@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-test
+  template:
+    metadata:
+      labels:
+        app: nginx-test
+    spec:
+      containers:
+      - name: nginx-test
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx # /etc/nginxにvolumesのnginx-confをmountする
+          readOnly: true
+          name: nginx-conf
+        - mountPath: /var/log/nginx
+          name: log
+      volumes:
+      - name: nginx-conf # volumeMountsで/etc/nginxにmountするやつ
+        configMap: 
+          name: nginx-conf # ConfigMapのnginx-confを/etc/nginx以下に配置する
+          items:
+            - key: nginx.conf # nginx-confのkey
+              path: nginx.conf # nginx.confというファイル名
+            - key: virtualhost.conf
+              path: virtualhost/virtualhost.conf # ディレクトリを掘ることも可能
+      - name: log
+        emptyDir: {}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-test
+spec:
+  selector:
+    app: nginx-test
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer

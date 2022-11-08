@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: machine-status-api
+  labels:
+    app: machine-status-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: machine-status-api
+  template:
+    metadata:
+      labels:
+        app: machine-status-api
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: machine-status-api
+          image: ghcr.io/walnuts1018/machine-status-api:latest
+          imagePullPolicy: Always
+          securityContext:
+            runAsGroup: 997
+            privileged: true
+          ports:
+            - containerPort: 80
+      nodeSelector:
+          kubernetes.io/hostname: kurumi-01

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: machine-status-api
+  labels:
+    app: machine-status-api
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: machine-status-api
+  type: LoadBalancer

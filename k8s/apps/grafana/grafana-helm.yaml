@@ -1,0 +1,9 @@
+rbac:
+  pspEnabled: false
+testFramework:
+  enabled: false
+persistence:
+  enabled: true
+  storageClassName: longhorn
+service:
+  type: LoadBalancer
