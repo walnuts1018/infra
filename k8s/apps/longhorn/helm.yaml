@@ -1,0 +1,11 @@
+defaultSettings:
+  allowNodeDrainWithLastHealthyReplica: true
+csi:
+  attacherReplicaCount: 2
+  provisionerReplicaCount: 2
+  resizerReplicaCount: 2
+  snapshotterReplicaCount: 2
+
+service:
+  ui:
+    type: ClusterIP

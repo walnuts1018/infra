@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-test
+  name: proxmox-webui
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx-test
+      app: proxmox-webui
   template:
     metadata:
       labels:
-        app: nginx-test
+        app: proxmox-webui
     spec:
       containers:
-      - name: nginx-test
+      - name: proxmox-webui
         image: nginx
         ports:
         - containerPort: 80
         volumeMounts:
         - mountPath: /etc/nginx # /etc/nginxにvolumesのnginx-confをmountする
           readOnly: true
-          name: nginx-conf
+          name: proxmox-webui-conf
         - mountPath: /var/log/nginx
           name: log
       volumes:
-      - name: nginx-conf # volumeMountsで/etc/nginxにmountするやつ
+      - name: proxmox-webui-conf # volumeMountsで/etc/nginxにmountするやつ
         configMap: 
-          name: nginx-conf # ConfigMapのnginx-confを/etc/nginx以下に配置する
+          name: proxmox-webui-conf # ConfigMapのnginx-confを/etc/nginx以下に配置する
           items:
             - key: nginx.conf # nginx-confのkey
               path: nginx.conf # nginx.confというファイル名
@@ -38,10 +38,10 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: nginx-test
+  name: proxmox-webui
 spec:
   selector:
-    app: nginx-test
+    app: proxmox-webui
   ports:
   - protocol: TCP
     port: 80
