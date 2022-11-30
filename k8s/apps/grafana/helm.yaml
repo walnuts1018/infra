@@ -6,4 +6,5 @@ persistence:
   enabled: true
   storageClassName: longhorn
 service:
-  type: LoadBalancer
+  type: ClusterIP
+

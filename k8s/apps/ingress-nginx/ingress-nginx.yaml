@@ -364,11 +364,11 @@ spec:
   - IPv4
   ipFamilyPolicy: SingleStack
   ports:
-  - appProtocol: http
-    name: http
-    port: 80
-    protocol: TCP
-    targetPort: http
+  #- appProtocol: http
+    #name: http
+    #port: 80
+    #protocol: TCP
+    #targetPort: http
   - appProtocol: https
     name: https
     port: 443
@@ -440,6 +440,7 @@ spec:
         - --validating-webhook=:8443
         - --validating-webhook-certificate=/usr/local/certificates/cert
         - --validating-webhook-key=/usr/local/certificates/key
+        #- --v=5
         env:
         - name: POD_NAME
           valueFrom:
