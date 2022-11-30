@@ -8,3 +8,7 @@ persistence:
 service:
   type: ClusterIP
 
+admin:
+  existingSecret: "grafana-secret"
+  userKey: admin-username
+  passwordKey: admin-password
