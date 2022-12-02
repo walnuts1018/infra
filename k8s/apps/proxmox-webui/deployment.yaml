@@ -21,6 +21,9 @@ spec:
         - mountPath: /etc/nginx # /etc/nginxにvolumesのnginx-confをmountする
           readOnly: true
           name: proxmox-webui-conf
+        - name: proxmox-cert
+          mountPath: "/etc/pve/local"
+          readOnly: true
         - mountPath: /var/log/nginx
           name: log
       volumes:
@@ -32,6 +35,9 @@ spec:
               path: nginx.conf # nginx.confというファイル名
             - key: virtualhost.conf
               path: virtualhost/virtualhost.conf # ディレクトリを掘ることも可能
+      - name: proxmox-cert
+        secret:
+          secretName: proxmox-cert
       - name: log
         emptyDir: {}
 ---
