@@ -1,5 +1,5 @@
 image:
-  repository: nextcloud
+  repository: ghcr.io/walnuts1018/nextcloud-image
   tag: 24.0.7-apache
   pullPolicy: IfNotPresent
 
