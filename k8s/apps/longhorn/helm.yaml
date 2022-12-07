@@ -8,4 +8,4 @@ csi:
 
 service:
   ui:
-    type: ClusterIP
+    type: LoadBalancer
