@@ -9,3 +9,7 @@ csi:
 service:
   ui:
     type: LoadBalancer
+persistence:
+  defaultClassReplicaCount: 2
+defaultSettings:
+  orphanAutoDeletion: true
