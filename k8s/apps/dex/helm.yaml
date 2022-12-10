@@ -5,48 +5,76 @@
 # -- Number of replicas (pods) to launch.
 replicaCount: 1
 
-image:
-  # -- Name of the image repository to pull the container image from.
-  repository: ghcr.io/dexidp/dex
-  # -- [Image pull policy](https://kubernetes.io/docs/concepts/containers/images/#updating-images) for updating already existing images on a node.
-  pullPolicy: IfNotPresent
-  # -- Image tag override for the default value (chart appVersion).
-  tag: ""
-
-https:
-  # -- Enable the HTTPS endpoint.
-  enabled: false
-
 # -- Application configuration.
 # See the [official documentation](https://dexidp.io/docs/).
 config:
-  # Set it to a valid URL
-  issuer: http://auth.walnuts.ml
+ issuer: https://auth.walnuts.ml:5556
+    storage:
+      type: kubernetes
+      config:
+        inCluster: true
+    web:
+      https: 0.0.0.0:5556
+      tlsCert: /etc/dex/tls/tls.crt
+      tlsKey: /etc/dex/tls/tls.key
+    connectors:
+    - type: github
+      id: github
+      name: GitHub
+      config:
+        clientID: $GITHUB_CLIENT_ID
+        clientSecret: $GITHUB_CLIENT_SECRET
+        redirectURI: https://auth.walnuts.ml:5556/callback
+        org: kubernetes
+    oauth2:
+      skipApprovalScreen: true
+    
+    staticClients:
+    - id: example-app
+      redirectURIs:
+      - 'http://longhorn.walnuts.ml/oauth2/callback'
+      name: 'oauth-proxy'
+      secret: proxy
+    enablePasswordDB: true
+    staticPasswords:
+    - email: "admin@example.com"
+      # bcrypt hash of the string "password": $(echo password | htpasswd -BinC 10 admin | cut -d: -f2)
+      hash: "$2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W"
+      username: "admin"
+      userID: "08a8684b-db88-4b73-90a9-3cd1661f5466"
 
-  # See https://dexidp.io/docs/storage/ for more options
-  storage:
-    type: memory
-
-  # Enable at least one connector
-  # See https://dexidp.io/docs/connectors/ for more options
-  enablePasswordDB: true
 
 service:
   # -- Annotations to be added to the service.
   annotations: {}
+
   # -- Kubernetes [service type](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types).
   type: ClusterIP
+
+  # -- Internal cluster service IP (when applicable)
+  clusterIP: ""
 
   ports:
     http:
       # -- HTTP service port
       port: 5556
+
+      # -- (int) HTTP node port (when applicable)
+      nodePort:
+
     https:
       # -- HTTPS service port
       port: 5554
+
+      # -- (int) HTTPS node port (when applicable)
+      nodePort:
+
     grpc:
       # -- gRPC service port
       port: 5557
+
+      # -- (int) gRPC node port (when applicable)
+      nodePort:
 
 ingress:
   # -- Enable [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
@@ -63,17 +91,10 @@ ingress:
   # -- Ingress host configuration.
   # @default -- See [values.yaml](values.yaml).
   hosts:
-    - host: auth.walnuts.ml
+    - host: cauth.walnuts.ml
       paths:
         - path: /
           pathType: ImplementationSpecific
-
-  # -- Ingress TLS configuration.
-  # @default -- See [values.yaml](values.yaml).
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 serviceMonitor:
   # -- Enable Prometheus ServiceMonitor.
@@ -92,27 +113,3 @@ serviceMonitor:
 
   # -- Labels to be added to the ServiceMonitor.
   labels: {}
-
-# -- Container resource [requests and limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
-# See the [API reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#resources) for details.
-# @default -- No requests or limits.
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-# -- Autoscaling configuration (see [values.yaml](values.yaml) for details).
-# @default -- Disabled by default.
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
