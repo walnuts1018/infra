@@ -8,15 +8,15 @@ config:
   # Add config annotations
   #annotations: {}
   # OAuth client ID
-  clientID: "longhorn"
+  #clientID: "oauth2-dex"
   # OAuth client secret
-  clientSecret: "proxy"
+  #clientSecret: "proxy"
   # Create a new secret with the following command
   # openssl rand -base64 32 | head -c 32 | base64
   # Use an existing secret for OAuth2 credentials (see secret.yaml for required fields)
   # Example:
-  #existingSecret: github-oauth-secret
-  cookieSecret: "RHRjT3FMNWFwWkI4b2NxaFhjSDBtYUtpc05hQ2k0WEQ="
+  existingSecret: dex-secret
+  #cookieSecret: 
   configFile: |-
     email_domains = [ "*" ]
     upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local" ]
