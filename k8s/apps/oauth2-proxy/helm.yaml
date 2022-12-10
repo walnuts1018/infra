@@ -8,27 +8,28 @@ config:
   # Add config annotations
   #annotations: {}
   # OAuth client ID
-  #clientID: "XXXXXXX"
+  clientID: "oauth2-proxy"
   # OAuth client secret
-  #clientSecret: "XXXXXXXX"
+  clientSecret: "proxy"
   # Create a new secret with the following command
   # openssl rand -base64 32 | head -c 32 | base64
   # Use an existing secret for OAuth2 credentials (see secret.yaml for required fields)
   # Example:
-  existingSecret: github-oauth-secret
-  #cookieSecret: "XXXXXXXXXXXXXXXX"
+  #existingSecret: github-oauth-secret
+  cookieSecret: "RHRjT3FMNWFwWkI4b2NxaFhjSDBtYUtpc05hQ2k0WEQ="
   configFile: |-
     email_domains = [ "*" ]
     upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local" ]
-    github_users = [ "walnuts1018" ]
 
 image:
   tag: "v7.2.1"
 
 extraArgs:
-  provider: github
+  provider: oidc
   redirect-url: https://longhorn.walnuts.ml/oauth2/callback
-
+  oidc-issuer-url: https://auth.walnuts.ml
+  set-authorization-header: true
+  ssl-insecure-skip-verify: true
 service:
   type: ClusterIP
   # when service.type is ClusterIP ...
