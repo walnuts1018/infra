@@ -8,7 +8,7 @@ config:
   # Add config annotations
   #annotations: {}
   # OAuth client ID
-  clientID: "oauth2-proxy"
+  clientID: "longhorn"
   # OAuth client secret
   clientSecret: "proxy"
   # Create a new secret with the following command
