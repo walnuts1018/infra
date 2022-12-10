@@ -20,13 +20,14 @@ config:
   configFile: |-
     email_domains = [ "*" ]
     upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local" ]
+    github_users = [ "walnuts1018" ]
 
 image:
   tag: "v7.2.1"
 
 extraArgs:
   provider: github
-  redirect-url: https://auth.walnuts.ml/oauth2/callback
+  redirect-url: https://longhorn.walnuts.ml/oauth2/callback
 
 service:
   type: ClusterIP
@@ -49,7 +50,7 @@ ingress:
   pathType: ImplementationSpecific
   # Used to create an Ingress record.
   hosts:
-     - auth.walnuts.ml
+     - longhorn.walnuts.ml
   # Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
   # Warning! The configuration is dependant on your current k8s API version capabilities (networking.k8s.io/v1)
   # extraPaths:
