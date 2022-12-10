@@ -27,10 +27,10 @@ config:
     skipApprovalScreen: true
     
   staticClients:
-  - id: oauth2-proxy
+  - id: longhorn
     redirectURIs:
     - 'https://longhorn.walnuts.ml/oauth2/callback'
-    name: 'oauth2-proxy'
+    name: 'longhorn'
     secret: proxy
 
   enablePasswordDB: true
