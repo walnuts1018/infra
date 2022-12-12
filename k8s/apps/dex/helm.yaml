@@ -22,7 +22,7 @@ config:
       clientSecret: $GITHUB_CLIENT_SECRET
       redirectURI: https://auth.walnuts.ml/callback
       orgs:
-        - name: kmc-jp
+        - name: walnuts-admin
   oauth2:
     skipApprovalScreen: true
     
@@ -31,7 +31,7 @@ config:
     redirectURIs:
     - 'https://longhorn.walnuts.ml/oauth2/callback'
     name: 'oauth2-dex'
-    secret: $DEX_SECRET
+    secretEnv: 'DEX_SECRET'
 
   enablePasswordDB: true
 
