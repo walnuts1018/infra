@@ -29,7 +29,7 @@ config:
   staticClients:
   - id: oauth2-dex
     redirectURIs:
-    - 'https://longhorn.walnuts.ml/oauth2/callback'
+    - 'https://oauth2.walnuts.ml/oauth2/callback'
     name: 'oauth2-dex'
     secretEnv: 'DEX_SECRET'
 

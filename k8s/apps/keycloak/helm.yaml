@@ -1,0 +1,24 @@
+ingress:
+  # If `true`, an Ingress is created
+  enabled: true
+  # The name of the Ingress Class associated with this ingress
+  ingressClassName: "nginx"
+  # The Service port targeted by the Ingress
+  servicePort: http
+  # Ingress annotations
+  annotations: {}
+    ## Resolve HTTP 502 error using ingress-nginx:
+    ## See https://www.ibm.com/support/pages/502-error-ingress-keycloak-response
+    # nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
+
+  # Additional Ingress labels
+  labels: {}
+   # List of rules for the Ingress
+  rules:
+    -
+      # Ingress host
+      host: '{{ .Release.Name }}.walnuts.ml'
+      # Paths for the host
+      paths:
+        - path: /
+          pathType: Prefix

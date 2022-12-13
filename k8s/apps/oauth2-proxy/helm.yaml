@@ -19,14 +19,15 @@ config:
   #cookieSecret: 
   configFile: |-
     email_domains = [ "*" ]
-    upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local" ]
+    upstreams = [ "file:///dev/null" ]
+    cookie_domains = ["*"]
 
 image:
   tag: "v7.2.1"
 
 extraArgs:
   provider: oidc
-  redirect-url: https://longhorn.walnuts.ml/oauth2/callback
+  redirect-url: https://oauth2.walnuts.ml/oauth2/callback
   oidc-issuer-url: https://auth.walnuts.ml
   set-authorization-header: true
   ssl-insecure-skip-verify: true
@@ -48,13 +49,13 @@ ingress:
   className: nginx
   path: /
   # Only used if API capabilities (networking.k8s.io/v1) allow it
-  pathType: ImplementationSpecific
+  pathType:  ImplementationSpecific
   # Used to create an Ingress record.
   hosts:
-     - longhorn.walnuts.ml
+     - oauth2.walnuts.ml
   # Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
   # Warning! The configuration is dependant on your current k8s API version capabilities (networking.k8s.io/v1)
-  # extraPaths:
+  #extraPaths:
   # - path: /*
   #   pathType: ImplementationSpecific
   #   backend:
