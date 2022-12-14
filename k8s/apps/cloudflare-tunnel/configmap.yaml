@@ -1,0 +1,21 @@
+# This ConfigMap is just a way to define the cloudflared config.yaml file in k8s.
+# It's useful to define it in k8s, rather than as a stand-alone .yaml file, because
+# this lets you use various k8s templating solutions (e.g. Helm charts) to
+# parameterize your config, instead of just using string literals.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared
+  namespace: network-exporter
+data:
+  config.yaml: |
+    url: http://192.168.0.130:80
+    tunnel: 73efd64d-b971-40f7-83a3-0445d6eedb2f
+    credentials-file: /etc/cloudflared/creds/credentials.json
+    no-autoupdate: true
+      #ingress:
+      # - hostname: walnuts.ml
+      #service: http://192.168.0.130:80
+      #- hostname: grafana.walnuts.ml
+      #service: http://192.168.0.129:80
+      #- service: http_status:404
