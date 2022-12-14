@@ -5,11 +5,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: tailscale
-  namespace: tailscale
+  namespace: network-exporter
 subjects:
 - kind: ServiceAccount
   name: "tailscale"
-  namespace: tailscale
+  namespace: network-exporter
 roleRef:
   kind: Role
   name: tailscale
