@@ -1,5 +1,6 @@
 defaultSettings:
   allowNodeDrainWithLastHealthyReplica: true
+  orphanAutoDeletion: true
 csi:
   attacherReplicaCount: 2
   provisionerReplicaCount: 2
@@ -11,5 +12,4 @@ service:
     type: LoadBalancer
 persistence:
   defaultClassReplicaCount: 2
-defaultSettings:
-  orphanAutoDeletion: true
+
