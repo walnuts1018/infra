@@ -10,12 +10,6 @@ metadata:
 data:
   config.yaml: |
     url: http://192.168.0.130:80
-    tunnel: 73efd64d-b971-40f7-83a3-0445d6eedb2f
+    tunnel: k8s-tunnel
     credentials-file: /etc/cloudflared/creds/credentials.json
     no-autoupdate: true
-      #ingress:
-      # - hostname: walnuts.ml
-      #service: http://192.168.0.130:80
-      #- hostname: grafana.walnuts.ml
-      #service: http://192.168.0.129:80
-      #- service: http_status:404
