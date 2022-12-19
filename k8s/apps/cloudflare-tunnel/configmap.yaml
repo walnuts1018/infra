@@ -9,7 +9,5 @@ metadata:
   namespace: network-exporter
 data:
   config.yaml: |
-    url: http://192.168.0.130:80
     tunnel: k8s-tunnel
     credentials-file: /etc/cloudflared/creds/credentials.json
-    no-autoupdate: true
