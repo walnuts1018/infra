@@ -1,5 +1,5 @@
 apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+kind: ApplicationSets
 metadata:
   name: guestbook
 spec:
