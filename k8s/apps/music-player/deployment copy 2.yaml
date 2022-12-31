@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: music-player3
+spec:
+  selector:
+    matchLabels:
+      app: music-player3
+  template:
+    metadata:
+      labels:
+        app: music-player3
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: music-player3
+        image: ghcr.io/walnuts1018/blazor-k8s:wasm-asp
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: music-player3
+  labels:
+    app: music-player3
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: music-player3
+  type: LoadBalancer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: music-player3
+  labels:
+    name: music-player3
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: test3.walnuts.ml
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: music-player3
+            port: 
+              number: 80
+
