@@ -1,6 +1,6 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: network-exporter
+  name: argocd
   labels:
-    name: network-exporter
+    name: argocd
