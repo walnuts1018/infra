@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: music-player
+spec:
+  selector:
+    matchLabels:
+      app: music-player
+  template:
+    metadata:
+      labels:
+        app: music-player
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: music-player
+        image: ghcr.io/walnuts1018/blazor-k8s:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: music-player
+  labels:
+    app: music-player
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: music-player
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: music-player
+  labels:
+    name: music-player
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: test.walnuts.ml
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: music-player
+            port: 
+              number: 80
+
