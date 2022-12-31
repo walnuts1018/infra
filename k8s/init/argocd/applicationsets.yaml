@@ -10,8 +10,7 @@ spec:
       revision: HEAD
       directories:
       - path: k8s/apps/*
-      files:
-      - path: "k8s/apps/**/argo.json"
+
   template:
     metadata:
       name: '{{path.basename}}'
@@ -23,4 +22,3 @@ spec:
         path: '{{path}}'
       destination:
         server: '192.168.0.111'
-        namespace: '{{namespace}}'
