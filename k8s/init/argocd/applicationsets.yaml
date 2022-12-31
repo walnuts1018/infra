@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: guestbook
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/walnuts1018/infra.git
+      revision: HEAD
+      directories:
+      - path: k8s/apps/*
+      files:
+      - path: "k8s/apps/**/argo.json"
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/walnuts1018/infra.git
+        targetRevision: HEAD
+        path: '{{path}}'
+      destination:
+        server: '192.168.0.111'
+        namespace: '{{namespace}}'
