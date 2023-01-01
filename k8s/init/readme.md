@@ -170,6 +170,6 @@ cd infra/k8s/init/
 kubectl apply -f ./argocd/namespace.yaml
 kubectl apply -n argocd -f ./argocd/install.yaml
 
-kubectl apply -f ./argocd/applications-deployer.yaml
+kubectl apply -f ./applications-deployer.yaml
 ```
 
