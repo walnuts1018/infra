@@ -158,12 +158,16 @@ sudo apt-get install helm=3.10.3-1
 echo "[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 [[ /usr/bin/helm ]] && source <(helm completion zsh)" >> .zshrc
 ```
-
+### k8s rename
+```bash
+kubectl config rename-context kubernetes-admin@kubernetes 
+```
 
 ### argocd 
 ```bash
 git clone git@github.com:walnuts1018/infra.git
 cd infra/k8s/init/
 kubectl apply -f ./argocd/namespace.yaml
-kubectl apply -f ./argocd/install.yaml
+kubectl apply -n argocd -f ./argocd/install.yaml
 ```
+
