@@ -159,3 +159,11 @@ echo "[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 [[ /usr/bin/helm ]] && source <(helm completion zsh)" >> .zshrc
 ```
 
+
+### argocd 
+```bash
+git clone git@github.com:walnuts1018/infra.git
+cd infra/k8s/init/
+kubectl apply -f ./argocd/namespace.yaml
+kubectl apply -f ./argocd/install.yaml
+```
