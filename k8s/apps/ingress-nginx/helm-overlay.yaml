@@ -12,7 +12,7 @@ spec:
     helm:
       releaseName: ingress-nginx
       valueFiles:
-        - helm-values.yaml
+        - https://github.com/walnuts1018/infra/blob/main/k8s/apps/ingress-nginx/helm-values.yaml
   destination:
     server: "https://kubernetes.default.svc"
     namespace: ingress-nginx
