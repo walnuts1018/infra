@@ -10,6 +10,15 @@
     - Raspberry Pi OS Lite 64bit Bullseye インストール
     - ```$ sudo apt update && sudo apt upgrade -y```
     - [zshセットアップ](https://github.com/walnuts1018/zsh_on_Debian)
+### ssh
+任意のマシン上で
+```
+scp ./.ssh/id_ed25519 juglans@192.168.0.16
+```
+
+```bash
+git clone git@github.com:walnuts1018/.ssh.git ssh
+```
 
 ## k8sインストール
 from: https://qiita.com/greenteabiscuit/items/6fce805185350eab6f7a
@@ -21,7 +30,9 @@ sudo raspi-config nonint do_change_timezone Asia/Tokyo
 
 ### IP固定
 ```bash
-echo "static ip_address=192.168.0.16/24
+echo "
+eth0
+static ip_address=192.168.0.16/24
 static routers=192.168.0.1
 static domain_name_servers=192.168.0.1 8.8.8.8" >> /etc/dhcpcd.conf
 ```
@@ -125,3 +136,26 @@ mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
+
+### taint
+```bash
+HOSTNAME=kurumi-01
+kubectl taint node $HOSTNAME node-role.kubernetes.io/control-plane:NoSchedule-
+kubectl taint node $HOSTNAME node-role.kubernetes.io/master:NoSchedule-
+```
+
+## helm
+```bash
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+sudo apt-get install apt-transport-https --yes
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm=3.10.3-1
+```
+
+### zsh-completion
+```bash
+echo "[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
+[[ /usr/bin/helm ]] && source <(helm completion zsh)" >> .zshrc
+```
+
