@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-grafana
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: ingress-nginx
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    helm:
+      releaseName: ingress-nginx
+      valueFiles:
+        - helm-values.yaml
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: ingress-nginx
