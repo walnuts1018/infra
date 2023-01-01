@@ -1,6 +1,0 @@
-{
-    "name": "grafana",
-    "namespace": "monitoring",
-    "server": "kurumi",
-    "directory": "grafana"
-}
