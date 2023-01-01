@@ -2,25 +2,24 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: main-deployer
-  namespace: argocd
 spec:
   generators:
   - git:
       repoURL: https://github.com/walnuts1018/infra.git
       revision: HEAD
-      directories:
-      - path: k8s/apps/*
       files:
-      - path: '{{path}}/argo.json'
+      - path: 'k8s/clusters/kurumi/apps/*.json'
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: '{{name}}'
+      annotations: 
+        argocd.argoproj.io/sync-wave: '{{syncwave}}'
     spec:
       project: default
       source:
         repoURL: https://github.com/walnuts1018/infra.git
         targetRevision: HEAD
-        path: '{{path}}'
+        path: 'k8s/apps/{{directory}}'
       destination:
         server: 'https://kubernetes.default.svc'
         namespace: '{{namespace}}'
