@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-helm
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: prometheus
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 3.8.3
+    helm:
+      releaseName: prometheus
+      valueFiles:
+        - https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/apps/prometheus/helm-values.yaml
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: monitoring
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true
