@@ -11,7 +11,7 @@ spec:
       directories:
       - path: k8s/apps/*
       files:
-      - path: "k8s/apps/**/argo.json"
+      - path: '{{path}}/argo.json'
   template:
     metadata:
       name: '{{path.basename}}'
