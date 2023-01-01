@@ -1,21 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingress-nginx-helm
+  name: sealed-secrets-helm
   namespace: argocd
 spec:
   project: default
   source:
-    chart: ingress-nginx
-    repoURL: https://kubernetes.github.io/ingress-nginx
-    targetRevision: 4.4.2
+    chart: sealed-secrets
+    repoURL: https://bitnami-labs.github.io/sealed-secrets
+    targetRevision: 2.7.2
     helm:
-      releaseName: ingress-nginx
+      releaseName: 
       valueFiles:
-        - https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/apps/ingress-nginx/helm-values.yaml
+        - https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/apps/sealed-secrets/helm-values.yaml
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: ingress-nginx
+    namespace: kube-system
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

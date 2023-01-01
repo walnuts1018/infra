@@ -1,21 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingress-nginx-helm
+  name: grafana-helm
   namespace: argocd
 spec:
   project: default
   source:
-    chart: ingress-nginx
-    repoURL: https://kubernetes.github.io/ingress-nginx
-    targetRevision: 4.4.2
+    chart: grafana
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 6.48.0
     helm:
-      releaseName: ingress-nginx
+      releaseName: grafana
       valueFiles:
-        - https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/apps/ingress-nginx/helm-values.yaml
+        - https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/apps/grafana/helm-values.yaml
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: ingress-nginx
+    namespace: monitoring
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
