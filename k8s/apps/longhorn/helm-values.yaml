@@ -12,3 +12,12 @@ service:
     type: LoadBalancer
 persistence:
   defaultClassReplicaCount: 2
+
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  host: "longhorn.walnuts.ml"
+  path: /
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
