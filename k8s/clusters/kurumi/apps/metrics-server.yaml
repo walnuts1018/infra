@@ -13,7 +13,7 @@ spec:
     path: k8s/apps/metrics-server
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
+    namespace: kube-system
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

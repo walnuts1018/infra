@@ -17,7 +17,7 @@ spec:
         - https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/apps/metrics-server/helm-values.yaml
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: monitoring
+    namespace: kube-system
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
