@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - image: index.docker.io/mysql:8.0.31
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
