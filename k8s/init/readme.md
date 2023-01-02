@@ -151,6 +151,7 @@ sudo apt-get install apt-transport-https --yes
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 sudo apt-get update
 sudo apt-get install helm=3.10.3-1
+sudo apt-mark hold helm
 ```
 
 ### zsh-completion
@@ -165,6 +166,12 @@ kubectl config rename-context kubernetes-admin@kubernetes
 ### longhorn
 ```bash
 sudo apt -y install open-iscsi
+```
+
+環境チェック
+```bash
+sudo apt install -y jq
+curl -sSfL https://raw.githubusercontent.com/longhorn/longhorn/v1.4.0/scripts/environment_check.sh | bash
 ```
 
 ### argocd 

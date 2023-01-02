@@ -11,6 +11,8 @@ spec:
     targetRevision: 0.13.7
     helm:
       releaseName: metallb
+      valueFiles:
+        - https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/apps/metallb/helm-values.yaml
   destination:
     server: "https://kubernetes.default.svc"
     namespace: metallb-system
