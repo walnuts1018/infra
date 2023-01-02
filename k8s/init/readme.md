@@ -162,6 +162,10 @@ echo "[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 ```bash
 kubectl config rename-context kubernetes-admin@kubernetes 
 ```
+### longhorn
+```bash
+sudo apt -y install open-iscsi
+```
 
 ### argocd 
 ```bash
@@ -183,3 +187,28 @@ cd
 ```
 
 (移行時)
+元の方
+```bash
+kubectl get secret -n kube-system sealed-secrets-key8jfgr -o yaml > sealed-secrets-key.yaml
+
+scp k1:~/sealed-secrets-key.yaml ./
+```
+新環境
+```bash
+kubeseal --fetch-cert > ~/SealedSecret.crt
+```
+
+```bash
+mv sealedsecret.yaml sealedsecret2.yaml
+kubeseal \
+--controller-namespace=kube-system \
+--controller-name=sealed-secrets-controller \
+< sealedsecret2.yaml \
+--recovery-unseal \
+--recovery-private-key ~/sealed-secrets-key.yaml -o yaml > secret.yaml
+cat secret.yaml | kubeseal --controller-name=sealed-secrets-controller --controller-namespace=kube-system --cert ~/SealedSecret.crt -w sealedsecret.yaml
+\rm sealedsecret2.yaml secret.yaml
+git add .
+git commit -m "[change] sealedsecret"
+git push
+```
