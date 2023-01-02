@@ -186,6 +186,14 @@ kubectl apply -n argocd -f ./argocd/install.yaml
 
 kubectl apply -f ./applications-deployer.yaml
 ```
+#### argocd cli
+```bash
+cd /tmp
+curl -sSL -o argocd-linux-arm64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-arm64
+sudo install -m 555 argocd-linux-arm64 /usr/local/bin/argocd
+\rm argocd-linux-arm64
+cd
+```
 
 ### SealedSecret
 ```bash
