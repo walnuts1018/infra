@@ -173,3 +173,13 @@ kubectl apply -n argocd -f ./argocd/install.yaml
 kubectl apply -f ./applications-deployer.yaml
 ```
 
+### SealedSecret
+```bash
+cd /tmp
+wget https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.19.3/kubeseal-0.19.3-linux-arm.tar.gz
+tar -xvzf kubeseal-0.19.3-linux-arm.tar.gz kubeseal
+sudo install -m 755 kubeseal /usr/local/bin/kubeseal
+cd 
+```
+
+(移行時)

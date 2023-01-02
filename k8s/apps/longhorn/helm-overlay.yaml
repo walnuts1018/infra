@@ -15,7 +15,7 @@ spec:
         - https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/apps/longhorn/helm-values.yaml
   destination:
     server: "https://kubernetes.default.svc"
-    namespace: longhorn
+    namespace: longhorn-system
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
