@@ -5,8 +5,6 @@ metadata:
   namespace: longhorn-system
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/auth-url: "https://oauth2.walnuts.ml/oauth2/auth"
-    nginx.ingress.kubernetes.io/auth-signin: "https://oauth2.walnuts.ml/oauth2/start?rd=/redirect/$http_host$escaped_request_uri"
 spec:
   ingressClassName: "nginx"
   rules:
