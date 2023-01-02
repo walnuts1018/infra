@@ -223,7 +223,7 @@ kubeseal \
 --controller-name=sealed-secrets-controller \
 < sealedsecret2.yaml \
 --recovery-unseal \
---recovery-private-key ~/sealed-secrets-key-new.yaml -o yaml > secret.yaml
+--recovery-private-key ~/sealed-secrets-key.yaml -o yaml > secret.yaml
 cat secret.yaml | kubeseal --controller-name=sealed-secrets-controller --controller-namespace=kube-system --cert ~/SealedSecret.crt -w sealedsecret.yaml
 \rm sealedsecret2.yaml secret.yaml
 git add .
