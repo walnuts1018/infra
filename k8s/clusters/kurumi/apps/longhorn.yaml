@@ -19,8 +19,8 @@ spec:
     server: "https://kubernetes.default.svc"
     namespace: longhorn-system
   ignoreDifferences:
-  - group: "apps"
-    kind: "Service"
+  - group: *
+    kind: Service
     jsonPointers:
     - /spec/ports/nodePort
 
