@@ -13,7 +13,6 @@ service:
 persistence:
   defaultClassReplicaCount: 2
 
-
 ingress:
   enabled: true
   ingressClassName: nginx
