@@ -127,7 +127,13 @@ sudo systemctl restart kubelet
 
 ### kubeadm
 ```bash
-sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+echo "apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+clusterName: kurumi
+networking:
+  podSubnet: 10.244.0.0/16" >kubeadm.yaml
+
+sudo kubeadm init --config kubeadm.yaml
 ```
 
 ### kubeconfig
@@ -159,10 +165,7 @@ sudo apt-mark hold helm
 echo "[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 [[ /usr/bin/helm ]] && source <(helm completion zsh)" >> .zshrc
 ```
-### k8s rename
-```bash
-kubectl config rename-context kubernetes-admin@kubernetes 
-```
+
 ### longhorn
 ```bash
 sudo apt -y install open-iscsi
