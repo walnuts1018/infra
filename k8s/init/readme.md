@@ -1,12 +1,16 @@
+# Init
+
 ## 構成
- kurumi-01 (Controll) RaspberryPi 4 4GB aarch64 
+
+ kurumi-01 (Controll) RaspberryPi 4 4GB aarch64
  
  kurumi-02 RaspberryPi 4 2GB aarch64
  
  (kurumi-03 QEMU 2Core 2GB amd64)
 
 ## セットアップ
-- kurumi-01,02 
+
+- kurumi-01,02
     - Raspberry Pi OS Lite 64bit Bullseye インストール
     - ```$ sudo apt update && sudo apt upgrade -y```
     - [zshセットアップ](https://github.com/walnuts1018/zsh_on_Debian)
