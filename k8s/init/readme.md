@@ -181,6 +181,7 @@ sudo apt install -y jq
 curl -sSfL https://raw.githubusercontent.com/longhorn/longhorn/v1.4.0/scripts/environment_check.sh | bash
 ```
 
+<!-- 
 ### argocd 
 ```bash
 git clone git@github.com:walnuts1018/infra.git
@@ -198,8 +199,17 @@ sudo install -m 555 argocd-linux-arm64 /usr/local/bin/argocd
 \rm argocd-linux-arm64
 cd
 ```
+--->
+
+### fluxcd
+
+```bash
+curl -s https://fluxcd.io/install.sh | sudo bash
+echo "[[ /usr/bin/flux ]] && source <(flux completion zsh)" >> ~/.zshrc
+```
 
 ### SealedSecret
+
 ```bash
 cd /tmp
 wget https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.19.3/kubeseal-0.19.3-linux-arm.tar.gz
