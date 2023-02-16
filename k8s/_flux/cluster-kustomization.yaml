@@ -6,7 +6,9 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./k8s/clusters/kurumi
+  path: 
+    - ./k8s/clusters/kurumi
+    - ./k8s/apps/music-player
   prune: true
   sourceRef:
     kind: GitRepository
