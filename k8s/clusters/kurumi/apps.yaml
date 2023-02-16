@@ -1,15 +1,4 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- ../../apps/grafana
-- ../../apps/ingress-nginx
-- ../../apps/longhorn
 - ../../apps/machine-status-api
-- ../../apps/metallb
-- ../../apps/metrics-server
-- ../../apps/mysql
-- ../../apps/nextcloud
-- ../../apps/prometheus
-- ../../apps/proxmox-webui
-- ../../apps/sealed-secrets
-- ../../apps/tailscale-subnet-router
