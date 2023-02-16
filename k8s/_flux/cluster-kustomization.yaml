@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./k8s/clusters/kurumi/kustomization.yaml
+  path: ./k8s/clusters/kurumi
   prune: true
   sourceRef:
     kind: GitRepository
