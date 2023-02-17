@@ -4,3 +4,4 @@ resources:
 - ../../namespaces
 - ../../apps/machine-status-api
 - ../../apps/ingress-nginx
+- ../../apps/metallb
