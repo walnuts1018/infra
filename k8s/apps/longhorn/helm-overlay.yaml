@@ -29,7 +29,7 @@ spec:
       ui:
         type: LoadBalancer
     persistence:
-      defaultClassReplicaCount: 2
+      defaultClassReplicaCount: 3
 
     ingress:
       enabled: false
