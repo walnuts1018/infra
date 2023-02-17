@@ -15,7 +15,7 @@ spec:
     spec:
       chart: longhorn
       version: 1.4.0
-      values:
+  values:
     defaultSettings:
       allowNodeDrainWithLastHealthyReplica: true
       orphanAutoDeletion: true
