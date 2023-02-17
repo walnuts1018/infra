@@ -3,6 +3,6 @@ kind: Kustomization
 namePrefix: ingress-nginx-
 namespace: ingress-nginx
 components:
-- ../../components/helm
+- ../components/helm
 patchesStrategicMerge:
 - helm-overlay.yaml
