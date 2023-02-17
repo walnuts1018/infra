@@ -1,28 +1,18 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
 metadata:
-  name: metallb-helm
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-  annotations:
-    argocd.argoproj.io/sync-wave: "-30"
+  name: repo
 spec:
-  project: default
-  source:
-    chart: metallb
-    repoURL: https://metallb.github.io/metallb
-    targetRevision: 0.13.7
-    helm:
-      releaseName: metallb
-      valueFiles:
-        - https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/apps/metallb/helm-values.yaml
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: metallb-system
-  syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
-    automated:
-      selfHeal: true
-      prune: true
+  url: https://metallb.github.io/metallb
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: metallb
+      version: 0.13.7
+values:
