@@ -1,0 +1,41 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: repo
+spec:
+  url: https://charts.longhorn.io
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: longhorn
+      version: 1.4.0
+      values:
+    defaultSettings:
+      allowNodeDrainWithLastHealthyReplica: true
+      orphanAutoDeletion: true
+    csi:
+      attacherReplicaCount: 2
+      provisionerReplicaCount: 2
+      resizerReplicaCount: 2
+      snapshotterReplicaCount: 2
+
+    service:
+      ui:
+        type: LoadBalancer
+    persistence:
+      defaultClassReplicaCount: 2
+
+    ingress:
+      enabled: false
+      ingressClassName: nginx
+      host: "longhorn.walnuts.ml"
+      path: /
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+
