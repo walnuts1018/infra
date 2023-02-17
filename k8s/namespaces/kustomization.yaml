@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
 - ./ingress-nginx.yaml
 - ./metallb-system.yaml
+- ./longhorn-system.yaml
