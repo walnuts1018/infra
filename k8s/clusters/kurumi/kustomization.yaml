@@ -9,3 +9,4 @@ resources:
 - ../../apps/sealed-secrets
 - ../../apps/proxmox-webui
 - ../../apps/tailscale-subnet-router
+- ../../apps/prometheus
