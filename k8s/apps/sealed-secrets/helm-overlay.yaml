@@ -1,28 +1,23 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
 metadata:
-  name: sealed-secrets-helm
-  namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "-50"
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
+  name: repo
 spec:
-  project: default
-  source:
-    chart: sealed-secrets
-    repoURL: https://bitnami-labs.github.io/sealed-secrets
-    targetRevision: 2.7.2
-    helm:
-      releaseName: 
-      valueFiles:
-        - https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/apps/sealed-secrets/helm-values.yaml
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: kube-system
-  syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
-    automated:
-      selfHeal: true
-      prune: true
+  url: https://bitnami-labs.github.io/sealed-secrets
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: sealed-secrets
+      version: 2.7.2
+values:
+  fullnameOverride: sealed-secrets-controller
+  keyrenewperiod: "0"
+
+
+
