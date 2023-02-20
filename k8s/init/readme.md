@@ -171,6 +171,11 @@ echo "[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 [[ /usr/bin/helm ]] && source <(helm completion zsh)" >> .zshrc
 ```
 
+## Flannel
+```bash
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+```
+
 ### longhorn
 ```bash
 sudo apt -y install open-iscsi
