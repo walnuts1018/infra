@@ -11,3 +11,4 @@ resources:
 - ../../apps/tailscale-subnet-router
 - ../../apps/prometheus
 - ../../apps/grafana
+- ../../apps/metrics-server
