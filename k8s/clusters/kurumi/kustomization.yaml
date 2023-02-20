@@ -10,5 +10,5 @@ resources:
 - ../../apps/proxmox-webui
 - ../../apps/tailscale-subnet-router
 - ../../apps/prometheus
-
+- ../../apps/grafana
 - ../../apps/metrics-server
