@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: network-exporter
 resources:
   - role.yaml
-  - deployment.yaml
+  - damonset.yaml
   - rolebinding.yaml
   - sealedsecret.yaml
   - sa.yaml
