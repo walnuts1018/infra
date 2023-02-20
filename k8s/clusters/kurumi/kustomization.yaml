@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
 - ../../namespaces
 - ../../apps/machine-status-api
-#- ../../apps/ingress-nginx
+- ../../apps/ingress-nginx
 - ../../apps/metallb
 - ../../apps/longhorn
 - ../../apps/sealed-secrets
