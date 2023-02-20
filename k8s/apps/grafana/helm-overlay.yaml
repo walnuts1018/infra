@@ -16,8 +16,6 @@ spec:
       chart: grafana
       version: 6.48.0
   values:
-    env:
-      GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: "true"
     rbac:
       pspEnabled: false
     testFramework:
