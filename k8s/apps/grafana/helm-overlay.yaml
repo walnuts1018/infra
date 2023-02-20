@@ -1,26 +1,32 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
 metadata:
-  name: grafana-helm
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
+  name: repo
 spec:
-  project: default
-  source:
-    chart: grafana
-    repoURL: https://grafana.github.io/helm-charts
-    targetRevision: 6.48.0
-    helm:
-      releaseName: grafana
-      valueFiles:
-        - https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/apps/grafana/helm-values.yaml
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: monitoring
-  syncPolicy:
-    syncOptions:
-      - CreateNamespace=true
-    automated:
-      selfHeal: true
-      prune: true
+  url: https://grafana.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: grafana
+      version: 6.48.0
+  values:
+    rbac:
+      pspEnabled: false
+    testFramework:
+      enabled: false
+    persistence:
+      enabled: true
+      storageClassName: longhorn
+    service:
+      type: ClusterIP
+
+    admin:
+      existingSecret: "grafana-secret"
+      userKey: admin-username
+      passwordKey: admin-password
