@@ -15,4 +15,4 @@ spec:
     spec:
       chart: metallb
       version: 0.13.7
-values:
+  values:
