@@ -7,3 +7,4 @@ resources:
 - ../../apps/metallb
 - ../../apps/longhorn
 - ../../apps/sealed-secrets
+- ../../apps/proxmox-webui
