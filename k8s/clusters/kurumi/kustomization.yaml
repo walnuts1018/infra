@@ -8,3 +8,4 @@ resources:
 - ../../apps/longhorn
 - ../../apps/sealed-secrets
 - ../../apps/proxmox-webui
+- ../../apps/tailscale-subnet-router
