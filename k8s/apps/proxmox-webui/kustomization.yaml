@@ -6,5 +6,5 @@ commonLabels:
 resources:
   - configmap.yaml
   - deployment.yaml
-  #- ingress.yaml
+  - ingress.yaml
   - sealedsecret.yaml
