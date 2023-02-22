@@ -3,6 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: jellyfin-media-pvc
 spec:
+  storageClassName: jellyfin-nfs
   accessModes:
     - ReadWriteOnce
   resources:
