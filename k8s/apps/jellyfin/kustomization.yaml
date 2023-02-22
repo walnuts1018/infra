@@ -4,7 +4,6 @@ namespace: default
 resources:
   - cache-pvc.yaml
   - config-pvc.yaml
-  - media-pv.yaml
   - media-pvc.yaml
   - deployment.yaml
   - service.yaml
