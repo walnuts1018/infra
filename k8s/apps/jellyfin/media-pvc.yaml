@@ -37,7 +37,7 @@ spec:
     readOnly: false
     volumeHandle: smb-server.default.svc.cluster.local/share##
     volumeAttributes:
-      source: "//storage.walnuts.ml/Movies"
+      source: "//storage.walnuts.ml/rasp/Movies"
     nodeStageSecretRef:
       name: smbcreds
       namespace: default
