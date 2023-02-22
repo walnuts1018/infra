@@ -3,9 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: jellyfin-media-pvc
 spec:
-  storageClassName: jellyfin-nfs
+  storageClassName: longhorn
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 200Gi
+      storage: 10Gi
