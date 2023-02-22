@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: -cache-pvc
+  name: jellyfin-cache-pvc
 spec:
   storageClassName: longhorn
   accessModes:
