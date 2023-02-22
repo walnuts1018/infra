@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: config-pvc
+  name: -config-pvc
 spec:
   storageClassName: longhorn
   accessModes:
