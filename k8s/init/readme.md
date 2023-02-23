@@ -252,9 +252,18 @@ git push
 ```
 
 ### SMB CSI Driver
+
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/deploy/v1.9.0/rbac-csi-smb.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/deploy/v1.9.0/csi-smb-driver.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/deploy/v1.9.0/csi-smb-controller.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/deploy/v1.9.0/csi-smb-node.yaml
+```
+
+### VPA
+
+```bash
+git clone https://github.com/kubernetes/autoscaler.git
+cd autoscaler/vertical-pod-autoscaler
+./hack/vpa-up.sh
 ```
