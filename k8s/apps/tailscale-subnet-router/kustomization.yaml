@@ -7,3 +7,4 @@ resources:
   - rolebinding.yaml
   - sealedsecret.yaml
   - sa.yaml
+  - vpa.yaml
