@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: jellyfin-media-pvc
+  name: webcam-smb-pvc
 spec:
   accessModes:
     - ReadWriteMany
