@@ -15,6 +15,10 @@ rules:
   resources: ["secrets"]
   verbs: ["get","update","patch"]
 - apiGroups: [""] # "" indicates the core API group
-  resourceNames: ["tailscale-auth"]
+  resourceNames: ["tailscale-auth1"]
+  resources: ["secrets"]
+  verbs: ["get","update","patch"]
+- apiGroups: [""] # "" indicates the core API group
+  resourceNames: ["tailscale-auth2"]
   resources: ["secrets"]
   verbs: ["get","update","patch"]
