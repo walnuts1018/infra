@@ -8,7 +8,7 @@ resources:
 - ../../apps/longhorn
 - ../../apps/sealed-secrets
 - ../../apps/proxmox-webui
-#- ../../apps/tailscale-subnet-router
+- ../../apps/tailscale-subnet-route*r
 - ../../apps/prometheus
 - ../../apps/grafana
 - ../../apps/metrics-server
