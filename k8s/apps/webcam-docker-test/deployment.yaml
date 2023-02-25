@@ -20,8 +20,15 @@ spec:
         - name: webcam-docker-test
           image: ghcr.io/walnuts1018/webcam-docker-test:latest
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - mountPath: /webcam
+            name: webcam-persistent-storage
           securityContext:
             runAsGroup: 997
             privileged: true
+      volumes:
+      - name: webcam-persistent-storage
+        persistentVolumeClaim:
+          claimName: webcam-smb-pv
       nodeSelector:
           kubernetes.io/hostname: kurumi-02
