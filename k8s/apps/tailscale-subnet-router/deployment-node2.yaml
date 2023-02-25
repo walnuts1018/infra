@@ -29,7 +29,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: tailscale-auth
-              key: TS_AUTH_KEY
+              key: TS_AUTH_KEY2
               optional: true
         - name: TS_ROUTES
           value: "192.168.0.2/31,192.168.0.4/30,192.168.0.8/31,192.168.0.10/32,192.168.0.16/30,192.168.0.21/32,192.168.0.22/31,192.168.0.24/29,192.168.0.32/27,192.168.0.64/26,192.168.0.128/25"
@@ -37,4 +37,4 @@ spec:
           runAsUser: 1000
           runAsGroup: 1000
       nodeSelector:
-          kubernetes.io/hostname: kurumi-01
+          kubernetes.io/hostname: kurumi-02
