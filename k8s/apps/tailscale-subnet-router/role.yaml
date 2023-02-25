@@ -11,7 +11,11 @@ rules:
   # Create can not be restricted to a resource name.
   verbs: ["create"]
 - apiGroups: [""] # "" indicates the core API group
-  resourceNames: ["tailscale"]
+  resourceNames: ["tailscale1"]
+  resources: ["secrets"]
+  verbs: ["get","update","patch"]
+- apiGroups: [""] # "" indicates the core API group
+  resourceNames: ["tailscale2"]
   resources: ["secrets"]
   verbs: ["get","update","patch"]
 - apiGroups: [""] # "" indicates the core API group
