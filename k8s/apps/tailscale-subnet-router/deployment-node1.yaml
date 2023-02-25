@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tailscale-subnet-router
+  name: tailscale-subnet-router1
   labels:
-    app: tailscale
+    app: tailscale1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tailscale
+      app: tailscale1
   template:
     metadata:
       labels:
-        app: tailscale
+        app: tailscale1
     spec:
       serviceAccountName: "tailscale"
       containers:
