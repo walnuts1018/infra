@@ -19,7 +19,7 @@ spec:
       containers:
         - name: webcam-docker-test
           image: ghcr.io/walnuts1018/webcam-docker-test:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           securityContext:
             runAsGroup: 997
             privileged: true
