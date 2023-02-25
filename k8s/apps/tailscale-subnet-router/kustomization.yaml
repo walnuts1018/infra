@@ -6,6 +6,7 @@ resources:
   - deployment-node1.yaml
   - deployment-node2.yaml
   - rolebinding.yaml
-  - sealedsecret.yaml
+  - sealedsecret1.yaml
+  - sealedsecret2.yaml
   - sa.yaml
   - vpa.yaml
