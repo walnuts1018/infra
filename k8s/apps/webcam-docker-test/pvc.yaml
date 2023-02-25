@@ -37,7 +37,7 @@ spec:
     readOnly: false
     volumeHandle: smb-server.default.svc.cluster.local/share##
     volumeAttributes:
-      source: "//storage.walnuts.ml/rasp//share/webcam"
+      source: "//storage.walnuts.ml/rasp/webcam"
     nodeStageSecretRef:
       name: smbcreds
       namespace: default
