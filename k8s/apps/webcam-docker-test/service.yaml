@@ -7,4 +7,4 @@ metadata:
 spec:
   selector:
     app: webcam-docker-test
-  type: LoadBalancer
+  type: NodePort
