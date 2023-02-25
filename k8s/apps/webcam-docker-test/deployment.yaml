@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webcam-docker-test
+  labels:
+    app: webcam-docker-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webcam-docker-test
+  template:
+    metadata:
+      labels:
+        app: webcam-docker-test
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: webcam-docker-test
+          image: ghcr.io/walnuts1018/webcam-docker-test:latest
+          imagePullPolicy: Always
+          securityContext:
+            runAsGroup: 997
+            privileged: true
+      nodeSelector:
+          kubernetes.io/hostname: kurumi-02
