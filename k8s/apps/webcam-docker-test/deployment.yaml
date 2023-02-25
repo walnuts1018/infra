@@ -29,6 +29,6 @@ spec:
       volumes:
       - name: webcam-persistent-storage
         persistentVolumeClaim:
-          claimName: webcam-smb-pv
+          claimName: webcam-smb-pvc
       nodeSelector:
           kubernetes.io/hostname: kurumi-02
