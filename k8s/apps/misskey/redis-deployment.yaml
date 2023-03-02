@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: misskey-redis
+spec:
+  selector:
+    matchLabels:
+      app: misskey-redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: misskey-redis
+    spec:
+      containers:
+      - image: index.docker.io/redis:7-alpine
+        imagePullPolicy: IfNotPresent
+        name: misskey-redis
+        ports:
+        - containerPort: 6379
+          name: misskey-redis
+        volumeMounts:
+        - name: misskey-redis-pv
+          mountPath: /data
+      volumes:
+      - name: misskey-redis-pv
+        persistentVolumeClaim:
+          claimName: misskey-redis-pvc
+

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: misskey-postgres
+spec:
+  selector:
+    matchLabels:
+      app: misskey-postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: misskey-postgres
+    spec:
+      containers:
+      - image: index.docker.io/postgres:15-alpine
+        imagePullPolicy: IfNotPresent
+        name: misskey-postgres
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: misskey-secret
+              key: postgres-password
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: misskey-secret
+              key: postgres-user
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: misskey-secret
+              key: postgres-db             
+        ports:
+        - containerPort: 5432
+          name: misskey-postgres
+        volumeMounts:
+        - name: misskey-postgres-pv
+          mountPath: /var/lib/postgresql/data
+
+      volumes:
+      - name: misskey-postgres-pv
+        persistentVolumeClaim:
+          claimName: misskey-postgres-pvc
+
