@@ -35,7 +35,7 @@ spec:
               key: postgres-db             
         ports:
         - containerPort: 5432
-          name: misskey-postgres
+          name: misskey-db
         volumeMounts:
         - name: misskey-postgres-pv
           mountPath: /var/lib/postgresql/data
