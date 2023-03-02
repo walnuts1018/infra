@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: misskey
+  labels:
+    name: misskey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: misskey
+  template:
+    metadata:
+      labels:
+        app: misskey
+    spec:
+      initContainers:
+        - name: misskey-init
+          image: ghcr.io/walnuts1018/misskey:13.8.1
+          imagePullPolicy: IfNotPresent
+          command:
+            - pnpm
+            - run
+            - init
+          volumeMounts:
+            - name: misskey-pv
+              mountPath: /misskey
+      containers:
+        - name: misskey
+          image: ghcr.io/walnuts1018/misskey:13.8.1
+          imagePullPolicy: IfNotPresent
+          tty: true
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: misskey-pv
+              mountPath: /misskey
+            - name: misskey-config
+              mountPath: /misskey/.config
+              readOnly: true
+
+      volumes:
+      - name: misskey-pv
+        persistentVolumeClaim:
+          claimName: misskey-pvc
+      - name: misskey-config
+        secret:
+          secretName: misskey-secret
