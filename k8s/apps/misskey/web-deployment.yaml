@@ -38,7 +38,8 @@ spec:
             - name: misskey-config
               mountPath: /misskey/.config
               readOnly: true
-
+      nodeSelector:
+          kubernetes.io/hostname: kurumi-03
       volumes:
       - name: misskey-pv
         persistentVolumeClaim:
