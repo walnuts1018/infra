@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: misskey
+  name: misskey-web
   labels:
-    name: misskey
+    name: misskey-web
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: misskey
+      app: misskey-web
   template:
     metadata:
       labels:
-        app: misskey
+        app: misskey-web
     spec:
       initContainers:
         - name: misskey-init
@@ -26,7 +26,7 @@ spec:
             - name: misskey-pv
               mountPath: /misskey
       containers:
-        - name: misskey
+        - name: misskey-web
           image: ghcr.io/walnuts1018/misskey:13.8.1
           imagePullPolicy: IfNotPresent
           tty: true
