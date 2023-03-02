@@ -41,9 +41,9 @@ spec:
       nodeSelector:
           kubernetes.io/hostname: kurumi-03
       volumes:
-      - name: misskey-pv
-        persistentVolumeClaim:
-          claimName: misskey-pvc
-      - name: misskey-config
-        secret:
-          secretName: misskey-secret
+        - name: misskey-pv
+          persistentVolumeClaim:
+            claimName: misskey-pvc
+        - name: misskey-config
+          secret:
+            secretName: misskey-secret
