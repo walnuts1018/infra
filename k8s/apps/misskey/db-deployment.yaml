@@ -38,7 +38,7 @@ spec:
           name: misskey-db
         volumeMounts:
         - name: misskey-postgres-pv
-          mountPath: /var/lib/postgresql/data
+          mountPath: /var/lib/postgresql
 
       volumes:
       - name: misskey-postgres-pv
