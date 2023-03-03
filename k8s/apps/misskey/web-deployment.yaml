@@ -52,7 +52,7 @@ spec:
             fsGroupChangePolicy: "OnRootMismatch"
 
       nodeSelector:
-          kubernetes.io/hostname: kurumi-03
+          kubernetes.io/hostname: kurumi-02
       volumes:
         - name: misskey-pv
           persistentVolumeClaim:

@@ -28,5 +28,5 @@ spec:
         persistentVolumeClaim:
           claimName: misskey-redis-pvc
       nodeSelector:
-          kubernetes.io/hostname: kurumi-03      
+          kubernetes.io/hostname: kurumi-02  
 
