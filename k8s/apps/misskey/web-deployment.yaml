@@ -17,14 +17,6 @@ spec:
         app: misskey-web
     spec:
       initContainers:
-        - name: misskey-init-permission
-          image: ghcr.io/walnuts1018/misskey:13.8.1
-          imagePullPolicy: IfNotPresent
-          command: [chown -R misskey:misskey /misskey/files]
-          volumeMounts:
-            - name: misskey-pv
-              mountPath: /misskey/files
-
         - name: misskey-init
           image: ghcr.io/walnuts1018/misskey:13.8.1
           imagePullPolicy: IfNotPresent
@@ -38,7 +30,10 @@ spec:
             - name: misskey-config
               mountPath: /misskey/.config
               readOnly: true
-        
+          securityContext:
+            fsGroup: 991
+            fsGroupChangePolicy: "OnRootMismatch"
+            
       containers:
         - name: misskey-web
           image: ghcr.io/walnuts1018/misskey:13.8.1
@@ -52,6 +47,9 @@ spec:
             - name: misskey-config
               mountPath: /misskey/.config
               readOnly: true
+          securityContext:
+            fsGroup: 991
+            fsGroupChangePolicy: "OnRootMismatch"
 
       nodeSelector:
           kubernetes.io/hostname: kurumi-03
