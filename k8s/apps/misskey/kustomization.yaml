@@ -14,3 +14,4 @@ resources:
   - db-service.yaml
   - web-service.yaml
   - redis-service.yaml
+  - ingress.yaml
