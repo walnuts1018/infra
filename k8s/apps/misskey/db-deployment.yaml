@@ -44,5 +44,4 @@ spec:
       - name: misskey-postgres-pv
         persistentVolumeClaim:
           claimName: misskey-postgres-pvc
-      nodeSelector:
-          kubernetes.io/hostname: kurumi-02
+
