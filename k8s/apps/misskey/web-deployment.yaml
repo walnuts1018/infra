@@ -24,7 +24,10 @@ spec:
             - init
           volumeMounts:
             - name: misskey-pv
-              mountPath: /misskey
+              mountPath: /misskey/files
+            - name: misskey-config
+              mountPath: /misskey/.config
+              readOnly: true
       containers:
         - name: misskey-web
           image: ghcr.io/walnuts1018/misskey:13.8.1
