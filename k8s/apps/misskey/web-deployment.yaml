@@ -30,6 +30,9 @@ spec:
             - name: misskey-config
               mountPath: /misskey/.config
               readOnly: true
+          securityContext:
+            fsGroup: 991
+            fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: misskey-web
           image: ghcr.io/walnuts1018/misskey:13.8.1
@@ -43,6 +46,10 @@ spec:
             - name: misskey-config
               mountPath: /misskey/.config
               readOnly: true
+          securityContext:
+            fsGroup: 991
+            fsGroupChangePolicy: "OnRootMismatch"
+
       nodeSelector:
           kubernetes.io/hostname: kurumi-03
       volumes:
