@@ -13,4 +13,4 @@ resources:
 - ../../apps/grafana
 - ../../apps/metrics-server
 #- ../../apps/webcam-docker-test
-#- ../../apps/misskey
+- ../../apps/misskey
