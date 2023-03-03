@@ -13,3 +13,4 @@ resources:
   - vpa.yaml
   - db-service.yaml
   - web-service.yaml
+  - redis-service.yaml
