@@ -9,6 +9,8 @@ spec:
   selector:
     matchLabels:
       app: misskey-web
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
