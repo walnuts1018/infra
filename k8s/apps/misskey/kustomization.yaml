@@ -11,3 +11,5 @@ resources:
   - sealedsecret.yaml
   - service.yaml
   - vpa.yaml
+  - db-service.yaml
+  - web-service.yaml
