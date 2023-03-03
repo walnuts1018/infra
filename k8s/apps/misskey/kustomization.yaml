@@ -4,7 +4,7 @@ namespace: misskey
 resources:
   - db-deployment.yaml
   - redis-deployment.yaml
-  #- web-deployment.yaml
+  - web-deployment.yaml
   - db-pvc.yaml
   - redis-pvc.yaml
   - web-pvc.yaml
