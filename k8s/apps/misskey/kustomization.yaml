@@ -10,8 +10,10 @@ resources:
   - web-pvc.yaml
   - sealedsecret.yaml
   - service.yaml
-  - vpa.yaml
   - db-service.yaml
   - web-service.yaml
   - redis-service.yaml
+  - db-vpa.yaml
+  - redis-vpa.yaml
+  - web-vpa.yaml
   - ingress.yaml
