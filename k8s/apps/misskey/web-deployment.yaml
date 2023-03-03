@@ -16,6 +16,9 @@ spec:
       labels:
         app: misskey-web
     spec:
+      securityContext:
+        fsGroup: 991
+        fsGroupChangePolicy: "OnRootMismatch"
       initContainers:
         - name: misskey-init
           image: ghcr.io/walnuts1018/misskey:13.8.1
@@ -30,9 +33,6 @@ spec:
             - name: misskey-config
               mountPath: /misskey/.config
               readOnly: true
-          securityContext:
-            fsGroup: 991
-            fsGroupChangePolicy: "OnRootMismatch"
             
       containers:
         - name: misskey-web
@@ -47,9 +47,6 @@ spec:
             - name: misskey-config
               mountPath: /misskey/.config
               readOnly: true
-          securityContext:
-            fsGroup: 991
-            fsGroupChangePolicy: Always
 
       volumes:
         - name: misskey-pv
