@@ -1,8 +1,0 @@
-apiVersion: autoscaling.k8s.io/v1
-kind: VerticalPodAutoscaler
-metadata:
-  name: misskey-postgres-vpa
-spec:
-  targetRef:
-    kind: Deployment
-    name: misskey-postgres
