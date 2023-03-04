@@ -36,7 +36,7 @@ spec:
             
       containers:
         - name: misskey-web
-          image: ghcr.io/walnuts1018/misskey:13.8.1
+          image: ghcr.io/walnuts1018/misskey:13.9.1
           imagePullPolicy: IfNotPresent
           tty: true
           ports:
