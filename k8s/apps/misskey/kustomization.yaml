@@ -13,7 +13,5 @@ resources:
   - db-service.yaml
   - web-service.yaml
   - redis-service.yaml
-  - db-vpa.yaml
-  - redis-vpa.yaml
-  - web-vpa.yaml
+  - vpa.yaml
   - ingress.yaml

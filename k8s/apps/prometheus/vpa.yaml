@@ -1,8 +1,36 @@
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
-  name: release
+  name: release-server
 spec:
   targetRef:
     kind: Deployment
     name: prometheus-release-server
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: release-kube-state-metrics
+spec:
+  targetRef:
+    kind: Deployment
+    name: prometheus-release-kube-state-metrics
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: release-prometheus-pushgateway
+spec:
+  targetRef:
+    kind: Deployment
+    name: prometheus-release-prometheus-pushgateway
+  resourcePolicy:
+    containerPolicies:
+      - containerName: '*'
+        minAllowed:
+          cpu: 1m
+          memory: 10Mi
+        maxAllowed:
+          cpu: 25m
+          memory: 100Mi
+        controlledResources: ["cpu", "memory"]
