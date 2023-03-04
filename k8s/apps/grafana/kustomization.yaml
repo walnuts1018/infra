@@ -5,7 +5,7 @@ namespace: monitoring
 resources:
   - sealedsecret.yaml
   - ingress.yaml
-  - vpa.yaml
+  #- vpa.yaml
 components:
 - ../../components/helm
 patchesStrategicMerge:
