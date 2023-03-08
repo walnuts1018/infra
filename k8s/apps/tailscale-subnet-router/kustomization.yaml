@@ -3,11 +3,8 @@ kind: Kustomization
 namespace: network-exporter
 resources:
   - role.yaml
-  - deployment-node1.yaml
-  - deployment-node2.yaml
+  - deployment.yaml
   - rolebinding.yaml
-  - sealedsecret1.yaml
-  - sealedsecret2.yaml
+  - sealedsecret.yaml
   - sa.yaml
-  #- vpa1.yaml
-  #- vpa2.yaml
+  #- vpa.yaml

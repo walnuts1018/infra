@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tailscale-subnet-router1
+  name: tailscale-subnet-router
   labels:
-    app: tailscale1
+    app: tailscale
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tailscale1
+      app: tailscale
   template:
     metadata:
       labels:
-        app: tailscale1
+        app: tailscale
     spec:
       serviceAccountName: "tailscale"
       containers:
@@ -22,7 +22,7 @@ spec:
         env:
         # Store the state in a k8s secret
         - name: TS_KUBE_SECRET
-          value: "tailscale1"
+          value: "tailscale"
         - name: TS_USERSPACE
           value: "true"
         - name: TS_AUTH_KEY
@@ -32,9 +32,7 @@ spec:
               key: TS_AUTH_KEY
               optional: true
         - name: TS_ROUTES
-          value: "192.168.0.2/31,192.168.0.4/30,192.168.0.8/31,192.168.0.10/32,192.168.0.16/30,192.168.0.21/32,192.168.0.22/31,192.168.0.24/29,192.168.0.32/27,192.168.0.64/26,192.168.0.128/25"
+          value: "192.168.0.2/31,192.168.0.4/30,192.168.0.8/29,192.168.0.16/28,192.168.0.32/27,192.168.0.64/26,192.168.0.128/25"
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
-      nodeSelector:
-          kubernetes.io/hostname: kurumi-01
