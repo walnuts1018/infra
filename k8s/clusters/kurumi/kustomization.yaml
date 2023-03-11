@@ -14,3 +14,4 @@ resources:
 - ../../apps/metrics-server
 #- ../../apps/webcam-docker-test
 - ../../apps/misskey
+- ../../apps/kube-state-metrics
