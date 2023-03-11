@@ -18,7 +18,7 @@ spec:
   values:
     server:
       persistentVolume:
-        size: 20Gi
+        size: 40Gi
         existingClaim: "prometheus-pvc"
 
       ingress:
