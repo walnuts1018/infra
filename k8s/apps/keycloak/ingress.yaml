@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: "keycloak.walnuts.ml"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana-release
+            port:
+              number: 80
