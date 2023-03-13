@@ -34,7 +34,9 @@ spec:
       - name: JAVA_OPTS_APPEND
         value: >-
           -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-          
+    
+    extraEnvFrom: "keycloak-secret"
+
     ingress:
       enabled: true
       ingressClassName: "nginx"
