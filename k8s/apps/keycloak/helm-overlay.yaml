@@ -26,7 +26,15 @@ spec:
       - "--http-port=80"
       - "--hostname-strict=false"
       - "--hostname-strict-https=false"
-
+    extraEnv: |
+      - name: KEYCLOAK_ADMIN
+        value: admin
+      - name: KEYCLOAK_ADMIN_PASSWORD
+        value: admin
+      - name: JAVA_OPTS_APPEND
+        value: >-
+          -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+          
     ingress:
       enabled: true
       ingressClassName: "nginx"
@@ -44,30 +52,6 @@ spec:
         - hosts:
             - keycloak.walnuts.ml
           secretName: ""
-
-      # ingress for console only (/auth/admin)
-      console:
-        # If `true`, an Ingress is created for console path only
-        enabled: false
-        # The name of Ingress Class associated with the console ingress only
-        ingressClassName: ""
-        # Ingress annotations for console ingress only
-        # Useful to set nginx.ingress.kubernetes.io/whitelist-source-range particularly
-        annotations: {}
-        rules:
-          -
-            # Ingress host
-            host: '{{ .Release.Name }}.keycloak.example.com'
-            # Paths for the host
-            paths:
-              - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/admin'
-                pathType: Prefix
-
-        # Console TLS configuration
-        tls: []
-    #      - hosts:
-    #          - console.keycloak.example.com
-    #        secretName: ""
 
     database:
       # don't create secret for db password. Instead use existing k8s secret
