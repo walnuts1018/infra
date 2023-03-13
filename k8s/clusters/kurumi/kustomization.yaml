@@ -15,3 +15,4 @@ resources:
 #- ../../apps/webcam-docker-test
 - ../../apps/misskey
 - ../../apps/mysql
+- ../../apps/keycloak
