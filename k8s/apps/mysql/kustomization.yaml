@@ -3,6 +3,6 @@ kind: Kustomization
 namespace: default
 resources:
   - sealedsecret.yaml
-  - ingress.yaml
   - deployment.yaml
   - service.yaml
+  - pvc.yaml
