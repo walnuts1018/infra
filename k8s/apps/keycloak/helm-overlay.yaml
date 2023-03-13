@@ -16,4 +16,60 @@ spec:
       chart: keycloakx
       version: 2.1.1
   values:
+    image:
+      tag: "20.0.3"
 
+    ingress:
+      enabled: true
+      ingressClassName: "nginx"
+      annotations: {}
+        ## Resolve HTTP 502 error using ingress-nginx:
+        ## See https://www.ibm.com/support/pages/502-error-ingress-keycloak-response
+        # nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
+
+      rules:
+        -
+          # Ingress host
+          host: 'keycloak.walnuts.ml'
+      # TLS configuration
+      tls:
+        - hosts:
+            - keycloak.walnuts.ml
+          secretName: ""
+
+      # ingress for console only (/auth/admin)
+      console:
+        # If `true`, an Ingress is created for console path only
+        enabled: false
+        # The name of Ingress Class associated with the console ingress only
+        ingressClassName: ""
+        # Ingress annotations for console ingress only
+        # Useful to set nginx.ingress.kubernetes.io/whitelist-source-range particularly
+        annotations: {}
+        rules:
+          -
+            # Ingress host
+            host: '{{ .Release.Name }}.keycloak.example.com'
+            # Paths for the host
+            paths:
+              - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/admin'
+                pathType: Prefix
+
+        # Console TLS configuration
+        tls: []
+    #      - hosts:
+    #          - console.keycloak.example.com
+    #        secretName: ""
+
+    database:
+      # don't create secret for db password. Instead use existing k8s secret
+      # existingSecret: "my-existent-dbpass-secret"
+      # existingSecretKey: "password"
+      existingSecret: "keycloak-secret"
+      existingSecretKey: "db-password"
+      # E.g. dev-file, dev-mem, mariadb, mssql, mysql, oracle or postgres
+      vendor: mysql
+      hostname: mysql.default.svc.cluster.local
+      port: 3306
+      database: keycloak
+      username: keycloak
