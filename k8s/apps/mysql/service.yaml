@@ -5,8 +5,6 @@ metadata:
 spec:
   ports:
   - port: 3306
-  # deploymentが管理するpodを定義
-  # labelsにapp=mysqlと設定されたpodを管理する
   selector:
     app: mysql
   type: LoadBalancer

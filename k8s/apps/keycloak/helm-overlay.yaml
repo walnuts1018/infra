@@ -13,7 +13,7 @@ metadata:
 spec:
   chart:
     spec:
-      chart: keycloak
-      version: 6.48.0
+      chart: keycloakx
+      version: 2.1.1
   values:
 
