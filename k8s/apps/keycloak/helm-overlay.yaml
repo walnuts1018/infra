@@ -21,21 +21,29 @@ spec:
 
     command:
       - "/opt/keycloak/bin/kc.sh"
+      - "--verbose"
       - "start"
       - "--http-enabled=true"
       - "--http-port=80"
       - "--hostname-strict=false"
       - "--hostname-strict-https=false"
+      - "--spi-events-listener-jboss-logging-success-level=info"
+      - "--spi-events-listener-jboss-logging-error-level=warn"
+
     extraEnv: |
       - name: KEYCLOAK_ADMIN
-        value: admin
+        valueFrom:
+          secretKeyRef:
+            name: keycloak-secret
+            key: admin-username
       - name: KEYCLOAK_ADMIN_PASSWORD
-        value: admin
+        valueFrom:
+          secretKeyRef:
+            name: keycloak-secret
+            key: admin-password
       - name: JAVA_OPTS_APPEND
         value: >-
           -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
-    
-    extraEnvFrom: "keycloak-secret"
 
     ingress:
       enabled: true
