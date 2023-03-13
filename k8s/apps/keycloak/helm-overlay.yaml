@@ -43,6 +43,9 @@ spec:
             key: admin-password
       - name: JAVA_OPTS_APPEND
         value: >-
+          -XX:+UseContainerSupport
+          -XX:MaxRAMPercentage=50.0
+          -Djava.awt.headless=true
           -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
 
     ingress:
@@ -62,6 +65,9 @@ spec:
         - hosts:
             - keycloak.walnuts.ml
           secretName: ""
+          
+    dbchecker:
+      enabled: true
 
     database:
       # don't create secret for db password. Instead use existing k8s secret
