@@ -13,6 +13,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: grafana-release
+            name: keycloak
             port:
-              number: 80
+              number: 8080
