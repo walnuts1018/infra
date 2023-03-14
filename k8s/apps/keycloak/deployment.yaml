@@ -17,7 +17,7 @@ spec:
       containers:
       - name: keycloak
         image: quay.io/keycloak/keycloak:21.0.1
-        args: ["start", "--verbose", "--hostname-strict=false", "--hostname-strict-https=false"]
+        args: ["--verbose", "start", "--hostname-strict=false", "--hostname-strict-https=false"]
         env:
         - name: KEYCLOAK_ADMIN
           valueFrom:
