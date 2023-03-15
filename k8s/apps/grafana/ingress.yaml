@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-  - host: "grafana.walnuts.ml"
+  - host: "grafana.walnuts.dev"
     http:
       paths:
       - path: /

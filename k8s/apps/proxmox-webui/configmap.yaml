@@ -35,7 +35,7 @@ data:
       server_name "";
       proxy_redirect off;
       location / {
-        proxy_pass    https://alice.walnuts.ml:8006/;
+        proxy_pass    https://alice.walnuts.dev:8006/;
 
         proxy_set_header    Host $http_host;
         proxy_set_header    X-Real-IP $remote_addr;

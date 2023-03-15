@@ -34,7 +34,7 @@ spec:
     ingress:
       enabled: false
       ingressClassName: nginx
-      host: "longhorn.walnuts.ml"
+      host: "longhorn.walnuts.dev"
       path: /
       annotations:
         nginx.ingress.kubernetes.io/rewrite-target: /
