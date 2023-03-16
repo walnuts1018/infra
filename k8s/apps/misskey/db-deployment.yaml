@@ -32,7 +32,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: misskey-secret
-              key: postgres-db             
+              key: postgres-db
         ports:
         - containerPort: 5432
           name: misskey-db
