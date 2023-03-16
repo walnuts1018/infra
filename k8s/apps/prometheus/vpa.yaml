@@ -6,6 +6,10 @@ spec:
   targetRef:
     kind: Deployment
     name: prometheus-release-server
+  resourcePolicy:
+    containerPolicies:
+      - containerName: '*'
+        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -15,6 +19,10 @@ spec:
   targetRef:
     kind: Deployment
     name: prometheus-release-kube-state-metrics
+  resourcePolicy:
+    containerPolicies:
+      - containerName: '*'
+        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -27,10 +35,4 @@ spec:
   resourcePolicy:
     containerPolicies:
       - containerName: '*'
-        minAllowed:
-          cpu: 1m
-          memory: 10Mi
-        maxAllowed:
-          cpu: 25m
-          memory: 100Mi
-        controlledResources: ["cpu", "memory"]
+        controlledResources: ["memory"]
