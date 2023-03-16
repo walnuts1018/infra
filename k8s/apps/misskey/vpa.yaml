@@ -6,6 +6,8 @@ spec:
   targetRef:
     kind: Deployment
     name: misskey-web
+  updatePolicy:
+    updateMode: "Off"
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -15,6 +17,8 @@ spec:
   targetRef:
     kind: Deployment
     name: misskey-postgres
+  updatePolicy:
+    updateMode: "Off"
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
