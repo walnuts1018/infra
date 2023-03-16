@@ -8,4 +8,5 @@ spec:
     name: grafana-release
   resourcePolicy:
     containerPolicies:
-      - controlledResources: ["memory"]
+      - containerName: '*'
+        controlledResources: ["memory"]
