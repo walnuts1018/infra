@@ -6,7 +6,3 @@ spec:
   targetRef:
     kind: Deployment
     name: tailscale-subnet-router
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]

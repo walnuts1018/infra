@@ -6,7 +6,3 @@ spec:
   targetRef:
     kind: Deployment
     name: keycloak
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]

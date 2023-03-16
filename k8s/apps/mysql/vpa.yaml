@@ -6,7 +6,3 @@ spec:
   targetRef:
     kind: Deployment
     name: mysql
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]

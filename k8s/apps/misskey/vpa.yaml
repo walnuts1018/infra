@@ -6,10 +6,6 @@ spec:
   targetRef:
     kind: Deployment
     name: misskey-web
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -19,10 +15,6 @@ spec:
   targetRef:
     kind: Deployment
     name: misskey-postgres
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -32,7 +24,3 @@ spec:
   targetRef:
     kind: Deployment
     name: misskey-redis
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]    

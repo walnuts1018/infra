@@ -6,10 +6,6 @@ spec:
   targetRef:
     kind: Deployment
     name: csi-attacher
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -19,10 +15,6 @@ spec:
   targetRef:
     kind: Deployment
     name: csi-provisioner
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -32,10 +24,6 @@ spec:
   targetRef:
     kind: Deployment
     name: csi-resizer
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -45,10 +33,6 @@ spec:
   targetRef:
     kind: Deployment
     name: csi-snapshotter
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -58,10 +42,6 @@ spec:
   targetRef:
     kind: Deployment
     name: longhorn-admission-webhook
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -71,10 +51,6 @@ spec:
   targetRef:
     kind: Deployment
     name: longhorn-conversion-webhook
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -84,10 +60,6 @@ spec:
   targetRef:
     kind: Deployment
     name: longhorn-driver-deployer
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -97,10 +69,6 @@ spec:
   targetRef:
     kind: Deployment
     name: longhorn-recovery-backend
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -110,7 +78,3 @@ spec:
   targetRef:
     kind: Deployment
     name: longhorn-ui
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        controlledResources: ["memory"]
