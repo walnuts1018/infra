@@ -18,10 +18,10 @@ spec:
         imagePullPolicy: IfNotPresent
         name: kmc-proxy
         command: ["/bin/sh","-c"]
-        args: ["ls -al && ssh kmc -g -oStrictHostKeyChecking=no"]
+        args: ["chown 600 /root/.ssh/* && ssh kmc -g -oStrictHostKeyChecking=no"]
         volumeMounts:
         - mountPath: /root/.ssh
-          readOnly: true
+          readOnly: false
           name: kmc-proxy-volume
 
       volumes:
