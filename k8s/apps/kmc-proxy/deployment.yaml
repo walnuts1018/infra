@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kmc-proxy
+spec:
+  selector:
+    matchLabels:
+      app: kmc-proxy
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: kmc-proxy
+    spec:
+      containers:
+      - image: ghcr.io/walnuts1018/ssh-client-image:latest
+        imagePullPolicy: IfNotPresent
+        name: kmc-proxy
+        command:
+          - ssh
+          - kmc
+        volumeMounts:
+        - mountPath: /root/.ssh/
+          readOnly: true
+          name: kmc-proxy-conf
+        - name: kmc-proxy
+          mountPath: "/root/.ssh/"
+          readOnly: true
+
+      volumes:
+      - name: kmc-proxy-conf
+        configMap: 
+          name: kmc-proxy-conf
+          items:
+            - key: config
+              path: config
+      - name: kmc-proxy
+        secret:
+          secretName: kmc-proxy
