@@ -8,11 +8,4 @@ spec:
     name: ingress-nginx-release-controller
   resourcePolicy:
     containerPolicies:
-      - containerName: '*'
-        minAllowed:
-          cpu: 1m
-          memory: 10Mi
-        maxAllowed:
-          cpu: 50m
-          memory: 300Mi
-        controlledResources: ["cpu", "memory"]
+      controlledResources: ["memory"]
