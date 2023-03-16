@@ -1,11 +1,11 @@
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
-  name: vpa
+  name: keycloak-vpa
 spec:
   targetRef:
     kind: Deployment
-    name: grafana-release
+    name: keycloak
   resourcePolicy:
     containerPolicies:
       - containerName: '*'
