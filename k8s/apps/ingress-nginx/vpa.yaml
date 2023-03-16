@@ -8,4 +8,4 @@ spec:
     name: ingress-nginx-release-controller
   resourcePolicy:
     containerPolicies:
-      controlledResources: ["memory"]
+      - controlledResources: ["memory"]
