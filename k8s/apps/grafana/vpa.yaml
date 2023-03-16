@@ -6,3 +6,6 @@ spec:
   targetRef:
     kind: Deployment
     name: grafana-release
+  resourcePolicy:
+    containerPolicies:
+      controlledResources: ["memory"]
