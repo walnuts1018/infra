@@ -27,4 +27,3 @@ spec:
       - name: misskey-redis-pv
         persistentVolumeClaim:
           claimName: misskey-redis-pvc
-
