@@ -17,10 +17,7 @@ spec:
       - image: ghcr.io/walnuts1018/ssh-client-image:latest
         imagePullPolicy: IfNotPresent
         name: kmc-proxy
-        command: 
-          - ssh
-          - kmc
-          - "-g"
+        command: ["chown","600","/root/.ssh/*","&&","ssh","kmc","-g","-oStrictHostKeyChecking=no"]
         volumeMounts:
         - mountPath: /root/.ssh
           readOnly: true
