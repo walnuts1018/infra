@@ -16,3 +16,4 @@ resources:
 - ../../apps/misskey
 - ../../apps/mysql
 - ../../apps/keycloak
+- ../../apps/descheduler
