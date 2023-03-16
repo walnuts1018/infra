@@ -35,4 +35,4 @@ spec:
                   - key: config
                     path: config
             - secret:
-                secretName: kmc-proxy
+                name: kmc-proxy-secret
