@@ -21,11 +21,11 @@ spec:
           - ssh
           - kmc
         volumeMounts:
-        - mountPath: /root/.ssh/
+        - mountPath: /root/.ssh
           readOnly: true
           name: kmc-proxy-conf
         - name: kmc-proxy
-          mountPath: "/root/.ssh/"
+          mountPath: /root/.ssh
           readOnly: true
 
       volumes:
