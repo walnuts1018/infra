@@ -17,4 +17,4 @@ resources:
 - ../../apps/mysql
 - ../../apps/keycloak
 - ../../apps/descheduler
-#- ../../apps/kmc-proxy
+- ../../apps/kmc-proxy
