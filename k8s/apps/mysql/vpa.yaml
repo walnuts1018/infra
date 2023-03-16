@@ -1,11 +1,11 @@
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
 metadata:
-  name: tailscale-vpa
+  name: mysql-vpa
 spec:
   targetRef:
     kind: Deployment
-    name: tailscale-subnet-router
+    name: mysql
   resourcePolicy:
     containerPolicies:
       - containerName: '*'
