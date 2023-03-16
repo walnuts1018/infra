@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-nginx
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: longhorn-system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: network-exporter
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: metallb-system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: misskey
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
