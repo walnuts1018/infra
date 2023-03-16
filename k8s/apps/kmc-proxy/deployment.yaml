@@ -23,18 +23,16 @@ spec:
         volumeMounts:
         - mountPath: /root/.ssh
           readOnly: true
-          name: kmc-proxy-conf
-        - name: kmc-proxy
-          mountPath: /root/.ssh
-          readOnly: true
+          name: kmc-proxy-volume
 
       volumes:
-      - name: kmc-proxy-conf
-        configMap: 
-          name: kmc-proxy-conf
-          items:
-            - key: config
-              path: config
-      - name: kmc-proxy
-        secret:
-          secretName: kmc-proxy
+      - name: kmc-proxy-volume
+        projected:
+          sources:
+            - configMap: 
+                name: kmc-proxy-conf
+                items:
+                  - key: config
+                    path: config
+            - secret:
+                secretName: kmc-proxy
