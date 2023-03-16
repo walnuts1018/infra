@@ -24,3 +24,5 @@ spec:
   targetRef:
     kind: Deployment
     name: misskey-redis
+  updatePolicy:
+    updateMode: "Off"

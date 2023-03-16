@@ -6,3 +6,5 @@ spec:
   targetRef:
     kind: Deployment
     name: grafana-release
+  updatePolicy:
+    updateMode: "Off"

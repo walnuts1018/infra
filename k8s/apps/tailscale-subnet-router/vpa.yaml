@@ -6,3 +6,5 @@ spec:
   targetRef:
     kind: Deployment
     name: tailscale-subnet-router
+  updatePolicy:
+    updateMode: "Off"

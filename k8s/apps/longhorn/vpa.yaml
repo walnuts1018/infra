@@ -6,6 +6,8 @@ spec:
   targetRef:
     kind: Deployment
     name: csi-attacher
+  updatePolicy:
+    updateMode: "Off"
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -15,6 +17,8 @@ spec:
   targetRef:
     kind: Deployment
     name: csi-provisioner
+  updatePolicy:
+    updateMode: "Off"
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -24,6 +28,8 @@ spec:
   targetRef:
     kind: Deployment
     name: csi-resizer
+  updatePolicy:
+    updateMode: "Off"
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -33,6 +39,8 @@ spec:
   targetRef:
     kind: Deployment
     name: csi-snapshotter
+  updatePolicy:
+    updateMode: "Off"
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -42,6 +50,8 @@ spec:
   targetRef:
     kind: Deployment
     name: longhorn-admission-webhook
+  updatePolicy:
+    updateMode: "Off"
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -51,6 +61,8 @@ spec:
   targetRef:
     kind: Deployment
     name: longhorn-conversion-webhook
+  updatePolicy:
+    updateMode: "Off"
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -60,6 +72,8 @@ spec:
   targetRef:
     kind: Deployment
     name: longhorn-driver-deployer
+  updatePolicy:
+    updateMode: "Off"
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -69,6 +83,8 @@ spec:
   targetRef:
     kind: Deployment
     name: longhorn-recovery-backend
+  updatePolicy:
+    updateMode: "Off"
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler
@@ -78,3 +94,5 @@ spec:
   targetRef:
     kind: Deployment
     name: longhorn-ui
+  updatePolicy:
+    updateMode: "Off"

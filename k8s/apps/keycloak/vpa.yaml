@@ -6,3 +6,5 @@ spec:
   targetRef:
     kind: Deployment
     name: keycloak
+  updatePolicy:
+    updateMode: "Off"
