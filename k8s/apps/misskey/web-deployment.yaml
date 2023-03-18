@@ -47,6 +47,13 @@ spec:
             - name: misskey-config
               mountPath: /misskey/.config
               readOnly: true
+          resources:
+            requests:
+              memory: "381Mi"
+              cpu: "600m"
+            limits:
+              memory: "1228Mi"
+              cpu: "1"
 
       volumes:
         - name: misskey-pv
