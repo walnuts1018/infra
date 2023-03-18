@@ -36,3 +36,10 @@ spec:
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
+        resources:
+          requests:
+            memory: "20Mi"
+            cpu: "5m"
+          limits:
+            memory: "80Mi"
+            cpu: "50m"          

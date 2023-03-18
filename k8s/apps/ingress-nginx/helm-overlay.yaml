@@ -15,6 +15,9 @@ spec:
     spec:
       chart: ingress-nginx
       version: 4.5.2
+      sourceRef:
+        kind: HelmRepository
+        name: ingress-nginx-repo      
   values:
     ## nginx configuration
     ## Ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/index.md
