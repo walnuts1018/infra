@@ -29,7 +29,7 @@ spec:
             cpu: "10m"            
           limits:
             memory: "12Mi"
-            cpu: "1"
+            cpu: "700m"
       volumes:
       - name: misskey-redis-pv
         persistentVolumeClaim:
