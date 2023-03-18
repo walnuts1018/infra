@@ -50,10 +50,8 @@ spec:
           resources:
             requests:
               memory: "381Mi"
-              cpu: "100m"
             limits:
               memory: "1228Mi"
-              cpu: "1"
 
       volumes:
         - name: misskey-pv
