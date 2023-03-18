@@ -38,11 +38,9 @@ spec:
                 - "rm -fr /var/lib/mysql/lost+found"
         resources:
           requests:
-            memory: "18Mi"
-            cpu: "8m"            
+            memory: "18Mi"       
           limits:
             memory: "50Mi"
-            cpu: "800m"
       volumes: #
       - name: mysql-ps
         persistentVolumeClaim:
