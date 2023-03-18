@@ -25,5 +25,12 @@ spec:
             privileged: true
           ports:
             - containerPort: 80
+          resources:
+            requests:
+              memory: "1Mi"
+              cpu: "1m"
+            limits:
+              memory: "10Mi"
+              cpu: "2m"
       nodeSelector:
           kubernetes.io/hostname: kurumi-02

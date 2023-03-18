@@ -15,6 +15,9 @@ spec:
     spec:
       chart: descheduler
       version: 0.25.0
+      sourceRef:
+        kind: HelmRepository
+        name: descheduler-repo      
   values:
     deschedulerPolicy:
       strategies:

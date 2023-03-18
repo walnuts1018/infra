@@ -49,3 +49,10 @@ spec:
           httpGet:
             path: /realms/master
             port: 8080
+        resources:
+          requests:
+            memory: "143Mi"
+            cpu: "3m"
+          limits:
+            memory: "260Mi"
+            cpu: "100m"             

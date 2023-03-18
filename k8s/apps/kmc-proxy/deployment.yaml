@@ -18,11 +18,18 @@ spec:
         imagePullPolicy: IfNotPresent
         name: kmc-proxy
         command: ["/bin/sh","-c"]
-        args: ["cp /root/ssh-temp/* /root/.ssh && chmod 600 /root/.ssh/* && ssh kmc -Nfg -oStrictHostKeyChecking=no && sleep infinity"]
+        args: ["cp /root/ssh-temp/* /root/.ssh && chmod 600 /root/.ssh/* && ssh kmc -Nfg -oStrictHostKeyChecking=no && sleep 12h"]
         volumeMounts:
         - mountPath: /root/ssh-temp
           readOnly: false
           name: kmc-proxy-volume
+        resources:
+          requests:
+            memory: "800Ki"
+            cpu: "1m"
+          limits:
+            memory: "5Mi"
+            cpu: "5m"
 
       volumes:
       - name: kmc-proxy-volume
