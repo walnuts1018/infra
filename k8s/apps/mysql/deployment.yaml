@@ -39,10 +39,9 @@ spec:
         resources:
           requests:
             memory: "18Mi"
-            cpu: "8m"
           limits:
             memory: "50Mi"
-            cpu: "200m"
+            cpu: "1"
       volumes: #
       - name: mysql-ps
         persistentVolumeClaim:
