@@ -44,10 +44,10 @@ spec:
           params:
             nodeResourceUtilizationThresholds:
               thresholds:
-                cpu: 30
-                memory: 30
+                cpu: 20
+                memory: 50
                 pods: 20
               targetThresholds:
-                cpu: 70
-                memory: 70
+                cpu: 50
+                memory: 80
                 pods: 30
