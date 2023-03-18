@@ -40,7 +40,7 @@ spec:
           requests:
             memory: "18Mi"       
           limits:
-            memory: "50Mi"
+            memory: "300Mi"
       volumes: #
       - name: mysql-ps
         persistentVolumeClaim:
