@@ -12,7 +12,7 @@ resources:
 - ../../apps/prometheus
 - ../../apps/grafana
 - ../../apps/metrics-server
-#- ../../apps/webcam-docker-test
+- ../../apps/jellyfin
 - ../../apps/misskey
 - ../../apps/mysql
 - ../../apps/keycloak
