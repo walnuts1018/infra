@@ -54,9 +54,9 @@ spec:
         client_id: grafana
         client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
         scopes: openid profile offline_access groups email
-        auth_url: https://auth.walnuts.dev/realms/Master/protocol/openid-connect/auth
-        token_url: https://auth.walnuts.dev/realms/Master/protocol/openid-connect/token
-        api_url: https://auth.walnuts.dev/realms/Master/protocol/openid-connect/userinfo
+        auth_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/auth
+        token_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/token
+        api_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/userinfo
         role_attribute_strict: true
         role_attribute_path: contains(groups[*], 'Admin') && 'Admin' || 'Viewer' # only root can modify Grafana. https://kmc-jp.slack.com/archives/C04EJU162/p1659630471721809
         use_pkce: true      
