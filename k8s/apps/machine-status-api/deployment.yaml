@@ -17,20 +17,20 @@ spec:
       imagePullSecrets:
         - name: regcred
       containers:
-        - name: machine-status-api
-          image: ghcr.io/walnuts1018/machine-status-api:latest
-          imagePullPolicy: Always
-          securityContext:
-            runAsGroup: 997
-            privileged: true
-          ports:
-            - containerPort: 80
-          resources:
-            requests:
-              memory: "1Mi"
-              cpu: "1m"
-            limits:
-              memory: "10Mi"
-              cpu: "2m"
+      - name: machine-status-api
+        image: ghcr.io/walnuts1018/machine-status-api:latest
+        imagePullPolicy: Always
+        securityContext:
+          runAsGroup: 997
+          privileged: true
+        ports:
+          - containerPort: 80
+        resources:
+          requests:
+            memory: "1Mi"
+            cpu: "1m"
+          limits:
+            memory: "10Mi"
+            cpu: "20m"
       nodeSelector:
           kubernetes.io/hostname: kurumi-02
