@@ -29,6 +29,6 @@ spec:
           requests:
             memory: "1Mi"
           limits:
-            memory: "10Mi"
+            memory: "20Mi"
       nodeSelector:
           kubernetes.io/hostname: kurumi-02
