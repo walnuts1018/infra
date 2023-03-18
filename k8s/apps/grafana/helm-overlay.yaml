@@ -34,3 +34,29 @@ spec:
       existingSecret: "grafana-secret"
       userKey: admin-username
       passwordKey: admin-password
+
+    extraSecretMounts:
+    - name: auth-generic-oauth-secret
+      secretName: grafana-secret
+      mountPath: /etc/secrets/auth_generic_oauth
+      readOnly: true
+
+    grafana.ini:
+      server:
+        domain: grafana.walnuts.dev
+        root_url: https://grafana.walnuts.dev/
+      auth:
+        disable_login_form: true
+      auth.basic:
+        enabled: false
+      auth.generic_oauth:
+        enabled: true
+        client_id: grafana-oauth
+        client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
+        scopes: openid profile offline_access groups email
+        auth_url: https://auth.walnuts.dev/auth
+        token_url: https://auth.walnuts.dev/token
+        api_url: https://auth.walnuts.dev/userinfo
+        role_attribute_strict: true
+        role_attribute_path: contains(groups[*], 'Admin') && 'Admin' || 'Viewer' # only root can modify Grafana. https://kmc-jp.slack.com/archives/C04EJU162/p1659630471721809
+        use_pkce: true      
