@@ -50,4 +50,4 @@ spec:
               targetThresholds:
                 cpu: 50
                 memory: 50
-                pods: 50
+                pods: 30
