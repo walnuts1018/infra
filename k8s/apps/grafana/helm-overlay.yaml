@@ -61,5 +61,5 @@ spec:
         token_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/token
         api_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/userinfo
         role_attribute_strict: true
-        role_attribute_path: contains(roles[*], 'admin') && 'Admin' || 'Viewer' # only root can modify Grafana. https://kmc-jp.slack.com/archives/C04EJU162/p1659630471721809
+        role_attribute_path: contains(group[*], 'admin') && 'Admin' || 'Viewer' # only root can modify Grafana. https://kmc-jp.slack.com/archives/C04EJU162/p1659630471721809
         use_pkce: true
