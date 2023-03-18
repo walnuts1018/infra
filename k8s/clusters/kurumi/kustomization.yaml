@@ -12,7 +12,6 @@ resources:
 - ../../apps/prometheus
 - ../../apps/grafana
 - ../../apps/metrics-server
-- ../../apps/jellyfin
 - ../../apps/misskey
 - ../../apps/mysql
 - ../../apps/keycloak
