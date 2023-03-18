@@ -44,7 +44,7 @@ spec:
             memory: "71Mi"
             cpu: "80m"
           limits:
-            memory: "150Mi"
+            memory: "250Mi"
             cpu: "300m" 
       volumes:
       - name: misskey-postgres-pv
