@@ -27,7 +27,7 @@ spec:
           requests:
             memory: "800Ki"         
           limits:
-            memory: "5Mi"
+            memory: "20Mi"
 
       volumes:
       - name: kmc-proxy-volume
