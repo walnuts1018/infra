@@ -32,7 +32,7 @@ spec:
 
     extraArgs:
       provider: oidc
-      redirect-url: https://192.168.0.130/
+      redirect-url: https://longhorn.walnuts.dev/
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
       #set-authorization-header: true
       #ssl-insecure-skip-verify: true
