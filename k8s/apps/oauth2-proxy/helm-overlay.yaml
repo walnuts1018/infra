@@ -23,11 +23,11 @@ spec:
       existingSecret: longhorn-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local/" ]
+        upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local/#/dashboard" ]
 
     extraArgs:
       provider: oidc
-      redirect-url: https://longhorn.walnuts.dev/sss
+      redirect-url: https://longhorn.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
       #set-authorization-header: true
       #ssl-insecure-skip-verify: true
