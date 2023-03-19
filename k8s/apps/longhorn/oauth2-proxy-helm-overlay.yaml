@@ -15,6 +15,9 @@ spec:
     spec:
       chart: oauth2-proxy
       version: 6.10.1
+      sourceRef:
+        kind: HelmRepository
+        name: longhorn-oauth2-proxy-repo     
   values:
     config:
       #clientID: "XXXXXXX"
