@@ -56,7 +56,7 @@ spec:
         scopes: openid email profile offline_access roles
         email_attribute_path: email
         login_attribute_path: preferred_username
-        name_attribute_path: realm_access.roles
+        name_attribute_path: preferred_username
         auth_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/auth
         token_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/token
         api_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/userinfo
