@@ -41,11 +41,9 @@ spec:
           mountPath: /var/lib/postgresql
         resources:
           requests:
-            memory: "71Mi"
-            cpu: "80m"            
+            memory: "71Mi"           
           limits:
             memory: "250Mi"
-            cpu: "700m"
       volumes:
       - name: misskey-postgres-pv
         persistentVolumeClaim:
