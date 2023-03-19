@@ -23,9 +23,7 @@ spec:
       existingSecret: longhorn-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://192.168.0.130/#/dashboard" ]
-
-    containerPort: 4180
+        upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local/" ]
 
     extraArgs:
       provider: oidc
@@ -42,7 +40,7 @@ spec:
       pathType: ImplementationSpecific
       # Used to create an Ingress record.
       hosts:
-       - "longhorn.walnuts.dev"
+       - ""
 
     # Configure the session storage type, between cookie and redis
     sessionStorage:
