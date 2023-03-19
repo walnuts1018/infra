@@ -5,6 +5,6 @@ namespace: longhorn-system
 resources:
   - ./sealedsecret.yaml
 components:
-- ../../components/helm
+- ../../../components/helm
 patchesStrategicMerge:
 - helm-overlay.yaml
