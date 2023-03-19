@@ -17,10 +17,10 @@ spec:
       version: 6.10.1
   values:
     config:
-      clientID: "XXXXXXX"
-      clientSecret: "XXXXXXXX"
-      existingSecret: longhorn-oauth2-proxysecret
-      cookieSecret: "aCtNTWsxb2x6QStMVjBBYTc4VjR1OWpLL2hRYjFEaFg="
+      #clientID: "XXXXXXX"
+      #clientSecret: "XXXXXXXX"
+      existingSecret: longhorn-oauth2-proxy-secret
+      #cookieSecret: "aCtNTWsxb2x6QStMVjBBYTc4VjR1OWpLL2hRYjFEaFg="
       configFile: |-
         email_domains = [ "*" ]
         upstreams = [ "file:///dev/null" ]
