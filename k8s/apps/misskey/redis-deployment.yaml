@@ -25,11 +25,9 @@ spec:
           mountPath: /data
         resources:
           requests:
-            memory: "5Mi"
-            cpu: "10m"            
+            memory: "5Mi"          
           limits:
             memory: "12Mi"
-            cpu: "700m"
       volumes:
       - name: misskey-redis-pv
         persistentVolumeClaim:
