@@ -23,7 +23,7 @@ spec:
       existingSecret: longhorn-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "192.168.0.130" ]
+        upstreams = [ "http://192.168.0.130" ]
 
     containerPort: 4180
 
