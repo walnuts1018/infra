@@ -55,12 +55,11 @@ spec:
         client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
         scopes: openid email profile offline_access roles
         email_attribute_path: email
-        login_attribute_path: username
-        name_attribute_path: full_name
+        login_attribute_path: profile.username
+        name_attribute_path: profile.username
         auth_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/auth
         token_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/token
         api_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/userinfo
         #role_attribute_strict: true
         role_attribute_path: contains(roles[*], 'admin') && 'Admin' || 'Viewer'
         use_pkce: true
-        allow_assign_grafana_admin: true
