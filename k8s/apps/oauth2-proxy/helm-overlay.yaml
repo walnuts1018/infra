@@ -29,9 +29,9 @@ spec:
       provider: keycloak-oidc
       redirect-url: https://longhorn.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
-      set-authorization-header: true
-      ssl-insecure-skip-verify: true
-      allowed-role: admin
+      #set-authorization-header: true
+      #ssl-insecure-skip-verify: true
+      #allowed-role: admin
     ingress:
       enabled: true
       className: nginx
