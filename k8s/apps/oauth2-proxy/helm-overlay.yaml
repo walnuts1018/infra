@@ -20,19 +20,16 @@ spec:
         name: longhorn-oauth2-proxy-repo     
   values:
     config:
-      #clientID: "XXXXXXX"
-      #clientSecret: "XXXXXXXX"
       existingSecret: longhorn-oauth2-proxy-secret
-      #cookieSecret: "aCtNTWsxb2x6QStMVjBBYTc4VjR1OWpLL2hRYjFEaFg="
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "file:///dev/null" ]
+        upstreams = [ "192.168.0.130" ]
 
     containerPort: 4180
 
     extraArgs:
       provider: oidc
-      redirect-url: https://longhorn.walnuts.dev/
+      redirect-url: https://longhorn.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
       #set-authorization-header: true
       #ssl-insecure-skip-verify: true
