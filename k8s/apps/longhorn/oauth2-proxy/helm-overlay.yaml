@@ -1,0 +1,111 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: repo
+spec:
+  url: https://oauth2-proxy.github.io/manifests
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: oauth2-proxy
+      version: 6.10.1
+  values:
+    config:
+      clientID: "XXXXXXX"
+      clientSecret: "XXXXXXXX"
+      existingSecret: longhorn-oauth2-proxysecret
+      cookieSecret: "aCtNTWsxb2x6QStMVjBBYTc4VjR1OWpLL2hRYjFEaFg="
+      configFile: |-
+        email_domains = [ "*" ]
+        upstreams = [ "file:///dev/null" ]
+
+    containerPort: 4180
+
+    extraArgs:
+      provider: oidc
+      redirect-url: https://longhorn.walnuts.dev/oauth2/callback
+      oidc-issuer-url: https://auth.walnuts.dev/realms/master
+      #set-authorization-header: true
+      #ssl-insecure-skip-verify: true
+
+    ingress:
+      enabled: true
+      className: nginx
+      path: /
+      # Only used if API capabilities (networking.k8s.io/v1) allow it
+      pathType: ImplementationSpecific
+      # Used to create an Ingress record.
+      hosts:
+       - ""
+
+    # Configure the session storage type, between cookie and redis
+    sessionStorage:
+      # Can be one of the supported session storage cookie|redis
+      type: cookie
+      redis:
+        # Name of the Kubernetes secret containing the redis & redis sentinel password values (see also `sessionStorage.redis.passwordKey`)
+        existingSecret: ""
+        # Redis password value. Applicable for all Redis configurations. Taken from redis subchart secret if not set. `sessionStorage.redis.existingSecret` takes precedence
+        password: ""
+        # Key of the Kubernetes secret data containing the redis password value
+        passwordKey: "redis-password"
+        # Can be one of standalone|cluster|sentinel
+        clientType: "standalone"
+        standalone:
+          # URL of redis standalone server for redis session storage (e.g. `redis://HOST[:PORT]`). Automatically generated if not set
+          connectionUrl: ""
+        cluster:
+          # List of Redis cluster connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
+          connectionUrls: []
+        sentinel:
+          # Name of the Kubernetes secret containing the redis sentinel password value (see also `sessionStorage.redis.sentinel.passwordKey`). Default: `sessionStorage.redis.existingSecret`
+          existingSecret: ""
+          # Redis sentinel password. Used only for sentinel connection; any redis node passwords need to use `sessionStorage.redis.password`
+          password: ""
+          # Key of the Kubernetes secret data containing the redis sentinel password value
+          passwordKey: "redis-sentinel-password"
+          # Redis sentinel master name
+          masterName: ""
+          # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
+          connectionUrls: []
+
+    # Enables and configure the automatic deployment of the redis subchart
+    redis:
+      # provision an instance of the redis sub-chart
+      enabled: false
+      # Redis specific helm chart settings, please see:
+      # https://github.com/bitnami/charts/tree/master/bitnami/redis#parameters
+      # redisPort: 6379
+      # cluster:
+      #   enabled: false
+      #   slaveCount: 1
+
+    metrics:
+      # Enable Prometheus metrics endpoint
+      enabled: false
+      # Serve Prometheus metrics on this port
+      port: 44180
+      # when service.type is NodePort ...
+      # nodePort: 44180
+      # Protocol set on the service for the metrics port
+      service:
+        appProtocol: http
+      servicemonitor:
+        # Enable Prometheus Operator ServiceMonitor
+        enabled: false
+        # Define the namespace where to deploy the ServiceMonitor resource
+        namespace: ""
+        # Prometheus Instance definition
+        prometheusInstance: default
+        # Prometheus scrape interval
+        interval: 60s
+        # Prometheus scrape timeout
+        scrapeTimeout: 30s
+        # Add custom labels to the ServiceMonitor resource
+        labels: {}
