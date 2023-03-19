@@ -8,13 +8,3 @@ spec:
     name: tailscale-subnet-router
   updatePolicy:
     updateMode: "Off"
-  resourcePolicy:
-    containerPolicies:
-      - containerName: '*'
-        minAllowed:
-          cpu: 1m
-          memory: 15Mi
-        maxAllowed:
-          cpu: 20m
-          memory: 30Mi
-        controlledResources: ["cpu", "memory"]
