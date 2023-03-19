@@ -4,9 +4,7 @@ namePrefix: longhorn-
 namespace: longhorn-system
 resources:
   - vpa.yaml
-  - sealedsecret.yaml
 components:
 - ../../components/helm
 patchesStrategicMerge:
 - helm-overlay.yaml
-- oauth2-proxy-helm-overlay.yaml
