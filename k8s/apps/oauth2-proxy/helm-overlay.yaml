@@ -40,7 +40,7 @@ spec:
       pathType: ImplementationSpecific
       # Used to create an Ingress record.
       hosts:
-       - ""
+       - "longhorn.walnuts.dev"
 
     # Configure the session storage type, between cookie and redis
     sessionStorage:
