@@ -2,14 +2,14 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: oauth2-proxy-repo
+  name: repo
 spec:
   url: https://oauth2-proxy.github.io/manifests
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: oauth2-proxy-release
+  name: release
 spec:
   chart:
     spec:
