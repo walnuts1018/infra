@@ -23,7 +23,7 @@ spec:
       existingSecret: longhorn-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://192.168.0.130" ]
+        upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local/#/dashboard" ]
 
     extraArgs:
       provider: keycloak-oidc
