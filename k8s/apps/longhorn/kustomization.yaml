@@ -9,4 +9,4 @@ components:
 - ../../components/helm
 patchesStrategicMerge:
 - helm-overlay.yaml
-- oauth2-proxy-helm-overlay.yaml
+#- oauth2-proxy-helm-overlay.yaml
