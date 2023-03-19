@@ -32,7 +32,7 @@ spec:
 
     extraArgs:
       provider: oidc
-      redirect-url: https://longhorn.walnuts.dev/
+      redirect-url: https://192.168.0.130/
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
       #set-authorization-header: true
       #ssl-insecure-skip-verify: true
@@ -45,7 +45,7 @@ spec:
       pathType: ImplementationSpecific
       # Used to create an Ingress record.
       hosts:
-       - ""
+       - "longhorn.walnuts.dev"
 
     # Configure the session storage type, between cookie and redis
     sessionStorage:
