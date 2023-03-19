@@ -31,7 +31,7 @@ spec:
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
       #set-authorization-header: true
       #ssl-insecure-skip-verify: true
-      #allowed-role: admin
+      allowed-role: admin
     ingress:
       enabled: true
       className: nginx
