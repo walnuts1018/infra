@@ -46,7 +46,7 @@ spec:
         domain: grafana.walnuts.dev
         root_url: https://grafana.walnuts.dev/
       auth:
-        #disable_login_form: true
+        disable_login_form: true
       auth.basic:
         enabled: false
       auth.generic_oauth:
@@ -60,6 +60,6 @@ spec:
         auth_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/auth
         token_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/token
         api_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/userinfo
-        #role_attribute_strict: true
+        role_attribute_strict: true
         role_attribute_path: contains(realm_access.roles[*], 'admin') && 'Admin' || 'Viewer'
         use_pkce: true
