@@ -35,7 +35,7 @@ spec:
       defaultClassReplicaCount: 3
 
     ingress:
-      enabled: false
+      enabled: true
       ingressClassName: nginx
       host: "longhorn.walnuts.dev"
       path: /
