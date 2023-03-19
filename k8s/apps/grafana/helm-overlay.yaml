@@ -54,7 +54,7 @@ spec:
         client_id: grafana
         client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
         scopes: openid email profile offline_access roles
-        email_attribute_path: email
+        email_attribute_path: email.email
         login_attribute_path: profile.username
         name_attribute_path: profile.username
         auth_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/auth
