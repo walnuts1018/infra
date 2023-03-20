@@ -30,7 +30,7 @@ spec:
       redirect-url: https://longhorn.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
       allowed-role: admin
-      reverse-proxy: true
+      #reverse-proxy: true
       skip-provider-button: true
 
 
