@@ -72,6 +72,8 @@ spec:
       #cluster:
         #enabled: false
         #slaveCount: 1
+      image:
+        tag: 7.0.9-debian-11-r6
       replica:
         replicaCount: 1
 
