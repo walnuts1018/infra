@@ -26,7 +26,7 @@ spec:
         upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local/#/dashboard" ]
 
     extraArgs:
-      provider: keycloak-oidc
+      provider: oidc
       redirect-url: https://longhorn.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
       #set-authorization-header: true
