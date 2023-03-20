@@ -4,7 +4,6 @@ namePrefix: prometheus-
 namespace: monitoring
 resources:
   - pvc.yaml
-  - vpa.yaml
 components:
 - ../../components/helm
 patchesStrategicMerge:

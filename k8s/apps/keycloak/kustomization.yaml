@@ -6,4 +6,3 @@ resources:
   - ingress.yaml
   - service.yaml
   - deployment.yaml
-  - vpa.yaml
