@@ -23,10 +23,10 @@ spec:
       allowNodeDrainWithLastHealthyReplica: true
       orphanAutoDeletion: true
     csi:
-      attacherReplicaCount: 2
-      provisionerReplicaCount: 2
-      resizerReplicaCount: 2
-      snapshotterReplicaCount: 2
+      attacherReplicaCount: 1
+      provisionerReplicaCount: 1
+      resizerReplicaCount: 1
+      snapshotterReplicaCount: 1
 
     service:
       ui:
