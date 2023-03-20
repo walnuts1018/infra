@@ -27,7 +27,7 @@ spec:
 
     extraArgs:
       provider: keycloak-oidc
-      redirect-url: https://longhorn-oauth2-proxy-release.longhorn-system.svc.cluster.local/oauth2/callback
+      redirect-url: https://longhorn.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
       #set-authorization-header: true
       #ssl-insecure-skip-verify: true
