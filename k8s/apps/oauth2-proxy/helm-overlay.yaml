@@ -60,7 +60,7 @@ spec:
         #clientType: "standalone"
         standalone:
           # URL of redis standalone server for redis session storage (e.g. `redis://HOST[:PORT]`). Automatically generated if not set
-          connectionUrl: "http://longhorn-frontend.longhorn-system.svc.cluster.local"
+          connectionUrl: "redis://longhorn-frontend.longhorn-system.svc.cluster.local:6379"
 
     # Enables and configure the automatic deployment of the redis subchart
     redis:
