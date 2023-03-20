@@ -24,11 +24,12 @@ spec:
       configFile: |-
         email_domains = [ "*" ]
         upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local/#/dashboard" ]
-        allowed-role = admin
+
     extraArgs:
       provider: oidc
       redirect-url: https://longhorn.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
+      allowed-role: admin
       reverse-proxy: true
       skip-provider-button: true
 
