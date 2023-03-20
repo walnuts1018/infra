@@ -60,7 +60,7 @@ spec:
         clientType: "standalone"
         standalone:
           # URL of redis standalone server for redis session storage (e.g. `redis://HOST[:PORT]`). Automatically generated if not set
-          connectionUrl: ""
+          connectionUrl: "http://longhorn-frontend.longhorn-system.svc.cluster.local"
 
     # Enables and configure the automatic deployment of the redis subchart
     redis:
@@ -69,8 +69,8 @@ spec:
       # Redis specific helm chart settings, please see:
       # https://github.com/bitnami/charts/tree/master/bitnami/redis#parameters
       # redisPort: 6379
-      # cluster:
-      #   enabled: false
+      cluster:
+        enabled: false
       #   slaveCount: 1
 
     metrics:
