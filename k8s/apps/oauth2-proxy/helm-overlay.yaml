@@ -58,7 +58,7 @@ spec:
         #passwordKey: "redis-password"
         # Can be one of standalone|cluster|sentinel
         #clientType: "standalone"
-        standalone:
+        #standalone:
           # URL of redis standalone server for redis session storage (e.g. `redis://HOST[:PORT]`). Automatically generated if not set
           #connectionUrl: "redis://longhorn-frontend.longhorn-system.svc.cluster.local:6379"
 
@@ -69,9 +69,9 @@ spec:
       # Redis specific helm chart settings, please see:
       # https://github.com/bitnami/charts/tree/master/bitnami/redis#parameters
       # redisPort: 6379
-      cluster:
-        enabled: false
-        slaveCount: 1
+      #cluster:
+        #enabled: false
+        #slaveCount: 1
 
     metrics:
       # Enable Prometheus metrics endpoint
