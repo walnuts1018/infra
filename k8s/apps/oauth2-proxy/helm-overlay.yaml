@@ -72,6 +72,8 @@ spec:
       #cluster:
         #enabled: false
         #slaveCount: 1
+      replicas:
+        replicaCount: 1
 
     metrics:
       # Enable Prometheus metrics endpoint
