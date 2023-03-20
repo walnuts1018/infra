@@ -73,7 +73,7 @@ spec:
         #enabled: false
         #slaveCount: 1
       replica:
-        replicaCount: 1
+        replicaCount: 2
 
     metrics:
       # Enable Prometheus metrics endpoint
