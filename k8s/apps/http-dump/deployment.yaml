@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-dump
+  labels:
+    app: http-dump
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-dump
+  template:
+    metadata:
+      labels:
+        app: http-dump
+    spec:
+      containers:
+      - name: http-dump
+        image: index.docker.io/daime/http-dump:latest
+        ports:
+        - name: http
+          containerPort: 8080
+      nodeSelector:
+        kubernetes.io/hostname: kurumi-03
