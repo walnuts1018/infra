@@ -18,3 +18,4 @@ resources:
 - ../../apps/descheduler
 - ../../apps/kmc-proxy
 - ../../apps/oauth2-proxy
+- ../../apps/http-dump
