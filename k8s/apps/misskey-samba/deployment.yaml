@@ -29,10 +29,10 @@ spec:
           value: "1"
         - name: AVAHI_DISABLE
           value: "1"
-        - name: GROUP_misskey
-          value: "1202"
-        - name: UID_misskey
-          value: "1202"
+        #- name: GROUP_misskey
+        #  value: "1202"
+        #- name: UID_misskey
+        #  value: "1202"
         - name: GROUPS_misskey
           value: misskey
         - name: SAMBA_VOLUME_CONFIG_misskeyfiles
