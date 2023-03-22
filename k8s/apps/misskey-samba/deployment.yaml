@@ -36,9 +36,9 @@ spec:
         - name: GROUPS_misskey
           value: misskey
         - name: SAMBA_VOLUME_CONFIG_misskeyfiles
-          value: "[misskey files]; path=/misskeyfiles; valid users = misskey; guest ok = no; read only = no; browseable = yes"
+          value: "[misskey-files]; path=/misskeyfiles; valid users = misskey; guest ok = no; read only = no; browseable = yes"
         - name: SAMBA_VOLUME_CONFIG_misskeyredis
-          value: "[misskey redis]; path=/misskeyredis; valid users = misskey; guest ok = no; read only = no; browseable = yes"
+          value: "[misskey-redis]; path=/misskeyredis; valid users = misskey; guest ok = no; read only = no; browseable = yes"
         ports:
         - containerPort: 445
           name: misskey-samba
