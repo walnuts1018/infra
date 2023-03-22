@@ -11,4 +11,4 @@ spec:
       targetPort: 5432
   selector:
     app: misskey-postgres
-  type: ClusterIP
+  type: LoadBalancer

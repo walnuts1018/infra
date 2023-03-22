@@ -3,14 +3,14 @@ kind: Kustomization
 namespace: misskey
 resources:
   - db-deployment.yaml
-  - redis-deployment.yaml
-  - web-deployment.yaml
+  #- redis-deployment.yaml
+  #- web-deployment.yaml
   - db-pvc.yaml
-  - redis-pvc.yaml
-  - web-pvc.yaml
+  #- redis-pvc.yaml
+  #- web-pvc.yaml
   - sealedsecret.yaml
   - service.yaml
   - db-service.yaml
-  - web-service.yaml
-  - redis-service.yaml
+  #- web-service.yaml
+  #- redis-service.yaml
   - ingress.yaml
