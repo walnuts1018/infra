@@ -24,15 +24,15 @@ spec:
               name: misskey-samba-secret
               key: account-misskey
         - name: SAMBA_CONF_LOG_LEVEL
-          value: 3
+          value: "3"
         - name: WSDD2_DISABLE
-          value: 1
+          value: "1"
         - name: AVAHI_DISABLE
-          value: 1
+          value: "1"
         - name: GROUP_misskey
-          value: 1202
+          value: "1202"
         - name: UID_misskey
-          value: 1202
+          value: "1202"
         - name: GROUPS_misskey
           value: misskey
         - name: SAMBA_VOLUME_CONFIG_misskeyfiles
