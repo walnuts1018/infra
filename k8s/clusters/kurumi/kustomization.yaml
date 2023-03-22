@@ -19,3 +19,4 @@ resources:
 - ../../apps/kmc-proxy
 - ../../apps/oauth2-proxy
 - ../../apps/http-dump
+- ../../apps/misskey-samba
