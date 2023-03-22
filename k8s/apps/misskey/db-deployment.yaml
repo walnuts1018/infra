@@ -41,7 +41,7 @@ spec:
           mountPath: /var/lib/postgresql
         resources:
           requests:
-            memory: "71Mi"           
+            memory: "71Mi"
           limits:
             memory: "250Mi"
       volumes:
