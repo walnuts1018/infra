@@ -14,7 +14,7 @@ spec:
         app: misskey-samba
     spec:
       containers:
-      - image: ghcr.io/servercontainers/samba:sha256:910876400475876e9c6fbe75681f871c09067c28c5ea2eaa82db83f1aa746bbc
+      - image: ghcr.io/servercontainers/samba:latest
         imagePullPolicy: IfNotPresent
         name: misskey-samba
         env:
