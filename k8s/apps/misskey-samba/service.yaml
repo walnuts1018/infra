@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: misskey-samba
+  labels:
+    app: misskey-samba
+spec:
+  ports:
+    - port: 445
+      protocol: TCP
+      targetPort: 445
+  selector:
+    app: misskey-samba
+  type: ClusterIP

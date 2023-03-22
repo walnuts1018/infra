@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: misskey-samba
+spec:
+  selector:
+    matchLabels:
+      app: misskey-samba
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: misskey-samba
+    spec:
+      containers:
+      - image: ghcr.io/servercontainers/samba:sha256:910876400475876e9c6fbe75681f871c09067c28c5ea2eaa82db83f1aa746bbc
+        imagePullPolicy: IfNotPresent
+        name: misskey-samba
+        env:
+        - name: ACCOUNT_misskey
+          valueFrom:
+            secretKeyRef:
+              name: misskey-samba-secret
+              key: account-misskey
+        - name: SAMBA_CONF_LOG_LEVEL
+          value: 3
+        - name: WSDD2_DISABLE
+          value: 1
+        - name: AVAHI_DISABLE
+          value: 1
+        - name: GROUP_misskey
+          value: 1202
+        - name: UID_misskey
+          value: 1202
+        - name: GROUPS_misskey
+          value: misskey
+        - name: SAMBA_VOLUME_CONFIG_misskeyfiles
+          value: "[misskey files]; path=/misskeyfiles; valid users = misskey; guest ok = no; read only = no; browseable = yes"
+        - name: SAMBA_VOLUME_CONFIG_misskeyredis
+          value: "[misskey redis]; path=/misskeyredis; valid users = misskey; guest ok = no; read only = no; browseable = yes"
+        ports:
+        - containerPort: 445
+          name: misskey-samba
+        volumeMounts:
+        - name: misskey-samba-pv-files
+          mountPath: /misskeyfiles
+        - name: misskey-samba-pv-redis
+          mountPath: /misskeyredis
+
+      volumes:
+      - name: misskey-samba-pv-files
+        persistentVolumeClaim:
+          claimName: misskey-samba-files-pvc
+      - name: misskey-samba-pv-redis
+        persistentVolumeClaim:
+          claimName: misskey-samba--redis-pvc
