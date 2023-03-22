@@ -54,4 +54,4 @@ spec:
           claimName: misskey-samba-files-pvc
       - name: misskey-samba-pv-redis
         persistentVolumeClaim:
-          claimName: misskey-samba--redis-pvc
+          claimName: misskey-samba-redis-pvc
