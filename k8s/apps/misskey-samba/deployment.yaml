@@ -13,6 +13,9 @@ spec:
       labels:
         app: misskey-samba
     spec:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"    
       containers:
       - image: ghcr.io/servercontainers/samba:latest
         imagePullPolicy: IfNotPresent
