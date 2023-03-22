@@ -11,4 +11,4 @@ spec:
       targetPort: 445
   selector:
     app: misskey-samba
-  type: ClusterIP
+  type: LoadBalancer
