@@ -12,11 +12,11 @@ resources:
 - ../../apps/prometheus
 - ../../apps/grafana
 - ../../apps/metrics-server
-- ../../apps/misskey
+#- ../../apps/misskey
 - ../../apps/mysql
 - ../../apps/keycloak
 #- ../../apps/descheduler
 - ../../apps/kmc-proxy
 - ../../apps/oauth2-proxy
 - ../../apps/http-dump
-- ../../apps/misskey-samba
+#- ../../apps/misskey-samba
