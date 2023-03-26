@@ -67,4 +67,4 @@ spec:
         #     hosts:
         #       - prometheus.domain.com
       service:
-        type: ClusterIP
+        type: LoadBalancer
