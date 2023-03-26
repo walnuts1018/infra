@@ -68,3 +68,30 @@ spec:
         #       - prometheus.domain.com
       service:
         type: LoadBalancer
+
+      resources: {}
+        # limits:
+        #   cpu: 500m
+        #   memory: 512Mi
+        # requests:
+        #   cpu: 500m
+        #   memory: 512Mi
+
+    # adds additional scrape configs to prometheus.yml
+    # must be a string so you have to add a | after extraScrapeConfigs:
+    # example adds prometheus-blackbox-exporter scrape config
+    extraScrapeConfigs:
+      - job_name: 'node'
+        #metrics_path: /probe
+        #params:
+        #  module: [http_2xx]
+        static_configs:
+          - targets:
+            - alice.walnuts.dev:9090
+        #relabel_configs:
+        #  - source_labels: [__address__]
+        #    target_label: __param_target
+        #  - source_labels: [__param_target]
+        #    target_label: instance
+        #  - target_label: __address__
+        #    replacement: prometheus-blackbox-exporter:9115
