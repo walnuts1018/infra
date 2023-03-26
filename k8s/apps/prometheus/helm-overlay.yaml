@@ -87,7 +87,7 @@ spec:
         #  module: [http_2xx]
         static_configs:
           - targets:
-            - alice.walnuts.dev:9090
+            - alice.walnuts.dev:9100
         #relabel_configs:
         #  - source_labels: [__address__]
         #    target_label: __param_target
