@@ -80,7 +80,7 @@ spec:
     # adds additional scrape configs to prometheus.yml
     # must be a string so you have to add a | after extraScrapeConfigs:
     # example adds prometheus-blackbox-exporter scrape config
-    extraScrapeConfigs:
+    extraScrapeConfigs: |
       - job_name: 'node'
         #metrics_path: /probe
         #params:
