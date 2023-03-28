@@ -20,3 +20,4 @@ resources:
 - ../../apps/oauth2-proxy
 - ../../apps/http-dump
 #- ../../apps/misskey-samba
+- ../../apps/nextcloud
