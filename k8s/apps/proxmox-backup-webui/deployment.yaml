@@ -21,9 +21,6 @@ spec:
         - mountPath: /etc/nginx
           readOnly: true
           name: proxmox-backup-webui-conf
-        - name: proxmox-cert
-          mountPath: "/etc/pve/local"
-          readOnly: true
         - mountPath: /var/log/nginx
           name: log
       volumes:
