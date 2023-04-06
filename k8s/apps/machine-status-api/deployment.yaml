@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
       - name: machine-status-api
-        image: ghcr.io/walnuts1018/machine-status-api:latest
+        image: ghcr.io/walnuts1018/machine-status-api:v0.2
         imagePullPolicy: Always
         securityContext:
           runAsGroup: 997
