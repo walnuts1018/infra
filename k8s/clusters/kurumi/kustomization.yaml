@@ -21,3 +21,4 @@ resources:
 - ../../apps/http-dump
 #- ../../apps/misskey-samba
 - ../../apps/nextcloud
+- ../../apps/proxmox-backup-webui
