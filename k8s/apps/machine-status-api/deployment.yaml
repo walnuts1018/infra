@@ -24,7 +24,7 @@ spec:
           runAsGroup: 997
           privileged: true
         ports:
-          - containerPort: 80
+          - containerPort: 8080
         resources:
           requests:
             memory: "1Mi"
