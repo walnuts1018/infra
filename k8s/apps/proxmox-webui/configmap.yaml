@@ -32,6 +32,7 @@ data:
   virtualhost.conf: |
     server{
       listen 80 default_server;
+      listen 3128 default_server;
       server_name "";
       proxy_redirect off;
       location / {
