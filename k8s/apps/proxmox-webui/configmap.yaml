@@ -32,7 +32,6 @@ data:
   virtualhost.conf: |
     server{
       listen 80 default_server;
-      listen 3128 default_server;
       server_name "";
       proxy_redirect off;
       location / {
@@ -50,5 +49,12 @@ data:
         proxy_read_timeout  3600s;
         proxy_send_timeout  3600s;
         send_timeout  3600s;
+      }
+      upstream spice {
+        server alice.walnuts.dev:3128/;
+      }
+      server {
+        listen      3128;
+        proxy_pass  spice;
       }
     }
