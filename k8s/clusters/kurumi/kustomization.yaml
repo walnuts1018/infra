@@ -23,3 +23,4 @@ resources:
 - ../../apps/nextcloud
 - ../../apps/proxmox-backup-webui
 - ../../apps/cert-manager
+- ../../apps/actions-runner-controller
