@@ -1,0 +1,34 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: repo
+spec:
+  interval: 1m
+  url: https://actions-runner-controller.github.io/actions-runner-controller
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: actions-runner-controller
+      version: 0.23.2
+      sourceRef:
+        kind: HelmRepository
+        name: actions-runner-controller-repo
+  values:
+    authSecret:
+      enabled: true
+      create: true
+      name: "controller-manager"
+
+    env:
+      - name: GITHUB_TOKEN
+        valueFrom:
+          secretKeyRef:
+            key: github-token
+            name: actions-runner-controller-secret
+            optional: true
