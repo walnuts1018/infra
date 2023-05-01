@@ -8,3 +8,4 @@ resources:
   - deployment.yaml
   - ingress.yaml
   - sealedsecret.yaml
+  - service.yaml
