@@ -6,4 +6,6 @@ spec:
   replicas: 1
   template:
     spec:
+      labels: 
+        - sweets-rebellion-runner-deploy
       repository: kmc-jp/STGProject2022
