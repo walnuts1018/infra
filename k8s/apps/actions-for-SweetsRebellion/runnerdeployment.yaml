@@ -1,7 +1,7 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: SweetsRebellion-runnerdeploy
+  name: SweetsRebellionRunnerdeploy
 spec:
   replicas: 1
   template:
