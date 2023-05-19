@@ -24,4 +24,4 @@ resources:
 - ../../apps/proxmox-backup-webui
 - ../../apps/cert-manager
 - ../../apps/actions-runner-controller
-#- ../../apps/actions-for-SweetsRebellion
+- ../../apps/actions-for-SweetsRebellion
