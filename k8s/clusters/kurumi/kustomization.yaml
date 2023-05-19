@@ -22,6 +22,6 @@ resources:
 #- ../../apps/misskey-samba
 - ../../apps/nextcloud
 - ../../apps/proxmox-backup-webui
-- ../../apps/cert-manager
-- ../../apps/actions-runner-controller
-- ../../apps/actions-for-SweetsRebellion
+#- ../../apps/cert-manager
+#- ../../apps/actions-runner-controller
+#- ../../apps/actions-for-SweetsRebellion
