@@ -1,0 +1,9 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: SweetsRebellion-runnerdeploy
+spec:
+  replicas: 1
+  template:
+    spec:
+      repository: kmc-jp/STGProject2022
