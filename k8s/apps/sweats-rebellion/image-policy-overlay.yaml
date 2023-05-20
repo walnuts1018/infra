@@ -14,7 +14,7 @@ metadata:
 spec:
   filterTags:
     ## use "pattern: '[a-f0-9]+-(?P<ts>[0-9]+)'" if you copied the workflow example using github.run_number
-    pattern: '^main-[a-f0-9]+-(?P<ts>[0-9]+)'
+    pattern: '[a-f0-9]+-(?P<ts>[0-9]+)'
     extract: '$ts'
   policy:
     numerical:
