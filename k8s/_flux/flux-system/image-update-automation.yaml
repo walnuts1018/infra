@@ -20,5 +20,5 @@ spec:
     kind: GitRepository
     name: flux-system
   update:
-    path: ./k8s/clusters/kurumi
+    path: ./k8s
     strategy: Setters
