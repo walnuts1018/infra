@@ -27,4 +27,4 @@ resources:
 #- ../../apps/actions-for-SweetsRebellion
 - ../../apps/sweats-rebellion
 - ../../image-update/sweats-rebellion
-#- ../../apps/sweats-rebellion-oauth2-proxy
+- ../../apps/sweats-rebellion-oauth2-proxy
