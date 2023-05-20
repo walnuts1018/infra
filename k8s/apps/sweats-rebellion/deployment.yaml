@@ -20,7 +20,12 @@ spec:
         ports:
         - containerPort: 80
           name: http
-
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          readOnly: true
+          name: nginx-conf
+        - mountPath: /var/log/nginx
+          name: log
       imagePullSecrets:
       - name: ghcr-login-secret
 
@@ -29,9 +34,7 @@ spec:
         configMap: 
           name: sweats-rebellion-nginx-conf
           items:
-            - key: nginx.conf
-              path: nginx.conf
-            - key: virtualhost.conf
-              path: virtualhost/virtualhost.conf
+            - key: default.conf
+              path: default.conf
       - name: log
         emptyDir: {}
