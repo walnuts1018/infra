@@ -15,9 +15,8 @@ data:
         location / {
             root   /usr/share/nginx/html;
             index  index.html index.htm;
-            gzip off;
         }
-        
+
         location ~ .+\.(data|symbols\.json)\.br$ {
             # Because this file is already pre-compressed on disk, disable the on-demand compression on it.
             # Otherwise nginx would attempt double compression.
