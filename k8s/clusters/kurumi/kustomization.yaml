@@ -25,6 +25,6 @@ resources:
 - ../../apps/cert-manager
 - ../../apps/actions-runner-controller
 #- ../../apps/actions-for-SweetsRebellion
-- ../../apps/sweats-rebellion
-- ../../image-update/sweats-rebellion
-- ../../apps/sweats-rebellion-oauth2-proxy
+- ../../apps/sweets-rebellion
+- ../../image-update/sweets-rebellion
+- ../../apps/sweets-rebellion-oauth2-proxy

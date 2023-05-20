@@ -17,17 +17,17 @@ spec:
       version: 6.10.1
       sourceRef:
         kind: HelmRepository
-        name: sweats-rebellion-oauth2-proxy-repo
+        name: sweets-rebellion-oauth2-proxy-repo
   values:
     config:
-      existingSecret: sweats-rebellion-oauth2-proxy-secret
+      existingSecret: sweets-rebellion-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://sweats-rebellion-sweats-rebellion.sweats-rebellion.svc.cluster.local/" ]
+        upstreams = [ "http://sweets-rebellion-sweets-rebellion.sweets-rebellion.svc.cluster.local/" ]
 
     extraArgs:
       provider: oidc
-      redirect-url: https://sweats-rebellion.walnuts.dev/oauth2/callback
+      redirect-url: https://sweets-rebellion.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
       allowed-role: kmc
       #reverse-proxy: true
@@ -42,7 +42,7 @@ spec:
       pathType: Prefix
       # Used to create an Ingress record.
       hosts:
-       - "sweats-rebellion.walnuts.dev"
+       - "sweets-rebellion.walnuts.dev"
 
     # Configure the session storage type, between cookie and redis
     sessionStorage:
@@ -57,7 +57,7 @@ spec:
         #clientType: "standalone"
         #standalone:
           # URL of redis standalone server for redis session storage (e.g. `redis://HOST[:PORT]`). Automatically generated if not set
-          #connectionUrl: "redis://sweats-rebellion-frontend.sweats-rebellion-system.svc.cluster.local:6379"
+          #connectionUrl: "redis://sweets-rebellion-frontend.sweets-rebellion-system.svc.cluster.local:6379"
 
     # Enables and configure the automatic deployment of the redis subchart
     redis:

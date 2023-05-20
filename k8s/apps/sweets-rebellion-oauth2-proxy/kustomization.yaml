@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namePrefix: sweats-rebellion-oauth2-proxy-
-namespace: sweats-rebellion
+namePrefix: sweets-rebellion-oauth2-proxy-
+namespace: sweets-rebellion
 resources:
   - sealedsecret.yaml
 components:
