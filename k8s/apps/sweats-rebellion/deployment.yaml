@@ -20,16 +20,9 @@ spec:
         ports:
         - containerPort: 80
           name: http
-        volumeMounts:
-        - mountPath: /etc/nginx
-          readOnly: true
-          name: nginx-conf
-        - mountPath: /var/log/nginx
-          name: log
 
       imagePullSecrets:
       - name: ghcr-login-secret
-
 
       volumes:
       - name: nginx-conf
