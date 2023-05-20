@@ -7,4 +7,4 @@ spec:
   - port: 80
   selector:
     app: sweats-rebellion
-  type: LoadBalancer
+  type: ClusterIP
