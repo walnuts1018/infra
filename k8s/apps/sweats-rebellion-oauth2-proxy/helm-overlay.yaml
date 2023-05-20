@@ -23,7 +23,7 @@ spec:
       existingSecret: sweats-rebellion-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://sweats-rebellion-sweats-rebellion.sweats-rebellion.svc.cluster.local/#/dashboard" ]
+        upstreams = [ "http://sweats-rebellion-sweats-rebellion.sweats-rebellion.svc.cluster.local/" ]
 
     extraArgs:
       provider: oidc
