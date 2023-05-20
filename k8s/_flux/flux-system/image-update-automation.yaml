@@ -15,7 +15,7 @@ spec:
       messageTemplate: '{{range .Updated.Images}}{{println .}}{{end}}'
       signingKey:
         secretRef:
-          name: ghcr-login-secret
+          name: flux-system
     push:
       branch: main
   interval: 1m0s
