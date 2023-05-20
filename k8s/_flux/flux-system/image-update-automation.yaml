@@ -20,5 +20,5 @@ spec:
     kind: GitRepository
     name: flux-system
   update:
-    path: ./k8s/_flux
+    path: ./k8s/
     strategy: Setters
