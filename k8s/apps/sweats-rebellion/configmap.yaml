@@ -18,6 +18,7 @@ data:
         }
 
         location ~ .+\.(data|symbols\.json)\.br$ {
+            root   /usr/share/nginx/html;
             # Because this file is already pre-compressed on disk, disable the on-demand compression on it.
             # Otherwise nginx would attempt double compression.
             gzip off;
@@ -27,6 +28,7 @@ data:
 
         # On-disk Brotli-precompressed JavaScript code files:
         location ~ .+\.js\.br$ {
+            root   /usr/share/nginx/html;
             gzip off; # Do not attempt dynamic gzip compression on an already compressed file
             add_header Content-Encoding br;
             default_type application/javascript;
@@ -34,6 +36,7 @@ data:
 
         # On-disk Brotli-precompressed WebAssembly files:
         location ~ .+\.wasm\.br$ {
+            root   /usr/share/nginx/html;
             gzip off; # Do not attempt dynamic gzip compression on an already compressed file
             add_header Content-Encoding br;
             # Enable streaming WebAssembly compilation by specifying the correct MIME type for
@@ -43,6 +46,7 @@ data:
 
         # On-disk gzip-precompressed data files should be served with compression enabled:
         location ~ .+\.(data|symbols\.json)\.gz$ {
+            root   /usr/share/nginx/html;
             gzip off; # Do not attempt dynamic gzip compression on an already compressed file
             add_header Content-Encoding gzip;
             default_type application/gzip;
@@ -50,6 +54,7 @@ data:
 
         # On-disk gzip-precompressed JavaScript code files:
         location ~ .+\.js\.gz$ {
+            root   /usr/share/nginx/html;
             gzip off; # Do not attempt dynamic gzip compression on an already compressed file
             add_header Content-Encoding gzip; # The correct MIME type here would be application/octet-stream, but due to Safari bug https://bugs.webkit.org/show_bug.cgi?id=247421, it's preferable to use MIME Type application/gzip instead.
             default_type application/javascript;
@@ -57,6 +62,7 @@ data:
 
         # On-disk gzip-precompressed WebAssembly files:
         location ~ .+\.wasm\.gz$ {
+            root   /usr/share/nginx/html;
             gzip off; # Do not attempt dynamic gzip compression on an already compressed file
             add_header Content-Encoding gzip;
             # Enable streaming WebAssembly compilation by specifying the correct MIME type for
