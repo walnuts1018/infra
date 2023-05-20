@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: sweats-rebellion
+  name: sweets-rebellion
 spec:
   ports:
   - port: 80
   selector:
-    app: sweats-rebellion
+    app: sweets-rebellion
   type: ClusterIP

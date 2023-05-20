@@ -5,18 +5,18 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: sweats-rebellion
+      app: sweets-rebellion
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: sweats-rebellion
+        app: sweets-rebellion
     spec:
       containers:
-      - image: ghcr.io/kmc-jp/stgproject2022:c67883aaedaccc287ba54d6b864dca9999a62953-25 # {"$imagepolicy": "flux-system:sweats-rebellion-policy"}
+      - image: ghcr.io/kmc-jp/stgproject2022:c67883aaedaccc287ba54d6b864dca9999a62953-25 # {"$imagepolicy": "flux-system:sweets-rebellion-policy"}
         imagePullPolicy: IfNotPresent
-        name: sweats-rebellion
+        name: sweets-rebellion
         ports:
         - containerPort: 80
           name: http
@@ -31,7 +31,7 @@ spec:
       volumes:
       - name: nginx-conf
         configMap:
-          name: sweats-rebellion-nginx-conf
+          name: sweets-rebellion-nginx-conf
           items:
           - key: default.conf
             path: default.conf
