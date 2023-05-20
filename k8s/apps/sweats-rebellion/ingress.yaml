@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sweats-rebellion
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: "sweats-rebellion.walnuts.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sweats-rebellion
+            port:
+              number: 80

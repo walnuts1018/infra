@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sweats-rebellion
+spec:
+  selector:
+    matchLabels:
+      app: sweats-rebellion
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sweats-rebellion
+    spec:
+      containers:
+      - image: ghcr.io/kmc-jp/stgproject2022:latest # {"$imagepolicy": "sweats-rebellion:sweats-rebellion-policy"}
+        imagePullPolicy: IfNotPresent
+        name: sweats-rebellion
+        ports:
+        - containerPort: 80
+          name: sweats-rebellion
+
