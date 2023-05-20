@@ -20,5 +20,5 @@ spec:
         ports:
         - containerPort: 80
           name: http
-        imagePullSecrets:
-        - name: ghcr-login-secret
+      imagePullSecrets:
+      - name: ghcr-login-secret
