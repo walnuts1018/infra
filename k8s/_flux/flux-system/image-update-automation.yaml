@@ -21,5 +21,5 @@ spec:
     name: flux-system
     namespace: flux-system
   update:
-    path: ./k8s/clusters/kurumi
+    path: ./k8s/
     strategy: Setters
