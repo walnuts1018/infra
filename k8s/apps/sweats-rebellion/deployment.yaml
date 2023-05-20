@@ -14,7 +14,7 @@ spec:
         app: sweats-rebellion
     spec:
       containers:
-      - image: ghcr.io/kmc-jp/stgproject2022:c67883aaedaccc287ba54d6b864dca9999a62953-25 # {"$imagepolicy": "flux-system:sweats-rebellion-policy"}
+      - image: ghcr.io/kmc-jp/stgproject2022:e90d44bf418c44af4aa690d4c18f14387969d38f-23 # {"$imagepolicy": "flux-system:sweats-rebellion-policy"}
         imagePullPolicy: IfNotPresent
         name: sweats-rebellion
         ports:
