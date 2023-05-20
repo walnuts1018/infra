@@ -6,11 +6,14 @@ metadata:
 spec:
   image: ghcr.io/kmc-jp/stgproject2022
   interval: 2m0s
+  secretRef:
+    name: ghcr-login-secret
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImagePolicy
 metadata:
   name: policy
+
 spec:
   filterTags:
     ## use "pattern: '[a-f0-9]+-(?P<ts>[0-9]+)'" if you copied the workflow example using github.run_number
