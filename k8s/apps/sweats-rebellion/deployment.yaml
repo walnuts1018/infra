@@ -23,7 +23,7 @@ spec:
         volumeMounts:
         - mountPath: /etc/nginx
           readOnly: true
-          name: nginx.conf
+          name: nginx-conf
         - mountPath: /var/log/nginx
           name: log
 
@@ -32,9 +32,9 @@ spec:
 
 
       volumes:
-      - name: nginx.conf
+      - name: nginx-conf
         configMap: 
-          name: nginx.conf
+          name: nginx-conf
           items:
             - key: nginx.conf
               path: nginx.conf
