@@ -25,3 +25,4 @@ resources:
 - ../../apps/cert-manager
 - ../../apps/actions-runner-controller
 #- ../../apps/actions-for-SweetsRebellion
+- ../../apps/sweats-rebellion

@@ -1,0 +1,21 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageRepository
+metadata:
+  name: repo
+  # namespace: to-be-filled
+spec:
+  # image: to-be-filled
+  interval: 2m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: policy
+  # namespace: to-be-filled
+spec:
+  imageRepositoryRef:
+    name: repo
+  policy:
+    semver:
+      # range: to-be-filled
