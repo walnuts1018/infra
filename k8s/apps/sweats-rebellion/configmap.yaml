@@ -15,27 +15,7 @@ data:
         location / {
             root   /usr/share/nginx/html;
             index  index.html index.htm;
-            gzip off;
-
-            location ~* \.gz$ {
-              add_header Content-Encoding gzip;
-
-              location ~* \.data\.gz$ {
-                  types { }
-                  default_type application/octet-stream;
-              }
-              location ~* \.wasm\.gz$ {
-                  types { }
-                  default_type application/wasm;
-              }
-              location ~* \.js\.gz$ {
-                  types { }
-                  default_type application/javascript;
-              }
-              location ~* \.symbols\.json\.gz$ {
-                  types { }
-                  default_type application/octet-stream;
-              }
+            gzip on;
             }
         }
 
