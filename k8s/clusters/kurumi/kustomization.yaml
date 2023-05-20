@@ -26,3 +26,4 @@ resources:
 - ../../apps/actions-runner-controller
 #- ../../apps/actions-for-SweetsRebellion
 - ../../apps/sweats-rebellion
+- ../../image-update/sweats-rebellion
