@@ -35,6 +35,7 @@ data:
       server_name "";
 
       location / {
+        root   /;
         index  index.html;
 
         gzip off;
