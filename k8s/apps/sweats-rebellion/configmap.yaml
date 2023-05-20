@@ -4,61 +4,70 @@ kind: ConfigMap
 metadata:
   name: nginx-conf
 data:
-  nginx.conf: |
-    user nginx;
-    worker_processes  1;
-    error_log  /var/log/nginx/error.log;
-    events {
-      worker_connections  10240;
-    }
-    http {
-      log_format  main
-              'remote_addr:$remote_addr\t'
-              'time_local:$time_local\t'
-              'method:$request_method\t'
-              'uri:$request_uri\t'
-              'host:$host\t'
-              'status:$status\t'
-              'bytes_sent:$body_bytes_sent\t'
-              'referer:$http_referer\t'
-              'useragent:$http_user_agent\t'
-              'forwardedfor:$http_x_forwarded_for\t'
-              'request_time:$request_time';
-
-      access_log    /var/log/nginx/access.log main;
-      
-      include /etc/nginx/virtualhost/virtualhost.conf;
-    }
-  virtualhost.conf: |
+  default.conf: |
     server {
-      listen 80 default_server;
-      server_name "";
+        listen       80;
+        listen  [::]:80;
+        server_name  localhost;
 
-      location / {
-        root   /;
-        index  index.html;
+        #access_log  /var/log/nginx/host.access.log  main;
 
-        gzip off;
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+            gzip off;
 
-        location ~* \.gz$ {
-          add_header Content-Encoding gzip;
+            location ~* \.gz$ {
+              add_header Content-Encoding gzip;
 
-          location ~* \.data\.gz$ {
-              types { }
-              default_type application/octet-stream;
-          }
-          location ~* \.wasm\.gz$ {
-              types { }
-              default_type application/wasm;
-          }
-          location ~* \.js\.gz$ {
-              types { }
-              default_type application/javascript;
-          }
-          location ~* \.symbols\.json\.gz$ {
-              types { }
-              default_type application/octet-stream;
-          }
+              location ~* \.data\.gz$ {
+                  types { }
+                  default_type application/octet-stream;
+              }
+              location ~* \.wasm\.gz$ {
+                  types { }
+                  default_type application/wasm;
+              }
+              location ~* \.js\.gz$ {
+                  types { }
+                  default_type application/javascript;
+              }
+              location ~* \.symbols\.json\.gz$ {
+                  types { }
+                  default_type application/octet-stream;
+              }
+            }
         }
-      }
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        #
+        #location ~ \.php$ {
+        #    proxy_pass   http://127.0.0.1;
+        #}
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #    root           html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #}
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        #location ~ /\.ht {
+        #    deny  all;
+        #}
     }
