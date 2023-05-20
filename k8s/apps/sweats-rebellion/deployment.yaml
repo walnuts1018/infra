@@ -34,7 +34,7 @@ spec:
       volumes:
       - name: nginx-conf
         configMap: 
-          name: nginx-conf
+          name: sweats-rebellion-nginx-conf
           items:
             - key: nginx.conf
               path: nginx.conf
