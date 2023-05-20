@@ -1,9 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namePrefix: sweats-rebellion-
-namespace: sweats-rebellion
+namespace: flux-system
 resources:
   - deployment.yaml
   - service.yaml
   - ingress.yaml
-  - ../../image-update/sweats-rebellion
+components:
+- ../../components/image-policy
+patchesStrategicMerge:
+- image-policy-overlay.yaml
