@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sweats-rebellion
+  name: deployment
 spec:
   selector:
     matchLabels:
@@ -19,5 +19,5 @@ spec:
         name: sweats-rebellion
         ports:
         - containerPort: 80
-          name: sweats-rebellion
+          name: http
 
