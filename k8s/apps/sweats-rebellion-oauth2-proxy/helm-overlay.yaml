@@ -17,7 +17,7 @@ spec:
       version: 6.10.1
       sourceRef:
         kind: HelmRepository
-        name: sweats-rebellion-oauth2-proxy-repo     
+        name: sweats-rebellion-oauth2-proxy-repo
   values:
     config:
       existingSecret: sweats-rebellion-oauth2-proxy-secret
