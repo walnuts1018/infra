@@ -14,7 +14,7 @@ spec:
         app: sweets-rebellion
     spec:
       containers:
-      - image: ghcr.io/kmc-jp/stgproject2022:0ce6abe92f09ce9eb6f30f20422fa4c70ecb8292-29 # {"$imagepolicy": "flux-system:sweets-rebellion-policy"}
+      - image: ghcr.io/kmc-jp/stgproject2022:abc6abe92f09ce9eb6f30f20422fa4c70ecb8292-30 # {"$imagepolicy": "flux-system:sweets-rebellion-policy"}
         imagePullPolicy: IfNotPresent
         name: sweets-rebellion
         ports:
