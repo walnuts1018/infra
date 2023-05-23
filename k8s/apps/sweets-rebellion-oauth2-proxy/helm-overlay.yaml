@@ -50,19 +50,19 @@ spec:
       type: redis
       redis:
         # Name of the Kubernetes secret containing the redis & redis sentinel password values (see also `sessionStorage.redis.passwordKey`)
-        #existingSecret: ""
+        existingSecret: "sweets-rebellion-oauth2-proxy-secret"
         # Key of the Kubernetes secret data containing the redis password value
-        #passwordKey: "redis-password"
+        passwordKey: "redis-password"
         # Can be one of standalone|cluster|sentinel
-        #clientType: "standalone"
-        #standalone:
+        clientType: "standalone"
+        standalone:
           # URL of redis standalone server for redis session storage (e.g. `redis://HOST[:PORT]`). Automatically generated if not set
-          #connectionUrl: "redis://sweets-rebellion-frontend.sweets-rebellion-system.svc.cluster.local:6379"
+          connectionUrl: "redis://redis-release-headless.databases.svc.cluster.local:6379"
 
     # Enables and configure the automatic deployment of the redis subchart
     redis:
       # provision an instance of the redis sub-chart
-      enabled: true
+      enabled: false
       # Redis specific helm chart settings, please see:
       # https://github.com/bitnami/charts/tree/master/bitnami/redis#parameters
       # redisPort: 6379
