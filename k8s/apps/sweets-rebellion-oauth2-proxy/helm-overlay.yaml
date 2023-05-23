@@ -50,9 +50,9 @@ spec:
       type: redis
       redis:
         # Name of the Kubernetes secret containing the redis & redis sentinel password values (see also `sessionStorage.redis.passwordKey`)
-        #existingSecret: ""
+        existingSecret: ""
         # Key of the Kubernetes secret data containing the redis password value
-        #passwordKey: "redis-password"
+        passwordKey: "redis-password"
         # Can be one of standalone|cluster|sentinel
         #clientType: "standalone"
         #standalone:

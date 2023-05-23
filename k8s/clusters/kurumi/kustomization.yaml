@@ -27,4 +27,4 @@ resources:
 - ../../apps/sweets-rebellion
 - ../../image-update/sweets-rebellion
 - ../../apps/sweets-rebellion-oauth2-proxy
-- ../../apps/redis-operator
+- ../../apps/redis
