@@ -1,0 +1,42 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: repo
+spec:
+  url: https://charts.bitnami.com/bitnami
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: redis
+      version: 17.11.3
+  values:
+    auth:
+      existingSecret: "redis-secret"
+      existingSecretPasswordKey: "redis-password"
+    master:
+      count: 1
+      kind: StatefulSet
+      persistence:
+        enabled: true
+        storageClass: "longhorn"
+        size: 8Gi
+      service:
+        type: ClusterIP
+        ports:
+          redis: 6379
+    replica:
+      replicaCount: 2
+      persistence:
+        enabled: true
+        storageClass: "longhorn"
+        size: 8Gi
+      service:
+        type: ClusterIP
+        ports:
+          redis: 6379
