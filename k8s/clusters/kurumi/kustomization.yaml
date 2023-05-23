@@ -17,7 +17,7 @@ resources:
 - ../../apps/keycloak
 #- ../../apps/descheduler
 - ../../apps/kmc-proxy
-- ../../apps/oauth2-proxy
+- ../../apps/longhorn-oauth2-proxy
 - ../../apps/http-dump
 #- ../../apps/misskey-samba
 - ../../apps/nextcloud
