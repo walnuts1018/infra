@@ -1,0 +1,37 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: repo
+spec:
+  url: https://helm.influxdata.com/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: influxdb
+      version: 4.12.1
+      sourceRef:
+        kind: HelmRepository
+        name: ingress-nginx-repo      
+  values:
+    persistence:
+      enabled: true
+      storageClass: "longhorn"
+      annotations:
+      accessMode: ReadWriteOnce
+      size: 20Gi
+
+    ## Set default user
+    ##
+    setDefaultUser:
+      enabled: false
+      user:
+        ## The user name and password are obtained from an existing secret. The expected
+        ## keys are `influxdb-user` and `influxdb-password`.
+        ## If set, the username and password values above are ignored.
+        existingSecret: influxdb-secret
