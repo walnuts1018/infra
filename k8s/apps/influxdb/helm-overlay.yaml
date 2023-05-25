@@ -37,13 +37,13 @@ spec:
       subPath: ""
 
     ingress:
-      enabled: false
+      enabled: true
       # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
       # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-      # className: nginx
+      className: nginx
       tls: false
       # secretName: my-tls-cert # only needed if tls above is true or default certificate is not configured for Nginx
-      hostname: influxdb.foobar.com
+      hostname: influxdb.walnuts.dev
       annotations: {}
         # kubernetes.io/ingress.class: "nginx"
         # kubernetes.io/tls-acme: "true"
