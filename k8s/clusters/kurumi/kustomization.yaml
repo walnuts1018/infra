@@ -28,3 +28,4 @@ resources:
 - ../../image-update/sweets-rebellion
 - ../../apps/sweets-rebellion-oauth2-proxy
 - ../../apps/redis
+- ../../apps/influxdb
