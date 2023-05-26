@@ -30,6 +30,7 @@ spec:
         type: ClusterIP
         ports:
           redis: 6379
+
     replica:
       replicaCount: 2
       persistence:
@@ -40,3 +41,13 @@ spec:
         type: ClusterIP
         ports:
           redis: 6379
+
+    sentinel:
+      enabled: true
+      masterSet: mymaster
+      quorum: 2
+      persistence:
+        enabled: true
+        storageClass: ""
+        size: 100Mi
+        
