@@ -60,7 +60,6 @@ spec:
           # Key of the Kubernetes secret data containing the redis sentinel password value
           passwordKey: "redis-password"
           # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
-          connectionUrls: '["redis://redis-release-headless.databases.svc.cluster.local:6379", "redis://redis-release-master.databases.svc.cluster.local:6379"]'
 
     # Enables and configure the automatic deployment of the redis subchart
     redis:
