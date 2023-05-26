@@ -17,6 +17,7 @@ spec:
       version: 17.11.3
   values:
     auth:
+      sentinel: true
       existingSecret: "redis-secret"
       existingSecretPasswordKey: "redis-password"
     master:
@@ -50,4 +51,3 @@ spec:
         enabled: true
         storageClass: ""
         size: 100Mi
-        
