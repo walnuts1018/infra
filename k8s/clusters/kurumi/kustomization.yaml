@@ -1,31 +1,38 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+# --- namespace一覧 ---
 - ../../namespaces
-- ../../apps/machine-status-api
+
+# --- system --
 - ../../apps/ingress-nginx
 - ../../apps/metallb
 - ../../apps/longhorn
 - ../../apps/sealed-secrets
-- ../../apps/proxmox-webui
-- ../../apps/tailscale-subnet-router
+#- ../../apps/descheduler
+
+# --- metrics ---
 - ../../apps/prometheus
 - ../../apps/grafana
 - ../../apps/metrics-server
-#- ../../apps/misskey
+#- ../../apps/influxdb
+
+# --- apps ---
+- ../../apps/machine-status-api
+- ../../apps/proxmox-webui
+- ../../apps/tailscale-subnet-router
 - ../../apps/mysql
 - ../../apps/keycloak
-#- ../../apps/descheduler
 - ../../apps/kmc-proxy
 - ../../apps/longhorn-oauth2-proxy
 - ../../apps/http-dump
-#- ../../apps/misskey-samba
 - ../../apps/nextcloud
 - ../../apps/proxmox-backup-webui
-#- ../../apps/cert-manager
-#- ../../apps/actions-runner-controller
 - ../../apps/sweets-rebellion
 - ../../image-update/sweets-rebellion
 - ../../apps/sweets-rebellion-oauth2-proxy
 - ../../apps/redis
-#- ../../apps/influxdb
+#- ../../apps/misskey
+#- ../../apps/misskey-samba
+#- ../../apps/cert-manager
+#- ../../apps/actions-runner-controller
