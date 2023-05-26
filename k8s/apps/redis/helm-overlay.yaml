@@ -49,5 +49,5 @@ spec:
       quorum: 2
       persistence:
         enabled: true
-        storageClass: ""
+        storageClass: "longhorn"
         size: 100Mi
