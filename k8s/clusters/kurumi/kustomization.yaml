@@ -24,7 +24,7 @@ resources:
 - ../../apps/mysql
 - ../../apps/keycloak
 - ../../apps/kmc-proxy
-- ../../apps/longhorn-oauth2-proxy
+#- ../../apps/longhorn-oauth2-proxy
 - ../../apps/http-dump
 - ../../apps/nextcloud
 - ../../apps/proxmox-backup-webui
