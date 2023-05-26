@@ -54,7 +54,8 @@ spec:
         passwordKey: "redis-password"
         # Can be one of standalone|cluster|sentinel
         clientType: "sentinel"
-
+        sentinel:
+          connectionUrls: ["redis://redis-release-headless.databases.svc.cluster.local:6379", "redis://redis-release-master.databases.svc.cluster.local:6379"]
 
     # Enables and configure the automatic deployment of the redis subchart
     redis:
