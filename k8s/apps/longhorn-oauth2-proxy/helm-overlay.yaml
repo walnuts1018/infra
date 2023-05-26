@@ -53,10 +53,13 @@ spec:
         # Key of the Kubernetes secret data containing the redis password value
         passwordKey: "redis-password"
         # Can be one of standalone|cluster|sentinel
-        clientType: "standalone"
-        standalone:
+        clientType: "sentinel"
+        #standalone:
           # URL of redis standalone server for redis session storage (e.g. `redis://HOST[:PORT]`). Automatically generated if not set
-          connectionUrl: "redis://redis-release-master.databases.svc.cluster.local:6379"
+          #connectionUrl: "redis://redis-release-master.databases.svc.cluster.local:6379"
+        sentinel:
+          # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
+          connectionUrls: ["redis://redis-release-headless.databases.svc.cluster.local:6379", "redis://redis-release-master.databases.svc.cluster.local:6379"]
 
     # Enables and configure the automatic deployment of the redis subchart
     redis:
