@@ -30,7 +30,7 @@ resources:
 - ../../apps/proxmox-backup-webui
 - ../../apps/sweets-rebellion
 - ../../image-update/sweets-rebellion
-#- ../../apps/sweets-rebellion-oauth2-proxy
+- ../../apps/sweets-rebellion-oauth2-proxy
 - ../../apps/redis
 #- ../../apps/misskey
 #- ../../apps/misskey-samba
