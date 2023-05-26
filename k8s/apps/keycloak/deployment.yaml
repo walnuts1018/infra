@@ -53,4 +53,4 @@ spec:
           requests:
             memory: "150Mi"
           limits:
-            memory: "300Mi"
+            memory: "500Mi"
