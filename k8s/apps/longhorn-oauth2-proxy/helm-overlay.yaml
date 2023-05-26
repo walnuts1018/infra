@@ -55,6 +55,10 @@ spec:
         # Can be one of standalone|cluster|sentinel
         clientType: "sentinel"
         sentinel:
+          # Name of the Kubernetes secret containing the redis sentinel password value (see also `sessionStorage.redis.sentinel.passwordKey`). Default: `sessionStorage.redis.existingSecret`
+          existingSecret: "longhorn-oauth2-proxy-secret"
+          # Key of the Kubernetes secret data containing the redis sentinel password value
+          passwordKey: "redis-password"
           # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
           connectionUrls: ["redis://redis-release-headless.databases.svc.cluster.local:6379", "redis://redis-release-master.databases.svc.cluster.local:6379"]
 
