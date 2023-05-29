@@ -53,6 +53,6 @@ spec:
             port: 8080
         resources:
           requests:
-            memory: "32Mi"
+            memory: "64Mi"
           limits:
             memory: "128Mi"
