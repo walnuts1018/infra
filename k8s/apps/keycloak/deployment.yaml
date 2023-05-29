@@ -43,7 +43,7 @@ spec:
               name: keycloak-secret
               key: db-password
         - name: JAVA_OPTS
-          value: "-Xms32m -Xmx256m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=128m -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.err.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8"
+          value: "-XX:MaxRamPercentage=50.0 -XX:MaxMetaspaceSize=128m -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.err.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8"
         ports:
         - name: http
           containerPort: 8080
