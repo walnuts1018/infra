@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-readme-stats
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-readme-stats
+  template:
+    metadata:
+      labels:
+        app: github-readme-stats
+    spec:
+      containers:
+      - name: github-readme-stats
+        image:  ghcr.io/walnuts1018/github-readme-stats:v1.0.1
+        ports:
+        - containerPort: 80
+        env:
+          - name: PAT_1
+            valueFrom:
+              secretKeyRef:
+                name: github-readme-stats-secret
+                key: github-token

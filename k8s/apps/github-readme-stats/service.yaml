@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: github-readme-stats
+spec:
+  selector:
+    app: github-readme-stats
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9000
+  type: ClusterIP
