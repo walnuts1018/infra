@@ -36,3 +36,4 @@ resources:
 #- ../../apps/misskey-samba
 #- ../../apps/cert-manager
 #- ../../apps/actions-runner-controller
+- ../../apps/github-readme-stats
