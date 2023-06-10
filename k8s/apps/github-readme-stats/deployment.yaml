@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: github-readme-stats
-        image:  ghcr.io/walnuts1018/github-readme-stats:v1.0.1
+        image:  ghcr.io/walnuts1018/github-readme-stats:v1.0.2
         ports:
         - containerPort: 80
         env:
