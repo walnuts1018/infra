@@ -609,24 +609,27 @@ cd
 (移行時)
 元の方
 ```bash
-kubectl get secret -n kube-system sealed-secrets-key8jfgr -o yaml > sealed-secrets-key.yaml
+kubectl get secret -n kube-system sealed-secrets-key8jfgr -o yaml > ~/oldSealedSecret/sealed-secrets-key.yaml
 
 scp k1:~/sealed-secrets-key.yaml ./
 ```
 新環境
 ```bash
-kubeseal --fetch-cert > ~/SealedSecret.crt
+kubeseal --fetch-cert > ~/currentSealedSecret/SealedSecret.crt
 ```
 
+
+namespaceとnamePrefixに注意！！！！
 ```bash
 mv sealedsecret.yaml sealedsecret2.yaml
 kubeseal \
 --controller-namespace=kube-system \
 --controller-name=sealed-secrets-controller \
+--namespace=monitoring \
 < sealedsecret2.yaml \
 --recovery-unseal \
---recovery-private-key ~/sealed-secrets-key.yaml -o yaml > secret.yaml
-cat secret.yaml | kubeseal --controller-name=sealed-secrets-controller --controller-namespace=kube-system --cert ~/SealedSecret.crt -w sealedsecret.yaml
+--recovery-private-key ~/oldSealedSecret/sealed-secrets-key.yaml -o yaml > secret.yaml
+cat secret.yaml | kubeseal --controller-name=sealed-secrets-controller --controller-namespace=kube-system --cert ~/currentSealedSecret/SealedSecret.crt -w sealedsecret.yaml
 \rm sealedsecret2.yaml secret.yaml
 git add .
 git commit -m "[change] sealedsecret"
