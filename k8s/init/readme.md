@@ -200,7 +200,7 @@ stream {
     }
 
   server {
-    listen        6443;
+    listen        16443;
     proxy_pass    kube_apiserver;
     proxy_timeout 10m;
     proxy_connect_timeout 1s;
@@ -243,7 +243,7 @@ stream {
     }
 
   server {
-    listen        6443;
+    listen        16443;
     proxy_pass    kube_apiserver;
     proxy_timeout 10m;
     proxy_connect_timeout 1s;
@@ -286,7 +286,7 @@ stream {
     }
 
   server {
-    listen        6443;
+    listen        16443;
     proxy_pass    kube_apiserver;
     proxy_timeout 10m;
     proxy_connect_timeout 1s;
@@ -319,7 +319,7 @@ EOF
 cat <<EOF | sudo tee /etc/keepalived/chk_nginx_proc.sh
 #!/usr/bin/bash
 
-timeout 5 curl http://localhost:6443
+timeout 5 curl http://localhost:16443
 status=$?
 
 if [ $status -eq 0 ]; then
@@ -501,7 +501,7 @@ kind: ClusterConfiguration
 clusterName: kurumi
 networking:
   podSubnet: 10.244.0.0/16
-controlPlaneEndpoint: 192.168.0.17:6443
+controlPlaneEndpoint: 192.168.0.17:16443
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
