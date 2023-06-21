@@ -2,27 +2,22 @@
 
 ## 構成
 
- kurumi-01 (Controll) RaspberryPi 4 4GB aarch64
+ kurumi-01 RaspberryPi 4 4Core 2GB+2GB aarch64 Debian11  Control
  
- kurumi-02 RaspberryPi 4 2GB aarch64
+ kurumi-02 RaspberryPi 4 4Core 4GB+2GB aarch64 Debian11  Control
  
- (kurumi-03 QEMU 2Core 2GB amd64)
-
+ kurumi-03 QEMU          4Core 4GB amd64   Ubuntu22
+ 
+ kurumi-04 Azure b1ms    1Core 2GB+1GB amd64   Ubuntu22
+ 
+ kurumi-05 Azure b1s     1Core 1GB+1GB amd64   Ubuntu22  Control
+ 
 ## セットアップ
 
 - kurumi-01,02
     - Raspberry Pi OS Lite 64bit Bullseye インストール
     - ```$ sudo apt update && sudo apt upgrade -y```
     - [zshセットアップ](https://github.com/walnuts1018/zsh_on_Debian)
-### ssh
-任意のマシン上で
-```
-scp ./.ssh/id_ed25519 juglans@192.168.0.16
-```
-
-```bash
-git clone git@github.com:walnuts1018/.ssh.git ssh
-```
 
 ## k8sインストール
 from: https://qiita.com/greenteabiscuit/items/6fce805185350eab6f7a
