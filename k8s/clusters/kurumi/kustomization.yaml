@@ -5,22 +5,22 @@ resources:
 - ../../namespaces
 
 # --- system --
-##- ../../apps/ingress-nginx
+- ../../apps/ingress-nginx
 - ../../apps/metallb
-#- ../../apps/longhorn
+- ../../apps/longhorn
 - ../../apps/sealed-secrets
 #- ../../apps/descheduler
 
 # --- metrics ---
 ##- ../../apps/prometheus
 ##- ../../apps/grafana
-##- ../../apps/metrics-server
+- ../../apps/metrics-server
 #- ../../apps/influxdb
 
 # --- apps ---
-##- ../../apps/machine-status-api
+- ../../apps/machine-status-api
 ##- ../../apps/proxmox-webui
-##- ../../apps/tailscale-subnet-router
+- ../../apps/tailscale-subnet-router
 ##- ../../apps/mysql
 ##- ../../apps/keycloak
 ##- ../../apps/kmc-proxy
