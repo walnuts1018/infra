@@ -633,8 +633,8 @@ kubectl get secret -n kube-system sealed-secrets-key6k7h5 -o yaml > ~/currentSea
 kubeseal --fetch-cert > ~/currentSealedSecret/SealedSecret.crt
 ```
 
-
 namespaceとnamePrefixに注意！！！！
+
 ```bash
 mv sealedsecret.yaml sealedsecret2.yaml
 kubeseal \
