@@ -537,6 +537,16 @@ HOSTNAME=kurumi-01
 kubectl taint node $HOSTNAME node-role.kubernetes.io/control-plane:NoSchedule-
 ```
 
+## join
+
+control-plane
+
+```bash
+sudo kubeadm join 192.168.0.17:16443 --token xxx \
+        --discovery-token-ca-cert-hash sha256:xxx \
+        --control-plane --certificate-key xxxx --ignore-preflight-errors=NumCPU --apiserver-advertise-address=100.84.126.71
+```
+
 ## helm
 ```bash
 curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
@@ -594,6 +604,10 @@ cd
 ```bash
 curl -s https://fluxcd.io/install.sh | sudo bash
 echo "[[ /usr/bin/flux ]] && source <(flux completion zsh)" >> ~/.zshrc
+```
+
+```bash
+flux bootstrap github --owner=walnuts1018 --repository=infra --branch=main --path=./k8s/_flux/kurumi/ --components-extra=image-reflector-controller,image-automation-controller --reconcile --token-auth --personal --ca-file ca.pem
 ```
 
 ## SealedSecret
