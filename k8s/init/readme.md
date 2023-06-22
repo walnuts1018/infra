@@ -629,6 +629,7 @@ scp k1:~/sealed-secrets-key.yaml ./
 ```
 新環境
 ```bash
+kubectl get secret -n kube-system sealed-secrets-key6k7h5 -o yaml > ~/currentSealedSecret/sealed-secrets-key.yaml
 kubeseal --fetch-cert > ~/currentSealedSecret/SealedSecret.crt
 ```
 
