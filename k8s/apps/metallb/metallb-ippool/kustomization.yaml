@@ -1,0 +1,8 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+namePrefix: metallb-
+namespace: metallb-system
+resources:
+  - ipaddresspool.yaml
+dependsOn:
+  - name: metallb
