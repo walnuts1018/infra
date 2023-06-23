@@ -7,7 +7,6 @@ resources:
 # --- system --
 - ../../apps/ingress-nginx
 - ../../apps/metallb
-- ../../apps/metallb/metallb-ippool
 - ../../apps/longhorn
 - ../../apps/sealed-secrets
 
