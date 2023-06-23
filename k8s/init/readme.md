@@ -545,6 +545,17 @@ control-plane
 
 sudo kubeadm init phase upload-certs --upload-certs
 
+hosts
+
+```/etc/hosts
+192.168.0.16    kurumi-01
+192.168.0.18    kurumi-02
+192.168.0.15    kurumi-03
+100.84.126.71   kurumi-04
+100.123.73.55   kurumi-05
+```
+
+
 ```bash
 sudo kubeadm join 192.168.0.17:16443 --token xxx \
         --discovery-token-ca-cert-hash sha256:xxx \
