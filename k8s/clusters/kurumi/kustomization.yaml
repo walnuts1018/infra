@@ -16,7 +16,7 @@ resources:
 - ../../apps/metrics-server
 
 # --- apps ---
-- ../../apps/machine-status-api
+#- ../../apps/machine-status-api
 - ../../apps/proxmox-webui
 - ../../apps/tailscale-subnet-router
 - ../../apps/mysql
