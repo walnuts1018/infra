@@ -166,6 +166,8 @@ KUBELET_EXTRA_ARGS=--container-runtime-endpoint='unix:///var/run/crio/crio.sock'
 EOF
 ```
 
+(control plane, tailscale) --node-ip=100.xxx.xxx.xxxも追加
+
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable kubelet
@@ -540,6 +542,8 @@ kubectl taint node $HOSTNAME node-role.kubernetes.io/control-plane:NoSchedule-
 ## join
 
 control-plane
+
+sudo kubeadm init phase upload-certs --upload-certs
 
 ```bash
 sudo kubeadm join 192.168.0.17:16443 --token xxx \
