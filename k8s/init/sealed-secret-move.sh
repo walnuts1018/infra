@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd ~/dev/infra/k8s/apps
-
+git pull
 for file in `ls ./*/sealedsecret.yaml`; do
     echo "----------------------------------------------"
 
@@ -39,6 +39,7 @@ for file in `ls ./*/sealedsecret.yaml`; do
         OLDNAMESPACE=$oldnamespace yq -i '.metadata.namespace = strenv(OLDNAMESPACE)' $file
     fi
 done
+
 #git add .
 #git commit -m "[change] sealedsecret"
 #git push
