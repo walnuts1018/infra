@@ -633,26 +633,19 @@ scp k1:~/sealed-secrets-key.yaml ./
 ```
 新環境
 ```bash
-kubectl get secret -n kube-system sealed-secrets-key6k7h5 -o yaml > ~/currentSealedSecret/sealed-secrets-key.yaml
+mkdir ~/currentSealedSecret
+\rm ~/currentSealedSecret/*
+kubectl get secret -n kube-system $(kubectl get secret -n kube-system |grep sealed-secrets-|cut -d " " -f 1) -o yaml > ~/currentSealedSecret/sealed-secrets-key.yaml
 kubeseal --fetch-cert > ~/currentSealedSecret/SealedSecret.crt
 ```
 
 namespaceとnamePrefixに注意！！！！
 
 ```bash
-mv sealedsecret.yaml sealedsecret2.yaml
-kubeseal \
---controller-namespace=kube-system \
---controller-name=sealed-secrets-controller \
---namespace=monitoring \
-< sealedsecret2.yaml \
---recovery-unseal \
---recovery-private-key ~/oldSealedSecret/sealed-secrets-key.yaml -o yaml > secret.yaml
-cat secret.yaml | kubeseal --controller-name=sealed-secrets-controller --controller-namespace=kube-system --cert ~/currentSealedSecret/SealedSecret.crt -w sealedsecret.yaml
-\rm sealedsecret2.yaml secret.yaml
-git add .
-git commit -m "[change] sealedsecret"
-git push
+cd ~/
+wget https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/init/sealed-secret-move.sh
+chmod +x ~/sealed-secret-move.sh
+~/sealed-secret-move.sh
 ```
 
 ## SMB CSI Driver
