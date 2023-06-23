@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: sealed-secrets
-      version: 2.7.2
+      version: 2.10.0
   values:
     fullnameOverride: sealed-secrets-controller
     keyrenewperiod: "0"
