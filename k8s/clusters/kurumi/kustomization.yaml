@@ -5,32 +5,32 @@ resources:
 - ../../namespaces
 
 # --- system --
-#- ../../apps/ingress-nginx
+- ../../apps/ingress-nginx
 - ../../apps/metallb
-#- ../../apps/longhorn
+- ../../apps/longhorn
 - ../../apps/sealed-secrets
 
 # --- metrics ---
 #- ../../apps/prometheus
 #- ../../apps/grafana
-#- ../../apps/metrics-server
+- ../../apps/metrics-server
 
 # --- apps ---
-#- ../../apps/machine-status-api
-#- ../../apps/proxmox-webui
-#- ../../apps/tailscale-subnet-router
-#- ../../apps/mysql
+- ../../apps/machine-status-api
+- ../../apps/proxmox-webui
+- ../../apps/tailscale-subnet-router
+- ../../apps/mysql
 ##- ../../apps/keycloak
-#- ../../apps/kmc-proxy
+- ../../apps/kmc-proxy
 ##- ../../apps/longhorn-oauth2-proxy
 - ../../apps/http-dump
 ##- ../../apps/nextcloud
-#- ../../apps/proxmox-backup-webui
-#- ../../apps/sweets-rebellion
-#- ../../image-update/sweets-rebellion
+- ../../apps/proxmox-backup-webui
+- ../../apps/sweets-rebellion
+- ../../image-update/sweets-rebellion
 ##- ../../apps/sweets-rebellion-oauth2-proxy
-#- ../../apps/redis
-#- ../../apps/github-readme-stats
+- ../../apps/redis
+- ../../apps/github-readme-stats
 
 # --- archives ---
 #- ../../apps/influxdb
