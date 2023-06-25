@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: samba
+spec:
+  selector:
+    matchLabels:
+      app: samba
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: samba
+    spec:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"    
+      containers:
+      - image: ghcr.io/servercontainers/samba:latest
+        imagePullPolicy: IfNotPresent
+        name: samba
+        env:
+        - name: ACCOUNT_samba
+          valueFrom:
+            secretKeyRef:
+              name: samba-secret
+              key: account-samba
+        - name: SAMBA_CONF_LOG_LEVEL
+          value: "3"
+        - name: WSDD2_DISABLE
+          value: "1"
+        - name: AVAHI_DISABLE
+          value: "1"
+        - name: GROUPS_samba
+          value: samba
+        - name: SAMBA_VOLUME_CONFIG_share
+          value: "[share]; path=/samba-share; valid users = samba; public = no; read only = no; browseable = yes; available = yes"
+        ports:
+        - containerPort: 445
+          name: samba
+        volumeMounts:
+        - name: samba-local-dir
+          mountPath: /samba-share
+        nodeSelector:
+            kubernetes.io/hostname: kurumi-02
+      volumes:
+      - name: samba-local-dir
+        hostPath:
+            path: /mnt/share
+            type: Directory
