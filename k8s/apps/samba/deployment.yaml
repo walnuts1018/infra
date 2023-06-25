@@ -42,8 +42,8 @@ spec:
         volumeMounts:
         - name: samba-local-dir
           mountPath: /samba-share
-        nodeSelector:
-            kubernetes.io/hostname: kurumi-02
+      nodeSelector:
+          kubernetes.io/hostname: kurumi-02
       volumes:
       - name: samba-local-dir
         hostPath:
