@@ -47,5 +47,5 @@ spec:
       volumes:
       - name: samba-local-dir
         hostPath:
-            path: /mnt/share
+            path: /mnt/data/share
             type: Directory
