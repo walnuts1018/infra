@@ -76,7 +76,12 @@ spec:
         # requests:
         #   cpu: 500m
         #   memory: 512Mi
-
+    
+    prometheus-node-exporter:
+      tolerations: 
+        - key: "remote-node"
+          operator: "Exists"
+          
     # adds additional scrape configs to prometheus.yml
     # must be a string so you have to add a | after extraScrapeConfigs:
     # example adds prometheus-blackbox-exporter scrape config
