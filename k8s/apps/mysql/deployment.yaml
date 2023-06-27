@@ -23,6 +23,7 @@ spec:
             secretKeyRef:
               name: mysql-secret
               key: password
+        command: ["sleep","infinity"]
         ports:
         - containerPort: 3306
           name: mysql
