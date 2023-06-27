@@ -18,6 +18,3 @@ spec:
   values:
     args:
       - "--kubelet-insecure-tls"
-    tolerations: 
-      - key: "remote-node"
-        operator: "Exists"
