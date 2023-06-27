@@ -19,7 +19,7 @@ resources:
 - ../../apps/machine-status-api
 - ../../apps/proxmox-webui
 - ../../apps/tailscale-subnet-router
-- ../../apps/mysql
+#- ../../apps/mysql
 - ../../apps/keycloak
 - ../../apps/kmc-proxy
 - ../../apps/longhorn-oauth2-proxy
