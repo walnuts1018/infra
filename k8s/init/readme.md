@@ -676,6 +676,13 @@ cd autoscaler/vertical-pod-autoscaler
 ./hack/vpa-up.sh
 ```
 
+### azure nodeの扱い
+
+```bash
+kubectl taint node kurumi-04 remote-node=:NoExecute
+```
+
+
 ## 参考
 
 <https://qiita.com/greenteabiscuit/items/6fce805185350eab6f7a>
