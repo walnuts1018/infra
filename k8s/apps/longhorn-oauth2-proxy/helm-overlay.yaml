@@ -29,7 +29,7 @@ spec:
       provider: keycloak-oidc
       redirect-url: https://longhorn.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
-      allowed-role: admin
+      allowed-role: longhorn-ui:admin
       #reverse-proxy: true
       skip-provider-button: true
 
