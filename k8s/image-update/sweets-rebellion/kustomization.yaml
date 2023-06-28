@@ -3,7 +3,7 @@ kind: Kustomization
 namePrefix: sweets-rebellion-
 namespace: flux-system
 resources:
-  - "./sealedsecret.yaml"
+  - sealedsecret.yaml
 components:
 - ../../components/image-policy
 patchesStrategicMerge:
