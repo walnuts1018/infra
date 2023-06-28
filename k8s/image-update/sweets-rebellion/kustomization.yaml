@@ -1,19 +1,10 @@
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
-  annotations:
-    sealedsecrets.bitnami.com/namespace-wide: "true"
-  creationTimestamp: null
-  name: ghcr-login-secret
-  namespace: flux-system
-spec:
-  encryptedData:
-    .dockerconfigjson: AgCFwRCssnDHCeYWzaOtVe6na3iNVyeK8ssGMa17sIiuUskrFoZ2RKRPRs+YkHbKFHxBpWE5W8MoeVzmBMPdFnXUS5mFOn3s1RFF1dA7Xgh+eiOp/ssn5VhxsRuuBePsndwWpRNrd4i75WKI2pDEV6aljP8s2fG7DdKLOAOHOToJi8n8A9ypIXgbJ3FdBXsciUbbd6ETZfCO5mD+tjbI5FjJaQ48Cgosdznf7O1QhPQMMT/IVOGxmVddHeyPJZV4SrmyXil+75lt68iwdYaGQbuEop3Gq76ySxC4SvAurMafYrIUBuNj3ayi4uPgBV6bYJKoy1rZNxjzNsAijFBjBkEKJscZufeTeOBc2oqRNUpz5jpwWQzMJRlb4PzwTmwTphFR3NNm6XEAXiEhr42sBvFcMuAPra6MzZTv2JlfDLA8VAB3geCuk3NrRc69h3ugbWddYsPDih3TIKwA8/Lv5jQAWT6uVMO6I8UK3X8axqYWLRf3TcpZ3dF6SDV9dTDaAolygn44gvF60SRnCI9FNFQhCQu/7vh4rMUg5a0fxiXOp/LTYHcScS+23duTth1ZA1mjWoR2rYxazyKEH03wUVJimeZckbWWSdNS5Avu7BxvMOmFAAbFBbofrf7nC72ESefVhSM1+K661f8ei7DekIORbqPgiXxwHXVjKLjOCDwLPcASs/J1qiHZrjhGGZl7aFNT3hEp+g2crgkSYZ91OxvFrv8fV8yTrIsRA73MqteMM6s1AdwurcVlL4WvXcs1XifGjdmBfjLxPKnqoSoaKZFOPPcoICFlbTakWjjT4ZErdGWmYATH1o4Az+AnsIc9QKXlbm0TR54S5wVFjEBI5EYQi7H77duEAxZ8M7yuCoWlDN722yqdT1/lsO3UCARRgyJ7EyVV2Vpqakh0jjjmlIcQPdu8etVJLBiXKbqCq5mz75zSorHJhUU=
-  template:
-    metadata:
-      annotations:
-        sealedsecrets.bitnami.com/namespace-wide: "true"
-      creationTimestamp: null
-      name: ghcr-login-secret
-      namespace: flux-system
-    type: kubernetes.io/dockerconfigjson
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namePrefix: sweets-rebellion-
+namespace: flux-system
+resources:
+  - "./sealedsecret.yaml"
+components:
+- ../../components/image-policy
+patchesStrategicMerge:
+- image-policy-overlay.yaml
