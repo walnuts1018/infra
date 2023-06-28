@@ -62,7 +62,7 @@ spec:
         auth_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/auth
         token_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/token
         api_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/userinfo
-        #role_attribute_strict: true
-        role_attribute_path: contains(roles[*], 'grafana-admin') && 'GrafanaAdmin' || contains(roles[*], 'grafana-editor') && 'Editor' || contains(roles[*], 'grafana-viewer') && 'Viewer'
+        role_attribute_strict: true
+        role_attribute_path: contains(roles[*], 'grafana-admin') && 'GrafanaAdmin' || contains(roles[*], 'grafana-editor') && 'Editor' || contains(roles[*], 'grafana-viewer') && 'Viewer' || 
         allow_assign_grafana_admin: true
         use_pkce: true
