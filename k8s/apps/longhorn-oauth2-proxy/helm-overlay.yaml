@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: oauth2-proxy
-      version: 6.10.1
+      version: 6.13.1
       sourceRef:
         kind: HelmRepository
         name: longhorn-oauth2-proxy-repo     
@@ -61,21 +61,6 @@ spec:
           masterName: "mymaster"          
           # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
           connectionUrls: "redis://redis-release.databases.svc.cluster.local:6379,redis://redis-release.databases.svc.cluster.local:26379"
-     
-    # Enables and configure the automatic deployment of the redis subchart
-    redis:
-      # provision an instance of the redis sub-chart
-      enabled: false
-      # Redis specific helm chart settings, please see:
-      # https://github.com/bitnami/charts/tree/master/bitnami/redis#parameters
-      # redisPort: 6379
-      #cluster:
-        #enabled: false
-        #slaveCount: 1
-      image:
-        tag: 7.0.9-debian-11-r6
-      replica:
-        replicaCount: 1
 
     metrics:
       # Enable Prometheus metrics endpoint
