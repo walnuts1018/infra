@@ -27,7 +27,7 @@ spec:
         - mountPath: /var/log/nginx
           name: log
       imagePullSecrets:
-      - name: ghcr-login-secret
+      - name: sweets-rebellion-ghcr-login-secret
       volumes:
       - name: nginx-conf
         configMap:
