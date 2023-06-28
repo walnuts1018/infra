@@ -61,5 +61,5 @@ spec:
         token_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/token
         api_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/userinfo
         #role_attribute_strict: true
-        role_attribute_path: contains(realm_access.roles[*], 'admin') && 'Admin' || 'Viewer'
+        role_attribute_path: contains(realm_access.roles[*], 'role_admin') && 'Admin' || 'Viewer'
         use_pkce: true
