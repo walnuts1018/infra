@@ -26,13 +26,12 @@ spec:
         upstreams = [ "http://sweets-rebellion-sweets-rebellion.sweets-rebellion.svc.cluster.local/" ]
 
     extraArgs:
-      provider: oidc
+      provider: keycloak-oidc
       redirect-url: https://sweets-rebellion.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
       allowed-role: kmc
       #reverse-proxy: true
       skip-provider-button: true
-
 
     ingress:
       enabled: true
