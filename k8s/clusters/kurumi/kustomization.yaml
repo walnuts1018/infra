@@ -4,6 +4,9 @@ resources:
 # --- namespace一覧 ---
 - ../../namespaces
 
+# --- image update ---
+- ../../image-update
+
 # --- system --
 - ../../apps/ingress-nginx
 - ../../apps/metallb
