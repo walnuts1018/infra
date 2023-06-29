@@ -16,7 +16,6 @@ spec:
       labels:
         app: misskey-web
     spec:
-      dnsPolicy: Default
       securityContext:
         fsGroup: 991
         fsGroupChangePolicy: "OnRootMismatch"
