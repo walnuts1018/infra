@@ -28,7 +28,12 @@ spec:
             memory: "5Mi"          
           limits:
             memory: "12Mi"
+
+      nodeSelector:
+        kubernetes.io/hostname: kurumi-04            
+
       volumes:
       - name: misskey-redis-pv
-        persistentVolumeClaim:
-          claimName: misskey-redis-pvc
+        hostPath:
+          path: /home/juglans/misskey/redis-data
+          type: Directory

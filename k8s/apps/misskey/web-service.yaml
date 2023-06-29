@@ -11,4 +11,4 @@ spec:
       targetPort: 3000
   selector:
     app: misskey-web
-  type: ClusterIP
+  type: NodePort

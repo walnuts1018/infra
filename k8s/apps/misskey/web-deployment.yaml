@@ -21,7 +21,7 @@ spec:
         fsGroupChangePolicy: "OnRootMismatch"
       initContainers:
         - name: misskey-init
-          image: ghcr.io/walnuts1018/misskey:13.9.2
+          image: ghcr.io/walnuts1018/misskey:5573fb7d12ac5e5fa8110e2026fe282df55ce337-15 # {"$imagepolicy": "flux-system:misskey-web-policy"}
           imagePullPolicy: IfNotPresent
           command:
             - pnpm
@@ -36,7 +36,7 @@ spec:
             
       containers:
         - name: misskey-web
-          image: ghcr.io/walnuts1018/misskey:13.10.2
+          image: ghcr.io/walnuts1018/misskey:5573fb7d12ac5e5fa8110e2026fe282df55ce337-15 # {"$imagepolicy": "flux-system:misskey-web-policy"}
           imagePullPolicy: IfNotPresent
           tty: true
           ports:
@@ -47,16 +47,15 @@ spec:
             - name: misskey-config
               mountPath: /misskey/.config
               readOnly: true
-          resources:
-            requests:
-              memory: "381Mi"
-            limits:
-              memory: "1228Mi"
+      
+      nodeSelector:
+        kubernetes.io/hostname: kurumi-04
 
       volumes:
         - name: misskey-pv
-          persistentVolumeClaim:
-            claimName: misskey-pvc
+          hostPath:
+            path: /home/juglans/misskey/files
+            type: Directory
         - name: misskey-config
           secret:
             secretName: misskey-secret
