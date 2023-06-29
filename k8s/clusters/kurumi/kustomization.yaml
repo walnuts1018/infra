@@ -34,11 +34,11 @@ resources:
 - ../../apps/redis
 - ../../apps/github-readme-stats
 - ../../apps/samba
+- ../../apps/misskey
 
 # --- archives ---
 #- ../../apps/influxdb
 #- ../../apps/descheduler
-#- ../../apps/misskey
 #- ../../apps/misskey-samba
 #- ../../apps/cert-manager
 #- ../../apps/actions-runner-controller
