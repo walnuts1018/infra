@@ -50,6 +50,9 @@ spec:
       
       nodeSelector:
         kubernetes.io/hostname: kurumi-04
+      tolerations: 
+        - key: "remote-node"
+          operator: "Exists"
 
       volumes:
         - name: misskey-pv
