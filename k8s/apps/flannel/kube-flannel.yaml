@@ -197,8 +197,8 @@ spec:
       - effect: NoSchedule
         operator: Exists
       - key: "remote-node"
-        operator: "Exists"
-         
+        operator: Exists
+
       volumes:
       - hostPath:
           path: /run/flannel
