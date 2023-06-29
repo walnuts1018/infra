@@ -196,6 +196,9 @@ spec:
       tolerations:
       - effect: NoSchedule
         operator: Exists
+      - key: "remote-node"
+        operator: "Exists"
+         
       volumes:
       - hostPath:
           path: /run/flannel
