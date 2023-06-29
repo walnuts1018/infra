@@ -35,5 +35,5 @@ spec:
       volumes:
       - name: misskey-redis-pv
         hostPath:
-          path: /home/juglans/misskey/redis-data
+          path: /home/juglans/misskey/redis
           type: Directory
