@@ -134,7 +134,7 @@ spec:
                 - linux
       containers:
       - command: ["/bin/sh","-c"]
-        args: ["if [ $HOSTNAME = 'kurumi-04' ];then /opt/bin/flanneld --ip-masq --kube-subnet-mgr --iface=tailscale0;else /opt/bin/flanneld --ip-masq --kube-subnet-mgr;fi "]
+        args: ["if [ $HOSTNAME = 'kurumi-04' ];then /opt/bin/flanneld --ip-masq --kube-subnet-mgr --iface=tailscale0;else /opt/bin/flanneld --ip-masq --kube-subnet-mgr --iface=tailscale0;fi "]
         env:
         - name: POD_NAME
           valueFrom:
