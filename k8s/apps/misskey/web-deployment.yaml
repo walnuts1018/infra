@@ -24,9 +24,8 @@ spec:
           image: ghcr.io/walnuts1018/misskey:5573fb7d12ac5e5fa8110e2026fe282df55ce337-15 # {"$imagepolicy": "flux-system:misskey-web-policy"}
           imagePullPolicy: IfNotPresent
           command:
-            - pnpm
-            - run
-            - init
+            - sleep
+            - infinity
           volumeMounts:
             - name: misskey-pv
               mountPath: /misskey/files
