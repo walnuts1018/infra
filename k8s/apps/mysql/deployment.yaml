@@ -39,7 +39,7 @@ spec:
                 - "rm -fr /var/lib/mysql/lost+found"
         resources:
           requests:
-            memory: "15Mi"       
+            memory: "15Mi" 
           limits:
             memory: "800Mi"
       volumes:
