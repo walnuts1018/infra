@@ -14,7 +14,7 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: index.docker.io/mysql:8.0
+      - image: index.docker.io/mysql:8.0.34
         imagePullPolicy: IfNotPresent
         name: mysql
         env:
