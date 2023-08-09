@@ -35,7 +35,7 @@ resources:
 - ../../apps/github-readme-stats
 - ../../apps/samba
 - ../../apps/misskey
-- ../../apps/home-controller-proxy
+#- ../../apps/home-controller-proxy
 # --- archives ---
 #- ../../apps/influxdb
 #- ../../apps/descheduler
