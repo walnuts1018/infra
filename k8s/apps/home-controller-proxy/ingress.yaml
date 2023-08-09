@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: home-controller-proxy
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: "homeapi.walnuts.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: home-controller-proxy
+            port:
+              number: 80
