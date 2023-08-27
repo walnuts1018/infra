@@ -17,8 +17,8 @@ spec:
       containers:
       - name: keycloak
         image: quay.io/keycloak/keycloak:21.1.1
+        command: ["sleep", "infinity"]
         #args: ["--verbose", "start", "--hostname-strict=false", "--hostname-strict-https=false"]
-        args: ["--verbose", "export", "--file", "/opt/keycloak/export", "&&", "sleep", "infinity"]
         env:
         - name: KEYCLOAK_ADMIN
           valueFrom:
