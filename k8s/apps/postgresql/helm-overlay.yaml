@@ -16,14 +16,12 @@ spec:
       chart: postgresql
       version: 12.2.5
   values:
-    global:
-      postgresql:
-        auth:
-          username: "juglans"
-          existingSecret: "postgres-secret"
-          secretKeys:
-            adminPasswordKey: admin-password
-            userPasswordKey: user-password
+    auth:
+      username: "juglans"
+      existingSecret: "postgres-secret"
+      secretKeys:
+        adminPasswordKey: admin-password
+        userPasswordKey: user-password
 
     image:
       registry: docker.io
