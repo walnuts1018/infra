@@ -27,19 +27,19 @@ resources:
 - ../../apps/kmc-proxy
 - ../../apps/longhorn-oauth2-proxy
 - ../../apps/http-dump
-##- ../../apps/nextcloud
 - ../../apps/proxmox-backup-webui
 - ../../apps/sweets-rebellion
 - ../../apps/sweets-rebellion-oauth2-proxy
 - ../../apps/redis
 - ../../apps/github-readme-stats
 - ../../apps/samba
-- ../../apps/misskey
 - ../../apps/postgresql
-#- ../../apps/home-controller-proxy
 # --- archives ---
+#- ../../apps/home-controller-proxy
 #- ../../apps/influxdb
 #- ../../apps/descheduler
 #- ../../apps/misskey-samba
 #- ../../apps/cert-manager
 #- ../../apps/actions-runner-controller
+#- ../../apps/misskey
+#- ../../apps/nextcloud
