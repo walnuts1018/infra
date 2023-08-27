@@ -1,0 +1,41 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: repo
+spec:
+  url: https://charts.bitnami.com/bitnami
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: postgresql
+      version: 12.2.5
+  values:
+    global:
+      postgresql:
+        auth:
+          username: "juglans"
+          existingSecret: "postgres-secret"
+          secretKeys:
+            adminPasswordKey: admin-password
+            userPasswordKey: user-password
+
+    image:
+      registry: docker.io
+      repository: bitnami/postgresql
+      tag: 15.2.0-debian-11-r13
+
+    ## @section PostgreSQL Primary parameters
+    primary:
+      resources:
+        limits: {}
+        requests:
+          memory: 256Mi
+      persistence:
+        enabled: true
+        existingClaim: "postgres-pvc"
