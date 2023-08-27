@@ -34,7 +34,7 @@ spec:
         - name: KC_DB
           value: "mysql"
         - name: KC_DB_URL_HOST
-          value: "mysql.defaults.svc.cluster.local"
+          value: "mysql.default.svc.cluster.local"
         - name: KC_DB_USERNAME
           value: "keycloak"
         - name: KC_DB_PASSWORD
