@@ -17,7 +17,8 @@ spec:
       containers:
       - name: keycloak
         image: quay.io/keycloak/keycloak:21.1.1
-        args: ["--verbose", "start", "--hostname-strict=false", "--hostname-strict-https=false"]
+        command: ["sleep", "infinity"]
+        #args: ["--verbose", "start", "--hostname-strict=false", "--hostname-strict-https=false"]
         env:
         - name: KEYCLOAK_ADMIN
           valueFrom:
@@ -47,10 +48,10 @@ spec:
         ports:
         - name: http
           containerPort: 8080
-        readinessProbe:
-          httpGet:
-            path: /realms/master
-            port: 8080
+        #readinessProbe:
+        #  httpGet:
+        #    path: /realms/master
+        #    port: 8080
         resources:
           requests:
             memory: "64Mi"
