@@ -48,10 +48,10 @@ spec:
         ports:
         - name: http
           containerPort: 8080
-        readinessProbe:
-          httpGet:
-            path: /realms/master
-            port: 8080
+        #readinessProbe:
+        #  httpGet:
+        #    path: /realms/master
+        #    port: 8080
         resources:
           requests:
             memory: "64Mi"
