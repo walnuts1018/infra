@@ -47,6 +47,9 @@ spec:
         ports:
         - name: http
           containerPort: 8080
+        volumeMounts:
+        - name: keycloak-volume
+          mountPath: /opt/keycloak
         readinessProbe:
           httpGet:
             path: /realms/master
@@ -56,3 +59,7 @@ spec:
             memory: "64Mi"
           limits:
             memory: "512Mi"
+      volumes:
+      - name: keycloak-volume
+        persistentVolumeClaim:
+          claimName: keycloak-pvc
