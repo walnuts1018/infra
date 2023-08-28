@@ -48,7 +48,7 @@ spec:
         domain: grafana.walnuts.dev
         root_url: https://grafana.walnuts.dev/
       auth:
-        disable_login_form: true
+        #disable_login_form: true
       auth.basic:
         enabled: false
       auth.generic_oauth:
