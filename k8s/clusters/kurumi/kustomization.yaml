@@ -24,7 +24,6 @@ resources:
 - ../../apps/tailscale-subnet-router
 - ../../apps/mysql
 - ../../apps/keycloak
-- ../../apps/keycloak-mysql
 - ../../apps/kmc-proxy
 - ../../apps/longhorn-oauth2-proxy
 - ../../apps/http-dump
