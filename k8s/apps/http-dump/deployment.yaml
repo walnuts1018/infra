@@ -16,9 +16,7 @@ spec:
     spec:
       containers:
       - name: http-dump
-        image: index.docker.io/daime/http-dump:latest
+        image: ghcr.io/walnuts1018/http-dump:latest
         ports:
         - name: http
           containerPort: 8080
-      nodeSelector:
-        kubernetes.io/hostname: kurumi-03
