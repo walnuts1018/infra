@@ -26,11 +26,11 @@ spec:
 
       resources:
         limits:
-          cpu: 200m
+          cpu: 300m
           memory: 512Mi
         requests:
           cpu: 30m
-          memory: 512Mi
+          memory: 256Mi
     
     prometheus-node-exporter:
       tolerations: 
