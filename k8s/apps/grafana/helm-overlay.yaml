@@ -48,7 +48,7 @@ spec:
         domain: grafana.walnuts.dev
         root_url: https://grafana.walnuts.dev/
       auth:
-        disable_login_form: true
+        #disable_login_form: true
       auth.basic:
         enabled: false
       auth.generic_oauth:
@@ -63,6 +63,6 @@ spec:
         token_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/token
         api_url: https://auth.walnuts.dev/realms/master/protocol/openid-connect/userinfo
         #role_attribute_strict: true
-        role_attribute_path: contains(roles[*], 'grafana-admin') && 'GrafanaAdmin' || contains(roles[*], 'grafana-editor') && 'Editor' || contains(roles[*], 'grafana-viewer') && 'Viewer' || 
+        role_attribute_path: contains(roles[*], 'grafana-admin') && 'GrafanaAdmin' || contains(roles[*], 'grafana-editor') && 'Editor' || contains(roles[*], 'grafana-viewer') && 'Viewer' 
         allow_assign_grafana_admin: true
         use_pkce: true
