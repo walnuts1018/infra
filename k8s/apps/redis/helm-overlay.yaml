@@ -31,6 +31,12 @@ spec:
         type: ClusterIP
         ports:
           redis: 6379
+      resources:
+        requests:
+          memory: 10Mi
+        limits:
+          cpu: 200m
+          memory: 50Mi
 
     replica:
       replicaCount: 2
@@ -42,7 +48,13 @@ spec:
         type: ClusterIP
         ports:
           redis: 6379
-
+      resources:
+        requests:
+          memory: 10Mi
+        limits:
+          cpu: 200m
+          memory: 50Mi
+  
     sentinel:
       enabled: true
       masterSet: mymaster
