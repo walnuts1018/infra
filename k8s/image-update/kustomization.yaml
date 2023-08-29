@@ -4,3 +4,4 @@ namespace: flux-system
 resources:
   - ./sealedsecret.yaml
   - ./sweets-rebellion
+  - ./keycloak
