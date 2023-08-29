@@ -489,7 +489,7 @@ server:
   ## Prometheus server resource requests and limits
   ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
   ##
-  resources: {}
+  resources:
     limits:
       cpu: 30m
       memory: 512Mi
