@@ -4,7 +4,7 @@ kind: ImageRepository
 metadata:
   name: repo
 spec:
-  image: ghcr.io/kmc-jp/stgproject2022
+  image: ghcr.io/walnuts1018/keycloak
   interval: 2m0s
   secretRef:
     name: ghcr-login-secret
