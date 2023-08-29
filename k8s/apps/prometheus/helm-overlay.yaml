@@ -14,68 +14,23 @@ spec:
   chart:
     spec:
       chart: prometheus
-      version: 20.0.2
+      version: 24.0.0
   values:
     server:
       persistentVolume:
         size: 40Gi
         existingClaim: "prometheus-pvc"
 
-      ingress:
-        ## If true, Prometheus server Ingress will be created
-        ##
-        enabled: false
-
-        # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
-        # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-        ingressClassName: nginx
-
-        ## Prometheus server Ingress annotations
-        ##
-        annotations: {}
-        #   kubernetes.io/ingress.class: nginx
-        #   kubernetes.io/tls-acme: 'true'
-
-        ## Prometheus server Ingress additional labels
-        ##
-        extraLabels: {}
-
-        ## Prometheus server Ingress hostnames with optional path
-        ## Must be provided if Ingress is enabled
-        ##
-        hosts:
-          - prometheus.walnuts.ml
-        #   - domain.com/prometheus
-
-        path: /
-
-        # pathType is only for k8s >= 1.18
-        pathType: Prefix
-
-        ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
-        extraPaths: []
-        # - path: /*
-        #   backend:
-        #     serviceName: ssl-redirect
-        #     servicePort: use-annotation
-
-        ## Prometheus server Ingress TLS configuration
-        ## Secrets must be manually created in the namespace
-        ##
-        tls: []
-        #   - secretName: prometheus-server-tls
-        #     hosts:
-        #       - prometheus.domain.com
       service:
         type: LoadBalancer
 
-      resources: {}
-        # limits:
-        #   cpu: 500m
-        #   memory: 512Mi
-        # requests:
-        #   cpu: 500m
-        #   memory: 512Mi
+      resources:
+        limits:
+          cpu: 30m
+          memory: 512Mi
+        requests:
+          cpu: 200m
+          memory: 512Mi
     
     prometheus-node-exporter:
       tolerations: 
