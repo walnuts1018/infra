@@ -22,18 +22,18 @@ spec:
     defaultSettings:
       allowNodeDrainWithLastHealthyReplica: true
       orphanAutoDeletion: true
+      backupTarget: "cifs://samba.walnuts.dev/share/longhorn"
+      backupTargetCredentialSecret: "longhorn-cifs-secret"
     csi:
       attacherReplicaCount: 1
       provisionerReplicaCount: 1
       resizerReplicaCount: 1
       snapshotterReplicaCount: 1
-
     service:
       ui:
         type: ClusterIP
     persistence:
       defaultClassReplicaCount: 2
-      
     longhornUI:
       replicas: 1
     longhornConversionWebhook:
