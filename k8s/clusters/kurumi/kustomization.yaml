@@ -14,10 +14,11 @@ resources:
 - ../../apps/sealed-secrets
 
 # --- metrics ---
-- ../../apps/prometheus
 - ../../apps/grafana
 - ../../apps/metrics-server
 - ../../apps/victoria-metrics
+- ../../apps/node-exporter
+- ../../apps/kube-state-metrics
 
 # --- apps ---
 - ../../apps/machine-status-api
