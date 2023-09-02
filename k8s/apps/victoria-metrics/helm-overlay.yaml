@@ -29,6 +29,5 @@ spec:
         # requests:
         #   cpu: 500m
         #   memory: 512Mi
-      statefulset:
-        service:
-          type: LoadBalancer
+      service:
+        type: LoadBalancer
