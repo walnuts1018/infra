@@ -31,6 +31,7 @@ spec:
         requests:
           cpu: 30m
           memory: 256Mi
+      retention: 2d
     
     prometheus-node-exporter:
       tolerations: 
