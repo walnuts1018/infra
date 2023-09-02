@@ -14,6 +14,7 @@ resources:
 - ../../apps/sealed-secrets
 
 # --- metrics ---
+- ../../apps/prometheus
 - ../../apps/grafana
 - ../../apps/metrics-server
 - ../../apps/victoria-metrics
@@ -44,4 +45,3 @@ resources:
 #- ../../apps/misskey
 #- ../../apps/nextcloud
 # - ../../apps/mysql
-#- ../../apps/prometheus
