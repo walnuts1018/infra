@@ -17,6 +17,7 @@ resources:
 - ../../apps/prometheus
 - ../../apps/grafana
 - ../../apps/metrics-server
+- ../../apps/victoria-metrics
 
 # --- apps ---
 - ../../apps/machine-status-api
