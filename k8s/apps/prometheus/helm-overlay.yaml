@@ -18,7 +18,6 @@ spec:
   values:
     server:
       persistentVolume:
-        size: 40Gi
         existingClaim: "prometheus-pvc"
       remoteWrite:
         - url: http://victoria-metrics-single-server.monitoring.svc.cluster.local:8428/api/v1/write
