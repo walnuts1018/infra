@@ -20,10 +20,10 @@ spec:
       persistentVolume:
         size: 40Gi
         existingClaim: "prometheus-pvc"
-
+      remoteWrite:
+        - url: http://victoria-metrics-single-server.default.svc.cluster.local:8428/api/v1/write
       service:
         type: LoadBalancer
-
       resources:
         limits:
           cpu: 300m
