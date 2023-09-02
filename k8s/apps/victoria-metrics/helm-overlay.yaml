@@ -16,7 +16,8 @@ spec:
       chart: victoria-metrics-single
       version: 0.9.4
   values:
-    server :
+    server:
+      fullnameOverride: "single-server"
       persistentVolume:
         existingClaim: "victoria-metrics-pvc"
 
