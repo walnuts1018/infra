@@ -29,5 +29,3 @@ spec:
         # requests:
         #   cpu: 500m
         #   memory: 512Mi
-      service:
-        type: LoadBalancer
