@@ -4,6 +4,7 @@ namePrefix: victoria-metrics-
 namespace: monitoring
 resources:
   - pvc.yaml
+  - service.yaml
 components:
 - ../../components/helm
 patchesStrategicMerge:
