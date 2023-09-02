@@ -13,45 +13,17 @@ metadata:
 spec:
   chart:
     spec:
-      chart: prometheus
-      version: 24.0.0
+      chart: kube-state-metrics
+      version: 5.12.1
   values:
-    server:
-      persistentVolume:
-        existingClaim: "prometheus-pvc"
-      remoteWrite:
-        - url: http://victoria-metrics-single-server.monitoring.svc.cluster.local:8428/api/v1/write
-      service:
-        type: LoadBalancer
-      resources:
-        limits:
-          cpu: 300m
-          memory: 512Mi
-        requests:
-          cpu: 30m
-          memory: 256Mi
-      retention: 1d
-    
-    prometheus-node-exporter:
-      tolerations: 
-        - key: "remote-node"
-          operator: "Exists"
-          
-    # adds additional scrape configs to prometheus.yml
-    # must be a string so you have to add a | after extraScrapeConfigs:
-    # example adds prometheus-blackbox-exporter scrape config
-    extraScrapeConfigs: |
-      - job_name: 'node'
-        #metrics_path: /probe
-        #params:
-        #  module: [http_2xx]
-        static_configs:
-          - targets:
-            - 192.168.0.11:9100
-        #relabel_configs:
-        #  - source_labels: [__address__]
-        #    target_label: __param_target
-        #  - source_labels: [__param_target]
-        #    target_label: instance
-        #  - target_label: __address__
-        #    replacement: prometheus-blackbox-exporter:9115
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: prometheus-node-exporter
+      version: 4.22.1
+  values:
