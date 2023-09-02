@@ -17,7 +17,7 @@ spec:
       version: 0.9.4
   values:
     server:
-      fullnameOverride: "victoria-metorics-single-server"
+      fullnameOverride: "victoria-metrics-single-server"
       persistentVolume:
         existingClaim: "victoria-metrics-pvc"
 
