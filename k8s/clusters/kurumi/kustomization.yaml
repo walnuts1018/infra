@@ -22,7 +22,6 @@ resources:
 - ../../apps/machine-status-api
 - ../../apps/proxmox-webui
 - ../../apps/tailscale-subnet-router
-- ../../apps/mysql
 - ../../apps/keycloak
 - ../../apps/kmc-proxy
 - ../../apps/longhorn-oauth2-proxy
@@ -43,3 +42,4 @@ resources:
 #- ../../apps/actions-runner-controller
 #- ../../apps/misskey
 #- ../../apps/nextcloud
+# - ../../apps/mysql
