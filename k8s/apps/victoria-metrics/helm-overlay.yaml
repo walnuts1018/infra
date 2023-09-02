@@ -21,8 +21,7 @@ spec:
       persistentVolume:
         existingClaim: "victoria-metrics-pvc"
 
-      resources:
-        {}
+      #resources:
         # limits:
         #   cpu: 500m
         #   memory: 512Mi
