@@ -15,9 +15,6 @@ spec:
     spec:
       chart: oauth2-proxy
       version: 6.16.1
-      sourceRef:
-        kind: HelmRepository
-        name: longhorn-oauth2-proxy-repo     
   values:
     config:
       existingSecret: longhorn-oauth2-proxy-secret
