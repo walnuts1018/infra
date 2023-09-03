@@ -23,11 +23,11 @@ spec:
       existingSecret: longhorn-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local/#/dashboard" ]
+        upstreams = [ "http://victoria-metrics-single-server.monitoring.svc.cluster.local/" ]
 
     extraArgs:
       provider: keycloak-oidc
-      redirect-url: https://longhorn.walnuts.dev/oauth2/callback
+      redirect-url: https://victoria-metrics.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev/realms/master
       allowed-role: admin
       #reverse-proxy: true
@@ -41,7 +41,7 @@ spec:
       pathType: Prefix
       # Used to create an Ingress record.
       hosts:
-       - "longhorn.walnuts.dev"
+       - "victoria-metrics.walnuts.dev"
 
     # Configure the session storage type, between cookie and redis
     sessionStorage:
@@ -49,13 +49,13 @@ spec:
       type: redis
       redis:
         # Name of the Kubernetes secret containing the redis & redis sentinel password values (see also `sessionStorage.redis.passwordKey`)
-        existingSecret: "longhorn-oauth2-proxy-secret"
+        existingSecret: "vm-oauth2-proxy-secret"
         # Key of the Kubernetes secret data containing the redis password value
         passwordKey: "redis-password"
         # Can be one of standalone|cluster|sentinel
         clientType: "sentinel"
         sentinel:
-          existingSecret: "longhorn-oauth2-proxy-secret"
+          existingSecret: "vm-oauth2-proxy-secret"
           passwordKey: "redis-password"
           # Redis sentinel master name
           masterName: "mymaster"          

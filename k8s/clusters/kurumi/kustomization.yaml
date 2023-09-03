@@ -17,6 +17,7 @@ resources:
 - ../../apps/grafana
 - ../../apps/metrics-server
 - ../../apps/victoria-metrics
+- ../../apps/vm-oauth2-proxy
 - ../../apps/node-exporter
 - ../../apps/kube-state-metrics
 
