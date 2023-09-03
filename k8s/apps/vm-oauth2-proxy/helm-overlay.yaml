@@ -17,7 +17,7 @@ spec:
       version: 6.16.1
   values:
     config:
-      existingSecret: longhorn-oauth2-proxy-secret
+      existingSecret: vm-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
         upstreams = [ "http://victoria-metrics-single-server.monitoring.svc.cluster.local/" ]
