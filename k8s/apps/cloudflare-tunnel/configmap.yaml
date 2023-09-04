@@ -5,8 +5,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cloudflared
-  namespace: network-exporter
+  name: configmap
 data:
   config.yaml: |
     tunnel: k8s-tunnel
