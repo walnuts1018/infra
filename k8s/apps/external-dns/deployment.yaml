@@ -21,7 +21,7 @@ spec:
         - --source=ingress
         - --domain-filter=walnuts.dev
         - --provider=cloudflare
-        - --cloudflare-proxied
+        #- --cloudflare-proxied
         env:
         - name: CF_API_TOKEN
           valueFrom:
