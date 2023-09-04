@@ -2,8 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: http-dump
+  annotations:
+    konghq.com/strip-path: "true"
 spec:
-  ingressClassName: "nginx"
+  ingressClassName: "kong"
   rules:
   - host: "httptest.walnuts.dev"
     http:
