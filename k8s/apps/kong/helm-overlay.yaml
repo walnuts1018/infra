@@ -18,13 +18,12 @@ spec:
   values:
     env:
       database: postgres
-      customEnv:
-        pg_host: "postgres-release-postgresql.databases.svc.cluster.local"
-        pg_port: 5432
-        pg_user: kong
-        pg_password:
-          valueFrom:
-            secretKeyRef:
-              key: kong-secret
-              name: pg-password
-        pg_database: kong
+      pg_host: "postgres-release-postgresql.databases.svc.cluster.local"
+      pg_port: 5432
+      pg_user: kong
+      pg_password:
+        valueFrom:
+          secretKeyRef:
+            key: kong-secret
+            name: pg-password
+      pg_database: kong
