@@ -3,6 +3,6 @@ kind: Kustomization
 namePrefix: cloudflare-tunnel-
 namespace: network-exporter
 resources:
-  - ingress.yaml
-  - service.yaml
   - deployment.yaml
+  - sealedsecret.yaml
+  - configmap.yaml
