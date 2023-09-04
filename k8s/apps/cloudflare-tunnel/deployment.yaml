@@ -22,7 +22,7 @@ spec:
         - /bin/sh
         - -c
         - sysctl -w kern.ipc.maxsockbuf=2411725
-        image: docker.io/debian:12.1-slim
+        image: docker.io/debian:12.1
         name: sysctl
         imagePullPolicy: IfNotPresent
         resources: {}
