@@ -37,8 +37,8 @@ resources:
 - ../../apps/samba
 - ../../apps/postgresql
 - ../../apps/kong
-- ../../apps/cloudflare-tunnel
 
+#- ../../apps/cloudflare-tunnel
 # --- archives ---
 #- ../../apps/home-controller-proxy
 #- ../../apps/influxdb
