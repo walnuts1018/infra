@@ -23,8 +23,8 @@ spec:
         - -c
         - sysctl -w kern.ipc.maxsockbuf=2411725
         image: cloudflare/cloudflared:2023.8.2
-        imagePullPolicy: IfNotPresent
         name: sysctl
+        imagePullPolicy: IfNotPresent
         resources: {}
         securityContext:
           privileged: true
