@@ -17,6 +17,8 @@ spec:
         sysctls:
         - name: net.ipv4.ping_group_range
           value: "0 2147483647"
+        - name: kern.ipc.maxsockbuf
+          value: "2411725"
       containers:
       - name: cloudflared
         image: cloudflare/cloudflared:2023.8.2
