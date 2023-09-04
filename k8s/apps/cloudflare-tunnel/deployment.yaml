@@ -22,7 +22,7 @@ spec:
         - /bin/sh
         - -c
         - sysctl -w kern.ipc.maxsockbuf=2411725
-        image: cloudflare/cloudflared:2023.8.2
+        image: docker.io/debian:12.1-slim
         name: sysctl
         imagePullPolicy: IfNotPresent
         resources: {}
@@ -30,7 +30,7 @@ spec:
           privileged: true
       containers:
       - name: cloudflared
-        image: cloudflare/cloudflared:2023.8.2
+        image: docker.io/cloudflare/cloudflared:2023.8.2
         imagePullPolicy: IfNotPresent
         args:
         - --no-autoupdate
