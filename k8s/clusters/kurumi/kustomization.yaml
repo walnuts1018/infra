@@ -36,7 +36,7 @@ resources:
 - ../../apps/github-readme-stats
 - ../../apps/samba
 - ../../apps/postgresql
-- ../../apps/kong
+#- ../../apps/kong
 
 # --- archives ---
 #- ../../apps/home-controller-proxy
