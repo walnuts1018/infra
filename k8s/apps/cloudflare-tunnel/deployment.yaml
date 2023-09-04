@@ -19,7 +19,7 @@ spec:
           value: "0 2147483647"
       initContainers:
       - command:
-        - sh
+        - /bin/bash
         - -c
         - sysctl -w kern.ipc.maxsockbuf=2411725
         image: cloudflare/cloudflared:2023.8.2
