@@ -2,6 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: http-dump
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: "httptest.walnuts.dev"
 spec:
   ingressClassName: "kong"
   rules:
