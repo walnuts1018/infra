@@ -17,17 +17,6 @@ spec:
         sysctls:
         - name: net.ipv4.ping_group_range
           value: "0 2147483647"
-      initContainers:
-      - command:
-        - /bin/sh
-        - -c
-        - sysctl -w kern.ipc.maxsockbuf=2411725
-        image: docker.io/debian:12.1
-        name: sysctl
-        imagePullPolicy: IfNotPresent
-        resources: {}
-        securityContext:
-          privileged: true
       containers:
       - name: cloudflared
         image: docker.io/cloudflare/cloudflared:2023.8.2
