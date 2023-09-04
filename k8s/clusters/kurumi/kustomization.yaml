@@ -12,6 +12,7 @@ resources:
 - ../../apps/metallb
 - ../../apps/longhorn
 - ../../apps/sealed-secrets
+- ../../apps/external-dns
 
 # --- metrics ---
 - ../../apps/grafana
