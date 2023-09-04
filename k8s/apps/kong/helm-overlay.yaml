@@ -24,6 +24,6 @@ spec:
       pg_password:
         valueFrom:
           secretKeyRef:
-            key: kong-secret
-            name: pg-password
+            name: kong-secret
+            key: pg-password
       pg_database: kong
