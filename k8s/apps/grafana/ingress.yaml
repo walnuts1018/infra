@@ -6,8 +6,6 @@ metadata:
 
 spec:
   ingressClassName: "nginx"
-  type: ExternalName
-  externalName: 4262dac3-569f-46ac-aa3a-b1397fb8d012.cfargotunnel.com
   rules:
   - host: "grafana.walnuts.dev"
     http:
