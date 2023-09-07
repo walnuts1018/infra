@@ -184,15 +184,6 @@ spec:
               scrape_interval: 5m
               scrape_timeout: 30s
             - honor_labels: true
-              job_name: prometheus-pushgateway
-              kubernetes_sd_configs:
-              - role: service
-              relabel_configs:
-              - action: keep
-                regex: pushgateway
-                source_labels:
-                - __meta_kubernetes_service_annotation_prometheus_io_probe
-            - honor_labels: true
               job_name: kubernetes-services
               kubernetes_sd_configs:
               - role: service
@@ -226,6 +217,10 @@ spec:
               kubernetes_sd_configs:
               - role: pod
               relabel_configs:
+              - action: drop
+                regex: ^(?!monitoring).*$
+                source_labels:
+                - __meta_kubernetes_namespace
               - action: keep
                 regex: true
                 source_labels:
@@ -284,6 +279,10 @@ spec:
               kubernetes_sd_configs:
               - role: pod
               relabel_configs:
+              - action: drop
+                regex: ^(?!monitoring).*$
+                source_labels:
+                - __meta_kubernetes_namespace
               - action: keep
                 regex: true
                 source_labels:
