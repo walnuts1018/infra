@@ -6,3 +6,11 @@ config:
   minute: 5
   policy: local
 plugin: rate-limiting
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: http-dump-jwt
+config:
+  global: true
+plugin: jwt
