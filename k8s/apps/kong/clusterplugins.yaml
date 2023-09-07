@@ -2,8 +2,7 @@
 apiVersion: configuration.konghq.com/v1
 kind: KongClusterPlugin
 metadata:
-  name: rate-limiting
-plugin: rate-limiting
+  name: keycloak-auth
 config:
-  minute: 5
-  policy: local
+  global: "true"
+plugin: jwt
