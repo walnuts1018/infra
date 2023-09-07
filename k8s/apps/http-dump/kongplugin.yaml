@@ -12,5 +12,5 @@ kind: KongPlugin
 metadata:
   name: http-dump-jwt
 config:
-  global: true
+  global: "true"
 plugin: jwt
