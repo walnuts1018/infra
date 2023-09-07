@@ -4,5 +4,4 @@ kind: KongClusterPlugin
 metadata:
   name: keycloak-auth
 config:
-  global: "true"
 plugin: jwt
