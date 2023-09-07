@@ -10,5 +10,6 @@ plugin: rate-limiting
 apiVersion: configuration.konghq.com/v1
 kind: KongPlugin
 metadata:
-  name: http-dump-jwt
-plugin: jwt
+  name: http-dump-oauth2
+plugin: oauth2
+config:
