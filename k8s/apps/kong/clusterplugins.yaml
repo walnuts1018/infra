@@ -1,0 +1,9 @@
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongClusterPlugin
+metadata:
+  name: rate-limiting
+plugin: rate-limiting
+config:
+  minute: 5
+  policy: local

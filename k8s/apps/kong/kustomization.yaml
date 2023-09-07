@@ -4,6 +4,7 @@ namePrefix: kong-
 namespace: kong-system
 resources:
   - sealedsecret.yaml
+  - clusterplugins.yaml
 components:
 - ../../components/helm
 patchesStrategicMerge:
