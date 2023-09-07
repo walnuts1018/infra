@@ -217,8 +217,8 @@ spec:
               kubernetes_sd_configs:
               - role: pod
               relabel_configs:
-              - action: drop
-                regex: ^(?!monitoring).*$
+              - action: keep
+                regex: monitoring
                 source_labels:
                 - __meta_kubernetes_namespace
               - action: keep
@@ -279,8 +279,8 @@ spec:
               kubernetes_sd_configs:
               - role: pod
               relabel_configs:
-              - action: drop
-                regex: ^(?!monitoring).*$
+              - action: keep
+                regex: monitoring
                 source_labels:
                 - __meta_kubernetes_namespace
               - action: keep
