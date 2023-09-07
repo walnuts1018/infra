@@ -4,7 +4,7 @@ metadata:
   name: http-dump
   annotations:
     external-dns.alpha.kubernetes.io/hostname: "httptest.walnuts.dev"
-    konghq.com/plugins: rate-limiting
+    konghq.com/plugins: http-dump-rate-limiting
 spec:
   ingressClassName: "kong"
   rules:
