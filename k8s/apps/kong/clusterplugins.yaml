@@ -3,5 +3,4 @@ apiVersion: configuration.konghq.com/v1
 kind: KongClusterPlugin
 metadata:
   name: keycloak-auth
-config:
 plugin: jwt
