@@ -3,8 +3,7 @@ kind: ConfigMap
 metadata:
   name: krakend-configmap
 data:
-  key: krakend.json
-  value: |-
+  krakend.json: |
     {
       "$schema": "https://www.krakend.io/schema/krakend.json",
       "version": 3,
