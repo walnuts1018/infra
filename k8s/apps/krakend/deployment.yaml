@@ -17,7 +17,7 @@ spec:
         image: devopsfaith/krakend:2.4
         ports:
         - containerPort: 8080
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         command: [ "/usr/bin/krakend" ]
         args: [ "run", "-d", "-c", "/etc/krakend/krakend.json", "-p", "8080" ]
         securityContext:
