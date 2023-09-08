@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: krakend
-        image: docker.io/r/devopsfaith/krakend:2.4
+        image: registry.hub.docker.com/r/devopsfaith/krakend:2.4
         ports:
         - containerPort: 8080
         imagePullPolicy: Never
