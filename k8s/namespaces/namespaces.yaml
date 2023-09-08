@@ -51,4 +51,4 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: kong-system
+  name: krakend-system
