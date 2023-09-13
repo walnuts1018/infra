@@ -16,4 +16,4 @@ metadata:
 spec:
   policy:
     semver:
-      range: ">=v1.0.0 <v2.0.0"
+      range: ">=1.0.0 <2.0.0"
