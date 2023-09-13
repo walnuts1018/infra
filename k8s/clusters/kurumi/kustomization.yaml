@@ -38,6 +38,8 @@ resources:
 - ../../apps/samba
 - ../../apps/postgresql
 - ../../apps/krakend
+- ../../apps/blog
+
 # --- archives ---
 #- ../../apps/home-controller-proxy
 #- ../../apps/influxdb
