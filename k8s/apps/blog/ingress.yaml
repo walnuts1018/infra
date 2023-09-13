@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blog
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: "blog.walnuts.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: blog
+            port:
+              number: 80
