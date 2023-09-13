@@ -39,10 +39,10 @@ resources:
 - ../../apps/postgresql
 - ../../apps/krakend
 - ../../apps/blog
+- ../../apps/influxdb
 
 # --- archives ---
 #- ../../apps/home-controller-proxy
-#- ../../apps/influxdb
 #- ../../apps/descheduler
 #- ../../apps/misskey-samba
 #- ../../apps/cert-manager
