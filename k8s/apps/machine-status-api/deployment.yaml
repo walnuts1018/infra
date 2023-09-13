@@ -19,7 +19,7 @@ spec:
       containers:
       - name: machine-status-api
         image: ghcr.io/walnuts1018/machine-status-api:v1.0.2 # {"$imagepolicy": "flux-system:machine-status-api-policy"}
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         securityContext:
           runAsGroup: 997
           privileged: true
