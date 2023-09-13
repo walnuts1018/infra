@@ -39,7 +39,7 @@ resources:
 - ../../apps/postgresql
 - ../../apps/krakend
 - ../../apps/blog
-- ../../apps/influxdb
+#- ../../apps/influxdb
 
 # --- archives ---
 #- ../../apps/home-controller-proxy
