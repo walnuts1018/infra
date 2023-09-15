@@ -16,4 +16,4 @@ metadata:
 spec:
   policy:
     semver:
-      range: 1.1.x
+      range: 1.x.x
