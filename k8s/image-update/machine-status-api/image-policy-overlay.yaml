@@ -5,9 +5,6 @@ metadata:
   name: repo
 spec:
   image: ghcr.io/walnuts1018/machine-status-api
-  interval: 2m0s
-  secretRef:
-    name: ghcr-login-secret
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
