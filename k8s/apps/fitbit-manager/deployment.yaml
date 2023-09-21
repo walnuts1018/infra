@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fitbit-manager
+  labels:
+    app: fitbit-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fitbit-manager
+  template:
+    metadata:
+      labels:
+        app: fitbit-manager
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: fitbit-manager
+        image: ghcr.io/walnuts1018/fitbit-manager:0.2.0
+        imagePullPolicy: Always
+        securityContext:
+          runAsGroup: 997
+          privileged: true
+        ports:
+          - containerPort: 8080
+        env:
+          - name: GIN_MODE
+            value: "release"
+          - name: CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: fitbit-manager-secret
+                key: client_id
+          - name: CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: fitbit-manager-secret
+                key: client_secret
+          - name: COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: fitbit-manager-secret
+                key: cookie_secret
+          - name: PSQL_ENDPOINT
+            value: "postgres-release-postgresql.databases.svc.cluster.local"
+          - name: PSQL_PORT
+            value: "5432"
+          - name: PSQL_DATABASE
+            value: "fitbit_manager"
+          - name: PSQL_USER
+            value: "postgres"
+          - name: PSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: fitbit-manager-secret
+                key: postgres_password
+          - name: INFLUXDB_ENDPOINT
+            value: "http://influxdb-release-influxdb2.databases.svc.cluster.local:8086"
+          - name: INFLUXDB_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: fitbit-manager-secret
+                key: influxdb_auth_token
+          - name: INFLUXDB_ORG
+            value: "influxdata"
+          - name: INFLUXDB_BUCKET
+            value: "fitbit_manager"
