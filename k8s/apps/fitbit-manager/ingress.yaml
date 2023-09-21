@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fitbit-manager
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: "fitbit.walnuts.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: fitbit-manager
+            port:
+              number: 8080
