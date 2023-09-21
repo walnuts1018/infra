@@ -40,6 +40,7 @@ resources:
 - ../../apps/krakend
 - ../../apps/blog
 - ../../apps/influxdb
+- ../../apps/fitbit-manager
 
 # --- archives ---
 #- ../../apps/home-controller-proxy
