@@ -57,7 +57,7 @@ spec:
                 name: fitbit-manager-secret
                 key: postgres_password
           - name: INFLUXDB_ENDPOINT
-            value: "http://influxdb-release-influxdb2.databases.svc.cluster.local:8086"
+            value: "http://influxdb-release-influxdb2.databases.svc.cluster.local"
           - name: INFLUXDB_AUTH_TOKEN
             valueFrom:
               secretKeyRef:
