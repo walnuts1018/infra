@@ -50,7 +50,7 @@ spec:
           - name: PSQL_DATABASE
             value: "fitbit_manager"
           - name: PSQL_USER
-            value: "postgres"
+            value: "fitbit_manager"
           - name: PSQL_PASSWORD
             valueFrom:
               secretKeyRef:
