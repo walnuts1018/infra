@@ -41,6 +41,7 @@ resources:
 - ../../apps/blog
 - ../../apps/influxdb
 - ../../apps/fitbit-manager
+- ../../apps/wakatime-to-slack-profile
 
 # --- archives ---
 #- ../../apps/home-controller-proxy

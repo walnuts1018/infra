@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wakatime-to-slack-profile
+  labels:
+    app: wakatime-to-slack-profile
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wakatime-to-slack-profile
+  template:
+    metadata:
+      labels:
+        app: wakatime-to-slack-profile
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: wakatime-to-slack-profile
+        image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.1.1
+        imagePullPolicy: Always
+        securityContext:
+          runAsGroup: 997
+          privileged: true
+        ports:
+          - containerPort: 8080
+        env:
+          - name: GIN_MODE
+            value: "release"
+          - name: WAKATIME_APP_ID
+            valueFrom:
+              secretKeyRef:
+                name: wakatime-to-slack-profile-secret
+                key: wakatime-app-id
+          - name: WAKATIME_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: wakatime-to-slack-profile-secret
+                key: wakatime-client-secret
+          - name: COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: wakatime-to-slack-profile-secret
+                key: cookie-secret
+          - name: PSQL_ENDPOINT
+            value: "postgres-release-postgresql.databases.svc.cluster.local"
+          - name: PSQL_PORT
+            value: "5432"
+          - name: PSQL_DATABASE
+            value: "wakatime_to_slack"
+          - name: PSQL_USER
+            value: "wakatime"
+          - name: PSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: wakatime-to-slack-profile-secret
+                key: postgres-password
+          - name: SLACK_ACCESS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: wakatime-to-slack-profile-secret
+                key: slack-access-token
