@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wakatime-to-slack-profile
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: "wakatime.walnuts.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: wakatime-to-slack-profile
+            port:
+              number: 8080
