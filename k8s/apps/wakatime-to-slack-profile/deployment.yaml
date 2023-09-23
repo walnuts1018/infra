@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
       - name: wakatime-to-slack-profile
-        image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.1.2
+        image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.1.3
         imagePullPolicy: Always
         securityContext:
           runAsGroup: 997
@@ -62,7 +62,7 @@ spec:
                 name: wakatime-to-slack-profile-secret
                 key: slack-access-token
         volumeMounts:
-        - mountPath: /app
+        - mountPath: /app/emoji.json
           readOnly: true
           name: emoji-json
         resources:
