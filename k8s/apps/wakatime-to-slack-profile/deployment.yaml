@@ -62,12 +62,13 @@ spec:
                 name: wakatime-to-slack-profile-secret
                 key: slack-access-token
         volumeMounts:
-        - mountPath: /app/
+        - mountPath: /app/emoji.json
+          subPath: emoji.json
           readOnly: true
           name: emoji-json
         resources:
           limits:
-            cpu: "10m"
+            cpu: "50m"
             memory: "100Mi"
           requests:
             cpu: "1m"
