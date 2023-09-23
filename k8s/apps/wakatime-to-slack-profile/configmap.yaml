@@ -5,6 +5,6 @@ metadata:
 data:
   emoji.json: |
     {
-      "Go":"gopher"
+      "Go":"gopher",
       "YAML": "k8s"
     }
