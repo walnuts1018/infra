@@ -71,7 +71,7 @@ spec:
             memory: "100Mi"
           requests:
             cpu: "1m"
-            memory: "10Mi"
+            memory: "5Mi"
       volumes:
       - name: emoji-json
         configMap: 
