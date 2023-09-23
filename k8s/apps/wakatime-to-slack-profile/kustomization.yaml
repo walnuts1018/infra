@@ -6,3 +6,4 @@ resources:
   - service.yaml
   - sealedsecret.yaml
   - ingress.yaml
+  - configmap.yaml
