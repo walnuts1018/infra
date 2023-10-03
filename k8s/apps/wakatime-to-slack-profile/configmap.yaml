@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wakatime-to-slack-profile-conf
+data:
+  emoji.json: |
+    {
+      "Go":"gopher",
+      "YAML": "k8s",
+      "SQL": "postgresql"
+    }
