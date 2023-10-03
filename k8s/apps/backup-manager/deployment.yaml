@@ -46,7 +46,7 @@ spec:
           - name: SAMBA_DST_DIR
             value: "/mnt/HDD1TB/smb-backup"
           - name: LOG_FILE
-            value: "./log/smb-backup"
+            value: "/app/log/smb-backup"
           - name: SAMBA_TASK_INTERVAL_DAYS
             value: "1"
           - name: SAMBA_TASK_DO_AT
@@ -55,6 +55,8 @@ spec:
           - name: ssh-key
             mountPath: /app/id_ed25519
             subPath: id_ed25519
+          - name: log
+            mountPath: /app/log
       volumes:
         - name: ssh-key
           secret:
@@ -62,4 +64,7 @@ spec:
             items:
               - key: id_ed25519
                 path: id_ed25519
+        - name: log
+          persistentVolumeClaim:
+            claimName: backup-manager-pvc
 
