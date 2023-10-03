@@ -13,4 +13,4 @@ metadata:
 spec:
   policy:
     semver:
-      range: '>=0.0.0'
+      range: '^1'
