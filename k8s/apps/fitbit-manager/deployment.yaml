@@ -25,6 +25,9 @@ spec:
           privileged: true
         ports:
           - containerPort: 8080
+        resources:
+          limits: {}
+          requests: {}
         env:
           - name: GIN_MODE
             value: "release"
