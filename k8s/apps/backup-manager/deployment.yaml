@@ -38,7 +38,7 @@ spec:
           - name: SAMBA_HOST_SSH_USER
             value: "root"
           - name: SAMBA_HOST_SSH_KEY_PATH
-            value: "/home/juglans/.ssh/id_ed25519"
+            value: "/app/id_ed25519"
           - name: SAMBA_HOST_SSH_PUBLIC_KEY
             value: "192.168.0.11 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKA/69GWs4ObygheeroJRf3mKp+IS9naaStqhL5C0hNVa090I7Ok0ngLEw6KyDYbc0i/qeHJ+71R+/HcteNJxw0="
           - name: SAMBA_SRC_DIR
@@ -51,5 +51,15 @@ spec:
             value: "1"
           - name: SAMBA_TASK_DO_AT
             value: "02:00"
-
+        volumeMounts:
+          - name: ssh-key
+            mountPath: /app/id_ed25519
+            subPath: id_ed25519
+      volumes:
+        - name: ssh-key
+          secret:
+            secretName: backup-manager-secret
+            items:
+              - key: id_ed25519
+                path: id_ed25519
 
