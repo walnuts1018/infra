@@ -18,13 +18,16 @@ spec:
         - name: regcred
       containers:
       - name: wakatime-to-slack-profile
-        image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.1.2
+        image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.1.2 # {"$imagepolicy": "flux-system:wakatime-to-slack-profile-policy"}
         imagePullPolicy: Always
         securityContext:
           runAsGroup: 997
           privileged: true
         ports:
           - containerPort: 8080
+        resources:
+          limits: {}
+          requests: {}
         env:
           - name: GIN_MODE
             value: "release"
