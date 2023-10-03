@@ -4,4 +4,4 @@ namespace: default
 resources:
   - deployment.yaml
   - service.yaml
-  - serviceaccount.yaml
+  - sealedsecret.yaml
