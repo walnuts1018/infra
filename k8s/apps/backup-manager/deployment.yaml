@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backup-manager
+  labels:
+    app: backup-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backup-manager
+  template:
+    metadata:
+      labels:
+        app: backup-manager
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: backup-manager
+        image: ghcr.io/walnuts1018/backup-manager:0.0.0  # {"$imagepolicy": "flux-system:backup-manager-policy"}
+        imagePullPolicy: Always
+        securityContext:
+          runAsGroup: 997
+          privileged: true
+        ports:
+          - containerPort: 8080
+        resources:
+          limits: {}
+          requests: {}
+        env:
+          - name: GIN_MODE
+            value: "release"
+          - name: SAMBA_HOST_SSH_URL
+            value: "192.168.0.11"
+          - name: SAMBA_HOST_SSH_PORT
+            value: "22"
+          - name: SAMBA_HOST_SSH_USER
+            value: "root"
+          - name: SAMBA_HOST_SSH_KEY_PATH
+            value: "/home/juglans/.ssh/id_ed25519"
+          - name: SAMBA_HOST_SSH_PUBLIC_KEY
+            value: "192.168.0.11 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKA/69GWs4ObygheeroJRf3mKp+IS9naaStqhL5C0hNVa090I7Ok0ngLEw6KyDYbc0i/qeHJ+71R+/HcteNJxw0="
+          - name: SAMBA_SRC_DIR
+            value: "/mnt/share/"
+          - name: SAMBA_DST_DIR
+            value: "/mnt/HDD1TB/smb-backup"
+          - name: LOG_FILE
+            value: "./log/smb-backup"
+          - name: SAMBA_TASK_INTERVAL_DAYS
+            value: "1"
+          - name: SAMBA_TASK_DO_AT
+            value: "02:00"
+
+

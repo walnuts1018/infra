@@ -1,0 +1,16 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: repo
+spec:
+  image: ghcr.io/walnuts1018/wakatime-to-slack-profile
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: policy
+spec:
+  policy:
+    semver:
+      range: '>=1.0.0'

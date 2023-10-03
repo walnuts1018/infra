@@ -6,3 +6,7 @@ resources:
   - ./sweets-rebellion
   - ./keycloak
   - ./machine-status-api
+  - ./wakatime-to-slack-profile
+  - ./fitbit-manager
+  - ./backup-manager
+  - ./github-readme-stats

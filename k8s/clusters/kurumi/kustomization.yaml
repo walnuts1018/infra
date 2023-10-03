@@ -42,7 +42,7 @@ resources:
 - ../../apps/influxdb
 - ../../apps/fitbit-manager
 - ../../apps/wakatime-to-slack-profile
-
+- ../../apps/backup-manager
 # --- archives ---
 #- ../../apps/home-controller-proxy
 #- ../../apps/descheduler
