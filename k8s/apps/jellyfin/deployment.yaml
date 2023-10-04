@@ -27,7 +27,7 @@ spec:
           name: jellyfin-config-persistent-storage
         - mountPath: /media
           name: jellyfin-data-persistent-storage
-      restartPolicy: Always
+      restartPolicy: IfNotPresent
       volumes:
       - name: jellyfin-cache-persistent-storage
         persistentVolumeClaim:

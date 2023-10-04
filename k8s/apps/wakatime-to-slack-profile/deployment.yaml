@@ -19,7 +19,7 @@ spec:
       containers:
       - name: wakatime-to-slack-profile
         image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.1.4 # {"$imagepolicy": "flux-system:wakatime-to-slack-profile-policy"}
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         securityContext:
           runAsGroup: 997
           privileged: true
