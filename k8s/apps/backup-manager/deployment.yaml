@@ -19,7 +19,7 @@ spec:
       containers:
       - name: backup-manager
         image: ghcr.io/walnuts1018/backup-manager:0.0.0  # {"$imagepolicy": "flux-system:backup-manager-policy"}
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         securityContext:
           runAsGroup: 997
           privileged: true
