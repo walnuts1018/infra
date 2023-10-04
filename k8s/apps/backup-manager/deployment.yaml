@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
         - name: backup-manager
-          image: ghcr.io/walnuts1018/backup-manager:0.0.2 # {"$imagepolicy": "flux-system:backup-manager-policy"}
+          image: ghcr.io/walnuts1018/backup-manager:0.0.3 # {"$imagepolicy": "flux-system:backup-manager-policy"}
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsGroup: 997
