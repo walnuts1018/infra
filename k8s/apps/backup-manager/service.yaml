@@ -6,7 +6,7 @@ metadata:
     app: backup-manager
 spec:
   ports:
-  - name: http
+  - name: metrics
     port: 8080
     targetPort: 8080
   selector:
