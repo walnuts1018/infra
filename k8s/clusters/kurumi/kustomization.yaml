@@ -15,6 +15,7 @@ resources:
 - ../../apps/external-dns
 - ../../apps/external-secrets
 - ../../apps/vault
+- ../../apps/samba
 
 # --- metrics ---
 - ../../apps/grafana
@@ -37,7 +38,6 @@ resources:
 - ../../apps/sweets-rebellion-oauth2-proxy
 - ../../apps/redis
 - ../../apps/github-readme-stats
-- ../../apps/samba
 - ../../apps/postgresql
 - ../../apps/krakend
 - ../../apps/blog
