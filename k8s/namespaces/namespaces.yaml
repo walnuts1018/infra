@@ -52,3 +52,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: krakend-system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-secrets

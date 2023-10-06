@@ -13,6 +13,7 @@ resources:
 - ../../apps/longhorn
 - ../../apps/sealed-secrets
 - ../../apps/external-dns
+- ../../apps/external-secrets
 
 # --- metrics ---
 - ../../apps/grafana
@@ -43,6 +44,7 @@ resources:
 - ../../apps/fitbit-manager
 - ../../apps/wakatime-to-slack-profile
 - ../../apps/backup-manager
+
 # --- archives ---
 #- ../../apps/home-controller-proxy
 #- ../../apps/descheduler
