@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: keycloak
-        image: ghcr.io/walnuts1018/keycloak:c9634a2c7e5c1e4faae29c910597a58260b320e1-13 # {"$imagepolicy": "flux-system:keycloak-policy"}
+        image: ghcr.io/walnuts1018/keycloak:c9634a2c7e5c1e4faae29c910597a58260b320e1-14 # {"$imagepolicy": "flux-system:keycloak-policy"}
         args: ["--verbose", "start", "--optimized", "--hostname-strict=false", "--hostname-strict-https=false"]
         env:
         - name: KEYCLOAK_ADMIN
