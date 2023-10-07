@@ -9,8 +9,8 @@ spec:
     - name: namespaces
     - name: flannel
   healthChecks:
-  - kind: HelmRelease
-    name: node-exporter-release
+  - kind: Daemonset
+    name: node-exporter-release-prometheus-node-exporter
     namespace: monitoring
   interval: 10m0s
   path: ./k8s/apps/node-exporter
