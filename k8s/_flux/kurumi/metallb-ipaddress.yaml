@@ -2,19 +2,15 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: http-dump
+  name: metallb-ipaddress
   namespace: flux-system
 spec:
   dependsOn:
     - name: namespace
     - name: flannel
-    - name: ingress-nginx
-  healthChecks:
-  - kind: Deployment
-    name: http-dump
-    namespace: default
+    - name: metallb
   interval: 10m0s
-  path: ./k8s/apps/http-dump
+  path: ./k8s/apps/metallb-ipaddress
   prune: true
   sourceRef:
     kind: GitRepository
