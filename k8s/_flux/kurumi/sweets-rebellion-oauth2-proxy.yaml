@@ -2,19 +2,22 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: http-dump
+  name: sweets-rebellion-oauth2-proxy
   namespace: flux-system
 spec:
   dependsOn:
     - name: namespace
     - name: flannel
+    - name: sealed-secrets
     - name: ingress-nginx
+    - name: redis
+    - name: sweets-rebellion
   healthChecks:
-  - kind: Deployment
-    name: http-dump
-    namespace: default
+  - kind: HelmRelease
+    name: sweets-rebellion-oauth2-proxy-release
+    namespace: sweets-rebellion
   interval: 10m0s
-  path: ./k8s/apps/http-dump
+  path: ./k8s/apps/sweets-rebellion-oauth2-proxy
   prune: true
   sourceRef:
     kind: GitRepository

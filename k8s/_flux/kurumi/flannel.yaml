@@ -2,19 +2,17 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: http-dump
+  name: flannel
   namespace: flux-system
 spec:
   dependsOn:
     - name: namespace
-    - name: flannel
-    - name: ingress-nginx
   healthChecks:
-  - kind: Deployment
-    name: http-dump
-    namespace: default
+  - kind: DaemonSet
+    name: kube-flannel-ds
+    namespace: kube-flannel
   interval: 10m0s
-  path: ./k8s/apps/http-dump
+  path: ./k8s/apps/flannel
   prune: true
   sourceRef:
     kind: GitRepository

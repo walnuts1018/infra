@@ -2,19 +2,19 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: http-dump
+  name: vault
   namespace: flux-system
 spec:
   dependsOn:
     - name: namespace
     - name: flannel
-    - name: ingress-nginx
+    - name: longhorn
   healthChecks:
-  - kind: Deployment
-    name: http-dump
-    namespace: default
+  - kind: HelmRelease
+    name: vault-release
+    namespace: vault
   interval: 10m0s
-  path: ./k8s/apps/http-dump
+  path: ./k8s/apps/vault
   prune: true
   sourceRef:
     kind: GitRepository
