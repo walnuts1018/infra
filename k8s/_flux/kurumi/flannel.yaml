@@ -7,6 +7,10 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
+  healthChecks:
+  - kind: DaemonSet
+    name: kube-flannel-ds
+    namespace: kube-flannel
   interval: 10m0s
   path: ./k8s/apps/flannel
   prune: true
