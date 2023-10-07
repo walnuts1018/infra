@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: namespace
+    - name: namespaces
     - name: flannel
     - name: sealed-secrets
     - name: metallb-ipaddress
