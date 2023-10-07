@@ -2,19 +2,21 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: http-dump
+  name: grafana
   namespace: flux-system
 spec:
   dependsOn:
     - name: namespace
     - name: flannel
+    - name: sealed-secrets
+    - name: longhorn
     - name: ingress-nginx
   healthChecks:
-  - kind: Deployment
-    name: http-dump
-    namespace: default
+  - kind: HelmRelease
+    name: grafana-release
+    namespace: monitoring
   interval: 10m0s
-  path: ./k8s/apps/http-dump
+  path: ./k8s/apps/grafana
   prune: true
   sourceRef:
     kind: GitRepository
