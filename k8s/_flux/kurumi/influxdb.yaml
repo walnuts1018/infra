@@ -2,19 +2,20 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
 kind: Kustomization
 metadata:
-  name: http-dump
+  name: influxdb
   namespace: flux-system
 spec:
   dependsOn:
     - name: namespace
     - name: flannel
+    - name: sealed-secrets
     - name: ingress-nginx
   healthChecks:
-  - kind: Deployment
-    name: http-dump
-    namespace: default
+  - kind: HelmRelease
+    name: influxdb-release
+    namespace: databases
   interval: 10m0s
-  path: ./k8s/apps/http-dump
+  path: ./k8s/apps/influxdb
   prune: true
   sourceRef:
     kind: GitRepository
