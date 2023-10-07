@@ -10,8 +10,8 @@ spec:
     - name: flannel
     - name: sealed-secrets
   healthChecks:
-  - kind: HelmRelease
-    name: longhorn-release
+  - kind: Deployment
+    name: longhorn-driver-deployer
     namespace: longhorn-system
   interval: 10m0s
   path: ./k8s/apps/longhorn

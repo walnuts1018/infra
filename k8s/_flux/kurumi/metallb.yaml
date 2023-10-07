@@ -9,8 +9,8 @@ spec:
     - name: namespaces
     - name: flannel
   healthChecks:
-  - kind: HelmRelease
-    name: metallb-release
+  - kind: Deployment
+    name: metallb-release-controller
     namespace: metallb-system
   interval: 10m0s
   path: ./k8s/apps/metallb
