@@ -3,8 +3,8 @@ kind: Kustomization
 namePrefix: longhorn-
 namespace: longhorn-system
 resources:
-  - sealedsecret.yaml
+  - externalsecret.yaml
 components:
-- ../../components/helm
+  - ../../components/helm
 patchesStrategicMerge:
-- helm-overlay.yaml
+  - helm-overlay.yaml
