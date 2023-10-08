@@ -7,11 +7,10 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
   healthChecks:
-  - kind: Deployment
-    name: metallb-release-controller
-    namespace: metallb-system
+    - kind: Deployment
+      name: metallb-release-controller
+      namespace: metallb-system
   interval: 10m0s
   path: ./k8s/apps/metallb
   prune: true

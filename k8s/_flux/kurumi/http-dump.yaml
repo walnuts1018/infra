@@ -7,12 +7,11 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: ingress-nginx
   healthChecks:
-  - kind: Deployment
-    name: http-dump
-    namespace: default
+    - kind: Deployment
+      name: http-dump
+      namespace: default
   interval: 10m0s
   path: ./k8s/apps/http-dump
   prune: true

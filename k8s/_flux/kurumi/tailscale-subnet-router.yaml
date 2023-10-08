@@ -7,12 +7,11 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: sealed-secrets
   healthChecks:
-  - kind: Deployment
-    name: tailscale-subnet-router
-    namespace: network-exporter
+    - kind: Deployment
+      name: tailscale-subnet-router
+      namespace: network-exporter
   interval: 10m0s
   path: ./k8s/apps/tailscale-subnet-router
   prune: true

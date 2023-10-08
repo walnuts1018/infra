@@ -7,13 +7,12 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: metallb-ipaddress
     - name: sealed-secrets
   healthChecks:
-  - kind: Deployment
-    name: machine-status-api
-    namespace: default
+    - kind: Deployment
+      name: machine-status-api
+      namespace: default
   interval: 10m0s
   path: ./k8s/apps/machine-status-api
   prune: true

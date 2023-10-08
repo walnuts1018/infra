@@ -7,15 +7,14 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: sealed-secrets
     - name: ingress-nginx
     - name: postgresql
     - name: influxdb
   healthChecks:
-  - kind: Deployment
-    name: fitbit-manager
-    namespace: default
+    - kind: Deployment
+      name: fitbit-manager
+      namespace: default
   interval: 10m0s
   path: ./k8s/apps/fitbit-manager
   prune: true

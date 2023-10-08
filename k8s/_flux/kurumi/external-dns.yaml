@@ -7,12 +7,11 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: sealed-secrets
   healthChecks:
-  - kind: Deployment
-    name: external-dns
-    namespace: kube-system
+    - kind: Deployment
+      name: external-dns
+      namespace: kube-system
   interval: 10m0s
   path: ./k8s/apps/external-dns
   prune: true

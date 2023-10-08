@@ -7,16 +7,15 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: sealed-secrets
     - name: ingress-nginx
     - name: redis
     - name: sweets-rebellion
   healthChecks:
-  - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-    kind: HelmRelease
-    name: sweets-rebellion-oauth2-proxy-release
-    namespace: sweets-rebellion
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: sweets-rebellion-oauth2-proxy-release
+      namespace: sweets-rebellion
   interval: 10m0s
   path: ./k8s/apps/sweets-rebellion-oauth2-proxy
   prune: true
