@@ -8,7 +8,7 @@ spec:
   dependsOn:
     - name: namespaces
     - name: flannel
-    - name: sealed-secrets
+    - name: external-secrets-store
     - name: metallb-ipaddress
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2beta1
