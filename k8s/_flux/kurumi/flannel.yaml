@@ -8,7 +8,8 @@ spec:
   dependsOn:
     - name: namespaces
   healthChecks:
-    - kind: ConfigMap
+    - apiVersion: v1
+      kind: ConfigMap
       name: kube-flannel-cfg
       namespace: kube-flannel
   interval: 10m0s
