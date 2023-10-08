@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: flux-system
 resources:
   - ./imageupdateautomation.yaml
-  - ./sealedsecret.yaml
+  - ./externalsecret.yaml
   - ./sweets-rebellion
   - ./keycloak
   - ./machine-status-api
