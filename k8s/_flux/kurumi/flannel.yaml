@@ -9,8 +9,8 @@ spec:
     - name: namespaces
   healthChecks:
     - apiVersion: v1
-      kind: ConfigMap
-      name: kube-flannel-cfg
+      kind: ServiceAccount
+      name: flannel
       namespace: kube-flannel
   interval: 10m0s
   path: ./k8s/apps/flannel
