@@ -3,9 +3,9 @@ kind: Kustomization
 namePrefix: grafana-
 namespace: monitoring
 resources:
-  - sealedsecret.yaml
+  - externalsecret.yaml
   - ingress.yaml
 components:
-- ../../components/helm
+  - ../../components/helm
 patchesStrategicMerge:
-- helm-overlay.yaml
+  - helm-overlay.yaml

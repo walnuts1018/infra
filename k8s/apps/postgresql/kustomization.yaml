@@ -4,8 +4,8 @@ namePrefix: postgres-
 namespace: databases
 resources:
   - pvc.yaml
-  - sealedsecret.yaml
+  - externalsecret.yaml
 components:
-- ../../components/helm
+  - ../../components/helm
 patchesStrategicMerge:
-- helm-overlay.yaml
+  - helm-overlay.yaml
