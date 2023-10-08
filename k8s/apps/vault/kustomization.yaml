@@ -4,6 +4,7 @@ namePrefix: vault-
 namespace: vault
 resources:
   - sa.yaml
+  - sa-token.yaml
 components:
   - ../../components/helm
 patchesStrategicMerge:
