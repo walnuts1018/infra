@@ -7,6 +7,10 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
+  healthChecks:
+    - kind: ConfigMap
+      name: kube-flannel-cfg
+      namespace: kube-flannel
   interval: 10m0s
   path: ./k8s/apps/flannel
   prune: true
