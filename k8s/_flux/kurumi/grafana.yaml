@@ -12,7 +12,8 @@ spec:
     - name: longhorn
     - name: ingress-nginx
   healthChecks:
-  - kind: HelmRelease
+  - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+    kind: HelmRelease
     name: grafana-release
     namespace: monitoring
   interval: 10m0s

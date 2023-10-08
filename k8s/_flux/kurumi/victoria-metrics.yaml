@@ -10,7 +10,8 @@ spec:
     - name: flannel
     - name: longhorn
   healthChecks:
-  - kind: HelmRelease
+  - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+    kind: HelmRelease
     name: victoria-metrics-release
     namespace: monitoring
   interval: 10m0s

@@ -13,7 +13,8 @@ spec:
     - name: redis
     - name: sweets-rebellion
   healthChecks:
-  - kind: HelmRelease
+  - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+    kind: HelmRelease
     name: sweets-rebellion-oauth2-proxy-release
     namespace: sweets-rebellion
   interval: 10m0s

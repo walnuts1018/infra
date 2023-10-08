@@ -13,7 +13,8 @@ spec:
     - name: redis
     - name: victoria-metrics
   healthChecks:
-  - kind: HelmRelease
+  - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+    kind: HelmRelease
     name: vm-oauth2-proxy-release
     namespace: monitoring
   interval: 10m0s
