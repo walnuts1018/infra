@@ -7,14 +7,13 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: longhorn
     - name: sealed-secrets
   healthChecks:
-  - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-    kind: HelmRelease
-    name: redis-release
-    namespace: databases
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: redis-release
+      namespace: databases
   interval: 10m0s
   path: ./k8s/apps/redis
   prune: true

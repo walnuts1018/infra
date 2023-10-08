@@ -7,14 +7,13 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: sealed-secrets
     - name: ingress-nginx
     - name: postgresql
   healthChecks:
-  - kind: Deployment
-    name: wakatime-to-slack-profile
-    namespace: default
+    - kind: Deployment
+      name: wakatime-to-slack-profile
+      namespace: default
   interval: 10m0s
   path: ./k8s/apps/wakatime-to-slack-profile
   prune: true

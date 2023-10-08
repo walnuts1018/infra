@@ -7,13 +7,12 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: sealed-secrets
     - name: ingress-nginx
   healthChecks:
-  - kind: Deployment
-    name: github-readme-stats
-    namespace: default
+    - kind: Deployment
+      name: github-readme-stats
+      namespace: default
   interval: 10m0s
   path: ./k8s/apps/github-readme-stats
   prune: true

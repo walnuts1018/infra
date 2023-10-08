@@ -7,13 +7,12 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: longhorn
     - name: sealed-secrets
   healthChecks:
-  - kind: Deployment
-    name: backup-manager
-    namespace: default
+    - kind: Deployment
+      name: backup-manager
+      namespace: default
   interval: 10m0s
   path: ./k8s/apps/backup-manager
   prune: true

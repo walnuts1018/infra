@@ -7,14 +7,13 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: sealed-secrets
     - name: metallb-ipaddress
   healthChecks:
-  - apiVersion: helm.toolkit.fluxcd.io/v2beta1
-    kind: HelmRelease
-    name: ingress-nginx-release
-    namespace: ingress-nginx
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: ingress-nginx-release
+      namespace: ingress-nginx
   interval: 10m0s
   path: ./k8s/apps/ingress-nginx
   prune: true

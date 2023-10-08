@@ -7,12 +7,11 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: sealed-secrets
   healthChecks:
-  - kind: Deployment
-    name: sweets-rebellion-deployment
-    namespace: sweets-rebellion
+    - kind: Deployment
+      name: sweets-rebellion-deployment
+      namespace: sweets-rebellion
   interval: 10m0s
   path: ./k8s/apps/sweets-rebellion
   prune: true
