@@ -8,7 +8,7 @@ spec:
   dependsOn:
     - name: namespaces
     - name: flannel
-    - name: sealed-secrets
+    - name: external-secrets-store
     - name: ingress-nginx
     - name: postgresql
     - name: influxdb

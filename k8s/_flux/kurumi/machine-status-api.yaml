@@ -9,7 +9,7 @@ spec:
     - name: namespaces
     - name: flannel
     - name: metallb-ipaddress
-    - name: sealed-secrets
+    - name: external-secrets-store
   healthChecks:
     - kind: Deployment
       name: machine-status-api
