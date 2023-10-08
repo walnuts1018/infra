@@ -9,7 +9,7 @@ spec:
     - name: namespaces
     - name: flannel
     - name: longhorn
-    - name: sealed-secrets
+    - name: external-secrets-store
   healthChecks:
     - kind: Deployment
       name: backup-manager
