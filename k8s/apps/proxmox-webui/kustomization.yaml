@@ -7,5 +7,5 @@ resources:
   - configmap.yaml
   - deployment.yaml
   - ingress.yaml
-  - sealedsecret.yaml
+  - externalsecret.yaml
   - service.yaml
