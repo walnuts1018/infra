@@ -9,8 +9,9 @@ spec:
     - name: namespaces
     - name: flannel
   healthChecks:
-  - kind: Daemonset
-    name: node-exporter-release-prometheus-node-exporter
+  - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+    kind: HelmRelease
+    name: node-exporter-release
     namespace: monitoring
   interval: 10m0s
   path: ./k8s/apps/node-exporter
