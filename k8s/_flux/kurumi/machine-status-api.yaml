@@ -7,6 +7,7 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
+    - name: flannel
     - name: metallb-ipaddress
     - name: sealed-secrets
   healthChecks:
