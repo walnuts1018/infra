@@ -11,7 +11,8 @@ spec:
     - name: sealed-secrets
     - name: ingress-nginx
   healthChecks:
-  - kind: HelmRelease
+  - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+    kind: HelmRelease
     name: influxdb-release
     namespace: databases
   interval: 10m0s
