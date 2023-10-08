@@ -3,8 +3,8 @@ kind: Kustomization
 namePrefix: sweets-rebellion-oauth2-proxy-
 namespace: sweets-rebellion
 resources:
-  - sealedsecret.yaml
+  - externalsecret.yaml
 components:
-- ../../components/helm
+  - ../../components/helm
 patchesStrategicMerge:
-- helm-overlay.yaml
+  - helm-overlay.yaml
