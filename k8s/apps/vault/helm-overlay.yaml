@@ -28,6 +28,9 @@ spec:
           hostPath:
             path: /var/data/vault
             type: Directory
+      volumeMounts:
+        - name: vault
+          mountPath: /vault/data
       dataStorage:
         enabled: false
       nodeSelector:
