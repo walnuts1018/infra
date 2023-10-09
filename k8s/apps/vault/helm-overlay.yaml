@@ -23,8 +23,15 @@ spec:
         ingressClassName: "nginx"
         hosts:
           - host: vault.walnuts.dev
+      volumes:
+        - name: vault
+          hostPath:
+            path: /var/data/vault
+            type: Directory
       dataStorage:
-        storageClass: "longhorn"
+        enabled: false
+      nodeSelector:
+        kubernetes.io/hostname: "kurumi-02"
     injector:
       enabled: false
     ui:
