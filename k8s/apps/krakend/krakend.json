@@ -29,12 +29,100 @@
       }
     },
     {
-      "endpoint": "/machine-manager/*",
+      "endpoint": "/machine-manager/machines/start/{machineName}",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/machines/start/{machineName}",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "https://auth.walnuts.dev/realms/master/protocol/openid-connect/certs",
+          "cache": true
+        }
+      }
+    },
+    {
+      "endpoint": "/machine-manager/machines/start/{machineName}/automated",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/machines/start/{machineName}/automated",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "https://auth.walnuts.dev/realms/master/protocol/openid-connect/certs",
+          "cache": true
+        }
+      }
+    },
+    {
+      "endpoint": "/machine-manager/machines/stop/{machineName}",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/machines/stop/{machineName}",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "https://auth.walnuts.dev/realms/master/protocol/openid-connect/certs",
+          "cache": true
+        }
+      }
+    },
+    {
+      "endpoint": "/machine-manager/machines/stop/{machineName}/automated",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/machines/stop/{machineName}/automated",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "https://auth.walnuts.dev/realms/master/protocol/openid-connect/certs",
+          "cache": true
+        }
+      }
+    },
+    {
+      "endpoint": "/machine-manager/machines/status/{machineName}",
       "method": "GET",
       "output_encoding": "json",
       "backend": [
         {
-          "url_pattern": "/",
+          "url_pattern": "/machines/status/{machineName}",
           "encoding": "json",
           "sd": "static",
           "method": "GET",
@@ -51,15 +139,15 @@
       }
     },
     {
-      "endpoint": "/machine-manager/*",
-      "method": "POST",
+      "endpoint": "/machine-manager/tasks/{taskId}",
+      "method": "GET",
       "output_encoding": "json",
       "backend": [
         {
-          "url_pattern": "/",
+          "url_pattern": "/tasks/{taskId}",
           "encoding": "json",
           "sd": "static",
-          "method": "POST",
+          "method": "GET",
           "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
           "disable_host_sanitize": false
         }
