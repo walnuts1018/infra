@@ -34,13 +34,11 @@
       "output_encoding": "json",
       "backend": [
         {
-          "url_pattern": "/machines/start/{machineName}",
+          "url_pattern": "/v1/machines/start/{machineName}",
           "encoding": "json",
           "sd": "static",
           "method": "POST",
-          "host": [
-            "http://machine-status-api.default.svc.cluster.local:8080/v1"
-          ],
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
           "disable_host_sanitize": false
         }
       ],
@@ -58,13 +56,11 @@
       "output_encoding": "json",
       "backend": [
         {
-          "url_pattern": "/machines/start/{machineName}/automated",
+          "url_pattern": "/v1/machines/start/{machineName}/automated",
           "encoding": "json",
           "sd": "static",
           "method": "POST",
-          "host": [
-            "http://machine-status-api.default.svc.cluster.local:8080/v1"
-          ],
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
           "disable_host_sanitize": false
         }
       ],
@@ -82,13 +78,11 @@
       "output_encoding": "json",
       "backend": [
         {
-          "url_pattern": "/machines/stop/{machineName}",
+          "url_pattern": "/v1/machines/stop/{machineName}",
           "encoding": "json",
           "sd": "static",
           "method": "POST",
-          "host": [
-            "http://machine-status-api.default.svc.cluster.local:8080/v1"
-          ],
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
           "disable_host_sanitize": false
         }
       ],
@@ -106,13 +100,11 @@
       "output_encoding": "json",
       "backend": [
         {
-          "url_pattern": "/machines/stop/{machineName}/automated",
+          "url_pattern": "/v1/machines/stop/{machineName}/automated",
           "encoding": "json",
           "sd": "static",
           "method": "POST",
-          "host": [
-            "http://machine-status-api.default.svc.cluster.local:8080/v1"
-          ],
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
           "disable_host_sanitize": false
         }
       ],
@@ -130,13 +122,11 @@
       "output_encoding": "json",
       "backend": [
         {
-          "url_pattern": "/machines/status/{machineName}",
+          "url_pattern": "/v1/machines/status/{machineName}",
           "encoding": "json",
           "sd": "static",
           "method": "GET",
-          "host": [
-            "http://machine-status-api.default.svc.cluster.local:8080/v1"
-          ],
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
           "disable_host_sanitize": false
         }
       ],
@@ -154,13 +144,11 @@
       "output_encoding": "json",
       "backend": [
         {
-          "url_pattern": "/tasks/{taskId}",
+          "url_pattern": "/v1/tasks/{taskId}",
           "encoding": "json",
           "sd": "static",
           "method": "GET",
-          "host": [
-            "http://machine-status-api.default.svc.cluster.local:8080/v1"
-          ],
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
           "disable_host_sanitize": false
         }
       ],
