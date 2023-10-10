@@ -4,5 +4,8 @@ namespace: krakend-system
 resources:
   - service.yaml
   - deployment.yaml
-  - configmap.yaml
   - ingress.yaml
+configMapGenerator:
+  - name: krakend-configmap
+    files:
+      - krakend.json
