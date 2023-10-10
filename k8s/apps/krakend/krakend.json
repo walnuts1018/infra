@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.krakend.io/schema/krakend.json",
   "version": 3,
-  "name": "Http Dump",
+  "name": "Main API Gateway",
   "timeout": "3000ms",
   "cache_ttl": "300s",
   "output_encoding": "json",
@@ -17,6 +17,50 @@
           "sd": "static",
           "method": "GET",
           "host": ["http://http-dump.default.svc.cluster.local:8080"],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "https://auth.walnuts.dev/realms/master/protocol/openid-connect/certs",
+          "cache": true
+        }
+      }
+    },
+    {
+      "endpoint": "/machine-manager",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "https://auth.walnuts.dev/realms/master/protocol/openid-connect/certs",
+          "cache": true
+        }
+      }
+    },
+    {
+      "endpoint": "/machine-manager",
+      "method": "POST",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/",
+          "encoding": "json",
+          "sd": "static",
+          "method": "POST",
+          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
           "disable_host_sanitize": false
         }
       ],
