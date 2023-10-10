@@ -6,4 +6,7 @@ resources:
   - service.yaml
   - externalsecret.yaml
   - ingress.yaml
-  - configmap.yaml
+configMapGenerator:
+  - name: wakatime-to-slack-profile-conf
+    files:
+      - emoji.json

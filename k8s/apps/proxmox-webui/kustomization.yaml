@@ -4,8 +4,12 @@ namespace: default
 commonLabels:
   app: proxmox-webui
 resources:
-  - configmap.yaml
   - deployment.yaml
   - ingress.yaml
   - externalsecret.yaml
   - service.yaml
+configMapGenerator:
+  - name: proxmox-webui-conf
+    files:
+      - nginx.conf
+      - virtualhost.conf
