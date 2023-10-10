@@ -38,7 +38,7 @@
           "encoding": "json",
           "sd": "static",
           "method": "POST",
-          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
+          "host": ["http://machine-status-api.default.svc.cluster.local"],
           "disable_host_sanitize": false
         }
       ],
@@ -60,7 +60,7 @@
           "encoding": "json",
           "sd": "static",
           "method": "POST",
-          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
+          "host": ["http://machine-status-api.default.svc.cluster.local"],
           "disable_host_sanitize": false
         }
       ],
@@ -82,7 +82,7 @@
           "encoding": "json",
           "sd": "static",
           "method": "POST",
-          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
+          "host": ["http://machine-status-api.default.svc.cluster.local"],
           "disable_host_sanitize": false
         }
       ],
@@ -104,7 +104,7 @@
           "encoding": "json",
           "sd": "static",
           "method": "POST",
-          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
+          "host": ["http://machine-status-api.default.svc.cluster.local"],
           "disable_host_sanitize": false
         }
       ],
@@ -126,7 +126,7 @@
           "encoding": "json",
           "sd": "static",
           "method": "GET",
-          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
+          "host": ["http://machine-status-api.default.svc.cluster.local"],
           "disable_host_sanitize": false
         }
       ],
@@ -148,7 +148,7 @@
           "encoding": "json",
           "sd": "static",
           "method": "GET",
-          "host": ["http://machine-status-api.default.svc.cluster.local:8080"],
+          "host": ["http://machine-status-api.default.svc.cluster.local"],
           "disable_host_sanitize": false
         }
       ],
