@@ -4,5 +4,8 @@ namespace: default
 resources:
   - deployment.yaml
   - service.yaml
-  - configmap.yaml
   - externalsecret.yaml
+configMapGenerator:
+  - name: kmc-proxy-conf
+    files:
+      - config

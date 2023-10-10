@@ -4,7 +4,11 @@ namespace: default
 commonLabels:
   app: blog
 resources:
-  - configmap.yaml
   - deployment.yaml
   - ingress.yaml
   - service.yaml
+configMapGenerator:
+  - name: blog-conf
+    files:
+      - nginx.conf
+      - virtualhost.conf
