@@ -5,7 +5,6 @@ metadata:
   name: image-update
   namespace: flux-system
 spec:
-  dependsOn:
   interval: 10m0s
   path: ./k8s/image-update
   prune: true
