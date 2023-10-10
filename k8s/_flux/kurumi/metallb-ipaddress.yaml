@@ -7,7 +7,6 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: metallb
   interval: 10m0s
   path: ./k8s/apps/metallb-ipaddress

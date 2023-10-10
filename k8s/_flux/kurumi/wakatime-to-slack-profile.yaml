@@ -7,7 +7,6 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
     - name: external-secrets-store
     - name: ingress-nginx
     - name: postgresql

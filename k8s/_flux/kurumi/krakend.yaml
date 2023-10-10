@@ -7,7 +7,6 @@ metadata:
 spec:
   dependsOn:
     - name: namespaces
-    - name: flannel
   healthChecks:
     - kind: Deployment
       name: krakend
