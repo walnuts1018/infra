@@ -5,8 +5,6 @@ metadata:
   name: flannel
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: namespaces
   healthChecks:
     - apiVersion: v1
       kind: ServiceAccount
