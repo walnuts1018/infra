@@ -6,7 +6,6 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: namespaces
     - name: external-secrets-store
     - name: metallb-ipaddress
   healthChecks:

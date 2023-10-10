@@ -6,7 +6,6 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: namespaces
     - name: ingress-nginx
     - name: external-secrets-store
   healthChecks:
