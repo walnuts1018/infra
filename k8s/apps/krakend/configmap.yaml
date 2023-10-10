@@ -30,7 +30,7 @@ data:
             "auth/validator": {
               "alg": "RS256",
               "jwk_url": "https://auth.walnuts.dev/realms/master/protocol/openid-connect/certs",
-              "disable_jwk_security": true
+              "cache": true,
             }
           }
         }
