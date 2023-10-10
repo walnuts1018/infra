@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: krakend-service
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
-  - name: http
-    port: 8000
-    targetPort: 8080
-    protocol: TCP
+    - name: http
+      port: 8000
+      targetPort: 8080
+      protocol: TCP
   selector:
     app: krakend
