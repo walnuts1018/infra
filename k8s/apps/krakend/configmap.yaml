@@ -7,7 +7,46 @@ data:
     {
       "$schema": "https://www.krakend.io/schema/krakend.json",
       "version": 3,
-      "name": "KrakenD - API Gateway",
+      "name": "Http Dump",
+      "extra_config": {
+        "auth/api-keys": {
+          "keys": [
+            {
+              "key": "b01daf6e-75f2-49c7-836d-a7d01c5c3f1a",
+              "roles": [
+                "test"
+              ]
+            }
+          ]
+        }
+      },
       "timeout": "3000ms",
-      "cache_ttl": "300s"
+      "cache_ttl": "300s",
+      "output_encoding": "json",
+      "endpoints": [
+        {
+          "endpoint": "/v1/httptest",
+          "method": "GET",
+          "output_encoding": "string",
+          "backend": [
+            {
+              "url_pattern": "/",
+              "encoding": "string",
+              "sd": "static",
+              "method": "GET",
+              "host": [
+                "https://http-dump.default.svc.cluster.local"
+              ],
+              "disable_host_sanitize": false
+            }
+          ],
+          "extra_config": {
+            "auth/api-keys": {
+              "roles": [
+                "test"
+              ]
+            }
+          }
+        }
+      ]
     }
