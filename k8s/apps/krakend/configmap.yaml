@@ -8,18 +8,6 @@ data:
       "$schema": "https://www.krakend.io/schema/krakend.json",
       "version": 3,
       "name": "Http Dump",
-      "extra_config": {
-        "auth/api-keys": {
-          "keys": [
-            {
-              "key": "b01daf6e-75f2-49c7-836d-a7d01c5c3f1a",
-              "roles": [
-                "test"
-              ]
-            }
-          ]
-        }
-      },
       "timeout": "3000ms",
       "cache_ttl": "300s",
       "output_encoding": "json",
@@ -34,17 +22,15 @@ data:
               "encoding": "string",
               "sd": "static",
               "method": "GET",
-              "host": [
-                "https://http-dump.default.svc.cluster.local"
-              ],
+              "host": ["https://http-dump.default.svc.cluster.local"],
               "disable_host_sanitize": false
             }
           ],
           "extra_config": {
-            "auth/api-keys": {
-              "roles": [
-                "test"
-              ]
+            "auth/validator": {
+              "alg": "RS256",
+              "jwk_url": "https://auth.walnuts.dev/realms/master/protocol/openid-connect/certs",
+              "disable_jwk_security": true
             }
           }
         }
