@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: krakend
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: "api.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: krakend
+                port:
+                  number: 8080
