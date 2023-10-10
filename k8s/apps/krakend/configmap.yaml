@@ -22,7 +22,7 @@ data:
               "encoding": "string",
               "sd": "static",
               "method": "GET",
-              "host": ["https://http-dump.default.svc.cluster.local"],
+              "host": ["http://http-dump.default.svc.cluster.local:8080"],
               "disable_host_sanitize": false
             }
           ],
