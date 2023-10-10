@@ -1,0 +1,32 @@
+{
+  "$schema": "https://www.krakend.io/schema/krakend.json",
+  "version": 3,
+  "name": "Http Dump",
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "json",
+  "endpoints": [
+    {
+      "endpoint": "/v1/httptest",
+      "method": "GET",
+      "output_encoding": "string",
+      "backend": [
+        {
+          "url_pattern": "/",
+          "encoding": "string",
+          "sd": "static",
+          "method": "GET",
+          "host": ["http://http-dump.default.svc.cluster.local:8080"],
+          "disable_host_sanitize": false
+        }
+      ],
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "https://auth.walnuts.dev/realms/master/protocol/openid-connect/certs",
+          "cache": true
+        }
+      }
+    }
+  ]
+}
