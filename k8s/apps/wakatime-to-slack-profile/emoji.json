@@ -1,5 +1,6 @@
 {
   "Go": "gopher",
   "YAML": "k8s",
-  "SQL": "postgresql"
+  "SQL": "postgresql",
+  "Ezhil": "excel"
 }
