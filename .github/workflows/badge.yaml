@@ -13,7 +13,7 @@ jobs:
         uses: tailscale/github-action@v2
         with: 
           authkey: ${{ secrets.Tailscale_Auth_Key }}
-          tags: github-action
+          tags: github
           args: "--accept-routes"
           
       - name: gen svg
