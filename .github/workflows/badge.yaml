@@ -21,3 +21,4 @@ jobs:
         uses: walnuts1018/k8s-badge@v0.1.0
         with:
           kubeconfig: ${{ secrets.Kubeconfig }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
