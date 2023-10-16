@@ -6,9 +6,6 @@ jobs:
     name: k8s badge build
     runs-on: ubuntu-latest
     steps:
-      - name: put kubeconfig
-        run: echo -n "${{ secrets.Kubeconfig }}" > kubeconfig
-      
       - name: setup tailscale
         uses: tailscale/github-action@v2
         with:
@@ -23,4 +20,4 @@ jobs:
       - name: gen svg
         uses: walnuts1018/k8s-badge@v0.0.9
         with:
-          kubeconfig: "kubeconfig"
+          kubeconfig: ${{ secrets.Kubeconfig }}
