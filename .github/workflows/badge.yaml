@@ -6,9 +6,6 @@ jobs:
     name: k8s badge build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        
       - name: put kubeconfig
         run: echo -n "${{ secrets.Kubeconfig }}" > kubeconfig
       
@@ -20,26 +17,6 @@ jobs:
           args: "--accept-routes"
           
       - name: gen svg
-        uses: walnuts1018/k8s-badge@v0.0.4
+        uses: walnuts1018/k8s-badge@v0.0.5
         with:
           kubeconfig-path: "kubeconfig"
-
-      - name: rm kubeconfig
-        run: rm -f kubeconfig
-
-      - name: Diff
-        id: diff
-        run: |
-          git add -N .
-          git diff --name-only --exit-code
-        continue-on-error: true
-
-      - name: Commit & Push
-        run: |
-          set -x
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add .
-          git commit --author=. -m 'add badge'
-          git push
-        if: steps.diff.outcome == 'failure'
