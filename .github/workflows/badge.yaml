@@ -12,7 +12,7 @@ jobs:
       - name: setup tailscale
         uses: tailscale/github-action@v2
         with: 
-          authkey: ${{ secrets.tailscale-auth-key }}
+          authkey: ${{ secrets.Tailscale_Auth_Key }}
           tags: github-action
           args: "--accept-routes"
           
