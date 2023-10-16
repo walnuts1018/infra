@@ -21,6 +21,6 @@ jobs:
         run: "curl -k https://192.168.0.17:16443"
       
       - name: gen svg
-        uses: walnuts1018/k8s-badge@v0.0.8
+        uses: walnuts1018/k8s-badge@v0.0.9
         with:
           kubeconfig: "kubeconfig"
