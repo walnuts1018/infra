@@ -2,7 +2,7 @@ name: k8s badge build Build
 on:
   workflow_dispatch:
   schedule:
-    - cron: '5 * * * *'
+    - cron: '0/10 * * * *'
 jobs:
   k8s-badge-build:
     name: k8s badge build
