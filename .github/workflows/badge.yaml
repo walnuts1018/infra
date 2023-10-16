@@ -11,8 +11,9 @@ jobs:
       
       - name: setup tailscale
         uses: tailscale/github-action@v2
-        with: 
-          authkey: ${{ secrets.Tailscale_Auth_Key }}
+        with:
+          oauth-client-id: ${{secrets.TAILSCALE_CLIENT_ID}}
+          oauth-secret: ${{secrets.TAILSCALE_SECRET}}
           tags: github
           args: "--accept-routes"
           
