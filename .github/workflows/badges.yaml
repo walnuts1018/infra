@@ -1,0 +1,15 @@
+name: k8s badge build Build
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  k8s-badge-build:
+    name: k8s badge build
+    runs-on: ubuntu-latest
+    steps:
+      - name: gen svg
+        uses: walnuts1018
+        with:
+          
