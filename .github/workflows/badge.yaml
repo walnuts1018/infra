@@ -1,0 +1,24 @@
+name: k8s badge build Build
+on:
+  workflow_dispatch:
+jobs:
+  k8s-badge-build:
+    name: k8s badge build
+    runs-on: ubuntu-latest
+    steps:
+      - name: put kubeconfig
+        run: echo -n "${{ secrets.Kubeconfig }}" > kubeconfig
+
+      - name: setup tailscale
+        uses: tailscale/github-action@v2
+        with: 
+          authkey: ${{ secrets.tailscale-auth-key }}
+          tags: github-action
+          args: "--accept-routes"
+          
+      - name: gen svg
+        uses: walnuts1018/k8s-badge@v0
+        with:
+          kubeconfig-path: "kubeconfig"
+          
+          
