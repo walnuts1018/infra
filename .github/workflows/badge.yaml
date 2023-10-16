@@ -20,7 +20,7 @@ jobs:
           args: "--accept-routes"
           
       - name: gen svg
-        uses: walnuts1018/k8s-badge@v0
+        uses: walnuts1018/k8s-badge@v0.0.0
         with:
           kubeconfig-path: "kubeconfig"
 
