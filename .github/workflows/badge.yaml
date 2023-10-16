@@ -14,7 +14,7 @@ jobs:
         with:
           oauth-client-id: ${{secrets.TAILSCALE_CLIENT_ID}}
           oauth-secret: ${{secrets.TAILSCALE_SECRET}}
-          tags: github
+          tags: "tag:github"
           args: "--accept-routes"
       - name: ping test
         run: ping 192.167.0.17
