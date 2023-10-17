@@ -1,7 +1,7 @@
 # Infra
-![k8s Status](https://walnuts1018.github.io/infra/k8sStatus.svg)
-![Pod Status](https://walnuts1018.github.io/infra/podStatus.svg)
-![Node Status](https://walnuts1018.github.io/infra/nodeStatus.svg)
+[![k8s Status](https://walnuts1018.github.io/infra/k8sStatus.svg)](https://walnuts1018.github.io/infra/k8sStatus.svg)
+[![Pod Status](https://walnuts1018.github.io/infra/podStatus.svg)](https://walnuts1018.github.io/infra/podStatus.svg)
+[![Node Status](https://walnuts1018.github.io/infra/nodeStatus.svg)](https://walnuts1018.github.io/infra/nodeStatus.svg)
 
 walnuts.devを支える技術
 
