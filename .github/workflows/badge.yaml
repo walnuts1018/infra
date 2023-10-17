@@ -35,3 +35,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: koki-develop/hub-purge-action@v1
+        continue-on-error: true
