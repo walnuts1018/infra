@@ -9,10 +9,6 @@ spec:
     - name: external-secrets-store
     - name: ingress-nginx
     - name: postgresql
-  healthChecks:
-    - kind: Deployment
-      name: zitadel-release
-      namespace: default
   interval: 10m0s
   path: ./k8s/apps/zitadel
   prune: true
