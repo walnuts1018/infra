@@ -22,4 +22,6 @@ spec:
   interval: 1h
   install:
     crds: CreateReplace
+    remediation:
+      retries: -1
   # values: to-be-filled
