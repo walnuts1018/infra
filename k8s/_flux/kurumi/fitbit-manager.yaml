@@ -5,15 +5,6 @@ metadata:
   name: fitbit-manager
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: external-secrets-store
-    - name: ingress-nginx
-    - name: postgresql
-    - name: influxdb
-  healthChecks:
-    - kind: Deployment
-      name: fitbit-manager
-      namespace: default
   interval: 10m0s
   path: ./k8s/apps/fitbit-manager
   prune: true

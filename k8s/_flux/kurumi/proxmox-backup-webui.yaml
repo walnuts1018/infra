@@ -5,12 +5,6 @@ metadata:
   name: proxmox-backup-webui
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: ingress-nginx
-  healthChecks:
-    - kind: Deployment
-      name: proxmox-backup-webui
-      namespace: default
   interval: 10m0s
   path: ./k8s/apps/proxmox-backup-webui
   prune: true

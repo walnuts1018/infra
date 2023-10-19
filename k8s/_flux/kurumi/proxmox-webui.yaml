@@ -5,13 +5,6 @@ metadata:
   name: proxmox-webui
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: ingress-nginx
-    - name: external-secrets-store
-  healthChecks:
-    - kind: Deployment
-      name: proxmox-webui
-      namespace: default
   interval: 10m0s
   path: ./k8s/apps/proxmox-webui
   prune: true

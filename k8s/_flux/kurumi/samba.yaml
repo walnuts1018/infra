@@ -5,13 +5,6 @@ metadata:
   name: samba
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: external-secrets-store
-    - name: metallb-ipaddress
-  healthChecks:
-    - kind: Deployment
-      name: samba
-      namespace: default
   interval: 10m0s
   path: ./k8s/apps/samba
   prune: true

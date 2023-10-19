@@ -5,13 +5,6 @@ metadata:
   name: sweets-rebellion
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: namespaces
-    - name: external-secrets-store
-  healthChecks:
-    - kind: Deployment
-      name: sweets-rebellion-deployment
-      namespace: sweets-rebellion
   interval: 10m0s
   path: ./k8s/apps/sweets-rebellion
   prune: true

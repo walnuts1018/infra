@@ -5,13 +5,6 @@ metadata:
   name: backup-manager
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: longhorn
-    - name: external-secrets-store
-  healthChecks:
-    - kind: Deployment
-      name: backup-manager
-      namespace: default
   interval: 10m0s
   path: ./k8s/apps/backup-manager
   prune: true

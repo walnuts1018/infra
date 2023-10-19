@@ -5,13 +5,6 @@ metadata:
   name: github-readme-stats
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: external-secrets-store
-    - name: ingress-nginx
-  healthChecks:
-    - kind: Deployment
-      name: github-readme-stats
-      namespace: default
   interval: 10m0s
   path: ./k8s/apps/github-readme-stats
   prune: true

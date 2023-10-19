@@ -5,12 +5,6 @@ metadata:
   name: external-dns
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: external-secrets-store
-  healthChecks:
-    - kind: Deployment
-      name: external-dns
-      namespace: kube-system
   interval: 10m0s
   path: ./k8s/apps/external-dns
   prune: true
