@@ -5,12 +5,6 @@ metadata:
   name: blog
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: ingress-nginx
-  healthChecks:
-    - kind: Deployment
-      name: blog
-      namespace: default
   interval: 10m0s
   path: ./k8s/apps/blog
   prune: true

@@ -5,13 +5,6 @@ metadata:
   name: longhorn
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: namespaces
-    - name: external-secrets-store
-  healthChecks:
-    - kind: Deployment
-      name: longhorn-driver-deployer
-      namespace: longhorn-system
   interval: 10m0s
   path: ./k8s/apps/longhorn
   prune: true

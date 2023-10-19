@@ -5,12 +5,6 @@ metadata:
   name: metallb
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: namespaces
-  healthChecks:
-    - kind: Deployment
-      name: metallb-release-controller
-      namespace: metallb-system
   interval: 10m0s
   path: ./k8s/apps/metallb
   prune: true

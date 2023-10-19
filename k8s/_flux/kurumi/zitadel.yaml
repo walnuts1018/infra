@@ -5,10 +5,6 @@ metadata:
   name: zitadel
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: external-secrets-store
-    - name: ingress-nginx
-    - name: postgresql
   interval: 10m0s
   path: ./k8s/apps/zitadel
   prune: true

@@ -5,11 +5,6 @@ metadata:
   name: flannel
   namespace: flux-system
 spec:
-  healthChecks:
-    - apiVersion: v1
-      kind: ServiceAccount
-      name: flannel
-      namespace: kube-flannel
   interval: 10m0s
   path: ./k8s/apps/flannel
   prune: true

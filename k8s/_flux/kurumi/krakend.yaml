@@ -5,12 +5,6 @@ metadata:
   name: krakend
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: namespaces
-  healthChecks:
-    - kind: Deployment
-      name: krakend
-      namespace: krakend-system
   interval: 10m0s
   path: ./k8s/apps/krakend
   prune: true
