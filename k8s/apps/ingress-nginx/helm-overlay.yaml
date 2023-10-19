@@ -17,7 +17,7 @@ spec:
       version: 4.5.2
       sourceRef:
         kind: HelmRepository
-        name: ingress-nginx-repo      
+        name: ingress-nginx-repo
   values:
     ## nginx configuration
     ## Ref: https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/index.md
@@ -61,7 +61,7 @@ spec:
         externalIPs: []
 
         # -- Used by cloud providers to connect the resulting `LoadBalancer` to a pre-existing static IP according to https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
-        loadBalancerIP: ""
+        loadBalancerIP: "192.168.0.132"
         loadBalancerSourceRanges: []
 
         enableHttp: false
