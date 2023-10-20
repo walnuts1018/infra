@@ -22,8 +22,20 @@ spec:
           Enabled: false
         ExternalSecure: false
       masterkeySecretName: "zitadel-secret"
-      configSecretName: zitadel-secret
-      configSecretKey: config-yaml
+      secretConfig:
+        Database:
+          postgres:
+            Host: "postgres-release-postgresql.databases.svc.cluster.local"
+            Port: 5432
+            Database: "zitadel"
+            User:
+              Username: zitadel
+              Password: "4bgLZwEyHystaxQVsKlu8lyLlZEbEkXxfoe8XlQF4" # test password
+              SSL:
+                Mode: disable
+
+      #configSecretName: zitadel-secret
+      #configSecretKey: config-yaml
     replicaCount: 1
     ingress:
       enabled: true
