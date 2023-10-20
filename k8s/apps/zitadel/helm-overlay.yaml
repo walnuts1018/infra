@@ -25,6 +25,8 @@ spec:
       configSecretName: zitadel-secret
       configSecretKey: config-yaml
     replicaCount: 1
+    image:
+      tag: "v2.38.1"
     ingress:
       enabled: true
       className: "nginx"
