@@ -21,6 +21,7 @@ spec:
         ExternalDomain: auth2.walnuts.dev
         TLS:
           Enabled: false
+        ExternalPort: 443
         ExternalSecure: true
       masterkeySecretName: "zitadel-secret"
       configSecretName: zitadel-secret
