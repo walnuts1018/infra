@@ -18,6 +18,7 @@ spec:
   values:
     zitadel:
       configmapConfig:
+        ExternalDomain: auth2.walnuts.dev
         TLS:
           Enabled: false
         ExternalSecure: false
