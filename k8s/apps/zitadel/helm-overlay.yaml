@@ -27,6 +27,7 @@ spec:
           postgres:
             Host: "postgres-release-postgresql.databases.svc.cluster.local"
             Port: 5432
+            SSLMode: disable
             Database: "zitadel"
             User:
               Username: zitadel
