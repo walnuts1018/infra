@@ -25,7 +25,7 @@ spec:
     extraArgs:
       provider: keycloak-oidc
       redirect-url: https://victoria-metrics.walnuts.dev/oauth2/callback
-      oidc-issuer-url: https://auth.walnuts.dev/realms/master
+      oidc-issuer-url: https://auth2.walnuts.dev
       allowed-role: admin
       #reverse-proxy: true
       skip-provider-button: true
@@ -38,7 +38,7 @@ spec:
       pathType: Prefix
       # Used to create an Ingress record.
       hosts:
-       - "victoria-metrics.walnuts.dev"
+        - "victoria-metrics.walnuts.dev"
 
     # Configure the session storage type, between cookie and redis
     sessionStorage:
@@ -55,7 +55,7 @@ spec:
           existingSecret: "vm-oauth2-proxy-secret"
           passwordKey: "redis-password"
           # Redis sentinel master name
-          masterName: "mymaster"          
+          masterName: "mymaster"
           # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
           connectionUrls: "redis://redis-release.databases.svc.cluster.local:6379,redis://redis-release.databases.svc.cluster.local:26379"
 
