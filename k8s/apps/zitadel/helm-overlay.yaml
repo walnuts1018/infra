@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: zitadel
-      version: 6.2.0
+      version: 7.0.0
   values:
     zitadel:
       configmapConfig:
@@ -25,8 +25,6 @@ spec:
       configSecretName: zitadel-secret
       configSecretKey: config-yaml
     replicaCount: 1
-    image:
-      tag: "v2.38.1"
     ingress:
       enabled: true
       className: "nginx"
