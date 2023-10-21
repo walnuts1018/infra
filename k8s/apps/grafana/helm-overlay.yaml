@@ -62,7 +62,7 @@ spec:
         enabled: true
         client_id: 237187024069656922@walnuts.dev
         client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
-        scopes: openid email profile offline_access urn:iam:org:project:roles urn:zitadel:iam:org:projects:roles
+        scopes: openid email profile offline_access roles urn:iam:org:project:roles urn:zitadel:iam:org:projects:roles
         email_attribute_path: email
         login_attribute_path: preferred_username
         name_attribute_path: preferred_username
