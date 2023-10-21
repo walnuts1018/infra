@@ -17,7 +17,7 @@ spec:
       version: 6.16.1
       sourceRef:
         kind: HelmRepository
-        name: longhorn-oauth2-proxy-repo     
+        name: longhorn-oauth2-proxy-repo
   values:
     config:
       existingSecret: longhorn-oauth2-proxy-secret
@@ -26,9 +26,9 @@ spec:
         upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local/#/dashboard" ]
 
     extraArgs:
-      provider: keycloak-oidc
+      provider: oidc
       redirect-url: https://longhorn.walnuts.dev/oauth2/callback
-      oidc-issuer-url: https://auth.walnuts.dev/realms/master
+      oidc-issuer-url: https://auth2.walnuts.dev/realms/master
       allowed-role: admin
       #reverse-proxy: true
       skip-provider-button: true
@@ -41,7 +41,7 @@ spec:
       pathType: Prefix
       # Used to create an Ingress record.
       hosts:
-       - "longhorn.walnuts.dev"
+        - "longhorn.walnuts.dev"
 
     # Configure the session storage type, between cookie and redis
     sessionStorage:
@@ -58,7 +58,7 @@ spec:
           existingSecret: "longhorn-oauth2-proxy-secret"
           passwordKey: "redis-password"
           # Redis sentinel master name
-          masterName: "mymaster"          
+          masterName: "mymaster"
           # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
           connectionUrls: "redis://redis-release.databases.svc.cluster.local:6379,redis://redis-release.databases.svc.cluster.local:26379"
 
