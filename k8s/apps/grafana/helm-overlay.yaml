@@ -58,15 +58,15 @@ spec:
         enabled: false
       auth.generic_oauth:
         enabled: true
-        client_id: grafana
+        client_id: 237187024069656922@walnuts.dev
         client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
         scopes: openid email profile offline_access roles
         email_attribute_path: email
         login_attribute_path: preferred_username
         name_attribute_path: preferred_username
-        auth_url: https://auth2.walnuts.dev/realms/master/protocol/openid-connect/auth
-        token_url: https://auth2.walnuts.dev/realms/master/protocol/openid-connect/token
-        api_url: https://auth2.walnuts.dev/realms/master/protocol/openid-connect/userinfo
+        auth_url: https://auth2.walnuts.dev/oauth/v2/authorize
+        token_url: https://auth2.walnuts.dev/oauth/v2/token
+        api_url: https://auth2.walnuts.dev/oidc/v1/userinfo
         #role_attribute_strict: true
         role_attribute_path: contains(roles[*], 'grafana-admin') && 'GrafanaAdmin' || contains(roles[*], 'grafana-editor') && 'Editor' || contains(roles[*], 'grafana-viewer') && 'Viewer'
         allow_assign_grafana_admin: true
