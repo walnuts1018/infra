@@ -70,6 +70,6 @@ spec:
         token_url: https://auth2.walnuts.dev/oauth/v2/token
         api_url: https://auth2.walnuts.dev/oidc/v1/userinfo
         #role_attribute_strict: true
-        role_attribute_path: urn:zitadel:iam:org:project:roles[0].grafana-admin!=null && 'GrafanaAdmin' || urn:zitadel:iam:org:project:roles[0].grafana-editor!=null && 'Editor' || urn:zitadel:iam:org:project:roles[0].grafana-viewer!=null && 'Viewer'
+        role_attribute_path: urn:zitadel:iam:org:project:roles.grafana-admin!=null && 'GrafanaAdmin' || urn:zitadel:iam:org:project:roles.grafana-editor!=null && 'Editor' || urn:zitadel:iam:org:project:roles.grafana-viewer!=null && 'Viewer'
         allow_assign_grafana_admin: true
         use_pkce: true
