@@ -66,10 +66,10 @@ spec:
         email_attribute_path: email
         login_attribute_path: preferred_username
         name_attribute_path: preferred_username
-        auth_url: https://auth2.walnuts.dev/oauth/v2/authorize
-        token_url: https://auth2.walnuts.dev/oauth/v2/token
-        api_url: https://auth2.walnuts.dev/oidc/v1/userinfo
-        #role_attribute_strict: true
+        auth_url: https://auth.walnuts.dev/oauth/v2/authorize
+        token_url: https://auth.walnuts.dev/oauth/v2/token
+        api_url: https://auth.walnuts.dev/oidc/v1/userinfo
+        role_attribute_strict: true
         role_attribute_path: |
           "urn:zitadel:iam:org:project:roles"."grafana-admin"  && 'GrafanaAdmin' || "urn:zitadel:iam:org:project:roles"."grafana-editor" && 'Editor' || "urn:zitadel:iam:org:project:roles"."grafana-viewer" && 'Viewer'
         allow_assign_grafana_admin: true

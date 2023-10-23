@@ -25,7 +25,7 @@ spec:
     extraArgs:
       provider: oidc
       redirect-url: https://victoria-metrics.walnuts.dev/oauth2/callback
-      oidc-issuer-url: https://auth2.walnuts.dev
+      oidc-issuer-url: https://auth.walnuts.dev
       allowed-role: admin
       #reverse-proxy: true
       skip-provider-button: true
