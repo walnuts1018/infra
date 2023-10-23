@@ -60,7 +60,7 @@ spec:
         enabled: false
       auth.generic_oauth:
         enabled: true
-        client_id: 237187024069656922@walnuts.dev
+        client_id: 237480184528306541@walnuts.dev
         client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
         scopes: openid email profile offline_access urn:zitadel:iam:org:projects:roles
         email_attribute_path: email
@@ -71,6 +71,6 @@ spec:
         api_url: https://auth.walnuts.dev/oidc/v1/userinfo
         role_attribute_strict: true
         role_attribute_path: |
-          "urn:zitadel:iam:org:project:roles"."grafana-admin"  && 'GrafanaAdmin' || "urn:zitadel:iam:org:project:roles"."grafana-editor" && 'Editor' || "urn:zitadel:iam:org:project:roles"."grafana-viewer" && 'Viewer'
+          "urn:zitadel:iam:org:project:roles"."admin"  && 'GrafanaAdmin' || "urn:zitadel:iam:org:project:roles"."grafana-editor" && 'Editor' || "urn:zitadel:iam:org:project:roles"."grafana-viewer" && 'Viewer'
         allow_assign_grafana_admin: true
         use_pkce: true
