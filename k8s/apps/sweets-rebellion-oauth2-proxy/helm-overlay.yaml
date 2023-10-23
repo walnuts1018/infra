@@ -26,10 +26,10 @@ spec:
         upstreams = [ "http://sweets-rebellion-sweets-rebellion.sweets-rebellion.svc.cluster.local/" ]
 
     extraArgs:
-      provider: keycloak-oidc
+      provider: oidc
       redirect-url: https://sweets-rebellion.walnuts.dev/oauth2/callback
-      oidc-issuer-url: https://auth.walnuts.dev/realms/master
-      allowed-role: kmc
+      oidc-issuer-url: https://auth.walnuts.dev
+      #allowed-role: kmc
       #reverse-proxy: true
       skip-provider-button: true
 
@@ -41,7 +41,7 @@ spec:
       pathType: Prefix
       # Used to create an Ingress record.
       hosts:
-       - "sweets-rebellion.walnuts.dev"
+        - "sweets-rebellion.walnuts.dev"
 
     # Configure the session storage type, between cookie and redis
     sessionStorage:
@@ -70,8 +70,8 @@ spec:
       # https://github.com/bitnami/charts/tree/master/bitnami/redis#parameters
       # redisPort: 6379
       #cluster:
-        #enabled: false
-        #slaveCount: 1
+      #enabled: false
+      #slaveCount: 1
       image:
         tag: 7.0.9-debian-11-r6
       replica:
