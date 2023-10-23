@@ -18,7 +18,7 @@ spec:
   values:
     zitadel:
       configmapConfig:
-        ExternalDomain: auth2.walnuts.dev
+        ExternalDomain: auth.walnuts.dev
         TLS:
           Enabled: false
         ExternalPort: 443
@@ -33,7 +33,7 @@ spec:
       enabled: true
       className: "nginx"
       hosts:
-        - host: auth2.walnuts.dev
+        - host: auth.walnuts.dev
           paths:
             - path: /
               pathType: Prefix
