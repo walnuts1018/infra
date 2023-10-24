@@ -38,5 +38,5 @@ spec:
             - path: /
               pathType: Prefix
     env:
-      - name: "ZITADEL_LOG_LEVEL"
+      - name: ZITADEL_LOG_LEVEL
         value: "debug"
