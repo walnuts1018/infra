@@ -5,7 +5,7 @@ resources:
   - ./imageupdateautomation.yaml
   - ./externalsecret.yaml
   - ./sweets-rebellion
-  - ./keycloak
+  - ./walnuts-dev
   - ./machine-status-api
   - ./wakatime-to-slack-profile
   - ./fitbit-manager
