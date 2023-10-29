@@ -1,8 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namePrefix: keycloak-
+namePrefix: walnuts.dev-
 namespace: flux-system
 components:
-- ../../components/image-policy
+  - ../../components/image-policy
 patchesStrategicMerge:
-- image-policy-overlay.yaml
+  - image-policy-overlay.yaml
