@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: walnuts.dev
+  name: walnuts-dev
   labels:
-    app: walnuts.dev
+    app: walnuts-dev
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: walnuts.dev
+      app: walnuts-dev
   template:
     metadata:
       labels:
-        app: walnuts.dev
+        app: walnuts-dev
     spec:
       containers:
-        - name: walnuts.dev
+        - name: walnuts-dev
           image: ghcr.io/walnuts1018/walnuts.dev:f0e4b249cd07b1c0ffaea67441374b14f7bb22c1-4 # {"$imagepolicy": "flux-system:walnuts.dev-policy"}
           imagePullPolicy: IfNotPresent
           ports:
