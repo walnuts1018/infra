@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: walnuts.dev
+  name: walnuts-dev
 spec:
   ingressClassName: "nginx"
   rules:
@@ -12,6 +12,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: walnuts.dev
+                name: "walnuts-dev"
                 port:
                   number: 3000
