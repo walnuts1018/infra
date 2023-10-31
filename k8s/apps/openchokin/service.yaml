@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: machine-status-api
+  name: openchokin-front
   labels:
-    app: machine-status-api
+    app: openchokin-front
 spec:
   ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
+    - name: http
+      port: 3000
+      targetPort: 3000
   selector:
-    app: machine-status-api
-  type: LoadBalancer
+    app: openchokin-front
+  type: ClusterIP
