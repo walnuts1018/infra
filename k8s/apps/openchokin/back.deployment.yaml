@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openchokin-back
+  labels:
+    app: openchokin-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openchokin-back
+  template:
+    metadata:
+      labels:
+        app: openchokin-back
+    spec:
+      containers:
+        - name: openchokin-back
+          image: ghcr.io/walnuts1018/openchokin-back:v0.0.0-4ce07549729f106576c0cb82ed2f9bfc87f1d7bc-16 # {"$imagepolicy": "flux-system:openchokin-back-policy"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: GIN_MODE
+              value: "release"
+          resources:
+            requests: {}
+            limits:
+              memory: {}

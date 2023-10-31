@@ -11,3 +11,5 @@ resources:
   - ./fitbit-manager
   - ./backup-manager
   - ./github-readme-stats
+  - ./openchokin-front
+  - ./openchokin-back
