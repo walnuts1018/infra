@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: openchokin-back
-          image: "ghcr.io/walnuts1018/openchokin-back:v0.0.0-b900872661066b84081dd2dd602fe34c978295c6-24" # {"$imagepolicy": "flux-system:openchokin-back-policy"}
+          image: "ghcr.io/walnuts1018/openchokin-back:v0.0.0-8bd1e19b1dc9df8d19b6a1a7200ab636d1be540c-25" # {"$imagepolicy": "flux-system:openchokin-back-policy"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
