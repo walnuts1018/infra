@@ -23,3 +23,23 @@ spec:
           resources:
             limits: {}
             requests: {}
+          env:
+            - name: ZITADEL_URL
+              value: "https://auth.walnuts.dev"
+            - name: NEXTAUTH_URL
+              value: "https://openchokin.walnuts.dev"
+            - name: ZITADEL_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: openchokin-secret
+                  key: zitade-client-id
+            - name: ZITADEL_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: openchokin-secret
+                  key: zitadel-client-secret
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: openchokin-secret
+                  key: nextauth-secret
