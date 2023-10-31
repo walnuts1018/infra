@@ -25,5 +25,4 @@ spec:
               value: "release"
           resources:
             requests: {}
-            limits:
-              memory: {}
+            limits: {}
