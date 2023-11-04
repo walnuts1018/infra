@@ -2,16 +2,13 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: openchokin-back
-  annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$1$2
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: "openchokin.walnuts.dev"
+    - host: "api.openchokin.walnuts.dev"
       http:
         paths:
-          - path: /api/back/(.*)
+          - path: /
             pathType: Prefix
             backend:
               service:
