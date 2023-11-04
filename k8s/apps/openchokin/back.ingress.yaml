@@ -14,4 +14,4 @@ spec:
               service:
                 name: "openchokin-back"
                 port:
-                  number: 3000
+                  number: 8080
