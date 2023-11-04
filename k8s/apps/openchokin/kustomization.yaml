@@ -4,7 +4,8 @@ namespace: default
 resources:
   - front.deployment.yaml
   - back.deployment.yaml
-  - service.yaml
+  - front.service.yaml
+  - back.service.yaml
   - front.ingress.yaml
   - back.ingress.yaml
   - externalsecret.yaml
