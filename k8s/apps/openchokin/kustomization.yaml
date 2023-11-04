@@ -5,5 +5,6 @@ resources:
   - front.deployment.yaml
   - back.deployment.yaml
   - service.yaml
-  - ingress.yaml
+  - front.ingress.yaml
+  - back.ingress.yaml
   - externalsecret.yaml
