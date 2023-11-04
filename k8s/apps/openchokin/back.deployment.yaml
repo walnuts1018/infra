@@ -23,6 +23,26 @@ spec:
           env:
             - name: GIN_MODE
               value: "release"
+            - name: POSTGRES_ADMIN_USER
+              value: "postgres"
+            - name: POSTGRES_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openchokin-secret
+                  key: postgres-admin-password
+            - name: POSTGRES_USER
+              value: "openchokin"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: openchokin-secret
+                  key: postgres-user-password
+            - name: POSTGRES_DB
+              value: "openchokin"
+            - name: POSTGRES_HOST
+              value: "postgres-release-postgresql.databases.svc.cluster.local"
+            - name: POSTGRES_PORT
+              value: "5432"
           resources:
             requests: {}
             limits: {}
