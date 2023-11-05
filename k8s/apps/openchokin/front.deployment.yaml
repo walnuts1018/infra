@@ -23,7 +23,6 @@ spec:
           resources:
             limits: {}
             requests: {}
-          command: ["sleep", "infinity"]
           env:
             - name: ZITADEL_URL
               value: "https://auth.walnuts.dev"
