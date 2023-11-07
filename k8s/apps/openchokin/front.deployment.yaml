@@ -49,9 +49,9 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: openchokin-secret
-                  key: redis-password
+                  key: REDIS_PASSWORD
             - name: CACHE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: openchokin-secret
-                  key: cache-password
+                  key: CACHE_PASSWORD
