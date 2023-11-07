@@ -28,8 +28,7 @@ spec:
         storageClass: "longhorn"
         size: 8Gi
       service:
-        type: LoadBalancer
-        loadBalancerIP: "192.168.0.134"
+        type: ClusterIP
         ports:
           redis: 6379
       resources:
@@ -64,3 +63,6 @@ spec:
         enabled: true
         storageClass: "longhorn"
         size: 100Mi
+      service:
+        type: LoadBalancer
+        loadBalancerIP: "192.168.0.134"
