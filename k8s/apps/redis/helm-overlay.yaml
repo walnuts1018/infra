@@ -28,7 +28,7 @@ spec:
         storageClass: "longhorn"
         size: 512Mi
       service:
-        type: ClusterIP
+        type: LoadBalancer
         ports:
           redis: 6379
       resources:
@@ -45,7 +45,7 @@ spec:
         storageClass: "longhorn"
         size: 512Mi
       service:
-        type: ClusterIP
+        type: LoadBalancer
         ports:
           redis: 6379
       resources:
