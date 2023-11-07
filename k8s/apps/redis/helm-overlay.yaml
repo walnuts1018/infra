@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: redis
-      version: 17.11.3
+      version: 18.2.1
   values:
     auth:
       sentinel: true
@@ -28,7 +28,8 @@ spec:
         storageClass: "longhorn"
         size: 8Gi
       service:
-        type: ClusterIP
+        type: LoadBalancer
+        loadBalancerIP: "192.168.0.134"
         ports:
           redis: 6379
       resources:
@@ -54,7 +55,7 @@ spec:
         limits:
           cpu: 200m
           memory: 50Mi
-  
+
     sentinel:
       enabled: true
       masterSet: mymaster
