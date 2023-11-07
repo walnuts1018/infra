@@ -39,7 +39,7 @@ spec:
           memory: 50Mi
 
     replica:
-      replicaCount: 3
+      replicaCount: 2
       persistence:
         enabled: true
         storageClass: "longhorn"
@@ -58,7 +58,7 @@ spec:
     sentinel:
       enabled: true
       masterSet: mymaster
-      quorum: 3
+      quorum: 2
       persistence:
         enabled: true
         storageClass: "longhorn"
