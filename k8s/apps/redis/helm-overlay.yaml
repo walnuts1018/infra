@@ -26,7 +26,7 @@ spec:
       persistence:
         enabled: true
         storageClass: "longhorn"
-        size: 8Gi
+        size: 512Mi
       service:
         type: ClusterIP
         ports:
@@ -39,11 +39,11 @@ spec:
           memory: 50Mi
 
     replica:
-      replicaCount: 2
+      replicaCount: 3
       persistence:
         enabled: true
         storageClass: "longhorn"
-        size: 8Gi
+        size: 512Mi
       service:
         type: ClusterIP
         ports:
