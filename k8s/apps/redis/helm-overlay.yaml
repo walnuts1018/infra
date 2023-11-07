@@ -58,7 +58,7 @@ spec:
     sentinel:
       enabled: true
       masterSet: mymaster
-      quorum: 2
+      quorum: 3
       persistence:
         enabled: true
         storageClass: "longhorn"
