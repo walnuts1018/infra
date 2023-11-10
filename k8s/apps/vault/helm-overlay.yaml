@@ -34,7 +34,7 @@ spec:
       dataStorage:
         enabled: false
       nodeSelector:
-        kubernetes.io/hostname: "kurumi-01"
+        kubernetes.io/hostname: "cake"
     injector:
       enabled: false
     ui:
