@@ -14,24 +14,24 @@ spec:
         app: misskey-redis
     spec:
       containers:
-      - image: index.docker.io/redis:7-alpine
-        imagePullPolicy: IfNotPresent
-        name: misskey-redis
-        ports:
-        - containerPort: 6379
+        - image: index.docker.io/redis:7-alpine
+          imagePullPolicy: IfNotPresent
           name: misskey-redis
-        volumeMounts:
-        - name: misskey-redis-pv
-          mountPath: /data
+          ports:
+            - containerPort: 6379
+              name: misskey-redis
+          volumeMounts:
+            - name: misskey-redis-pv
+              mountPath: /data
 
       nodeSelector:
-        kubernetes.io/hostname: kurumi-04            
-      tolerations: 
+        kubernetes.io/hostname: kurumi-04
+      tolerations:
         - key: "remote-node"
           operator: "Exists"
 
       volumes:
-      - name: misskey-redis-pv
-        hostPath:
-          path: /home/juglans/misskey/redis
-          type: Directory
+        - name: misskey-redis-pv
+          hostPath:
+            path: /home/juglans/misskey/redis
+            type: Directory
