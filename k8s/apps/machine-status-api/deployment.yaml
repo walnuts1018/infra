@@ -46,4 +46,4 @@ spec:
             limits:
               memory: "20Mi"
       nodeSelector:
-        kubernetes.io/hostname: kurumi-01
+        kubernetes.io/hostname: snow
