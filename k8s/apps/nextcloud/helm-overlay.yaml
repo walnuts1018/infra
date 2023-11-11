@@ -84,3 +84,5 @@ spec:
           path: /mnt/data/nextcloud
     metrics:
       enabled: true
+    nodeSelector:
+      kubernetes.io/hostname: cake
