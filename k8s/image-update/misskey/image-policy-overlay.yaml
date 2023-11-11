@@ -5,7 +5,8 @@ metadata:
   name: repo
 spec:
   image: misskey/misskey
-  secretRef: {}
+  secretRef:
+    $patch: delete
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
