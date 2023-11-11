@@ -88,21 +88,21 @@ spec:
     nodeSelector:
       kubernetes.io/hostname: cake
     livenessProbe:
-      enabled: false
+      enabled: true
       initialDelaySeconds: 60
       periodSeconds: 30
       timeoutSeconds: 5
       failureThreshold: 3
       successThreshold: 1
     readinessProbe:
-      enabled: false
+      enabled: true
       initialDelaySeconds: 60
       periodSeconds: 30
       timeoutSeconds: 5
       failureThreshold: 3
       successThreshold: 1
     startupProbe:
-      enabled: false
+      enabled: true
       initialDelaySeconds: 120
       periodSeconds: 30
       timeoutSeconds: 5
