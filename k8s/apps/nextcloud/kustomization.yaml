@@ -3,9 +3,9 @@ kind: Kustomization
 namePrefix: nextcloud-
 namespace: default
 resources:
-  - sealedsecret.yaml
+  - externalsecret.yaml
   - pvc.yaml
 components:
-- ../../components/helm
+  - ../../components/helm
 patchesStrategicMerge:
-- helm-overlay.yaml
+  - helm-overlay.yaml

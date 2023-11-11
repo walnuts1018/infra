@@ -1,0 +1,86 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: repo
+spec:
+  url: https://nextcloud.github.io/helm/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: nextcloud
+      version: 4.3.5
+  values:
+    image:
+      tag: 27.1.3
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: 4G
+        nginx.ingress.kubernetes.io/server-snippet: |-
+          server_tokens off;
+          proxy_hide_header X-Powered-By;
+
+          rewrite ^/.well-known/webfinger /public.php?service=webfinger last;
+          rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
+          rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json;
+          location = /.well-known/carddav {
+            return 301 $scheme://$host/remote.php/dav;
+          }
+          location = /.well-known/caldav {
+            return 301 $scheme://$host/remote.php/dav;
+          }
+          location = /robots.txt {
+            allow all;
+            log_not_found off;
+            access_log off;
+          }
+          location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)/ {
+            deny all;
+          }
+          location ~ ^/(?:autotest|occ|issue|indie|db_|console) {
+            deny all;
+          }
+
+    phpClientHttpsFix:
+      enabled: true
+      protocol: https
+
+    nextcloud:
+      host: nextcloud.walnuts.dev
+      existingSecret:
+        enabled: true
+        secretName: nextcloud-secret
+        usernameKey: admin-username
+        passwordKey: admin-password
+      datadir: /var/www/html/data
+    internalDatabase:
+      enabled: false
+    externalDatabase:
+      enabled: true
+      type: postgresql
+      host: postgresql-release.databases.svc.cluster.local
+      database: nextcloud
+      existingSecret:
+        enabled: true
+        secretName: nextcloud-secret
+        usernameKey: postgres-username
+        passwordKey: postgres-password
+    cronjob:
+      enabled: false
+    persistence:
+      enabled: true
+      existingClaim: nextcloud-pvc
+      nextcloudData:
+        enabled: true
+        storageClass: manual
+        local:
+          path: /mnt/data/nextcloud
+    metrics:
+      enabled: true
