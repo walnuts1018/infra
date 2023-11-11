@@ -30,7 +30,7 @@ spec:
       redirect-url: https://longhorn.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev
       oidc-groups-claim: "my:zitadel:grants"
-      allowed-group: "longhorn-admin"
+      allowed-group: "walnuts.dev:longhorn-admin"
       #reverse-proxy: true
       skip-provider-button: true
 
