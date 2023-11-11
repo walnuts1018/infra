@@ -63,7 +63,7 @@ spec:
       extraVolumes:
         - name: samba-local-dir
           hostPath:
-            path: /mnt/data/share
+            path: /mnt/data/nextcloud
             type: Directory
 
     internalDatabase:
