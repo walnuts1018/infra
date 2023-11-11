@@ -13,3 +13,4 @@ resources:
   - ./github-readme-stats
   - ./openchokin-front
   - ./openchokin-back
+  - ./misskey

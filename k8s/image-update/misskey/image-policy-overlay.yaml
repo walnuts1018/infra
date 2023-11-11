@@ -1,0 +1,18 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: repo
+spec:
+  image: misskey/misskey
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: policy
+spec:
+  filterTags:
+    pattern: '(?P<version>.[0-9]{4}\.[0-9]+\.[0-9]+)'
+  policy:
+    alphabetical:
+      order: asc
