@@ -43,8 +43,14 @@ spec:
                 secretKeyRef:
                   name: openchokin-secret
                   key: nextauth-secret
-            - name: REDIS_HOST
+            - name: REDIS_SENTINEL_HOST
               value: "redis-release.databases.svc.cluster.local"
+            - name: REDIS_SENTINEL_PORT
+              value: "26379"
+            - name: REDIS_SENTINEL_NAME
+              value: "mymaster"
+            - name: REDIS_DB
+              value: "2"
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
