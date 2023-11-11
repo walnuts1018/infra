@@ -36,7 +36,7 @@ spec:
 
       containers:
         - name: misskey
-          image: misskey/misskey:2023.11.0 # {"$imagepolicy": "flux-system:misskey-policy"}
+          image: misskey/misskey:2023.11.0
           imagePullPolicy: IfNotPresent
           tty: true
           ports:
