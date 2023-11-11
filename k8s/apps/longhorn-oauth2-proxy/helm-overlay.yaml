@@ -26,7 +26,7 @@ spec:
         upstreams = [ "http://longhorn-frontend.longhorn-system.svc.cluster.local/#/dashboard" ]
         pass_access_token = true
         user_id_claim = "sub"
-        oidc_groups_claim="{my:zitadel:grants}"
+        oidc_groups_claim="my:zitadel:grants"
         allowed_groups = ["237477822715658605:longhorn-admin"]
 
     extraArgs:
