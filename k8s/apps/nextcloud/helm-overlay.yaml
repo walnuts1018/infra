@@ -60,6 +60,12 @@ spec:
         usernameKey: admin-username
         passwordKey: admin-password
       datadir: /var/www/html/data
+      extraVolumes:
+        - name: samba-local-dir
+          hostPath:
+            path: /mnt/data/share
+            type: Directory
+
     internalDatabase:
       enabled: false
     externalDatabase:
@@ -77,11 +83,6 @@ spec:
     persistence:
       enabled: true
       existingClaim: nextcloud-pvc
-      nextcloudData:
-        enabled: true
-        storageClass: manual
-        local:
-          path: /mnt/data/nextcloud
     metrics:
       enabled: true
     nodeSelector:
