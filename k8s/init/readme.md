@@ -1,20 +1,7 @@
 # Init
 
-## 構成
-
-- kurumi-01 RaspberryPi 4 4Core 2GB+2GB aarch64 Debian11  Control
-- kurumi-02 RaspberryPi 4 4Core 4GB+2GB aarch64 Debian11  Control
-- kurumi-03 QEMU          4Core 4GB+4GB amd64   Ubuntu22
-- kurumi-04 Azure b1ms    1Core 2GB+1GB amd64   Ubuntu22
-- kurumi-05 Azure b1s     1Core 1GB+1GB amd64   Ubuntu22  Control
-
 ## 初期設定
 
-- kurumi-01,02
-  - Raspberry Pi OS Lite 64bit Bullseye インストール
-  - ```$ sudo apt update && sudo apt upgrade -y```
-- kurumi-03,04,05
-  - Ubuntu22 Install
 - [zsh&dotfile](https://github.com/walnuts1018/dotfiles)
 
 ## Timezone
@@ -31,7 +18,7 @@ sudo raspi-config nonint do_change_timezone Asia/Tokyo
 sudo timedatectl set-timezone Asia/Tokyo
 ```
 
-## IP固定
+## IP 固定
 
 ### rasp
 
@@ -45,62 +32,22 @@ static domain_name_servers=192.168.0.1" >> /etc/dhcpcd.conf
 
 再起動
 
+### Ubuntu
+
+インストールの時にやる
+
 ## cgroups
+
+###rasp
 
 ```bash
 sudo sed -i 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/g' /boot/cmdline.txt
 ```
+
 再起動
 
-## swap
-
-### rasp
-
-```bash
-sudo vim /etc/dphys-swapfile
-```
-
-```bash
-sudo systemctl restart dphys-swapfile
-```
-
-### Ubuntu(Azure)
-```bash
-sudo fallocate -l 1G /mnt/swap.img
-sudo chmod 600 /mnt/swap.img
-sudo mkswap /mnt/swap.img
-sudo vim /etc/fstab
-```
-
-```diff
-+ /mnt/swap.img none swap sw 0 0
-```
-
-```bash
-sudo reboot
-```
-
-## iptables
-```bash
-cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
-br_netfilter
-EOF
-
-cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-EOF
-
-sudo apt-get install -y iptables arptables ebtables
-sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
-sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
-sudo update-alternatives --set arptables /usr/sbin/arptables-legacy
-sudo update-alternatives --set ebtables /usr/sbin/ebtables-legacy
-
-sudo sysctl --system
-```
-
 ## crio
+
 ```bash
 cat <<EOF | sudo tee /etc/modules-load.d/crio.conf
 overlay
@@ -117,30 +64,16 @@ EOF
 sudo sysctl --system
 ```
 
-### rasp
-
 ```bash
-cat <<EOF | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Raspbian_10/ /
-EOF
-cat <<EOF | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:1.27.list
-deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.27/Raspbian_11/ /
-EOF
-curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:1.27/Raspbian_11/Release.key | sudo apt-key --keyring /etc/apt/trusted.gpg.d/libcontainers.gpg add -
-curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Raspbian_10/Release.key | sudo apt-key --keyring /etc/apt/trusted.gpg.d/libcontainers.gpg add -
+sudo apt update
+sudo apt install -y software-properties-common curl
 ```
 
-### ubuntu
-
-```bash
-cat <<EOF | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_22.04/ /
-EOF
-cat <<EOF | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:1.27.list
-deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.27/xUbuntu_22.04/ /
-EOF
-curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:1.27/xUbuntu_22.04/Release.key | sudo apt-key --keyring /etc/apt/trusted.gpg.d/libcontainers.gpg add -
-curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_22.04/Release.key | sudo apt-key --keyring /etc/apt/trusted.gpg.d/libcontainers.gpg add -
+````bash
+curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/prerelease:/main/deb/Release.key |
+    gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/prerelease:/v1.28/deb /" |
+    tee /etc/apt/sources.list.d/cri-o.list
 ```
 
 ```bash
@@ -149,24 +82,23 @@ sudo apt install -y cri-o cri-o-runc
 sudo systemctl daemon-reload
 sudo systemctl enable crio
 sudo systemctl start crio
-```
+````
 
-## k8s本体
+## k8s 本体
+
 ```bash
-sudo apt-get update && sudo apt-get install -y apt-transport-https curl
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
-deb https://apt.kubernetes.io/ kubernetes-xenial main
-EOF
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key |
+    gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" |
+    tee /etc/apt/sources.list.d/kubernetes.list
+
 sudo apt update
-sudo apt install -y kubelet=1.27.2-00 kubeadm=1.27.2-00 kubectl=1.27.2-00
-sudo apt-mark hold kubelet kubeadm kubectl
+sudo apt install -y kubelet kubeadm kubectl
+
 cat <<EOF | sudo tee /etc/default/kubelet
 KUBELET_EXTRA_ARGS=--container-runtime-endpoint='unix:///var/run/crio/crio.sock'
 EOF
 ```
-
-(control plane, tailscale) --node-ip=100.xxx.xxx.xxxも追加
 
 ```bash
 sudo systemctl daemon-reload
@@ -176,14 +108,11 @@ sudo systemctl start kubelet
 
 ## keepalived & nginx
 
-1,2,3
-
 ```bash
 sudo apt install keepalived nginx -y
 keepalived --version
 ```
 
-1
 ```bash
 cat <<EOF | sudo tee /etc/nginx/nginx.conf
 user www-data;
@@ -198,93 +127,7 @@ events {
 stream {
   upstream kube_apiserver {
     least_conn;
-    server 192.168.0.16:6443;
-    }
-
-  server {
-    listen        16443;
-    proxy_pass    kube_apiserver;
-    proxy_timeout 10m;
-    proxy_connect_timeout 1s;
-  }
-}
-
-http {
-    sendfile on;
-
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
-
-    access_log /var/log/nginx/access.log;
-    error_log /var/log/nginx/error.log;
-
-    keepalive_timeout  65;
-
-    include /etc/nginx/conf.d/*.conf;
-    include /etc/nginx/sites-enabled/*;
-}
-EOF
-```
-
-2
-```bash
-cat <<EOF | sudo tee /etc/nginx/nginx.conf
-user www-data;
-worker_processes auto;
-pid /run/nginx.pid;
-include /etc/nginx/modules-enabled/*.conf;
-
-events {
-    worker_connections  1024;
-}
-
-stream {
-  upstream kube_apiserver {
-    least_conn;
-    server 100.84.126.71:6443;
-    }
-
-  server {
-    listen        16443;
-    proxy_pass    kube_apiserver;
-    proxy_timeout 10m;
-    proxy_connect_timeout 1s;
-  }
-}
-
-http {
-    sendfile on;
-
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
-
-    access_log /var/log/nginx/access.log;
-    error_log /var/log/nginx/error.log;
-
-    keepalive_timeout  65;
-
-    include /etc/nginx/conf.d/*.conf;
-    include /etc/nginx/sites-enabled/*;
-}
-EOF
-```
-
-3
-```bash
-cat <<EOF | sudo tee /etc/nginx/nginx.conf
-user www-data;
-worker_processes auto;
-pid /run/nginx.pid;
-include /etc/nginx/modules-enabled/*.conf;
-
-events {
-    worker_connections  1024;
-}
-
-stream {
-  upstream kube_apiserver {
-    least_conn;
-    server 100.123.73.55:6443;
+    server 192.168.0.16:6443; # to be changed
     }
 
   server {
@@ -321,7 +164,7 @@ EOF
 cat <<EOF | sudo tee /etc/keepalived/chk_nginx_proc.sh
 #!/usr/bin/bash
 
-timeout 5 curl http://localhost:16443
+timeout 5 curl http://localhost:16443 # to be changed
 status=$?
 
 if [ $status -eq 0 ]; then
@@ -345,8 +188,6 @@ exit 0
 EOF
 ```
 
-1
-
 ```bash
 cat <<EOF | sudo tee /etc/keepalived/keepalived.conf
 ! Configuration File for keepalived
@@ -378,104 +219,10 @@ vrrp_instance VI_1 {
     state MASTER
     interface eth0
     virtual_router_id 51
-    priority 120
+    priority 120 # to be changed
     advert_int 1
     virtual_ipaddress {
-        192.168.0.17
-    }
-    track_script {
-      chk_nginx
-      chk_nginx_processes
-      maintenance_mode
-    }
-}
-EOF
-```
-
-2
-
-```bash
-cat <<EOF | sudo tee /etc/keepalived/keepalived.conf
-! Configuration File for keepalived
-
-global_defs {
-}
-
-vrrp_script chk_nginx {
-    script "/etc/keepalived/chk_nginx_status.sh"
-    interval 2
-    fall 2
-    rise 2
-}
-
-vrrp_script chk_nginx_processes {
-    script "/etc/keepalived/chk_nginx_proc.sh"
-    interval 2
-    fall 2
-    rise 2
-}
-
-vrrp_script maintenance_mode {
-    script "/etc/keepalived/maintenance.sh"
-    interval 2
-    weight 50
-}
-
-vrrp_instance VI_1 {
-    state MASTER
-    interface eth0
-    virtual_router_id 51
-    priority 110
-    advert_int 1
-    virtual_ipaddress {
-        192.168.0.17
-    }
-    track_script {
-      chk_nginx
-      chk_nginx_processes
-      maintenance_mode
-    }
-}
-EOF
-```
-
-3
-
-```bash
-cat <<EOF | sudo tee /etc/keepalived/keepalived.conf
-! Configuration File for keepalived
-
-global_defs {
-}
-
-vrrp_script chk_nginx {
-    script "/etc/keepalived/chk_nginx_status.sh"
-    interval 2
-    fall 2
-    rise 2
-}
-
-vrrp_script chk_nginx_processes {
-    script "/etc/keepalived/chk_nginx_proc.sh"
-    interval 2
-    fall 2
-    rise 2
-}
-
-vrrp_script maintenance_mode {
-    script "/etc/keepalived/maintenance.sh"
-    interval 2
-    weight 50
-}
-
-vrrp_instance VI_1 {
-    state MASTER
-    interface eth0
-    virtual_router_id 51
-    priority 100
-    advert_int 1
-    virtual_ipaddress {
-        192.168.0.17
+        192.168.0.17 # to be changed
     }
     track_script {
       chk_nginx
@@ -516,16 +263,18 @@ memorySwap:
 sudo kubeadm init --config kubeadm-config.yaml
 ```
 
-再試行してるうちに↓
+再試行してるうちに ↓
+
 ## swap support
+
 ```bash
 sudo vim /var/lib/kubelet/kubeadm-flags.env
 ```
 
 `--feature-gates=NodeSwap=true` を追加
 
-
 ## kubeconfig
+
 ```bash
 sudo rm -r .kube
 mkdir -p $HOME/.kube
@@ -534,27 +283,15 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
 ## taint
+
 ```bash
-HOSTNAME=kurumi-01
 kubectl taint node $HOSTNAME node-role.kubernetes.io/control-plane:NoSchedule-
 ```
 
 ## join
 
-control-plane
-
 sudo kubeadm init phase upload-certs --upload-certs
-
-hosts
-
-```/etc/hosts
-192.168.0.16    kurumi-01
-192.168.0.18    kurumi-02
-192.168.0.15    kurumi-03
-100.84.126.71   kurumi-04
-100.123.73.55   kurumi-05
-```
-
+sudo kubeadm token create --print-join-command
 
 ```bash
 sudo kubeadm join 192.168.0.17:16443 --token xxx \
@@ -563,6 +300,7 @@ sudo kubeadm join 192.168.0.17:16443 --token xxx \
 ```
 
 ## helm
+
 ```bash
 curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
 sudo apt-get install apt-transport-https --yes
@@ -573,46 +311,17 @@ sudo apt-mark hold helm
 ```
 
 ## zsh-completion
+
 ```bash
 echo "[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 [[ /usr/bin/helm ]] && source <(helm completion zsh)" >> .zshrc
 ```
 
-## Flannel
-```bash
-kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
-```
-
 ## longhorn
+
 ```bash
 sudo apt -y install open-iscsi
 ```
-
-環境チェック
-```bash
-sudo apt install -y jq
-curl -sSfL https://raw.githubusercontent.com/longhorn/longhorn/v1.4.0/scripts/environment_check.sh | bash
-```
-
-<!-- 
-### argocd 
-```bash
-git clone git@github.com:walnuts1018/infra.git
-cd infra/k8s/init/
-kubectl apply -f ./argocd/namespace.yaml
-kubectl apply -n argocd -f ./argocd/install.yaml
-
-kubectl apply -f ./applications-deployer.yaml
-```
-#### argocd cli
-```bash
-cd /tmp
-curl -sSL -o argocd-linux-arm64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-arm64
-sudo install -m 555 argocd-linux-arm64 /usr/local/bin/argocd
-\rm argocd-linux-arm64
-cd
-```
---->
 
 ## fluxcd
 
@@ -625,40 +334,7 @@ echo "[[ /usr/bin/flux ]] && source <(flux completion zsh)" >> ~/.zshrc
 flux bootstrap github --owner=walnuts1018 --repository=infra --branch=main --path=./k8s/_flux/kurumi/ --components-extra=image-reflector-controller,image-automation-controller --reconcile --token-auth --personal --ca-file ca.pem
 ```
 
-## SealedSecret
-
-```bash
-cd /tmp
-wget https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.22.0/kubeseal-0.22.0-linux-arm64.tar.gz
-tar -xvzf kubeseal-0.22.0-linux-arm64.tar.gz kubeseal
-sudo install -m 755 kubeseal /usr/local/bin/kubeseal
-cd 
-```
-
-(移行時)
-元の方
-```bash
-kubectl get secret -n kube-system sealed-secrets-key8jfgr -o yaml > ~/oldSealedSecret/sealed-secrets-key.yaml
-
-scp k1:~/sealed-secrets-key.yaml ./
-```
-新環境
-```bash
-mkdir ~/currentSealedSecret
-\rm ~/currentSealedSecret/*
-kubectl get secret -n kube-system $(kubectl get secret -n kube-system |grep sealed-secrets-|cut -d " " -f 1) -o yaml > ~/currentSealedSecret/sealed-secrets-key.yaml
-kubeseal --fetch-cert > ~/currentSealedSecret/SealedSecret.crt
-```
-
-namespaceとnamePrefixに注意！！！！
-
-```bash
-cd ~/
-wget https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/init/sealed-secret-move.sh
-chmod +x ~/sealed-secret-move.sh
-~/sealed-secret-move.sh
-```
-
+<!--
 ## SMB CSI Driver
 
 ```bash
@@ -667,6 +343,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/deploy/v1.9.0/csi-smb-controller.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/deploy/v1.9.0/csi-smb-node.yaml
 ```
+--->
 
 ## VPA
 
@@ -675,14 +352,3 @@ git clone https://github.com/kubernetes/autoscaler.git
 cd autoscaler/vertical-pod-autoscaler
 ./hack/vpa-up.sh
 ```
-
-### azure nodeの扱い
-
-```bash
-kubectl taint node kurumi-04 remote-node=:NoExecute
-```
-
-
-## 参考
-
-<https://qiita.com/greenteabiscuit/items/6fce805185350eab6f7a>
