@@ -20,17 +20,19 @@ spec:
         name: sweets-rebellion-oauth2-proxy-repo
   values:
     config:
-      existingSecret: sweets-rebellion-oauth2-proxy-secret
+      existingSecret: vm-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
         upstreams = [ "http://sweets-rebellion-sweets-rebellion.sweets-rebellion.svc.cluster.local/" ]
+        pass_access_token = true
+        user_id_claim = "sub"
+        oidc_groups_claim="my:zitadel:grants"
+        allowed_groups = ["237477822715658605:sweets-rebellion"]
 
     extraArgs:
       provider: oidc
       redirect-url: https://sweets-rebellion.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev
-      #allowed-role: kmc
-      #reverse-proxy: true
       skip-provider-button: true
 
     ingress:
