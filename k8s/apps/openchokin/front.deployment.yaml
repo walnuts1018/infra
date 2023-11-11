@@ -44,7 +44,7 @@ spec:
                   name: openchokin-secret
                   key: nextauth-secret
             - name: REDIS_HOST
-              value: "192.168.0.134"
+              value: "redis-release.databases.svc.cluster.local"
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
