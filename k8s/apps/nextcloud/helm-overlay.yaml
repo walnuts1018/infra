@@ -61,11 +61,13 @@ spec:
         passwordKey: admin-password
       datadir: /var/www/html/data
       extraVolumes:
-        - name: samba-local-dir
+        - name: snow-local
           hostPath:
             path: /mnt/data/nextcloud
             type: Directory
-
+      extraVolumeMounts:
+        - name: snow-local
+          mountPath: /var/www/html/data
     internalDatabase:
       enabled: false
     externalDatabase:
@@ -89,22 +91,7 @@ spec:
       kubernetes.io/hostname: cake
     livenessProbe:
       enabled: true
-      initialDelaySeconds: 60
-      periodSeconds: 30
-      timeoutSeconds: 5
-      failureThreshold: 3
-      successThreshold: 1
     readinessProbe:
       enabled: true
-      initialDelaySeconds: 60
-      periodSeconds: 30
-      timeoutSeconds: 5
-      failureThreshold: 3
-      successThreshold: 1
     startupProbe:
       enabled: true
-      initialDelaySeconds: 120
-      periodSeconds: 30
-      timeoutSeconds: 5
-      failureThreshold: 30
-      successThreshold: 1
