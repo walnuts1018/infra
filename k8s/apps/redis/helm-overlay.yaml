@@ -39,7 +39,7 @@ spec:
           memory: 50Mi
 
     replica:
-      replicaCount: 2
+      replicaCount: 3
       persistence:
         enabled: true
         storageClass: "longhorn"
