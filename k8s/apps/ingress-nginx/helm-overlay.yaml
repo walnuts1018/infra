@@ -98,3 +98,4 @@ spec:
           http: http
           https: https
         type: LoadBalancer
+        replicaCount: 3
