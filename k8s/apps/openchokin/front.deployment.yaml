@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: openchokin-front
-          image: "ghcr.io/walnuts1018/openchokin-front:v0.0.0-5465f964f9aeb0ab47b8432df51953373dd15e2c-63" #{"$imagepolicy": "flux-system:openchokin-front-policy"}
+          image: "ghcr.io/walnuts1018/openchokin-front:v0.0.0-bec58804876114b9fc8490a72f4988f70e7ca81d-64" #{"$imagepolicy": "flux-system:openchokin-front-policy"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
