@@ -341,7 +341,7 @@ spec:
               kubernetes_sd_configs:
                 - role: service
               metrics_path: /probe
-              scrape_interval: 60m
+              scrape_interval: 30m
               scrape_timeout: 90s
               params:
                 script:
