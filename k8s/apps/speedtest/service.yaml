@@ -6,7 +6,7 @@ metadata:
     app: speedtest
   annotations:
     prometheus.io/port: "9469"
-    prometheus.io/scrape: "true"
+    walnuts.dev/speedtest: "true"
 spec:
   ports:
     - name: http
