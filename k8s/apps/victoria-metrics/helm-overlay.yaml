@@ -217,10 +217,6 @@ spec:
                 - role: pod
               relabel_configs:
                 - action: keep
-                  regex: monitoring
-                  source_labels:
-                    - __meta_kubernetes_namespace
-                - action: keep
                   regex: true
                   source_labels:
                     - __meta_kubernetes_pod_annotation_prometheus_io_scrape
@@ -278,10 +274,6 @@ spec:
               kubernetes_sd_configs:
                 - role: pod
               relabel_configs:
-                - action: keep
-                  regex: monitoring
-                  source_labels:
-                    - __meta_kubernetes_namespace
                 - action: keep
                   regex: true
                   source_labels:
