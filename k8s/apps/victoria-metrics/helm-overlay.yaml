@@ -336,3 +336,18 @@ spec:
               static_configs:
                 - targets:
                     - 192.168.0.11:9100
+            - honor_labels: true
+              job_name: speedtest-service
+              kubernetes_sd_configs:
+                - role: service
+              metrics_path: /probe
+              scrape_interval: 60m
+              scrape_timeout: 90s
+              params:
+                script:
+                  - speedtest
+              relabel_configs:
+                - action: keep
+                  regex: true
+                  source_labels:
+                    - __meta_kubernetes_service_annotation_walnuts_dev_speedtest
