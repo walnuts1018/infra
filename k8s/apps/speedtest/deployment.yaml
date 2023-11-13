@@ -25,3 +25,10 @@ spec:
           resources:
             limits: {}
             requests: {}
+          readinessProbe:
+            httpGet:
+              port: 9469
+              path: /probe
+            failureThreshold: 10
+            periodSeconds: 3600
+            timeoutSeconds: 90
