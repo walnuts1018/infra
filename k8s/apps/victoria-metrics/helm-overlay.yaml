@@ -216,6 +216,13 @@ spec:
               kubernetes_sd_configs:
                 - role: pod
               relabel_configs:
+                - action: drop
+                  source_labels: [__meta_kubernetes_pod_container_init]
+                  regex: true
+                - action: keep_if_equal
+                  source_labels:
+                    - __meta_kubernetes_pod_annotation_prometheus_io_port,
+                    - __meta_kubernetes_pod_container_port_number,
                 - action: keep
                   regex: true
                   source_labels:
