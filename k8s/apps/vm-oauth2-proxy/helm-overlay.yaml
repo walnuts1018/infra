@@ -62,25 +62,4 @@ spec:
           connectionUrls: "redis://redis-release.databases.svc.cluster.local:6379,redis://redis-release.databases.svc.cluster.local:26379"
 
     metrics:
-      # Enable Prometheus metrics endpoint
-      enabled: false
-      # Serve Prometheus metrics on this port
-      port: 44180
-      # when service.type is NodePort ...
-      # nodePort: 44180
-      # Protocol set on the service for the metrics port
-      service:
-        appProtocol: http
-      servicemonitor:
-        # Enable Prometheus Operator ServiceMonitor
-        enabled: false
-        # Define the namespace where to deploy the ServiceMonitor resource
-        namespace: ""
-        # Prometheus Instance definition
-        prometheusInstance: default
-        # Prometheus scrape interval
-        interval: 60s
-        # Prometheus scrape timeout
-        scrapeTimeout: 30s
-        # Add custom labels to the ServiceMonitor resource
-        labels: {}
+      enabled: true
