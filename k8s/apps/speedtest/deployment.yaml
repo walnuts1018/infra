@@ -28,7 +28,7 @@ spec:
           readinessProbe:
             httpGet:
               port: 9469
-              path: /probe
+              path: /probe?script=speedtest
             failureThreshold: 10
             periodSeconds: 3600
             timeoutSeconds: 90
