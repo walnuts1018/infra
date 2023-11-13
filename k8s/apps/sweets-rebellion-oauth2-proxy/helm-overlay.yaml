@@ -20,7 +20,7 @@ spec:
         name: sweets-rebellion-oauth2-proxy-repo
   values:
     config:
-      existingSecret: vm-oauth2-proxy-secret
+      existingSecret: sweets-rebellion-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
         upstreams = [ "http://sweets-rebellion-sweets-rebellion.sweets-rebellion.svc.cluster.local/" ]
