@@ -42,6 +42,10 @@ spec:
           volumeMounts:
             - name: samba-local-dir
               mountPath: /samba-share
+      resources:
+        limits:
+          memory: "1Gi"
+          cpu: "1"
       nodeSelector:
         kubernetes.io/hostname: cake
       volumes:
