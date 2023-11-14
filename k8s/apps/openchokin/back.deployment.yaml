@@ -44,7 +44,9 @@ spec:
             - name: POSTGRES_PORT
               value: "5432"
           resources:
-            requests: {}
+            requests:
+              cpu: 100m
+              memory: 128Mi
             limits:
               cpu: 1000m
               memory: 512Mi
