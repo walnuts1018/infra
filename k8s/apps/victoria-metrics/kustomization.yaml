@@ -5,6 +5,12 @@ namespace: monitoring
 resources:
   - pvc.yaml
 components:
-- ../../components/helm
+  - ../../components/helm
 patchesStrategicMerge:
-- helm-overlay.yaml
+  - helm-overlay.yaml
+configMapGenerator:
+  - name: config
+    files:
+      - prometheus.yaml
+configurations:
+  - kustomizeconfig.yaml
