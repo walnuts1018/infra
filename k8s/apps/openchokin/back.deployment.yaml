@@ -45,4 +45,6 @@ spec:
               value: "5432"
           resources:
             requests: {}
-            limits: {}
+            limits:
+              cpu: 1000m
+              memory: 512Mi

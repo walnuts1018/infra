@@ -21,8 +21,10 @@ spec:
           ports:
             - containerPort: 3000
           resources:
-            limits: {}
             requests: {}
+            limits:
+              cpu: 1000m
+              memory: 512Mi
           env:
             - name: ZITADEL_URL
               value: "https://auth.walnuts.dev"
