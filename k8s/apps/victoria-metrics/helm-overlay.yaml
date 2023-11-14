@@ -20,7 +20,6 @@ spec:
       fullnameOverride: "victoria-metrics-single-server"
       persistentVolume:
         existingClaim: "victoria-metrics-pvc"
-
       resources:
         limits:
           cpu: 500m
@@ -28,7 +27,8 @@ spec:
         requests:
           cpu: 150m
           memory: 200Mi
-
       scrape:
         enabled: true
         configMap: victoria-metrics-config
+      statefulSet:
+        podManagementPolicy: Parallel
