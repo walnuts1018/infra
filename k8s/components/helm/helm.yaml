@@ -4,7 +4,7 @@ kind: HelmRepository
 metadata:
   name: repo # to-be-prefixed
 spec:
-  interval: 25h
+  interval: 1h
   # url: https://to-be-filled.invalid/
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
