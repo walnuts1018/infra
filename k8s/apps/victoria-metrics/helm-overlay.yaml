@@ -335,7 +335,17 @@ spec:
             - job_name: "node-exporter"
               static_configs:
                 - targets:
-                    - 192.168.0.11:9100
+                    #<IP>:<PORT>:<HOSTNAME>
+                    - 192.168.0.11:9100:alice
+              relabel_configs:
+                - source_labels: [__address__]
+                  regex: '([^:]+):(\d+):(.*)'
+                  target_label: instance
+                  replacement: "${3}:${2}"
+                - source_labels: [__address__]
+                  regex: '([^:]+):(\d+):(.*)'
+                  target_label: __address__
+                  replacement: "${1}:${2}"
             - honor_labels: true
               job_name: speedtest-service
               kubernetes_sd_configs:
