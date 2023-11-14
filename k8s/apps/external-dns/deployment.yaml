@@ -32,7 +32,9 @@ spec:
             - name: CF_TUNNEL_ID
               value: 4262dac3-569f-46ac-aa3a-b1397fb8d012
           resources:
-            requests: {}
+            requests:
+              cpu: 100m
+              memory: 128Mi
             limits:
               cpu: 1000m
               memory: 512Mi
