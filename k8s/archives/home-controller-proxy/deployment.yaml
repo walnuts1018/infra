@@ -13,25 +13,25 @@ spec:
         app: home-controller-proxy
     spec:
       containers:
-      - name: home-controller-proxy
-        image: nginx
-        ports:
-        - containerPort: 80
-        volumeMounts:
-        - mountPath: /etc/nginx
-          readOnly: true
-          name: home-controller-proxy-conf
-        - mountPath: /var/log/nginx
-          name: log
+        - name: home-controller-proxy
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/nginx
+              readOnly: true
+              name: home-controller-proxy-conf
+            - mountPath: /var/log/nginx
+              name: log
 
       volumes:
-      - name: home-controller-proxy-conf
-        configMap: 
-          name: home-controller-proxy-conf
-          items:
-            - key: nginx.conf
-              path: nginx.conf
-            - key: virtualhost.conf
-              path: virtualhost/virtualhost.conf
-      - name: log
-        emptyDir: {}
+        - name: home-controller-proxy-conf
+          configMap:
+            name: home-controller-proxy-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+              - key: virtualhost.conf
+                path: virtualhost/virtualhost.conf
+        - name: log
+          emptyDir: {}

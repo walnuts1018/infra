@@ -14,36 +14,35 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: index.docker.io/mysql:8.0.34
-        imagePullPolicy: IfNotPresent
-        name: mysql
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: password
-        # command: ["sleep","infinity"]
-        ports:
-        - containerPort: 3306
+        - image: index.docker.io/mysql:8.0.34
+          imagePullPolicy: IfNotPresent
           name: mysql
-        volumeMounts:
-        - name: mysql-ps
-          mountPath: /var/lib/mysql
-        lifecycle:
-          postStart:
-            exec:
-              command:
-                - sh
-                - -c
-                - "rm -fr /var/lib/mysql/lost+found"
-        resources:
-          requests:
-            memory: "15Mi" 
-          limits:
-            memory: "800Mi"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+          # command: ["sleep","infinity"]
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mysql-ps
+              mountPath: /var/lib/mysql
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - "rm -fr /var/lib/mysql/lost+found"
+          resources:
+            requests:
+              memory: "15Mi"
+            limits:
+              memory: "800Mi"
       volumes:
-      - name: mysql-ps
-        persistentVolumeClaim:
-          claimName: mysql-pvc
-
+        - name: mysql-ps
+          persistentVolumeClaim:
+            claimName: mysql-pvc

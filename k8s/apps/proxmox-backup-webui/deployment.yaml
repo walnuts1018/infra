@@ -13,27 +13,27 @@ spec:
         app: proxmox-backup-webui
     spec:
       containers:
-      - name: proxmox-backup-webui
-        image: nginx
-        ports:
-        - containerPort: 80
-        volumeMounts:
-        - mountPath: /etc/nginx
-          readOnly: true
-          name: proxmox-backup-webui-conf
-        - mountPath: /var/log/nginx
-          name: log
+        - name: proxmox-backup-webui
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/nginx
+              readOnly: true
+              name: proxmox-backup-webui-conf
+            - mountPath: /var/log/nginx
+              name: log
       volumes:
-      - name: proxmox-backup-webui-conf
-        configMap: 
-          name: proxmox-backup-webui-conf
-          items:
-            - key: nginx.conf
-              path: nginx.conf
-            - key: virtualhost.conf
-              path: virtualhost/virtualhost.conf
-      - name: log
-        emptyDir: {}
+        - name: proxmox-backup-webui-conf
+          configMap:
+            name: proxmox-backup-webui-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+              - key: virtualhost.conf
+                path: virtualhost/virtualhost.conf
+        - name: log
+          emptyDir: {}
 ---
 kind: Service
 apiVersion: v1
@@ -43,7 +43,7 @@ spec:
   selector:
     app: proxmox-backup-webui
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
+    - protocol: TCP
+      port: 80
+      targetPort: 80
   type: ClusterIP

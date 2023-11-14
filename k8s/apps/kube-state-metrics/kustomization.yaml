@@ -4,7 +4,7 @@ namePrefix: kube-state-metrics-
 namespace: monitoring
 
 components:
-- ../../components/helm
+  - ../../components/helm
 
 patchesStrategicMerge:
-- helm-overlay.yaml
+  - helm-overlay.yaml

@@ -13,31 +13,31 @@ spec:
         app: proxmox-webui
     spec:
       containers:
-      - name: proxmox-webui
-        image: nginx
-        ports:
-        - containerPort: 80
-        volumeMounts:
-        - mountPath: /etc/nginx
-          readOnly: true
-          name: proxmox-webui-conf
-        - name: proxmox-cert
-          mountPath: "/etc/pve/local"
-          readOnly: true
-        - mountPath: /var/log/nginx
-          name: log
+        - name: proxmox-webui
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/nginx
+              readOnly: true
+              name: proxmox-webui-conf
+            - name: proxmox-cert
+              mountPath: "/etc/pve/local"
+              readOnly: true
+            - mountPath: /var/log/nginx
+              name: log
 
       volumes:
-      - name: proxmox-webui-conf
-        configMap: 
-          name: proxmox-webui-conf
-          items:
-            - key: nginx.conf
-              path: nginx.conf
-            - key: virtualhost.conf
-              path: virtualhost/virtualhost.conf
-      - name: proxmox-cert
-        secret:
-          secretName: proxmox-cert
-      - name: log
-        emptyDir: {}
+        - name: proxmox-webui-conf
+          configMap:
+            name: proxmox-webui-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+              - key: virtualhost.conf
+                path: virtualhost/virtualhost.conf
+        - name: proxmox-cert
+          secret:
+            secretName: proxmox-cert
+        - name: log
+          emptyDir: {}

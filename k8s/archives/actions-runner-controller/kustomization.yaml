@@ -3,8 +3,8 @@ kind: Kustomization
 namePrefix: actions-runner-controller-
 namespace: actions-runner-controller
 resources:
-- ./sealedsecret.yaml
+  - ./sealedsecret.yaml
 components:
-- ../../components/helm
+  - ../../components/helm
 patchesStrategicMerge:
-- helm-overlay.yaml
+  - helm-overlay.yaml

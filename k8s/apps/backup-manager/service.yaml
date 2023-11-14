@@ -9,9 +9,9 @@ metadata:
     prometheus.io/scrape: "true"
 spec:
   ports:
-  - name: metrics
-    port: 8080
-    targetPort: 8080
+    - name: metrics
+      port: 8080
+      targetPort: 8080
   selector:
     app: backup-manager
   type: ClusterIP

@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 
 resources:
-- image-policy.yaml
+  - image-policy.yaml
 
 configurations:
-- configuration.yaml
+  - configuration.yaml

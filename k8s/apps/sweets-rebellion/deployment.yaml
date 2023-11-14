@@ -14,26 +14,31 @@ spec:
         app: sweets-rebellion
     spec:
       containers:
-      - image: ghcr.io/kmc-jp/stgproject2022:abc6abe92f09ce9eb6f30f20422fa4c70ecb8292-30 # {"$imagepolicy": "flux-system:sweets-rebellion-policy"}
-        imagePullPolicy: IfNotPresent
-        name: sweets-rebellion
-        ports:
-        - containerPort: 80
-          name: http
-        volumeMounts:
-        - mountPath: /etc/nginx/conf.d
-          readOnly: true
-          name: nginx-conf
-        - mountPath: /var/log/nginx
-          name: log
+        - image: ghcr.io/kmc-jp/stgproject2022:abc6abe92f09ce9eb6f30f20422fa4c70ecb8292-30 # {"$imagepolicy": "flux-system:sweets-rebellion-policy"}
+          imagePullPolicy: IfNotPresent
+          name: sweets-rebellion
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d
+              readOnly: true
+              name: nginx-conf
+            - mountPath: /var/log/nginx
+              name: log
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests: {}
       imagePullSecrets:
-      - name: sweets-rebellion-ghcr-login-secret
+        - name: sweets-rebellion-ghcr-login-secret
       volumes:
-      - name: nginx-conf
-        configMap:
-          name: sweets-rebellion-nginx-conf
-          items:
-          - key: default.conf
-            path: default.conf
-      - name: log
-        emptyDir: {}
+        - name: nginx-conf
+          configMap:
+            name: sweets-rebellion-nginx-conf
+            items:
+              - key: default.conf
+                path: default.conf
+        - name: log
+          emptyDir: {}

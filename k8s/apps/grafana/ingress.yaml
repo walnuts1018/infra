@@ -7,13 +7,13 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-  - host: "grafana.walnuts.dev"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: grafana-release
-            port:
-              number: 80
+    - host: "grafana.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana-release
+                port:
+                  number: 80

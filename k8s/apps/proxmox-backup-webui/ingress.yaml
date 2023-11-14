@@ -5,13 +5,13 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-  - host: "proxmox-backup.walnuts.dev"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: proxmox-backup-webui
-            port:
-              number: 80
+    - host: "proxmox-backup.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: proxmox-backup-webui
+                port:
+                  number: 80
