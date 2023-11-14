@@ -45,7 +45,7 @@ spec:
     extraSecretMounts:
       - name: auth-generic-oauth-secret
         secretName: grafana-secret
-        mountPath: /etc/secrets/auth_generic_oauth
+        mountPath: /etc/secrets
         readOnly: true
 
     grafana.ini:
@@ -61,7 +61,7 @@ spec:
       auth.generic_oauth:
         enabled: true
         client_id: 237480184528306541@walnuts.dev
-        client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
+        client_secret: $__file{/etc/secrets/client_secret}
         scopes: openid email profile offline_access urn:zitadel:iam:org:projects:roles
         email_attribute_path: email
         login_attribute_path: preferred_username
@@ -74,3 +74,9 @@ spec:
           "urn:zitadel:iam:org:project:roles"."admin"  && 'GrafanaAdmin' || "urn:zitadel:iam:org:project:roles"."grafana-editor" && 'Editor' || "urn:zitadel:iam:org:project:roles"."grafana-viewer" && 'Viewer'
         allow_assign_grafana_admin: true
         use_pkce: true
+      database:
+        type: postgres
+        host: postgres-release-postgresql.databases.svc.cluster.local
+        name: grafana
+        user: grafana
+        password: $__file{/etc/secrets/postgres_password}
