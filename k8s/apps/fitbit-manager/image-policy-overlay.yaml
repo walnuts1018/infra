@@ -2,14 +2,14 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: repo
+  name: fitbit-manager
 spec:
   image: ghcr.io/walnuts1018/fitbit-manager
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: policy
+  name: fitbit-manager
 spec:
   policy:
     semver:
