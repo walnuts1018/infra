@@ -13,4 +13,4 @@ configMapGenerator:
     files:
       - scrape.yml
 configurations:
-  - kustomize-config.yaml
+  - kustomization-config.yaml
