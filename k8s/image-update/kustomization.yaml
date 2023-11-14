@@ -8,7 +8,6 @@ resources:
   - ./walnuts-dev
   - ./machine-status-api
   - ./wakatime-to-slack-profile
-  - ./fitbit-manager
   - ./backup-manager
   - ./github-readme-stats
   - ./openchokin-front
