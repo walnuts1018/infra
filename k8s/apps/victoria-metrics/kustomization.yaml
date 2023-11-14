@@ -13,4 +13,4 @@ configMapGenerator:
     files:
       - prometheus.yaml
 configurations:
-  - kustomizeconfig.yaml
+  - kustomize-config.yaml
