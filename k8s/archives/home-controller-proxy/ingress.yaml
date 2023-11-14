@@ -5,13 +5,13 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-  - host: "homeapi.walnuts.dev"
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: home-controller-proxy
-            port:
-              number: 80
+    - host: "homeapi.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: home-controller-proxy
+                port:
+                  number: 80

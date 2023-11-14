@@ -13,17 +13,19 @@ spec:
         app: github-readme-stats
     spec:
       containers:
-      - name: github-readme-stats
-        image:  ghcr.io/walnuts1018/github-readme-stats:v1.0.3 # {"$imagepolicy": "flux-system:github-readme-stats-policy"}
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 80
-        resources:
-          limits: {}
-          requests: {}
-        env:
-          - name: PAT_1
-            valueFrom:
-              secretKeyRef:
-                name: github-readme-stats-secret
-                key: github-token
+        - name: github-readme-stats
+          image: ghcr.io/walnuts1018/github-readme-stats:v1.0.3 # {"$imagepolicy": "flux-system:github-readme-stats-policy"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests: {}
+          env:
+            - name: PAT_1
+              valueFrom:
+                secretKeyRef:
+                  name: github-readme-stats-secret
+                  key: github-token

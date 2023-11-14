@@ -3,6 +3,6 @@ kind: Kustomization
 namePrefix: metallb-
 namespace: metallb-system
 components:
-- ../../components/helm
+  - ../../components/helm
 patchesStrategicMerge:
-- helm-overlay.yaml
+  - helm-overlay.yaml

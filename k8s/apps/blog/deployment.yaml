@@ -13,27 +13,27 @@ spec:
         app: blog
     spec:
       containers:
-      - name: blog
-        image: nginx
-        ports:
-        - containerPort: 80
-        volumeMounts:
-        - mountPath: /etc/nginx
-          readOnly: true
-          name: blog-conf
-        - mountPath: /var/log/nginx
-          name: log
-        resources:
-          limits: {}
-          requests: {}
+        - name: blog
+          image: nginx
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/nginx
+              readOnly: true
+              name: blog-conf
+            - mountPath: /var/log/nginx
+              name: log
+          resources:
+            limits: {}
+            requests: {}
       volumes:
-      - name: blog-conf
-        configMap: 
-          name: blog-conf
-          items:
-            - key: nginx.conf
-              path: nginx.conf
-            - key: virtualhost.conf
-              path: virtualhost/virtualhost.conf
-      - name: log
-        emptyDir: {}
+        - name: blog-conf
+          configMap:
+            name: blog-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+              - key: virtualhost.conf
+                path: virtualhost/virtualhost.conf
+        - name: log
+          emptyDir: {}

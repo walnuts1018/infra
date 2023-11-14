@@ -18,6 +18,3 @@ spec:
   values:
     fullnameOverride: sealed-secrets-controller
     keyrenewperiod: "0"
-
-
-

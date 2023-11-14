@@ -4,6 +4,6 @@ namePrefix: cert-manager-
 namespace: cert-manager
 #resources:
 components:
-- ../../components/helm
+  - ../../components/helm
 patchesStrategicMerge:
-- helm-overlay.yaml
+  - helm-overlay.yaml

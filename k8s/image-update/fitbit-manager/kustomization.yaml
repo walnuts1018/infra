@@ -3,6 +3,6 @@ kind: Kustomization
 namePrefix: fitbit-manager-
 namespace: flux-system
 components:
-- ../../components/image-policy
+  - ../../components/image-policy
 patchesStrategicMerge:
-- image-policy-overlay.yaml
+  - image-policy-overlay.yaml

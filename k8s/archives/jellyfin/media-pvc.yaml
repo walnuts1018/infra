@@ -31,7 +31,7 @@ spec:
     - noperm
     - mfsymlinks
     - cache=strict
-    - noserverino  # required to prevent data corruption
+    - noserverino # required to prevent data corruption
   csi:
     driver: smb.csi.k8s.io
     readOnly: false

@@ -3,6 +3,6 @@ kind: Kustomization
 namePrefix: descheduler-
 namespace: kube-system
 components:
-- ../../components/helm
+  - ../../components/helm
 patchesStrategicMerge:
-- helm-overlay.yaml
+  - helm-overlay.yaml

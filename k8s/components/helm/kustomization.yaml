@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 
 resources:
-- helm.yaml
+  - helm.yaml
 
 configurations:
-- configuration.yaml
+  - configuration.yaml

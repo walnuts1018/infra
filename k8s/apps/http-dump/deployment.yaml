@@ -15,8 +15,8 @@ spec:
         app: http-dump
     spec:
       containers:
-      - name: http-dump
-        image: ghcr.io/walnuts1018/http-dump:latest
-        ports:
-        - name: http
-          containerPort: 8080
+        - name: http-dump
+          image: ghcr.io/walnuts1018/http-dump:latest
+          ports:
+            - name: http
+              containerPort: 8080

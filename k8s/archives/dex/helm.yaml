@@ -14,24 +14,24 @@ config:
     config:
       inCluster: true
   connectors:
-  - type: github
-    id: github
-    name: GitHub
-    config:
-      clientID: $GITHUB_CLIENT_ID
-      clientSecret: $GITHUB_CLIENT_SECRET
-      redirectURI: https://auth.walnuts.ml/callback
-      orgs:
-        - name: walnuts-admin
+    - type: github
+      id: github
+      name: GitHub
+      config:
+        clientID: $GITHUB_CLIENT_ID
+        clientSecret: $GITHUB_CLIENT_SECRET
+        redirectURI: https://auth.walnuts.ml/callback
+        orgs:
+          - name: walnuts-admin
   oauth2:
     skipApprovalScreen: true
-    
+
   staticClients:
-  - id: oauth2-dex
-    redirectURIs:
-    - 'https://oauth2.walnuts.ml/oauth2/callback'
-    name: 'oauth2-dex'
-    secretEnv: 'DEX_SECRET'
+    - id: oauth2-dex
+      redirectURIs:
+        - "https://oauth2.walnuts.ml/oauth2/callback"
+      name: "oauth2-dex"
+      secretEnv: "DEX_SECRET"
 
   enablePasswordDB: true
 
@@ -75,7 +75,8 @@ ingress:
   className: "nginx"
 
   # -- Annotations to be added to the ingress.
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
 
@@ -106,20 +107,20 @@ serviceMonitor:
   labels: {}
 
 envVars:
-- name: GITHUB_CLIENT_ID
-  valueFrom:
-    secretKeyRef:
-      name: github-client
-      key: client-id
+  - name: GITHUB_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: github-client
+        key: client-id
 
-- name: GITHUB_CLIENT_SECRET
-  valueFrom:
-    secretKeyRef:
-      name: github-client
-      key: client-secret
+  - name: GITHUB_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: github-client
+        key: client-secret
 
-- name: DEX_SECRET
-  valueFrom:
-    secretKeyRef:
-      name: dex-secret
-      key: client-secret
+  - name: DEX_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: dex-secret
+        key: client-secret
