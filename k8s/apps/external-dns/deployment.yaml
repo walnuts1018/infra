@@ -33,4 +33,6 @@ spec:
               value: 4262dac3-569f-46ac-aa3a-b1397fb8d012
           resources:
             requests: {}
-            limits: {}
+            limits:
+              cpu: 1000m
+              memory: 512Mi
