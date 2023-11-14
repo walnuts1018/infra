@@ -20,6 +20,8 @@ spec:
         kind: HelmRepository
         name: grafana-repo
   values:
+    image:
+      tag: 10.2.0
     resources:
       limits:
         cpu: 200m
