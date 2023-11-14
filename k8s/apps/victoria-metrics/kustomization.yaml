@@ -11,6 +11,6 @@ patchesStrategicMerge:
 configMapGenerator:
   - name: config
     files:
-      - scrape.yml
+      - scrape.yml=prometheus.yaml
 configurations:
   - kustomization-config.yaml
