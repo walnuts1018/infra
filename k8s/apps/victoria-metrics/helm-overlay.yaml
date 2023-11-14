@@ -340,8 +340,8 @@ spec:
               relabel_configs:
                 - source_labels: [__address__]
                   regex: '([^:]+):(\d+):(.*)'
-                  target_label: instance
-                  replacement: "${3}:${2}"
+                  target_label: node
+                  replacement: "${3}"
                 - source_labels: [__address__]
                   regex: '([^:]+):(\d+):(.*)'
                   target_label: __address__
