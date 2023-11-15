@@ -2,15 +2,20 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: openchokin-front
+  name: openchokin-back
 spec:
-  image: ghcr.io/walnuts1018/openchokin-back
+  image: ghcr.io/walnuts1018/openchokin-front
+  interval: 2m0s
+  secretRef:
+    name: ghcr-login-secret
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: openchokin-front
+  name: openchokin-back
 spec:
+  imageRepositoryRef:
+    name: openchokin-back
   filterTags:
     ## use "pattern: '[a-f0-9]+-(?P<ts>[0-9]+)'" if you copied the workflow example using github.run_number
     pattern: ".*-[a-f0-9]+-(?P<ts>[0-9]+)"

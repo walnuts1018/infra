@@ -5,14 +5,17 @@ metadata:
   name: misskey
 spec:
   image: misskey/misskey
+  interval: 2m0s
   secretRef:
-    $patch: delete
+    name: ghcr-login-secret
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
   name: misskey
 spec:
+  imageRepositoryRef:
+    name: backup-manager
   filterTags:
     pattern: '(?P<year>[0-9]{4})\.(?P<month>[0-9]+)\.(?P<version>[0-9]+)'
   policy:

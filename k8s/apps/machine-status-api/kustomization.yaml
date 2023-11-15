@@ -5,7 +5,4 @@ resources:
   - deployment.yaml
   - service.yaml
   - externalsecret.yaml
-components:
-  - ../../components/image-policy
-patchesStrategicMerge:
-  - image-policy-overlay.yaml
+  - image-policy.yaml
