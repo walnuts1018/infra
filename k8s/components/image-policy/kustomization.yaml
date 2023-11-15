@@ -1,8 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
-
-resources:
-  - image-policy.yaml
-
-configurations:
-  - configuration.yaml
+patches:
+  - path: image-policy.yaml
+    target:
+      kind: ImagePolicy
+  - path: image-repository.yaml
+    target:
+      kind: ImageRepository
