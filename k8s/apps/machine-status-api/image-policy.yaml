@@ -15,7 +15,7 @@ metadata:
   name: machine-status-api
 spec:
   imageRepositoryRef:
-    name: backup-manager
+    name: machine-status-api
   policy:
     semver:
       range: "^1"

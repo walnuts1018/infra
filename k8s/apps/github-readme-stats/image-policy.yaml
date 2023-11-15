@@ -15,7 +15,7 @@ metadata:
   name: github-readme-stats
 spec:
   imageRepositoryRef:
-    name: backup-manager
+    name: github-readme-stats
   policy:
     semver:
       range: "^1"
