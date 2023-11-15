@@ -44,3 +44,5 @@ spec:
         value: "debug"
     nodeSelector:
       kubernetes.io/hostname: cake
+    metrics:
+      enabled: true
