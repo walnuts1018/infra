@@ -15,7 +15,7 @@ metadata:
   name: wakatime-to-slack-profile
 spec:
   imageRepositoryRef:
-    name: backup-manager
+    name: wakatime-to-slack-profile
   policy:
     semver:
       range: "^0"
