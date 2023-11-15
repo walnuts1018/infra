@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: github-readme-stats
-          image: ghcr.io/walnuts1018/github-readme-stats:v1.0.3 # {"$imagepolicy": "flux-system:github-readme-stats-policy"}
+          image: ghcr.io/walnuts1018/github-readme-stats:v1.0.3 # {"$imagepolicy": "flux-system:github-readme-stats"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

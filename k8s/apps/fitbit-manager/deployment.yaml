@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
         - name: fitbit-manager
-          image: ghcr.io/walnuts1018/fitbit-manager:0.6.5 # {"$imagepolicy": "flux-system:fitbit-manager-policy"}
+          image: ghcr.io/walnuts1018/fitbit-manager:0.6.5 # {"$imagepolicy": "flux-system:fitbit-manager"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
