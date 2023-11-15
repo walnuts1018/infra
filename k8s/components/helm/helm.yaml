@@ -2,7 +2,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: repo # to-be-prefixed
+  #name: repo # to-be-filled
 spec:
   interval: 1h
   # url: https://to-be-filled.invalid/
@@ -10,14 +10,14 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: release # to-be-prefixed
+  #name: release # to-be-filled
 spec:
   chart:
     spec:
       chart: to-be-filled
       sourceRef:
         kind: HelmRepository
-        name: repo # to-be-prefixed
+        #name: repo # to-be-filled
       # version: to-be-filled
   interval: 1h
   install:

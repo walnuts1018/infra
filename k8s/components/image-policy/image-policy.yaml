@@ -2,8 +2,7 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: repo
-  # namespace: to-be-filled
+  #name: repo
 spec:
   # image: to-be-filled
   interval: 2m0s
@@ -13,11 +12,11 @@ spec:
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: policy
+  #name: policy
   # namespace: to-be-filled
 spec:
   imageRepositoryRef:
-    name: repo
+    #name: repo
   policy:
     semver:
       # range: to-be-filled
