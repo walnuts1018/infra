@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: blog
-          image: nginx
+          image: nginx # {"$imagepolicy": "flux-system:blog"}
           ports:
             - containerPort: 80
           volumeMounts:

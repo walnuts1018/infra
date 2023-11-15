@@ -1,0 +1,19 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: blog
+spec:
+  image: nginx
+  interval: 2m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: blog
+spec:
+  imageRepositoryRef:
+    name: blog
+  policy:
+    semver:
+      range: "^0"
