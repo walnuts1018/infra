@@ -9,8 +9,5 @@ resources:
   - front.ingress.yaml
   - back.ingress.yaml
   - externalsecret.yaml
-components:
-  - ../../components/image-policy
-patchesStrategicMerge:
-  - front.image-policy-overlay.yaml
-  - back.image-policy-overlay.yaml
+  - front.image-policy.yaml
+  - back.image-policy.yaml

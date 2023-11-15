@@ -5,6 +5,9 @@ metadata:
   name: walnuts-dev
 spec:
   image: ghcr.io/walnuts1018/walnuts.dev
+  interval: 2m0s
+  secretRef:
+    name: ghcr-login-secret
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy

@@ -5,12 +5,17 @@ metadata:
   name: github-readme-stats
 spec:
   image: ghcr.io/walnuts1018/github-readme-stats
+  interval: 2m0s
+  secretRef:
+    name: ghcr-login-secret
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
   name: github-readme-stats
 spec:
+  imageRepositoryRef:
+    name: backup-manager
   policy:
     semver:
       range: "^1"
