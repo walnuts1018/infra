@@ -2,14 +2,14 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: repo
+  name: machine-status-api
 spec:
   image: ghcr.io/walnuts1018/machine-status-api
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: policy
+  name: machine-status-api
 spec:
   policy:
     semver:
