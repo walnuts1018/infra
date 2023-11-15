@@ -10,3 +10,7 @@ configMapGenerator:
   - name: wakatime-to-slack-profile-conf
     files:
       - emoji.json
+components:
+  - ../../components/image-policy
+patchesStrategicMerge:
+  - image-policy-overlay.yaml

@@ -7,3 +7,7 @@ resources:
   - service.yaml
   - configmap.yaml
   - externalsecret.yaml
+components:
+  - ../../components/image-policy
+patchesStrategicMerge:
+  - image-policy-overlay.yaml
