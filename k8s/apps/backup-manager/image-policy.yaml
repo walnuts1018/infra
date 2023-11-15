@@ -11,6 +11,11 @@ kind: ImagePolicy
 metadata:
   name: backup-manager
 spec:
+  imageRepositoryRef:
+    name: backup-manager
+  interval: 2m0s
+  secretRef:
+    name: ghcr-login-secret
   policy:
     semver:
       range: "^0"
