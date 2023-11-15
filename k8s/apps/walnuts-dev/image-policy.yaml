@@ -2,17 +2,18 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: repo
+  name: walnuts-dev
 spec:
   image: ghcr.io/walnuts1018/walnuts.dev
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: policy
+  name: walnuts-dev
 spec:
+  imageRepositoryRef:
+    name: walnuts-dev
   filterTags:
-    ## use "pattern: '[a-f0-9]+-(?P<ts>[0-9]+)'" if you copied the workflow example using github.run_number
     pattern: "[a-f0-9]+-(?P<ts>[0-9]+)"
     extract: "$ts"
   policy:
