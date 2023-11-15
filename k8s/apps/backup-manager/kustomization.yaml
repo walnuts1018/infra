@@ -7,5 +7,3 @@ resources:
   - externalsecret.yaml
   - pvc.yaml
   - image-policy.yaml
-components:
-  - ../../components/image-policy
