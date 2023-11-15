@@ -2,7 +2,7 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: sweets-rebellion
+  name: imagerepo
 spec:
   image: ghcr.io/kmc-jp/stgproject2022
   interval: 2m0s
@@ -12,10 +12,10 @@ spec:
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: sweets-rebellion
+  name: imagepolicy
 spec:
   imageRepositoryRef:
-    name: sweets-rebellion
+    name: sweets-rebellion-imagerepo
   filterTags:
     ## use "pattern: '[a-f0-9]+-(?P<ts>[0-9]+)'" if you copied the workflow example using github.run_number
     pattern: "[a-f0-9]+-(?P<ts>[0-9]+)"
