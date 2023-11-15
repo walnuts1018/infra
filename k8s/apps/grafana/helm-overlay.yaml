@@ -1,11 +1,15 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
+metadata:
+  name: grafana
 spec:
   url: https://grafana.github.io/helm-charts
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
+metadata:
+  name: grafana
 spec:
   chart:
     spec:
@@ -33,13 +37,13 @@ spec:
       type: ClusterIP
 
     admin:
-      existingSecret: "grafana-secret"
+      existingSecret: "grafana"
       userKey: admin-username
       passwordKey: admin-password
 
     extraSecretMounts:
       - name: auth-generic-oauth-secret
-        secretName: grafana-secret
+        secretName: grafana
         mountPath: /etc/secrets
         readOnly: true
 
