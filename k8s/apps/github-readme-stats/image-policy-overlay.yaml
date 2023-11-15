@@ -2,14 +2,14 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: repo
+  name: github-readme-stats
 spec:
   image: ghcr.io/walnuts1018/github-readme-stats
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: policy
+  name: github-readme-stats
 spec:
   policy:
     semver:

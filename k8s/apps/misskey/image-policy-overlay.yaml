@@ -2,7 +2,7 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: repo
+  name: misskey
 spec:
   image: misskey/misskey
   secretRef:
@@ -11,7 +11,7 @@ spec:
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: policy
+  name: misskey
 spec:
   filterTags:
     pattern: '(?P<year>[0-9]{4})\.(?P<month>[0-9]+)\.(?P<version>[0-9]+)'

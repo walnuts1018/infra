@@ -2,14 +2,14 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: repo
+  name: backup-manager
 spec:
   image: ghcr.io/walnuts1018/backup-manager
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: policy
+  name: backup-manager
 spec:
   policy:
     semver:
