@@ -6,8 +6,6 @@ metadata:
 spec:
   image: misskey/misskey
   interval: 2m0s
-  secretRef:
-    name: ghcr-login-secret
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
