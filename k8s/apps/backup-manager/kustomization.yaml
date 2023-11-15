@@ -6,3 +6,7 @@ resources:
   - service.yaml
   - externalsecret.yaml
   - pvc.yaml
+components:
+  - ../../components/image-policy
+patchesStrategicMerge:
+  - image-policy-overlay.yaml

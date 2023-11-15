@@ -6,3 +6,7 @@ resources:
   - ingress.yaml
   - externalsecret.yaml
   - service.yaml
+components:
+  - ../../components/image-policy
+patchesStrategicMerge:
+  - image-policy-overlay.yaml

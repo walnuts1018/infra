@@ -4,12 +4,3 @@ namespace: flux-system
 resources:
   - ./imageupdateautomation.yaml
   - ./externalsecret.yaml
-  - ./sweets-rebellion
-  - ./walnuts-dev
-  - ./machine-status-api
-  - ./wakatime-to-slack-profile
-  - ./backup-manager
-  - ./github-readme-stats
-  - ./openchokin-front
-  - ./openchokin-back
-  - ./misskey
