@@ -32,3 +32,12 @@ spec:
       ingressClassName: nginx
       hosts:
         - minio-console.walnuts.dev
+    oidc:
+      enabled: true
+      configUrl: "https://auth.walnuts.dev/.well-known/openid-configuration"
+      clientId: "241002618523026212@walnuts.dev"
+      # Provide existing client secret from the Kubernetes Secret resource, existing secret will have priority over `clientSecret`
+      existingClientSecretName: "minio-secret"
+      existingClientSecretKey: "client-secret"
+      scopes: "openid,profile,email"
+      redirectUri: "https://minio-console.walnuts.dev/oauth_callback"
