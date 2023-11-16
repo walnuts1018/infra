@@ -29,5 +29,6 @@ spec:
     mode: standalone
     consoleIngress:
       enabled: true
+      ingressClassName: nginx
       hosts:
         - minio-console.walnuts.dev
