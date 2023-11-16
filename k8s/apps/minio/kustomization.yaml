@@ -4,6 +4,7 @@ namePrefix: minio-
 namespace: minio
 resources:
   - externalsecret.yaml
+  - pvc.yaml
 components:
   - ../../components/helm
 patchesStrategicMerge:
