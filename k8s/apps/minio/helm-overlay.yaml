@@ -18,7 +18,7 @@ spec:
   values:
     existingSecret: minio-secret
     persistence:
-      existingClaim: minio-pvc
+      storageClass: longhorn
       size: 8Gi
     ingress:
       enabled: true
