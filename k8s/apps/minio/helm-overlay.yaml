@@ -33,7 +33,7 @@ spec:
       hosts:
         - minio-console.walnuts.dev
     oidc:
-      enabled: true
+      enabled: false
       configUrl: "https://auth.walnuts.dev/.well-known/openid-configuration"
       clientId: "241002618523026212@walnuts.dev"
       # Provide existing client secret from the Kubernetes Secret resource, existing secret will have priority over `clientSecret`
