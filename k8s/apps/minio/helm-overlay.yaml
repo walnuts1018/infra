@@ -41,3 +41,5 @@ spec:
       existingClientSecretKey: "client-secret"
       scopes: "openid,profile,email"
       redirectUri: "https://minio-console.walnuts.dev/oauth_callback"
+    env:
+      MINIO_IDENTITY_OPENID_REDIRECT_URI: "https://minio-console.walnuts.dev/oauth_callback"
