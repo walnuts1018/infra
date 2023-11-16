@@ -29,3 +29,4 @@ spec:
       type: LoadBalancer
       LoadBalancerIP: "192.168.0.134"
     replicas: 1
+    mode: standalone
