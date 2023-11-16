@@ -19,7 +19,7 @@ spec:
     existingSecret: minio-secret
     persistence:
       existingClaim: minio-pvc
-      size: 10Gi
+      size: 8Gi
     ingress:
       enabled: true
       ingressClassName: nginx
