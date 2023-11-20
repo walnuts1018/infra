@@ -35,31 +35,10 @@ spec:
     # myLabel: aakkmd
 
     controller:
-      ## Override NGINX template
-      customTemplate:
-        configMapName: ""
-        configMapKey: ""
-
+      config:
+        use-forwarded-headers: true
       service:
         enabled: true
-
-        # -- If enabled is adding an appProtocol option for Kubernetes service. An appProtocol field replacing annotations that were
-        # using for setting a backend protocol. Here is an example for AWS: service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
-        # It allows choosing the protocol for each backend specified in the Kubernetes service.
-        # See the following GitHub issue for more details about the purpose: https://github.com/kubernetes/kubernetes/issues/40244
-        # Will be ignored for Kubernetes versions older than 1.20
-        ##
-        appProtocol: true
-
-        annotations: {}
-        labels: {}
-        # clusterIP: ""
-
-        # -- List of IP addresses at which the controller services are available
-        ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
-        ##
-        externalIPs: []
-
         # -- Used by cloud providers to connect the resulting `LoadBalancer` to a pre-existing static IP according to https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
         loadBalancerIP: "192.168.0.132"
         loadBalancerSourceRanges: []
