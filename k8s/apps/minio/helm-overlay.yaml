@@ -44,4 +44,5 @@ spec:
       redirectUri: "https://minio-console.walnuts.dev/oauth_callback"
     environment:
       MINIO_IDENTITY_OPENID_REDIRECT_URI: "https://minio-console.walnuts.dev/oauth_callback"
-      MINIO_DOMAIN: "https://minio.walnuts.dev"
+      MINIO_SERVER_URL: "https://minio.walnuts.dev"
+      MINIO_BROWSER_REDIRECT_URL: "https://minio-console.walnuts.dev"
