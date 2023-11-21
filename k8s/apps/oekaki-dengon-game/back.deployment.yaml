@@ -31,7 +31,7 @@ spec:
                   name: oekaki-dengon-game-secret
                   key: postgres-admin-password
             - name: POSTGRES_USER
-              value: "oekaki-dengon-game"
+              value: "oekaki_dengon_game"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
