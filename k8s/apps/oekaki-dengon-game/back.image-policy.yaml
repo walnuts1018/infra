@@ -4,7 +4,7 @@ kind: ImageRepository
 metadata:
   name: oekaki-dengon-game-back
 spec:
-  image: ghcr.io/walnuts1018/oekaki-dengon-game-front
+  image: ghcr.io/kmc-jp/oekaki-dengon-game-front
   interval: 2m0s
   secretRef:
     name: ghcr-login-secret
