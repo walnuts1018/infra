@@ -4,7 +4,6 @@ namespace: default
 resources:
   - back.deployment.yaml
   - back.service.yaml
-  - back.ingress.yaml
   - back.image-policy.yaml
   - front.deployment.yaml
   - front.service.yaml
