@@ -8,5 +8,4 @@ resources:
   - front.deployment.yaml
   - front.service.yaml
   - front.image-policy.yaml
-  - front.ingress.yaml
   - externalsecret.yaml
