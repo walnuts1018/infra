@@ -14,4 +14,4 @@ spec:
               service:
                 name: oekaki-dengon-game
                 port:
-                  number: 8080
+                  number: 3000
