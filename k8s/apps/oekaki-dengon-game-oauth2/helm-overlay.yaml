@@ -20,7 +20,7 @@ spec:
       existingSecret: oekaki-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://oekaki-dengon-game-front.dafault.svc.cluster.local:8428/" ]
+        upstreams = [ "http://oekaki-dengon-game-front.dafault.svc.cluster.local:3000/" ]
         pass_access_token = true
         user_id_claim = "sub"
         oidc_groups_claim="my:zitadel:grants"
