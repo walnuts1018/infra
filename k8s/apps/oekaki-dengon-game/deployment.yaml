@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
         - name: oekaki-dengon-game
-          image: ghcr.io/walnuts1018/oekaki-dengon-game-front:0.6.5 # {"$imagepolicy": "flux-system:oekaki-dengon-game"}
+          image: ghcr.io/kmc-jp/oekaki-dengon-game-front:0.6.5 # {"$imagepolicy": "flux-system:oekaki-dengon-game"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
