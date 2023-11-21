@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: oekaki-dengon-game
+  name: oekaki-dengon-game-front
   labels:
-    app: oekaki-dengon-game
+    app: oekaki-dengon-game-front
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: oekaki-dengon-game
+      app: oekaki-dengon-game-front
   template:
     metadata:
       labels:
-        app: oekaki-dengon-game
+        app: oekaki-dengon-game-front
     spec:
       imagePullSecrets:
         - name: regcred
       containers:
-        - name: oekaki-dengon-game
-          image: ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-11111-0 # {"$imagepolicy": "flux-system:oekaki-dengon-game"}
+        - name: oekaki-dengon-game-front
+          image: ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-11111-0 # {"$imagepolicy": "flux-system:oekaki-dengon-game-front"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000

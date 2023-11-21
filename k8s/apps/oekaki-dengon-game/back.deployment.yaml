@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oekaki-dengon-game-back
+  labels:
+    app: oekaki-dengon-game-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oekaki-dengon-game-back
+  template:
+    metadata:
+      labels:
+        app: oekaki-dengon-game-back
+    spec:
+      containers:
+        - name: oekaki-dengon-game-back
+          image: "ghcr.io/walnuts1018/oekaki-dengon-game-back:v0.0.0-dbc8eb50d6a2159871a16758cc8712196d9e8289-1" # {"$imagepolicy": "flux-system:oekaki-dengon-game-back"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: GIN_MODE
+              value: "release"
+            - name: POSTGRES_ADMIN_USER
+              value: "postgres"
+            - name: POSTGRES_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: oekaki-dengon-game-secret
+                  key: postgres-admin-password
+            - name: POSTGRES_USER
+              value: "oekaki-dengon-game"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: oekaki-dengon-game-secret
+                  key: postgres-user-password
+            - name: POSTGRES_DB
+              value: "oekaki-dengon-game"
+            - name: POSTGRES_HOST
+              value: "postgres-release-postgresql.databases.svc.cluster.local"
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: MINIO_ENDPOINT
+              value: "minio.walnuts.dev"
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: oekaki-dengon-game-secret
+                  key: minio-access-key
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: oekaki-dengon-game-secret
+                  key: minio-secret-key
+            - name: MINIO_BUCKET
+              value: "oekaki-dengon-game"
+            - name: MINIO_KEY_PREFIX
+              value: ""
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
