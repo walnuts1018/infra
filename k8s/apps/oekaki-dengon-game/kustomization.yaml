@@ -2,7 +2,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: default
 resources:
-  - deployment.yaml
-  - service.yaml
-  - ingress.yaml
-  - image-policy.yaml
+  - back.deployment.yaml
+  - back.service.yaml
+  - back.ingress.yaml
+  - back.image-policy.yaml
+  - front.deployment.yaml
+  - front.service.yaml
+  - front.image-policy.yaml
+  - front.ingress.yaml
+  - externalsecret.yaml
