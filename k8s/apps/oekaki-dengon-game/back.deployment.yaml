@@ -38,7 +38,7 @@ spec:
                   name: oekaki-dengon-game-secret
                   key: postgres-user-password
             - name: POSTGRES_DB
-              value: "oekaki-dengon-game"
+              value: oekaki_dengon_game
             - name: POSTGRES_HOST
               value: "postgres-release-postgresql.databases.svc.cluster.local"
             - name: POSTGRES_PORT
