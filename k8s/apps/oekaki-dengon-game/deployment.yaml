@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oekaki-dengon-game
+  labels:
+    app: oekaki-dengon-game
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oekaki-dengon-game
+  template:
+    metadata:
+      labels:
+        app: oekaki-dengon-game
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: oekaki-dengon-game
+          image: ghcr.io/walnuts1018/oekaki-dengon-game-front:0.6.5 # {"$imagepolicy": "flux-system:oekaki-dengon-game"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
