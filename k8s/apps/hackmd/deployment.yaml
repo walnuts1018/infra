@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hackmd
+  labels:
+    app: hackmd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hackmd
+  template:
+    metadata:
+      labels:
+        app: hackmd
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: hackmd
+          image: hackmdio/hackmd:2.4.2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          env:
+            - name: CMD_USECDN
+              value: "true"
+            - name: CMD_DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: hackmd-secret
+                  key: db-url

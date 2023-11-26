@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hackmd
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: "hackmd.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hackmd
+                port:
+                  number: 3000
