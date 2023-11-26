@@ -39,6 +39,30 @@ spec:
                   key: db-url
             - name: CMD_DOMAIN
               value: "hedgedoc.walnuts.dev"
+            - name: CMD_OAUTH2_USER_PROFILE_URL
+              value: "https://auth.walnuts.dev/oidc/v1/userinfo"
+            - name: CMD_OAUTH2_USER_PROFILE_USERNAME_ATTR
+              value: "preferred_username"
+            - name: CMD_OAUTH2_USER_PROFILE_DISPLAY_NAME_ATTR
+              value: "name"
+            - name: CMD_OAUTH2_USER_PROFILE_EMAIL_ATTR
+              value: "email"
+            - name: CMD_OAUTH2_TOKEN_URL
+              value: "https://auth.walnuts.dev/oauth/v2/token"
+            - name: CMD_OAUTH2_AUTHORIZATION_URL
+              value: "https://auth.walnuts.dev/oauth/v2/authorize"
+            - name: CMD_OAUTH2_CLIENT_ID
+              value: "242480725109048091@walnuts.dev"
+            - name: CMD_OAUTH2_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: hedgedoc-secret
+                  key: client-secret
+            - name: CMD_OAUTH2_PROVIDERNAME
+              value: "walnuts.dev"
+            - name: CMD_OAUTH2_SCOPE
+              value: "openid profile email"
+
           volumeMounts:
             - name: hedgedoc-data
               mountPath: /hedgedoc/public/uploads
