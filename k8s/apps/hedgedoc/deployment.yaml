@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hackmd
+  name: hedgedoc
   labels:
-    app: hackmd
+    app: hedgedoc
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hackmd
+      app: hedgedoc
   template:
     metadata:
       labels:
-        app: hackmd
+        app: hedgedoc
     spec:
       imagePullSecrets:
         - name: regcred
       containers:
-        - name: hackmd
-          image: hackmdio/hackmd:2.4.2-cjk
+        - name: hedgedoc
+          image: quay.io/hedgedoc/hedgedoc:1.9.9
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
@@ -35,7 +35,14 @@ spec:
             - name: CMD_DB_URL
               valueFrom:
                 secretKeyRef:
-                  name: hackmd-secret
+                  name: hedgedoc-secret
                   key: db-url
             - name: CMD_DOMAIN
-              value: "hackmd.walnuts.dev"
+              value: "hedgedoc.walnuts.dev"
+          volumeMounts:
+            - name: hedgedoc-data
+              mountPath: /hedgedoc/public/uploads
+      volumes:
+        - name: hedgedoc-data
+          persistentVolumeClaim:
+            claimName: hedgedoc
