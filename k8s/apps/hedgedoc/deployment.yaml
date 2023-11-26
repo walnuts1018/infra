@@ -17,7 +17,7 @@ spec:
       imagePullSecrets:
         - name: regcred
       securityContext:
-        fsGroup: 65534
+        fsGroup: 10000
         fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: hedgedoc
