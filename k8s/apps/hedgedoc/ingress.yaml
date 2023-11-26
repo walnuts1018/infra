@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: hedgedoc
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: 1G
+    nginx.ingress.kubernetes.io/proxy-body-size: 100M
 spec:
   ingressClassName: "nginx"
   rules:
