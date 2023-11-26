@@ -66,6 +66,10 @@ spec:
               value: "true"
             - name: CMD_EMAIL
               value: "false"
+            - name: CMD_OAUTH2_ROLES_CLAIM
+              value: "my:zitadel:grants"
+            - name: CMD_OAUTH2_ACCESS_ROLE
+              value: "237477822715658605:hedgedoc-user"
           volumeMounts:
             - name: hedgedoc-data
               mountPath: /hedgedoc/public/uploads
