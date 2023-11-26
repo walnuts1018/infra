@@ -62,7 +62,8 @@ spec:
               value: "walnuts.dev"
             - name: CMD_OAUTH2_SCOPE
               value: "openid profile email"
-
+            - name: CMD_PROTOCOL_USESSL
+              value: "true"
           volumeMounts:
             - name: hedgedoc-data
               mountPath: /hedgedoc/public/uploads
