@@ -17,7 +17,6 @@ spec:
       imagePullSecrets:
         - name: regcred
       securityContext:
-        runAsUser: 10000
         fsGroup: 10000
         fsGroupChangePolicy: "OnRootMismatch"
       containers:
