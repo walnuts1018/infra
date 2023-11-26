@@ -31,7 +31,7 @@ spec:
               memory: 128Mi
           env:
             - name: CMD_USECDN
-              value: "true"
+              value: "false"
             - name: CMD_DB_URL
               valueFrom:
                 secretKeyRef:
