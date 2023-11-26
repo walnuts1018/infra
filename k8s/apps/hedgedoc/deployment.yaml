@@ -19,6 +19,13 @@ spec:
       securityContext:
         fsGroup: 10000
         fsGroupChangePolicy: "OnRootMismatch"
+      initContainers:
+        - name: chown-change
+          image: busybox:1.36.1
+          command: ["chown", "-R", "10000:10000", "/hedgedoc/public/uploads"]
+          volumeMounts:
+            - name: hedgedoc-data
+              mountPath: /hedgedoc/public/uploads
       containers:
         - name: hedgedoc
           image: quay.io/hedgedoc/hedgedoc:1.9.9
