@@ -37,3 +37,5 @@ spec:
                 secretKeyRef:
                   name: hackmd-secret
                   key: db-url
+            - name: CMD_DOMAIN
+              value: "hackmd.walnuts.dev"
