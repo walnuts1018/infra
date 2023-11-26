@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashy
+  labels:
+    app: dashy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashy
+  template:
+    metadata:
+      labels:
+        app: dashy
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: dashy
+          image: lissy93/dashy:2.1.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4000
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          env:
+            - name: NODE_ENV
+              value: "production"

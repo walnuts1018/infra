@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dashy
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: "dashy.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dashy
+                port:
+                  number: 4000
