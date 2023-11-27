@@ -6,4 +6,3 @@ resources:
   - service.yaml
   - externalsecret.yaml
   - ingress.yaml
-  - pvc.yaml
