@@ -32,11 +32,11 @@ spec:
           env:
             - name: NODE_ENV
               value: "production"
-          volumeMounts:
-            - name: dashy
-              mountPath: /app/public
-              subPath: conf.yml
+
       volumes:
         - name: dashy
-          persistentVolumeClaim:
-            claimName: dashy
+          configMap:
+            name: dashy
+            items:
+              - key: conf.yml
+                path: conf.yml
