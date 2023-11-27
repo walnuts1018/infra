@@ -34,7 +34,7 @@ spec:
               value: "production"
           volumeMounts:
             - name: dashy
-              mountPath: /app/public2
+              mountPath: /app/public
       volumes:
         - name: dashy
           persistentVolumeClaim:
