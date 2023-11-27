@@ -100,10 +100,3 @@ spec:
               value: "true"
             - name: CMD_S3_BUCKET
               value: "hedgedoc"
-          volumeMounts:
-            - name: hedgedoc-data
-              mountPath: /hedgedoc/public/uploads
-      volumes:
-        - name: hedgedoc-data
-          persistentVolumeClaim:
-            claimName: hedgedoc
