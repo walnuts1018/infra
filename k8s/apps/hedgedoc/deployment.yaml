@@ -80,6 +80,24 @@ spec:
               value: "my:zitadel:grants"
             - name: CMD_OAUTH2_ACCESS_ROLE
               value: "237477822715658605:hedgedoc-user"
+            - name: CMD_IMAGE_UPLOAD_TYPE
+              value: "minio"
+            - name: CMD_MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: hedgedoc-secret
+                  key: minio-access-key
+            - name: CMD_MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: hedgedoc-secret
+                  key: minio-secret-key
+            - name: CMD_MINIO_ENDPOINT
+              value: "minio.walnuts.dev"
+            - name: CMD_MINIO_PORT
+              value: "443"
+            - name: CMD_MINIO_SECURE
+              value: "true"
           volumeMounts:
             - name: hedgedoc-data
               mountPath: /hedgedoc/public/uploads
