@@ -21,7 +21,7 @@ spec:
           image: lissy93/dashy:2.1.1
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           resources:
             limits:
               cpu: 1000m
