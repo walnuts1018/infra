@@ -98,6 +98,8 @@ spec:
               value: "443"
             - name: CMD_MINIO_SECURE
               value: "true"
+            - name: CMD_S3_BUCKET
+              value: "hedgedoc"
           volumeMounts:
             - name: hedgedoc-data
               mountPath: /hedgedoc/public/uploads
