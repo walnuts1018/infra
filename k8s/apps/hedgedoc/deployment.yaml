@@ -90,3 +90,5 @@ spec:
               value: "true"
             - name: CMD_S3_BUCKET
               value: "hedgedoc"
+            - name: CMD_DEFAULT_PERMISSION
+              value: "limited"
