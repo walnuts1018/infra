@@ -1,0 +1,56 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: repo
+spec:
+  url: https://oauth2-proxy.github.io/manifests
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: oauth2-proxy
+      version: 6.16.1
+      sourceRef:
+        kind: HelmRepository
+        name: dashy-oauth2-proxy-repo
+  values:
+    config:
+      existingSecret: dashy-oauth2-proxy-secret
+      configFile: |-
+        email_domains = [ "*" ]
+        upstreams = [ "http://dashy.default.svc.cluster.local/" ]
+        pass_access_token = true
+        user_id_claim = "sub"
+        oidc_groups_claim="my:zitadel:grants"
+        allowed_groups = ["237477822715658605:dashy"]
+
+    extraArgs:
+      provider: oidc
+      redirect-url: https://dashy.walnuts.dev/oauth2/callback
+      oidc-issuer-url: https://auth.walnuts.dev
+      skip-provider-button: true
+    ingress:
+      enabled: true
+      className: nginx
+      path: /
+      pathType: Prefix
+      hosts:
+        - "dashy.walnuts.dev"
+    sessionStorage:
+      type: redis
+      redis:
+        existingSecret: "dashy-oauth2-proxy-secret"
+        passwordKey: "redis-password"
+        clientType: "sentinel"
+        sentinel:
+          existingSecret: "dashy-oauth2-proxy-secret"
+          passwordKey: "redis-password"
+          masterName: "mymaster"
+          connectionUrls: "redis://redis-release.databases.svc.cluster.local:6379,redis://redis-release.databases.svc.cluster.local:26379"
+    metrics:
+      enabled: true
