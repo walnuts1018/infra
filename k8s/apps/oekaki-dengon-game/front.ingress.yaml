@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: oekaki-dengon-game
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: "oekaki.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: oekaki-dengon-game
+                port:
+                  number: 8080
