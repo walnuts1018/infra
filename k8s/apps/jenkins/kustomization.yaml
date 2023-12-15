@@ -4,6 +4,7 @@ namespace: jenkins
 namePrefix: jenkins-
 resources:
   - ingress.yaml
+  - pvc.yaml
 components:
   - ../../components/helm
 patchesStrategicMerge:
