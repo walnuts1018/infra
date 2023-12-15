@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: ingress
 spec:
+  ingressClassName: "nginx"
   rules:
     - host: jenkins.walnuts.dev
       http:
