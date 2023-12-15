@@ -5,6 +5,7 @@ namePrefix: jenkins-
 resources:
   - ingress.yaml
   - pvc.yaml
+  - externalsecret.yaml
 components:
   - ../../components/helm
 patchesStrategicMerge:
