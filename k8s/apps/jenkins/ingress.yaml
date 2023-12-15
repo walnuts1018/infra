@@ -13,4 +13,4 @@ spec:
               service:
                 name: jenkins-release
                 port:
-                  number: 8081
+                  number: 8080
