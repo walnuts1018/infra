@@ -14,5 +14,13 @@ spec:
   chart:
     spec:
       chart: jenkins
-      version: 4.9.1
-  values: {}
+      version: 4.9.2
+  values:
+    controller:
+      admin:
+        existingSecret: "jenkins-secret"
+        userKey: jenkins-admin-user
+        passwordKey: jenkins-admin-password
+    persistence:
+      enabled: true
+      existingClaim: jenkins-pvc
