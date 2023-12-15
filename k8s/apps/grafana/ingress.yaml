@@ -3,7 +3,6 @@ kind: Ingress
 metadata:
   name: ingress
   namespace: monitoring
-
 spec:
   ingressClassName: "nginx"
   rules:
