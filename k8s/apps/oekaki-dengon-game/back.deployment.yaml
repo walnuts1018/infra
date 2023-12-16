@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: oekaki-dengon-game-back
-          image: "ghcr.io/kmc-jp/oekaki-dengon-game-back:v0.0.0-372cf6eb319563316b255c0961936bc10da00a69-8" # {"$imagepolicy": "default:oekaki-dengon-game-back"}
+          image: "ghcr.io/kmc-jp/oekaki-dengon-game-back:v0.0.0-393f5d0f123faf236826919a05eae9267eebf40e-9" # {"$imagepolicy": "default:oekaki-dengon-game-back"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
