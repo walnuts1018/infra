@@ -57,7 +57,7 @@ jobs:
       - run: "mv ${{ steps.base_changed.outputs.manifestsBundle }} /tmp/manifests-head.yaml"
 
       - name: Upload file status_job02.txt as an artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           if-no-files-found: error
           name: manifests
