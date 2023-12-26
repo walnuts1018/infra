@@ -1,36 +1,35 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
-  "dependencyDashboard": false,
-  "timezone": "Asia/Tokyo",
-  "flux": {
-    "enabled": false
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:base"],
+  dependencyDashboard: false,
+  reviewers: ["@walnuts1018"],
+  timezone: "Asia/Tokyo",
+  flux: {
+    enabled: false,
   },
-  "regexManagers": [
+  regexManagers: [
     {
-      "fileMatch": ["^k8s/apps/.*/helm-overlay.yaml$"],
-      "matchStringsStrategy": "combination",
-      "matchStrings": [
-        "  url: \"?(?<registryUrl>\\S+)\"?\\s*",
-        "      chart: \"?(?<depName>[a-z0-9-]+)\"?\\s*",
-        "      version: \"?(?<currentValue>\\S+)\"?\\s*"
+      fileMatch: ["^k8s/apps/.*/helm-overlay.yaml$"],
+      matchStringsStrategy: "combination",
+      matchStrings: [
+        '  url: "?(?<registryUrl>\\S+)"?\\s*',
+        '      chart: "?(?<depName>[a-z0-9-]+)"?\\s*',
+        '      version: "?(?<currentValue>\\S+)"?\\s*',
       ],
-      "datasourceTemplate": "helm"
-    }
-  ],
-  "packageRules": [
-    {
-      "matchUpdateTypes": ["patch"],
-      "matchDatasources": ["helm"],
-      "matchCurrentVersion": "!/^0/",
-      "automerge": true
+      datasourceTemplate: "helm",
     },
   ],
-  "internalChecksFilter": "none",
-  "schedule": ["before 11am on saturday"],
-  "automergeSchedule": ["after 7am and before 11am on saturday"],
-  "updateNotScheduled": false,
-  "prHourlyLimit": 0,
+  packageRules: [
+    {
+      matchUpdateTypes: ["patch"],
+      matchDatasources: ["helm"],
+      matchCurrentVersion: "!/^0/",
+      automerge: true,
+    },
+  ],
+  internalChecksFilter: "none",
+  schedule: ["before 11am on saturday"],
+  automergeSchedule: ["after 7am and before 11am on saturday"],
+  updateNotScheduled: false,
+  prHourlyLimit: 0,
 }

@@ -47,13 +47,10 @@ jobs:
       - run: 'ls ./k8s/apps/ | while read line; do   echo "  - ../../apps/$line" >> ./k8s/tmp/cluster-kustomize/kustomization.yaml  ; done'
         shell: bash
 
-      - run: "ls ./k8s/tmp/cluster-kustomize/"
-        shell: bash
-
       - uses: azure/k8s-bake@v2
         with:
           renderEngine: "kustomize"
-          kustomizationPath: ./k8s/tmp/cluster-kustomize/"
+          kustomizationPath: ./k8s/tmp/cluster-kustomize/
           kubectl-version: "latest"
         id: base_changed
 
