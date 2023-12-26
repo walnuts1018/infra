@@ -15,6 +15,9 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.base.ref }}
 
+      - run: "pwd"
+        shell: bash
+
       - run: "mkdir -p ./k8s/tmp/cluster-kustomize"
         shell: bash
 
@@ -34,6 +37,9 @@ jobs:
       - run: "mv ${{ steps.base_bake.outputs.manifestsBundle }} /tmp/manifests-base.yaml"
 
       - uses: actions/checkout@v4
+
+      - run: "pwd"
+        shell: bash
 
       - run: "mkdir -p ./k8s/tmp/cluster-kustomize"
         shell: bash
