@@ -35,6 +35,15 @@ jobs:
 
       - uses: actions/checkout@v4
 
+      - run: "mkdir -p ./k8s/tmp/cluster-kustomize"
+        shell: bash
+
+      - run: 'echo -en "apiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\nresources:\n" > ./k8s/tmp/cluster-kustomize/kustomization.yaml'
+        shell: bash
+
+      - run: 'ls ./k8s/apps/ | while read line; do   echo "  - ../../apps/$line" >> ./k8s/tmp/cluster-kustomize/kustomization.yaml  ; done'
+        shell: bash
+
       - uses: azure/k8s-bake@v2
         with:
           renderEngine: "kustomize"
