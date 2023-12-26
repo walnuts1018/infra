@@ -44,6 +44,9 @@ jobs:
       - run: 'echo -en "apiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\nresources:\n" > ./k8s/tmp/cluster-kustomize/kustomization.yaml'
         shell: bash
 
+      - run: "cat ./k8s/tmp/cluster-kustomize/kustomization.yaml"
+        shell: bash
+
       - uses: azure/k8s-bake@v2
         with:
           renderEngine: "kustomize"
