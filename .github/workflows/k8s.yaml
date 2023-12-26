@@ -38,7 +38,7 @@ jobs:
       - uses: azure/k8s-bake@v2
         with:
           renderEngine: "kustomize"
-          kustomizationPath: "./k8s/apps/*/"
+          kustomizationPath: ./k8s/tmp/cluster-kustomize/"
           kubectl-version: "latest"
         id: base_changed
 
