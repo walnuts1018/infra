@@ -3,7 +3,7 @@
   "extends": [
     "config:base"
   ],
-  "dependencyDashboard": false
+  "dependencyDashboard": false,
   "timezone": "Asia/Tokyo",
   "flux": {
     "enabled": false
