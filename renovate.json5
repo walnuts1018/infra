@@ -27,6 +27,7 @@
       "matchCurrentVersion": "!/^0/",
       "automerge": true
     },
+  ],
   "internalChecksFilter": "none",
   "schedule": ["before 11am on saturday"],
   "automergeSchedule": ["after 7am and before 11am on saturday"],
