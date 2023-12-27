@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://avatars.githubusercontent.com/u/60650857" alt="walnuts" max-height="100px" width="auto" />
+    <img src="./static/logo.png" alt="walnuts" height="200px" width="auto" />
 </p>
 
 <p align="center">
