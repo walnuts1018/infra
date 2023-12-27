@@ -9,6 +9,11 @@ walnuts.dev を支える技術
 
 Walnuts 家の自宅サーバ全般のリポジトリです。
 
-## Kubernetes
+## Kubernetes Manifests
 
 ⇒ [./k8s/README.md](./k8s/README.md)
+
+## Actions
+
+- [k8s-badge](./github/workflows/badge.yaml)
+- [CI](./github/workflows/k8s.yaml)
