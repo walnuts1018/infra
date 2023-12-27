@@ -54,3 +54,7 @@ spec:
           connectionUrls: "redis://redis-release.databases.svc.cluster.local:6379,redis://redis-release.databases.svc.cluster.local:26379"
     metrics:
       enabled: true
+    persistence:
+      recurringJobSelector:
+        enable: true
+        jobList: ["backup-to-samba"]
