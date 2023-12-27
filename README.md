@@ -1,9 +1,17 @@
-# Infra
+<p align="center">
+    <img src="https://avatars.githubusercontent.com/u/60650857" alt="walnuts" max-height="100px" width="auto" />
+</p>
 
-[![k8s Status](https://walnuts1018.github.io/infra/k8sStatus.svg)](https://walnuts1018.github.io/infra/k8sStatus.svg)
-[![Pod Status](https://walnuts1018.github.io/infra/podStatus.svg)](https://walnuts1018.github.io/infra/podStatus.svg)
-[![Node Status](https://walnuts1018.github.io/infra/nodeStatus.svg)](https://walnuts1018.github.io/infra/nodeStatus.svg)
-[![wakatime](https://wakatime.com/badge/user/981e52dd-a7ab-4b00-9a71-125be9dc2de6/project/07d86b66-ede6-45aa-a456-0985d4aed1a9.svg)](https://wakatime.com/badge/user/981e52dd-a7ab-4b00-9a71-125be9dc2de6/project/07d86b66-ede6-45aa-a456-0985d4aed1a9)
+<p align="center">
+  <img src="https://walnuts1018.github.io/infra/k8sStatus.svg" alt="k8s Status" />
+  <img src="https://walnuts1018.github.io/infra/podStatus.svg" alt="Pod Status" />
+  <img src="https://walnuts1018.github.io/infra/nodeStatus.svg" alt="Node Status" />
+  <a href="https://wakatime.com/badge/user/981e52dd-a7ab-4b00-9a71-125be9dc2de6/project/07d86b66-ede6-45aa-a456-0985d4aed1a9" alt="WakaTime">
+      <img src="https://wakatime.com/badge/user/981e52dd-a7ab-4b00-9a71-125be9dc2de6/project/07d86b66-ede6-45aa-a456-0985d4aed1a9.svg" alt="WakaTime" />
+  </a>
+</p>
+
+# Infra
 
 walnuts.dev を支える技術
 
