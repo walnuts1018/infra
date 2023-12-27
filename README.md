@@ -15,5 +15,5 @@ Walnuts 家の自宅サーバ全般のリポジトリです。
 
 ## Actions
 
-- [k8s-badge](./github/workflows/badge.yaml)
-- [CI](./github/workflows/k8s.yaml)
+- [k8s-badge](./.github/workflows/badge.yaml)
+- [CI](./.github/workflows/k8s.yaml)
