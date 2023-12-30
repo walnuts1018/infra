@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: switch to deploy branch
-        run: git checkout deploy
+        run: git switch -c deploy
 
       - name: rm old files
         run: rm  ./k8s/_flux/kurumi/*.yaml
