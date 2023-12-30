@@ -1,8 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namePrefix: cert-manager-
+namePrefix: certmanager-
 namespace: cert-manager
-#resources:
+resources: []
 components:
   - ../../components/helm
 patchesStrategicMerge:
