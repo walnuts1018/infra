@@ -1,0 +1,22 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: repo
+spec:
+  url: https://actions-runner-controller.github.io/actions-runner-controller
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: release
+spec:
+  chart:
+    spec:
+      chart: actions-runner-controller
+      version: 0.23.7
+  values:
+    authSecret:
+      enabled: true
+      create: false
+      name: "arc-secret"
