@@ -6,4 +6,4 @@ spec:
   replicas: 5
   template:
     spec:
-      organization: walnuts1018
+      repository: "walnuts1018/fitibit-manager"
