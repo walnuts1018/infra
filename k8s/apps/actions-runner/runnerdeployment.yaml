@@ -1,0 +1,8 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: runner
+spec:
+  replicas: 5
+  template:
+    spec: {}
