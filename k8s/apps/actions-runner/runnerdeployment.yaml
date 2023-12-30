@@ -5,4 +5,5 @@ metadata:
 spec:
   replicas: 5
   template:
-    spec: {}
+    spec:
+      organization: walnuts1018
