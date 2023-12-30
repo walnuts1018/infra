@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://walnuts.dev" alt="WakaTime">
-        <img src="./static/logo.png" alt="walnuts" />
+        <img src="./static/logo-100px.png" alt="walnuts" />
     </a>
 </p>
 
