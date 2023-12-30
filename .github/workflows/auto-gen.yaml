@@ -1,0 +1,30 @@
+name: Manifest Auto Generation
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: switch to deploy branch
+        run: git checkout deploy
+
+      - name: rm old files
+        run: rm  ./k8s/_flux/kurumi/*.yaml
+
+      - name: Generate _flux/kurumi Kustomization
+        shell: bash
+        run: 'ls ./k8s/apps/ | while read line; do   echo "apiVersion: kustomize.toolkit.fluxcd.io/v1beta2\nkind: Kustomization\nmetadata:\n  name: $line\n  namespace: flux-system\nspec:\n  interval: 10m0s\n  path: ./k8s/apps/$line\n  prune: true\n  sourceRef:\n    kind: GitRepository\n    name: flux-system\n    namespace: flux-system" > ./k8s/_flux/kurumi/$line.yaml  ; done'
+
+      - name: push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "auto-gen"
+          git push
