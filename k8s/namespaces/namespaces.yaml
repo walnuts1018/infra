@@ -41,6 +41,11 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: actions-runner
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: sweets-rebellion
 ---
 apiVersion: v1
