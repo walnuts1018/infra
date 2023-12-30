@@ -6,4 +6,4 @@ spec:
   replicas: 5
   template:
     spec:
-      repository: "walnuts1018/fitbit-manager"
+      repository: "walnuts1018/OpenChokin"
