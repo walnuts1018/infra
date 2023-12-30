@@ -30,6 +30,7 @@ Walnuts 家の自宅サーバ全般のリポジトリです。
 
 - [k8s-badge](./.github/workflows/badge.yaml)
 - [CI](./.github/workflows/k8s.yaml)
+- [flux Manigests AutoGen](./.github/workflows/auto-gen.yaml)
 
 ## Renovate
 
