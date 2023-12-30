@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m0s
   ref:
-    branch: main
+    branch: deploy
   secretRef:
     name: flux-system
   url: https://github.com/walnuts1018/infra.git
