@@ -3,7 +3,7 @@ kind: RunnerDeployment
 metadata:
   name: kurumi
 spec:
-  replicas: 5
+  replicas: 1
   template:
     spec:
       repository: "walnuts1018/OpenChokin"
