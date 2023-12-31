@@ -17,6 +17,7 @@ spec:
       version: 5.41.4
   values:
     loki:
+      auth_enabled: false
       commonConfig:
         replication_factor: 1
       storage:
