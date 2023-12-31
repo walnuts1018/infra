@@ -33,6 +33,7 @@ spec:
           redis: 6379
       resources:
         requests:
+          cpu: 30m
           memory: 10Mi
         limits:
           cpu: 200m
@@ -50,6 +51,7 @@ spec:
           redis: 6379
       resources:
         requests:
+          cpu: 30m
           memory: 10Mi
         limits:
           cpu: 200m
