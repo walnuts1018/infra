@@ -22,8 +22,11 @@ jobs:
         shell: bash
         run: "sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq"
 
-      - name: bash version
-        run: bash --version
+      - name: test
+        run: |
+          shopt -s lastpipe
+          echo 'line1\nline2' | read -d '' anArg
+          echo "$anArg"
 
       - name: Generate image-update
         shell: bash
