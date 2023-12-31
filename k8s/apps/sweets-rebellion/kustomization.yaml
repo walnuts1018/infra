@@ -7,4 +7,3 @@ resources:
   - service.yaml
   - configmap.yaml
   - externalsecret.yaml
-  - image-policy.yaml

@@ -6,7 +6,6 @@ resources:
   - service.yaml
   - externalsecret.yaml
   - ingress.yaml
-  - image-policy.yaml
 configMapGenerator:
   - name: wakatime-to-slack-profile-conf
     files:

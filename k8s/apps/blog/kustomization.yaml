@@ -7,7 +7,6 @@ resources:
   - deployment.yaml
   - ingress.yaml
   - service.yaml
-  - image-policy.yaml
 configMapGenerator:
   - name: blog-conf
     files:
