@@ -4,3 +4,4 @@ namespace: default
 resources:
   - deployment.yaml
   - service.yaml
+  #- ./oauth2-proxy

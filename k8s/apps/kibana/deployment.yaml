@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: kibana
-          image: docker.elastic.co/kibana/kibana:7.5.1
+          image: docker.elastic.co/kibana/kibana:8.11.3
           ports:
             - name: http
               containerPort: 5601
