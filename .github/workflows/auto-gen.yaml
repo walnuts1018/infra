@@ -24,7 +24,7 @@ jobs:
 
       - name: test
         shell: bash
-        run: 'shopt -s lastpipe; ls ./k8s/apps/**/*image-policy.yaml | while read line; do echo "$line" | sed -e "s/^\.\/k8s\/apps\/\(.*\)\/.*image-policy\.yaml$/\1/g" ; done'
+        run: 'shopt -s lastpipe; ls ./k8s/apps/**/*image-policy.yaml | while read line; do echo "$line" | sed -e "s/^\.\/k8s\/apps\/\(.*\)\/.*image-policy\.yaml$/\1/g"| read -d '''' nameprefix; echo $nameprefix; done'
 
       - name: Generate image-update
         shell: bash
