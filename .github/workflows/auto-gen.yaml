@@ -24,7 +24,7 @@ jobs:
 
       - name: Generate image-update
         shell: bash
-        run: 'shopt -s lastpipe; ls ./k8s/apps/**/*image-policy.yaml | while read line; do echo "$line" | sed -e "s/^\.\/k8s\/apps\/\(.*\)\/.*image-policy\.yaml$/\1/g"| read -d '' nameprefix; yq -i ".metadata.name |= \"$nameprefix-\" + ." $line; echo "  - ../../../$line" >> ./k8s/_flux/image-update/kustomization.yaml  ; done'
+        run: 'shopt -s lastpipe; ls ./k8s/apps/**/*image-policy.yaml | while read line; do echo "$line" | sed -e "s/^\.\/k8s\/apps\/\(.*\)\/.*image-policy\.yaml$/\1/g"| read -d '''' nameprefix; yq -i ".metadata.name |= \"$nameprefix-\" + ." $line; echo "  - ../../../$line" >> ./k8s/_flux/image-update/kustomization.yaml ; done'
 
       - name: push
         run: |
