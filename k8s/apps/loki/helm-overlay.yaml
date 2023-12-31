@@ -15,4 +15,11 @@ spec:
     spec:
       chart: loki
       version: 5.41.4
-  values: {}
+  values:
+    loki:
+      commonConfig:
+        replication_factor: 1
+      storage:
+        type: "filesystem"
+    singleBinary:
+      replicas: 1
