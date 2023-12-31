@@ -14,7 +14,6 @@ metadata:
 spec:
   imageRepositoryRef:
     name: blog
-    namespace: flux-system
   policy:
     semver:
       range: "^0"
