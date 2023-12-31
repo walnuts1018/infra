@@ -24,11 +24,11 @@ spec:
             - containerPort: 3000
           resources:
             limits:
-              cpu: 1000m
-              memory: 512Mi
-            requests:
               cpu: 100m
-              memory: 128Mi
+              memory: 300Mi
+            requests:
+              cpu: 10m
+              memory: 100Mi
           env:
             - name: CMD_USECDN
               value: "false"

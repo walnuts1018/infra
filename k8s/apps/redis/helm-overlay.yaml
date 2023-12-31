@@ -35,7 +35,7 @@ spec:
         requests:
           memory: 10Mi
         limits:
-          cpu: 200m
+          cpu: 20m
           memory: 50Mi
 
     replica:
@@ -52,7 +52,7 @@ spec:
         requests:
           memory: 10Mi
         limits:
-          cpu: 200m
+          cpu: 20m
           memory: 50Mi
 
     sentinel:

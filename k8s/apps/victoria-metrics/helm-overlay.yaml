@@ -25,7 +25,7 @@ spec:
           cpu: 500m
           memory: 512Mi
         requests:
-          cpu: 150m
+          cpu: 100m
           memory: 200Mi
       scrape:
         enabled: true

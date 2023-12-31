@@ -45,7 +45,7 @@ spec:
           resources:
             limits:
               memory: "1Gi"
-              cpu: "1"
+              cpu: "1000m"
       nodeSelector:
         kubernetes.io/hostname: cake
       volumes:
