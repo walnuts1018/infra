@@ -26,7 +26,6 @@ jobs:
         run: |
           shopt -s lastpipe
           echo 'line1\nline2' | read -d '' anArg
-          echo "$anArg"
 
       - name: Generate image-update
         shell: bash
