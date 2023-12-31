@@ -16,4 +16,4 @@ spec:
     name: elasticsearch
   policy:
     semver:
-      range: "^2.x.x"
+      range: "^8.x.x"
