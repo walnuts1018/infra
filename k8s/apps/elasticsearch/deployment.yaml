@@ -28,7 +28,7 @@ spec:
             - name: discovery.type
               value: single-node
             - name: cluster.name
-              value: kmc
+              value: kurumi
             - name: xpack.security.enabled
               value: "false"
           volumeMounts:
