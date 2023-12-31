@@ -4,6 +4,6 @@ namePrefix: kibana-oauth2-proxy-
 resources:
   - externalsecret.yaml
 components:
-  - ../../components/helm
+  - ../../../components/helm
 patchesStrategicMerge:
   - helm-overlay.yaml
