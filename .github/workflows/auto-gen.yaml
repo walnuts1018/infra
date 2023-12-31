@@ -23,10 +23,8 @@ jobs:
         run: "sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq"
 
       - name: Generate image-update
-        shell: bash
-        run: |
-          shopt -s lastpipe
-          ls ./k8s/apps/**/*image-policy.yaml | while read line; do echo "$line" | sed -e "s/^\.\/k8s\/apps\/\(.*\)\/.*image-policy\.yaml$/\1/g"| read -d '''' nameprefix; yq -i ".metadata.name |= \"$nameprefix-\" + ." $line; echo "  - ../../../$line" >> ./k8s/_flux/image-update/kustomization.yaml ; done
+        shell: zsh
+        run: 'ls ./k8s/apps/**/*image-policy.yaml | while read line; do echo "$line" | sed -e "s/^\.\/k8s\/apps\/\(.*\)\/.*image-policy\.yaml$/\1/g"| read -d '''' nameprefix; yq -i ".metadata.name |= \"$nameprefix-\" + ." $line; echo "  - ../../../$line" >> ./k8s/_flux/image-update/kustomization.yaml ; done'
 
       - name: push
         run: |
