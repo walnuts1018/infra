@@ -12,6 +12,9 @@ spec:
       labels:
         app: elasticsearch
     spec:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: elasticsearch
           image: docker.elastic.co/elasticsearch/elasticsearch:8.11.3
@@ -36,8 +39,8 @@ spec:
               mountPath: "/usr/share/elasticsearch/config/elasticsearch-plugins.yaml"
               subPath: "elasticsearch-plugins.yaml"
               readOnly: true
-            # - name: data
-            #   mountPath: /usr/share/elasticsearch/data
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
 
       volumes:
         - name: config
