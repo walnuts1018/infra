@@ -153,8 +153,8 @@ spec:
           name: kube-flannel
           resources:
             requests:
-              cpu: 100m
-              memory: 50Mi
+              cpu: 10m
+              memory: 30Mi
           securityContext:
             capabilities:
               add:

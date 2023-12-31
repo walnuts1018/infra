@@ -42,9 +42,10 @@ spec:
                   key: secret
           resources:
             requests:
+              cpu: "1m"
               memory: "10Mi"
             limits:
               memory: "512Mi"
-              cpu: "1"
+              cpu: "100m"
       nodeSelector:
         kubernetes.io/hostname: snow
