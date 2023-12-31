@@ -9,5 +9,3 @@ resources:
   - front.ingress.yaml
   - back.ingress.yaml
   - externalsecret.yaml
-  - front.image-policy.yaml
-  - back.image-policy.yaml

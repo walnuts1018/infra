@@ -6,4 +6,3 @@ resources:
   - service.yaml
   - externalsecret.yaml
   - pvc.yaml
-  - image-policy.yaml

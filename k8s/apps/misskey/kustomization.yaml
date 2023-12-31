@@ -7,4 +7,3 @@ resources:
   - pvc.yaml
   - externalsecret.yaml
   - ingress.yaml
-  - image-policy.yaml

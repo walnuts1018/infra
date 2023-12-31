@@ -6,4 +6,3 @@ resources:
   - ingress.yaml
   - externalsecret.yaml
   - service.yaml
-  - image-policy.yaml
