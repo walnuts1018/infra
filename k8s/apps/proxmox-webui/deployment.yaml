@@ -26,7 +26,13 @@ spec:
               readOnly: true
             - mountPath: /var/log/nginx
               name: log
-
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 1m
+              memory: 1Mi
       volumes:
         - name: proxmox-webui-conf
           configMap:
