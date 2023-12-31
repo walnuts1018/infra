@@ -35,6 +35,10 @@ spec:
             - name: config
               mountPath: "/usr/share/elasticsearch/config/elasticsearch-plugins.yaml"
               subPath: "elasticsearch-plugins.yaml"
+              readOnly: true
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+
       volumes:
         - name: config
           configMap:
@@ -42,3 +46,6 @@ spec:
             items:
               - key: elasticsearch-plugins.yaml
                 path: elasticsearch-plugins.yaml
+        - name: data
+          persistentVolumeClaim:
+            claimName: elasticsearch

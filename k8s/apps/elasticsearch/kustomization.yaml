@@ -4,6 +4,7 @@ namespace: databases
 resources:
   - deployment.yaml
   - service.yaml
+  - pvc.yaml
 configMapGenerator:
   - name: elasticsearch-configmap
     files:
