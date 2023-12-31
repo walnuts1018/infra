@@ -16,4 +16,4 @@ spec:
     name: blog
   policy:
     semver:
-      range: "^0"
+      range: "^1.x.x"
