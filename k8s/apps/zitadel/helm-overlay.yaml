@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: zitadel
-      version: 7.3.2
+      version: 7.4.0
   values:
     zitadel:
       configmapConfig:
