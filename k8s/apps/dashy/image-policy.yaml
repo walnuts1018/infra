@@ -1,0 +1,19 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: dashy
+spec:
+  image: lissy93/dashy
+  interval: 2m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: dashy
+spec:
+  imageRepositoryRef:
+    name: dashy
+  policy:
+    semver:
+      range: "^2.x.x"

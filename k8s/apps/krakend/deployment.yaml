@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: krakend
-          image: devopsfaith/krakend:2.4
+          image: devopsfaith/krakend:2.4 # {"$imagepolicy": "flux-system:krakend"}
           ports:
             - containerPort: 8080
           imagePullPolicy: IfNotPresent

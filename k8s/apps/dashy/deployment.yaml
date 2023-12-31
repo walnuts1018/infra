@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
         - name: dashy
-          image: lissy93/dashy:2.1.1
+          image: lissy93/dashy:2.1.1 # {"$imagepolicy": "flux-system:dashy"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

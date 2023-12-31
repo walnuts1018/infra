@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
         - name: hedgedoc
-          image: quay.io/hedgedoc/hedgedoc:1.9.9
+          image: quay.io/hedgedoc/hedgedoc:1.9.9 # {"$imagepolicy": "flux-system:hedgedoc"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
