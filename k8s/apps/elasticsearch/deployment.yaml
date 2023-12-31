@@ -36,8 +36,8 @@ spec:
               mountPath: "/usr/share/elasticsearch/config/elasticsearch-plugins.yaml"
               subPath: "elasticsearch-plugins.yaml"
               readOnly: true
-            - name: data
-              mountPath: /usr/share/elasticsearch/data
+            # - name: data
+            #   mountPath: /usr/share/elasticsearch/data
 
       volumes:
         - name: config
