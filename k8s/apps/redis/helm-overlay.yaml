@@ -36,7 +36,7 @@ spec:
           memory: 10Mi
         limits:
           cpu: 20m
-          memory: 50Mi
+          memory: 100Mi
 
     replica:
       replicaCount: 3
@@ -53,7 +53,7 @@ spec:
           memory: 10Mi
         limits:
           cpu: 20m
-          memory: 50Mi
+          memory: 100Mi
 
     sentinel:
       enabled: true
