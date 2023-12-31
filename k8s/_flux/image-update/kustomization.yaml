@@ -3,5 +3,4 @@ kind: Kustomization
 namespace: flux-system
 resources:
   - ./imageupdateautomation.yaml
-  - ./imageupdateautomationdefault.yaml
   - ./externalsecret.yaml
