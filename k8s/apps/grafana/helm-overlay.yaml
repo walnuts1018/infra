@@ -16,8 +16,6 @@ spec:
       chart: grafana
       version: 7.0.19
   values:
-    image:
-      tag: 10.2.0
     resources:
       limits:
         cpu: 200m
