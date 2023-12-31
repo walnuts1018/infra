@@ -18,15 +18,15 @@ jobs:
         shell: bash
         run: 'ls ./k8s/apps/ | while read line; do   echo -e "apiVersion: kustomize.toolkit.fluxcd.io/v1beta2\nkind: Kustomization\nmetadata:\n  name: $line\n  namespace: flux-system\nspec:\n  interval: 10m0s\n  path: ./k8s/apps/$line\n  prune: true\n  sourceRef:\n    kind: GitRepository\n    name: flux-system\n    namespace: flux-system" > ./k8s/_flux/kurumi/$line.yaml  ; done'
 
-      - name: install yq
-        shell: bash
-        run: "sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq"
+      # - name: install yq
+      #   shell: bash
+      #   run: "sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq"
 
-      - name: Generate image-update
-        shell: bash
-        run: |
-          shopt -s lastpipe
-          ls ./k8s/apps/**/*image-policy.yaml | while read line; do set +e; echo "$line" | sed -e "s/^\.\/k8s\/apps\/\(.*\)\/.*image-policy\.yaml$/\1/g"| read -d '''' nameprefix; set -e; yq -i ".metadata.name |= \"$nameprefix-\" + ." $line; yq -i ".spec.imageRepositoryRef.name |= \"$nameprefix-\" + ." $line; echo "  - ../../../$line" >> ./k8s/_flux/image-update/kustomization.yaml ; done
+      # - name: Generate image-update
+      #   shell: bash
+      #   run: |
+      #     shopt -s lastpipe
+      #     ls ./k8s/apps/**/*image-policy.yaml | while read line; do set +e; echo "$line" | sed -e "s/^\.\/k8s\/apps\/\(.*\)\/.*image-policy\.yaml$/\1/g"| read -d '''' nameprefix; set -e; yq -i ".metadata.name |= \"$nameprefix-\" + ." $line; imagepolicy=$(yq "select(.kind==\"ImagePolicy\") |.spec.imageRepositoryRef.name |= \"$nameprefix-\" + ." $line); imagerepo=$(yq "select(.kind==\"ImageRepository\")" $line); rm $line; echo $imagerepo > $line; echo "---" >> $line; echo $imagepolicy >> $line;  echo "  - ../../../$line" >> ./k8s/_flux/image-update/kustomization.yaml ; done
 
       - name: push
         run: |
