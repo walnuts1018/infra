@@ -1,0 +1,19 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: hedgedoc
+spec:
+  image: quay.io/hedgedoc/hedgedoc
+  interval: 2m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: hedgedoc
+spec:
+  imageRepositoryRef:
+    name: hedgedoc
+  policy:
+    semver:
+      range: "^1.x.x"

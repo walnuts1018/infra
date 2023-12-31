@@ -1,0 +1,19 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: elasticsearch
+spec:
+  image: docker.elastic.co/elasticsearch/elasticsearch
+  interval: 2m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: elasticsearch
+spec:
+  imageRepositoryRef:
+    name: elasticsearch
+  policy:
+    semver:
+      range: "^2.x.x"

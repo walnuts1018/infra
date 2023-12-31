@@ -1,0 +1,19 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: proxmox-webui
+spec:
+  image: nginx
+  interval: 2m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: proxmox-webui
+spec:
+  imageRepositoryRef:
+    name: proxmox-webui
+  policy:
+    semver:
+      range: "^1.x.x"
