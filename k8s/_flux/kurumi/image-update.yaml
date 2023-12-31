@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./k8s/image-update
+  path: ./k8s/_flux/image-update
   prune: true
   sourceRef:
     kind: GitRepository
