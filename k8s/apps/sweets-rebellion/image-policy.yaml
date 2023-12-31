@@ -2,7 +2,7 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: imagerepo
+  name: sweets-rebellion-imagerepo
 spec:
   image: ghcr.io/kmc-jp/stgproject2022
   interval: 2m0s
@@ -12,7 +12,7 @@ spec:
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: imagepolicy
+  name: sweets-rebellion-imagepolicy
 spec:
   imageRepositoryRef:
     name: sweets-rebellion-imagerepo
