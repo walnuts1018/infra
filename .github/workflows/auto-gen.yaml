@@ -23,10 +23,11 @@ jobs:
         run: "sudo wget https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_amd64 -O /usr/bin/yq && sudo chmod +x /usr/bin/yq"
 
       - name: test
-        continue-on-error: true
         run: |
           shopt -s lastpipe
+          set +e
           echo 'line1\nline2' | read -d '' anArg
+          set -e
           echo "$anArg"
 
       - name: Generate image-update
