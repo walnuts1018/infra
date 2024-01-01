@@ -8,4 +8,4 @@ resources:
 configMapGenerator:
   - name: elasticsearch-configmap
     files:
-      - elasticsearch-plugins.yaml
+      - elasticsearch-plugins.yml
