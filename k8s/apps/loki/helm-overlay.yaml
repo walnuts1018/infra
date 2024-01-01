@@ -24,3 +24,6 @@ spec:
         type: "filesystem"
     singleBinary:
       replicas: 1
+    monitoring:
+      selfMonitoring:
+        enabled: false
