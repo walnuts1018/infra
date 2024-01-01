@@ -46,9 +46,6 @@ spec:
         - name: config
           configMap:
             name: elasticsearch-configmap
-            items:
-              - key: elasticsearch-plugins.yaml
-                path: elasticsearch-plugins.yaml
         - name: data
           persistentVolumeClaim:
             claimName: elasticsearch
