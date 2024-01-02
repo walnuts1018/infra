@@ -63,9 +63,15 @@ spec:
           hostPath:
             path: /mnt/data/nextcloud
             type: Directory
+        - name: samba-data
+          hostPath:
+            path: /mnt/data/share
+            type: Directory
       extraVolumeMounts:
         - name: snow-local
           mountPath: /var/www/html/data
+        - name: samba-data
+          mountPath: /mnt/data/share
     internalDatabase:
       enabled: false
     externalDatabase:
