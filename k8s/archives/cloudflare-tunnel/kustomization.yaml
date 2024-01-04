@@ -1,8 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namePrefix: cloudflare-tunnel-
-namespace: network-exporter
-resources:
-  - deployment.yaml
-  - sealedsecret.yaml
-  - configmap.yaml

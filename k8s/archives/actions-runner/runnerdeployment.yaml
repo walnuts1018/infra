@@ -1,9 +1,0 @@
-apiVersion: actions.summerwind.dev/v1alpha1
-kind: RunnerDeployment
-metadata:
-  name: kurumi
-spec:
-  replicas: 1
-  template:
-    spec:
-      repository: "walnuts1018/OpenChokin"
