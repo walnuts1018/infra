@@ -39,8 +39,8 @@ spec:
             - path: /
               pathType: Prefix
     env:
-      - name: ZITADEL_LOG_LEVEL
-        value: "debug"
+    #  - name: ZITADEL_LOG_LEVEL
+    #    value: "debug"
     nodeSelector:
       kubernetes.io/hostname: cake
     metrics:
