@@ -15,10 +15,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: data-pvc
 spec:
+  storageClassName: longhorn-local
   accessModes:
     - ReadWriteOnce
-  volumeMode: Filesystem
   resources:
     requests:
       storage: 3Gi
-  storageClassName: longhorn-local
