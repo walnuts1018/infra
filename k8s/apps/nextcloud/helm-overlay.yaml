@@ -21,13 +21,7 @@ spec:
       className: nginx
       annotations:
         nginx.ingress.kubernetes.io/proxy-body-size: 4G
-        nginx.ingress.kubernetes.io/server-snippet: |-
-          server_tokens off;
-          proxy_hide_header X-Powered-By;
-
-          rewrite ^/.well-known/webfinger /public.php?service=webfinger last;
-          rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
-          rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json;
+        nginx.ingress.kubernetes.io/configuration-snippet: |-
           location = /.well-known/carddav {
             return 301 $scheme://$host/remote.php/dav;
           }
@@ -45,6 +39,13 @@ spec:
           location ~ ^/(?:autotest|occ|issue|indie|db_|console) {
             deny all;
           }
+        # nginx.ingress.kubernetes.io/server-snippet: |-
+        #   server_tokens off;
+        #   proxy_hide_header X-Powered-By;
+
+        #   rewrite ^/.well-known/webfinger /public.php?service=webfinger last;
+        #   rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
+        #   rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json;
 
     phpClientHttpsFix:
       enabled: true
