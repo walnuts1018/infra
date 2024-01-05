@@ -109,8 +109,8 @@ spec:
               'memcache.locking' => '\OC\Memcache\Redis',
               'redis' => array(
                 'host' => 'redis-haproxy.databases.svc.cluster.local',
-                'port' => 6379,
-                'dbindex' => 3,
+                'port' => '6379',
+                'dbindex' => '3',
                 'password' => getenv('REDIS_HOST_PASSWORD'),
               ),
             );
