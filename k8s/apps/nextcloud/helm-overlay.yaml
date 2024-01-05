@@ -78,6 +78,8 @@ spec:
             secretKeyRef:
               name: nextcloud-secret
               key: redis-password
+        - name: NEXTCLOUD_HOSTNAME
+          value: nextcloud.walnuts.dev
       configs:
         phone.config.php: |-
           <?php
