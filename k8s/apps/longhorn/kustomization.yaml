@@ -4,6 +4,7 @@ namePrefix: longhorn-
 namespace: longhorn-system
 resources:
   - externalsecret.yaml
+  - storageclass.yaml
 components:
   - ../../components/helm
 patchesStrategicMerge:
