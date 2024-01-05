@@ -78,6 +78,24 @@ spec:
               key: redis-password
         - name: NEXTCLOUD_HOSTNAME
           value: nextcloud.walnuts.dev
+        # smtp
+        - name: SMTP_HOST
+          value: smtp.gmail.com
+        - name: SMTP_SECURE
+          value: tls
+        - name: SMTP_PORT
+          value: "587"
+        - name: SMTP_NAME
+          value: "r.juglans.1018@gmail.com"
+        - name: SMTP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nextcloud-secret
+              key: smtp-password
+        - name: MAIL_FROM_ADDRESS
+          value: "noreply"
+        - name: MAIL_DOMAIN
+          value: "walnuts.dev"
       configs:
         phone.config.php: |-
           <?php
