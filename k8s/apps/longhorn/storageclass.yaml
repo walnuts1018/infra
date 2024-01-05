@@ -2,6 +2,7 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: local
+labels: recurring-job-group.longhorn.io/default=enabled
 provisioner: driver.longhorn.io
 allowVolumeExpansion: true
 parameters:
