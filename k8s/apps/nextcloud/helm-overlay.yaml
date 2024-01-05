@@ -59,17 +59,11 @@ spec:
         passwordKey: admin-password
       datadir: /var/www/html/data
       extraVolumes:
-        - name: snow-local
-          hostPath:
-            path: /mnt/data/nextcloud
-            type: Directory
         - name: samba-data
           hostPath:
             path: /mnt/data/share
             type: Directory
       extraVolumeMounts:
-        - name: snow-local
-          mountPath: /var/www/html/data
         - name: samba-data
           mountPath: /mnt/data/share
       extraEnv:
@@ -93,6 +87,9 @@ spec:
     persistence:
       enabled: true
       existingClaim: nextcloud-pvc
+      nextcloudData:
+        enabled: true
+        existingClaim: nextcloud-data-pvc
     nodeSelector:
       kubernetes.io/hostname: cake
     livenessProbe:
