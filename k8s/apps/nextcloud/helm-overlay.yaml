@@ -85,12 +85,10 @@ spec:
         usernameKey: postgres-username
         passwordKey: postgres-password
     cronjob:
-      enabled: false
+      enabled: true
     persistence:
       enabled: true
       existingClaim: nextcloud-pvc
-    metrics:
-      enabled: true
     nodeSelector:
       kubernetes.io/hostname: cake
     livenessProbe:
