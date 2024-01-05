@@ -57,7 +57,7 @@ spec:
         secretName: nextcloud-secret
         usernameKey: admin-username
         passwordKey: admin-password
-      datadir: /var/www/html/data
+      #datadir: /var/www/html/data
       extraVolumes:
         - name: samba-data
           hostPath:
