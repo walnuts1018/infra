@@ -92,7 +92,6 @@ spec:
       nextcloudData:
         enabled: true
         existingClaim: nextcloud-data-pvc
-        subPath: data
     nodeSelector:
       kubernetes.io/hostname: cake
     livenessProbe:
