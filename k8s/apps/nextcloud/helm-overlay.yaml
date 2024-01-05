@@ -88,8 +88,8 @@ spec:
       enabled: true
       existingClaim: nextcloud-pvc
       nextcloudData:
-        enabled: true
-        existingClaim: nextcloud-data-pvc
+        #enabled: true
+        #existingClaim: nextcloud-data-pvc
     nodeSelector:
       kubernetes.io/hostname: cake
     livenessProbe:
