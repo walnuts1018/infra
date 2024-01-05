@@ -78,6 +78,12 @@ spec:
             secretKeyRef:
               name: nextcloud-secret
               key: redis-password
+      configs:
+        phone.config.php: |-
+          <?php
+          $CONFIG = array (
+            'default_phone_region' ⇒ 'JP',
+          );
 
     internalDatabase:
       enabled: false
