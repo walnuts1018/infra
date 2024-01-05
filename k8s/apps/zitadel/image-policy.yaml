@@ -4,7 +4,7 @@ kind: ImageRepository
 metadata:
   name: zitadel
 spec:
-  image: zitadel
+  image: ghcr.io/zitadel/zitadel
   interval: 2m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
