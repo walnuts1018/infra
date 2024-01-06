@@ -2,6 +2,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: elasticsearch
+  labels:
+    recurring-job-group.longhorn.io/default: enabled    
 spec:
   storageClassName: longhorn
   accessModes:
