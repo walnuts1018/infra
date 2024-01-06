@@ -24,3 +24,5 @@ spec:
         type: "filesystem"
     singleBinary:
       replicas: 1
+      persistence:
+        storageClass: longhorn
