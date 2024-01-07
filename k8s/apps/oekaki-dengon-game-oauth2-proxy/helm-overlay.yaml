@@ -25,7 +25,7 @@ spec:
         user_id_claim = "sub"
         oidc_groups_claim="my:zitadel:grants"
         allowed_groups = ["237477822715658605:oekaki-admin"]
-        skip_auth_routes = ["/public","GET=/api","/_next", "/texture.png"]
+        skip_auth_routes = ["/public","GET=/api","/_next", "/texture.png", "/robots.txt"]
     extraArgs:
       provider: oidc
       redirect-url: https://oekaki.walnuts.dev/oauth2/callback
