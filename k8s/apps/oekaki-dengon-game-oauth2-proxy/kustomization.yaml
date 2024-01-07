@@ -8,3 +8,7 @@ components:
   - ../../components/helm
 patchesStrategicMerge:
   - helm-overlay.yaml
+configMapGenerator:
+  - name: oekaki-oauth2-proxy-templates
+    files:
+      - robots.txt
