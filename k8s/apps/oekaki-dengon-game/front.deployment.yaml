@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
         - name: oekaki-dengon-game-front
-          image: ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-537234176d7531fab7fc1ccfe3377f3ac9a2e0cf-69 # {"$imagepolicy": "flux-system:oekaki-dengon-game-front"}
+          image: ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-d757d81d762a9431670e6feca867a14f80050d6d-70 # {"$imagepolicy": "flux-system:oekaki-dengon-game-front"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
