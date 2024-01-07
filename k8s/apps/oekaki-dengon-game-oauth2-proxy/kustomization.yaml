@@ -12,3 +12,5 @@ configMapGenerator:
   - name: templates
     files:
       - robots.txt
+    options:
+      disableNameSuffixHash: true
