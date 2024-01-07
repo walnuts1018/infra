@@ -1,5 +1,12 @@
 User-agent: *
 Disallow： /
 Allow: /public/
+Allow: /_next/
+Allow: /static/
+Allow: /favicon.ico
+Allow: /manifest.json
+Allow: /robots.txt
+Allow: /sitemap.xml
+
 
 Host: https://oekaki.walnuts.dev
