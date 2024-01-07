@@ -6,7 +6,11 @@ on:
     paths:
       - "k8s/**"
       - ".github/workflows/k8s.yaml"
-
+  push:
+    branches: [main]
+    paths:
+      - "k8s/**"
+      - ".github/workflows/k8s.yaml"
 jobs:
   build:
     runs-on: ubuntu-latest
