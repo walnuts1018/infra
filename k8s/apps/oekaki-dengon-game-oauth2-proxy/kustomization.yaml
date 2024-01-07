@@ -9,6 +9,6 @@ components:
 patchesStrategicMerge:
   - helm-overlay.yaml
 configMapGenerator:
-  - name: oekaki-oauth2-proxy-templates
+  - name: templates
     files:
       - robots.txt
