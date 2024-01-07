@@ -72,6 +72,7 @@ jobs:
   diff:
     runs-on: ubuntu-latest
     needs: build
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/download-artifact@v4
         with:
