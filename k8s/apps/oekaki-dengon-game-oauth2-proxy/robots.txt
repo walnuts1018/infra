@@ -1,0 +1,5 @@
+User-agent: *
+Disallow： /
+Allow: /public/
+
+Host: https://oekaki.walnuts.dev
