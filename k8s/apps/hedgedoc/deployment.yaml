@@ -92,3 +92,8 @@ spec:
               value: "hedgedoc"
             - name: CMD_DEFAULT_PERMISSION
               value: "limited"
+            - name: CMD_SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: hedgedoc-secret
+                  key: session-secret
