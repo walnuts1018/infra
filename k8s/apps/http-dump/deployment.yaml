@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: http-dump
-          image: ghcr.io/walnuts1018/http-dump:test-a1410a43da25d7d7141c0d13aa9f700d68d88b20-1 # {"$imagepolicy": "flux-system:http-dump"}
+          image: ghcr.io/walnuts1018/http-dump:e645a153069e02a1f9e923006d09cc90ba845ca3-2 # {"$imagepolicy": "flux-system:http-dump"}
           ports:
             - name: http
               containerPort: 8080
