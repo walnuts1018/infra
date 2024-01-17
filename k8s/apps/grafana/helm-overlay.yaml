@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: grafana
-      version: 7.2.0
+      version: 7.2.1
   values:
     resources:
       limits:
