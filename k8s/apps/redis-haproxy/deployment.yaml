@@ -26,7 +26,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       containers:
         - name: haproxy
-          image: haproxy:2.9.0
+          image: haproxy:2.9.2 # {"$imagepolicy": "flux-system:redis-haproxy"}
           ports:
             - containerPort: 8080
             - containerPort: 6380
