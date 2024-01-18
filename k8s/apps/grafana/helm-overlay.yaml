@@ -1,4 +1,3 @@
----
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
@@ -17,7 +16,7 @@ spec:
       version: 7.2.1
   values:
     image:
-      tag: 10.2.2 # {"$imagepolicy": "flux-system:grafana"}
+      tag: grafana/grafana:10.2.3 # {"$imagepolicy": "flux-system:grafana"}
     resources:
       limits:
         cpu: 200m
@@ -35,18 +34,15 @@ spec:
       size: 1Gi
     service:
       type: ClusterIP
-
     admin:
       existingSecret: "grafana-secret"
       userKey: admin-username
       passwordKey: admin-password
-
     extraSecretMounts:
       - name: auth-generic-oauth-secret
         secretName: grafana-secret
         mountPath: /etc/secrets
         readOnly: true
-
     grafana.ini:
       server:
         domain: grafana.walnuts.dev
