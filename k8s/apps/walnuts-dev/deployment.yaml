@@ -23,3 +23,6 @@ spec:
           resources:
             limits: {}
             requests: {}
+          env:
+            - name: NEXT_PUBLIC_GA_ID
+              value: G-NB6F68ZQ9P
