@@ -16,6 +16,8 @@ spec:
       chart: grafana
       version: 7.2.1
   values:
+    image:
+      tag: 10.2.2 # {"$imagepolicy": "flux-system:grafana"}
     resources:
       limits:
         cpu: 200m
