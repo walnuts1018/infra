@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
         - name: wakatime-to-slack-profile
-          image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.2.1 # {"$imagepolicy": "flux-system:wakatime-to-slack-profile"}
+          image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.2.2 # {"$imagepolicy": "flux-system:wakatime-to-slack-profile"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
