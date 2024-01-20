@@ -15,3 +15,13 @@ spec:
                 name: "walnuts-dev"
                 port:
                   number: 3000
+    - host: "www.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "walnuts-dev"
+                port:
+                  number: 3000
