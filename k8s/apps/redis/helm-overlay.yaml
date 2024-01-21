@@ -67,3 +67,6 @@ spec:
         size: 100Mi
       service:
         type: ClusterIP
+
+    serviceAccount:
+      create: true
