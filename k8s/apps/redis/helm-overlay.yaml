@@ -38,6 +38,8 @@ spec:
         limits:
           cpu: 200m
           memory: 100Mi
+      serviceAccount:
+        create: false
 
     replica:
       replicaCount: 3
@@ -56,6 +58,8 @@ spec:
         limits:
           cpu: 200m
           memory: 100Mi
+      serviceAccount:
+        create: false
 
     sentinel:
       enabled: true
