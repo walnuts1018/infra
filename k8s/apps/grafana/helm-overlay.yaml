@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: grafana
-      version: 7.2.3
+      version: 7.2.4
   values:
     # image:
     #   tag: grafana/grafana:10.2.3 # {"$imagepolicy": "flux-system:grafana"}
