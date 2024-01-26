@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: walnuts-dev-www-redirect
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: walnuts-dev-www-redirect
+  template:
+    metadata:
+      labels:
+        app: walnuts-dev-www-redirect
+    spec:
+      containers:
+        - name: walnuts-dev-www-redirect
+          image: nginx:1.25.3 # {"$imagepolicy": "flux-system:walnuts-dev-www-redirect"}
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/nginx
+              readOnly: true
+              name: walnuts-dev-www-redirect-conf
+            - mountPath: /var/log/nginx
+              name: log
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      volumes:
+        - name: walnuts-dev-www-redirect-conf
+          configMap:
+            name: walnuts-dev-www-redirect-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+              - key: virtualhost.conf
+                path: virtualhost/virtualhost.conf
+        - name: log
+          emptyDir: {}

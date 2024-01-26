@@ -1,17 +1,17 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: walnuts-dev
+  name: walnuts-dev-www-redirect
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: "walnuts.dev"
+    - host: "www.walnuts.dev"
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: "walnuts-dev"
+                name: walnuts-dev-www-redirect
                 port:
-                  number: 3000
+                  number: 80
