@@ -1,0 +1,19 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: walnuts-dev-www-redirect
+spec:
+  image: nginx
+  interval: 2m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: walnuts-dev-www-redirect
+spec:
+  imageRepositoryRef:
+    name: walnuts-dev-www-redirect
+  policy:
+    semver:
+      range: "^1.x.x"

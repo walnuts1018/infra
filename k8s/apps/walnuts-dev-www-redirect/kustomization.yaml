@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: default
+commonLabels:
+  app: walnuts-dev-www-redirect
+resources:
+  - deployment.yaml
+  - ingress.yaml
+  - service.yaml
+configMapGenerator:
+  - name: walnuts-dev-www-redirect-conf
+    files:
+      - nginx.conf
+      - virtualhost.conf
