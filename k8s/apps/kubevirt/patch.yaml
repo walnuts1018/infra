@@ -1,7 +1,3 @@
-apiVersion: kubevirt.io/v1
-kind: KubeVirt
-spec:
-  infra:
-    nodePlacement:
-      nodeSelector:
-        kubernetes.io/hostname: "cake"
+- op: replace
+  path: /spec/infra/nodePlacement/nodeSelector/kubernetes.io~1hostname
+  value: cake
