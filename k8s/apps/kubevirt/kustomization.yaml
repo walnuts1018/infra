@@ -11,5 +11,6 @@ patches:
       kind: KubeVirt
     patch: |-
       - op: add
-        path: "/spec/infra/nodePlacement/nodeSelector/kubernetes.io/hostname"
-        value: "cake"
+        path: "/spec/infra/nodePlacement/nodeSelector"
+        value:
+          kubernetes.io/hostname: "cake"
