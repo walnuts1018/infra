@@ -1,4 +1,4 @@
 - op: add
   path: "/spec/infra/nodePlacement/nodeSelector"
   value:
-    kubernetes.io/hostname: kurumi
+    kubernetes.io/hostname: "kurumi"
