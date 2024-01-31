@@ -1,6 +1,0 @@
-- op: add
-  path: "/spec/infra"
-  value:
-    nodePlacement:
-      nodeSelector:
-        kubernetes.io/hostname: cake
