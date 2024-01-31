@@ -23,7 +23,7 @@
       matchStrings: [
         "https:\\/\\/github\\.com\\/(?<depName>[a-z0-9-]+)\\/releases\\/download\\/(?<currentValue>\\S+)\\/.*\\.yaml\\s*",
       ],
-      datasourceTemplate: "github-releases",
+      datasourceTemplate: "github-tags",
     },
   ],
   packageRules: [
@@ -34,7 +34,7 @@
       automerge: true,
     },
     {
-      matchDatasources: ["github-releases"],
+      matchDatasources: ["github-tags"],
       automerge: false,
     },
   ],
