@@ -13,7 +13,3 @@ patches:
 replicas:
   - name: virt-operator
     count: 1
-  - name: virt-api
-    count: 1
-  - name: virt-controller
-    count: 1
