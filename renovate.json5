@@ -1,13 +1,14 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:base"],
+  extends: ["config:recommended"],
   dependencyDashboard: false,
   timezone: "Asia/Tokyo",
   flux: {
     enabled: false,
   },
-  regexManagers: [
+  customManagers: [
     {
+      customType: "regex",
       fileMatch: ["^k8s/apps/.*/helm-overlay.yaml$"],
       matchStringsStrategy: "combination",
       matchStrings: [
@@ -18,6 +19,7 @@
       datasourceTemplate: "helm",
     },
     {
+      customType: "regex",
       fileMatch: "^k8s/apps/.*/kustomization.yaml$",
       matchStringsStrategy: "any",
       matchStrings: [
