@@ -36,8 +36,10 @@
       automerge: true,
     },
     {
+      matchUpdateTypes: ["patch"],
       matchDatasources: ["github-tags"],
-      automerge: false,
+      matchCurrentVersion: "!/^0/",
+      automerge: true,
     },
   ],
   internalChecksFilter: "none",
