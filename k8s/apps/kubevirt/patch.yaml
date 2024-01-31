@@ -3,4 +3,4 @@
   value:
     nodePlacement:
       nodeSelector:
-        kubernetes.io/hostname: kurumi
+        kubernetes.io/hostname: cake
