@@ -14,5 +14,5 @@ spec:
   chart:
     spec:
       chart: metallb
-      version: 0.14.2
+      version: 0.14.3
   values:
