@@ -1,3 +1,4 @@
 - op: add
-  path: /spec/infra/nodePlacement/nodeSelector/kubernetes.io~1hostname
-  value: cake
+  path: "/spec/infra/nodePlacement/nodeSelector"
+  value:
+    kubernetes.io/hostname: kurumi
