@@ -9,7 +9,6 @@ patches:
       group: kubevirt.io
       version: v1
       kind: KubeVirt
-      name: kubevirt
     patch: |-
       - op: add
         path: "/spec/infra/nodePlacement/nodeSelector/kubernetes.io/hostname"
