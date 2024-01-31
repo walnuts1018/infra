@@ -27,7 +27,7 @@ spec:
       configSecretKey: config-yaml
     replicaCount: 1
     image:
-      tag: "v2.44.0" # {"$imagepolicy": "flux-system:zitadel:tag"}
+      tag: "v2.44.1" # {"$imagepolicy": "flux-system:zitadel:tag"}
     ingress:
       enabled: true
       className: "nginx"
