@@ -25,3 +25,5 @@ jobs:
 
       - name: enable auto merge
         run: gh pr merge --merge --auto "1"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
