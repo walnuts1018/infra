@@ -19,10 +19,6 @@ jobs:
       - name: create pull-request
         run: |
           gh pr create --title "Update image tag ${{ github.event.repository.name }}" --body ":crown: *An automated PR*" --base main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: enable auto merge
-        run: gh pr merge --merge --auto ${{ github.event.pull_request.number }}
+          gh pr merge --merge --auto ${{ github.event.pull_request.number }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
