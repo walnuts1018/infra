@@ -8,6 +8,7 @@ resources:
   - ingress.yaml
   - externalsecret.yaml
   - service.yaml
+  - image-policy.yaml
 configMapGenerator:
   - name: proxmox-webui-conf
     files:

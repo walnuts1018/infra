@@ -21,7 +21,7 @@ spec:
         fsGroupChangePolicy: "OnRootMismatch"
       initContainers:
         - name: misskey-init
-          image: misskey/misskey:2023.12.2 # {"$imagepolicy": "flux-system:misskey"}
+          image: misskey/misskey:2023.12.2 # {"$imagepolicy": "misskey:misskey"}
           imagePullPolicy: IfNotPresent
           command:
             - pnpm
@@ -35,7 +35,7 @@ spec:
               readOnly: true
       containers:
         - name: misskey
-          image: misskey/misskey:2023.12.2 # {"$imagepolicy": "flux-system:misskey"}
+          image: misskey/misskey:2023.12.2 # {"$imagepolicy": "misskey:misskey"}
           imagePullPolicy: IfNotPresent
           tty: true
           ports:
