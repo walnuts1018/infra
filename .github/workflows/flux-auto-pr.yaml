@@ -10,12 +10,25 @@ jobs:
     name: Open PR to main
     runs-on: ubuntu-latest
     steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Set env
+        run: |
+          echo "GH_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
         name: checkout
+        with:
+          token: ${{ env.GH_TOKEN }}
 
       - name: create pull-request
         run: |
           gh pr create --body ":crown: *An automated PR*" --base main --title "Update image tag"
           gh pr merge --merge --auto
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ env.GH_TOKEN }}
