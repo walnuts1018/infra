@@ -18,12 +18,6 @@ jobs:
         shell: bash
         run: 'ls ./k8s/apps/ | while read line; do   echo -e "apiVersion: kustomize.toolkit.fluxcd.io/v1beta2\nkind: Kustomization\nmetadata:\n  name: $line\n  namespace: flux-system\nspec:\n  interval: 10m0s\n  path: ./k8s/apps/$line\n  prune: true\n  sourceRef:\n    kind: GitRepository\n    name: flux-system\n    namespace: flux-system" > ./k8s/_flux/kurumi/$line.yaml  ; done'
 
-      - name: Generate image-update
-        shell: bash
-        run: |
-          shopt -s lastpipe
-          ls ./k8s/apps/**/*image-policy.yaml | while read line; do echo "  - ../../../$line" >> ./k8s/_flux/image-update/kustomization.yaml ; done
-
       - name: push
         run: |
           git config user.name  "github-actions[bot]"

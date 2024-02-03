@@ -5,6 +5,7 @@ resources:
   - service.yaml
   - deployment.yaml
   - ingress.yaml
+  - image-policy.yaml
 configMapGenerator:
   - name: krakend-configmap
     files:
