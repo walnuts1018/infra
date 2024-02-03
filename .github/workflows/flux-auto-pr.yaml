@@ -16,12 +16,12 @@ jobs:
       - uses: peter-evans/create-pull-request@v6
         name: create pull-request
         with:
-          destination_branch: "main"
           title: "Update image tag ${{ github.event.repository.name }}"
           body: ":crown: *An automated PR*"
           commit-message: "Update image tag ${{ github.event.repository.name }}"
           committer: fluxcdbot <fluxcdbot@users.noreply.github.com>
           author: fluxcdbot <fluxcdbot@users.noreply.github.com>
+          branch: "main"
 
       - name: enable auto merge
         run: gh pr merge --merge --auto ${{ github.event.pull_request.number }}
