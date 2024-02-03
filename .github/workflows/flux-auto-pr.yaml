@@ -5,9 +5,6 @@ on:
     branches:
       - "fluxcd/*"
 
-permissions:
-  pull-requests: write
-
 jobs:
   create-pull-request:
     name: Open PR to main
