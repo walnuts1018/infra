@@ -2,7 +2,6 @@ name: k8s CI
 
 on:
   pull_request:
-    branches: [main]
     paths:
       - "k8s/**"
       - ".github/workflows/k8s.yaml"
