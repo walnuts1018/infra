@@ -20,7 +20,7 @@ spec:
     name: flux-system
     namespace: flux-system
   update:
-    path: ./k8s/apps/oekaki-dengon-game-front
+    path: ./k8s/apps/oekaki-dengon-game/front
     strategy: Setters
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2

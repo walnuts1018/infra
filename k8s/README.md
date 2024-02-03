@@ -54,7 +54,7 @@ Kubernetes クラスタに適用される Manifest 群です。
 - postgresql: PostgreSQL
 - redis: Redis
 - samba: Samba
-- tailscale-subnet-router: Tailscale Net に、192.168.0.0/24 を公開
+- tailscale: Tailscale Net に、192.168.0.0/24 を公開
 - vault: シークレット管理システム。Vault に保存されたシークレットは、external-secrets によって Secret として Kubernetes に登録される。
 - victoria-metrics: Prometheus 互換のメトリクス収集サーバー。
 
