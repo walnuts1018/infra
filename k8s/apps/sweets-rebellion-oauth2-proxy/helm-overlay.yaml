@@ -23,7 +23,7 @@ spec:
       existingSecret: sweets-rebellion-oauth2-proxy-secret
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://sweets-rebellion-sweets-rebellion.sweets-rebellion.svc.cluster.local/" ]
+        upstreams = [ "http://sweets-rebellion.sweets-rebellion.svc.cluster.local/" ]
         pass_access_token = true
         user_id_claim = "sub"
         oidc_groups_claim="my:zitadel:grants"

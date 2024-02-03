@@ -5,6 +5,7 @@ resources:
   - deployment.yaml
   - service.yaml
   - pvc.yaml
+  - image-policy.yaml
 configMapGenerator:
   - name: elasticsearch-configmap
     files:
