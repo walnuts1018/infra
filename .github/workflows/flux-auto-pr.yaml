@@ -1,0 +1,23 @@
+name: flux-auto-PR
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "fluxcd/*"
+
+jobs:
+  create-pull-request:
+    name: Open PR to main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: checkout
+
+      - uses: repo-sync/pull-request@v2
+        name: pull-request
+        with:
+          destination_branch: "main"
+          pr_title: "Update image tag ${{ github.event.repository.name }}"
+          pr_body: ":crown: *An automated PR*"
+          pr_reviewer: "walnuts1018"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
