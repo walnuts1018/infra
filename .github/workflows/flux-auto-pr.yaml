@@ -10,15 +10,15 @@ jobs:
     name: Open PR to main
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
-        id: generate_token
-        with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
+      # - uses: actions/create-github-app-token@v1
+      #   id: generate_token
+      #   with:
+      #     app-id: ${{ secrets.APP_ID }}
+      #     private-key: ${{ secrets.PRIVATE_KEY }}
 
-      - name: Set env
-        run: |
-          echo "GH_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
+      # - name: Set env
+      #   run: |
+      #     echo "GH_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v4
         name: checkout
@@ -27,4 +27,6 @@ jobs:
         run: |
           gh pr create --body ":crown: *An automated PR*" --base main --title "Update image tag"
           gh pr merge --merge --auto
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
