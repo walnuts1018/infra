@@ -28,7 +28,7 @@ kind: ImageRepository
 metadata:
   name: openchokin-back
 spec:
-  image: ghcr.io/walnuts1018/openchokin/back
+  image: ghcr.io/walnuts1018/openchokin-back
   interval: 2m0s
   secretRef:
     name: ghcr-login-secret
