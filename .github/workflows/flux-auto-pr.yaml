@@ -24,4 +24,5 @@ jobs:
         run: |
           git config user.name  "fluxcdbot"
           git config user.email "fluxcdbot@users.noreply.github.com"
-          git commit --allow-empty && git push
+          git commit --allow-empty -m "empty commit"
+          git push
