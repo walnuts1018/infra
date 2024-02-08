@@ -23,3 +23,7 @@ spec:
     crds: CreateReplace
     remediation:
       retries: -1
+  upgrade:
+    remediation:
+      retries: 5
+      strategy: rollback
