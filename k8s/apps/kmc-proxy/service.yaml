@@ -15,3 +15,4 @@ spec:
   selector:
     app: kmc-proxy
   type: LoadBalancer
+  loadBalancerIP: "192.168.0.130"
