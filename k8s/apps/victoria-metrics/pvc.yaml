@@ -4,6 +4,7 @@ metadata:
   name: pvc
 spec:
   storageClassName: longhorn
+  volumeName: victoria-metrics
   accessModes:
     - ReadWriteOnce
   resources:
