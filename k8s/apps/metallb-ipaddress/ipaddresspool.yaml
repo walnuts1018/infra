@@ -5,5 +5,5 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-    - 192.168.0.129-192.168.0.142
+    - 192.168.120.0/24
   autoAssign: true
