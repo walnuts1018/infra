@@ -16,11 +16,11 @@ spec:
       serviceAccountName: external-dns
       containers:
         - name: external-dns
-          image: ghcr.io/piny940/external-dns:20240108001410 # {"$imagepolicy": "kube-system:external-dns"}
+          image: ghcr.io/walnuts1018/external-dns:7pkjknkjbk
           args:
             - --source=ingress
             - --domain-filter=walnuts.dev
-            - --provider=cloudflaretunnel
+            - --provider=cloudflare-tunnel
           env:
             - name: CF_API_TOKEN
               valueFrom:
