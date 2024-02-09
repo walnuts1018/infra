@@ -285,18 +285,18 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ## taint
 
 ```bash
-kubectl taint node $HOSTNAME node-role.kubernetes.io/control-plane:NoSchedule-
+kubectl taint node $(hostname) node-role.kubernetes.io/control-plane:NoSchedule-
 ```
 
 ## join
 
-sudo kubeadm init phase upload-certs --upload-certs
-sudo kubeadm token create --print-join-command
+`$sudo kubeadm init phase upload-certs --upload-certs`
+`$sudo kubeadm token create --print-join-command`
 
 ```bash
 sudo kubeadm join 192.168.0.17:16443 --token xxx \
         --discovery-token-ca-cert-hash sha256:xxx \
-        --control-plane --certificate-key xxxx --ignore-preflight-errors=NumCPU --apiserver-advertise-address=100.84.126.71
+        --control-plane --certificate-key xxxx
 ```
 
 ## helm
