@@ -4,6 +4,7 @@ metadata:
   name: pvc
 spec:
   storageClassName: longhorn
+  volumeName: nextcloud
   accessModes:
     - ReadWriteOnce
   resources:
@@ -18,6 +19,7 @@ metadata:
     recurring-job-group.longhorn.io/default: enabled
 spec:
   storageClassName: longhorn-local
+  volumeName: nextcloud-data
   accessModes:
     - ReadWriteOnce
   resources:

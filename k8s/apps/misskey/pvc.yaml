@@ -4,6 +4,7 @@ metadata:
   name: misskey-pvc
 spec:
   storageClassName: longhorn
+  volumeName: misskey
   accessModes:
     - ReadWriteOnce
   resources:
