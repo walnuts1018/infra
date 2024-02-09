@@ -4,6 +4,7 @@ metadata:
   name: pvc
 spec:
   storageClassName: longhorn
+  volumeName: postgresql
   accessModes:
     - ReadWriteOnce
   resources:
