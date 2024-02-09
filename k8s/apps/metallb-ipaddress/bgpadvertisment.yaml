@@ -11,5 +11,4 @@ spec:
   communities:
     - 65535:65282
   aggregationLength: 32
-  aggregationLengthV6: 128
   localPref: 100
