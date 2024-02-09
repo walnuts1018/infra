@@ -40,7 +40,7 @@ spec:
       service:
         enabled: true
         # -- Used by cloud providers to connect the resulting `LoadBalancer` to a pre-existing static IP according to https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
-        loadBalancerIP: "192.168.0.132"
+        loadBalancerIP: "192.168.120.11"
         loadBalancerSourceRanges: []
 
         enableHttp: false
