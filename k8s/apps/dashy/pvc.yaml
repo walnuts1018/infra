@@ -4,6 +4,7 @@ metadata:
   name: dashy
 spec:
   storageClassName: longhorn
+  volumeName: dashy
   accessModes:
     - ReadWriteOnce
   resources:
