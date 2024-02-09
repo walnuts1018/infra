@@ -234,6 +234,8 @@ EOF
 ```
 
 ```bash
+sudo chmod +x /etc/keepalived/*.sh
+
 sudo systemctl enable keepalived
 sudo systemctl start keepalived
 
@@ -257,6 +259,7 @@ kind: KubeletConfiguration
 failSwapOn: false
 featureGates:
   NodeSwap: true
+  AppArmor: false
 memorySwap:
   swapBehavior: UnlimitedSwap" > kubeadm-config.yaml
 
