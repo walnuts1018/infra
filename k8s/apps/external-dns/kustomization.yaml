@@ -7,3 +7,4 @@ resources:
   - clusterrolebinding.yaml
   - deployment.yaml
   - serviceaccount.yaml
+  - image-policy.yaml
