@@ -4,7 +4,6 @@ metadata:
   name: code-server
 spec:
   storageClassName: longhorn
-  volumeName: code-server
   accessModes:
     - ReadWriteOnce
   resources:
