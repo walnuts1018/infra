@@ -334,7 +334,7 @@ echo "[[ /usr/bin/flux ]] && source <(flux completion zsh)" >> ~/.zshrc
 ```
 
 ```bash
-flux bootstrap github --owner=walnuts1018 --repository=infra --branch=deploy --path=./k8s/_flux/kurumi/ --components-extra=image-reflector-controller,image-automation-controller --reconcile --token-auth --personal --ca-file ca.pem
+flux bootstrap github --owner=walnuts1018 --repository=infra --branch=deploy --path=./k8s/_flux/kurumi/ --components-extra=image-reflector-controller,image-automation-controller --reconcile --token-auth --personal
 ```
 
 <!--
