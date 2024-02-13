@@ -19,15 +19,25 @@ spec:
         fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: code-server
-          image: ghcr.io/coder/code-server:4.21.1
+          image: ghcr.io/walnuts1018/code-server-images-golang:bd1eb2cf6047428667e578539bb6fc72f07491b2-13
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           resources: {}
           volumeMounts:
-            - name: home
-              mountPath: /home/coder/
+            - name: config
+              mountPath: /home/coder/.config
+            - name: work
+              mountPath: /home/coder/work
+            - name: local
+              mountPath: /home/coder/.local
       volumes:
-        - name: home
+        - name: config
           persistentVolumeClaim:
-            claimName: code-server
+            claimName: code-server-config
+        - name: work
+          persistentVolumeClaim:
+            claimName: code-server-work
+        - name: local
+          persistentVolumeClaim:
+            claimName: code-server-local
