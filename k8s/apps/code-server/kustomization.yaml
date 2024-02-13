@@ -6,3 +6,4 @@ resources:
   - service.yaml
   - pvc.yaml
   - ingress.yaml
+  - image-policy.yaml
