@@ -22,7 +22,7 @@ spec:
           image: ghcr.io/walnuts1018/code-server-images-golang:bd1eb2cf6047428667e578539bb6fc72f07491b2-13
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - containerPort: 19200
           resources: {}
           volumeMounts:
             - name: config
