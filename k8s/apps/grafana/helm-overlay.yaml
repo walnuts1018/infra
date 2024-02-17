@@ -17,11 +17,11 @@ spec:
   values:
     resources:
       limits:
-        cpu: 200m
-        memory: 200Mi
+        cpu: 500m
+        memory: 800Mi
       requests:
-        cpu: 5m
-        memory: 64Mi
+        cpu: 100m
+        memory: 100Mi
     rbac:
       pspEnabled: false
     testFramework:
