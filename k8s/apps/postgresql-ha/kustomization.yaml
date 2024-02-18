@@ -3,7 +3,6 @@ kind: Kustomization
 namePrefix: postgres-ha-
 namespace: databases
 resources:
-  - pvc.yaml
   - externalsecret.yaml
 components:
   - ../../components/helm
