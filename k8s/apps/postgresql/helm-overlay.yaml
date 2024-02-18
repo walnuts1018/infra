@@ -23,10 +23,10 @@ spec:
         adminPasswordKey: admin-password
         userPasswordKey: user-password
 
-    image:
-      registry: docker.io
-      repository: bitnami/postgresql
-      tag: 15.2.0-debian-11-r13
+    # image:
+    #   registry: docker.io
+    #   repository: bitnami/postgresql
+    #   tag: 15.2.0-debian-11-r13
 
     ## @section PostgreSQL Primary parameters
     primary:
