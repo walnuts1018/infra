@@ -28,3 +28,20 @@ spec:
     service:
       type: LoadBalancer
       loadBalancerIP: "192.168.120.17"
+
+    postgresql:
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1024Mi
+        requests:
+          cpu: 50m
+          memory: 128Mi
+    pgpool:
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1024Mi
+        requests:
+          cpu: 50m
+          memory: 128Mi
