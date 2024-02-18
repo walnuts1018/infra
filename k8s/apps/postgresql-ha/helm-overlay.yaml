@@ -13,7 +13,7 @@ metadata:
 spec:
   chart:
     spec:
-      chart: postgresql
+      chart: postgresql-ha
       version: 14.1.1
   valuesFrom:
     - kind: ConfigMap
