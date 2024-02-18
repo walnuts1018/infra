@@ -15,6 +15,16 @@ spec:
     spec:
       chart: postgresql-ha
       version: 14.1.1
-  valuesFrom:
-    - kind: ConfigMap
-      name: helm-values
+  values:
+    global:
+      storageClass: "longhorn"
+      postgresql:
+        username: "admin"
+        existingSecret: "postgres-ha-secret"
+      pgpool:
+        adminUsername: "admin"
+        existingSecret: "postgres-ha-secret"
+
+    service:
+      type: LoadBalancer
+      loadBalancerIP: "192.168.120.17"
