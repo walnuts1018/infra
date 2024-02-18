@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: postgresql-ha
-      version: 14.1.1
+      version: 13.3.0
   values:
     global:
       storageClass: "longhorn"
