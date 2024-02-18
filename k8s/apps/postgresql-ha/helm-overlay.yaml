@@ -19,7 +19,7 @@ spec:
     global:
       storageClass: "longhorn"
       postgresql:
-        username: "admin"
+        username: "juglans"
         existingSecret: "postgres-ha-secret"
       pgpool:
         adminUsername: "admin"
