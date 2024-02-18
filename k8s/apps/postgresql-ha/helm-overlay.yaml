@@ -22,7 +22,7 @@ spec:
         username: "juglans"
         existingSecret: "postgres-ha-secret"
       pgpool:
-        adminUsername: "postgres"
+        adminUsername: "admin"
         existingSecret: "postgres-ha-secret"
 
     service:
@@ -45,3 +45,4 @@ spec:
         requests:
           cpu: 50m
           memory: 128Mi
+      customUsersSecret: "postgres-ha-secret"
