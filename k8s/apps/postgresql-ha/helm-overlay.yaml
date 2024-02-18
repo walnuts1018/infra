@@ -22,7 +22,7 @@ spec:
         username: "juglans"
         existingSecret: "postgres-ha-secret"
       pgpool:
-        adminUsername: "admin"
+        adminUsername: "postgres"
         existingSecret: "postgres-ha-secret"
 
     service:
