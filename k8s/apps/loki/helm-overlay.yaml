@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: loki
-      version: 5.43.1
+      version: 5.43.2
   values:
     loki:
       auth_enabled: false
