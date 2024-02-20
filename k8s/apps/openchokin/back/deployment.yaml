@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: openchokin-back
-          image: "ghcr.io/walnuts1018/openchokin-back:v0.0.0-80746c45e900497982e1dde3f805e53c9a9d120d-89-amd64" # {"$imagepolicy": "default:openchokin-back"}
+          image: "ghcr.io/walnuts1018/openchokin-back:v0.0.0-26b3e74b65af0a117007eff39d840127618d00cd-90-amd64" # {"$imagepolicy": "default:openchokin-back"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
