@@ -20,7 +20,7 @@ spec:
       containers:
         - name: tailscale
           imagePullPolicy: IfNotPresent
-          image: ghcr.io/tailscale/tailscale:v1.58.2 # {"$imagepolicy": "network-exporter:tailscale"}
+          image: ghcr.io/tailscale/tailscale:v1.61.11 # {"$imagepolicy": "network-exporter:tailscale"}
           env:
             # Store the state in a k8s secret
             - name: TS_KUBE_SECRET
