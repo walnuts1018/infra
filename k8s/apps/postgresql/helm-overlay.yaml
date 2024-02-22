@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: postgresql
-      version: 14.2.1
+      version: 14.2.2
   values:
     auth:
       username: "juglans"
