@@ -48,7 +48,7 @@ spec:
                   name: fitbit-manager-secret
                   key: cookie_secret
             - name: PSQL_ENDPOINT
-              value: "postgres-release-postgresql.databases.svc.cluster.local"
+              value: "postgres-postgresql.databases.svc.cluster.local"
             - name: PSQL_PORT
               value: "5432"
             - name: PSQL_DATABASE
@@ -61,7 +61,7 @@ spec:
                   name: fitbit-manager-secret
                   key: postgres_password
             - name: INFLUXDB_ENDPOINT
-              value: "http://influxdb-release-influxdb2.databases.svc.cluster.local"
+              value: "http://influxdb-influxdb2.databases.svc.cluster.local"
             - name: INFLUXDB_AUTH_TOKEN
               valueFrom:
                 secretKeyRef:
