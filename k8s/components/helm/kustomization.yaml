@@ -5,7 +5,7 @@ patches:
     target:
       group: source.toolkit.fluxcd.io
       kind: HelmRepository
-  - path: helm.yaml
+  - path: helm-release.yaml
     target:
       group: helm.toolkit.fluxcd.io
       kind: HelmRelease
