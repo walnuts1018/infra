@@ -17,7 +17,7 @@ spec:
       version: 6.24.1
   values:
     config:
-      existingSecret: dashy-oauth2-proxy-secret
+      existingSecret: dashy-oauth2-proxy
       configFile: |-
         email_domains = [ "*" ]
         upstreams = [ "http://dashy.default.svc.cluster.local/" ]
@@ -41,11 +41,11 @@ spec:
     sessionStorage:
       type: redis
       redis:
-        existingSecret: "dashy-oauth2-proxy-secret"
+        existingSecret: "dashy-oauth2-proxy"
         passwordKey: "redis-password"
         clientType: "sentinel"
         sentinel:
-          existingSecret: "dashy-oauth2-proxy-secret"
+          existingSecret: "dashy-oauth2-proxy"
           passwordKey: "redis-password"
           masterName: "mymaster"
           connectionUrls: "redis://redis-release.databases.svc.cluster.local:6379,redis://redis-release.databases.svc.cluster.local:26379"

@@ -1,5 +1,0 @@
-nameReference:
-  - kind: HelmRepository
-    fieldSpecs:
-      - path: spec/chart/spec/sourceRef/name
-        kind: HelmRelease

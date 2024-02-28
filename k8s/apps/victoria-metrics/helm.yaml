@@ -2,14 +2,14 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: repo
+  name: victoria-metrics
 spec:
   url: https://victoriametrics.github.io/helm-charts/
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: release
+  name: victoria-metrics
 spec:
   chart:
     spec:
@@ -19,7 +19,7 @@ spec:
     server:
       fullnameOverride: "victoria-metrics-single-server"
       persistentVolume:
-        existingClaim: "victoria-metrics-pvc"
+        existingClaim: "victoria-metrics"
       resources:
         limits:
           cpu: 500m
