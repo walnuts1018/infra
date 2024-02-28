@@ -1,6 +1,5 @@
 nameReference:
   - kind: ConfigMap
-    version: v1
     fieldSpecs:
-      - path: spec/values/extraVolumes[name=custom-templates]/configMap/name
+      - path: spec/values/extraVolumes/configMap/name
         kind: HelmRelease
