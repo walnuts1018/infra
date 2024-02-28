@@ -41,7 +41,7 @@ spec:
                   name: wakatime-to-slack-profile-secret
                   key: cookie-secret
             - name: PSQL_ENDPOINT
-              value: "postgres-postgresql.databases.svc.cluster.local"
+              value: "postgresql.databases.svc.cluster.local"
             - name: PSQL_PORT
               value: "5432"
             - name: PSQL_DATABASE
