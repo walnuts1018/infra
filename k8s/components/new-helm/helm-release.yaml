@@ -1,0 +1,14 @@
+- op: add
+  path: /spec/interval
+  value: 1h
+- op: add
+  path: /spec/install
+  value:
+    crds: CreateReplace
+    remediation:
+      retries: -1
+- op: add
+  path: /spec/chart/spec/sourceRef
+  value:
+    kind: HelmRepository
+    name: invalid
