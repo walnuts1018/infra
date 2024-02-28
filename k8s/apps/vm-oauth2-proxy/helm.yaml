@@ -59,7 +59,7 @@ spec:
           # Redis sentinel master name
           masterName: "mymaster"
           # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
-          connectionUrls: "redis://redis-release.databases.svc.cluster.local:6379,redis://redis-release.databases.svc.cluster.local:26379"
+          connectionUrls: "redis://redis.databases.svc.cluster.local:6379,redis://redis.databases.svc.cluster.local:26379"
 
     metrics:
       enabled: true
