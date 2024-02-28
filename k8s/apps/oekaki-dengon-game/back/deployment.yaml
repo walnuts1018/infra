@@ -40,7 +40,7 @@ spec:
             - name: POSTGRES_DB
               value: oekaki_dengon_game
             - name: POSTGRES_HOST
-              value: "postgres-release-postgresql.databases.svc.cluster.local"
+              value: "postgres-postgresql.databases.svc.cluster.local"
             - name: POSTGRES_PORT
               value: "5432"
             - name: MINIO_ENDPOINT
