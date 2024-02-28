@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: oauth2-proxy
-      version: 6.24.1
+      version: 6.24.2
   values:
     config:
       existingSecret: vm-oauth2-proxy-secret
