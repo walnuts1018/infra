@@ -2,14 +2,14 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: repo
+  name: sweets-rebellion-oauth2-proxy
 spec:
   url: https://oauth2-proxy.github.io/manifests
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: release
+  name: sweets-rebellion-oauth2-proxy
 spec:
   chart:
     spec:
@@ -17,18 +17,18 @@ spec:
       version: 6.24.2
   values:
     config:
-      existingSecret: vm-oauth2-proxy-secret
+      existingSecret: sweets-rebellion-oauth2-proxy
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://victoria-metrics-single-server.monitoring.svc.cluster.local:8428/" ]
+        upstreams = [ "http://sweets-rebellion.sweets-rebellion.svc.cluster.local/" ]
         pass_access_token = true
         user_id_claim = "sub"
         oidc_groups_claim="my:zitadel:grants"
-        allowed_groups = ["237477822715658605:victoria-metrics"]
+        allowed_groups = ["237477822715658605:sweets-rebellion"]
 
     extraArgs:
       provider: oidc
-      redirect-url: https://victoria-metrics.walnuts.dev/oauth2/callback
+      redirect-url: https://sweets-rebellion.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev
       skip-provider-button: true
 
@@ -40,7 +40,7 @@ spec:
       pathType: Prefix
       # Used to create an Ingress record.
       hosts:
-        - "victoria-metrics.walnuts.dev"
+        - "sweets-rebellion.walnuts.dev"
 
     # Configure the session storage type, between cookie and redis
     sessionStorage:
@@ -48,18 +48,33 @@ spec:
       type: redis
       redis:
         # Name of the Kubernetes secret containing the redis & redis sentinel password values (see also `sessionStorage.redis.passwordKey`)
-        existingSecret: "vm-oauth2-proxy-secret"
+        existingSecret: "sweets-rebellion-oauth2-proxy"
         # Key of the Kubernetes secret data containing the redis password value
         passwordKey: "redis-password"
         # Can be one of standalone|cluster|sentinel
         clientType: "sentinel"
         sentinel:
-          existingSecret: "vm-oauth2-proxy-secret"
+          existingSecret: "sweets-rebellion-oauth2-proxy"
           passwordKey: "redis-password"
           # Redis sentinel master name
           masterName: "mymaster"
           # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
           connectionUrls: "redis://redis-release.databases.svc.cluster.local:6379,redis://redis-release.databases.svc.cluster.local:26379"
+
+    # Enables and configure the automatic deployment of the redis subchart
+    redis:
+      # provision an instance of the redis sub-chart
+      enabled: false
+      # Redis specific helm chart settings, please see:
+      # https://github.com/bitnami/charts/tree/master/bitnami/redis#parameters
+      # redisPort: 6379
+      #cluster:
+      #enabled: false
+      #slaveCount: 1
+      image:
+        tag: 7.0.9-debian-11-r6
+      replica:
+        replicaCount: 1
 
     metrics:
       enabled: true

@@ -1,14 +1,14 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: repo
+  name: zitadel
 spec:
   url: https://charts.zitadel.com
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: release
+  name: zitadel
 spec:
   chart:
     spec:
@@ -22,8 +22,8 @@ spec:
           Enabled: false
         ExternalPort: 443
         ExternalSecure: true
-      masterkeySecretName: "zitadel-secret"
-      configSecretName: zitadel-secret
+      masterkeySecretName: "zitadel"
+      configSecretName: zitadel
       configSecretKey: config-yaml
     replicaCount: 1
     image:

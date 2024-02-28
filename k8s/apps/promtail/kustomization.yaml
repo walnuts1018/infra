@@ -1,9 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: monitoring
-namePrefix: promtail-
-resources: []
 components:
   - ../../components/helm
-patchesStrategicMerge:
-  - helm-overlay.yaml
+resources:
+  - helm.yaml

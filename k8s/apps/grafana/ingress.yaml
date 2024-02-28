@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress
+  name: grafana
   namespace: monitoring
 spec:
   ingressClassName: "nginx"
@@ -13,6 +13,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: grafana-release
+                name: grafana
                 port:
                   number: 80

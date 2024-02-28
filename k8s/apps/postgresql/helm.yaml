@@ -2,14 +2,14 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: repo
+  name: postgresql
 spec:
   url: https://charts.bitnami.com/bitnami
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: release
+  name: postgresql
 spec:
   chart:
     spec:
@@ -18,7 +18,7 @@ spec:
   values:
     auth:
       username: "juglans"
-      existingSecret: "postgres-secret"
+      existingSecret: "postgresql"
       secretKeys:
         adminPasswordKey: admin-password
         userPasswordKey: user-password
@@ -36,7 +36,7 @@ spec:
           memory: 256Mi
       persistence:
         enabled: true
-        existingClaim: "postgres-pvc"
+        existingClaim: "postgresql"
       service:
         type: LoadBalancer
         loadBalancerIP: 192.168.120.15

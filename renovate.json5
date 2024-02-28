@@ -9,7 +9,7 @@
   customManagers: [
     {
       customType: "regex",
-      fileMatch: ["^k8s/apps/.*/helm-overlay.yaml$", "^k8s/apps/.*/helm.yaml$"],
+      fileMatch: ["^k8s/apps/.*/helm.yaml$", "^k8s/apps/.*/helm.yaml$"],
       matchStringsStrategy: "combination",
       matchStrings: [
         '  url: "?(?<registryUrl>\\S+)"?\\s*',
