@@ -2,16 +2,16 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: repo
+  name: metallb
 spec:
-  url: https://charts.external-secrets.io
+  url: https://metallb.github.io/metallb
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: release
+  name: metallb
 spec:
   chart:
     spec:
-      chart: external-secrets
-      version: 0.9.13
+      chart: metallb
+      version: 0.14.3

@@ -2,14 +2,14 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
 metadata:
-  name: repo
+  name: nextcloud
 spec:
   url: https://nextcloud.github.io/helm/
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: release
+  name: nextcloud
 spec:
   chart:
     spec:
@@ -56,7 +56,7 @@ spec:
         redis.config.php: false
       existingSecret:
         enabled: true
-        secretName: nextcloud-secret
+        secretName: nextcloud
         usernameKey: admin-username
         passwordKey: admin-password
       datadir: /var/www/html/data
@@ -74,7 +74,7 @@ spec:
         - name: REDIS_HOST_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: nextcloud-secret
+              name: nextcloud
               key: redis-password
         - name: NEXTCLOUD_HOSTNAME
           value: nextcloud.walnuts.dev
@@ -90,7 +90,7 @@ spec:
         - name: SMTP_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: nextcloud-secret
+              name: nextcloud
               key: smtp-password
         - name: MAIL_FROM_ADDRESS
           value: "noreply"
@@ -124,7 +124,7 @@ spec:
       database: nextcloud
       existingSecret:
         enabled: true
-        secretName: nextcloud-secret
+        secretName: nextcloud
         usernameKey: postgres-username
         passwordKey: postgres-password
 
@@ -133,10 +133,10 @@ spec:
 
     persistence:
       enabled: true
-      existingClaim: nextcloud-pvc
+      existingClaim: nextcloud
       nextcloudData:
         enabled: true
-        existingClaim: nextcloud-data-pvc
+        existingClaim: nextcloud-data
     nodeSelector:
       kubernetes.io/hostname: cake
     livenessProbe:
