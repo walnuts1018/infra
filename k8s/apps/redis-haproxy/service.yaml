@@ -15,4 +15,4 @@ spec:
   selector:
     app: redis-haproxy
   type: LoadBalancer
-  loadBalancerIP: 192.168.120.16
+  loadBalancerIP: 192.168.0.132
