@@ -9,6 +9,6 @@ spec:
   peers:
     - default
   communities:
-    - 65535:65281
+    - 65535:65282
   aggregationLength: 32
   localPref: 100
