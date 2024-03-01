@@ -34,7 +34,7 @@ spec:
                   key: TS_AUTH_KEY
                   optional: true
             - name: TS_ROUTES
-              value: "192.168.0.2/31,192.168.0.4/30,192.168.0.8/29,192.168.0.16/28,192.168.0.32/27,192.168.0.64/26,192.168.0.128/25,192.168.120.0/24"
+              value: "192.168.0.2/31,192.168.0.4/30,192.168.0.8/29,192.168.0.16/28,192.168.0.32/27,192.168.0.64/26,192.168.0.128/25"
             - name: TS_EXTRA_ARGS
               value: "--advertise-tags=tag:localserver --snat-subnet-routes=false --accept-routes"
           securityContext:

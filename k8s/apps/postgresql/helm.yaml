@@ -39,4 +39,4 @@ spec:
         existingClaim: "postgresql"
       service:
         type: LoadBalancer
-        loadBalancerIP: 192.168.120.15
+        loadBalancerIP: 192.168.0.131
