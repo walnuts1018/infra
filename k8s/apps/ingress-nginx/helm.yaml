@@ -21,7 +21,7 @@ spec:
         use-forwarded-headers: true
       service:
         enabled: true
-        loadBalancerIP: "192.168.0.128"
+        loadBalancerIP: "192.168.120.11"
         loadBalancerSourceRanges: []
         enableHttp: false
         enableHttps: true

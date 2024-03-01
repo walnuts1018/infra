@@ -12,4 +12,4 @@ spec:
   selector:
     app: machine-status-api
   type: LoadBalancer
-  loadBalancerIP: "192.168.0.130"
+  loadBalancerIP: "192.168.120.14"
