@@ -3,5 +3,4 @@ kind: Kustomization
 namespace: metallb-system
 resources:
   - ipaddresspool.yaml
-  - bgppeer.yaml
-  - bgpadvertisment.yaml
+  - l2advertisment.yaml
