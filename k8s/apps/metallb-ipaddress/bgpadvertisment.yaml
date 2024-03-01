@@ -4,10 +4,10 @@ metadata:
   name: default
   namespace: metallb-system
 spec:
-  ipAddressPools:
-    - default
-  peers:
-    - default
+  # ipAddressPools:
+  #   - default
+  # peers:
+  #   - default
   communities:
     - 65535:65282
   aggregationLength: 32
