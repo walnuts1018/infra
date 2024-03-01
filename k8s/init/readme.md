@@ -70,10 +70,8 @@ sudo apt install -y software-properties-common curl
 ```
 
 ````bash
-curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/prerelease:/main/deb/Release.key |
-    gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/prerelease:/v1.28/deb /" |
-    tee /etc/apt/sources.list.d/cri-o.list
+curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.29/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.29/deb /" | tee /etc/apt/sources.list.d/cri-o.list
 ```
 
 ```bash
@@ -87,9 +85,9 @@ sudo systemctl start crio
 ## k8s 本体
 
 ```bash
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key |
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key |
     gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" |
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" |
     tee /etc/apt/sources.list.d/kubernetes.list
 
 sudo apt update
@@ -217,7 +215,7 @@ vrrp_script maintenance_mode {
 
 vrrp_instance VI_1 {
     state MASTER
-    interface eth0
+    interface eth0 # to be changed
     virtual_router_id 51
     priority 120 # to be changed
     advert_int 1
@@ -233,7 +231,10 @@ vrrp_instance VI_1 {
 EOF
 ```
 
+
+
 ```bash
+sudo useradd keepalived_script
 sudo chmod +x /etc/keepalived/*.sh
 
 sudo systemctl enable keepalived
