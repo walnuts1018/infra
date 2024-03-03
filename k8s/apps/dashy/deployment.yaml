@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
         - name: dashy
-          image: lissy93/dashy:2.1.1 # {"$imagepolicy": "default:dashy"}
+          image: lissy93/dashy:2.1.2 # {"$imagepolicy": "default:dashy"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
