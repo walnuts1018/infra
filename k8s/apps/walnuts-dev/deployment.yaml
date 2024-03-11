@@ -26,10 +26,10 @@ spec:
           env:
             - name: NEXT_PUBLIC_GA_ID
               value: G-NB6F68ZQ9P
-    volumeMounts:
-      - name: walnutsdev-resolv-conf
-        mountPath: /etc/resolv.conf
-        readOnly: true
+          volumeMounts:
+            - name: walnutsdev-resolv-conf
+              mountPath: /etc/resolv.conf
+              readOnly: true
   volumes:
     - name: walnutsdev-resolv-conf
       hostPath:
