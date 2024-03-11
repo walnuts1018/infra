@@ -16,7 +16,7 @@ jobs:
 
       - name: Generate _flux/kurumi Kustomization
         shell: bash
-        run: 'ls ./k8s/apps/ | while read line; do   echo -e "apiVersion: kustomize.toolkit.fluxcd.io/v1beta2\nkind: Kustomization\nmetadata:\n  name: $line\n  namespace: flux-system\nspec:\n  interval: 10m0s\n  path: ./k8s/apps/$line\n  prune: true\n  sourceRef:\n    kind: GitRepository\n    name: flux-system\n    namespace: flux-system" > ./k8s/_flux/kurumi/$line.yaml  ; done'
+        run: 'ls ./k8s/apps/ | while read line; do   echo -e "apiVersion: kustomize.toolkit.fluxcd.io/v1beta2\nkind: Kustomization\nmetadata:\n  name: $line\n  namespace: flux-system\nspec:\n  interval: 1m0s\n  path: ./k8s/apps/$line\n  prune: true\n  sourceRef:\n    kind: GitRepository\n    name: flux-system\n    namespace: flux-system" > ./k8s/_flux/kurumi/$line.yaml  ; done'
 
       - name: push
         run: |
