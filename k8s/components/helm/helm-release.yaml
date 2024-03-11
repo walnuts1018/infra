@@ -1,6 +1,6 @@
 - op: add
   path: /spec/interval
-  value: 1h
+  value: 1m
 - op: add
   path: /spec/install
   value:
