@@ -39,7 +39,5 @@ spec:
     env:
     #  - name: ZITADEL_LOG_LEVEL
     #    value: "debug"
-    nodeSelector:
-      kubernetes.io/hostname: cake
     metrics:
       enabled: true
