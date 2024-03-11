@@ -26,21 +26,4 @@ spec:
           env:
             - name: NEXT_PUBLIC_GA_ID
               value: G-NB6F68ZQ9P
-          volumeMounts:
-            - name: walnutsdev-resolv-conf
-              mountPath: /etc/resolv.conf
-              readOnly: true
-      volumes:
-        - name: walnutsdev-resolv-conf
-          hostPath:
-            path: /etc/resolv.conf
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: walnutsdev-resolv-conf
-data:
-  resolv.conf: |
-    search default.svc.cluster.local svc.cluster.local cluster.local walnuts.dev
-    nameserver 10.96.0.10
-    options ndots:5
+
