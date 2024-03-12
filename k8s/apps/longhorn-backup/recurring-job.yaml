@@ -1,7 +1,7 @@
 apiVersion: longhorn.io/v1beta2
 kind: RecurringJob
 metadata:
-  name: cifs-backup
+  name: default
   namespace: longhorn-system
 spec:
   concurrency: 1
@@ -9,6 +9,6 @@ spec:
   groups: []
   labels:
     automated: "true"
-  name: cifs-backup
+  name: default
   retain: 1
   task: backup
