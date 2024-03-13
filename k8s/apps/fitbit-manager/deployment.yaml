@@ -14,8 +14,6 @@ spec:
       labels:
         app: fitbit-manager
     spec:
-      imagePullSecrets:
-        - name: regcred
       containers:
         - name: fitbit-manager
           image: ghcr.io/walnuts1018/fitbit-manager:0.7.0 # {"$imagepolicy": "default:fitbit-manager"}

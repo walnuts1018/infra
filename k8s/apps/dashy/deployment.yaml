@@ -14,8 +14,6 @@ spec:
       labels:
         app: dashy
     spec:
-      imagePullSecrets:
-        - name: regcred
       containers:
         - name: dashy
           image: lissy93/dashy:2.1.2 # {"$imagepolicy": "default:dashy"}
