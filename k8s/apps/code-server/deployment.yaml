@@ -21,7 +21,7 @@ spec:
         fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: code-server
-          image: ghcr.io/kmc-jp/code-server-images-flutter:d5ae4b145cf498eee8d1ce00bcee30d6be35e031-22 # {"$imagepolicy": "default:code-server"}
+          image: ghcr.io/kmc-jp/code-server-images-flutter:f342baa2ce64ad0376df67c7fa7f61831bc8d051-32 # {"$imagepolicy": "default:code-server"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 19200
