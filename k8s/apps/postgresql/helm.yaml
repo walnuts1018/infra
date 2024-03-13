@@ -31,8 +31,11 @@ spec:
     ## @section PostgreSQL Primary parameters
     primary:
       resources:
-        limits: {}
+        limits:
+          cpu: 1000m
+          memory: 2Gi
         requests:
+          cpu: 100m
           memory: 256Mi
       persistence:
         enabled: true
