@@ -30,6 +30,8 @@ metadata:
 spec:
   image: ghcr.io/kmc-jp/code-server-images-flutter
   interval: 2m0s
+  secretRef:
+    name: ghcr-login-secret
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
