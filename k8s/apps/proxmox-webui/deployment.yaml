@@ -32,7 +32,7 @@ spec:
               memory: 100Mi
             requests:
               cpu: 1m
-              memory: 1Mi
+              memory: 5Mi
       volumes:
         - name: proxmox-webui-conf
           configMap:
