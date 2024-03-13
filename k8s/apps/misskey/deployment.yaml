@@ -57,8 +57,12 @@ spec:
                   name: misskey-secret
                   key: postgres-password
           resources:
-            requests: {}
-            limits: {}
+            requests:
+              cpu: 10m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 1Gi
       volumes:
         - name: misskey-pv
           persistentVolumeClaim:
