@@ -14,8 +14,6 @@ spec:
       labels:
         app: machine-status-api
     spec:
-      imagePullSecrets:
-        - name: regcred
       containers:
         - name: machine-status-api
           image: ghcr.io/walnuts1018/machine-status-api:1.2.0 # {"$imagepolicy": "default:machine-status-api"}

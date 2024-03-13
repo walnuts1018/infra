@@ -14,8 +14,6 @@ spec:
       labels:
         app: hedgedoc
     spec:
-      imagePullSecrets:
-        - name: regcred
       containers:
         - name: hedgedoc
           image: quay.io/hedgedoc/hedgedoc:1.9.9 # {"$imagepolicy": "default:hedgedoc"}

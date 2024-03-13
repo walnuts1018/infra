@@ -15,7 +15,7 @@ spec:
         app: oekaki-dengon-game-front
     spec:
       imagePullSecrets:
-        - name: regcred
+        - name: regcredghcr-login-secret
       containers:
         - name: oekaki-dengon-game-front
           image: ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-b20618a191f132a79c89839640d2a9fd8bb73e3a-86 # {"$imagepolicy": "default:oekaki-dengon-game-front"}

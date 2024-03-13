@@ -14,8 +14,6 @@ spec:
       labels:
         app: wakatime-to-slack-profile
     spec:
-      imagePullSecrets:
-        - name: regcred
       containers:
         - name: wakatime-to-slack-profile
           image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.2.2 # {"$imagepolicy": "default:wakatime-to-slack-profile"}
