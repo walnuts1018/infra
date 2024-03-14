@@ -214,7 +214,7 @@ vrrp_script maintenance_mode {
 }
 
 vrrp_instance VI_1 {
-    state MASTER
+    state MASTER / BACKUP # to be changed
     interface eth0 # to be changed
     virtual_router_id 51
     priority 120 # to be changed
@@ -294,8 +294,16 @@ kubectl taint node $(hostname) node-role.kubernetes.io/control-plane:NoSchedule-
 
 ## join
 
-`$sudo kubeadm init phase upload-certs --upload-certs`
-`$sudo kubeadm token create --print-join-command`
+### Control Plane
+```bash
+echo "sudo" $(sudo kubeadm token create --print-join-command) "--control-plane --certificate-key" $(sudo kubeadm init phase upload-certs --upload-certs | tail -n 1)
+```
+👆を実行
+
+### Worker
+```bash
+echo "sudo" $(sudo kubeadm token create --print-join-command)
+```
 
 ```bash
 sudo kubeadm join 192.168.0.17:16443 --token xxx \
