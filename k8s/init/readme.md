@@ -76,7 +76,7 @@ echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.i
 
 ```bash
 sudo apt update
-sudo apt install -y cri-o cri-o-runc
+sudo apt install -y cri-o
 sudo systemctl daemon-reload
 sudo systemctl enable crio
 sudo systemctl start crio
@@ -324,7 +324,9 @@ echo "[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
 ## longhorn
 
 ```bash
-sudo apt -y install open-iscsi
+sudo apt -y install open-iscsi nfs-common
+sudo systemctl start iscsid
+sudo systemctl enable iscsid
 ```
 
 ## fluxcd
