@@ -21,7 +21,6 @@ spec:
       orphanAutoDeletion: true
       backupTarget: "cifs://samba.walnuts.dev/share/longhorn"
       backupTargetCredentialSecret: "cifs-secret"
-      taintToleration: node-role.kubernetes.io/control-plane:NoSchedule
     csi:
       attacherReplicaCount: 1
       provisionerReplicaCount: 1
