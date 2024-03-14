@@ -21,6 +21,7 @@ spec:
       orphanAutoDeletion: true
       backupTarget: "cifs://samba.walnuts.dev/share/longhorn"
       backupTargetCredentialSecret: "cifs-secret"
+      taintToleration: node-role.kubernetes.io/control-plane:NoSchedule
     csi:
       attacherReplicaCount: 1
       provisionerReplicaCount: 1
@@ -39,3 +40,14 @@ spec:
       replicas: 1
     longhornRecoveryBackend:
       replicas: 1
+
+    longhornManager:
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
+    longhornDriver:
+      tolerations:
+        - key: "node-role.kubernetes.io/control-plane"
+          operator: "Exists"
+          effect: "NoSchedule"
