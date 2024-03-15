@@ -2,6 +2,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: victoria-metrics
+  labels: 
+    recurring-job-group.longhorn.io/default: disabled
 spec:
   storageClassName: longhorn
   volumeName: victoria-metrics
