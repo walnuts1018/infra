@@ -24,3 +24,6 @@ spec:
     configKubernetes:
       # allow user secrets in other namespaces than the Postgres cluster
       enable_cross_namespace_secret: true
+
+    nodeSelector:
+      kubernetes.io/arch: amd64
