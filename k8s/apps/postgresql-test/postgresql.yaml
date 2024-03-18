@@ -7,12 +7,12 @@ spec:
   volume:
     size: 20Gi
     storageClass: longhorn
-    numberOfInstances: 2
-    users:
-      postgres:  # database owner
-      - superuser
-      - createdb
-    # databases:
-    #   foo: zalando  # dbname: owner
-    postgresql:
-      version: "15"
+  numberOfInstances: 2
+  users:
+    postgres:  # database owner
+    - superuser
+    - createdb
+  # databases:
+  #   foo: zalando  # dbname: owner
+  postgresql:
+    version: "15"
