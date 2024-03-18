@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: redis
-      version: 18.19.3
+      version: 18.19.4
   values:
     auth:
       sentinel: true
