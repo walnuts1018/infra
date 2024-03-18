@@ -15,7 +15,7 @@ spec:
         app: code-server
     spec:
       imagePullSecrets:
-        - name: regcredghcr-login-secret
+        - name: ghcr-login-secret
       securityContext:
         fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
