@@ -28,7 +28,7 @@ kind: ImageRepository
 metadata:
   name: code-server
 spec:
-  image: ghcr.io/kmc-jp/code-server-images-flutter
+  image: ghcr.io/kmc-jp/code-server-images-golang
   interval: 2m0s
   secretRef:
     name: ghcr-login-secret
