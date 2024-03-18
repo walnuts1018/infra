@@ -12,7 +12,8 @@ spec:
     postgres:  # database owner
     - superuser
     - createdb
-  # databases:
-  #   foo: zalando  # dbname: owner
+    test: []
+  databases:
+    testdb: test  # dbname: owner
   postgresql:
     version: "15"
