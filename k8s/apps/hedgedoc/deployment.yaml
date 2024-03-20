@@ -28,6 +28,8 @@ spec:
               cpu: 30m
               memory: 100Mi
           env:
+            - name: CMD_LOGLEVEL
+              value: "debug"
             - name: CMD_USECDN
               value: "false"
             - name: CMD_DB_URL
