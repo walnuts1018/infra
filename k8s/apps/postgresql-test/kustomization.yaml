@@ -4,3 +4,4 @@ namespace: databases
 resources:
 - postgresql.yaml
 - ./users/
+- service.yaml
