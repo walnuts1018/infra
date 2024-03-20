@@ -76,7 +76,7 @@ spec:
         password: $__file{/etc/secrets/smtp_password}
       database:
         type: postgres
-        host: postgresql-default.databases.svc.cluster.local
+        host: postgresql.databases.svc.cluster.local
         name: grafana
         user: grafana
         password: $__file{/etc/secrets/postgres_password}
