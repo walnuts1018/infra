@@ -5,3 +5,4 @@ components:
 - ./component/
 resources:
 - users.yaml
+- juggler.yaml
