@@ -2,8 +2,14 @@ apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   name: postgres
+spec:
+  template:
+    type: Opaque
 ---
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   name: juglans
+spec:
+  template:
+    type: Opaque
