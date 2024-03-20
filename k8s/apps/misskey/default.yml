@@ -5,7 +5,7 @@ db:
   port: 5432
   db: misskey
   user: misskey
-  pass: {{ .postgres-password }}
+  pass: {{ .misskeydbpassword }}
 dbReplications: false
 redis:
   host: redis-haproxy.databases.svc.cluster.local
