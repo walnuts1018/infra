@@ -1,7 +1,7 @@
 url: https://misskey.walnuts.dev
 port: 3000
 db:
-  host: postgresql-default.databases.svc.cluster.local
+  host: postgresql.databases.svc.cluster.local
   port: 5432
   db: misskey
   user: misskey
