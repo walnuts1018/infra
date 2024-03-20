@@ -5,4 +5,4 @@ components:
 - ./component/
 resources:
 - users.yaml
-- juglans.yaml
+# - juglans.yaml
