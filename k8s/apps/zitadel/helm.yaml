@@ -49,3 +49,14 @@ spec:
       limits:
         cpu: 500m
         memory: 512Mi 
+
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
