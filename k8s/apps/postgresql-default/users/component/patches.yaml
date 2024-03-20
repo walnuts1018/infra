@@ -16,7 +16,7 @@
             team: default
         data:
           raw_username: "to-be-changed"
-          username: "{{ snakecase .raw_username }}"
+          username: "{{ .raw_username | toString | snakecase }}"
           password: "{{ .password }}"
     data:
     - secretKey: password
