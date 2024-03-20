@@ -24,6 +24,18 @@ spec:
     configKubernetes:
       # allow user secrets in other namespaces than the Postgres cluster
       enable_cross_namespace_secret: true
-
+      # switches pod anti affinity type to `preferredDuringSchedulingIgnoredDuringExecution`
+      pod_antiaffinity_preferred_during_scheduling: true
     nodeSelector:
       kubernetes.io/arch: amd64
+
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64
