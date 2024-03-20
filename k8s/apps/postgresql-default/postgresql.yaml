@@ -15,7 +15,6 @@ spec:
     juglans: []
     fitbit_manager: []
     grafana: []
-    hedgedoc: []
     misskey: []
     nextcloud: []
     oekaki_dengon_game: []
@@ -26,7 +25,6 @@ spec:
     juglans: juglans
     fitbit_manager: fitbit_manager
     grafana: grafana
-    hedgedoc: hedgedoc
     misskey: misskey
     nextcloud: nextcloud
     oekaki_dengon_game: oekaki_dengon_game
