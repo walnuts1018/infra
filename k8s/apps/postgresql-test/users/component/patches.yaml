@@ -12,20 +12,20 @@
       remoteRef:
         key: postgres_passwords
         property: to-be-changed
-# - op: copy
-#   from: /metadata/name
-#   path: /spec/target/name
-# - op: add
-#   path: /spec/template
-#   value:
-#     type: Opaque
-#     metadata:
-#       labels:
-#         application: spilo
-#         cluster-name: default
-#         team: default
-#     data:
-#       username: to-be-changed
+- op: copy
+  from: /metadata/name
+  path: /spec/target/name
+- op: add
+  path: /spec/template
+  value:
+    type: Opaque
+    metadata:
+      labels:
+        application: spilo
+        cluster-name: default
+        team: default
+    data:
+      username: to-be-changed
 # - op: copy
 #   from: /metadata/name
 #   path: /spec/template/data/username
