@@ -43,3 +43,6 @@ spec:
     limits:
       cpu: 1000m
       memory: 2Gi
+  patroni:
+    pg_hba:
+    - host all all 10.244.0.0/16 md5
