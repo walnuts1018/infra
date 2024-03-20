@@ -24,7 +24,7 @@ spec:
         ExternalSecure: true
       masterkeySecretName: "zitadel"
       configSecretName: zitadel
-      configSecretKey: config-yaml
+      configSecretKey: "config.yaml"
     replicaCount: 1
     ingress:
       enabled: true
