@@ -1,0 +1,37 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: default
+spec:
+  teamId: "default"
+  volume:
+    size: 20Gi
+    storageClass: longhorn
+  numberOfInstances: 2
+  users:
+    postgres:  # database owner
+    - superuser
+    - createdb
+    juglans: []
+    fitbit_manager: []
+    grafana: []
+    hedgedoc: []
+    misskey: []
+    nextcloud: []
+    oekaki_dengon_game: []
+    openchokin: []
+    wakatime: []
+  databases:
+    # dbname: owner
+    juglans: juglans
+    fitbit_manager: fitbit_manager
+    grafana: grafana
+    hedgedoc: hedgedoc
+    misskey: misskey
+    nextcloud: nextcloud
+    oekaki_dengon_game: oekaki_dengon_game
+    openchokin: openchokin
+    wakatime_to_slack: wakatime
+    zitadel: postgres
+  postgresql:
+    version: "15"
