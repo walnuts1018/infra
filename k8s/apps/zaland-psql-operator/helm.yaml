@@ -27,3 +27,7 @@ spec:
 
     nodeSelector:
       kubernetes.io/arch: amd64
+    configLoadBalancer:
+      enable_master_load_balancer: true
+
+
