@@ -15,3 +15,6 @@ spec:
     spec:
       chart: postgres-operator-ui
       version: 1.11.0
+  values:
+    nodeSelector:
+      kubernetes.io/arch: amd64
