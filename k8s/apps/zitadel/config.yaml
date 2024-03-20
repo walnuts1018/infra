@@ -1,0 +1,25 @@
+Database:
+  postgres:
+    Host: "postgresql.databases.svc.cluster.local"
+    Port: 5432
+    Database: zitadel
+    MaxOpenConns: 25
+    MaxConnLifetime: 1h
+    MaxConnIdleTime: 5m
+    Options:
+    User:
+      Username: zitadel
+      Password: {{ .zitadeldbpassword }}
+      SSL:
+        Mode: disable
+        RootCert:
+        Cert:
+        Key:
+    Admin:
+      Username: postgres
+      Password: {{ .postgresdbpassword }}
+      SSL:
+        Mode: disable
+        RootCert:
+        Cert:
+        Key:
