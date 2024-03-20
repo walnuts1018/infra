@@ -41,7 +41,7 @@ spec:
       cpu: 100m
       memory: 512Mi
     limits:
-      cpu: 1000m
+      cpu: 2000m
       memory: 2Gi
   patroni:
     pg_hba:
@@ -55,4 +55,4 @@ spec:
     - hostnossl  all             all          all                reject
     - hostssl    all             +zalandos    all                pam
     - hostssl    all             all          all                md5
-    - host       all             all          10.244.0.0/16      md5
+    - host       all             all          10.244.0.0/16      password
