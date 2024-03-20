@@ -21,6 +21,7 @@ spec:
     oekaki_dengon_game: []
     openchokin: []
     wakatime: []
+    zitadel: []
   databases:
     # dbname: owner
     juglans: juglans
@@ -32,7 +33,7 @@ spec:
     oekaki_dengon_game: oekaki_dengon_game
     openchokin: openchokin
     wakatime_to_slack: wakatime
-    zitadel: postgres
+    zitadel: zitadel
   postgresql:
     version: "15"
   resources:
