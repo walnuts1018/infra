@@ -9,7 +9,7 @@ spec:
     storageClass: longhorn
   numberOfInstances: 2
   users:
-    postgres:  # database owner
+    postgres:
     - superuser
     - createdb
     juglans: []
