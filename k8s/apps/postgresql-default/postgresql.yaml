@@ -52,7 +52,6 @@ spec:
     - host       all             all          ::1/128            md5
     - local      replication     standby                         trust
     - hostssl    replication     standby      all                md5
-    - hostnossl  all             all          all                reject
     - hostssl    all             +zalandos    all                pam
     - hostssl    all             all          all                md5
-    - host       all             all          10.244.0.0/16      password
+    - host       all             all          10.244.0.0/16      md5
