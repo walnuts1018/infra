@@ -15,7 +15,8 @@
             cluster-name: default
             team: default
         data:
-          username: to-be-changed
+          raw-username: "to-be-changed"
+          username: "{{ snakecase .raw-username }}"
           password: "{{ .password }}"
     data:
     - secretKey: password
@@ -27,7 +28,7 @@
   path: /spec/target/name
 - op: copy
   from: /metadata/name
-  path: /spec/target/template/data/username
+  path: /spec/target/template/data/raw-username
 - op: copy
   from: /metadata/name
   path: /spec/data/0/remoteRef/property

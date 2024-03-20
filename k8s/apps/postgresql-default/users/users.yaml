@@ -8,10 +8,10 @@ kind: ExternalSecret
 metadata:
   name: juglans
 ---
-# apiVersion: external-secrets.io/v1beta1
-# kind: ExternalSecret
-# metadata:
-#   name: fitbit_manager
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: fitbit-manager
 ---
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -33,10 +33,10 @@ kind: ExternalSecret
 metadata:
   name: nextcloud
 ---
-# apiVersion: external-secrets.io/v1beta1
-# kind: ExternalSecret
-# metadata:
-#   name: oekaki_dengon_game
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: oekaki-dengon-game
 ---
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
