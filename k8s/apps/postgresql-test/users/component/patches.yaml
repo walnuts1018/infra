@@ -16,7 +16,7 @@
             team: default
         data:
           username: to-be-changed
-          password: {{ .password }}
+          password: "{{ .password }}"
     data:
     - secretKey: password
       remoteRef:
