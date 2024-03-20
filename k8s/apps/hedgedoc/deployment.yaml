@@ -25,7 +25,7 @@ spec:
               cpu: 100m
               memory: 300Mi
             requests:
-              cpu: 10m
+              cpu: 30m
               memory: 100Mi
           env:
             - name: CMD_USECDN
