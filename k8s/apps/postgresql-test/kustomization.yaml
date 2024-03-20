@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: databases
 resources:
 - postgresql.yaml
+- ./users/
