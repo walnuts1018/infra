@@ -8,6 +8,7 @@
     target:
       name: to-be-changed
       template:
+        engineVersion: v2
         type: Opaque
         metadata:
           labels:
@@ -16,7 +17,7 @@
             team: default
         data:
           raw_username: "to-be-changed"
-          username: "{{ \".raw_username\" | snakecase }}"
+          username: "{{ .raw_username | toString }}"
           password: "{{ .password }}"
     data:
     - secretKey: password
