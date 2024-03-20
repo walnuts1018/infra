@@ -55,7 +55,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: misskey-secret
-                  key: postgres-password
+                  key: misskeydbpassword
           resources:
             requests:
               cpu: 10m
