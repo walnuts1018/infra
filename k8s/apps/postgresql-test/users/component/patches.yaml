@@ -7,6 +7,15 @@
     refreshInterval: 1m
     target:
       name: to-be-changed
+    template:
+      type: Opaque
+      metadata:
+        labels:
+          application: spilo
+          cluster-name: default
+          team: default
+      data:
+        username: to-be-changed
     data:
     - secretKey: password
       remoteRef:
@@ -15,20 +24,9 @@
 - op: copy
   from: /metadata/name
   path: /spec/target/name
-- op: add
-  path: /spec/template
-  value:
-    type: Opaque
-    metadata:
-      labels:
-        application: spilo
-        cluster-name: default
-        team: default
-    data:
-      username: to-be-changed
 # - op: copy
 #   from: /metadata/name
 #   path: /spec/template/data/username
-# - op: copy
-#   from: /metadata/name
-#   path: /spec/data/0/remoteRef/property
+- op: copy
+  from: /metadata/name
+  path: /spec/data/0/remoteRef/property
