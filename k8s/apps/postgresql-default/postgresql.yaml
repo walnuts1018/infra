@@ -7,7 +7,7 @@ spec:
   volume:
     size: 20Gi
     storageClass: longhorn
-  numberOfInstances: 2
+  numberOfInstances: 3
   users:
     postgres:
     - superuser
