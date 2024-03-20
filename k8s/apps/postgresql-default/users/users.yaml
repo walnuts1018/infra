@@ -21,11 +21,6 @@ metadata:
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: hedgedoc
----
-apiVersion: external-secrets.io/v1beta1
-kind: ExternalSecret
-metadata:
   name: misskey
 ---
 apiVersion: external-secrets.io/v1beta1
