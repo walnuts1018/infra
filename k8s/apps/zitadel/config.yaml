@@ -1,6 +1,6 @@
 Database:
   postgres:
-    Host: "postgresql.databases.svc.cluster.local"
+    Host: "postgresql-default.databases.svc.cluster.local"
     Port: 5432
     Database: zitadel
     MaxOpenConns: 25
