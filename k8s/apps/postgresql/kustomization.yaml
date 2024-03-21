@@ -3,7 +3,3 @@ kind: Kustomization
 namespace: databases
 resources:
   - pvc.yaml
-  - externalsecret.yaml
-  - helm.yaml
-components:
-  - ../../components/helm
