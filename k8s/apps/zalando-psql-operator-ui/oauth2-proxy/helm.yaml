@@ -20,7 +20,7 @@ spec:
       existingSecret: zalando-ui-oauth2-proxy
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://zalando-postgres-operator-ui.databases.svc.cluster.local:8081" ]
+        upstreams = [ "http://zalando-postgres-operator-ui.databases.svc.cluster.local" ]
         pass_access_token = true
         user_id_claim = "sub"
         oidc_groups_claim="my:zitadel:grants"
