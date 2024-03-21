@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "postgres-operator-ui"
+  name: "zalando-postgres-operator-ui"
   labels:
-    name: "postgres-operator-ui"
+    name: "zalando-postgres-operator-ui"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: "postgres-operator-ui"
+      name: "zalando-postgres-operator-ui"
   template:
     metadata:
       labels:
-        name: "postgres-operator-ui"
+        name: "zalando-postgres-operator-ui"
     spec:
-      serviceAccountName: postgres-operator-ui
+      serviceAccountName: zalando-postgres-operator-ui
       containers:
         - name: "service"
           image: registry.opensource.zalan.do/acid/postgres-operator-ui:v1.11.0

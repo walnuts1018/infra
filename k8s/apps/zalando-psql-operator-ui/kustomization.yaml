@@ -5,3 +5,4 @@ resources:
 - deployment.yaml
 - service.yaml
 - ui-service-account-rbac.yaml
+- ./oauth2-proxy

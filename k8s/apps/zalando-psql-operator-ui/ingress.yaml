@@ -1,9 +1,9 @@
 apiVersion: "networking.k8s.io/v1"
 kind: "Ingress"
 metadata:
-  name: "postgres-operator-ui"
+  name: "zalando-postgres-operator-ui"
   labels:
-    application: "postgres-operator-ui"
+    application: "zalando-postgres-operator-ui"
 spec:
   ingressClassName: "nginx"
   rules:
@@ -14,6 +14,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: "postgres-operator-ui"
+                name: "zalando-postgres-operator-ui"
                 port:
                   number: 80
