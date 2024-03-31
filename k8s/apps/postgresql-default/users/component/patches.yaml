@@ -1,0 +1,30 @@
+- op: add
+  path: /spec
+  value:
+    secretStoreRef:
+      name: vault-secretstore
+      kind: ClusterSecretStore
+    refreshInterval: 1m
+    target:
+      name: to-be-changed
+      template:
+        engineVersion: v2
+        type: Opaque
+        metadata:
+          labels:
+            application: spilo
+            cluster-name: default
+            team: default
+        data:
+          password: "{{ .password }}"
+    data:
+    - secretKey: password
+      remoteRef:
+        key: postgres_passwords
+        property: to-be-changed
+- op: copy
+  from: /metadata/name
+  path: /spec/target/name
+- op: copy
+  from: /metadata/name
+  path: /spec/data/0/remoteRef/property

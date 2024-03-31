@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: zitadel
-      version: 7.10.0
+      version: 7.11.0
   values:
     zitadel:
       configmapConfig:
@@ -24,7 +24,7 @@ spec:
         ExternalSecure: true
       masterkeySecretName: "zitadel"
       configSecretName: zitadel
-      configSecretKey: config-yaml
+      configSecretKey: "config.yaml"
     replicaCount: 1
     ingress:
       enabled: true
@@ -49,3 +49,14 @@ spec:
       limits:
         cpu: 500m
         memory: 512Mi 
+
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64

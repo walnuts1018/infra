@@ -1,0 +1,57 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: default
+spec:
+  teamId: "default"
+  volume:
+    size: 20Gi
+    storageClass: longhorn
+  numberOfInstances: 3
+  users:
+    postgres:
+    - superuser
+    - createdb
+    juglans: []
+    fitbit_manager: []
+    grafana: []
+    hedgedoc: []
+    misskey: []
+    nextcloud: []
+    oekaki_dengon_game: []
+    openchokin: []
+    wakatime: []
+    zitadel: []
+  databases:
+    # dbname: owner
+    juglans: juglans
+    fitbit_manager: fitbit_manager
+    grafana: grafana
+    hedgedoc: hedgedoc
+    misskey: misskey
+    nextcloud: nextcloud
+    oekaki_dengon_game: oekaki_dengon_game
+    openchokin: openchokin
+    wakatime_to_slack: wakatime
+    zitadel: zitadel
+  postgresql:
+    version: "15"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+  patroni:
+    pg_hba:
+    - local      all             all                             trust
+    - hostssl    all             +zalandos    127.0.0.1/32       pam
+    - host       all             all          127.0.0.1/32       md5
+    - hostssl    all             +zalandos    ::1/128            pam
+    - host       all             all          ::1/128            md5
+    - local      replication     standby                         trust
+    - hostssl    replication     standby      all                md5
+    - hostssl    all             +zalandos    all                pam
+    - hostssl    all             all          all                md5
+    - host       all             all          10.244.0.0/16      md5

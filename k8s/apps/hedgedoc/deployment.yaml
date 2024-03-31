@@ -22,12 +22,14 @@ spec:
             - containerPort: 3000
           resources:
             limits:
-              cpu: 100m
+              cpu: 200m
               memory: 300Mi
             requests:
-              cpu: 10m
+              cpu: 100m
               memory: 100Mi
           env:
+            - name: CMD_LOGLEVEL
+              value: "debug"
             - name: CMD_USECDN
               value: "false"
             - name: CMD_DB_URL
@@ -95,3 +97,15 @@ spec:
                 secretKeyRef:
                   name: hedgedoc-secret
                   key: session-secret
+          livenessProbe:
+            httpGet:
+              path: /_health
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          startupProbe:
+            httpGet:
+              path: /_health
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 10

@@ -1,0 +1,41 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: zalando-psql-operator
+spec:
+  url: https://opensource.zalando.com/postgres-operator/charts/postgres-operator
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: zalando-psql-operator
+spec:
+  chart:
+    spec:
+      chart: postgres-operator
+      version: 1.11.0
+  values:
+    # general configuration parameters
+    configGeneral:
+      # number of routines the operator spawns to process requests concurrently
+      workers: 8
+
+    configKubernetes:
+      # allow user secrets in other namespaces than the Postgres cluster
+      enable_cross_namespace_secret: true
+      # switches pod anti affinity type to `preferredDuringSchedulingIgnoredDuringExecution`
+      pod_antiaffinity_preferred_during_scheduling: true
+    nodeSelector:
+      kubernetes.io/arch: amd64
+
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                  - amd64

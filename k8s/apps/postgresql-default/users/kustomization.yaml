@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+nameSuffix: .default.credentials.postgresql.acid.zalan.do
+components:
+- ./component/
+resources:
+- users.yaml

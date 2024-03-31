@@ -14,4 +14,4 @@ spec:
   chart:
     spec:
       chart: kube-state-metrics
-      version: 5.16.4
+      version: 5.18.0

@@ -15,17 +15,19 @@ spec:
         app: code-server
     spec:
       imagePullSecrets:
-        - name: regcredghcr-login-secret
+        - name: ghcr-login-secret
       securityContext:
         fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: code-server
-          image: ghcr.io/kmc-jp/code-server-images-flutter:f342baa2ce64ad0376df67c7fa7f61831bc8d051-32 # {"$imagepolicy": "default:code-server"}
+          image: ghcr.io/kmc-jp/code-server-images-golang:f342baa2ce64ad0376df67c7fa7f61831bc8d051-32 # {"$imagepolicy": "default:code-server"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 19200
           resources: {}
+          args:
+            - "--git-clone https://github.com/walnuts1018/http-dump"
           volumeMounts:
             - name: config
               mountPath: /home/coder/.config
@@ -33,6 +35,8 @@ spec:
               mountPath: /home/coder/work
             - name: local
               mountPath: /home/coder/.local
+      nodeSelector:
+        kubernetes.io/arch: amd64
       volumes:
         - name: config
           persistentVolumeClaim:
