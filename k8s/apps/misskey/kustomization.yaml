@@ -8,3 +8,9 @@ resources:
   - externalsecret.yaml
   - ingress.yaml
   - image-policy.yaml
+configMapGenerator:
+  - name: misskey-config
+    files:
+      - default.yml
+generatorOptions:
+  disableNameSuffixHash: true

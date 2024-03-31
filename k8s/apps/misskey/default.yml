@@ -1,0 +1,23 @@
+url: https://misskey.walnuts.dev
+port: 3000
+db:
+  host: postgresql-default.databases.svc.cluster.local
+  port: 5432
+  db: misskey
+  user: misskey
+  pass: {{ .misskeydbpassword }}
+dbReplications: false
+redis:
+  host: redis-haproxy.databases.svc.cluster.local
+  port: 6379
+  pass: {{ .redispassword }}
+  db: 1
+id: 'aidx'
+proxyBypassHosts:
+  - api.deepl.com
+  - api-free.deepl.com
+  - www.recaptcha.net
+  - hcaptcha.com
+  - challenges.cloudflare.com
+proxyRemoteFiles: true
+signToActivityPubGet: true

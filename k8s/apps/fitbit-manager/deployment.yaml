@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: fitbit-manager
-          image: ghcr.io/walnuts1018/fitbit-manager:0.7.0 # {"$imagepolicy": "default:fitbit-manager"}
+          image: ghcr.io/walnuts1018/fitbit-manager:0.8.0 # {"$imagepolicy": "default:fitbit-manager"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -46,7 +46,7 @@ spec:
                   name: fitbit-manager-secret
                   key: cookie_secret
             - name: PSQL_ENDPOINT
-              value: "postgresql.databases.svc.cluster.local"
+              value: "postgresql-default.databases.svc.cluster.local"
             - name: PSQL_PORT
               value: "5432"
             - name: PSQL_DATABASE
