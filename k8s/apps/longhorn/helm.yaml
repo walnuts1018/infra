@@ -22,23 +22,23 @@ spec:
       backupTarget: "cifs://samba.walnuts.dev/share/longhorn"
       backupTargetCredentialSecret: "cifs-secret"
     csi:
-      attacherReplicaCount: 1
-      provisionerReplicaCount: 1
-      resizerReplicaCount: 1
-      snapshotterReplicaCount: 1
+      attacherReplicaCount: 2
+      provisionerReplicaCount: 2
+      resizerReplicaCount: 2
+      snapshotterReplicaCount: 2
     service:
       ui:
         type: ClusterIP
     persistence:
       defaultClassReplicaCount: 2
     longhornUI:
-      replicas: 1
+      replicas: 2
     longhornConversionWebhook:
-      replicas: 1
+      replicas: 2
     longhornAdmissionWebhook:
-      replicas: 1
+      replicas: 2
     longhornRecoveryBackend:
-      replicas: 1
+      replicas: 2
 
     longhornManager:
       tolerations:
