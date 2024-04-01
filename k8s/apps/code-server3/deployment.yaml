@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-server3
+  labels:
+    app: code-server3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: code-server3
+  template:
+    metadata:
+      labels:
+        app: code-server3
+    spec:
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
+      containers:
+        - name: code-server3
+          image: ghcr.io/kmc-jp/code-server-images-golang:f342baa2ce64ad0376df67c7fa7f61831bc8d051-32 # {"$imagepolicy": "default:code-server3"}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 19200
+          resources: {}
+          args:
+            - "--git-clone https://github.com/walnuts1018/http-dump"
+          volumeMounts:
+            - name: config
+              mountPath: /home/coder/.config
+            - name: work
+              mountPath: /home/coder/work
+            - name: local
+              mountPath: /home/coder/.local
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: code-server3-config
+        - name: work
+          persistentVolumeClaim:
+            claimName: code-server3-work
+        - name: local
+          persistentVolumeClaim:
+            claimName: code-server3-local

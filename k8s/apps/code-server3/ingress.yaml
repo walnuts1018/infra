@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: code-server3
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: "code-3.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: code-server3
+                port:
+                  number: 19200

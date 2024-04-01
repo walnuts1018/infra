@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: code-server3
+  labels:
+    app: code-server3
+spec:
+  ports:
+    - name: http
+      port: 19200
+      targetPort: 19200
+  selector:
+    app: code-server3
+  type: ClusterIP
