@@ -27,10 +27,12 @@ spec:
     testFramework:
       enabled: false
     persistence:
-      enabled: true
+      enabled: false
       storageClassName: longhorn
       volumeName: grafana
       size: 1Gi
+      inMemory:
+        enabled: true
     service:
       type: ClusterIP
     admin:
