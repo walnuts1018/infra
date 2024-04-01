@@ -21,7 +21,7 @@ spec:
         fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: code-server2
-          image: ghcr.io/kmc-jp/code-server-images-golang:23421e300188934e99be3e31fac451442234eb00-34 # {"$imagepolicy": "default:code-server2"}
+          image: ghcr.io/kmc-jp/code-server-images-golang:42adab26b3c4050f875683b109834427d203c4b8-36 # {"$imagepolicy": "default:code-server2"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 19200
