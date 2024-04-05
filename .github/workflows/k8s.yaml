@@ -62,6 +62,7 @@ jobs:
       # Helm Diff
       - name: install dependencies
         run: |
+          sudo su
           # Install jq
           wget https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64 -O /usr/bin/jq
           chmod +x /usr/bin/jq
