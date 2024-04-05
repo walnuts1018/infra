@@ -76,11 +76,11 @@ jobs:
 
       - name: HelmReleaseとHelmRepoを抽出
         run: |
-          cat /tmp/manifests-head.yaml |yq '. | select(.kind == "HelmRelease") | sort_keys(.metadata.name .metadata.namespace)' > /tmp/helmreleases-head.json
-          cat /tmp/manifests-head.yaml |yq '. | select(.kind == "HelmRepository") | sort_keys(.metadata.name .metadata.namespace)' > /tmp/helmrepository-head.json
+          cat /tmp/manifests-head.yaml |yq '. | select(.kind == "HelmRelease") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmreleases-head.json
+          cat /tmp/manifests-head.yaml |yq '. | select(.kind == "HelmRepository") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmrepository-head.json
 
-          cat /tmp/manifests-base.yaml |yq '. | select(.kind == "HelmRelease") | sort_keys(.metadata.name .metadata.namespace)' > /tmp/helmreleases-base.json
-          cat /tmp/manifests-base.yaml |yq '. | select(.kind == "HelmRepository") | sort_keys(.metadata.name .metadata.namespace)' > /tmp/helmrepository-base.json
+          cat /tmp/manifests-base.yaml |yq '. | select(.kind == "HelmRelease") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmreleases-base.json
+          cat /tmp/manifests-base.yaml |yq '. | select(.kind == "HelmRepository") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmrepository-base.json
 
       - name: helm repo add
         run: |
@@ -90,7 +90,7 @@ jobs:
           done
 
           # helm repo add base-<.metadata.name-.metadata.namespace> <.spec.url>
-          cat helmrepository-base.json | jq -r '"base" + .metadata.name + "-" + .metadata.namespace + " " + .spec.url' | while read line; do
+          cat /tmp/helmrepository-base.json | jq -r '"base" + .metadata.name + "-" + .metadata.namespace + " " + .spec.url' | while read line; do
             helm repo add $line
           done
 
@@ -98,16 +98,14 @@ jobs:
         run: |
           length = $(cat /tmp/helmreleases-head.json | jq -s length)
           for i in $(seq 0 $length); do
-            rm -f values.json
-            cat /tmp/helmreleases-head.json | jq -rs ".[$i] | .spec.values" | yq -y > values.json
+            cat /tmp/helmreleases-head.json | jq -rs ".[$i] | .spec.values" | tee values.json
             command = $(cat /tmp/helmreleases-head.json | jq -rs "\"helm install \" + .[$i].metadata.name + \" --namespace \" + .[$i].metadata.namespace + \" head-\" + .[$i].spec.chart.spec.sourceRef.name + \"-\" + .[$i].metadata.namespace + \"/\" + .[$i].spec.chart.spec.chart + \" -f values.json --dry-run -o yaml\"")
             eval $command >> /tmp/manifests-head.yaml
           done
 
           length = $(cat /tmp/helmreleases-base.json | jq -s length)
           for i in $(seq 0 $length); do
-            rm -f values.json
-            cat /tmp/helmreleases-base.json | jq -rs ".[$i] | .spec.values" > values.json
+            cat /tmp/helmreleases-base.json | jq -rs ".[$i] | .spec.values" | tee values.json
             command = $(cat /tmp/helmreleases-base.json | jq -rs "\"helm install \" + .[$i].metadata.name + \" --namespace \" + .[$i].metadata.namespace + \" base-\" + .[$i].spec.chart.spec.sourceRef.name + \"-\" + .[$i].metadata.namespace + \"/\" + .[$i].spec.chart.spec.chart + \" -f values.json --dry-run -o yaml\"")
             eval $command >> /tmp/manifests-base.yaml
           done
