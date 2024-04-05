@@ -98,14 +98,14 @@ jobs:
         run: |
           length=$(cat /tmp/helmreleases-head.json | jq -s length)
           for i in $( seq 0 $(($length - 1)) ); do
-            cat /tmp/helmreleases-head.json | jq -rs ".[$i] | .spec.values" | tee values.json
+            cat /tmp/helmreleases-head.json | jq -rs ".[$i] | .spec.values" | tee values.json >> /dev/null
             command=$(cat /tmp/helmreleases-head.json | jq -rs "\"helm template \" + .[$i].metadata.name + \" --namespace \" + .[$i].metadata.namespace + \" head-\" + .[$i].spec.chart.spec.sourceRef.name + \"-\" + .[$i].metadata.namespace + \"/\" + .[$i].spec.chart.spec.chart + \" -f values.json\"")
             eval $command >> /tmp/manifests-head.yaml
           done
 
           length=$(cat /tmp/helmreleases-base.json | jq -s length)
           for i in $( seq 0 $(($length - 1)) ); do
-            cat /tmp/helmreleases-base.json | jq -rs ".[$i] | .spec.values" | tee values.json
+            cat /tmp/helmreleases-base.json | jq -rs ".[$i] | .spec.values" | tee values.json >> /dev/null
             command=$(cat /tmp/helmreleases-base.json | jq -rs "\"helm template \" + .[$i].metadata.name + \" --namespace \" + .[$i].metadata.namespace + \" base-\" + .[$i].spec.chart.spec.sourceRef.name + \"-\" + .[$i].metadata.namespace + \"/\" + .[$i].spec.chart.spec.chart + \" -f values.json\"")
             eval $command >> /tmp/manifests-base.yaml
           done
