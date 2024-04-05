@@ -155,10 +155,10 @@ jobs:
       - name: Set PR number
         id: set_pr_number
         run: |
-          if [ -s "${{ steps.get_pr_number_from_branch.outputs.pr_number }}" ]; then
+          if [ "${{ steps.get_pr_number_from_branch.outputs.pr_number }}" != "" ]; then
             echo "PR number is ${{ steps.get_pr_number_from_branch.outputs.pr_number }}"
             echo "pr_number=${{ steps.get_pr_number_from_branch.outputs.pr_number }}" >> $GITHUB_ENV
-          elif [ -s "${{ steps.get_pr_number_from_event.outputs.pr_number }}" ]; then
+          elif [ "${{ steps.get_pr_number_from_event.outputs.pr_number }}" != "" ]; then
             echo "PR number is ${{ steps.get_pr_number_from_event.outputs.pr_number }}"
             echo "pr_number=${{ steps.get_pr_number_from_event.outputs.pr_number }}" >> $GITHUB_ENV
           else
