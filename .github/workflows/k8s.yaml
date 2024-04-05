@@ -167,7 +167,7 @@ jobs:
 
       # PRへのコメントだけど、issue commentのAPIを使うらしい
       - name: Comment manifest diff to GitHub PR
-        if: steps.set_pr_number.outputs.pr_number != ''
+        if: steps.set_pr_number.outputs.pr_number == ''
         run: |
           cat /tmp/comment.md | jq -Rs '{ "body": . }' | curl --fail \
             -X POST -H 'Accept: application/vnd.github.v3+json' \
