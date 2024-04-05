@@ -59,6 +59,58 @@ jobs:
 
       - run: "mv ${{ steps.base_changed.outputs.manifestsBundle }} /tmp/manifests-head.yaml"
 
+      # Helm Diff
+      - name: install dependencies
+        run: |
+          # Install jq
+          wget https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64 -O /usr/bin/jq
+          chmod +x /usr/bin/jq
+
+          # Install yq
+          wget https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_amd64 -O /usr/bin/yq
+          chmod +x /usr/bin/yq
+
+          # install helm
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+      - name: HelmReleaseとHelmRepoを抽出
+        run: |
+          cat /tmp/manifests-head.yaml |yq --sort-keys '. | select(.kind == "HelmRelease")' > /tmp/helmreleases-head.json
+          cat /tmp/manifests-head.yaml |yq --sort-keys '. | select(.kind == "HelmRepository")' > /tmp/helmrepository-head.json
+
+          cat /tmp/manifests-base.yaml |yq --sort-keys '. | select(.kind == "HelmRelease")' > /tmp/helmreleases-base.json
+          cat /tmp/manifests-base.yaml |yq --sort-keys '. | select(.kind == "HelmRepository")' > /tmp/helmrepository-base.json
+
+      - name: helm repo add
+        run: |
+          # helm repo add head-<.metadata.name-.metadata.namespace> <.spec.url>
+          cat /tmp/helmrepository-head.json | jq -r '"head" + .metadata.name + "-" + .metadata.namespace + " " + .spec.url' | while read line; do
+            helm repo add $line
+          done
+
+          # helm repo add base-<.metadata.name-.metadata.namespace> <.spec.url>
+          cat helmrepository-base.json | jq -r '"base" + .metadata.name + "-" + .metadata.namespace + " " + .spec.url' | while read line; do
+            helm repo add $line
+          done
+
+      - name: helm install --dry-run
+        run: |
+          length = $(cat /tmp/helmreleases-head.json | jq -s length)
+          for i in $(seq 0 $length); do
+            rm -f values.json
+            cat /tmp/helmreleases-head.json | jq -rs ".[$i] | .spec.values" | yq -y > values.json
+            command = $(cat /tmp/helmreleases-head.json | jq -rs "\"helm install \" + .[$i].metadata.name + \" --namespace \" + .[$i].metadata.namespace + \" head-\" + .[$i].spec.chart.spec.sourceRef.name + \"-\" + .[$i].metadata.namespace + \"/\" + .[$i].spec.chart.spec.chart + \" -f values.json --dry-run -o yaml\"")
+            eval $command >> /tmp/manifests-head.yaml
+          done
+
+          length = $(cat /tmp/helmreleases-base.json | jq -s length)
+          for i in $(seq 0 $length); do
+            rm -f values.json
+            cat /tmp/helmreleases-base.json | jq -rs ".[$i] | .spec.values" > values.json
+            command = $(cat /tmp/helmreleases-base.json | jq -rs "\"helm install \" + .[$i].metadata.name + \" --namespace \" + .[$i].metadata.namespace + \" base-\" + .[$i].spec.chart.spec.sourceRef.name + \"-\" + .[$i].metadata.namespace + \"/\" + .[$i].spec.chart.spec.chart + \" -f values.json --dry-run -o yaml\"")
+            eval $command >> /tmp/manifests-base.yaml
+          done
+
       - name: Upload file status_job02.txt as an artifact
         uses: actions/upload-artifact@v4
         with:
@@ -95,7 +147,7 @@ jobs:
           cat /tmp/comment.md | jq -Rs '{ "body": . }' | curl --fail \
             -X POST -H 'Accept: application/vnd.github.v3+json' \
             --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-            https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }}/comments \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/comments \
             -d @-
 
   lint:
