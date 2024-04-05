@@ -130,17 +130,15 @@ jobs:
 
       - name: Build markdown comment with manifest diff
         run: |
-          cat <<EOF > /tmp/comment.md
-          ## Manifest diff
-
+          echo "## Manifest diff
           <details>
+          <summary>Click to expand</summary>
 
           \`\`\`diff
           $(diff -u manifests-base.yaml manifests-head.yaml)
           \`\`\`
 
-          </details>
-          EOF
+          </details>" | tee /tmp/comment.md
 
       # PRへのコメントだけど、issue commentのAPIを使うらしい
       - name: Comment manifest diff to GitHub PR
