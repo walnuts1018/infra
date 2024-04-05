@@ -10,6 +10,7 @@ on:
     paths:
       - "k8s/**"
       - ".github/workflows/k8s.yaml"
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
