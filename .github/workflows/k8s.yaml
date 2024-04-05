@@ -76,11 +76,11 @@ jobs:
 
       - name: HelmReleaseとHelmRepoを抽出
         run: |
-          cat /tmp/manifests-head.yaml |yq --sort-keys '. | select(.kind == "HelmRelease")' > /tmp/helmreleases-head.json
-          cat /tmp/manifests-head.yaml |yq --sort-keys '. | select(.kind == "HelmRepository")' > /tmp/helmrepository-head.json
+          cat /tmp/manifests-head.yaml |yq '. | select(.kind == "HelmRelease") | sort_keys(.metadata.name .metadata.namespace)' > /tmp/helmreleases-head.json
+          cat /tmp/manifests-head.yaml |yq '. | select(.kind == "HelmRepository") | sort_keys(.metadata.name .metadata.namespace)' > /tmp/helmrepository-head.json
 
-          cat /tmp/manifests-base.yaml |yq --sort-keys '. | select(.kind == "HelmRelease")' > /tmp/helmreleases-base.json
-          cat /tmp/manifests-base.yaml |yq --sort-keys '. | select(.kind == "HelmRepository")' > /tmp/helmrepository-base.json
+          cat /tmp/manifests-base.yaml |yq '. | select(.kind == "HelmRelease") | sort_keys(.metadata.name .metadata.namespace)' > /tmp/helmreleases-base.json
+          cat /tmp/manifests-base.yaml |yq '. | select(.kind == "HelmRepository") | sort_keys(.metadata.name .metadata.namespace)' > /tmp/helmrepository-base.json
 
       - name: helm repo add
         run: |
