@@ -143,7 +143,7 @@ jobs:
         id: get_pr_number_from_branch
         run: |
           branch=$(echo ${{ github.ref }} | cut -d'/' -f3)
-          pr_number=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -X GET "https://api.github.com/repos/${{ github.repository }}/pulls?state=open" | jq -r ".[] | select(.head.ref == \"$branch\") | .number")
+          pr_number=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -X GET "https://api.github.com/repos/${{ github.repository }}/pulls?state=open" | jq -r ".[] | select(.head.ref == \"$branch\" or .base.ref == \"$branch\") | .number")
           echo "pr_number=$pr_number" >> $GITHUB_OUTPUT
 
       - name: eventからPR番号を取得
