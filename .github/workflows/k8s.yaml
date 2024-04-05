@@ -76,21 +76,21 @@ jobs:
 
       - name: HelmReleaseとHelmRepoを抽出
         run: |
-          cat /tmp/manifests-head.yaml |yq '. | select(.kind == "HelmRelease") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmreleases-head.json
-          cat /tmp/manifests-head.yaml |yq '. | select(.kind == "HelmRepository") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmrepository-head.json
+          cat /tmp/manifests-head.yaml |yq -j '. | select(.kind == "HelmRelease") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmreleases-head.json
+          cat /tmp/manifests-head.yaml |yq '. | select(.kind == "HelmRepository") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmrepository-head.yaml
 
-          cat /tmp/manifests-base.yaml |yq '. | select(.kind == "HelmRelease") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmreleases-base.json
-          cat /tmp/manifests-base.yaml |yq '. | select(.kind == "HelmRepository") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmrepository-base.json
+          cat /tmp/manifests-base.yaml |yq -j '. | select(.kind == "HelmRelease") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmreleases-base.json
+          cat /tmp/manifests-base.yaml |yq '. | select(.kind == "HelmRepository") | sort_keys(.metadata.name .metadata.namespace)' | tee /tmp/helmrepository-base.yaml
 
       - name: helm repo add
         run: |
           # helm repo add head-<.metadata.name-.metadata.namespace> <.spec.url>
-          cat /tmp/helmrepository-head.json | jq -r '"head" + .metadata.name + "-" + .metadata.namespace + " " + .spec.url' | while read line; do
+          cat /tmp/helmrepository-head.yaml | yq -r '"head" + .metadata.name + "-" + .metadata.namespace + " " + .spec.url' | while read line; do
             helm repo add $line
           done
 
           # helm repo add base-<.metadata.name-.metadata.namespace> <.spec.url>
-          cat /tmp/helmrepository-base.json | jq -r '"base" + .metadata.name + "-" + .metadata.namespace + " " + .spec.url' | while read line; do
+          cat /tmp/helmrepository-base.yaml | yq -r '"base" + .metadata.name + "-" + .metadata.namespace + " " + .spec.url' | while read line; do
             helm repo add $line
           done
 
