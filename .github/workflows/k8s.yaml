@@ -150,17 +150,17 @@ jobs:
         if: github.event_name == 'pull_request'
         id: get_pr_number_from_event
         run: |
-          echo "pr_number=${{ github.event.number }}" >> $GITHUB_ENV
+          echo "pr_number=${{ github.event.number }}" >> $GITHUB_OUTPUT
 
       - name: Set PR number
         id: set_pr_number
         run: |
           if [ "${{ steps.get_pr_number_from_branch.outputs.pr_number }}" != "" ]; then
             echo "PR number is ${{ steps.get_pr_number_from_branch.outputs.pr_number }}"
-            echo "pr_number=${{ steps.get_pr_number_from_branch.outputs.pr_number }}" >> $GITHUB_ENV
+            echo "pr_number=${{ steps.get_pr_number_from_branch.outputs.pr_number }}" >> $GITHUB_OUTPUT
           elif [ "${{ steps.get_pr_number_from_event.outputs.pr_number }}" != "" ]; then
             echo "PR number is ${{ steps.get_pr_number_from_event.outputs.pr_number }}"
-            echo "pr_number=${{ steps.get_pr_number_from_event.outputs.pr_number }}" >> $GITHUB_ENV
+            echo "pr_number=${{ steps.get_pr_number_from_event.outputs.pr_number }}" >> $GITHUB_OUTPUT
           else
             echo "PR number is not found"
           fi
