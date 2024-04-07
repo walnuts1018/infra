@@ -3,7 +3,7 @@ kind: CodeServerDeployment
 metadata:
   labels:
     app.kubernetes.io/name: codeserverdeployment
-  name: codeserverdeployment-sample
+  name: code
 spec:
   replicas: 4
   template:
