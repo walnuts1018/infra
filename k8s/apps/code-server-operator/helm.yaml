@@ -20,4 +20,4 @@ spec:
     manager:
       image:
         repository: walnuts1018/code-server-operator
-        tag: 0.2.2 
+        tag: 0.2.2
