@@ -20,5 +20,5 @@ spec:
     controllerManager:
       manager:
         image:
-          repository: walnuts1018/code-server-operator
+          repository: ghcr.io/walnuts1018/code-server-operator
           tag: 0.2.2
