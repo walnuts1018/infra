@@ -1,0 +1,19 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: code-server-operator
+spec:
+  url: https://walnuts1018.github.io/code-server-operator/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: code-server-operator
+spec:
+  chart:
+    spec:
+      chart: code-server-operator
+      version: 0.2.2
+  values:
+    fullnameOverride: code-server-operator
