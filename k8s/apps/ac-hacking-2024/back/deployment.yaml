@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 2024-ac-hacking-back
+  name: ac-hacking-2024-back
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: 2024-ac-hacking-back
+      app: ac-hacking-2024-back
   template:
     metadata:
       labels:
-        app: 2024-ac-hacking-back
+        app: ac-hacking-2024-back
     spec:
       containers:
-        - name: 2024-ac-hacking-back
-          image: ghcr.io/walnuts1018/2024-ac-hacking:932de43aada8967ab673dc1355c5b45d648aa8b6-9 # {"$imagepolicy": "default:2024-ac-hacking-back"}
+        - name: ac-hacking-2024-back
+          image: ghcr.io/walnuts1018/2024-ac-hacking:932de43aada8967ab673dc1355c5b45d648aa8b6-9 # {"$imagepolicy": "default:ac-hacking-2024-back"}
           ports:
             - containerPort: 80
           resources:
@@ -36,11 +36,11 @@ spec:
             - name: PSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: 2024-ac-hacking-front
+                  name: ac-hacking-2024-front
                   key: postgres_password
             - name: PSQL_SSLMODE
               values: "disable"
             - name: PROXY_PASSWORD
               value: "sukina-souzai-happyo-doragon"
             - name: FRONT_URL
-              values: "http://2024-ac-hacking-front.default.svc.cluster.local:80"
+              values: "http://ac-hacking-2024-front.default.svc.cluster.local:80"

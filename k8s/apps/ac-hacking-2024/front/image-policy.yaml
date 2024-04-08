@@ -1,7 +1,7 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImageUpdateAutomation
 metadata:
-  name: 2024-ac-hacking-back
+  name: ac-hacking-2024-front
 spec:
   git:
     checkout:
@@ -13,31 +13,31 @@ spec:
         name: fluxcdbot
       messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
     push:
-      branch: fluxcd/2024-ac-hacking-back
+      branch: fluxcd/ac-hacking-2024-front
   interval: 1m0s
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   update:
-    path: ./k8s/apps/2024-ac-hacking-back
+    path: ./k8s/apps/ac-hacking-2024-front
     strategy: Setters
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: 2024-ac-hacking-back
+  name: ac-hacking-2024-front
 spec:
-  image: ghcr.io/walnuts1018/2024-ac-hacking
+  image: ghcr.io/walnuts1018/2024-ac-hacking-front
   interval: 2m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: 2024-ac-hacking-back
+  name: ac-hacking-2024-front
 spec:
   imageRepositoryRef:
-    name: 2024-ac-hacking-back
+    name: ac-hacking-2024-front
   policy:
     semver:
       range: "^1.x.x"
