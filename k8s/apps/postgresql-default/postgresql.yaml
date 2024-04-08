@@ -22,6 +22,7 @@ spec:
     openchokin: []
     wakatime: []
     zitadel: []
+    ac_hacking: []
   databases:
     # dbname: owner
     juglans: juglans
@@ -34,6 +35,7 @@ spec:
     openchokin: openchokin
     wakatime_to_slack: wakatime
     zitadel: zitadel
+    ac_hacking: ac_hacking
   postgresql:
     version: "15"
   resources:
