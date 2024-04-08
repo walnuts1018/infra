@@ -24,4 +24,5 @@ spec:
             requests:
               cpu: 0m
               memory: 5Mi
-
+      nodeSelector:
+        kubernetes.io/arch: amd64
