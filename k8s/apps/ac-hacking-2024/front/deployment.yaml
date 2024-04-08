@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 2024-ac-hacking-front
+  name: ac-hacking-2024-front
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: 2024-ac-hacking-front
+      app: ac-hacking-2024-front
   template:
     metadata:
       labels:
-        app: 2024-ac-hacking-front
+        app: ac-hacking-2024-front
     spec:
       containers:
-        - name: 2024-ac-hacking-front
-          image: ghcr.io/walnuts1018/2024-ac-hacking-front:932de43aada8967ab673dc1355c5b45d648aa8b6-9 # {"$imagepolicy": "default:2024-ac-hacking-front"}
+        - name: ac-hacking-2024-front
+          image: ghcr.io/walnuts1018/2024-ac-hacking-front:932de43aada8967ab673dc1355c5b45d648aa8b6-9 # {"$imagepolicy": "default:ac-hacking-2024-front"}
           ports:
             - containerPort: 80
           resources:

@@ -1,10 +1,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: 2024-ac-hacking-front
+  name: ac-hacking-2024-back
 spec:
   selector:
-    app: 2024-ac-hacking-front
+    app: ac-hacking-2024-back
   ports:
     - protocol: TCP
       port: 80
