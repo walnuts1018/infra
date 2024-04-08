@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: 2024-ac-hacking-back
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: "2024-ac-hacking.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blog
+                port:
+                  number: 80

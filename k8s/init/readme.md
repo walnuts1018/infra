@@ -162,13 +162,13 @@ EOF
 cat <<EOF | sudo tee /etc/keepalived/chk_nginx_proc.sh
 #!/usr/bin/bash
 
-timeout 5 curl http://localhost:16443 # to be changed
-status=$?
+timeout 5 curl -k https://localhost:16443 # to be changed
+status=\$?
 
-if [ $status -eq 0 ]; then
+if [ \$status -eq 0 ]; then
   logger "nginx processes are alive."
   exit 0
-elif [ $status -eq 130 ]; then
+elif [ \$status -eq 130 ]; then
   logger "nginx process is hanging up."
   exit 1
 else
