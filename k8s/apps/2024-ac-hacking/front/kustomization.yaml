@@ -5,6 +5,5 @@ commonLabels:
   app: 2024-ac-hacking-front
 resources:
   - deployment.yaml
-  - ingress.yaml
   - service.yaml
   - image-policy.yaml

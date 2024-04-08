@@ -8,3 +8,4 @@ resources:
   - ingress.yaml
   - service.yaml
   - image-policy.yaml
+  - externalsecret.yaml

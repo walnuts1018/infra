@@ -36,7 +36,7 @@ spec:
             - name: PSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: ac-hacking-secret
+                  name: 2024-ac-hacking-front
                   key: postgres_password
             - name: PSQL_SSLMODE
               values: "disable"
