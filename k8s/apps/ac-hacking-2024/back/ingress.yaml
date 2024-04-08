@@ -14,4 +14,4 @@ spec:
               service:
                 name: ac-hacking-2024-back
                 port:
-                  number: 80
+                  number: 8080
