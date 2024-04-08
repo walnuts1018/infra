@@ -26,23 +26,23 @@ spec:
               memory: 5Mi
           env:
             - name: PSQL_HOST
-              values: "postgresql-default.databases.svc.cluster.local"
+              value: "postgresql-default.databases.svc.cluster.local"
             - name: PSQL_PORT
-              values: "5432"
+              value: "5432"
             - name: PSQL_DATABASE
-              values: "ac_hacking"
+              value: "ac_hacking"
             - name: PSQL_USER
-              values: "ac_hacking"
+              value: "ac_hacking"
             - name: PSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: ac-hacking-2024
                   key: postgres_password
             - name: PSQL_SSLMODE
-              values: "disable"
+              value: "disable"
             - name: PROXY_PASSWORD
               value: "sukina-souzai-happyo-doragon"
             - name: FRONT_URL
-              values: "http://ac-hacking-2024-front.default.svc.cluster.local:80"
+              value: "http://ac-hacking-2024-front.default.svc.cluster.local:80"
       nodeSelector:
         kubernetes.io/arch: amd64
