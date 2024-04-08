@@ -16,7 +16,7 @@ spec:
         - name: ac-hacking-2024-back
           image: ghcr.io/walnuts1018/2024-ac-hacking:932de43aada8967ab673dc1355c5b45d648aa8b6-9 # {"$imagepolicy": "default:ac-hacking-2024-back"}
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           resources:
             limits:
               cpu: 1000m
@@ -43,6 +43,6 @@ spec:
             - name: PROXY_PASSWORD
               value: "sukina-souzai-happyo-doragon"
             - name: FRONT_URL
-              value: "http://ac-hacking-2024-front.default.svc.cluster.local:80"
+              value: "http://ac-hacking-2024-front.default.svc.cluster.local:3000"
       nodeSelector:
         kubernetes.io/arch: amd64
