@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: 2024-ac-hacking-back
+spec:
+  selector:
+    app: 2024-ac-hacking-back
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP

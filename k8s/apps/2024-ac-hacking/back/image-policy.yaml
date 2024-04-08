@@ -1,0 +1,43 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: 2024-ac-hacking-back
+spec:
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
+    push:
+      branch: fluxcd/2024-ac-hacking-back
+  interval: 1m0s
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  update:
+    path: ./k8s/apps/2024-ac-hacking-back
+    strategy: Setters
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: 2024-ac-hacking-back
+spec:
+  image: ghcr.io/walnuts1018/2024-ac-hacking
+  interval: 2m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: 2024-ac-hacking-back
+spec:
+  imageRepositoryRef:
+    name: 2024-ac-hacking-back
+  policy:
+    semver:
+      range: "^1.x.x"

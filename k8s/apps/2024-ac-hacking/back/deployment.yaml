@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 2024-ac-hacking-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: 2024-ac-hacking-back
+  template:
+    metadata:
+      labels:
+        app: 2024-ac-hacking-back
+    spec:
+      containers:
+        - name: 2024-ac-hacking-back
+          image: ghcr.io/walnuts1018/2024-ac-hacking:932de43aada8967ab673dc1355c5b45d648aa8b6-9 # {"$imagepolicy": "default:2024-ac-hacking-back"}
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 10m
+              memory: 5Mi
+
