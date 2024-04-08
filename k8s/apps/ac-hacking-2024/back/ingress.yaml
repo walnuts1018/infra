@@ -12,6 +12,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: blog
+                name: ac-hacking-2024-back
                 port:
                   number: 80
