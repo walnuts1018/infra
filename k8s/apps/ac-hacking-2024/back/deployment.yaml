@@ -44,3 +44,5 @@ spec:
               value: "sukina-souzai-happyo-doragon"
             - name: FRONT_URL
               values: "http://ac-hacking-2024-front.default.svc.cluster.local:80"
+      nodeSelector:
+        kubernetes.io/arch: amd64
