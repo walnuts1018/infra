@@ -43,6 +43,6 @@ spec:
             - name: PROXY_PASSWORD
               value: "sukina-souzai-happyo-doragon"
             - name: FRONT_URL
-              value: "http://ac-hacking-2024-front.default.svc.cluster.local:3000"
+              value: "http://ac-hacking-2024-front.ac-hacking-2024.svc.cluster.local:3000"
       nodeSelector:
         kubernetes.io/arch: amd64
