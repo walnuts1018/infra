@@ -4,6 +4,7 @@ namespace: ac-hacking-2024
 resources:
 - back
 - front
+- oauth2-proxy
 labels:
 - includeSelectors: true
   pairs:

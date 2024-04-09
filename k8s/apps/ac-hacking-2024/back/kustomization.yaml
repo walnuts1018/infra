@@ -6,7 +6,6 @@ labels:
     app: ac-hacking-2024-back
 resources:
   - deployment.yaml
-  - ingress.yaml
   - service.yaml
   - image-policy.yaml
   - externalsecret.yaml
