@@ -1,8 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: default
-commonLabels:
-  app: walnuts-dev-www-redirect
+labels:
+- includeSelectors: true
+  pairs:
+    app: walnuts-dev-www-redirect
 resources:
   - deployment.yaml
   - ingress.yaml
