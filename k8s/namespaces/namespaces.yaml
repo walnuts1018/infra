@@ -72,3 +72,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: kubevirt
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ac-hacking-2024
