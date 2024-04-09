@@ -20,7 +20,7 @@ spec:
       existingSecret: ac-hacking-oauth2-proxy
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://ac-hacking-2024-front.ac-hacking-2024.svc.cluster.local:8080" ]
+        upstreams = [ "http://ac-hacking-2024-back.ac-hacking-2024.svc.cluster.local:8080" ]
         pass_access_token = true
         user_id_claim = "sub"
         oidc_groups_claim="my:zitadel:grants"
