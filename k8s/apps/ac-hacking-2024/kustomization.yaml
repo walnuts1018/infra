@@ -5,7 +5,3 @@ resources:
 - back
 - front
 - oauth2-proxy
-labels:
-- includeSelectors: true
-  pairs:
-    app: ac-hacking-2024
