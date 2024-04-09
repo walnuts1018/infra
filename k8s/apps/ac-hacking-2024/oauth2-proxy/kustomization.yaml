@@ -4,4 +4,4 @@ resources:
   - externalsecret.yaml
   - helm.yaml
 components:
-  - ../../components/helm
+  - ../../../components/helm
