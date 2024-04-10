@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: ac-hacking-2024-back
-          image: ghcr.io/walnuts1018/2024-ac-hacking:932de43aada8967ab673dc1355c5b45d648aa8b6-9 # {"$imagepolicy": "ac-hacking-2024:ac-hacking-2024-back"}
+          image: ghcr.io/walnuts1018/2024-ac-hacking:1c4c5593eb14f8656449d2176c177ca20679ef56-10 # {"$imagepolicy": "ac-hacking-2024:ac-hacking-2024-back"}
           ports:
             - containerPort: 8080
           resources:
