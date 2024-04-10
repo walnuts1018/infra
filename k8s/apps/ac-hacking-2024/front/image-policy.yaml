@@ -40,4 +40,4 @@ spec:
     name: ac-hacking-2024-front
   policy:
     semver:
-      range: "^1.x.x"
+      range: "^0.x.x"
