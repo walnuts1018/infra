@@ -38,6 +38,9 @@ metadata:
 spec:
   imageRepositoryRef:
     name: ac-hacking-2024-back
+  filterTags:
+    pattern: "[a-f0-9]+-(?P<ts>[0-9]+)"
+    extract: "$ts"
   policy:
-    semver:
-      range: "^0.x.x"
+    numerical:
+      order: asc
