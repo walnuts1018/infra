@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: oauth2-proxy
-      version: 7.1.0
+      version: 7.4.1
   values:
     config:
       existingSecret: dashy-oauth2-proxy
