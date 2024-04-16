@@ -1,14 +1,15 @@
-apiVersion: cs.walnuts.dev/v1alpha1
+apiVersion: cs.walnuts.dev/v1alpha2
 kind: CodeServerDeployment
 metadata:
   labels:
     app.kubernetes.io/name: codebox
-  name: codebox-line2
+  name: codebox-line
 spec:
-  replicas: 15
+  replicas: 1
   template:
     spec:
       storageSize: 3Gi
+      initCommand: "cd work && go mod download"
       initPlugins:
         git:
           repourl: "github.com/walnuts1018/2024-golang-linebot"
@@ -18,7 +19,7 @@ spec:
       envs:
         - name: LANGUAGE_DEFAULT
           value: "ja"
-      image: "ghcr.io/kmc-jp/code-server-images-golang:f1c334c052db29dab859b4b333d3262819ab3421-44" # {"$imagepolicy": "code-server:codebox-policy"}
+      image: "ghcr.io/kmc-jp/code-server-images-golang:f1c334c052db29dab859b4b333d3262819ab3421-44" 
       imagePullSecrets:
         - name: ghcr-login-secret
       domain: "walnuts.dev"
