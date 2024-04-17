@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: walnuts-dev-www-redirect
-          image: nginx:1.25.4 # {"$imagepolicy": "default:walnuts-dev-www-redirect"}
+          image: nginx:1.25.5 # {"$imagepolicy": "default:walnuts-dev-www-redirect"}
           ports:
             - containerPort: 80
           volumeMounts:
