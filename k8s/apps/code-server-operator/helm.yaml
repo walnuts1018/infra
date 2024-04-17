@@ -14,6 +14,6 @@ spec:
   chart:
     spec:
       chart: code-server-operator
-      version: 0.5.4
+      version: 0.5.5
   values:
     fullnameOverride: code-server-operator
