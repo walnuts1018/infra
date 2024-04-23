@@ -3,7 +3,7 @@ kind: CodeServerDeployment
 metadata:
   labels:
     app.kubernetes.io/name: codebox
-  name: moneyforward-bak
+  name: codebox-moneyforward-bak
 spec:
   replicas: 5
   template:
