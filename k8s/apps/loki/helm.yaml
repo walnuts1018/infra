@@ -27,3 +27,9 @@ spec:
       replicas: 1
       persistence:
         storageClass: longhorn
+    write:
+      replicas: 0
+    read:
+      replicas: 0
+    backend:
+      replicas: 0
