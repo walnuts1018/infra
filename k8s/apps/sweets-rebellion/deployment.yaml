@@ -44,3 +44,4 @@ spec:
                 path: default.conf
         - name: log
           emptyDir: {}
+      priorityClassName: low
