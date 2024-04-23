@@ -41,3 +41,4 @@ spec:
                 path: virtualhost/virtualhost.conf
         - name: log
           emptyDir: {}
+      priorityClassName: high

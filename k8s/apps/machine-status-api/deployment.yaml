@@ -45,5 +45,6 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "100m"
+      priorityClassName: high
       nodeSelector:
         kubernetes.io/hostname: snow

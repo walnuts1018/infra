@@ -75,3 +75,4 @@ spec:
             items:
               - key: emoji.json
                 path: emoji.json
+      priorityClassName: low
