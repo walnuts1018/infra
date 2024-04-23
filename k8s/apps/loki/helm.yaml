@@ -16,6 +16,7 @@ spec:
       chart: loki
       version: 6.3.4
   values:
+    deploymentMode: "SingleBinary"
     loki:
       auth_enabled: false
       commonConfig:
