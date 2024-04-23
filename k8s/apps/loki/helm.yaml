@@ -16,13 +16,13 @@ spec:
       chart: loki
       version: 6.3.4
   values:
-    deploymentMode: "SingleBinary"
+    deploymentMode: SingleBinary
     loki:
       auth_enabled: false
       commonConfig:
         replication_factor: 1
       storage:
-        type: "filesystem"
+        type: filesystem
     singleBinary:
       replicas: 1
       persistence:
