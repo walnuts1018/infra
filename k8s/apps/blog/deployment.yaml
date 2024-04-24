@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: blog
-          image: nginx:1.25.5 # {"$imagepolicy": "default:blog"}
+          image: nginx:1.26.0 # {"$imagepolicy": "default:blog"}
           ports:
             - containerPort: 80
           volumeMounts:
