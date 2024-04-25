@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: y-2024
+spec:
+  selector:
+    app: y-2024
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP

@@ -23,6 +23,7 @@ spec:
     wakatime: []
     zitadel: []
     ac_hacking: []
+    y: []
   databases:
     # dbname: owner
     juglans: juglans
@@ -36,6 +37,7 @@ spec:
     wakatime_to_slack: wakatime
     zitadel: zitadel
     ac_hacking: ac_hacking
+    y: y
   postgresql:
     version: "15"
   resources:
