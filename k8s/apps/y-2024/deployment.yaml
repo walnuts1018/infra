@@ -31,9 +31,9 @@ spec:
             - name: PSQL_PORT
               value: "5432"
             - name: PSQL_DATABASE
-              value: "y"
+              value: "y_2024"
             - name: PSQL_USER
-              value: "y"
+              value: "y_2024"
             - name: PSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
