@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/name: codebox
   name: codebox-moneyforward-bak
 spec:
-  replicas: 5
+  replicas: 20
   template:
     spec:
       storageSize: 3Gi
