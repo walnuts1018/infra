@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: y-2024
-          image: ghcr.io/walnuts1018/2024-y:d0ad46d340d53cc515b9cdc735caf53184a8e9c0-3 # {"$imagepolicy": "default:y-2024"}
+          image: ghcr.io/walnuts1018/2024-y:c5fed4064372a5094e38592c44a7a5db330723d7-7 # {"$imagepolicy": "default:y-2024"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
