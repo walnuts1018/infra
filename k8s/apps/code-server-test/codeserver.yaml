@@ -10,7 +10,7 @@ spec:
     spec:
       storageSize: 3Gi
       storageClassName: local-path
-      initCommand: "npm install"
+      initCommand: 'cd work && export NVM_DIR="$HOME/.nvm && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && npm install'
       initPlugins:
         git:
           repourl: "github.com/walnuts1018/2024-y"
