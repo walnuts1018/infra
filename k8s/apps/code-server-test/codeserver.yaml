@@ -14,7 +14,7 @@ spec:
       initPlugins:
         git:
           repourl: "github.com/walnuts1018/2024-y"
-          branch: "main"
+          branch: "frontend"
         copyDefaultConfig: {}
         copyHome: {}
       envs:
