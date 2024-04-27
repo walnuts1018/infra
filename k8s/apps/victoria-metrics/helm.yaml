@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: victoria-metrics-single
-      version: 0.9.18
+      version: 0.9.19
   values:
     server:
       fullnameOverride: "victoria-metrics-single-server"
