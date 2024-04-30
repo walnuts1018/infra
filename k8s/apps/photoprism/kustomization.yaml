@@ -6,5 +6,4 @@ resources:
   - service.yaml
   - ingress.yaml
   - statefulset.yaml
-  - pvc.yaml
   - ./mariadb
