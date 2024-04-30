@@ -28,7 +28,7 @@ spec:
         # Load database DSN & admin password from secret
         envFrom:
         - secretRef:
-            name: photoprism-secrets
+            name: photoprism
             optional: false
         ports:
         - containerPort: 2342
