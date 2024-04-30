@@ -56,7 +56,7 @@ spec:
       volumes:
       - name: originals
         hostPath:
-          path: /mnt/data/share/photoprism
+          path: /mnt/data/share/CameraRoll
           type: Directory
       - name: import
         persistentVolumeClaim:
