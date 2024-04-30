@@ -25,18 +25,6 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: photoprism-storage
-spec:
-  storageClassName: longhorn
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 16Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
   name: photoprism-storage2
 spec:
   storageClassName: longhorn
