@@ -1,9 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: default
+namespace: code-server
 resources:
-  - deployment.yaml
-  - service.yaml
-  - pvc.yaml
-  - ingress.yaml
-  - image-policy.yaml
+  - codeserver.yaml
+  - network-policy.yaml
