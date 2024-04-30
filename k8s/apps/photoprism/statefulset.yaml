@@ -53,6 +53,8 @@ spec:
           name: import
         - mountPath: /photoprism/storage
           name: storage
+        - mountPath: /photoprism/storage/cache-new
+          name: cache
         readinessProbe:
           httpGet:
             path: /api/v1/status
@@ -65,6 +67,9 @@ spec:
       - name: import
         persistentVolumeClaim:
             claimName: photoprism-import
+      - name: cache
+        persistentVolumeClaim:
+            claimName: photoprism-cache
       - name: storage
         persistentVolumeClaim:
             claimName: photoprism-storage
