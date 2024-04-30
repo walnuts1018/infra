@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - externalsecret.yaml
   - helm.yaml
+  - pvc.yaml
 components:
   - ../../../components/helm
 

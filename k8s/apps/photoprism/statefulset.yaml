@@ -46,14 +46,16 @@ spec:
             port: http
       volumes:
       - name: originals
-        nfs:
-          path: /originals
-          server: my.nas.host
+        hostPath:
+          path: /mnt/data/share/photoprism/originals
+          type: Directory
       - name: import
-        nfs:
-          path: /import
-          server: my.nas.host
+        hostPath:
+          path: /mnt/data/share/photoprism/import
+          type: Directory
       - name: storage
-        nfs:
-          path: /storage
-          server: my.nas.host
+        hostPath:
+          path: /mnt/data/share/photoprism/storage
+          type: Directory
+      nodeSelector:
+        kubernetes.io/hostname: cake
