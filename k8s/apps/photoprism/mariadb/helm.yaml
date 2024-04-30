@@ -1,0 +1,39 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: mariadb
+spec:
+  url: https://charts.bitnami.com/bitnami
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: mariadb
+spec:
+  chart:
+    spec:
+      chart: mariadb
+      version: 18.0.2
+  values:
+    auth:
+      database: photoprism
+      username: "photoprism"
+      replicationUser: replicator
+      existingSecret: "photoprism-mariadb"
+    primary:
+      persistence:
+        enabled: true
+        existingClaim: "photoprism-mariadb"
+        storageClass: "longhorn"
+        size: 8Gi
+      service:
+        type: LoadBalancer
+        loadBalancerIP: "192.168.0.135"
+    secondary:
+      persistence:
+        enabled: true
+        storageClass: "longhorn"
+        size: 8Gi
+      service:
+        type: ClusterIP

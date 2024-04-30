@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: photoprism
+spec:
+  selector:
+    matchLabels:
+      app: photoprism
+  serviceName: photoprism
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: photoprism
+    spec:
+      containers:
+      - name: photoprism
+        image: photoprism/photoprism:latest
+        env:
+        - name: PHOTOPRISM_DEBUG
+          value: "true"
+        - name: PHOTOPRISM_DATABASE_DRIVER
+          value: mysql
+        - name: PHOTOPRISM_HTTP_HOST
+          value: 0.0.0.0
+        - name: PHOTOPRISM_HTTP_PORT
+          value: "2342"
+        # Load database DSN & admin password from secret
+        envFrom:
+        - secretRef:
+            name: photoprism-secrets
+            optional: false
+        ports:
+        - containerPort: 2342
+          name: http
+        volumeMounts:
+        - mountPath: /photoprism/originals
+          name: originals
+        - mountPath: /photoprism/import
+          name: import
+        - mountPath: /photoprism/storage
+          name: storage
+        readinessProbe:
+          httpGet:
+            path: /api/v1/status
+            port: http
+      volumes:
+      - name: originals
+        nfs:
+          path: /originals
+          server: my.nas.host
+      - name: import
+        nfs:
+          path: /import
+          server: my.nas.host
+      - name: storage
+        nfs:
+          path: /storage
+          server: my.nas.host
