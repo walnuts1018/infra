@@ -56,15 +56,13 @@ spec:
       volumes:
       - name: originals
         hostPath:
-          path: /mnt/data/share/photoprism/originals
+          path: /mnt/data/share/photoprism
           type: Directory
       - name: import
-        hostPath:
-          path: /mnt/data/share/photoprism/import
-          type: Directory
+        persistentVolumeClaim:
+            claimName: photoprism-import
       - name: storage
-        hostPath:
-          path: /mnt/data/share/photoprism/storage
-          type: Directory
+        persistentVolumeClaim:
+            claimName: photoprism-storage
       nodeSelector:
         kubernetes.io/hostname: cake
