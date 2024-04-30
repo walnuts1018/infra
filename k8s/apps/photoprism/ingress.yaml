@@ -5,6 +5,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: 4G
   name: photoprism
 spec:
+  ingressClassName: "nginx"
   rules:
   - host: photoprism.walnuts.dev
     http:
