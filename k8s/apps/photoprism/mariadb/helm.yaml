@@ -33,6 +33,7 @@ spec:
     secondary:
       persistence:
         enabled: true
+        existingClaim: "photoprism-mariadb-secondary"
         storageClass: "longhorn"
         size: 8Gi
       service:
