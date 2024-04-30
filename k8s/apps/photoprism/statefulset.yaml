@@ -53,6 +53,8 @@ spec:
           name: import
         - mountPath: /photoprism/storage
           name: storage
+        - mountPath: /photoprism/storage2
+          name: storage2
         - mountPath: /photoprism/storage/cache-new
           name: cache
         readinessProbe:
@@ -73,5 +75,8 @@ spec:
       - name: storage
         persistentVolumeClaim:
             claimName: photoprism-storage
+      - name: storage2
+        persistentVolumeClaim:
+            claimName: photoprism-storage2
       nodeSelector:
         kubernetes.io/hostname: cake
