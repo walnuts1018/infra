@@ -55,6 +55,7 @@ spec:
             port: http
       volumes:
       - name: originals
+        readOnly: true
         hostPath:
           path: /mnt/data/share/CameraRoll
           type: Directory
