@@ -16,6 +16,8 @@ spec:
       containers:
       - name: photoprism
         image: photoprism/photoprism:240420
+        command:
+        - "sleep infinity"
         resources:
           requests:
             cpu: 100m
