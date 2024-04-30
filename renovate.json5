@@ -44,8 +44,8 @@
     },
   ],
   internalChecksFilter: "none",
-  // schedule: ["before 11am on saturday"],
-  // automergeSchedule: ["after 7am and before 11am on saturday"],
-  // updateNotScheduled: false,
-  // prHourlyLimit: 0,
+  schedule: ["before 11am on saturday"],
+  automergeSchedule: ["after 7am and before 11am on saturday"],
+  updateNotScheduled: false,
+  prHourlyLimit: 0,
 }
