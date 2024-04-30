@@ -16,6 +16,13 @@ spec:
       containers:
       - name: photoprism
         image: photoprism/photoprism:latest
+        resources:
+          requests:
+            cpu: 100m
+            memory: 2Gi
+          limits:
+            cpu: "2"
+            memory: 4Gi
         env:
         - name: PHOTOPRISM_DEBUG
           value: "true"
@@ -25,6 +32,8 @@ spec:
           value: 0.0.0.0
         - name: PHOTOPRISM_HTTP_PORT
           value: "2342"
+        - name: PHOTOPRISM_ADMIN_USER
+          value: photoprism
         # Load database DSN & admin password from secret
         envFrom:
         - secretRef:
