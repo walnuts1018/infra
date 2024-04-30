@@ -48,4 +48,6 @@
   automergeSchedule: ["after 7am and before 11am on saturday"],
   updateNotScheduled: false,
   prHourlyLimit: 0,
+  prConcurrentLimit: 100,
+  platformAutomerge: false,
 }
