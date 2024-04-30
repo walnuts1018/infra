@@ -16,8 +16,6 @@ spec:
       containers:
       - name: photoprism
         image: photoprism/photoprism:240420
-        command:
-        - "sleep infinity"
         resources:
           requests:
             cpu: 100m
@@ -55,9 +53,7 @@ spec:
           name: import
         - mountPath: /photoprism/storage
           name: storage
-        - mountPath: /photoprism/storage2
-          name: storage2
-        - mountPath: /photoprism/storage/cache-new
+        - mountPath: /photoprism/storage/cache
           name: cache
         readinessProbe:
           httpGet:
@@ -75,9 +71,6 @@ spec:
         persistentVolumeClaim:
             claimName: photoprism-cache
       - name: storage
-        persistentVolumeClaim:
-            claimName: photoprism-storage
-      - name: storage2
         persistentVolumeClaim:
             claimName: photoprism-storage2
       nodeSelector:
