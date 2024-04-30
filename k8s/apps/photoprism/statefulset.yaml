@@ -24,8 +24,8 @@ spec:
             cpu: "2"
             memory: 4Gi
         env:
-        - name: PHOTOPRISM_DEBUG
-          value: "true"
+        # - name: PHOTOPRISM_DEBUG
+        #   value: "true"
         - name: PHOTOPRISM_DATABASE_DRIVER
           value: mysql
         - name: PHOTOPRISM_HTTP_HOST
