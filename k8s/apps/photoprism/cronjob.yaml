@@ -4,6 +4,8 @@ metadata:
   name: photoprism
 spec:
   schedule: "*/10 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 12000
   jobTemplate:
     spec:
       template:
@@ -15,6 +17,7 @@ spec:
             command:
             - photoprism
             - index
+            - "--cleanup"
             resources:
               requests:
                 cpu: 100m
@@ -51,10 +54,6 @@ spec:
               name: storage
             - mountPath: /photoprism/storage/cache
               name: cache
-            readinessProbe:
-              httpGet:
-                path: /api/v1/status
-                port: http
           volumes:
           - name: originals
             hostPath:
