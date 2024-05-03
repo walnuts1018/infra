@@ -7,4 +7,5 @@ resources:
   - ingress.yaml
   - statefulset.yaml
   - pvc.yaml
+  - cronjob.yaml
   - ./mariadb
