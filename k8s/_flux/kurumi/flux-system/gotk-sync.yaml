@@ -11,7 +11,7 @@ spec:
     branch: deploy
   secretRef:
     name: flux-system
-  url: https://github.com/walnuts1018/infra.git
+  url: ssh://git@github.com/walnuts1018/infra
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization

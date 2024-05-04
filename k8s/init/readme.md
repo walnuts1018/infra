@@ -231,8 +231,6 @@ vrrp_instance VI_1 {
 EOF
 ```
 
-
-
 ```bash
 sudo useradd keepalived_script
 sudo chmod +x /etc/keepalived/*.sh
@@ -295,12 +293,15 @@ kubectl taint node $(hostname) node-role.kubernetes.io/control-plane:NoSchedule-
 ## join
 
 ### Control Plane
+
 ```bash
 echo "sudo" $(sudo kubeadm token create --print-join-command) "--control-plane --certificate-key" $(sudo kubeadm init phase upload-certs --upload-certs | tail -n 1)
 ```
-👆を実行
+
+👆 を実行
 
 ### Worker
+
 ```bash
 echo "sudo" $(sudo kubeadm token create --print-join-command)
 ```
@@ -345,7 +346,7 @@ echo "[[ /usr/bin/flux ]] && source <(flux completion zsh)" >> ~/.zshrc
 ```
 
 ```bash
-flux bootstrap github --owner=walnuts1018 --repository=infra --branch=deploy --path=./k8s/_flux/kurumi/ --components-extra=image-reflector-controller,image-automation-controller --reconcile --token-auth --personal
+flux bootstrap github --owner=walnuts1018 --repository=infra --branch=deploy --path=./k8s/_flux/kurumi/ --components-extra=image-reflector-controller,image-automation-controller --reconcile --ssh-key-algorithm=ed25519 --read-write-key=true
 ```
 
 <!--
