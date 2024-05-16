@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: krakend
-          image: devopsfaith/krakend:2.6.2 # {"$imagepolicy": "krakend-system:krakend"}
+          image: devopsfaith/krakend:2.6.3 # {"$imagepolicy": "krakend-system:krakend"}
           ports:
             - containerPort: 8080
           imagePullPolicy: IfNotPresent
