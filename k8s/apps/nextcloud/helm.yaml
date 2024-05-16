@@ -20,7 +20,7 @@ spec:
       enabled: true
       className: nginx
       annotations:
-        nginx.ingress.kubernetes.io/proxy-body-size: 4G
+        nginx.ingress.kubernetes.io/proxy-body-size: 128G
         # nginx.ingress.kubernetes.io/server-snippet: |-
         #   server_tokens off;
         #   proxy_hide_header X-Powered-By;
