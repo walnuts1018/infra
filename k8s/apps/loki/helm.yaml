@@ -16,20 +16,29 @@ spec:
       chart: loki
       version: 6.5.0
   values:
-    # deploymentMode: SingleBinary
-    # loki:
-    #   auth_enabled: false
-    #   commonConfig:
-    #     replication_factor: 1
-    #   storage:
-    #     type: filesystem
-    # singleBinary:
-    #   replicas: 1
-    #   persistence:
-    #     storageClass: longhorn
-    # write:
-    #   replicas: 0
-    # read:
-    #   replicas: 0
-    # backend:
-    #   replicas: 0
+    deploymentMode: SingleBinary
+    loki:
+      auth_enabled: false
+      commonConfig:
+        replication_factor: 1
+      storage:
+        type: filesystem
+      schemaConfig:
+        configs:
+        - from: 2024-01-01
+          store: tsdb
+          index:
+            prefix: loki_index_
+            period: 24h
+          object_store: filesystem
+          schema: v13
+    singleBinary:
+      replicas: 1
+      persistence:
+        storageClass: longhorn
+    write:
+      replicas: 0
+    read:
+      replicas: 0
+    backend:
+      replicas: 0
