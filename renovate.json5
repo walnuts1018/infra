@@ -3,6 +3,7 @@
   extends: ["config:recommended"],
   dependencyDashboard: false,
   timezone: "Asia/Tokyo",
+  minimumReleaseAge: "8 days",
   flux: {
     enabled: false,
   },
@@ -49,5 +50,4 @@
   updateNotScheduled: false,
   prHourlyLimit: 0,
   prConcurrentLimit: 100,
-  platformAutomerge: false,
 }
