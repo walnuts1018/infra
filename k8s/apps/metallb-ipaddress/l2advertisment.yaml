@@ -4,7 +4,7 @@ metadata:
   name: default-cake
   namespace: metallb-system
 spec:
-  nodeSelector:
+  nodeSelectors:
   - kubernetes.io/hostname: cake
   interfaces:
   - enp2s0
@@ -15,7 +15,7 @@ metadata:
   name: default-donut
   namespace: metallb-system
 spec:
-  nodeSelector:
+  nodeSelectors:
   - kubernetes.io/hostname: donut
   interfaces:
   - vlanbr0
@@ -26,7 +26,7 @@ metadata:
   name: default-snow
   namespace: metallb-system
 spec:
-  nodeSelector:
+  nodeSelectors:
   - kubernetes.io/hostname: snow
   interfaces:
   - eth0
