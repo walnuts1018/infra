@@ -1,35 +1,5 @@
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
 metadata:
-  name: default-cake
+  name: default
   namespace: metallb-system
-spec:
-  nodeSelectors:
-  - matchLabels:
-      kubernetes.io/hostname: cake
-  interfaces:
-  - enp2s0
----
-apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
-metadata:
-  name: default-donut
-  namespace: metallb-system
-spec:
-  nodeSelectors:
-  - matchLabels:
-      kubernetes.io/hostname: donut
-  interfaces:
-  - vlanbr0
----
-apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
-metadata:
-  name: default-snow
-  namespace: metallb-system
-spec:
-  nodeSelectors:
-  - matchLabels:
-      kubernetes.io/hostname: snow
-  interfaces:
-  - eth0
