@@ -3,6 +3,7 @@
   extends: ["config:recommended"],
   dependencyDashboard: false,
   timezone: "Asia/Tokyo",
+  minimumReleaseAge: "8 days",
   flux: {
     enabled: false,
   },
