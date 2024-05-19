@@ -50,5 +50,4 @@
   updateNotScheduled: false,
   prHourlyLimit: 0,
   prConcurrentLimit: 100,
-  platformAutomerge: false,
 }
