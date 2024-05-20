@@ -14,7 +14,7 @@ spec:
       initPlugins:
         git:
           repourl: "github.com/walnuts1018/http-dump"
-          branch: "frontend"
+          branch: "master"
         copyDefaultConfig: {}
         copyHome: {}
       envs:
