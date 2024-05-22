@@ -57,8 +57,8 @@ spec:
               cpu: 100m
               memory: 100Mi
             limits:
-              cpu: 500m
-              memory: 500Mi
+              cpu: "2"
+              memory: 1Gi
       volumes:
         - name: archivebox-data
           persistentVolumeClaim:
