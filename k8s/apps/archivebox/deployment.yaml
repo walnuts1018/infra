@@ -14,9 +14,6 @@ spec:
       labels:
         app: archivebox
     spec:
-      securityContext:
-        fsGroup: 991
-        fsGroupChangePolicy: "OnRootMismatch"
       initContainers:
         - name: archivebox-init
           image: archivebox/archivebox:0.7.2 # {"$imagepolicy": "archivebox:archivebox"}
