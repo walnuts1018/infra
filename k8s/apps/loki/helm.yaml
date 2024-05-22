@@ -23,6 +23,15 @@ spec:
         replication_factor: 1
       storage:
         type: filesystem
+      schemaConfig:
+        configs:
+        - from: '2024-01-01'
+          store: tsdb
+          index:
+            prefix: loki_index_
+            period: 24h
+          object_store: filesystem
+          schema: v13
     singleBinary:
       replicas: 1
       persistence:
