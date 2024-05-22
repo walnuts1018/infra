@@ -18,8 +18,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
+
       - name: Setup Flux CLI
         uses: fluxcd/flux2/action@main
+
       - name: Check for updates
         id: update
         run: |
@@ -29,10 +31,18 @@ jobs:
 
           VERSION="$(flux -v)"
           echo "flux_version=$VERSION" >> $GITHUB_OUTPUT
+
+      # secrets.GITHUB_TOKENでpushすると、他のActionsがトリガーされない
+      - uses: actions/create-github-app-token@v1
+        id: generate_token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
           branch: update-flux
           commit-message: Update to ${{ steps.update.outputs.flux_version }}
           title: Update to ${{ steps.update.outputs.flux_version }}
