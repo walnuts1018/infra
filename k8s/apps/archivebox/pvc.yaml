@@ -4,7 +4,7 @@ metadata:
   name: archivebox
 spec:
   storageClassName: longhorn
-  volumeName: archivebox
+  # volumeName: archivebox
   accessModes:
     - ReadWriteOnce
   resources:
