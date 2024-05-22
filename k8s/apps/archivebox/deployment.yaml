@@ -17,13 +17,13 @@ spec:
       securityContext:
         runAsUser: 911
         runAsGroup: 911
-        fsGroup: 911
       initContainers:
         - name: archivebox-init
           image: archivebox/archivebox:0.7.2 # {"$imagepolicy": "archivebox:archivebox"}
           imagePullPolicy: IfNotPresent
           args:
             - init
+            - "--setup"
           volumeMounts:
             - name: archivebox-data
               mountPath: /data
