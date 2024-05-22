@@ -21,7 +21,9 @@ spec:
       username: "photoprism"
       replicationUser: replicator
       existingSecret: "photoprism-mariadb"
+    architecture: standalone
     primary:
+      name:
       persistence:
         enabled: true
         existingClaim: "photoprism-mariadb"
@@ -31,12 +33,14 @@ spec:
         type: LoadBalancer
         loadBalancerIP: "192.168.0.135"
       resourcesPreset: "medium"
-    secondary:
-      persistence:
-        enabled: true
-        existingClaim: "photoprism-mariadb-secondary"
-        storageClass: "longhorn"
-        size: 8Gi
-      service:
-        type: ClusterIP
-      resourcesPreset: "medium"
+
+    # when architecture is set to "replication" the following values are required
+    # secondary:
+    #   persistence:
+    #     enabled: true
+    #     existingClaim: "photoprism-mariadb-secondary"
+    #     storageClass: "longhorn"
+    #     size: 8Gi
+    #   service:
+    #     type: ClusterIP
+    #   resourcesPreset: "medium"
