@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fess
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fess
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: fess
+    spec:
+      containers:
+        - name: fess
+          image: ghcr.io/codelibs/fess:14.13.0 # {"$imagepolicy": "archivebox:fess"}
+          imagePullPolicy: IfNotPresent
+          args: ["server"]
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+              name: http
+          resources: {}
+          env:
+            - name: SEARCH_ENGINE_HTTP_URL
+              value: http://elasticsearch.databases.svc.cluster.local:9200
