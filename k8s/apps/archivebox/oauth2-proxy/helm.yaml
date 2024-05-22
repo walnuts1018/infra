@@ -20,7 +20,7 @@ spec:
       existingSecret: archivebox-oauth2-proxy
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://archivebox.default.svc.cluster.local:80" ]
+        upstreams = [ "http://archivebox.archivebox.svc.cluster.local:80" ]
         pass_access_token = true
         user_id_claim = "sub"
         oidc_groups_claim="my:zitadel:grants"
