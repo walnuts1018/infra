@@ -113,10 +113,12 @@ keepalived --version
 
 ```bash
 cat <<EOF | sudo tee /etc/nginx/nginx.conf
-user www-data;
-worker_processes auto;
-pid /run/nginx.pid;
-include /etc/nginx/modules-enabled/*.conf;
+user  nginx;
+worker_processes  auto;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
+
 
 events {
     worker_connections  1024;
@@ -137,18 +139,23 @@ stream {
 }
 
 http {
-    sendfile on;
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
 
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
 
-    access_log /var/log/nginx/access.log;
-    error_log /var/log/nginx/error.log;
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
 
     keepalive_timeout  65;
 
+    #gzip  on;
+
     include /etc/nginx/conf.d/*.conf;
-    include /etc/nginx/sites-enabled/*;
 }
 EOF
 ```
