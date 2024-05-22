@@ -30,7 +30,7 @@ jobs:
           version: 1.66.4
 
       - name: gen svg
-        uses: walnuts1018/k8s-badge@v1.1.2
+        uses: walnuts1018/k8s-badge@v1
         timeout-minutes: 5
         with:
           kubeconfig: ${{ secrets.Kubeconfig }}
