@@ -20,7 +20,6 @@ spec:
           imagePullPolicy: IfNotPresent
           args:
             - init
-            - "--setup"
           volumeMounts:
             - name: archivebox-data
               mountPath: /data
