@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: archivebox
+  name: fess
   labels:
-    app: archivebox
+    app: fess
 spec:
   ports:
     - port: 80
       protocol: TCP
       targetPort: 8000
   selector:
-    app: archivebox
+    app: fess
   type: ClusterIP
