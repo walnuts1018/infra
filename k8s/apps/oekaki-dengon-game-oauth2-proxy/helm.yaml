@@ -14,7 +14,7 @@ spec:
   chart:
     spec:
       chart: oauth2-proxy
-      version: 7.5.3
+      version: 7.5.4
   values:
     config:
       existingSecret: oekaki-oauth2-proxy
