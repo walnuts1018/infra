@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: archivebox-init
-          image: archivebox/archivebox:0.7.2 # {"$imagepolicy": "archivebox:archivebox"}
+          image: archivebox/archivebox:0.7.4 # {"$imagepolicy": "archivebox:archivebox"}
           imagePullPolicy: IfNotPresent
           args: ["init"]
           volumeMounts:
@@ -24,7 +24,7 @@ spec:
               mountPath: /data
       containers:
         - name: archivebox
-          image: archivebox/archivebox:0.7.2 # {"$imagepolicy": "archivebox:archivebox"}
+          image: archivebox/archivebox:0.7.4 # {"$imagepolicy": "archivebox:archivebox"}
           imagePullPolicy: IfNotPresent
           args: ["server"]
           ports:
