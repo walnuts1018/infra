@@ -2,6 +2,9 @@ name: update-flux
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/update-flux.yaml
   schedule:
     - cron: "0 * * * *"
 
@@ -21,6 +24,7 @@ jobs:
         id: update
         run: |
           flux install \
+            --components-extra=image-reflector-controller,image-automation-controller \
             --export > ./k8s/_flux/kurumi/flux-system/gotk-components.yaml
 
           VERSION="$(flux -v)"
