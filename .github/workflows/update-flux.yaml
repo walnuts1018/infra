@@ -3,6 +3,8 @@ name: update-flux
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - .github/workflows/update-flux.yaml
   schedule:
