@@ -24,22 +24,22 @@ spec:
           volumeMounts:
             - name: archivebox-data
               mountPath: /data
-        - name: archivebox-config
-          image: archivebox/archivebox:0.7.2 # {"$imagepolicy": "archivebox:archivebox"}
-          imagePullPolicy: IfNotPresent
-          command:
-            - sh
-            - -c
-            - |
-              archivebox config --set PUBLIC_ADD_VIEW=True;
-              archivebox config --set PUBLIC_SNAPSHOTS=True;
-              archivebox config --set PUBLIC_INDEX=True;
-          securityContext:
-            runAsUser: 911
-            runAsGroup: 911
-          volumeMounts:
-            - name: archivebox-data
-              mountPath: /data
+        # - name: archivebox-config
+        #   image: archivebox/archivebox:0.7.2 # {"$imagepolicy": "archivebox:archivebox"}
+        #   imagePullPolicy: IfNotPresent
+        #   command:
+        #     - sh
+        #     - -c
+        #     - |
+        #       archivebox config --set PUBLIC_ADD_VIEW=True;
+        #       archivebox config --set PUBLIC_SNAPSHOTS=True;
+        #       archivebox config --set PUBLIC_INDEX=True;
+        #   securityContext:
+        #     runAsUser: 911
+        #     runAsGroup: 911
+        #   volumeMounts:
+        #     - name: archivebox-data
+        #       mountPath: /data
       containers:
         - name: archivebox
           image: archivebox/archivebox:0.7.2 # {"$imagepolicy": "archivebox:archivebox"}
