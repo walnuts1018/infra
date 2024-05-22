@@ -18,7 +18,9 @@ spec:
         - name: archivebox-init
           image: archivebox/archivebox:0.7.4 # {"$imagepolicy": "archivebox:archivebox"}
           imagePullPolicy: IfNotPresent
-          args: ["init"]
+          args:
+            - init
+            - "--setup"
           volumeMounts:
             - name: archivebox-data
               mountPath: /data
