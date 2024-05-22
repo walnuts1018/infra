@@ -5,4 +5,4 @@ resources:
   - deployment.yaml
   - service.yaml
   - image-policy.yaml
-  - ./oauth2-proxy
+  # - ./oauth2-proxy
