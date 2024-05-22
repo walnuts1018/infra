@@ -27,7 +27,7 @@ jobs:
           oauth-secret: ${{secrets.TAILSCALE_SECRET}}
           tags: "tag:github"
           args: "--accept-routes"
-          version: 1.64.0
+          version: 1.66.4
 
       - name: gen svg
         uses: walnuts1018/k8s-badge@v1.1.2
