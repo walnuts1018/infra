@@ -17,6 +17,7 @@ while [ $(date +%s) -lt $end ]; do
     if [ $? -eq 0 ]; then
         break
     fi
+    sleep 60 #[s]
 done
 
 if [ $(date +%s) -ge $end ]; then
