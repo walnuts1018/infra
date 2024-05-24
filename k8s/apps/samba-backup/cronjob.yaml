@@ -28,6 +28,7 @@ spec:
               - name: samba-backup-script
                 mountPath: /
                 readOnly: true
+                subPath: entrypoint.sh
               - name: samba-local-dir
                 mountPath: /samba-share
               - name: samba-id-ed25519
