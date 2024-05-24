@@ -36,7 +36,7 @@ DATE_SUFFIX=$(date +%Y-%m-%d_%Hh%Mm%Ss)
 DATEDIR="$DISTDIR/tmp-backup-$DATE_SUFFIX"
 echo "New backup dir: $DATEDIR"
 
-mkdir $DATEDIR
+ssh $alice_ip mkdir $DATEDIR
 rsync -avh --link-dest="$LATEST_BACKUP_DIR" --exclude='$RECYCLE.BIN' /samba-share "$alice_ip:$DATEDIR"
 
 if [ $? -ne 0 ]; then
