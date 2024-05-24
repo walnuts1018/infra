@@ -7,7 +7,7 @@ apt-get install rsync ssh -y
 timeout=60*60*12 #12時間
 alice_ip=root@192.168.0.11
 
-sudo chmod 600 /root/.ssh/id_ed25519
+chmod 600 /root/.ssh/id_ed25519
 
 # aliceが起動するまで待つ
 now=$(date +%s)
