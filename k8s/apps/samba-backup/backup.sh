@@ -24,6 +24,9 @@ if [ $(date +%s) -ge $end ]; then
     exit 1
 fi
 
+# for k8s liveness probe
+touch /tmp/healthy
+
 # aliceが起動したらrsyncでバックアップを取る
 DISTDIR="/mnt/HDD1TB/smb-backup"
 LATEST_BACKUP_DIR=$(ssh $alice_ip "ls -d $DISTDIR/*/ | grep "/backup-" | tail -n 1")
