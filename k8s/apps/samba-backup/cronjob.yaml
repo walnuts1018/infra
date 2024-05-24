@@ -1,0 +1,51 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: samba-backup
+spec:
+  schedule: "0 3 * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 120
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: samba-backup
+            image: debian:12.5 # {"$imagepolicy": "default:samba-backup"}
+            command:
+            - sh
+            - /entrypoint.sh
+            resources:
+              requests:
+                cpu: 100m
+                memory: 500Mi
+              limits:
+                cpu: "1"
+                memory: 2Gi
+            volumeMounts:
+              - name: samba-backup-script
+                mountPath: /
+                readOnly: true
+              - name: samba-local-dir
+                mountPath: /samba-share
+              - name: samba-id-ed25519
+                mountPath: /root/.ssh/id_ed25519
+                subPath: id_ed25519
+          volumes:
+            - name: samba-backup-script
+              configMap:
+                name: samba-backup-script
+                items:
+                  - key: entrypoint.sh
+                    path: entrypoint.sh
+            - name: samba-local-dir
+              hostPath:
+                path: /mnt/data/share
+                type: Directory
+            - name: samba-id-ed25519
+              secret:
+                secretName: samba-backup-secret
+          nodeSelector:
+            kubernetes.io/hostname: cake
