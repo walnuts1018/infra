@@ -27,7 +27,6 @@ spec:
             volumeMounts:
               - name: samba-backup-script
                 mountPath: /backup.sh
-                readOnly: true
                 subPath: backup.sh
               - name: samba-local-dir
                 mountPath: /samba-share
