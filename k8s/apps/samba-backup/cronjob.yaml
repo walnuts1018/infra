@@ -23,6 +23,11 @@ spec:
                   secretKeyRef:
                     name: samba-backup-secret
                     key: id_ed25519
+            readinessProbe:
+              exec:
+                command:
+                - cat
+                - /tmp/healthy
             resources:
               requests:
                 cpu: 100m
