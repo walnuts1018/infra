@@ -12,7 +12,7 @@ apt-get install rsync ssh -y
 now=$(date +%s)
 end=$(($now + $timeout))
 while [ $(date +%s) -lt $end ]; do
-    ssh $alice_ip exit
+    ssh $alice_ip exit -o "StrictHostKeyChecking no"
     if [ $? -eq 0 ]; then
         break
     fi
