@@ -16,7 +16,7 @@ spec:
             image: debian:12.5 # {"$imagepolicy": "default:samba-backup"}
             command:
             - sh
-            - /entrypoint.sh
+            - /backup.sh
             resources:
               requests:
                 cpu: 100m
@@ -26,9 +26,9 @@ spec:
                 memory: 2Gi
             volumeMounts:
               - name: samba-backup-script
-                mountPath: /
+                mountPath: /backup.sh
                 readOnly: true
-                subPath: entrypoint.sh
+                subPath: backup.sh
               - name: samba-local-dir
                 mountPath: /samba-share
               - name: samba-id-ed25519
@@ -39,8 +39,8 @@ spec:
               configMap:
                 name: samba-backup-script
                 items:
-                  - key: entrypoint.sh
-                    path: entrypoint.sh
+                  - key: backup.sh
+                    path: backup.sh
             - name: samba-local-dir
               hostPath:
                 path: /mnt/data/share

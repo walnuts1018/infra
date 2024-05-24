@@ -11,4 +11,4 @@ resources:
 configMapGenerator:
   - name: samba-backup-script
     files:
-      - entrypoint.sh
+      - backup.sh
