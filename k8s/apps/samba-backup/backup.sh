@@ -8,9 +8,6 @@ alice_ip=root@192.168.0.11
 apt-get update
 apt-get install rsync ssh -y
 
-echo $SSH_PRIVATE_KEY >/root/.ssh/id_ed25519
-chmod 600 /root/.ssh/id_ed25519
-
 # aliceが起動するまで待つ
 now=$(date +%s)
 end=$(($now + $timeout))
