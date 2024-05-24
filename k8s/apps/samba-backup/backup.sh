@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# install dependency
+apt-get update
+apt-get install rsync ssh -y
+
 timeout=60*60*12 #12時間
 alice_ip=root@192.168.0.11
 
