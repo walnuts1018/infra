@@ -17,6 +17,12 @@ spec:
             command:
             - sh
             - /backup.sh
+            env:
+              - name: SSH_PRIVATE_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: samba-backup-secret
+                    key: id_ed25519
             resources:
               requests:
                 cpu: 100m
@@ -27,12 +33,10 @@ spec:
             volumeMounts:
               - name: samba-backup-script
                 mountPath: /backup.sh
+                readOnly: true
                 subPath: backup.sh
               - name: samba-local-dir
                 mountPath: /samba-share
-              - name: samba-id-ed25519
-                mountPath: /root/.ssh/id_ed25519
-                subPath: id_ed25519
           volumes:
             - name: samba-backup-script
               configMap:
@@ -44,8 +48,5 @@ spec:
               hostPath:
                 path: /mnt/data/share
                 type: Directory
-            - name: samba-id-ed25519
-              secret:
-                secretName: samba-backup-secret
           nodeSelector:
             kubernetes.io/hostname: cake
