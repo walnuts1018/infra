@@ -1,0 +1,5 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomizatio
+namespace: kourier
+resources:
+  - https://github.com/knative/net-kourier/releases/download/knative-v1.14.0/kourier.yaml
