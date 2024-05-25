@@ -4,6 +4,7 @@ metadata:
   name: samba-backup
 spec:
   schedule: "0 3 * * *"
+  timeZone: Asia/Tokyo
   concurrencyPolicy: Forbid
   startingDeadlineSeconds: 120
   jobTemplate:
