@@ -71,6 +71,13 @@ spec:
         size: 100Mi
       service:
         type: ClusterIP
+      resources:
+        requests:
+          cpu: 50m
+          memory: 20Mi
+        limits:
+          cpu: 200m
+          memory: 192Mi
 
     serviceAccount:
       create: true
