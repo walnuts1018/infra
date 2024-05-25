@@ -1,0 +1,3 @@
+- op: add
+  path: /data/ingress-class
+  value: kourier.ingress.networking.knative.dev
