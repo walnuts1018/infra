@@ -21,6 +21,7 @@ spec:
             - --source=ingress
             - --domain-filter=walnuts.dev
             - --provider=cloudflare-tunnel
+            - --annotation-filter=walnuts.dev/externaldns.skip notin (true)
           env:
             - name: CF_API_TOKEN
               valueFrom:
