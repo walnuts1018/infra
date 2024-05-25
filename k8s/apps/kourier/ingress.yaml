@@ -5,6 +5,7 @@ metadata:
   namespace: kourier-system
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    walnuts.dev/externaldns.skip: "true"
 spec:
   ingressClassName: "nginx"
   rules:
