@@ -25,7 +25,7 @@ spec:
       kind: StatefulSet
       persistence:
         enabled: true
-        storageClass: "longhorn"
+        storageClass: "local-path"
         size: 512Mi
       service:
         type: LoadBalancer
@@ -45,7 +45,7 @@ spec:
       replicaCount: 3
       persistence:
         enabled: true
-        storageClass: "longhorn"
+        storageClass: "local-path"
         size: 512Mi
       service:
         type: ClusterIP
@@ -67,7 +67,7 @@ spec:
       quorum: 2
       persistence:
         enabled: true
-        storageClass: "longhorn"
+        storageClass: "local-path"
         size: 100Mi
       service:
         type: ClusterIP
