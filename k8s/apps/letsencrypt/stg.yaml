@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-stg
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: "r.juglans.1018@gmail.com"
+    privateKeySecretRef:
+      name: letsencrypt-stg
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx
