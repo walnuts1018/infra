@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: kourier
   namespace: kourier-system
+  annotations:
+    cert-manager.io/issuer: letsencrypt-stg
 spec:
   ingressClassName: "nginx"
   rules:
@@ -16,3 +18,7 @@ spec:
                 name: kourier
                 port:
                   number: 8080
+  tls:
+    - hosts:
+        - "*.knative.walnuts.dev"
+      secretName: kourier-tls
