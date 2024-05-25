@@ -4,7 +4,7 @@ metadata:
   name: kourier
   namespace: kourier-system
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-stg
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: "nginx"
   rules:
