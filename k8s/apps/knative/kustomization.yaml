@@ -8,3 +8,8 @@ patches:
     kind: ConfigMap
     name: config-network
   path: use-kourier.yaml
+- target:
+    kind: ConfigMap
+    name: config-domain
+    namespace: knative-serving
+  path: set-config-domain.yaml
