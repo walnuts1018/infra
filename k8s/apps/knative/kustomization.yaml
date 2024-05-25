@@ -1,0 +1,5 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: knative
+resources:
+  - https://github.com/knative/serving/releases/download/knative-v1.14.0/serving-crds.yaml
