@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # constants
-timeout=60*60*12 #12時間
+timeout=60*60*20 #20時間
 alice_ip=root@192.168.0.11
 
 # install dependency
