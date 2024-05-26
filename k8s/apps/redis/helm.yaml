@@ -40,7 +40,15 @@ spec:
           memory: 100Mi
       serviceAccount:
         create: false
-
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: walnuts.dev/ondemand
+                operator: NotIn
+                values:
+                - "true"
     replica:
       replicaCount: 3
       persistence:
