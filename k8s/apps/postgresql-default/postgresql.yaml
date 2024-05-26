@@ -59,3 +59,12 @@ spec:
     - hostssl    all             +zalandos    all                pam
     - hostssl    all             all          all                md5
     - host       all             all          10.244.0.0/16      md5
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 1
+      preference:
+        matchExpressions:
+          - key: kubernetes.io/arch
+            operator: In
+            values:
+              - amd64
