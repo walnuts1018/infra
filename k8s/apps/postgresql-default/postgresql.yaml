@@ -61,7 +61,7 @@ spec:
     - host       all             all          10.244.0.0/16      md5
   nodeAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
-    - weight: 1
+    - weight: 100
       preference:
         matchExpressions:
           - key: kubernetes.io/arch

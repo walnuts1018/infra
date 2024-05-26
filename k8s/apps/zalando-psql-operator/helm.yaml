@@ -32,14 +32,3 @@ spec:
       pod_antiaffinity_topology_key: "kubernetes.io/hostname"
     nodeSelector:
       kubernetes.io/arch: amd64
-
-    affinity:
-      nodeAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 1
-          preference:
-            matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                  - amd64
