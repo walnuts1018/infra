@@ -70,8 +70,8 @@ sudo apt install -y software-properties-common curl
 ```
 
 ````bash
-curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.29/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.29/deb /" | tee /etc/apt/sources.list.d/cri-o.list
+curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.30/deb /" | tee /etc/apt/sources.list.d/cri-o.list
 ```
 
 ```bash
@@ -85,9 +85,9 @@ sudo systemctl start crio
 ## k8s 本体
 
 ```bash
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key |
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key |
     gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" |
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /" |
     tee /etc/apt/sources.list.d/kubernetes.list
 
 sudo apt update
@@ -142,9 +142,9 @@ http {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
 
-    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-                      '$status $body_bytes_sent "$http_referer" '
-                      '"$http_user_agent" "$http_x_forwarded_for"';
+    log_format  main  '\$remote_addr - \$remote_user [\$time_local] "\$request" '
+                      '\$status \$body_bytes_sent "\$http_referer" '
+                      '"\$http_user_agent" "\$http_x_forwarded_for"';
 
     access_log  /var/log/nginx/access.log  main;
 
@@ -267,7 +267,7 @@ featureGates:
   NodeSwap: true
   AppArmor: false
 memorySwap:
-  swapBehavior: UnlimitedSwap" > kubeadm-config.yaml
+  swapBehavior: LimitedSwap" > kubeadm-config.yaml
 
 sudo kubeadm init --config kubeadm-config.yaml
 ```
