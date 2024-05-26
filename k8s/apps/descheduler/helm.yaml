@@ -37,7 +37,8 @@ spec:
                   - requiredDuringSchedulingIgnoredDuringExecution
             - name: RemovePodsViolatingTopologySpreadConstraint
               args:
-                includeSoftConstraints: false
+                constraints:
+                - ScheduleAnyway
             - name: LowNodeUtilization
               args:
                 thresholds:
