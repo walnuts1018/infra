@@ -68,7 +68,15 @@ spec:
           memory: 100Mi
       serviceAccount:
         create: false
-
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: walnuts.dev/ondemand
+                operator: NotIn
+                values:
+                - "true"
     sentinel:
       enabled: true
       masterSet: mymaster
