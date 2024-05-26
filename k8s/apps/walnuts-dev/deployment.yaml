@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: walnuts-dev
-          image: ghcr.io/walnuts1018/walnuts.dev:00528bb1f935402af6c74e843d33c38472fe5fd5-209 # {"$imagepolicy": "default:walnuts-dev"}
+          image: ghcr.io/walnuts1018/walnuts.dev:105406b77286cf96c75061ebb56c538a03abb7f1-210 # {"$imagepolicy": "default:walnuts-dev"}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
@@ -30,10 +30,10 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            preference:
-              matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: NotIn
-                  values:
-                    - donut
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values:
+                      - donut
