@@ -53,7 +53,7 @@ spec:
     affinity:
       nodeAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 1
+        - weight: 100
           preference:
             matchExpressions:
               - key: kubernetes.io/arch
