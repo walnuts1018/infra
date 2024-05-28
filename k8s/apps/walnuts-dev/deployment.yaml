@@ -33,7 +33,14 @@ spec:
             - weight: 100
               preference:
                 matchExpressions:
-                  - key: kubernetes.io/hostname
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: kubernetes.iohostname
                     operator: NotIn
                     values:
                       - donut

@@ -60,3 +60,10 @@ spec:
                 operator: In
                 values:
                   - amd64
+        - weight: 10
+          preference:
+            matchExpressions:
+              - key: kubernetes.iohostname
+                operator: NotIn
+                values:
+                  - donut
