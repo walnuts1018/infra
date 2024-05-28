@@ -49,6 +49,21 @@ spec:
                 operator: NotIn
                 values:
                 - "true"
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+                - key: kubernetes.io/arch
+                  operator: In
+                  values:
+                    - amd64
+          - weight: 10
+            preference:
+              matchExpressions:
+                - key: kubernetes.iohostname
+                  operator: NotIn
+                  values:
+                    - donut
     replica:
       replicaCount: 3
       persistence:
@@ -77,6 +92,21 @@ spec:
                 operator: NotIn
                 values:
                 - "true"
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+                - key: kubernetes.io/arch
+                  operator: In
+                  values:
+                    - amd64
+          - weight: 10
+            preference:
+              matchExpressions:
+                - key: kubernetes.iohostname
+                  operator: NotIn
+                  values:
+                    - donut
     sentinel:
       enabled: true
       masterSet: mymaster
