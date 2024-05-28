@@ -3,4 +3,3 @@ kind: Kustomization
 namespace: code-server
 resources:
   - codeserver.yaml
-  - network-policy.yaml
