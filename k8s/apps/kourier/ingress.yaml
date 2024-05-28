@@ -3,13 +3,12 @@ kind: Ingress
 metadata:
   name: kourier
   namespace: kourier-system
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    walnuts.dev/externaldns.skip: "true"
+  # annotations:
+  #   walnuts.dev/externaldns.skip: "true"
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: "*.knative.walnuts.dev"
+    - host: "*.walnuts.dev"
       http:
         paths:
           - path: /
@@ -19,7 +18,3 @@ spec:
                 name: kourier
                 port:
                   number: 8080
-  tls:
-    - hosts:
-        - "*.knative.walnuts.dev"
-      secretName: kourier-tls

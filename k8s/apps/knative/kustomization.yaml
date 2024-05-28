@@ -13,3 +13,8 @@ patches:
     name: config-domain
     namespace: knative-serving
   path: set-config-domain.yaml
+- target:
+    kind: ConfigMap
+    name: config-network
+    namespace: knative-serving
+  path: set-config-network.yaml
