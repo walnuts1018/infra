@@ -63,7 +63,7 @@ spec:
         - weight: 10
           preference:
             matchExpressions:
-              - key: kubernetes.iohostname
+              - key: kubernetes.io/hostname
                 operator: NotIn
                 values:
                   - donut
