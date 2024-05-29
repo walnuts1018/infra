@@ -1,5 +1,5 @@
 apiVersion: cs.walnuts.dev/v1alpha2
-kind: CodeServer
+kind: CodeServerDeployment
 metadata:
   labels:
     app.kubernetes.io/name: codebox
