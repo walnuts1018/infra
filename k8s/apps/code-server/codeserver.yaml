@@ -14,7 +14,7 @@ spec:
       initPlugins:
         git:
           repourl: "github.com/walnuts1018/panda-downloader"
-          branch: "master"
+          branch: "main"
         copyDefaultConfig: {}
         copyHome: {}
       envs:
