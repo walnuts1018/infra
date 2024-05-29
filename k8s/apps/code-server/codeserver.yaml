@@ -3,7 +3,7 @@ kind: CodeServerDeployment
 metadata:
   labels:
     app.kubernetes.io/name: codebox
-  name: codebox-httpdump
+  name: codebox-panda-downloader
 spec:
   replicas: 1
   template:
@@ -13,14 +13,14 @@ spec:
       initCommand: 'cd work && go mod tidy'
       initPlugins:
         git:
-          repourl: "github.com/walnuts1018/http-dump"
+          repourl: "github.com/walnuts1018/panda-downloader"
           branch: "master"
         copyDefaultConfig: {}
         copyHome: {}
       envs:
         - name: LANGUAGE_DEFAULT
           value: "ja"
-      image: "ghcr.io/kmc-jp/code-server-images-golang:ab1aae4a8580953b22c0064b8ca4a01284833ed6-49" 
+      image: "ghcr.io/kmc-jp/code-server-images-node:ab1aae4a8580953b22c0064b8ca4a01284833ed6-49" 
       imagePullSecrets:
         - name: ghcr-login-secret
       domain: "walnuts.dev"
