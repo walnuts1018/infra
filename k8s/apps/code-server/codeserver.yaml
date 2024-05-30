@@ -20,7 +20,7 @@ spec:
       envs:
         - name: LANGUAGE_DEFAULT
           value: "ja"
-      image: "ghcr.io/kmc-jp/code-server-images-node:b83efae68d87e6773e6cce7ef00200261842d7e0-53" # {"$imagepolicy": "code-server:code-server-node"}
+      image: "ghcr.io/kmc-jp/code-server-images-node:f66bb947f1dbfe0c07c8323ef45ebd32af0a72f4-54" # {"$imagepolicy": "code-server:code-server-node"}
       imagePullSecrets:
         - name: ghcr-login-secret
       domain: "walnuts.dev"
