@@ -19,7 +19,7 @@ spec:
       envs:
         - name: LANGUAGE_DEFAULT
           value: "ja"
-      image: "ghcr.io/kmc-jp/code-server-images-golang:ab1aae4a8580953b22c0064b8ca4a01284833ed6-49" 
+      image: "ghcr.io/kmc-jp/code-server-images-golang:ab1aae4a8580953b22c0064b8ca4a01284833ed6-49"  # {"$imagepolicy": "code-server:code-server-golang"}
       imagePullSecrets:
         - name: ghcr-login-secret
       domain: "walnuts.dev"
