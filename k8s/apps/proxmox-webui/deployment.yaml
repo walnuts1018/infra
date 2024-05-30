@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: proxmox-webui
-          image: nginx:1.26.1 # {"$imagepolicy": "default:proxmox-webui"}
+          image: nginx:1.27.0 # {"$imagepolicy": "default:proxmox-webui"}
           ports:
             - containerPort: 80
           volumeMounts:
