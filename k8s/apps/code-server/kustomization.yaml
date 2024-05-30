@@ -4,3 +4,4 @@ namespace: code-server
 resources:
   - codeserver.yaml
   - network-policy.yaml
+  - imagepolicies.yaml
