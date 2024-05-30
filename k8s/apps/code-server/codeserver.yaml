@@ -10,7 +10,7 @@ spec:
     spec:
       storageSize: 3Gi
       storageClassName: local-path
-      initCommand: 'cd work && export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && npm install'
+      initCommand: 'cd work && export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && yarn install'
       initPlugins:
         git:
           repourl: "github.com/walnuts1018/panda-downloader"
@@ -20,7 +20,7 @@ spec:
       envs:
         - name: LANGUAGE_DEFAULT
           value: "ja"
-      image: "ghcr.io/kmc-jp/code-server-images-node:b83efae68d87e6773e6cce7ef00200261842d7e0-53" # {"$imagepolicy": "code-server:code-server-node"}
+      image: "ghcr.io/kmc-jp/code-server-images-node:ab1aae4a8580953b22c0064b8ca4a01284833ed6-49" # {"$imagepolicy": "code-server:code-server-node"}
       imagePullSecrets:
         - name: ghcr-login-secret
       domain: "walnuts.dev"
