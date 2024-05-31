@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/name: codebox
   name: codebox-panda-downloader
 spec:
-  replicas: 1
+  replicas: 10
   template:
     spec:
       storageSize: 3Gi
