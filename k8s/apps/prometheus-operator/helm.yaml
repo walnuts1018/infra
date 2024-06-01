@@ -29,6 +29,7 @@ spec:
         enabled: true
         hosts:
           - grafana.walnuts.dev
+        ingressClassName: nginx
       rbac:
         pspEnabled: false
       testFramework:
