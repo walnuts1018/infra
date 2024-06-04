@@ -1,4 +1,3 @@
----
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
@@ -28,7 +27,7 @@ spec:
       ingress:
         enabled: true
         hosts:
-          - grafana.walnuts.dev
+        - grafana.walnuts.dev
         ingressClassName: nginx
       rbac:
         pspEnabled: false
@@ -48,10 +47,10 @@ spec:
         userKey: admin-username
         passwordKey: admin-password
       extraSecretMounts:
-        - name: auth-generic-oauth-secret
-          secretName: grafana
-          mountPath: /etc/secrets
-          readOnly: true
+      - name: auth-generic-oauth-secret
+        secretName: grafana
+        mountPath: /etc/secrets
+        readOnly: true
       grafana.ini:
         server:
           domain: grafana.walnuts.dev
