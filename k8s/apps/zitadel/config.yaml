@@ -9,7 +9,7 @@ Database:
     Options:
     User:
       Username: zitadel
-      Password: {? {.zitadeldbpassword: ''} : ''}
+      Password: "{{ .zitadeldbpassword }}"
       SSL:
         Mode: disable
         RootCert:
@@ -17,7 +17,7 @@ Database:
         Key:
     Admin:
       Username: postgres
-      Password: {? {.postgresdbpassword: ''} : ''}
+      Password: "{{ .postgresdbpassword }}"
       SSL:
         Mode: disable
         RootCert:
