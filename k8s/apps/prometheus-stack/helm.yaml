@@ -90,3 +90,9 @@ spec:
           name: grafana
           user: grafana
           password: $__file{/etc/secrets/postgres_password}
+    prometheus-node-exporter:
+      prometheus:
+        monitor:
+          relabelings:
+          - sourceLabels: [__meta_kubernetes_node_name]
+            targetLabel: node
