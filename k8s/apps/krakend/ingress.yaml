@@ -5,13 +5,13 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: "api.walnuts.dev"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: krakend
-                port:
-                  number: 8080
+  - host: "api.walnuts.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: krakend
+            port:
+              number: 8080

@@ -6,9 +6,9 @@ metadata:
     app: machine-status-api
 spec:
   ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 8080
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
   selector:
     app: machine-status-api
   type: LoadBalancer

@@ -5,13 +5,13 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: "wakatime.walnuts.dev"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: wakatime-to-slack-profile
-                port:
-                  number: 8080
+  - host: "wakatime.walnuts.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: wakatime-to-slack-profile
+            port:
+              number: 8080

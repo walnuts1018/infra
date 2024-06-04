@@ -5,13 +5,13 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: "api-openchokin.walnuts.dev"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: "openchokin-back"
-                port:
-                  number: 8080
+  - host: "api-openchokin.walnuts.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: "openchokin-back"
+            port:
+              number: 8080

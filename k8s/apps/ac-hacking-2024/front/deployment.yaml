@@ -13,16 +13,16 @@ spec:
         app: ac-hacking-2024-front
     spec:
       containers:
-        - name: ac-hacking-2024-front
-          image: ghcr.io/walnuts1018/2024-ac-hacking-front:1c4c5593eb14f8656449d2176c177ca20679ef56-11 # {"$imagepolicy": "ac-hacking-2024:ac-hacking-2024-front"}
-          ports:
-            - containerPort: 3000
-          resources:
-            limits:
-              cpu: 1000m
-              memory: 512Mi
-            requests:
-              cpu: 0m
-              memory: 5Mi
+      - name: ac-hacking-2024-front
+        image: ghcr.io/walnuts1018/2024-ac-hacking-front:1c4c5593eb14f8656449d2176c177ca20679ef56-11 # {"$imagepolicy": "ac-hacking-2024:ac-hacking-2024-front"}
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+          requests:
+            cpu: 0m
+            memory: 5Mi
       nodeSelector:
         kubernetes.io/arch: amd64

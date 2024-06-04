@@ -32,10 +32,10 @@ spec:
       annotations:
         nginx.ingress.kubernetes.io/proxy-body-size: "0"
       hosts:
-        - host: auth.walnuts.dev
-          paths:
-            - path: /
-              pathType: Prefix
+      - host: auth.walnuts.dev
+        paths:
+        - path: /
+          pathType: Prefix
     env:
     #  - name: ZITADEL_LOG_LEVEL
     #    value: "debug"
@@ -48,7 +48,7 @@ spec:
         memory: 128Mi
       limits:
         cpu: 500m
-        memory: 512Mi 
+        memory: 512Mi
 
     affinity:
       nodeAffinity:
@@ -56,14 +56,14 @@ spec:
         - weight: 100
           preference:
             matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                  - amd64
+            - key: kubernetes.io/arch
+              operator: In
+              values:
+              - amd64
         - weight: 10
           preference:
             matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: NotIn
-                values:
-                  - donut
+            - key: kubernetes.io/hostname
+              operator: NotIn
+              values:
+              - donut

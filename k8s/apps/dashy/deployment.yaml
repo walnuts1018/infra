@@ -15,26 +15,26 @@ spec:
         app: dashy
     spec:
       containers:
+      - name: dashy
+        image: lissy93/dashy:2.1.2 # {"$imagepolicy": "default:dashy"}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+          requests:
+            cpu: 1m
+            memory: 64Mi
+        env:
+        - name: NODE_ENV
+          value: "production"
+        volumeMounts:
         - name: dashy
-          image: lissy93/dashy:2.1.2 # {"$imagepolicy": "default:dashy"}
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 80
-          resources:
-            limits:
-              cpu: 1000m
-              memory: 512Mi
-            requests:
-              cpu: 1m
-              memory: 64Mi
-          env:
-            - name: NODE_ENV
-              value: "production"
-          volumeMounts:
-            - name: dashy
-              mountPath: /app/public
+          mountPath: /app/public
       volumes:
-        - name: dashy
-          persistentVolumeClaim:
-            claimName: dashy
+      - name: dashy
+        persistentVolumeClaim:
+          claimName: dashy
       priorityClassName: low

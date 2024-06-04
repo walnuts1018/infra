@@ -6,9 +6,9 @@ metadata:
     app: oekaki-dengon-game-back
 spec:
   ports:
-    - name: http
-      port: 8080
-      targetPort: 8080
+  - name: http
+    port: 8080
+    targetPort: 8080
   selector:
     app: oekaki-dengon-game-back
   type: ClusterIP

@@ -15,57 +15,57 @@ spec:
         app: fitbit-manager
     spec:
       containers:
-        - name: fitbit-manager
-          image: ghcr.io/walnuts1018/fitbit-manager:0.8.1 # {"$imagepolicy": "default:fitbit-manager"}
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8080
-          resources:
-            limits:
-              cpu: 100m
-              memory: 100Mi
-            requests:
-              cpu: 1m
-              memory: 10Mi
-          env:
-            - name: GIN_MODE
-              value: "release"
-            - name: CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: fitbit-manager-secret
-                  key: client_id
-            - name: CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: fitbit-manager-secret
-                  key: client_secret
-            - name: COOKIE_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: fitbit-manager-secret
-                  key: cookie_secret
-            - name: PSQL_ENDPOINT
-              value: "postgresql-default.databases.svc.cluster.local"
-            - name: PSQL_PORT
-              value: "5432"
-            - name: PSQL_DATABASE
-              value: "fitbit_manager"
-            - name: PSQL_USER
-              value: "fitbit_manager"
-            - name: PSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: fitbit-manager-secret
-                  key: postgres_password
-            - name: INFLUXDB_ENDPOINT
-              value: "http://influxdb-influxdb2.databases.svc.cluster.local"
-            - name: INFLUXDB_AUTH_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: fitbit-manager-secret
-                  key: influxdb_auth_token
-            - name: INFLUXDB_ORG
-              value: "influxdata"
-            - name: INFLUXDB_BUCKET
-              value: "fitbit_manager"
+      - name: fitbit-manager
+        image: ghcr.io/walnuts1018/fitbit-manager:0.8.1 # {"$imagepolicy": "default:fitbit-manager"}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 1m
+            memory: 10Mi
+        env:
+        - name: GIN_MODE
+          value: "release"
+        - name: CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: fitbit-manager-secret
+              key: client_id
+        - name: CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: fitbit-manager-secret
+              key: client_secret
+        - name: COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: fitbit-manager-secret
+              key: cookie_secret
+        - name: PSQL_ENDPOINT
+          value: "postgresql-default.databases.svc.cluster.local"
+        - name: PSQL_PORT
+          value: "5432"
+        - name: PSQL_DATABASE
+          value: "fitbit_manager"
+        - name: PSQL_USER
+          value: "fitbit_manager"
+        - name: PSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: fitbit-manager-secret
+              key: postgres_password
+        - name: INFLUXDB_ENDPOINT
+          value: "http://influxdb-influxdb2.databases.svc.cluster.local"
+        - name: INFLUXDB_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: fitbit-manager-secret
+              key: influxdb_auth_token
+        - name: INFLUXDB_ORG
+          value: "influxdata"
+        - name: INFLUXDB_BUCKET
+          value: "fitbit_manager"

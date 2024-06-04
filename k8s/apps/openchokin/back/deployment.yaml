@@ -15,38 +15,38 @@ spec:
         app: openchokin-back
     spec:
       containers:
-        - name: openchokin-back
-          image: "ghcr.io/walnuts1018/openchokin-back:v0.0.0-cd205cba77a922ba01009c04203a0e4b962a31d8-97" # {"$imagepolicy": "default:openchokin-back"}
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8080
-          env:
-            - name: GIN_MODE
-              value: "release"
-            - name: POSTGRES_ADMIN_USER
-              value: "postgres"
-            - name: POSTGRES_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: openchokin-secret
-                  key: postgres-admin-password
-            - name: POSTGRES_USER
-              value: "openchokin"
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: openchokin-secret
-                  key: postgres-user-password
-            - name: POSTGRES_DB
-              value: "openchokin"
-            - name: POSTGRES_HOST
-              value: "postgresql-default.databases.svc.cluster.local"
-            - name: POSTGRES_PORT
-              value: "5432"
-          resources:
-            requests:
-              cpu: 1m
-              memory: 10Mi
-            limits:
-              cpu: 1000m
-              memory: 512Mi
+      - name: openchokin-back
+        image: "ghcr.io/walnuts1018/openchokin-back:v0.0.0-cd205cba77a922ba01009c04203a0e4b962a31d8-97" # {"$imagepolicy": "default:openchokin-back"}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GIN_MODE
+          value: "release"
+        - name: POSTGRES_ADMIN_USER
+          value: "postgres"
+        - name: POSTGRES_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: openchokin-secret
+              key: postgres-admin-password
+        - name: POSTGRES_USER
+          value: "openchokin"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: openchokin-secret
+              key: postgres-user-password
+        - name: POSTGRES_DB
+          value: "openchokin"
+        - name: POSTGRES_HOST
+          value: "postgresql-default.databases.svc.cluster.local"
+        - name: POSTGRES_PORT
+          value: "5432"
+        resources:
+          requests:
+            cpu: 1m
+            memory: 10Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi

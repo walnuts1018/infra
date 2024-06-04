@@ -13,33 +13,33 @@ spec:
         app: y-2024
     spec:
       containers:
-        - name: y-2024
-          image: ghcr.io/walnuts1018/2024-y:c638b12298b8f6959ac1b54a9fa961c03fb01586-9 # {"$imagepolicy": "default:y-2024"}
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8080
-          resources:
-            limits:
-              cpu: 1000m
-              memory: 512Mi
-            requests:
-              cpu: 1m
-              memory: 32Mi
-          env:
-            - name: PSQL_HOST
-              value: "postgresql-default.databases.svc.cluster.local"
-            - name: PSQL_PORT
-              value: "5432"
-            - name: PSQL_DATABASE
-              value: "y_2024"
-            - name: PSQL_USER
-              value: "y_2024"
-            - name: PSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: y-2024
-                  key: postgres_password
-            - name: PSQL_SSLMODE
-              value: "disable"
+      - name: y-2024
+        image: ghcr.io/walnuts1018/2024-y:c638b12298b8f6959ac1b54a9fa961c03fb01586-9 # {"$imagepolicy": "default:y-2024"}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+          requests:
+            cpu: 1m
+            memory: 32Mi
+        env:
+        - name: PSQL_HOST
+          value: "postgresql-default.databases.svc.cluster.local"
+        - name: PSQL_PORT
+          value: "5432"
+        - name: PSQL_DATABASE
+          value: "y_2024"
+        - name: PSQL_USER
+          value: "y_2024"
+        - name: PSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: y-2024
+              key: postgres_password
+        - name: PSQL_SSLMODE
+          value: "disable"
       nodeSelector:
         kubernetes.io/arch: amd64

@@ -5,7 +5,7 @@ labels:
   pairs:
     app: ac-hacking-2024-back
 resources:
-  - deployment.yaml
-  - service.yaml
-  - image-policy.yaml
-  - externalsecret.yaml
+- deployment.yaml
+- service.yaml
+- image-policy.yaml
+- externalsecret.yaml

@@ -5,6 +5,6 @@ labels:
   pairs:
     app: ac-hacking-2024-front
 resources:
-  - deployment.yaml
-  - service.yaml
-  - image-policy.yaml
+- deployment.yaml
+- service.yaml
+- image-policy.yaml

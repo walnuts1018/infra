@@ -19,11 +19,11 @@ spec:
             - sh
             - /backup.sh
             env:
-              - name: SSH_PRIVATE_KEY
-                valueFrom:
-                  secretKeyRef:
-                    name: samba-backup-secret
-                    key: id_ed25519
+            - name: SSH_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: samba-backup-secret
+                  key: id_ed25519
             readinessProbe:
               exec:
                 command:
@@ -37,29 +37,29 @@ spec:
                 cpu: "1"
                 memory: 2Gi
             volumeMounts:
-              - name: samba-backup-script
-                mountPath: /backup.sh
-                readOnly: true
-                subPath: backup.sh
-              - name: samba-local-dir
-                mountPath: /samba-share
-              - name: samba-id-ed25519
-                mountPath: /root/.ssh/id_ed25519
-                subPath: id_ed25519
-          volumes:
             - name: samba-backup-script
-              configMap:
-                name: samba-backup-script
-                items:
-                  - key: backup.sh
-                    path: backup.sh
+              mountPath: /backup.sh
+              readOnly: true
+              subPath: backup.sh
             - name: samba-local-dir
-              hostPath:
-                path: /mnt/data/share
-                type: Directory
+              mountPath: /samba-share
             - name: samba-id-ed25519
-              secret:
-                secretName: samba-backup-secret
-                defaultMode: 0600
+              mountPath: /root/.ssh/id_ed25519
+              subPath: id_ed25519
+          volumes:
+          - name: samba-backup-script
+            configMap:
+              name: samba-backup-script
+              items:
+              - key: backup.sh
+                path: backup.sh
+          - name: samba-local-dir
+            hostPath:
+              path: /mnt/data/share
+              type: Directory
+          - name: samba-id-ed25519
+            secret:
+              secretName: samba-backup-secret
+              defaultMode: 0600
           nodeSelector:
             kubernetes.io/hostname: cake

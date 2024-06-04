@@ -1,4 +1,10 @@
 {
   "cmake.configureOnOpen": false,
-  "yaml.format.enable": false
+  "yaml.format.enable": false,
+  "[yaml]": {
+    "editor.defaultFormatter": "kennylong.kubernetes-yaml-formatter",
+    "editor.formatOnSave": true
+  },
+  "compactSequenceIndent": true,
+  "includeDocumentStart": true
 }

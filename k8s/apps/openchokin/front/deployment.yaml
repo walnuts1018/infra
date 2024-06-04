@@ -15,53 +15,53 @@ spec:
         app: openchokin-front
     spec:
       containers:
-        - name: openchokin-front
-          image: "ghcr.io/walnuts1018/openchokin-front:v0.0.0-805921b42b330190ff496e2d810ec3846947162a-66" #{"$imagepolicy": "default:openchokin-front"}
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 3000
-          resources:
-            requests:
-              cpu: 1m
-              memory: 100Mi
-            limits:
-              cpu: 1000m
-              memory: 512Mi
-          env:
-            - name: ZITADEL_URL
-              value: "https://auth.walnuts.dev"
-            - name: NEXTAUTH_URL
-              value: "https://openchokin.walnuts.dev"
-            - name: ZITADEL_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: openchokin-secret
-                  key: zitade-client-id
-            - name: ZITADEL_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: openchokin-secret
-                  key: zitadel-client-secret
-            - name: NEXTAUTH_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: openchokin-secret
-                  key: nextauth-secret
-            - name: REDIS_SENTINEL_HOST
-              value: "redis.databases.svc.cluster.local"
-            - name: REDIS_SENTINEL_PORT
-              value: "26379"
-            - name: REDIS_SENTINEL_NAME
-              value: "mymaster"
-            - name: REDIS_DB
-              value: "2"
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: openchokin-secret
-                  key: redis-password
-            - name: CACHE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: openchokin-secret
-                  key: cache-password
+      - name: openchokin-front
+        image: "ghcr.io/walnuts1018/openchokin-front:v0.0.0-805921b42b330190ff496e2d810ec3846947162a-66" #{"$imagepolicy": "default:openchokin-front"}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: 1m
+            memory: 100Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+        env:
+        - name: ZITADEL_URL
+          value: "https://auth.walnuts.dev"
+        - name: NEXTAUTH_URL
+          value: "https://openchokin.walnuts.dev"
+        - name: ZITADEL_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: openchokin-secret
+              key: zitade-client-id
+        - name: ZITADEL_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: openchokin-secret
+              key: zitadel-client-secret
+        - name: NEXTAUTH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: openchokin-secret
+              key: nextauth-secret
+        - name: REDIS_SENTINEL_HOST
+          value: "redis.databases.svc.cluster.local"
+        - name: REDIS_SENTINEL_PORT
+          value: "26379"
+        - name: REDIS_SENTINEL_NAME
+          value: "mymaster"
+        - name: REDIS_DB
+          value: "2"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: openchokin-secret
+              key: redis-password
+        - name: CACHE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: openchokin-secret
+              key: cache-password

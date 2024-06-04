@@ -9,6 +9,6 @@ components:
 configMapGenerator:
 - name: zitadel-config
   files:
-    - config.yaml
+  - config.yaml
 generatorOptions:
   disableNameSuffixHash: true

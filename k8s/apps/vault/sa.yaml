@@ -14,6 +14,6 @@ roleRef:
   kind: ClusterRole
   name: cluster-admin
 subjects:
-  - kind: ServiceAccount
-    name: vault-auth
-    namespace: vault
+- kind: ServiceAccount
+  name: vault-auth
+  namespace: vault

@@ -7,13 +7,13 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: "misskey.walnuts.dev"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: "misskey"
-                port:
-                  number: 80
+  - host: "misskey.walnuts.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: "misskey"
+            port:
+              number: 80

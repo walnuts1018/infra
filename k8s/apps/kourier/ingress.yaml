@@ -4,17 +4,17 @@ metadata:
   name: kourier
   namespace: kourier-system
   # annotations:
-  #   walnuts.dev/externaldns.skip: "true"
+#   walnuts.dev/externaldns.skip: "true"
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: "*.walnuts.dev"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: kourier
-                port:
-                  number: 8080
+  - host: "*.walnuts.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kourier
+            port:
+              number: 8080

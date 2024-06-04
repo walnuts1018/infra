@@ -17,11 +17,11 @@ spec:
         copyDefaultConfig: {}
         copyHome: {}
       envs:
-        - name: LANGUAGE_DEFAULT
-          value: "ja"
+      - name: LANGUAGE_DEFAULT
+        value: "ja"
       image: "ghcr.io/kmc-jp/code-server-images-golang:f66bb947f1dbfe0c07c8323ef45ebd32af0a72f4-54" # {"$imagepolicy": "code-server:code-server-golang"}
       imagePullSecrets:
-        - name: ghcr-login-secret
+      - name: ghcr-login-secret
       domain: "walnuts.dev"
       ingressClassName: "nginx"
       resources:

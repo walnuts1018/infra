@@ -6,9 +6,9 @@ metadata:
     app: kibana
 spec:
   ports:
-    - name: http
-      port: 5601
-      targetPort: 5601
+  - name: http
+    port: 5601
+    targetPort: 5601
   selector:
     app: kibana
   type: ClusterIP

@@ -15,20 +15,20 @@ spec:
         app: kibana
     spec:
       containers:
-        - name: kibana
-          image: docker.elastic.co/kibana/kibana:8.13.4 # {"$imagepolicy": "default:kibana"}
-          ports:
-            - name: http
-              containerPort: 5601
-          env:
-            - name: ELASTICSEARCH_HOSTS
-              value: "http://elasticsearch.databases.svc.cluster.local:9200"
-              #- name: SERVER_PUBLICBASEURL
-              #  value: "https://kibana.walnuts.dev"
-          resources:
-            limits:
-              cpu: 1000m
-              memory: 1024Mi
-            requests:
-              cpu: 10m
-              memory: 350Mi
+      - name: kibana
+        image: docker.elastic.co/kibana/kibana:8.13.4 # {"$imagepolicy": "default:kibana"}
+        ports:
+        - name: http
+          containerPort: 5601
+        env:
+        - name: ELASTICSEARCH_HOSTS
+          value: "http://elasticsearch.databases.svc.cluster.local:9200"
+          #- name: SERVER_PUBLICBASEURL
+        #  value: "https://kibana.walnuts.dev"
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1024Mi
+          requests:
+            cpu: 10m
+            memory: 350Mi

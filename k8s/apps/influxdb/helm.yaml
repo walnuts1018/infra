@@ -1,4 +1,3 @@
----
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
@@ -42,10 +41,9 @@ spec:
       tls: false
       # secretName: my-tls-cert # only needed if tls above is true or default certificate is not configured for Nginx
       hostname: influxdb.walnuts.dev
-      annotations:
-        {}
-        # kubernetes.io/ingress.class: "nginx"
-        # kubernetes.io/tls-acme: "true"
+      annotations: {}
+      # kubernetes.io/ingress.class: "nginx"
+      # kubernetes.io/tls-acme: "true"
       path: /
 
     resources:

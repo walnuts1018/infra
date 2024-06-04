@@ -34,4 +34,4 @@ Walnuts 家の自宅サーバ全般のリポジトリです。
 
 ## Renovate
 
-- [renovate.json](./renovate.json5) 
+- [renovate.json](./renovate.json5)

@@ -9,9 +9,9 @@ metadata:
     walnuts.dev/speedtest: "true"
 spec:
   ports:
-    - name: http
-      port: 9469
-      targetPort: 9469
+  - name: http
+    port: 9469
+    targetPort: 9469
   selector:
     app: speedtest
   type: ClusterIP

@@ -6,9 +6,9 @@ metadata:
     app: samba
 spec:
   ports:
-    - port: 445
-      protocol: TCP
-      targetPort: 445
+  - port: 445
+    protocol: TCP
+    targetPort: 445
   selector:
     app: samba
   type: LoadBalancer

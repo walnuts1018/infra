@@ -6,7 +6,7 @@ spec:
   storageClassName: longhorn
   volumeName: misskey
   accessModes:
-    - ReadWriteOnce
+  - ReadWriteOnce
   resources:
     requests:
       storage: 4Gi
