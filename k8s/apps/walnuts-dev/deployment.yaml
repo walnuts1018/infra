@@ -15,32 +15,32 @@ spec:
         app: walnuts-dev
     spec:
       containers:
-        - name: walnuts-dev
-          image: ghcr.io/walnuts1018/walnuts.dev:293347303800f4d5c25de5b47b880937292b3f6e-212 # {"$imagepolicy": "default:walnuts-dev"}
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 3000
-          resources:
-            limits: {}
-            requests: {}
-          env:
-            - name: NEXT_PUBLIC_GA_ID
-              value: G-NB6F68ZQ9P
+      - name: walnuts-dev
+        image: ghcr.io/walnuts1018/walnuts.dev:293347303800f4d5c25de5b47b880937292b3f6e-212 # {"$imagepolicy": "default:walnuts-dev"}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        resources:
+          limits: {}
+          requests: {}
+        env:
+        - name: NEXT_PUBLIC_GA_ID
+          value: G-NB6F68ZQ9P
       priorityClassName: high
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              preference:
-                matchExpressions:
-                  - key: kubernetes.io/arch
-                    operator: In
-                    values:
-                      - amd64
-            - weight: 10
-              preference:
-                matchExpressions:
-                  - key: kubernetes.io/hostname
-                    operator: NotIn
-                    values:
-                      - donut
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+          - weight: 10
+            preference:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                - donut

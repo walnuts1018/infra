@@ -20,53 +20,53 @@ spec:
         fsGroup: 991
         fsGroupChangePolicy: "OnRootMismatch"
       initContainers:
-        - name: misskey-init
-          image: misskey/misskey:2024.5.0 # {"$imagepolicy": "misskey:misskey"}
-          imagePullPolicy: IfNotPresent
-          command:
-            - pnpm
-            - run
-            - init
-          volumeMounts:
-            - name: misskey-pv
-              mountPath: /misskey/files
-            - name: misskey-config
-              mountPath: /misskey/.config
-              readOnly: true
-      containers:
-        - name: misskey
-          image: misskey/misskey:2024.5.0 # {"$imagepolicy": "misskey:misskey"}
-          imagePullPolicy: IfNotPresent
-          tty: true
-          ports:
-            - containerPort: 3000
-          volumeMounts:
-            - name: misskey-pv
-              mountPath: /misskey/files
-            - name: misskey-config
-              mountPath: /misskey/.config
-              readOnly: true
-          env:
-            - name: POSTGRES_USER
-              value: "misskey"
-            - name: POSTGRES_DB
-              value: "misskey"
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: misskey-secret
-                  key: misskeydbpassword
-          resources:
-            requests:
-              cpu: 10m
-              memory: 512Mi
-            limits:
-              cpu: 2000m
-              memory: 1Gi
-      volumes:
+      - name: misskey-init
+        image: misskey/misskey:2024.5.0 # {"$imagepolicy": "misskey:misskey"}
+        imagePullPolicy: IfNotPresent
+        command:
+        - pnpm
+        - run
+        - init
+        volumeMounts:
         - name: misskey-pv
-          persistentVolumeClaim:
-            claimName: misskey-pvc
+          mountPath: /misskey/files
         - name: misskey-config
-          secret:
-            secretName: misskey-secret
+          mountPath: /misskey/.config
+          readOnly: true
+      containers:
+      - name: misskey
+        image: misskey/misskey:2024.5.0 # {"$imagepolicy": "misskey:misskey"}
+        imagePullPolicy: IfNotPresent
+        tty: true
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: misskey-pv
+          mountPath: /misskey/files
+        - name: misskey-config
+          mountPath: /misskey/.config
+          readOnly: true
+        env:
+        - name: POSTGRES_USER
+          value: "misskey"
+        - name: POSTGRES_DB
+          value: "misskey"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: misskey-secret
+              key: misskeydbpassword
+        resources:
+          requests:
+            cpu: 10m
+            memory: 512Mi
+          limits:
+            cpu: 2000m
+            memory: 1Gi
+      volumes:
+      - name: misskey-pv
+        persistentVolumeClaim:
+          claimName: misskey-pvc
+      - name: misskey-config
+        secret:
+          secretName: misskey-secret

@@ -6,12 +6,12 @@ metadata:
     app: redis-haproxy
 spec:
   ports:
-    - name: dashboard
-      port: 8080
-      targetPort: 8080
-    - name: redis-write
-      port: 6379
-      targetPort: 6379
+  - name: dashboard
+    port: 8080
+    targetPort: 8080
+  - name: redis-write
+    port: 6379
+    targetPort: 6379
   selector:
     app: redis-haproxy
   type: LoadBalancer

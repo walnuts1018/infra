@@ -6,9 +6,9 @@ metadata:
     app: wakatime-to-slack-profile
 spec:
   ports:
-    - name: http
-      port: 8080
-      targetPort: 8080
+  - name: http
+    port: 8080
+    targetPort: 8080
   selector:
     app: wakatime-to-slack-profile
   type: ClusterIP

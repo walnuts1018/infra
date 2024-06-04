@@ -6,8 +6,8 @@ kind: RoleBinding
 metadata:
   name: tailscale
 subjects:
-  - kind: ServiceAccount
-    name: "tailscale"
+- kind: ServiceAccount
+  name: "tailscale"
 roleRef:
   kind: Role
   name: tailscale

@@ -16,35 +16,35 @@ spec:
         fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
       containers:
-        - name: elasticsearch
-          image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4 # {"$imagepolicy": "databases:elasticsearch"}
-          ports:
-            - containerPort: 9200
-          resources:
-            requests:
-              memory: 3000Mi
-              cpu: 10m
-            limits:
-              memory: "5000Mi"
-              cpu: "500m"
-          env:
-            - name: discovery.type
-              value: single-node
-            - name: cluster.name
-              value: kurumi
-            - name: xpack.security.enabled
-              value: "false"
-          volumeMounts:
-            - name: config
-              mountPath: "/usr/share/elasticsearch/config/elasticsearch-plugins.yml"
-              subPath: "elasticsearch-plugins.yml"
-              readOnly: true
-            - name: data
-              mountPath: /usr/share/elasticsearch/data
-      volumes:
+      - name: elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4 # {"$imagepolicy": "databases:elasticsearch"}
+        ports:
+        - containerPort: 9200
+        resources:
+          requests:
+            memory: 3000Mi
+            cpu: 10m
+          limits:
+            memory: "5000Mi"
+            cpu: "500m"
+        env:
+        - name: discovery.type
+          value: single-node
+        - name: cluster.name
+          value: kurumi
+        - name: xpack.security.enabled
+          value: "false"
+        volumeMounts:
         - name: config
-          configMap:
-            name: elasticsearch-configmap
+          mountPath: "/usr/share/elasticsearch/config/elasticsearch-plugins.yml"
+          subPath: "elasticsearch-plugins.yml"
+          readOnly: true
         - name: data
-          persistentVolumeClaim:
-            claimName: elasticsearch
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+      - name: config
+        configMap:
+          name: elasticsearch-configmap
+      - name: data
+        persistentVolumeClaim:
+          claimName: elasticsearch

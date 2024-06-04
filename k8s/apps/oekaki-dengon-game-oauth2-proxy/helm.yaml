@@ -1,4 +1,3 @@
----
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
@@ -34,16 +33,16 @@ spec:
       skip-provider-button: true
 
     extraVolumes:
-      - name: custom-templates
-        configMap:
-          name: oekaki-oauth2-proxy-templates
-          items:
-            - key: robots.txt
-              path: robots.txt
+    - name: custom-templates
+      configMap:
+        name: oekaki-oauth2-proxy-templates
+        items:
+        - key: robots.txt
+          path: robots.txt
     extraVolumeMounts:
-      - name: custom-templates
-        mountPath: /etc/oauth2-proxy/templates
-        readOnly: true
+    - name: custom-templates
+      mountPath: /etc/oauth2-proxy/templates
+      readOnly: true
 
     ingress:
       enabled: true
@@ -53,7 +52,7 @@ spec:
       pathType: Prefix
       # Used to create an Ingress record.
       hosts:
-        - "oekaki.walnuts.dev"
+      - "oekaki.walnuts.dev"
 
     # Configure the session storage type, between cookie and redis
     sessionStorage:

@@ -1,4 +1,3 @@
----
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
@@ -25,14 +24,14 @@ spec:
       enabled: true
       ingressClassName: nginx
       hosts:
-        - minio.walnuts.dev
+      - minio.walnuts.dev
     replicas: 1
     mode: standalone
     consoleIngress:
       enabled: true
       ingressClassName: nginx
       hosts:
-        - minio-console.walnuts.dev
+      - minio-console.walnuts.dev
     oidc:
       enabled: false
       configUrl: "https://auth.walnuts.dev/.well-known/openid-configuration"

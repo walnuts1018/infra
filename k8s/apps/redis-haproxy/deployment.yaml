@@ -17,35 +17,35 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app
-                    operator: In
-                    values:
-                      - redis-haproxy
-              topologyKey: "kubernetes.io/hostname"
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - redis-haproxy
+            topologyKey: "kubernetes.io/hostname"
       containers:
-        - name: haproxy
-          image: haproxy:2.9.7 # {"$imagepolicy": "databases:redis-haproxy"}
-          ports:
-            - containerPort: 8080
-            - containerPort: 6380
-          volumeMounts:
-            - name: config
-              mountPath: /usr/local/etc/haproxy/haproxy.cfg
-              subPath: haproxy.cfg
-              readOnly: true
-          resources:
-            requests:
-              cpu: 10m
-              memory: 50Mi
-            limits:
-              cpu: 300m
-              memory: 100Mi
-      volumes:
+      - name: haproxy
+        image: haproxy:2.9.7 # {"$imagepolicy": "databases:redis-haproxy"}
+        ports:
+        - containerPort: 8080
+        - containerPort: 6380
+        volumeMounts:
         - name: config
-          secret:
-            secretName: redis-haproxy-secret
-            items:
-              - key: haproxy.cfg
-                path: haproxy.cfg
+          mountPath: /usr/local/etc/haproxy/haproxy.cfg
+          subPath: haproxy.cfg
+          readOnly: true
+        resources:
+          requests:
+            cpu: 10m
+            memory: 50Mi
+          limits:
+            cpu: 300m
+            memory: 100Mi
+      volumes:
+      - name: config
+        secret:
+          secretName: redis-haproxy-secret
+          items:
+          - key: haproxy.cfg
+            path: haproxy.cfg

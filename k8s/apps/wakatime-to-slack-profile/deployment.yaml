@@ -15,64 +15,64 @@ spec:
         app: wakatime-to-slack-profile
     spec:
       containers:
-        - name: wakatime-to-slack-profile
-          image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.2.2 # {"$imagepolicy": "default:wakatime-to-slack-profile"}
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8080
-          env:
-            - name: GIN_MODE
-              value: "release"
-            - name: WAKATIME_APP_ID
-              valueFrom:
-                secretKeyRef:
-                  name: wakatime-to-slack-profile-secret
-                  key: wakatime-app-id
-            - name: WAKATIME_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: wakatime-to-slack-profile-secret
-                  key: wakatime-client-secret
-            - name: COOKIE_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: wakatime-to-slack-profile-secret
-                  key: cookie-secret
-            - name: PSQL_ENDPOINT
-              value: "postgresql-default.databases.svc.cluster.local"
-            - name: PSQL_PORT
-              value: "5432"
-            - name: PSQL_DATABASE
-              value: "wakatime_to_slack"
-            - name: PSQL_USER
-              value: "wakatime"
-            - name: PSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: wakatime-to-slack-profile-secret
-                  key: postgres-password
-            - name: SLACK_ACCESS_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: wakatime-to-slack-profile-secret
-                  key: slack-access-token
-          volumeMounts:
-            - mountPath: /app/emoji.json
-              subPath: emoji.json
-              readOnly: true
-              name: emoji-json
-          resources:
-            limits:
-              cpu: "50m"
-              memory: "100Mi"
-            requests:
-              cpu: "1m"
-              memory: "5Mi"
+      - name: wakatime-to-slack-profile
+        image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.2.2 # {"$imagepolicy": "default:wakatime-to-slack-profile"}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GIN_MODE
+          value: "release"
+        - name: WAKATIME_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: wakatime-to-slack-profile-secret
+              key: wakatime-app-id
+        - name: WAKATIME_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: wakatime-to-slack-profile-secret
+              key: wakatime-client-secret
+        - name: COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: wakatime-to-slack-profile-secret
+              key: cookie-secret
+        - name: PSQL_ENDPOINT
+          value: "postgresql-default.databases.svc.cluster.local"
+        - name: PSQL_PORT
+          value: "5432"
+        - name: PSQL_DATABASE
+          value: "wakatime_to_slack"
+        - name: PSQL_USER
+          value: "wakatime"
+        - name: PSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: wakatime-to-slack-profile-secret
+              key: postgres-password
+        - name: SLACK_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: wakatime-to-slack-profile-secret
+              key: slack-access-token
+        volumeMounts:
+        - mountPath: /app/emoji.json
+          subPath: emoji.json
+          readOnly: true
+          name: emoji-json
+        resources:
+          limits:
+            cpu: "50m"
+            memory: "100Mi"
+          requests:
+            cpu: "1m"
+            memory: "5Mi"
       volumes:
-        - name: emoji-json
-          configMap:
-            name: wakatime-to-slack-profile-conf
-            items:
-              - key: emoji.json
-                path: emoji.json
+      - name: emoji-json
+        configMap:
+          name: wakatime-to-slack-profile-conf
+          items:
+          - key: emoji.json
+            path: emoji.json
       priorityClassName: low

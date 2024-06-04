@@ -61,12 +61,12 @@ spec:
               type: Directory
           - name: import
             persistentVolumeClaim:
-                claimName: photoprism-import
+              claimName: photoprism-import
           - name: cache
             persistentVolumeClaim:
-                claimName: photoprism-cache
+              claimName: photoprism-cache
           - name: storage
             persistentVolumeClaim:
-                claimName: photoprism-storage2
+              claimName: photoprism-storage2
           nodeSelector:
             kubernetes.io/hostname: cake

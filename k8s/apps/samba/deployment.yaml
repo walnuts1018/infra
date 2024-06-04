@@ -17,42 +17,42 @@ spec:
         fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
       containers:
-        - image: ghcr.io/servercontainers/samba:a3.19.0-s4.18.9-r0
-          imagePullPolicy: IfNotPresent
+      - image: ghcr.io/servercontainers/samba:a3.19.0-s4.18.9-r0
+        imagePullPolicy: IfNotPresent
+        name: samba
+        env:
+        - name: ACCOUNT_samba
+          valueFrom:
+            secretKeyRef:
+              name: samba-secret
+              key: account-samba
+        - name: SAMBA_CONF_LOG_LEVEL
+          value: "3"
+        - name: WSDD2_DISABLE
+          value: "1"
+        - name: AVAHI_DISABLE
+          value: "1"
+        - name: GROUPS_samba
+          value: samba
+        - name: SAMBA_VOLUME_CONFIG_share
+          value: "[share]; path=/samba-share; valid users = samba; public = no; read only = no; browseable = yes; available = yes"
+        ports:
+        - containerPort: 445
           name: samba
-          env:
-            - name: ACCOUNT_samba
-              valueFrom:
-                secretKeyRef:
-                  name: samba-secret
-                  key: account-samba
-            - name: SAMBA_CONF_LOG_LEVEL
-              value: "3"
-            - name: WSDD2_DISABLE
-              value: "1"
-            - name: AVAHI_DISABLE
-              value: "1"
-            - name: GROUPS_samba
-              value: samba
-            - name: SAMBA_VOLUME_CONFIG_share
-              value: "[share]; path=/samba-share; valid users = samba; public = no; read only = no; browseable = yes; available = yes"
-          ports:
-            - containerPort: 445
-              name: samba
-          volumeMounts:
-            - name: samba-local-dir
-              mountPath: /samba-share
-          resources:
-            limits:
-              memory: "4Gi"
-              cpu: "1000m"
-            requests:
-              memory: "0"
-              cpu: "0"
+        volumeMounts:
+        - name: samba-local-dir
+          mountPath: /samba-share
+        resources:
+          limits:
+            memory: "4Gi"
+            cpu: "1000m"
+          requests:
+            memory: "0"
+            cpu: "0"
       nodeSelector:
         kubernetes.io/hostname: cake
       volumes:
-        - name: samba-local-dir
-          hostPath:
-            path: /mnt/data/share
-            type: Directory
+      - name: samba-local-dir
+        hostPath:
+          path: /mnt/data/share
+          type: Directory

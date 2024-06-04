@@ -15,36 +15,36 @@ spec:
         app: machine-status-api
     spec:
       containers:
-        - name: machine-status-api
-          image: ghcr.io/walnuts1018/machine-status-api:1.2.0 # {"$imagepolicy": "default:machine-status-api"}
-          imagePullPolicy: IfNotPresent
-          securityContext:
-            runAsGroup: 997
-            privileged: true
-          ports:
-            - containerPort: 8080
-          env:
-            - name: GIN_MODE
-              value: "release"
-            - name: PVE_API_URL
-              value: "https://proxmox.walnuts.dev/api2/json/"
-            - name: PVE_API_TOKEN_ID
-              valueFrom:
-                secretKeyRef:
-                  name: machine-status-api-secret
-                  key: token
-            - name: PVE_API_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: machine-status-api-secret
-                  key: secret
-          resources:
-            requests:
-              cpu: "1m"
-              memory: "10Mi"
-            limits:
-              memory: "512Mi"
-              cpu: "100m"
+      - name: machine-status-api
+        image: ghcr.io/walnuts1018/machine-status-api:1.2.0 # {"$imagepolicy": "default:machine-status-api"}
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsGroup: 997
+          privileged: true
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GIN_MODE
+          value: "release"
+        - name: PVE_API_URL
+          value: "https://proxmox.walnuts.dev/api2/json/"
+        - name: PVE_API_TOKEN_ID
+          valueFrom:
+            secretKeyRef:
+              name: machine-status-api-secret
+              key: token
+        - name: PVE_API_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: machine-status-api-secret
+              key: secret
+        resources:
+          requests:
+            cpu: "1m"
+            memory: "10Mi"
+          limits:
+            memory: "512Mi"
+            cpu: "100m"
       priorityClassName: high
       nodeSelector:
         kubernetes.io/hostname: snow

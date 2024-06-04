@@ -6,12 +6,12 @@ labels:
   pairs:
     app: walnuts-dev-www-redirect
 resources:
-  - deployment.yaml
-  - ingress.yaml
-  - service.yaml
-  - image-policy.yaml
+- deployment.yaml
+- ingress.yaml
+- service.yaml
+- image-policy.yaml
 configMapGenerator:
-  - name: walnuts-dev-www-redirect-conf
-    files:
-      - nginx.conf
-      - virtualhost.conf
+- name: walnuts-dev-www-redirect-conf
+  files:
+  - nginx.conf
+  - virtualhost.conf

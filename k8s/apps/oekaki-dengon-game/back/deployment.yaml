@@ -15,54 +15,54 @@ spec:
         app: oekaki-dengon-game-back
     spec:
       containers:
-        - name: oekaki-dengon-game-back
-          image: "ghcr.io/kmc-jp/oekaki-dengon-game-back:v0.0.0-8663021dfbeca48bdcf4bd904796eb0c43dc544a-12" # {"$imagepolicy": "default:oekaki-dengon-game-back"}
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8080
-          env:
-            - name: GIN_MODE
-              value: "release"
-            - name: POSTGRES_ADMIN_USER
-              value: "postgres"
-            - name: POSTGRES_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: oekaki-dengon-game-secret
-                  key: postgres-admin-password
-            - name: POSTGRES_USER
-              value: "oekaki_dengon_game"
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: oekaki-dengon-game-secret
-                  key: postgres-user-password
-            - name: POSTGRES_DB
-              value: oekaki_dengon_game
-            - name: POSTGRES_HOST
-              value: "postgresql-default.databases.svc.cluster.local"
-            - name: POSTGRES_PORT
-              value: "5432"
-            - name: MINIO_ENDPOINT
-              value: "minio.walnuts.dev"
-            - name: MINIO_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: oekaki-dengon-game-secret
-                  key: minio-access-key
-            - name: MINIO_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: oekaki-dengon-game-secret
-                  key: minio-secret-key
-            - name: MINIO_BUCKET
-              value: "oekaki-dengon-game"
-            - name: MINIO_KEY_PREFIX
-              value: ""
-          resources:
-            requests:
-              cpu: 1m
-              memory: 10Mi
-            limits:
-              cpu: 1000m
-              memory: 1Gi
+      - name: oekaki-dengon-game-back
+        image: "ghcr.io/kmc-jp/oekaki-dengon-game-back:v0.0.0-8663021dfbeca48bdcf4bd904796eb0c43dc544a-12" # {"$imagepolicy": "default:oekaki-dengon-game-back"}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GIN_MODE
+          value: "release"
+        - name: POSTGRES_ADMIN_USER
+          value: "postgres"
+        - name: POSTGRES_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: oekaki-dengon-game-secret
+              key: postgres-admin-password
+        - name: POSTGRES_USER
+          value: "oekaki_dengon_game"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: oekaki-dengon-game-secret
+              key: postgres-user-password
+        - name: POSTGRES_DB
+          value: oekaki_dengon_game
+        - name: POSTGRES_HOST
+          value: "postgresql-default.databases.svc.cluster.local"
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: MINIO_ENDPOINT
+          value: "minio.walnuts.dev"
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oekaki-dengon-game-secret
+              key: minio-access-key
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: oekaki-dengon-game-secret
+              key: minio-secret-key
+        - name: MINIO_BUCKET
+          value: "oekaki-dengon-game"
+        - name: MINIO_KEY_PREFIX
+          value: ""
+        resources:
+          requests:
+            cpu: 1m
+            memory: 10Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi

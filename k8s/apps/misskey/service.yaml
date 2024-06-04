@@ -6,9 +6,9 @@ metadata:
     app: misskey
 spec:
   ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 3000
+  - port: 80
+    protocol: TCP
+    targetPort: 3000
   selector:
     app: misskey
   type: NodePort

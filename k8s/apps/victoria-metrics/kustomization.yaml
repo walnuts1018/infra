@@ -2,13 +2,13 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: monitoring
 resources:
-  - pvc.yaml
-  - helm.yaml
+- pvc.yaml
+- helm.yaml
 components:
-  - ../../components/helm
+- ../../components/helm
 configMapGenerator:
-  - name: victoria-metrics-config
-    files:
-      - scrape.yml=prometheus.yaml
+- name: victoria-metrics-config
+  files:
+  - scrape.yml=prometheus.yaml
 configurations:
-  - configurations.yaml
+- configurations.yaml

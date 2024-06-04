@@ -1,9 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 patches:
-  - path: patches.yaml
-    target:
-      group: external-secrets.io
-      kind: ExternalSecret
+- path: patches.yaml
+  target:
+    group: external-secrets.io
+    kind: ExternalSecret
 configurations:
-  - configurations.yaml
+- configurations.yaml

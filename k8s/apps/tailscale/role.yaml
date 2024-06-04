@@ -6,15 +6,15 @@ kind: Role
 metadata:
   name: tailscale
 rules:
-  - apiGroups: [""] # "" indicates the core API group
-    resources: ["secrets"]
-    # Create can not be restricted to a resource name.
-    verbs: ["create"]
-  - apiGroups: [""] # "" indicates the core API group
-    resourceNames: ["tailscale"]
-    resources: ["secrets"]
-    verbs: ["get", "update", "patch"]
-  - apiGroups: [""] # "" indicates the core API group
-    resourceNames: ["tailscale-auth1"]
-    resources: ["secrets"]
-    verbs: ["get", "update", "patch"]
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["secrets"]
+  # Create can not be restricted to a resource name.
+  verbs: ["create"]
+- apiGroups: [""] # "" indicates the core API group
+  resourceNames: ["tailscale"]
+  resources: ["secrets"]
+  verbs: ["get", "update", "patch"]
+- apiGroups: [""] # "" indicates the core API group
+  resourceNames: ["tailscale-auth1"]
+  resources: ["secrets"]
+  verbs: ["get", "update", "patch"]

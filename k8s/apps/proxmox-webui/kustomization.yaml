@@ -6,13 +6,13 @@ labels:
   pairs:
     app: proxmox-webui
 resources:
-  - deployment.yaml
-  - ingress.yaml
-  - externalsecret.yaml
-  - service.yaml
-  - image-policy.yaml
+- deployment.yaml
+- ingress.yaml
+- externalsecret.yaml
+- service.yaml
+- image-policy.yaml
 configMapGenerator:
-  - name: proxmox-webui-conf
-    files:
-      - nginx.conf
-      - virtualhost.conf
+- name: proxmox-webui-conf
+  files:
+  - nginx.conf
+  - virtualhost.conf

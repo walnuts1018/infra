@@ -6,7 +6,7 @@ spec:
   selector:
     app: github-readme-stats
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 9000
+  - protocol: TCP
+    port: 80
+    targetPort: 9000
   type: ClusterIP

@@ -1,4 +1,3 @@
----
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
@@ -22,15 +21,15 @@ spec:
         enabled: true
         ingressClassName: "nginx"
         hosts:
-          - host: vault.walnuts.dev
+        - host: vault.walnuts.dev
       volumes:
-        - name: vault
-          hostPath:
-            path: /var/data/vault
-            type: Directory
+      - name: vault
+        hostPath:
+          path: /var/data/vault
+          type: Directory
       volumeMounts:
-        - name: vault
-          mountPath: /vault/data
+      - name: vault
+        mountPath: /vault/data
       dataStorage:
         enabled: false
       nodeSelector:

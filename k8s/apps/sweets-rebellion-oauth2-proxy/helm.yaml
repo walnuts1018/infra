@@ -1,4 +1,3 @@
----
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
@@ -40,7 +39,7 @@ spec:
       pathType: Prefix
       # Used to create an Ingress record.
       hosts:
-        - "sweets-rebellion.walnuts.dev"
+      - "sweets-rebellion.walnuts.dev"
 
     # Configure the session storage type, between cookie and redis
     sessionStorage:

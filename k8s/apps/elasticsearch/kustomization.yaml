@@ -2,11 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: databases
 resources:
-  - deployment.yaml
-  - service.yaml
-  - pvc.yaml
-  - image-policy.yaml
+- deployment.yaml
+- service.yaml
+- pvc.yaml
+- image-policy.yaml
 configMapGenerator:
-  - name: elasticsearch-configmap
-    files:
-      - elasticsearch-plugins.yml
+- name: elasticsearch-configmap
+  files:
+  - elasticsearch-plugins.yml

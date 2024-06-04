@@ -6,9 +6,9 @@ metadata:
     app: oekaki-dengon-game-front
 spec:
   ports:
-    - name: http
-      port: 3000
-      targetPort: 3000
+  - name: http
+    port: 3000
+    targetPort: 3000
   selector:
     app: oekaki-dengon-game-front
   type: ClusterIP

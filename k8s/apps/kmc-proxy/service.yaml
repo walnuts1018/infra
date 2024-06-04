@@ -4,14 +4,14 @@ metadata:
   name: kmc-proxy
 spec:
   ports:
-    - port: 25565
-      name: minecraft
-    - port: 8123
-      name: dynmap1
-    - port: 8124
-      name: dynmap2
-    - port: 6443
-      name: k8s
+  - port: 25565
+    name: minecraft
+  - port: 8123
+    name: dynmap1
+  - port: 8124
+    name: dynmap2
+  - port: 6443
+    name: k8s
   selector:
     app: kmc-proxy
   type: LoadBalancer

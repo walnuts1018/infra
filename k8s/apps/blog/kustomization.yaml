@@ -6,12 +6,12 @@ labels:
   pairs:
     app: blog
 resources:
-  - deployment.yaml
-  - ingress.yaml
-  - service.yaml
-  - image-policy.yaml
+- deployment.yaml
+- ingress.yaml
+- service.yaml
+- image-policy.yaml
 configMapGenerator:
-  - name: blog-conf
-    files:
-      - nginx.conf
-      - virtualhost.conf
+- name: blog-conf
+  files:
+  - nginx.conf
+  - virtualhost.conf

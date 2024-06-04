@@ -7,13 +7,13 @@ metadata:
 spec:
   ingressClassName: "nginx"
   rules:
-    - host: "hedgedoc.walnuts.dev"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: hedgedoc
-                port:
-                  number: 3000
+  - host: "hedgedoc.walnuts.dev"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hedgedoc
+            port:
+              number: 3000

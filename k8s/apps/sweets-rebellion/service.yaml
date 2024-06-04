@@ -4,7 +4,7 @@ metadata:
   name: sweets-rebellion
 spec:
   ports:
-    - port: 80
+  - port: 80
   selector:
     app: sweets-rebellion
   type: ClusterIP

@@ -6,9 +6,9 @@ labels:
   pairs:
     app: samba-backup
 resources:
-  - cronjob.yaml
-  - externalsecret.yaml
+- cronjob.yaml
+- externalsecret.yaml
 configMapGenerator:
-  - name: samba-backup-script
-    files:
-      - backup.sh
+- name: samba-backup-script
+  files:
+  - backup.sh

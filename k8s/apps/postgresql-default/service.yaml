@@ -9,9 +9,9 @@ metadata:
     team: default
 spec:
   ports:
-    - name: postgresql
-      port: 5432
-      targetPort: 5432
+  - name: postgresql
+    port: 5432
+    targetPort: 5432
   selector:
     application: spilo
     cluster-name: default
