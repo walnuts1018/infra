@@ -37,7 +37,6 @@ spec:
       - name: misskey
         image: misskey/misskey:2024.5.0 # {"$imagepolicy": "misskey:misskey"}
         imagePullPolicy: IfNotPresent
-        tty: true
         ports:
         - containerPort: 3000
         volumeMounts:
