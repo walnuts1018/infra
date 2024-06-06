@@ -19,7 +19,7 @@ spec:
       existingSecret: prometheus-oauth2-proxy
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://prometheus-operated.monitoring.svc.cluster.local:8080" ]
+        upstreams = [ "http://prometheus-operated.monitoring.svc.cluster.local:9090" ]
         pass_access_token = true
         user_id_claim = "sub"
         oidc_groups_claim="my:zitadel:grants"
