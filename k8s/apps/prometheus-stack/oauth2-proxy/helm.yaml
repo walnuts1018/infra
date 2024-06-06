@@ -1,0 +1,52 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: prometheus-oauth2-proxy
+spec:
+  url: https://oauth2-proxy.github.io/manifests
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: prometheus-oauth2-proxy
+spec:
+  chart:
+    spec:
+      chart: oauth2-proxy
+      version: 7.5.5
+  values:
+    config:
+      existingSecret: prometheus-oauth2-proxy
+      configFile: |-
+        email_domains = [ "*" ]
+        upstreams = [ "http://prometheus-operated.monitoring.svc.cluster.local:8080" ]
+        pass_access_token = true
+        user_id_claim = "sub"
+        oidc_groups_claim="my:zitadel:grants"
+        allowed_groups = ["237477822715658605:prometheus-admin"]
+
+    extraArgs:
+      provider: oidc
+      redirect-url: https://prometheus.walnuts.dev/oauth2/callback
+      oidc-issuer-url: https://auth.walnuts.dev
+      skip-provider-button: true
+    ingress:
+      enabled: true
+      className: nginx
+      path: /
+      pathType: Prefix
+      hosts:
+      - "prometheus.walnuts.dev"
+    sessionStorage:
+      type: redis
+      redis:
+        existingSecret: "prometheus-oauth2-proxy"
+        passwordKey: "redis-password"
+        clientType: "sentinel"
+        sentinel:
+          existingSecret: "prometheus-oauth2-proxy"
+          passwordKey: "redis-password"
+          masterName: "mymaster"
+          connectionUrls: "redis://redis.databases.svc.cluster.local:6379,redis://redis.databases.svc.cluster.local:26379"
+    metrics:
+      enabled: true
