@@ -3,12 +3,3 @@ kind: Kustomization
 namespace: monitoring
 resources:
 - pvc.yaml
-- helm.yaml
-components:
-- ../../components/helm
-configMapGenerator:
-- name: victoria-metrics-config
-  files:
-  - scrape.yml=prometheus.yaml
-configurations:
-- configurations.yaml
