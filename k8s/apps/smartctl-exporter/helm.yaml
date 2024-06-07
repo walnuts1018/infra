@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: prometheus-smartctl-exporter
-      version: 0.8.0
+      version: 0.9.0
   values:
     image:
       repository: ghcr.io/joryirving/smartctl_exporter
