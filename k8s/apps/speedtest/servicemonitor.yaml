@@ -14,7 +14,7 @@ spec:
     params:
       script:
       - speedtest
-  jobLabel: prometheus-stack
+  jobLabel: speedtest
   namespaceSelector:
     matchNames:
     - monitoring
