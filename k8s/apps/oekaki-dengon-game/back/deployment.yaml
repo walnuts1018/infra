@@ -59,8 +59,4 @@ spec:
           value: "oekaki-dengon-game"
         - name: MINIO_KEY_PREFIX
           value: ""
-        resources:
-          requests:
-            memory: 10Mi
-          limits:
-            memory: 1Gi
+        resources: {}

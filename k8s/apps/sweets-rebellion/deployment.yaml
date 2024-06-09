@@ -26,11 +26,7 @@ spec:
           name: nginx-conf
         - mountPath: /var/log/nginx
           name: log
-        resources:
-          limits:
-            memory: 512Mi
-          requests:
-            memory: 10Mi
+        resources: {}
       imagePullSecrets:
       - name: ghcr-login-secret
       volumes:

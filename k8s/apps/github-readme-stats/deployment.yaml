@@ -18,11 +18,7 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
-        resources:
-          limits:
-            memory: 200Mi
-          requests:
-            memory: 32Mi
+        resources: {}
         env:
         - name: PAT_1
           valueFrom:

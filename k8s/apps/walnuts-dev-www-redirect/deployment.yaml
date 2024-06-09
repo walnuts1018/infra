@@ -23,11 +23,7 @@ spec:
           name: walnuts-dev-www-redirect-conf
         - mountPath: /var/log/nginx
           name: log
-        resources:
-          limits:
-            memory: 512Mi
-          requests:
-            memory: 128Mi
+        resources: {}
       volumes:
       - name: walnuts-dev-www-redirect-conf
         configMap:

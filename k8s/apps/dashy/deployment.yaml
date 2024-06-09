@@ -20,11 +20,7 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
-        resources:
-          limits:
-            memory: 512Mi
-          requests:
-            memory: 64Mi
+        resources: {}
         env:
         - name: NODE_ENV
           value: "production"

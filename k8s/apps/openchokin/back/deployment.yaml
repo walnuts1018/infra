@@ -43,8 +43,4 @@ spec:
           value: "postgresql-default.databases.svc.cluster.local"
         - name: POSTGRES_PORT
           value: "5432"
-        resources:
-          requests:
-            memory: 10Mi
-          limits:
-            memory: 512Mi
+        resources: {}

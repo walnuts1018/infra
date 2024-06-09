@@ -40,9 +40,5 @@ spec:
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
-        resources:
-          requests:
-            memory: "20Mi"
-          limits:
-            memory: "80Mi"
+        resources: {}
       priorityClassName: high

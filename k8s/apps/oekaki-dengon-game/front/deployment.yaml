@@ -25,10 +25,6 @@ spec:
         env:
         - name: API_URL
           value: "http://oekaki-dengon-game-back.default.svc.cluster.local:8080/api"
-        resources:
-          limits:
-            memory: 512Mi
-          requests:
-            memory: 160Mi
+        resources: {}
       nodeSelector:
         kubernetes.io/arch: amd64

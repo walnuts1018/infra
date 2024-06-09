@@ -61,11 +61,7 @@ spec:
           subPath: emoji.json
           readOnly: true
           name: emoji-json
-        resources:
-          limits:
-            memory: "100Mi"
-          requests:
-            memory: "5Mi"
+        resources: {}
       volumes:
       - name: emoji-json
         configMap:

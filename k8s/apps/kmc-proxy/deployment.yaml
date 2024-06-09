@@ -23,12 +23,7 @@ spec:
         - mountPath: /root/ssh-temp
           readOnly: false
           name: kmc-proxy-volume
-        resources:
-          requests:
-            memory: 1Mi
-          limits:
-            memory: 512Mi
-
+        resources: {}
       volumes:
       - name: kmc-proxy-volume
         projected:

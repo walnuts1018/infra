@@ -38,11 +38,7 @@ spec:
             secretKeyRef:
               name: machine-status-api-secret
               key: secret
-        resources:
-          requests:
-            memory: "10Mi"
-          limits:
-            memory: "512Mi"
+        resources: {}
       priorityClassName: high
       nodeSelector:
         kubernetes.io/hostname: snow

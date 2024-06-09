@@ -23,11 +23,7 @@ spec:
           name: blog-conf
         - mountPath: /var/log/nginx
           name: log
-        resources:
-          limits:
-            memory: 512Mi
-          requests:
-            memory: 5Mi
+        resources: {}
       volumes:
       - name: blog-conf
         configMap:

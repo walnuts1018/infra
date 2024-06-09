@@ -46,7 +46,7 @@ spec:
           limits:
             memory: "4Gi"
           requests:
-            memory: "0"
+            memory: "100Mi"
       nodeSelector:
         kubernetes.io/hostname: cake
       volumes:

@@ -35,11 +35,7 @@ spec:
           mountPath: /usr/local/etc/haproxy/haproxy.cfg
           subPath: haproxy.cfg
           readOnly: true
-        resources:
-          requests:
-            memory: 50Mi
-          limits:
-            memory: 100Mi
+        resources: {}
       volumes:
       - name: config
         secret:

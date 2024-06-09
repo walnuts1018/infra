@@ -20,9 +20,7 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
-        resources:
-          limits: {}
-          requests: {}
+        resources: {}
         env:
         - name: NEXT_PUBLIC_GA_ID
           value: G-NB6F68ZQ9P
