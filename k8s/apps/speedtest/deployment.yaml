@@ -22,9 +22,7 @@ spec:
         - containerPort: 9469
         resources:
           limits:
-            cpu: 500m
             memory: 100Mi
           requests:
-            cpu: 1m
             memory: 5Mi
       priorityClassName: low

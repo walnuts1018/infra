@@ -42,9 +42,7 @@ spec:
           runAsGroup: 1000
         resources:
           requests:
-            cpu: "20m"
             memory: "20Mi"
           limits:
-            cpu: "100m"
             memory: "80Mi"
       priorityClassName: high

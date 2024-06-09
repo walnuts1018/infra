@@ -31,10 +31,8 @@ spec:
                 - /tmp/healthy
             resources:
               requests:
-                cpu: 100m
                 memory: 500Mi
               limits:
-                cpu: "1"
                 memory: 2Gi
             volumeMounts:
             - name: samba-backup-script

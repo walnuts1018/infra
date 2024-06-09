@@ -21,10 +21,8 @@ spec:
         existingClaim: "victoria-metrics"
       resources:
         limits:
-          cpu: 500m
           memory: 1Gi
         requests:
-          cpu: 100m
           memory: 200Mi
       scrape:
         enabled: true

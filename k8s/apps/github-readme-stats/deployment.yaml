@@ -20,10 +20,8 @@ spec:
         - containerPort: 80
         resources:
           limits:
-            cpu: 100m
             memory: 200Mi
           requests:
-            cpu: 1m
             memory: 32Mi
         env:
         - name: PAT_1

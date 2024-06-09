@@ -20,10 +20,8 @@ spec:
             - "--cleanup"
             resources:
               requests:
-                cpu: 100m
                 memory: 2Gi
               limits:
-                cpu: "2"
                 memory: 4Gi
             env:
             - name: PHOTOPRISM_ORIGINALS_LIMIT

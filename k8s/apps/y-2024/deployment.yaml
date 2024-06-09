@@ -20,10 +20,8 @@ spec:
         - containerPort: 8080
         resources:
           limits:
-            cpu: 1000m
             memory: 512Mi
           requests:
-            cpu: 1m
             memory: 32Mi
         env:
         - name: PSQL_HOST

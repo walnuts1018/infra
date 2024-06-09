@@ -23,10 +23,8 @@ spec:
         resources:
           requests:
             memory: 3000Mi
-            cpu: 10m
           limits:
             memory: "5000Mi"
-            cpu: "500m"
         env:
         - name: discovery.type
           value: single-node
