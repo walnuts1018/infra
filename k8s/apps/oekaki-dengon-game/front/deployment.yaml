@@ -31,6 +31,6 @@ spec:
             memory: 512Mi
           requests:
             cpu: 1m
-            memory: 20Mi
+            memory: 160Mi
       nodeSelector:
         kubernetes.io/arch: amd64
