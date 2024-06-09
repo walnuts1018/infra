@@ -97,3 +97,6 @@ spec:
             targetLabel: node
             replacement: $1
             action: replace
+    prometheus:
+      prometheusSpec:
+        serviceMonitorSelectorNilUsesHelmValues: false
