@@ -103,10 +103,11 @@ spec:
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: longhorn
+              storageClassName: local-path
               accessModes: ["ReadWriteOnce"]
               resources:
                 requests:
                   storage: 32Gi
         retention: 14d
         retentionSize: 30Gi
+        replicas: 2
