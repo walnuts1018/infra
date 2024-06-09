@@ -24,8 +24,7 @@ spec:
         - mountPath: /var/log/nginx
           name: log
         resources:
-          limits:
-            memory: 512Mi
+          limits: {}
           requests:
             memory: 5Mi
       volumes:

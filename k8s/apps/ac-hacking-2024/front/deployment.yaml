@@ -18,8 +18,7 @@ spec:
         ports:
         - containerPort: 3000
         resources:
-          limits:
-            memory: 512Mi
+          limits: {}
           requests:
             memory: 30Mi
       nodeSelector:

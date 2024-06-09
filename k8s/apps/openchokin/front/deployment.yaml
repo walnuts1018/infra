@@ -23,8 +23,7 @@ spec:
         resources:
           requests:
             memory: 100Mi
-          limits:
-            memory: 512Mi
+          limits: {}
         env:
         - name: ZITADEL_URL
           value: "https://auth.walnuts.dev"

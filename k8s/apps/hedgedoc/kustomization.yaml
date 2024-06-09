@@ -7,3 +7,5 @@ resources:
 - externalsecret.yaml
 - ingress.yaml
 - image-policy.yaml
+components:
+- ../../components/deployment-with-vpa

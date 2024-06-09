@@ -5,3 +5,5 @@ resources:
 - service.yaml
 - image-policy.yaml
 - ingress.yaml
+components:
+- ../../../components/deployment-with-vpa

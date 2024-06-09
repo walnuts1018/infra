@@ -43,6 +43,5 @@ spec:
         resources:
           requests:
             memory: "20Mi"
-          limits:
-            memory: "80Mi"
+          limits: {}
       priorityClassName: high

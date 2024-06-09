@@ -21,8 +21,7 @@ spec:
         ports:
         - containerPort: 9469
         resources:
-          limits:
-            memory: 100Mi
+          limits: {}
           requests:
             memory: 5Mi
       priorityClassName: low

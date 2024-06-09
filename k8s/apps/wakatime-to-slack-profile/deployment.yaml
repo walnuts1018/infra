@@ -62,8 +62,7 @@ spec:
           readOnly: true
           name: emoji-json
         resources:
-          limits:
-            memory: "100Mi"
+          limits: {}
           requests:
             memory: "5Mi"
       volumes:

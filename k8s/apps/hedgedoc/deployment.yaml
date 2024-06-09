@@ -21,8 +21,7 @@ spec:
         ports:
         - containerPort: 3000
         resources:
-          limits:
-            memory: 300Mi
+          limits: {}
           requests:
             memory: 100Mi
         env:
