@@ -24,3 +24,10 @@ spec:
       prometheus.io/path: "/metrics"
     serviceMonitor:
       enabled: true
+      relabelings:
+      - sourceLabels: [__meta_kubernetes_pod_node_name]
+        separator: ;
+        regex: ^(.*)$
+        targetLabel: node
+        replacement: $1
+        action: replace
