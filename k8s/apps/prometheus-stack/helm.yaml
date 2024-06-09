@@ -19,11 +19,9 @@ spec:
       replicas: 2
       resources:
         limits:
-          cpu: 500m
           memory: 800Mi
         requests:
-          cpu: 10m
-          memory: 50Mi
+          memory: 220Mi
       ingress:
         enabled: true
         hosts:

@@ -63,10 +63,8 @@ spec:
           name: emoji-json
         resources:
           limits:
-            cpu: "50m"
             memory: "100Mi"
           requests:
-            cpu: "1m"
             memory: "5Mi"
       volumes:
       - name: emoji-json

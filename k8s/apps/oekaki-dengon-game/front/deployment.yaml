@@ -27,10 +27,8 @@ spec:
           value: "http://oekaki-dengon-game-back.default.svc.cluster.local:8080/api"
         resources:
           limits:
-            cpu: 1000m
             memory: 512Mi
           requests:
-            cpu: 1m
             memory: 160Mi
       nodeSelector:
         kubernetes.io/arch: amd64

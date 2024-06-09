@@ -19,10 +19,8 @@ spec:
         - containerPort: 3000
         resources:
           limits:
-            cpu: 1000m
             memory: 512Mi
           requests:
-            cpu: 0m
             memory: 30Mi
       nodeSelector:
         kubernetes.io/arch: amd64

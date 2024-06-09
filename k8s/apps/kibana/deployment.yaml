@@ -27,8 +27,6 @@ spec:
         #  value: "https://kibana.walnuts.dev"
         resources:
           limits:
-            cpu: 1000m
             memory: 1024Mi
           requests:
-            cpu: 10m
             memory: 350Mi

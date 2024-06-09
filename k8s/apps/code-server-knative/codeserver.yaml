@@ -26,10 +26,8 @@ spec:
       ingressClassName: "nginx"
       resources:
         limits:
-          cpu: "2000m"
           memory: "4Gi"
         requests:
-          cpu: "10m"
           memory: "512Mi"
       nodeSelector:
         kubernetes.io/arch: "amd64"

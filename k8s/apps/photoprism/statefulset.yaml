@@ -18,10 +18,8 @@ spec:
         image: photoprism/photoprism:240420
         resources:
           requests:
-            cpu: 10m
             memory: 2Gi
           limits:
-            cpu: "2"
             memory: 4Gi
         env:
         # - name: PHOTOPRISM_DEBUG

@@ -25,10 +25,8 @@ spec:
           name: log
         resources:
           limits:
-            cpu: 1000m
             memory: 512Mi
           requests:
-            cpu: 1m
             memory: 128Mi
       volumes:
       - name: walnuts-dev-www-redirect-conf

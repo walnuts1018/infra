@@ -57,10 +57,8 @@ spec:
               key: misskeydbpassword
         resources:
           requests:
-            cpu: 10m
             memory: 512Mi
           limits:
-            cpu: 2000m
             memory: 1Gi
       volumes:
       - name: misskey-pv

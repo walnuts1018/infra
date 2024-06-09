@@ -32,10 +32,8 @@ spec:
           redis: 6379
       resources:
         requests:
-          cpu: 50m
           memory: 10Mi
         limits:
-          cpu: 200m
           memory: 100Mi
       serviceAccount:
         create: false
@@ -75,10 +73,8 @@ spec:
           redis: 6379
       resources:
         requests:
-          cpu: 50m
           memory: 10Mi
         limits:
-          cpu: 200m
           memory: 100Mi
       serviceAccount:
         create: false
@@ -118,10 +114,8 @@ spec:
         type: ClusterIP
       resources:
         requests:
-          cpu: 50m
           memory: 20Mi
         limits:
-          cpu: 200m
           memory: 192Mi
 
     serviceAccount:

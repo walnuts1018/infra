@@ -28,10 +28,8 @@ spec:
           name: log
         resources:
           limits:
-            cpu: 100m
             memory: 100Mi
           requests:
-            cpu: 1m
             memory: 5Mi
       volumes:
       - name: proxmox-webui-conf

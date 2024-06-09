@@ -22,10 +22,8 @@ spec:
         - containerPort: 3000
         resources:
           limits:
-            cpu: 200m
             memory: 300Mi
           requests:
-            cpu: 10m
             memory: 100Mi
         env:
         - name: CMD_LOGLEVEL

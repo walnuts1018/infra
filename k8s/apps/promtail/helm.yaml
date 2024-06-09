@@ -17,10 +17,8 @@ spec:
   values:
     resources:
       limits:
-        cpu: 200m
         memory: 128Mi
       requests:
-        cpu: 50m
         memory: 32Mi
     config:
       clients:

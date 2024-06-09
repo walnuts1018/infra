@@ -34,10 +34,8 @@ spec:
           value: 4262dac3-569f-46ac-aa3a-b1397fb8d012
         resources:
           requests:
-            cpu: 10m
             memory: 32Mi
           limits:
-            cpu: 500m
             memory: 512Mi
       nodeSelector:
         kubernetes.io/arch: amd64

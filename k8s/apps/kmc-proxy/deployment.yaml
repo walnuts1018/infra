@@ -26,10 +26,8 @@ spec:
         resources:
           requests:
             memory: 1Mi
-            cpu: 1m
           limits:
             memory: 512Mi
-            cpu: 100m
 
       volumes:
       - name: kmc-proxy-volume
