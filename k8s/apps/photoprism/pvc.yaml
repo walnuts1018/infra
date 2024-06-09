@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: photoprism-import
 spec:
-  storageClassName: local-path
+  storageClassName: longhorn-local
   accessModes:
   - ReadWriteOnce
   resources:
@@ -15,7 +15,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: photoprism-cache
 spec:
-  storageClassName: local-path
+  storageClassName: longhorn-local
   accessModes:
   - ReadWriteOnce
   resources:
