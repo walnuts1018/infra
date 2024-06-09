@@ -107,4 +107,6 @@ spec:
               accessModes: ["ReadWriteOnce"]
               resources:
                 requests:
-                  storage: 20Gi
+                  storage: 32Gi
+        retention: 14d
+        retentionSize: 30Gi
