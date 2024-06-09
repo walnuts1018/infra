@@ -22,3 +22,5 @@ spec:
       prometheus.io/scrape: "true"
       prometheus.io/port: "9666"
       prometheus.io/path: "/metrics"
+    serviceMonitor:
+      enabled: true
