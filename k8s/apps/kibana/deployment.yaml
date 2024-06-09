@@ -26,7 +26,6 @@ spec:
           #- name: SERVER_PUBLICBASEURL
         #  value: "https://kibana.walnuts.dev"
         resources:
-          limits:
-            memory: 1024Mi
+          limits: {}
           requests:
             memory: 350Mi

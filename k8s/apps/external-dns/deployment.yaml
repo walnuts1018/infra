@@ -35,7 +35,6 @@ spec:
         resources:
           requests:
             memory: 32Mi
-          limits:
-            memory: 512Mi
+          limits: {}
       nodeSelector:
         kubernetes.io/arch: amd64

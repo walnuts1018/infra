@@ -7,3 +7,5 @@ resources:
 - externalsecret.yaml
 - service.yaml
 - image-policy.yaml
+components:
+- ../../components/deployment-with-vpa

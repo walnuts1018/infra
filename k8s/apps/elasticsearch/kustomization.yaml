@@ -10,3 +10,5 @@ configMapGenerator:
 - name: elasticsearch-configmap
   files:
   - elasticsearch-plugins.yml
+components:
+- ../../components/deployment-with-vpa

@@ -11,3 +11,5 @@ configMapGenerator:
 - name: wakatime-to-slack-profile-conf
   files:
   - emoji.json
+components:
+- ../../components/deployment-with-vpa

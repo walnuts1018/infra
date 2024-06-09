@@ -1,0 +1,17 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: to-be-replaced
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: to-be-replaced
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: "*"
+      controlledResources: ["memory"]
+      minAllowed:
+        memory: 10Mi

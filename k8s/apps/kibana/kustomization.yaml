@@ -6,3 +6,5 @@ resources:
 - service.yaml
 - ./oauth2-proxy
 - image-policy.yaml
+components:
+- ../../components/deployment-with-vpa

@@ -46,5 +46,4 @@ spec:
         resources:
           requests:
             memory: 10Mi
-          limits:
-            memory: 512Mi
+          limits: {}
