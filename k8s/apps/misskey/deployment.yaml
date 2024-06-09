@@ -58,8 +58,7 @@ spec:
         resources:
           requests:
             memory: 512Mi
-          limits:
-            memory: 1Gi
+          limits: {}
       volumes:
       - name: misskey-pv
         persistentVolumeClaim:
