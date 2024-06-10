@@ -15,4 +15,6 @@ spec:
       chart: opentelemetry-operator
       version: 0.62.0
   values:
-
+    manager:
+      collectorImage:
+        repository: "otel/opentelemetry-collector-k8s"
