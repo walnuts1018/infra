@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: opentelemetry-operator-system
 components:
 - ../../components/helm
-- ../../components/helm-with-values-secret
 resources:
 - helm.yaml
 - externalsecret.yaml
