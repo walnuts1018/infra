@@ -31,6 +31,8 @@ spec:
 
     postgres:
       enabled: false
+      pgadmin:
+        enabled: false
 
     ingress:
       enabled: true
