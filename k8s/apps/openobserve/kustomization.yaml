@@ -6,3 +6,4 @@ components:
 resources:
 - helm.yaml
 - externalsecret.yaml
+- configmap.yaml
