@@ -18,11 +18,11 @@ spec:
   - kind: Secret
     name: openobserve-collector
     valuesKey: authorization
-    targetPath: "exporters.otelhttp/openobserve.headers.Authorization"
+    targetPath: "exporters.otlphttp/openobserve.headers.Authorization"
   - kind: Secret
     name: openobserve-collector
     valuesKey: authorization
-    targetPath: "exporters.otelhttp/openobserve_k8s_events.headers.Authorization"
+    targetPath: "exporters.otlphttp/openobserve_k8s_events.headers.Authorization"
   values:
     exporters:
       otlphttp/openobserve:
