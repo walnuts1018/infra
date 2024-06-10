@@ -17,7 +17,7 @@ spec:
   values:
     externalSecret:
       enabled: true
-      name: "openobserve"
+      name: "openobserve-credentials"
 
     config:
       ZO_S3_PROVIDER: "minio"
