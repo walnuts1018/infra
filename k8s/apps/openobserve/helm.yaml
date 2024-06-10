@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: openobserve
-      version: 0.10.22
+      version: 0.10.24
   values:
     externalSecret:
       enabled: true
