@@ -31,3 +31,14 @@ spec:
 
     postgres:
       enabled: false
+
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations:
+        nginx.ingress.kubernetes.io/enable-cors: "true"
+      hosts:
+      - host: openobserve.walnuts.dev
+        paths:
+        - path: /
+          pathType: ImplementationSpecific
