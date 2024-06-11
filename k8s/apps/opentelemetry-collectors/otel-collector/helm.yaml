@@ -25,6 +25,15 @@ spec:
         otlphttp:
           endpoint: https://openobserve.walnuts.dev/api/default/
           headers: {}
+      service:
+        pipelines:
+          traces:
+            exporters: [otlphttp]
+          metrics:
+            exporters: [otlphttp]
+          logs:
+            exporters: [otlphttp]
+
 
     mode: daemonset
     image:
@@ -41,11 +50,3 @@ spec:
       logsCollection:
         enabled: true
 
-    service:
-      pipelines:
-        traces:
-          exporters: [otlphttp]
-        metrics:
-          exporters: [otlphttp]
-        logs:
-          exporters: [otlphttp]

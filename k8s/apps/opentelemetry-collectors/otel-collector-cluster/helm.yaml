@@ -25,6 +25,14 @@ spec:
         otlphttp:
           endpoint: https://openobserve.walnuts.dev/api/default/
           headers: {}
+      service:
+        pipelines:
+          traces:
+            exporters: [otlphttp]
+          metrics:
+            exporters: [otlphttp]
+          logs:
+            exporters: [otlphttp]
 
     mode: deployment
 
@@ -38,12 +46,3 @@ spec:
       # enables the k8sobjectsreceiver to collect events only and adds it to the logs pipelines
       kubernetesEvents:
         enabled: true
-
-    service:
-      pipelines:
-        traces:
-          exporters: [otlphttp]
-        metrics:
-          exporters: [otlphttp]
-        logs:
-          exporters: [otlphttp]
