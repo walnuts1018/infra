@@ -1,0 +1,49 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: otel-collector-cluster
+spec:
+  url: https://open-telemetry.github.io/opentelemetry-helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: otel-collector-cluster
+spec:
+  chart:
+    spec:
+      chart: opentelemetry-collector
+      version: 0.3.7
+  valuesFrom:
+  - kind: Secret
+    name: openobserve-authorization
+    valuesKey: authorization
+    targetPath: "config.exporters.otlphttp.headers.Authorization"
+  values:
+    config:
+      exporters:
+        otlphttp:
+          endpoint: https://openobserve.walnuts.dev/api/default/
+          headers: {}
+
+    mode: deployment
+
+    image:
+      repository: opentelemetry-collector-k8s
+
+    presets:
+      # enables the k8sclusterreceiver and adds it to the metrics pipelines
+      clusterMetrics:
+        enabled: true
+      # enables the k8sobjectsreceiver to collect events only and adds it to the logs pipelines
+      kubernetesEvents:
+        enabled: true
+
+    service:
+      pipelines:
+        traces:
+          exporters: [otlphttp]
+        metrics:
+          exporters: [otlphttp]
+        logs:
+          exporters: [otlphttp]

@@ -96,7 +96,7 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: openobserve-collector
+  name: opentelemetry-collector
 ---
 apiVersion: v1
 kind: Namespace
