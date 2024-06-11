@@ -32,3 +32,6 @@ spec:
         endpoint: https://openobserve.walnuts.dev/api/default/
         headers:
           stream-name: k8s_events
+    podSecurityContext:
+      fsGroup: 10001
+      fsGroupChangePolicy: "OnRootMismatch"
