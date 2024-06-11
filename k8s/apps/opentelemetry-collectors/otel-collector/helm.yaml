@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: opentelemetry-collector
-      version: 0.3.7
+      version: 0.93.2
   valuesFrom:
   - kind: Secret
     name: openobserve-authorization
