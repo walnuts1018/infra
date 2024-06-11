@@ -1,9 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: monitoring
-components:
-- ../../components/helm
+namespace: openobserve
 resources:
-- helm.yaml
+- https://raw.githubusercontent.com/zinclabs/openobserve/main/deploy/k8s/statefulset.yaml
 - externalsecret.yaml
-- configmap.yaml
+patches:
+- target:
+    kind: StatefulSet
+    name: openobserve
+  path: env-patch.yaml
