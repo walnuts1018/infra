@@ -21,8 +21,11 @@ spec:
         ports:
         - containerPort: 3000
         resources:
-          limits: {}
+          limits:
+            cpu: 200m
+            memory: 200Mi
           requests:
+            cpu: 100m
             memory: 100Mi
         env:
         - name: NEXT_PUBLIC_GA_ID
