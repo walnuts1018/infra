@@ -27,7 +27,7 @@ spec:
     exporters:
       otlphttp/openobserve:
         endpoint: https://openobserve.walnuts.dev/api/default/
-        headers:
+        headers: {}
       otlphttp/openobserve_k8s_events:
         endpoint: https://openobserve.walnuts.dev/api/default/
         headers:
