@@ -37,7 +37,7 @@ spec:
     mode: deployment
 
     image:
-      repository: opentelemetry-collector-k8s
+      repository: otel/opentelemetry-collector-k8s
 
     presets:
       # enables the k8sclusterreceiver and adds it to the metrics pipelines
