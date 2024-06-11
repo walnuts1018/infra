@@ -37,7 +37,7 @@ spec:
 
     mode: daemonset
     image:
-      repository: opentelemetry-collector-k8s
+      repository: otel/opentelemetry-collector-k8s
 
     presets:
       # enables the k8sattributesprocessor and adds it to the traces, metrics, and logs pipelines
