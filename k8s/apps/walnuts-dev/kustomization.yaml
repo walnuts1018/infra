@@ -7,4 +7,4 @@ resources:
 - ingress.yaml
 - image-policy.yaml
 components:
-- ../../components/deployment-with-vpa
+- ../../components/deployment-with-hpa
