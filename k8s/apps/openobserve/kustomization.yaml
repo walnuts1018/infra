@@ -9,3 +9,7 @@ patches:
     kind: StatefulSet
     name: openobserve
   path: env-patch.yaml
+- target:
+    kind: StatefulSet
+    name: openobserve
+  path: nodeselector-patch.yaml
