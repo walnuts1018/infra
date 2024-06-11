@@ -28,9 +28,7 @@ spec:
       otlphttp/openobserve:
         endpoint: https://openobserve.walnuts.dev/api/default/
         headers:
-          Authorization: Basic < base64 encoded auth >
       otlphttp/openobserve_k8s_events:
         endpoint: https://openobserve.walnuts.dev/api/default/
         headers:
-          Authorization: Basic < base64 encoded auth >
           stream-name: k8s_events
