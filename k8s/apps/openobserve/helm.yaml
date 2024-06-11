@@ -56,3 +56,6 @@ spec:
         paths:
         - path: /
           pathType: ImplementationSpecific
+
+    nodeSelector:
+      kubernetes.io/arch: amd64
