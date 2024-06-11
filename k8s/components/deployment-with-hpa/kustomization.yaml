@@ -12,3 +12,7 @@ replacements:
     fieldPaths:
     - metadata.name
     - spec.scaleTargetRef.name
+patches:
+- path: rm-replicas.yaml
+  target:
+    kind: Deployment
