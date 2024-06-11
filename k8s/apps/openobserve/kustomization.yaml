@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: openobserve
 resources:
-- https://raw.githubusercontent.com/zinclabs/openobserve/main/deploy/k8s/statefulset.yaml
+- https://raw.githubusercontent.com/openobserve/openobserve/v0.10.6/deploy/k8s/statefulset.yaml
 - externalsecret.yaml
 patches:
 - target:
