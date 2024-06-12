@@ -1,4 +1,12 @@
 # https://github.com/prometheus/snmp_exporter/tree/main/generator
+
+# $ git clone https://github.com/prometheus/snmp_exporter
+# $ cd snmp_exporter/generator
+# <edit generator.yml>
+# $ make mibs
+# $ docker build -t snmp-generator .
+# $ docker run -ti -v "${PWD}:/opt/" snmp-generator generate
+
 auths:
   public_v1:
     version: 1
