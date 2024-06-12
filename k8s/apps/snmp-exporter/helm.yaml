@@ -1,0 +1,58 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: snmp-exporter
+spec:
+  url: https://prometheus-community.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: snmp-exporter
+spec:
+  chart:
+    spec:
+      chart: prometheus-snmp-exporter
+      version: 5.4.0
+  values:
+    serviceMonitor:
+      enabled: true
+      path: /snmp
+
+      # Relabelings dynamically rewrite the label set of a target before it gets scraped.
+      # Set if defined unless overriden by params.relabelings.
+      # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#monitoring.coreos.com/v1.RelabelConfig
+      relabelings: []
+      # - sourceLabels: [__address__]
+      #   targetLabel: __param_target
+      # - sourceLabels: [__param_target]
+      #   targetLabel: instance
+
+      # Metric relabeling is applied to samples as the last step before ingestion.
+      # Set if defined unless overriden by params.additionalMetricsRelabels.
+      # This sets fixed relabel configs with action 'replace'.
+      additionalMetricsRelabels: {}
+      # targetLabel1: replacementValue1
+      # targetLabel2: replacementValue2
+
+      # Metric relabeling is applied to samples as the last step before ingestion.
+      # Set if defined unless overridden by params.additionalMetricsRelabelConfigs.
+      # This allows setting arbitrary relabel configs.
+      # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#monitoring.coreos.com/v1.RelabelConfig
+      additionalMetricsRelabelConfigs: []
+      # - sourceLabels: [__name__]
+      #   targetLabel: __name__
+      #   action: replace
+      #   regex: (.*)
+      #   replacement: prefix_$1
+
+
+      # Retain the job and instance labels of the metrics retrieved by the snmp-exporter
+      # https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#monitoring.coreos.com/v1.Endpoint
+      honorLabels: true
+
+      params:
+      - name: ix2215
+        target: "192.168.0.1"
+        module:
+        - nec_ix
