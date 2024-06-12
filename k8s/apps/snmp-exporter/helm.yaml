@@ -25,5 +25,5 @@ spec:
   valuesFrom:
   - kind: ConfigMap
     name: snmp-exporter
-    valuesKey: snmp.yaml
+    valuesKey: config
     targetPath: "config"
