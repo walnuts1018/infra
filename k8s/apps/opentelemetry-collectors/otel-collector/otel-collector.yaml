@@ -18,7 +18,7 @@ spec:
         send_batch_size: 10000
         timeout: 10s
     exporters:
-      openobserve:
+      otlphttp:
         endpoint: https://openobserve.walnuts.dev/api/default/
         headers:
           Authorization: ${env:OPENOBSERVE_AUTHORIZATION}
@@ -27,18 +27,18 @@ spec:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [openobserve]
+          exporters: [otlphttp]
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [openobserve]
+          exporters: [otlphttp]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [openobserve]
+          exporters: [otlphttp]
   env:
-    - name: OPENOBSERVE_AUTHORIZATION
-      valueFrom:
-        secretKeyRef:
-          name: openobserve-authorization
-          key: authorization
+  - name: OPENOBSERVE_AUTHORIZATION
+    valueFrom:
+      secretKeyRef:
+        name: openobserve-authorization
+        key: authorization
