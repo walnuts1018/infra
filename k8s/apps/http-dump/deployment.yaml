@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: http-dump
-        image: ghcr.io/walnuts1018/http-dump:f18838814b3c6f03942647bb7398c5fef1196cb8-10 # {"$imagepolicy": "default:http-dump"}
+        image: ghcr.io/walnuts1018/http-dump:0ac54b98f0742e59a4a0f7368d2baddc692a93bd-12 # {"$imagepolicy": "default:http-dump"}
         ports:
         - name: http
           containerPort: 8080
