@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: snmp-exporter
 data:
-  snmp.yaml: |
+  config: |
     # WARNING: This file was auto-generated using snmp_exporter generator, manual changes will be lost.
     auths:
       public_v1:
