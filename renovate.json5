@@ -13,9 +13,9 @@
       fileMatch: ["^k8s/apps/.*/helm.yaml$"],
       matchStringsStrategy: "combination",
       matchStrings: [
-        '^  url: "?(?<registryUrl>\\S+)"?\\s*',
-        '^      chart: "?(?<depName>[a-z0-9-]+)"?\\s*',
-        '^      version: "?(?<currentValue>\\S+)"?\\s*',
+        '  url: "?(?<registryUrl>\\S+)"?\\s*',
+        '      chart: "?(?<depName>[a-z0-9-]+)"?\\s*',
+        '      version: "?(?<currentValue>\\S+)"?\\s*',
       ],
       datasourceTemplate: "helm",
     },
