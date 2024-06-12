@@ -36,7 +36,7 @@ spec:
           security_level: noAuthNoPriv
           auth_protocol: MD5
           priv_protocol: DES
-          version: 2
+          version: 5
       modules:
         nec_ix:
           walk:
