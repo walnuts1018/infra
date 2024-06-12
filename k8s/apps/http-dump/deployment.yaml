@@ -24,8 +24,8 @@ spec:
           limits: {}
           requests:
             memory: 10Mi
-      env:
-      - name: OTEL_EXPORTER_OTLP_INSECURE
-        value: "true"
-      - name: OTEL_EXPORTER_OTLP_ENDPOINT
-        value: "http://default-collector.opentelemetry-collector.svc.cluster.local:4317"
+        env:
+        - name: OTEL_EXPORTER_OTLP_INSECURE
+          value: "true"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://default-collector.opentelemetry-collector.svc.cluster.local:4317"
