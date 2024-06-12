@@ -15,6 +15,7 @@ spec:
         app: oekaki-dengon-game-back
       annotations:
         instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
+        instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/app/server'
     spec:
       containers:
       - name: oekaki-dengon-game-back
