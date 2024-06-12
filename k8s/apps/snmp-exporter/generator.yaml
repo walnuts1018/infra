@@ -1,4 +1,3 @@
----
 # https://github.com/prometheus/snmp_exporter/tree/main/generator
 auths:
   auth_name:
@@ -9,17 +8,27 @@ auths:
     version: 2
 
 modules:
-# NEC IX Router
-#
-# https://jpn.nec.com/univerge/ix/Manual/MIB/PICO-SMI-MIB.txt
-# https://jpn.nec.com/univerge/ix/Manual/MIB/PICO-SMI-ID-MIB.txt
-# https://jpn.nec.com/univerge/ix/Manual/MIB/PICO-IPSEC-FLOW-MONITOR-MIB.txt
+  # NEC IX Router
+  #
+  # https://jpn.nec.com/univerge/ix/Manual/MIB/PICO-SMI-MIB.txt
+  # https://jpn.nec.com/univerge/ix/Manual/MIB/PICO-SMI-ID-MIB.txt
+  # https://jpn.nec.com/univerge/ix/Manual/MIB/PICO-IPSEC-FLOW-MONITOR-MIB.txt
   nec_ix:
     walk:
-      - picoSystem
-      - picoNetworkMonitorMIB
-      - picoIPv4MIB
-      - picoIPv6MIB
+    - picoOriginal
+    - picoSystem
+    - picoIpSecFlowMonitorMIB
+    - picoLoginMIB
+    - picoConfigEventMIB
+    - picoExtIfMIB
+    - picoNetworkMonitorMIB
+    - picoIsdnMIB
+    - picoNgnMIB
+    - picoPostMIB
+    - picoMobileMIB
+    - picoIPv4MIB
+    - picoIPv6MIB
+    - picoQoSMIB
+    - picoNAPTMIB
     retries: 3
     timeout: 10s
-
