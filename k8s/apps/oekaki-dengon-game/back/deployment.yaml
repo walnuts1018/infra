@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: oekaki-dengon-game-back
+      annotations:
+        instrumentation.opentelemetry.io/inject-go: "opentelemetry-collector/default"
     spec:
       containers:
       - name: oekaki-dengon-game-back
