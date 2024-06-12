@@ -1,0 +1,235 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: snmp-exporter
+data:
+  snmp.yaml: |
+    # WARNING: This file was auto-generated using snmp_exporter generator, manual changes will be lost.
+    auths:
+      auth_name:
+        community: public
+        security_level: noAuthNoPriv
+        auth_protocol: MD5
+        priv_protocol: DES
+        version: 2
+      public_v1:
+        community: public
+        security_level: noAuthNoPriv
+        auth_protocol: MD5
+        priv_protocol: DES
+        version: 1
+      public_v2:
+        community: public
+        security_level: noAuthNoPriv
+        auth_protocol: MD5
+        priv_protocol: DES
+        version: 2
+    modules:
+      nec_ix:
+        walk:
+        - 1.3.6.1.4.1.119.2.3.84.12
+        - 1.3.6.1.4.1.119.2.3.84.13
+        - 1.3.6.1.4.1.119.2.3.84.2
+        - 1.3.6.1.4.1.119.2.3.84.7
+        metrics:
+        - name: picoIPv4CacheEntries
+          oid: 1.3.6.1.4.1.119.2.3.84.12.1.1
+          type: gauge
+          help: The number of current IPv4 cache. - 1.3.6.1.4.1.119.2.3.84.12.1.1
+        - name: picoIPv4CachePeaks
+          oid: 1.3.6.1.4.1.119.2.3.84.12.1.2
+          type: gauge
+          help: The peak value of IPv4 cache. - 1.3.6.1.4.1.119.2.3.84.12.1.2
+        - name: picoIPv4CacheCreates
+          oid: 1.3.6.1.4.1.119.2.3.84.12.1.3
+          type: counter
+          help: The total count of created IPv4 cache. - 1.3.6.1.4.1.119.2.3.84.12.1.3
+        - name: picoIPv4CacheOverflows
+          oid: 1.3.6.1.4.1.119.2.3.84.12.1.4
+          type: counter
+          help: The total count of IPv4 cache overflow. - 1.3.6.1.4.1.119.2.3.84.12.1.4
+        - name: picoIPv4UFSCacheEntries
+          oid: 1.3.6.1.4.1.119.2.3.84.12.2.1
+          type: gauge
+          help: The number of current IPv4 UFS cache - 1.3.6.1.4.1.119.2.3.84.12.2.1
+        - name: picoIPv4UFSCachePeaks
+          oid: 1.3.6.1.4.1.119.2.3.84.12.2.2
+          type: gauge
+          help: The peak value of IPv4 UFS cache - 1.3.6.1.4.1.119.2.3.84.12.2.2
+        - name: picoIPv4UFSCacheCreates
+          oid: 1.3.6.1.4.1.119.2.3.84.12.2.3
+          type: counter
+          help: The total count of created IPv4 UFS cache - 1.3.6.1.4.1.119.2.3.84.12.2.3
+        - name: picoIPv4UFSCacheOverflows
+          oid: 1.3.6.1.4.1.119.2.3.84.12.2.4
+          type: counter
+          help: The total count of IPv4 UFS cache overflow - 1.3.6.1.4.1.119.2.3.84.12.2.4
+        - name: picoIPv6CacheEntries
+          oid: 1.3.6.1.4.1.119.2.3.84.13.1.1
+          type: gauge
+          help: The number of current IPv6 cache. - 1.3.6.1.4.1.119.2.3.84.13.1.1
+        - name: picoIPv6CachePeaks
+          oid: 1.3.6.1.4.1.119.2.3.84.13.1.2
+          type: gauge
+          help: The peak value of IPv6 cache. - 1.3.6.1.4.1.119.2.3.84.13.1.2
+        - name: picoIPv6CacheCreates
+          oid: 1.3.6.1.4.1.119.2.3.84.13.1.3
+          type: counter
+          help: The total count of created IPv6 cache. - 1.3.6.1.4.1.119.2.3.84.13.1.3
+        - name: picoIPv6CacheOverflows
+          oid: 1.3.6.1.4.1.119.2.3.84.13.1.4
+          type: counter
+          help: The total count of IPv6 cache overflow. - 1.3.6.1.4.1.119.2.3.84.13.1.4
+        - name: picoIPv6UFSCacheEntries
+          oid: 1.3.6.1.4.1.119.2.3.84.13.2.1
+          type: gauge
+          help: The number of current IPv6 UFS cache - 1.3.6.1.4.1.119.2.3.84.13.2.1
+        - name: picoIPv6UFSCachePeaks
+          oid: 1.3.6.1.4.1.119.2.3.84.13.2.2
+          type: gauge
+          help: The peak value of IPv6 UFS cache - 1.3.6.1.4.1.119.2.3.84.13.2.2
+        - name: picoIPv6UFSCacheCreates
+          oid: 1.3.6.1.4.1.119.2.3.84.13.2.3
+          type: counter
+          help: The total count of created IPv6 UFS cache - 1.3.6.1.4.1.119.2.3.84.13.2.3
+        - name: picoIPv6UFSCacheOverflows
+          oid: 1.3.6.1.4.1.119.2.3.84.13.2.4
+          type: counter
+          help: The total count of IPv6 UFS cache overflow - 1.3.6.1.4.1.119.2.3.84.13.2.4
+        - name: picoCelsius
+          oid: 1.3.6.1.4.1.119.2.3.84.2.1.1
+          type: gauge
+          help: Indicates the temperature of the equipment inside, in degree (Celsius).
+            - 1.3.6.1.4.1.119.2.3.84.2.1.1
+        - name: picoFahrenheit
+          oid: 1.3.6.1.4.1.119.2.3.84.2.1.2
+          type: gauge
+          help: Indicates the temperature of the equipment inside, in degree (Fahrenheit).
+            - 1.3.6.1.4.1.119.2.3.84.2.1.2
+        - name: picoVoltage
+          oid: 1.3.6.1.4.1.119.2.3.84.2.2
+          type: gauge
+          help: Indicates the observed voltage, in milli-volt (mV). - 1.3.6.1.4.1.119.2.3.84.2.2
+        - name: picoFanIndex
+          oid: 1.3.6.1.4.1.119.2.3.84.2.3.1.1
+          type: gauge
+          help: Unique index for each fan module. - 1.3.6.1.4.1.119.2.3.84.2.3.1.1
+          indexes:
+          - labelname: picoFanIndex
+            type: gauge
+        - name: picoFanStatus
+          oid: 1.3.6.1.4.1.119.2.3.84.2.3.1.2
+          type: gauge
+          help: Status of a fan module - 1.3.6.1.4.1.119.2.3.84.2.3.1.2
+          indexes:
+          - labelname: picoFanIndex
+            type: gauge
+          enum_values:
+            1: normal
+            2: failure
+        - name: picoFanRpm
+          oid: 1.3.6.1.4.1.119.2.3.84.2.3.1.3
+          type: gauge
+          help: Fan speed (Revolution Per Minutes) - 1.3.6.1.4.1.119.2.3.84.2.3.1.3
+          indexes:
+          - labelname: picoFanIndex
+            type: gauge
+        - name: picoPowerSupplyIndex
+          oid: 1.3.6.1.4.1.119.2.3.84.2.4.1.1
+          type: gauge
+          help: Unique index for each power supply module. - 1.3.6.1.4.1.119.2.3.84.2.4.1.1
+          indexes:
+          - labelname: picoPowerSupplyIndex
+            type: gauge
+        - name: picoPowerSupplyType
+          oid: 1.3.6.1.4.1.119.2.3.84.2.4.1.2
+          type: gauge
+          help: Power supply module type. - 1.3.6.1.4.1.119.2.3.84.2.4.1.2
+          indexes:
+          - labelname: picoPowerSupplyIndex
+            type: gauge
+          enum_values:
+            0: notInstalled
+            1: systemACPS
+            2: ieee802dot3af-PoE-ACPS
+        - name: picoPowerSupplyStatus
+          oid: 1.3.6.1.4.1.119.2.3.84.2.4.1.3
+          type: gauge
+          help: Status of a Power Supply module. - 1.3.6.1.4.1.119.2.3.84.2.4.1.3
+          indexes:
+          - labelname: picoPowerSupplyIndex
+            type: gauge
+          enum_values:
+            0: notInstalled
+            1: normal
+            2: failure
+        - name: picoSchedRtUtl1Sec
+          oid: 1.3.6.1.4.1.119.2.3.84.2.5.1
+          type: gauge
+          help: Indicates the observed system utilization for last 1 second, in percent
+            (%). - 1.3.6.1.4.1.119.2.3.84.2.5.1
+        - name: picoSchedRtUtl5Sec
+          oid: 1.3.6.1.4.1.119.2.3.84.2.5.2
+          type: gauge
+          help: Indicates the observed system utilization for last 5 seconds, in percent
+            (%). - 1.3.6.1.4.1.119.2.3.84.2.5.2
+        - name: picoSchedRtUtl1Min
+          oid: 1.3.6.1.4.1.119.2.3.84.2.5.3
+          type: gauge
+          help: Indicates the observed system utilization for last 1 minute, in percent
+            (%). - 1.3.6.1.4.1.119.2.3.84.2.5.3
+        - name: picoSchedRtUtl1Hour
+          oid: 1.3.6.1.4.1.119.2.3.84.2.5.4
+          type: gauge
+          help: Indicates the observed system utilization for last 1 hour, in percent
+            (%). - 1.3.6.1.4.1.119.2.3.84.2.5.4
+        - name: picoHeapSize
+          oid: 1.3.6.1.4.1.119.2.3.84.2.6.1
+          type: gauge
+          help: Indicates the observed total heap size, in bytes. - 1.3.6.1.4.1.119.2.3.84.2.6.1
+        - name: picoHeapUtil
+          oid: 1.3.6.1.4.1.119.2.3.84.2.6.2
+          type: gauge
+          help: Indicates the observed current heap utilization, in percent (%). - 1.3.6.1.4.1.119.2.3.84.2.6.2
+        - name: picoNetmonWatchgroupIndex
+          oid: 1.3.6.1.4.1.119.2.3.84.7.1.1.1.1
+          type: gauge
+          help: Unique index for each Netmon Watchgroup. - 1.3.6.1.4.1.119.2.3.84.7.1.1.1.1
+          indexes:
+          - labelname: picoNetmonWatchgroupIndex
+            type: gauge
+        - name: picoNetmonWatchgroupName
+          oid: 1.3.6.1.4.1.119.2.3.84.7.1.1.1.2
+          type: DisplayString
+          help: Netmon Watchgroup Name. - 1.3.6.1.4.1.119.2.3.84.7.1.1.1.2
+          indexes:
+          - labelname: picoNetmonWatchgroupIndex
+            type: gauge
+        - name: picoNetmonWatchgroupSequenceNumber
+          oid: 1.3.6.1.4.1.119.2.3.84.7.1.1.1.3
+          type: gauge
+          help: Netmon Watchgroup sequence number. - 1.3.6.1.4.1.119.2.3.84.7.1.1.1.3
+          indexes:
+          - labelname: picoNetmonWatchgroupIndex
+            type: gauge
+        - name: picoNetmonWatchgroupStatus
+          oid: 1.3.6.1.4.1.119.2.3.84.7.1.1.1.4
+          type: gauge
+          help: Status of a Netmon Watchgroup. - 1.3.6.1.4.1.119.2.3.84.7.1.1.1.4
+          indexes:
+          - labelname: picoNetmonWatchgroupIndex
+            type: gauge
+          enum_values:
+            1: normal
+            2: stand
+            3: disable
+        - name: picoNetmonWatchgroupVarianceCounts
+          oid: 1.3.6.1.4.1.119.2.3.84.7.1.1.1.5
+          type: gauge
+          help: Netmon Watchgroup variance statistics. - 1.3.6.1.4.1.119.2.3.84.7.1.1.1.5
+          indexes:
+          - labelname: picoNetmonWatchgroupIndex
+            type: gauge
+        retries: 3
+        timeout: 10s
+
