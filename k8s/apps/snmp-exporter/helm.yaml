@@ -15,9 +15,17 @@ spec:
       chart: prometheus-snmp-exporter
       version: 5.4.0
   values:
-  - name: snmp-exporter-configmap
-    mountPath: /run/secrets/snmp-exporter
-    subPath: snmp.yaml
-    configMap: snmp-exporter
-    readOnly: true
-    defaultMode: 420
+    serviceMonitor:
+      enabled: true
+      params:
+      - name: ix2215
+        target: "192.168.0.1"
+        module:
+        - nec_ix
+    extraConfigmapMounts:
+    - name: snmp-exporter
+      mountPath: /run/secrets/snmp-exporter
+      subPath: snmp.yaml # (optional)
+      configMap: snmp-exporter
+      readOnly: true
+      defaultMode: 420
