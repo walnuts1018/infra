@@ -43,7 +43,7 @@ spec:
           key: ZO_META_POSTGRES_DSN
 
     config:
-      ZO_LOCAL_MODE: "false"
+      ZO_LOCAL_MODE: "true"
       ZO_LOCAL_MODE_STORAGE: "s3"
       ZO_S3_PROVIDER: "minio"
       ZO_S3_SERVER_URL: "https://minio.walnuts.dev"
