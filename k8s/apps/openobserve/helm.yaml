@@ -67,3 +67,6 @@ spec:
 
     nodeSelector:
       kubernetes.io/arch: amd64
+
+    persistence:
+      enabled: false
