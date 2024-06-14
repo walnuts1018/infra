@@ -127,6 +127,12 @@ jobs:
         with:
           name: manifests
 
+      - name: install dyff
+        run: |
+          wget https://github.com/homeport/dyff/releases/download/v1.8.0/dyff_1.8.0_linux_amd64.tar.gz
+          tar -xvf dyff_1.8.0_linux_amd64.tar.gz
+          chmod +x dyff
+
       - name: Build markdown comment with manifest diff
         run: |
           echo "## Manifest diff
@@ -134,7 +140,7 @@ jobs:
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(diff -u manifests-base.yaml manifests-head.yaml)
+          $(./dyff between manifests-base.yaml manifests-head.yaml)
           \`\`\`
 
           </details>" | tee /tmp/comment.md
@@ -170,6 +176,28 @@ jobs:
         id: slack
         uses: slackapi/slack-github-action@v1.26.0
         with:
-          slack-message: "Failed to lint manifests-head.yaml"
+          payload: |
+            {
+              "text": "Workflow ${{ github.workflow }} failed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Workflow ${{ github.workflow }} failed"
+                  }
+                },
+                {
+                  "type": "section",
+                  "block_id": "section789",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "error: ${{ job.status }}"
+                    }
+                  ]
+                }
+              ]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
