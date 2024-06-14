@@ -176,6 +176,28 @@ jobs:
         id: slack
         uses: slackapi/slack-github-action@v1.26.0
         with:
-          slack-message: "Failed to lint manifests-head.yaml"
+          payload: |
+            {
+              "text": "Workflow ${{ github.workflow }} failed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Workflow ${{ github.workflow }} failed"
+                  }
+                },
+                {
+                  "type": "section",
+                  "block_id": "section789",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "error: ${{ job.status }}"
+                    }
+                  ]
+                }
+              ]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
