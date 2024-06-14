@@ -28,7 +28,7 @@ kind: ImageRepository
 metadata:
   name: openobserve
 spec:
-  image: public.ecr.aws/zinclabs/openobserve:v0.10.7
+  image: public.ecr.aws/zinclabs/openobserve
   interval: 2m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
