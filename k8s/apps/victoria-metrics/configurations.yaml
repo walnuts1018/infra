@@ -1,5 +1,0 @@
-nameReference:
-- kind: ConfigMap
-  fieldSpecs:
-  - path: spec/values/server/scrape/configMap
-    kind: HelmRelease
