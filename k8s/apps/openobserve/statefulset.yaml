@@ -42,8 +42,6 @@ spec:
         - name: ZO_META_STORE
           value: "postgres"
         envFrom:
-        - configMapRef:
-            name: openobserve
         - secretRef:
             name: openobserve
         livenessProbe:
