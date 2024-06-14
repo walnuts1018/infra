@@ -101,6 +101,8 @@ spec:
           name: grafana
           user: grafana
           password: $__file{/etc/secrets/postgres_password}
+        plugins:
+          allow_loading_unsigned_plugins: zinclabs_openobserve
     prometheus-node-exporter:
       prometheus:
         monitor:
