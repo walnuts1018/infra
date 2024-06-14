@@ -145,7 +145,7 @@ jobs:
           \`\`\`
 
           dyff
-          \`\`\`yaml
+          \`\`\`diff
           $(./dyff between manifests-base.yaml manifests-head.yaml)
           \`\`\`
 
