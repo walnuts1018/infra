@@ -42,4 +42,4 @@ spec:
     pattern: 'v(?P<major>[0-9]{4})\.(?P<miner>[0-9]+)\.(?P<patch>[0-9]+)'
   policy:
     semver:
-      range: ">=1.0.0"
+      range: "vx.x.x"
