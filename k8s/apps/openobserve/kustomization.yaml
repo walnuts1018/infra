@@ -6,3 +6,4 @@ resources:
 - service.yaml
 - statefulset.yaml
 - ingress.yaml
+- image-policy.yaml
