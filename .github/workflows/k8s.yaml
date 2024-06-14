@@ -127,6 +127,12 @@ jobs:
         with:
           name: manifests
 
+      - name: install dyff
+        run: |
+          wget https://github.com/homeport/dyff/releases/download/v1.8.0/dyff_1.8.0_linux_amd64.tar.gz
+          tar -xvf dyff_1.8.0_linux_amd64.tar.gz
+          chmod +x dyff
+
       - name: Build markdown comment with manifest diff
         run: |
           echo "## Manifest diff
@@ -134,7 +140,7 @@ jobs:
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(diff -u manifests-base.yaml manifests-head.yaml)
+          $(./dyff between manifests-base.yaml manifests-head.yaml)
           \`\`\`
 
           </details>" | tee /tmp/comment.md
