@@ -8,5 +8,5 @@ spec:
     port: 5080
     targetPort: 5080
   selector:
-    app: photoprism
+    app: openobserve
   type: ClusterIP
