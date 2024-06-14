@@ -1,0 +1,45 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: openobserve
+spec:
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
+    push:
+      branch: openobserve
+  interval: 1m0s
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  update:
+    path: ./k8s/apps/openobserve
+    strategy: Setters
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: openobserve
+spec:
+  image: public.ecr.aws/zinclabs/openobserve:v0.10.7
+  interval: 2m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: openobserve
+spec:
+  imageRepositoryRef:
+    name: openobserve
+  filterTags:
+    pattern: 'v(?P<major>[0-9]{4})\.(?P<miner>[0-9]+)\.(?P<patch>[0-9]+)'
+  policy:
+    semver:
+      range: ">=1.0.0"
