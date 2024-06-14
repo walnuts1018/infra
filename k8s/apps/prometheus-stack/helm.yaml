@@ -39,30 +39,11 @@ spec:
         existingSecret: "grafana"
         userKey: admin-username
         passwordKey: admin-password
-      extraInitContainers:
-      - name: openobserve-plugin-loader
-        image: wbitt/network-multitool
-        imagePullPolicy: IfNotPresent
-        command:
-          [
-            "sh",
-            "-c",
-            "curl -o /var/lib/grafana/plugins/zo_gp.tar.gz https://zincsearch-releases.s3.us-west-2.amazonaws.com/zo_gp/zo_gp.tar.gz && cd /var/lib/grafana/plugins &&  tar -zxvf zo_gp.tar.gz",
-          ]
-        volumeMounts:
-          - name: plugins
-            mountPath: /var/lib/grafana/plugins
       extraSecretMounts:
       - name: auth-generic-oauth-secret
         secretName: grafana
         mountPath: /etc/secrets
         readOnly: true
-      extraVolumeMounts:
-      - name: plugins
-        mountPath: /var/lib/grafana/plugins
-      extraVolumes:
-      - name: plugins
-        emptyDir: {}
       grafana.ini:
         server:
           domain: grafana.walnuts.dev
@@ -101,8 +82,6 @@ spec:
           name: grafana
           user: grafana
           password: $__file{/etc/secrets/postgres_password}
-        plugins:
-          allow_loading_unsigned_plugins: zinclabs_openobserve
     prometheus-node-exporter:
       prometheus:
         monitor:
