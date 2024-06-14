@@ -40,4 +40,4 @@ spec:
     name: openobserve
   policy:
     semver:
-      range: ">=v1.0.0"
+      range: ">=0.0.0"
