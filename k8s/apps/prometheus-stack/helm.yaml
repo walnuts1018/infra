@@ -33,13 +33,10 @@ spec:
         enabled: false
       persistence:
         enabled: false
-        storageClassName: longhorn
-        volumeName: grafana
-        size: 1Gi
-        inMemory:
-          enabled: true
       service:
         type: ClusterIP
+      plugins:
+      - https://zincsearch-releases.s3.us-west-2.amazonaws.com/zo_gp/zo_gp.tar.gz;zinclabs_openobserve
       admin:
         existingSecret: "grafana"
         userKey: admin-username
