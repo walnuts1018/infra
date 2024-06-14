@@ -39,7 +39,7 @@ spec:
   imageRepositoryRef:
     name: openobserve
   filterTags:
-    pattern: 'v(?P<major>[0-9]{4})\.(?P<miner>[0-9]+)\.(?P<patch>[0-9]+)'
+    pattern: '(?P<major>[0-9]{4})\.(?P<miner>[0-9]+)\.(?P<patch>[0-9]+)'
   policy:
     semver:
-      range: "vx.x.x"
+      range: ">=1.0.0"
