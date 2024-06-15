@@ -28,8 +28,8 @@ spec:
           Authorization: ${env:OPENOBSERVE_AUTHORIZATION}
       otelhttp/loki:
         endpoint: http://loki.monitoring.svc.cluster.local:3100/otlp/v1/logs
-        headers:
-          X-Scope-OrgID: ${env:LOKI_SCOPE_ORG_ID}
+        tls:
+          insecure: true
     service:
       pipelines:
         traces:
