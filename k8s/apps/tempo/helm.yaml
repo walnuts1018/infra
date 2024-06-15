@@ -21,7 +21,7 @@ spec:
           backend: s3
           s3:
             bucket: tempo
-            endpoint: https://minio.walnuts.dev/
+            endpoint: https://minio.walnuts.dev
             access_key: '${MINIO_ACCESS_KEY}'
             secret_key: '${MINIO_SECRET_KEY}'
       extraEnv:
