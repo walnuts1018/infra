@@ -18,6 +18,10 @@ spec:
         send_batch_size: 10000
         timeout: 10s
     exporters:
+      otlp/tempo:
+        endpoint: tempo.monitoring.svc.cluster.local:4317
+        tls:
+          insecure: true
       otlphttp:
         endpoint: https://openobserve.walnuts.dev/api/default/
         headers:
