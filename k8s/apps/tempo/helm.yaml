@@ -24,7 +24,6 @@ spec:
             endpoint: minio.walnuts.dev
             access_key: '${MINIO_ACCESS_KEY}'
             secret_key: '${MINIO_SECRET_KEY}'
-            insecure: false
       extraEnv:
       - name: MINIO_ACCESS_KEY
         valueFrom:
