@@ -24,7 +24,6 @@ spec:
             endpoint: minio.walnuts.dev
             access_key: '${MINIO_ACCESS_KEY}'
             secret_key: '${MINIO_SECRET_KEY}'
-            region: ap-northeast-1
             insecure: false
       extraEnv:
       - name: MINIO_ACCESS_KEY
@@ -37,3 +36,5 @@ spec:
           secretKeyRef:
             name: tempo-credentials
             key: MINIO_SECRET_KEY
+      extraArgs:
+      - -config.expand-env=true
