@@ -26,7 +26,7 @@ spec:
         endpoint: https://openobserve.walnuts.dev/api/default/
         headers:
           Authorization: ${env:OPENOBSERVE_AUTHORIZATION}
-      otelhttp/loki:
+      otlphttp/loki:
         endpoint: http://loki.monitoring.svc.cluster.local:3100/otlp/v1/logs
         tls:
           insecure: true
@@ -43,7 +43,7 @@ spec:
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [otelhttp/loki, otlphttp/openobserve]
+          exporters: [otlphttp/loki, otlphttp/openobserve]
   env:
   - name: OPENOBSERVE_AUTHORIZATION
     valueFrom:
