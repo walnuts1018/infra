@@ -31,7 +31,7 @@ spec:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [otlphttp]
+          exporters: [otlp/tempo, otlphttp]
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch]
