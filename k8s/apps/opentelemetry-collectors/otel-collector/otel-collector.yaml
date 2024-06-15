@@ -22,24 +22,28 @@ spec:
         endpoint: tempo.monitoring.svc.cluster.local:4317
         tls:
           insecure: true
-      otlphttp:
+      otlphttp/openobserve:
         endpoint: https://openobserve.walnuts.dev/api/default/
         headers:
           Authorization: ${env:OPENOBSERVE_AUTHORIZATION}
+      otelhttp/loki:
+        endpoint: http://loki.monitoring.svc.cluster.local:3100/otlp/v1/logs
+        headers:
+          X-Scope-OrgID: ${env:LOKI_SCOPE_ORG_ID}
     service:
       pipelines:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [otlp/tempo, otlphttp]
+          exporters: [otlp/tempo, otlphttp/openobserve]
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [otlphttp]
+          exporters: [otlphttp/openobserve]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [otlphttp]
+          exporters: [otelhttp/loki, otlphttp/openobserve]
   env:
   - name: OPENOBSERVE_AUTHORIZATION
     valueFrom:
