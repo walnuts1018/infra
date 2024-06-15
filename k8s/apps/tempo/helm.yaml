@@ -35,5 +35,4 @@ spec:
           secretKeyRef:
             name: tempo-credentials
             key: MINIO_SECRET_KEY
-      extraArgs:
-      - -config.expand-env=true
+      extraArgs: -config.expand-env=true
