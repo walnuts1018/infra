@@ -1,0 +1,37 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: tempo
+spec:
+  url: https://grafana.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tempo
+spec:
+  chart:
+    spec:
+      chart: tempo
+      version: 1.9.0
+  values:
+    tempo:
+      storage:
+        trace:
+          backend: s3
+          s3:
+            bucket: tempo
+            endpoint: minio.walnuts.dev
+            access_key: '${MINIO_ACCESS_KEY}'
+            secret_key: '${MINIO_SECRET_KEY}'
+      extraEnv:
+      - name: MINIO_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: tempo-credentials
+            key: MINIO_ACCESS_KEY
+      - name: MINIO_SECRET_KEY
+        valueFrom:
+          secretKeyRef:
+            name: tempo-credentials
+            key: MINIO_SECRET_KEY
