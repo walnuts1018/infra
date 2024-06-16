@@ -18,6 +18,10 @@ spec:
     controller:
       config:
         use-forwarded-headers: true
+        enable-opentelemetry: "true"
+        opentelemetry-trust-incoming-span: "true"
+        otlp-collector-host: "default-collector.opentelemetry-collector.svc.cluster.local"
+        otel-service-name: "ingress-nginx"
       service:
         enabled: true
         loadBalancerIP: "192.168.0.128"
@@ -26,3 +30,7 @@ spec:
         enableHttps: true
         type: LoadBalancer
       replicaCount: 3
+
+      opentelemetry:
+        enabled: true
+        name: opentelemetry
