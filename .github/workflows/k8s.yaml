@@ -133,6 +133,11 @@ jobs:
           tar -xvf dyff_1.8.0_linux_amd64.tar.gz
           chmod +x dyff
 
+      - name: diff/dyff view
+        run: |
+          diff -u manifests-base.yaml manifests-head.yaml
+          ./dyff between manifests-base.yaml manifests-head.yaml
+
       - name: Build markdown comment with manifest diff
         run: |
           echo "# Manifest diff
