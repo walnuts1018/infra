@@ -24,7 +24,7 @@ spec:
         runAsNonRoot: true
       containers:
       - name: openobserve-standalone
-        image: public.ecr.aws/zinclabs/openobserve:v0.10.5 # {"$imagepolicy": "openobserve:openobserve"}
+        image: public.ecr.aws/zinclabs/openobserve:v0.10.7 # {"$imagepolicy": "openobserve:openobserve"}
         imagePullPolicy: IfNotPresent
         env:
         - name: ZO_LOCAL_MODE
