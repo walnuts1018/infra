@@ -45,3 +45,7 @@ spec:
       priorityClassName: high
       nodeSelector:
         kubernetes.io/hostname: snow
+      tolerations:
+      - key: "node-role.kubernetes.io/control-plane"
+        operator: "Exists"
+        effect: "NoSchedule"
