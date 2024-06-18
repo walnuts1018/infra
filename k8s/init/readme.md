@@ -388,3 +388,32 @@ kubectl apply -f - -n kube-system
 ```bash
 kubectl label nodes cheese walnuts.dev/ondemand=true
 ```
+
+## Vault
+
+```bash
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install vault
+```
+
+```bash
+kubectl port-forward service/vault -n vault 8200:8200 &
+export VAULT_ADDR=http://localhost:8200
+vault operator unseal
+```
+
+```bash
+vault login
+```
+
+```bash
+export SA_JWT_TOKEN=$(kubectl get secret -n vault vault-auth-secret --output 'go-template={{ .data.token }}' | base64 --decode)
+export SA_CA_CRT=$(kubectl config view --raw --minify --flatten --output 'jsonpath={.clusters[].cluster.certificate-authority-data}' | base64 --decode)
+
+vault write auth/kubernetes/config \
+     token_reviewer_jwt="$SA_JWT_TOKEN" \
+     kubernetes_host="https://192.168.0.17:16443" \
+     kubernetes_ca_cert="$SA_CA_CRT" \
+     issuer="https://kubernetes.default.svc.cluster.local"
+```
