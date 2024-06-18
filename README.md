@@ -11,8 +11,8 @@
     <img src="https://github.com/walnuts1018/infra/actions/workflows/k8s.yaml/badge.svg" alt="k8s CI" />
     <img src="https://github.com/walnuts1018/infra/actions/workflows/auto-gen.yaml/badge.svg" alt="Manifest Auto Generation" />
     <img alt="Walnuts.dev Status" src="https://img.shields.io/website?url=https%3A%2F%2Fwalnuts.dev&label=Walnuts.dev">
-    <a href="https://wakatime.com/badge/user/981e52dd-a7ab-4b00-9a71-125be9dc2de6/project/07d86b66-ede6-45aa-a456-0985d4aed1a9" alt="WakaTime">
-        <img src="https://wakatime.com/badge/user/981e52dd-a7ab-4b00-9a71-125be9dc2de6/project/07d86b66-ede6-45aa-a456-0985d4aed1a9.svg" alt="WakaTime" />
+    <a href="https://wakatime.com/badge/user/981e52dd-a7ab-4b00-9a71-125be9dc2de6/project/07d86b66-ede6-45aa-a456-0985d4aed1a9">
+        <img src="https://wakatime.com/badge/user/981e52dd-a7ab-4b00-9a71-125be9dc2de6/project/07d86b66-ede6-45aa-a456-0985d4aed1a9.svg" alt="wakatime">
     </a>
 </p>
 
