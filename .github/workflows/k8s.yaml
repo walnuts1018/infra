@@ -135,19 +135,21 @@ jobs:
 
       - name: Build markdown comment with manifest diff
         run: |
-          echo "## Manifest diff
+          echo "# Manifest diff
 
-          # diff
+          ## diff
           <details>
           <summary>Click to expand</summary>
+
           \`\`\`diff
           $(diff -u manifests-base.yaml manifests-head.yaml)
           \`\`\`
           </details>
 
-          # dyff
+          ## dyff
           <details>
           <summary>Click to expand</summary>
+
           \`\`\`diff
           $(./dyff between manifests-base.yaml manifests-head.yaml)
           \`\`\`
