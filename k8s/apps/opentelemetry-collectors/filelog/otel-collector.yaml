@@ -109,6 +109,5 @@ spec:
   - name: varlibdockercontainers
     hostPath:
       path: /var/lib/docker/containers
-  podSecurityContext:
-    fsGroup: 10001
-    fsGroupChangePolicy: "OnRootMismatch"
+  securityContext:
+    runAsGroup: 0
