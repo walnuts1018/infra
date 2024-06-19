@@ -41,6 +41,8 @@ spec:
     #    value: "debug"
     metrics:
       enabled: true
+      serviceMonitor:
+        enabled: true
 
     resources:
       requests:
