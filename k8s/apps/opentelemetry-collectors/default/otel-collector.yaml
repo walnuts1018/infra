@@ -30,14 +30,14 @@ spec:
           - k8s.deployment.name
           - k8s.node.name
         pod_association:
-          - sources: # First try to use the value of the resource attribute k8s.pod.ip
-              - from: resource_attribute
-                name: k8s.pod.ip
-          - sources: # Then try to use the value of the resource attribute k8s.pod.uid
-              - from: resource_attribute
-                name: k8s.pod.uid
-          - sources: # If neither of those work, use the request's connection to get the pod IP.
-              - from: connection
+        - sources: # First try to use the value of the resource attribute k8s.pod.ip
+          - from: resource_attribute
+            name: k8s.pod.ip
+        - sources: # Then try to use the value of the resource attribute k8s.pod.uid
+          - from: resource_attribute
+            name: k8s.pod.uid
+        - sources: # If neither of those work, use the request's connection to get the pod IP.
+          - from: connection
     exporters:
       otlp/tempo:
         endpoint: tempo.monitoring.svc.cluster.local:4317

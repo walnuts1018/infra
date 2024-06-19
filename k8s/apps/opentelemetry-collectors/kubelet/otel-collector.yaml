@@ -13,9 +13,9 @@ spec:
         endpoint: '${env:K8S_NODE_IP}:10250'
         insecure_skip_verify: true
         metric_groups:
-          - node
-          - pod
-          - container
+        - node
+        - pod
+        - container
     processors:
       memory_limiter:
         check_interval: 1s
