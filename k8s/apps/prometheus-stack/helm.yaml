@@ -103,6 +103,11 @@ spec:
               resources:
                 requests:
                   storage: 32Gi
+        resources:
+          requests:
+            memory: 1000Mi
+          limits:
+            memory: 2000Mi
         retention: 14d
         retentionSize: 30GiB
         replicas: 2
