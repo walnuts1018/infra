@@ -31,10 +31,6 @@ spec:
           insecure: true
     service:
       pipelines:
-        traces:
-          receivers: [kubeletstats]
-          processors: [memory_limiter, batch]
-          exporters: [otlp/default]
         metrics:
           receivers: [kubeletstats]
           processors: [memory_limiter, batch]
