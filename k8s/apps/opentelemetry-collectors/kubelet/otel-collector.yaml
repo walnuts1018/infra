@@ -4,6 +4,7 @@ metadata:
   name: kubelet
 spec:
   serviceAccount: kubelet-collector
+  mode: deployment
   config:
     receivers:
       kubeletstats:
