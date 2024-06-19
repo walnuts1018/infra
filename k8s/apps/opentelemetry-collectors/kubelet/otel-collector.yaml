@@ -35,10 +35,6 @@ spec:
           receivers: [kubeletstats]
           processors: [memory_limiter, batch]
           exporters: [otlp/default]
-        logs:
-          receivers: [kubeletstats]
-          processors: [memory_limiter, batch]
-          exporters: [otlp/default]
   env:
   - name: K8S_NODE_NAME
     valueFrom:
