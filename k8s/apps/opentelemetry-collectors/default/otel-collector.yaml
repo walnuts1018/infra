@@ -4,6 +4,7 @@ metadata:
   name: default
 spec:
   mode: deployment
+  serviceAccount: default-collector
   config:
     receivers:
       otlp:
