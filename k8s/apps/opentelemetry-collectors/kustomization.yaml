@@ -3,5 +3,6 @@ kind: Kustomization
 namespace: opentelemetry-collector
 resources:
 - externalsecret.yaml
-- ./otel-collector
+- ./default
+- ./kubelet
 - ./otel-collector-cluster
