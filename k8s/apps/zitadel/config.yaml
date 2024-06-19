@@ -23,3 +23,16 @@ Database:
         RootCert:
         Cert:
         Key:
+Metrics:
+  Type: otel
+
+Tracing:
+  Type: otel
+  Fraction: 1.0
+  Endpoint: "http://default-collector.opentelemetry-collector.svc.cluster.local:4317"
+
+Telemetry:
+  Enabled: true
+  Endpoints:
+    - http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+  Limit: 100
