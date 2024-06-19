@@ -1,0 +1,41 @@
+apiVersion: moco.cybozu.com/v1beta2
+kind: MySQLCluster
+metadata:
+  name: default
+spec:
+  replicas: 3
+  podTemplate:
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - mysql
+              - key: app.kubernetes.io/instance
+                operator: In
+                values:
+                - test
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: mysqld
+        image: ghcr.io/cybozu-go/moco/mysql:8.0.35
+        resources:
+          requests:
+            memory: "100Mi"
+          limits:
+            memory: "10Gi"
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+  primaryServiceTemplate:
+    spec:
+      type: LoadBalancer
