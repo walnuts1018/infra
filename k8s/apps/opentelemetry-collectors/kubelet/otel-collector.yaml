@@ -1,0 +1,45 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: kubelet
+spec:
+  serviceAccount: kubelet-collector
+  config:
+    receivers:
+      kubeletstats:
+        collection_interval: 10s
+        auth_type: 'serviceAccount'
+        endpoint: '${env:K8S_NODE_NAME}:10250'
+        insecure_skip_verify: true
+        metric_groups:
+          - node
+          - pod
+          - container
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 75
+        spike_limit_percentage: 15
+      batch:
+        send_batch_size: 10000
+        timeout: 10s
+    exporters:
+      otlp/default:
+        endpoint: default-collector.opentelemetry-collector.svc.cluster.local:4317
+        tls:
+          insecure: true
+    service:
+      pipelines:
+        traces:
+          receivers: [kubeletstats]
+          processors: [memory_limiter, batch]
+          exporters: [otlp/default]
+        metrics:
+          receivers: [kubeletstats]
+          processors: [memory_limiter, batch]
+          exporters: [otlp/default]
+        logs:
+          receivers: [kubeletstats]
+          processors: [memory_limiter, batch]
+          exporters: [otlp/default]
+
