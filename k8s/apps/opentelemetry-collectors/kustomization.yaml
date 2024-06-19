@@ -4,5 +4,5 @@ namespace: opentelemetry-collector
 resources:
 - externalsecret.yaml
 - ./default
+- ./filelog
 - ./kubelet
-- ./otel-collector-cluster
