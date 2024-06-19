@@ -37,7 +37,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       containers:
       - name: mysqld
-        image: ghcr.io/cybozu-go/moco/mysql:8.0.35
+        image: ghcr.io/cybozu-go/moco/mysql:8.4.0
         resources:
           requests:
             memory: "100Mi"
