@@ -40,9 +40,9 @@ spec:
         image: ghcr.io/cybozu-go/moco/mysql:8.4.0
         resources:
           requests:
-            memory: "100Mi"
+            memory: "350Mi"
           limits:
-            memory: "10Gi"
+            memory: "2Gi"
   volumeClaimTemplates:
   - metadata:
       name: mysql-data
