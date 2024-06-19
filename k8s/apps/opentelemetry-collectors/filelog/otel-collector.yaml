@@ -110,4 +110,5 @@ spec:
     hostPath:
       path: /var/lib/docker/containers
   securityContext:
+    runAsUser: 0
     runAsGroup: 0
