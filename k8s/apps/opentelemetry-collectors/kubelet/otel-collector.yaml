@@ -10,7 +10,7 @@ spec:
       kubeletstats:
         collection_interval: 10s
         auth_type: 'serviceAccount'
-        endpoint: '${env:K8S_NODE_NAME}:10250'
+        endpoint: '${env:K8S_NODE_IP}:10250'
         insecure_skip_verify: true
         metric_groups:
           - node
@@ -36,7 +36,7 @@ spec:
           processors: [memory_limiter, batch]
           exporters: [otlp/default]
   env:
-  - name: K8S_NODE_NAME
+  - name: K8S_NODE_IP
     valueFrom:
       fieldRef:
-        fieldPath: spec.nodeName
+        fieldPath: status.hostIP
