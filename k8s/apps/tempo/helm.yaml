@@ -16,6 +16,11 @@ spec:
       version: 1.10.0
   values:
     tempo:
+      resources:
+       requests:
+         memory: 2Gi
+       limits:
+         memory: 4Gi
       storage:
         trace:
           backend: s3
