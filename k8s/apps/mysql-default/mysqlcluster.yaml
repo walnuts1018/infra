@@ -20,15 +20,21 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
-              - key: app.kubernetes.io/name
-                operator: In
-                values:
-                - mysql
               - key: app.kubernetes.io/instance
                 operator: In
                 values:
                 - test
             topologyKey: "kubernetes.io/hostname"
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 10
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - mysql
+              topologyKey: "kubernetes.io/hostname"
       containers:
       - name: mysqld
         image: ghcr.io/cybozu-go/moco/mysql:8.0.35
