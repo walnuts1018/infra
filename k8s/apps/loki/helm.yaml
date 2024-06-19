@@ -35,6 +35,11 @@ spec:
       replicas: 1
       persistence:
         storageClass: longhorn
+      resources:
+        requests:
+          memory: 300Mi
+        limits:
+          memory: 512Mi
     write:
       replicas: 0
     read:
