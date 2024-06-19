@@ -4,7 +4,7 @@ metadata:
   name: kubelet
 spec:
   serviceAccount: kubelet-collector
-  mode: deployment
+  mode: daemonset
   config:
     receivers:
       kubeletstats:
@@ -43,4 +43,8 @@ spec:
           receivers: [kubeletstats]
           processors: [memory_limiter, batch]
           exporters: [otlp/default]
-
+  env:
+  - name: K8S_NODE_NAME
+    valueFrom:
+      fieldRef:
+        fieldPath: spec.nodeName
