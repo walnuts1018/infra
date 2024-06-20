@@ -23,6 +23,8 @@ spec:
     ingress:
       enabled: true
       ingressClassName: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: 128G
       hosts:
       - minio.walnuts.dev
     replicas: 1
