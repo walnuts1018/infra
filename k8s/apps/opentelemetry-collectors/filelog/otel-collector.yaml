@@ -108,3 +108,4 @@ spec:
   securityContext:
     runAsUser: 0
     runAsGroup: 0
+    privileged: true
