@@ -9,3 +9,4 @@ resources:
 - ./kubelet
 - ./cluster
 - ./loki-exporter
+- ./prometheus
