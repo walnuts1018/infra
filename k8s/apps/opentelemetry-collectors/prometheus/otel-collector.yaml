@@ -3,7 +3,7 @@ kind: OpenTelemetryCollector
 metadata:
   name: prometheus
 spec:
-  mode: deployment
+  mode: statefulset
   serviceAccount: otel-collector
   targetAllocator:
     enabled: true
