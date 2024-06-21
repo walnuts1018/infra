@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: otel-exporter
+  labels:
+    app: otel-exporter
+spec:
+  endpoints:
+  - honorLabels: false
+    honorTimestamps: true
+    path: /metrics
+    port: "prometheus"
+  jobLabel: otel-exporter
+  namespaceSelector:
+    matchNames:
+    - opentelemetry-collector
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: opentelemetry-collector.prometheus-exporter
+      app.kubernetes.io/name: prometheus-exporter-collector
