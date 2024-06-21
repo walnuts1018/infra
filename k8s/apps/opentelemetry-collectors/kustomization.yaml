@@ -8,3 +8,4 @@ resources:
 - ./filelog
 - ./kubelet
 - ./cluster
+- ./loki-exporter
