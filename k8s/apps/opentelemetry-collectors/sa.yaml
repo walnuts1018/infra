@@ -26,6 +26,7 @@ rules:
   - configmaps
   - nodes/metrics
   - endpoints
+  - secrets
   verbs:
   - get
   - watch
