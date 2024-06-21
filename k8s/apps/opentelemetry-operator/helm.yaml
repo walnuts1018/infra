@@ -16,8 +16,8 @@ spec:
       version: 0.62.0
   values:
     manager:
-      collectorImage:
-        repository: "otel/opentelemetry-collector-k8s"
+      # collectorImage:
+      #   repository: "otel/opentelemetry-collector-k8s"
       extraArgs:
       - --enable-go-instrumentation=true
       - --enable-nginx-instrumentation=true
