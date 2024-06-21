@@ -1,3 +1,6 @@
+# loki exporterがデフォルトで有効な、opentelemetry-collector-contribを使いたいが、defaultの方はopentelemetry-collector-k8sを使いたいし、そもそもcontribの方は非推奨
+# よって、分離して、default-collectorとlokiの間に入る
+
 apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
