@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: opentelemetry-collector
 resources:
 - externalsecret.yaml
+- sa.yaml
 - ./default
 - ./filelog
 - ./kubelet
-- ./sa.yaml
