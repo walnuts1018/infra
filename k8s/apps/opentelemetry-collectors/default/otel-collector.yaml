@@ -56,7 +56,7 @@ spec:
       loki:
         endpoint: http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
         default_labels_enabled:
-          exporter: false
+          exporter: true
           job: true
         tls:
           insecure: true
