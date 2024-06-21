@@ -1,0 +1,43 @@
+# prometheus exporterがデフォルトで有効な、opentelemetry-collector-contribを使いたいが、defaultの方はopentelemetry-collector-k8sを使いたいし、そもそもcontribの方は非推奨
+# よって、分離して、default-collectorとprometheusの間に入る
+
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: prometheus-exporter
+spec:
+  mode: deployment
+  image: otel/opentelemetry-collector-contrib:0.103.0
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            max_recv_msg_size_mib: 100
+          http: {}
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 75
+        spike_limit_percentage: 15
+      batch:
+        send_batch_size: 10000
+        timeout: 10s
+    exporters:
+      prometheus:
+        endpoint: "0.0.0.0:8080"
+        tls:
+          insecure: true
+        namespace: monitoring
+        send_timestamps: true
+        metric_expiration: 180m
+        enable_open_metrics: true
+        add_metric_suffixes: false
+        resource_to_telemetry_conversion:
+          enabled: true
+    service:
+      pipelines:
+        logs:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [prometheus]

@@ -10,3 +10,4 @@ resources:
 - ./cluster
 - ./loki-exporter
 - ./prometheus
+- ./prometheus-exporter
