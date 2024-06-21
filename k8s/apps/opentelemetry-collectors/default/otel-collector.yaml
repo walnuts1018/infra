@@ -48,8 +48,8 @@ spec:
         endpoint: https://openobserve.walnuts.dev/api/default/
         headers:
           Authorization: ${env:OPENOBSERVE_AUTHORIZATION}
-      otlphttp/loki:
-        endpoint: http://loki.monitoring.svc.cluster.local:3100/otlp
+      otlp/loki-exporter:
+        endpoint: loki-exporter.opentelemetry-collector.svc.cluster.local:4317
         tls:
           insecure: true
     service:
@@ -65,7 +65,7 @@ spec:
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlphttp/loki, otlphttp/openobserve]
+          exporters: [otlp/loki-exporter, otlphttp/openobserve]
   env:
   - name: OPENOBSERVE_AUTHORIZATION
     valueFrom:
