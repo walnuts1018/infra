@@ -9,7 +9,8 @@ spec:
     receivers:
       otlp:
         protocols:
-          grpc: {}
+          grpc:
+            max_recv_msg_size_mib: 100
           http: {}
     processors:
       memory_limiter:
