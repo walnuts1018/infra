@@ -31,6 +31,8 @@ spec:
             period: 24h
           object_store: filesystem
           schema: v13
+      limits_config:
+        allow_structured_metadata: true
     singleBinary:
       replicas: 1
       persistence:
