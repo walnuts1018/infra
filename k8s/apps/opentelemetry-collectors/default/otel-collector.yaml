@@ -5,6 +5,7 @@ metadata:
 spec:
   mode: deployment
   serviceAccount: otel-collector
+  image: otel/opentelemetry-collector-contrib:0.103.0
   config:
     receivers:
       otlp:
