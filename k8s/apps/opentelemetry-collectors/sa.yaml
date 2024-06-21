@@ -11,31 +11,60 @@ rules:
 - apiGroups:
   - ''
   resources:
-  - 'pods'
-  - 'namespaces'
+  - events
+  - namespaces
+  - namespaces/status
+  - nodes
+  - nodes/spec
+  - nodes/stats
+  - pods
+  - pods/status
+  - replicationcontrollers
+  - replicationcontrollers/status
+  - resourcequotas
+  - services
   verbs:
-  - 'get'
-  - 'watch'
-  - 'list'
+  - get
+  - watch
+  - list
 - apiGroups:
-  - 'apps'
+  - apps
   resources:
-  - 'replicasets'
+  - replicasets
+  - daemonsets
+  - deployments
+  - statefulsets
   verbs:
-  - 'get'
-  - 'list'
-  - 'watch'
+  - get
+  - list
+  - watch
 - apiGroups:
-  - 'extensions'
+  - extensions
   resources:
-  - 'replicasets'
+  - daemonsets
+  - deployments
+  - replicasets
   verbs:
-  - 'get'
-  - 'list'
-  - 'watch'
-- apiGroups: ['']
-  resources: ['nodes/stats']
-  verbs: ['get', 'watch', 'list']
+  - get
+  - list
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  - cronjobs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - autoscaling
+  resources:
+  - horizontalpodautoscalers
+  verbs:
+  - get
+  - list
+  - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
