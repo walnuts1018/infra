@@ -3,7 +3,7 @@ kind: OpenTelemetryCollector
 metadata:
   name: kubelet
 spec:
-  serviceAccount: kubelet-collector
+  serviceAccount: otel-collector
   mode: daemonset
   config:
     receivers:

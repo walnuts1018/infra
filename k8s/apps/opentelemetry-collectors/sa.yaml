@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: default-collector
+  name: otel-collector
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: default-collector
+  name: otel-collector
 rules:
 - apiGroups:
   - ''
@@ -33,16 +33,19 @@ rules:
   - 'get'
   - 'list'
   - 'watch'
+- apiGroups: ['']
+  resources: ['nodes/stats']
+  verbs: ['get', 'watch', 'list']
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: default-collector
+  name: otel-collector
 subjects:
 - kind: ServiceAccount
-  name: default-collector
+  name: otel-collector
   namespace: opentelemetry-collector
 roleRef:
   kind: ClusterRole
-  name: default-collector
+  name: otel-collector
   apiGroup: rbac.authorization.k8s.io

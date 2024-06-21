@@ -4,7 +4,7 @@ metadata:
   name: default
 spec:
   mode: deployment
-  serviceAccount: default-collector
+  serviceAccount: otel-collector
   config:
     receivers:
       otlp:
