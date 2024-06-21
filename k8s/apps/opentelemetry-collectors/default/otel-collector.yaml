@@ -52,6 +52,10 @@ spec:
         endpoint: loki-exporter-collector.opentelemetry-collector.svc.cluster.local:4317
         tls:
           insecure: true
+      otlp/prometheus-exporter:
+        endpoint: prometheus-exporter-collector.opentelemetry-collector.svc.cluster.local:4317
+        tls:
+          insecure: true
     service:
       pipelines:
         traces:
@@ -61,7 +65,7 @@ spec:
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlphttp/openobserve]
+          exporters: [otlphttp/openobserve, otlp/prometheus-exporter]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]

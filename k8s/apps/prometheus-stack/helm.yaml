@@ -95,6 +95,9 @@ spec:
     prometheus:
       prometheusSpec:
         serviceMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelector:
+          matchLabels:
+            app: otel-exporter
         storageSpec:
           volumeClaimTemplate:
             spec:
