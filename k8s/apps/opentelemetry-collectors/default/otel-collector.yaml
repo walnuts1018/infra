@@ -52,6 +52,13 @@ spec:
         endpoint: http://loki.monitoring.svc.cluster.local:3100/otlp
         tls:
           insecure: true
+      loki:
+        endpoint: http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
+        default_labels_enabled:
+          exporter: false
+          job: true
+        tls:
+          insecure: true
     service:
       pipelines:
         traces:
@@ -65,7 +72,7 @@ spec:
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlphttp/loki, otlphttp/openobserve]
+          exporters: [otlphttp/loki, loki, otlphttp/openobserve]
   env:
   - name: OPENOBSERVE_AUTHORIZATION
     valueFrom:
