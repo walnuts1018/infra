@@ -26,8 +26,6 @@ spec:
     exporters:
       prometheus:
         endpoint: "0.0.0.0:8080"
-        tls:
-          insecure: true
         namespace: monitoring
         send_timestamps: true
         metric_expiration: 180m
