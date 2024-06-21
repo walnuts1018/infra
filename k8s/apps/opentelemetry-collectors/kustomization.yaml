@@ -6,3 +6,4 @@ resources:
 - ./default
 - ./filelog
 - ./kubelet
+- ./sa.yaml

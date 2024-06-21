@@ -4,6 +4,7 @@ metadata:
   name: filelog
 spec:
   mode: daemonset
+  serviceAccount: otel-collector
   config:
     receivers:
       filelog:
