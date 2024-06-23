@@ -18,7 +18,7 @@ spec:
     processors:
       memory_limiter:
         check_interval: 1s
-        limit_percentage: 75
+        limit_percentage: 85
         spike_limit_percentage: 15
       batch:
         send_batch_size: 10000
