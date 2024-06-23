@@ -18,3 +18,4 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: opentelemetry-collector.prometheus-exporter
       app.kubernetes.io/name: prometheus-exporter-collector
+      operator.opentelemetry.io/collector-service-type: base
