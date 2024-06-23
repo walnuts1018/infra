@@ -39,3 +39,8 @@ spec:
           receivers: [otlp]
           processors: [memory_limiter, batch]
           exporters: [prometheus]
+  resources:
+    requests:
+      memory: 2Gi
+    limits:
+      memory: 6Gi
