@@ -9,5 +9,3 @@ configMapGenerator:
 - name: kmc-proxy-conf
   files:
   - config
-components:
-- ../../components/deployment-with-vpa

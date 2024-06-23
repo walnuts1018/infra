@@ -8,5 +8,3 @@ resources:
 - deployment.yaml
 - serviceaccount.yaml
 - image-policy.yaml
-components:
-- ../../components/deployment-with-vpa

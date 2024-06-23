@@ -10,5 +10,3 @@ configMapGenerator:
 - name: krakend-configmap
   files:
   - krakend.json
-components:
-- ../../components/deployment-with-vpa

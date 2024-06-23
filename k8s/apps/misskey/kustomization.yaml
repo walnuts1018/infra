@@ -14,5 +14,3 @@ configMapGenerator:
   - default.yml
 generatorOptions:
   disableNameSuffixHash: true
-components:
-- ../../components/deployment-with-vpa

@@ -20,7 +20,8 @@ spec:
         resources:
           requests:
             memory: 5Mi
-          limits: {}
+          limits:
+            memory: 100Mi
         env:
         - name: PSQL_HOST
           value: "postgresql-default.databases.svc.cluster.local"
