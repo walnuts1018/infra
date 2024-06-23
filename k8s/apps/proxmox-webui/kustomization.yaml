@@ -16,5 +16,3 @@ configMapGenerator:
   files:
   - nginx.conf
   - virtualhost.conf
-components:
-- ../../components/deployment-with-vpa

@@ -6,5 +6,3 @@ resources:
 - service.yaml
 - pvc.yaml
 - image-policy.yaml
-components:
-- ../../components/deployment-with-vpa
