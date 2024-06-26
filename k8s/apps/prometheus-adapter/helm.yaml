@@ -1,14 +1,14 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: prometheus-stack
+  name: prometheus-adapter
 spec:
   url: https://prometheus-community.github.io/helm-charts
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: prometheus-stack
+  name: prometheus-adapter
 spec:
   chart:
     spec:
