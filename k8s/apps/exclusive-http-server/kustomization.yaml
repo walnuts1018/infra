@@ -7,4 +7,4 @@ resources:
 - deployment.yaml
 - image-policy.yaml
 - hpa.yaml
-- service-monitor.yaml
+- servicemonitor.yaml
