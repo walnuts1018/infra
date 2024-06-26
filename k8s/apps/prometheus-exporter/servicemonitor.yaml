@@ -13,9 +13,9 @@ spec:
   jobLabel: otel-exporter
   namespaceSelector:
     matchNames:
-    - opentelemetry-collector
+    - monitoring
   selector:
     matchLabels:
-      app.kubernetes.io/instance: opentelemetry-collector.prometheus-exporter
+      app.kubernetes.io/instance: monitoring.prometheus-exporter
       app.kubernetes.io/name: prometheus-exporter-collector
       operator.opentelemetry.io/collector-service-type: base
