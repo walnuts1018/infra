@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: exclusive-http-server
-        image: ghcr.io/walnuts1018/exclusive-http-server:c2a71f8ece222fb172124ef41891bbaf949fb5ba-8 # {"$imagepolicy": "default:exclusive-http-server"}
+        image: ghcr.io/walnuts1018/exclusive-http-server:67c6c3e3e2f9d6796670ec2cfad7e8dd1c1f167a-9 # {"$imagepolicy": "default:exclusive-http-server"}
         ports:
         - name: http
           containerPort: 8080
@@ -35,4 +35,3 @@ spec:
             port: 8080
       nodeSelector:
         kubernetes.io/arch: amd64
-
