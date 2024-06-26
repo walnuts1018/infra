@@ -8,7 +8,7 @@ spec:
     kind: Deployment
     name: exclusive-http-server
   minReplicas: 1
-  maxReplicas: 100
+  maxReplicas: 1
   metrics:
   - type: Resource
     resource:
