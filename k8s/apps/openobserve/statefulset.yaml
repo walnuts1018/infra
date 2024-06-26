@@ -57,10 +57,10 @@ spec:
         resources:
           limits:
             cpu: 4096m
-            memory: 2048Mi
+            memory: 6Gi
           requests:
             cpu: 256m
-            memory: 50Mi
+            memory: 1Gi
         ports:
         - containerPort: 5080
           name: http
