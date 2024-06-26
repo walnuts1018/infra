@@ -21,7 +21,7 @@ spec:
           containerPort: 8080
         resources:
           requests:
-            cpu: 1000m
+            cpu: 100m
             memory: 1Gi
         env:
         - name: SLEEP_DURATION
