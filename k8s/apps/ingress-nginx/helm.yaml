@@ -41,7 +41,6 @@ spec:
                 values:
                 - amd64
 
-
       opentelemetry:
         enabled: true
         name: opentelemetry
