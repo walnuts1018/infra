@@ -36,3 +36,8 @@ spec:
           matches: ""
           as: "gin_request_total"
         metricsQuery: sum(rate(<<.Series>>{<<.LabelMatchers>>}[1m])) by (<<.GroupBy>>)
+    resources:
+      requests:
+        memory: 64Mi
+      limits:
+        memory: 128Mi
