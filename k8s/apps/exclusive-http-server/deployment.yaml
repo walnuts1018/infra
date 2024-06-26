@@ -23,7 +23,7 @@ spec:
           limits:
             memory: 1Gi
           requests:
-            memory: 10Mi
+            memory: 100Mi
         env:
         - name: SLEEP_DURATION
           value: "10ms"
