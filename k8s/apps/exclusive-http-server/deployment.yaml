@@ -38,6 +38,6 @@ spec:
         readinessProbe:
           httpGet:
             path: /health
-            port: 8080
+            port: 8081
       nodeSelector:
         kubernetes.io/arch: amd64
