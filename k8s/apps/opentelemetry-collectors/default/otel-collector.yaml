@@ -65,7 +65,7 @@ spec:
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlphttp/openobserve, otlp/prometheus-exporter]
+          exporters: [otlp/prometheus-exporter]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
