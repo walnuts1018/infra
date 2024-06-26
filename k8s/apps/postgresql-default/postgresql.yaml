@@ -24,7 +24,6 @@ spec:
     zitadel: []
     ac_hacking: []
     y_2024: []
-    openobserve: []
   databases:
     # dbname: owner
     juglans: juglans
@@ -39,7 +38,6 @@ spec:
     zitadel: zitadel
     ac_hacking: ac_hacking
     y_2024: y_2024
-    openobserve: openobserve
   postgresql:
     version: "15"
   resources:

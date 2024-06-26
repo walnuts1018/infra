@@ -44,10 +44,6 @@ spec:
         endpoint: tempo.monitoring.svc.cluster.local:4317
         tls:
           insecure: true
-      otlphttp/openobserve:
-        endpoint: https://openobserve.walnuts.dev/api/default/
-        headers:
-          Authorization: ${env:OPENOBSERVE_AUTHORIZATION}
       otlp/loki-exporter:
         endpoint: loki-exporter-collector.opentelemetry-collector.svc.cluster.local:4317
         tls:
@@ -61,7 +57,7 @@ spec:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/tempo, otlphttp/openobserve]
+          exporters: [otlp/tempo]
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
@@ -69,10 +65,4 @@ spec:
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/loki-exporter, otlphttp/openobserve]
-  env:
-  - name: OPENOBSERVE_AUTHORIZATION
-    valueFrom:
-      secretKeyRef:
-        name: openobserve-authorization
-        key: authorization
+          exporters: [otlp/loki-exporter]
