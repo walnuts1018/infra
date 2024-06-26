@@ -5,7 +5,6 @@ metadata:
   labels:
     app: exclusive-http-server
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: exclusive-http-server
