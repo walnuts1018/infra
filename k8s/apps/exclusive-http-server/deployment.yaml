@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: exclusive-http-server
-        image: ghcr.io/walnuts1018/exclusive-http-server:7a67d3fee6a71f83a4e6157c753e9a9912e940d1-2 # {"$imagepolicy": "default:exclusive-http-server"}
+        image: ghcr.io/walnuts1018/exclusive-http-server:7a67d3fee6a71f83a4e6157c753e9a9912e940d1-3 # {"$imagepolicy": "default:exclusive-http-server"}
         ports:
         - name: http
           containerPort: 8080
