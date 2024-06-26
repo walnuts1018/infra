@@ -27,5 +27,10 @@ spec:
         env:
         - name: SLEEP_DURATION
           value: "0ms"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
       nodeSelector:
         kubernetes.io/arch: amd64
+
