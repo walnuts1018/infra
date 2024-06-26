@@ -27,6 +27,10 @@ spec:
         env:
         - name: SLEEP_DURATION
           value: "0ms"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         readinessProbe:
           httpGet:
             path: /health
