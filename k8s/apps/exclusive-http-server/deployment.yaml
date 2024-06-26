@@ -26,4 +26,4 @@ spec:
             memory: 100Mi
         env:
         - name: SLEEP_DURATION
-          value: "1ms"
+          value: "0ms"
