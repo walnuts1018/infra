@@ -27,3 +27,5 @@ spec:
         env:
         - name: SLEEP_DURATION
           value: "0ms"
+      nodeSelector:
+        kubernetes.io/arch: amd64
