@@ -12,10 +12,10 @@ spec:
       enabled: true
       serviceMonitorSelector:
         matchExpressions:
-        - key: app
+        - key: walnuts.dev/scraped-by
           operator: NotIn
           values:
-          - otel-exporter
+          - prometheus
   config:
     receivers:
       prometheus:
