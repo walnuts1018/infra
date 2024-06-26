@@ -25,7 +25,7 @@ spec:
             memory: 1Gi
         env:
         - name: SLEEP_DURATION
-          value: "0ms"
+          value: "1ms"
         - name: POD_NAME
           valueFrom:
             fieldRef:
