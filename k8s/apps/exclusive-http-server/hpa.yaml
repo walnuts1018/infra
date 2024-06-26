@@ -16,4 +16,4 @@ spec:
         name: gin_request_total
       target:
         type: AverageValue
-        averageValue: "500"
+        averageValue: "400"
