@@ -41,6 +41,6 @@ spec:
           exporters: [prometheus]
   resources:
     requests:
-      memory: 4Gi
+      memory: 500Mi
     limits:
-      memory: 8Gi
+      memory: 4Gi
