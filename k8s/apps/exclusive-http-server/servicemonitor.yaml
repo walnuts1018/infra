@@ -1,9 +1,9 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: otel-exporter
+  name: exclusive-http-server
   labels:
-    app: otel-exporter
+    app: exclusive-http-server
     walnuts.dev/scraped-by: prometheus
 spec:
   endpoints:
@@ -12,14 +12,12 @@ spec:
   - honorLabels: true
     honorTimestamps: true
     path: /metrics
-    port: "prometheus"
+    port: "metrics"
     interval: 15s
-  jobLabel: otel-exporter
+  jobLabel: exclusive-http-server
   namespaceSelector:
     matchNames:
-    - monitoring
+    - default
   selector:
     matchLabels:
-      app.kubernetes.io/instance: monitoring.prometheus-exporter
-      app.kubernetes.io/name: prometheus-exporter-collector
-      operator.opentelemetry.io/collector-service-type: base
+      app: exclusive-http-server

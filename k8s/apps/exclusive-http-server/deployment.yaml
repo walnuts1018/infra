@@ -19,6 +19,8 @@ spec:
         ports:
         - name: http
           containerPort: 8080
+        - name: metrics
+          containerPort: 8081
         resources:
           limits:
             cpu: 300m
