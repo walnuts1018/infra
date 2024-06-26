@@ -30,6 +30,17 @@ spec:
         enableHttps: true
         type: LoadBalancer
       replicaCount: 3
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+
 
       opentelemetry:
         enabled: true
