@@ -5,6 +5,13 @@ metadata:
   labels:
     app: alice-node-exporter
 spec:
+  jobLabel: node-exporter
+  namespaceSelector:
+    matchNames:
+    - monitoring
+  selector:
+    matchLabels:
+      app: alice-node-exporter
   endpoints:
   # If honor_labels is set to "true", label conflicts are resolved by keeping label values from the scraped data and ignoring the conflicting server-side labels.
   # If honor_labels is set to "false", label conflicts are resolved by renaming conflicting labels in the scraped data to "exported_<original-label>" (for example "exported_instance", "exported_job") and then attaching server-side labels.
@@ -13,10 +20,6 @@ spec:
     path: /metrics
     port: "metrics"
     interval: 10s
-  jobLabel: node-exporter
-  namespaceSelector:
-    matchNames:
-    - monitoring
-  selector:
-    matchLabels:
-      app: alice-node-exporter
+    relabelings:
+    - targetLabel: node
+      replacement: alice
