@@ -42,4 +42,4 @@ spec:
     name: github-readme-stats
   policy:
     semver:
-      range: "^1"
+      range: ">=0.0.0"

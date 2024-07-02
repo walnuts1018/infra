@@ -40,4 +40,4 @@ spec:
     name: krakend
   policy:
     semver:
-      range: "^2.x.x"
+      range: ">=0.0.0"
