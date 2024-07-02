@@ -13,7 +13,7 @@ spec:
     path: /metrics
     port: "metrics"
     interval: 10s
-  jobLabel: alice-node-exporter
+  jobLabel: node-exporter
   namespaceSelector:
     matchNames:
     - monitoring
