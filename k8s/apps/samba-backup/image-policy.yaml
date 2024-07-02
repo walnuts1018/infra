@@ -40,7 +40,7 @@ spec:
     name: samba-backup
   filterTags:
     pattern: '^(?P<version>[0-9]+)\.(?P<revision>[0-9]+)$'
-    extract: "${version}${revision}"
+    extract: "${version}.${revision}.0"
   policy:
-    numerical:
-      order: asc
+    semver:
+      range: ">=0.0.0"
