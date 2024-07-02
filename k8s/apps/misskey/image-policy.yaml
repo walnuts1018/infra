@@ -42,4 +42,4 @@ spec:
     pattern: '(?P<year>[0-9]{4})\.(?P<month>[0-9]+)\.(?P<version>[0-9]+)'
   policy:
     semver:
-      range: ">=1.0.0"
+      range: ">=0.0.0"

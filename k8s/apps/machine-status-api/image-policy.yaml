@@ -42,4 +42,4 @@ spec:
     name: machine-status-api
   policy:
     semver:
-      range: "^1"
+      range: ">=0.0.0"

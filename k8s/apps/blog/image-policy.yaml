@@ -40,4 +40,4 @@ spec:
     name: blog
   policy:
     semver:
-      range: "^1.x.x"
+      range: ">=0.0.0"
