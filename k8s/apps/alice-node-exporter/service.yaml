@@ -4,6 +4,7 @@ metadata:
   name: alice-node-exporter
   labels:
     app: alice-node-exporter
+    job: node-exporter
 spec:
   type: ExternalName
   externalName: 192.168.0.11
