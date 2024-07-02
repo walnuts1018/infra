@@ -38,4 +38,5 @@ spec:
           httpGet:
             path: /health
             port: 8081
-
+      nodeSelector:
+        kubernetes.io/arch: amd64
