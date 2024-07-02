@@ -9,6 +9,6 @@ spec:
   externalName: 192.168.0.11
   ports:
   - name: metrics
-    port: 8080
+    port: 9100
     protocol: TCP
-    targetPort: 8080
+    targetPort: 9100
