@@ -26,8 +26,7 @@ spec:
             cpu: 300m
             memory: 1Gi
           requests:
-            cpu: 100m
-            memory: 1Gi
+            memory: 1Mi
         env:
         - name: SLEEP_DURATION
           value: "1ms"
@@ -39,5 +38,4 @@ spec:
           httpGet:
             path: /health
             port: 8081
-      nodeSelector:
-        kubernetes.io/arch: amd64
+
