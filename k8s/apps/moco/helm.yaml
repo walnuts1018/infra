@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: moco
-      version: 0.13.0
+      version: 0.13.1
   values:
     priorityClassName: "high"
     affinity:
