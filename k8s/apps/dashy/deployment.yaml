@@ -19,7 +19,7 @@ spec:
         image: lissy93/dashy:3.1.0 # {"$imagepolicy": "default:dashy"}
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         resources:
           limits: {}
           requests:
@@ -29,7 +29,7 @@ spec:
           value: "production"
         volumeMounts:
         - name: dashy
-          mountPath: /app/public
+          mountPath: /app/user-data
       volumes:
       - name: dashy
         persistentVolumeClaim:
