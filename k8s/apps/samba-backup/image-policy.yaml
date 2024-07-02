@@ -39,7 +39,7 @@ spec:
   imageRepositoryRef:
     name: samba-backup
   filterTags:
-    pattern: "^(?P<version>[0-9]+)\\.(?P<revision>[0-9]+)$"
+    pattern: '^(?P<version>[0-9]+)\.(?P<revision>[0-9]+)$'
     extract: "${version}${revision}"
   policy:
     numerical:
