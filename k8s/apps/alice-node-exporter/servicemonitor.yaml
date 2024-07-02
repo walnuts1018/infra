@@ -5,7 +5,7 @@ metadata:
   labels:
     app: alice-node-exporter
 spec:
-  jobLabel: node-exporter
+  jobLabel: job
   namespaceSelector:
     matchNames:
     - monitoring
