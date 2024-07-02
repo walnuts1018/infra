@@ -4,3 +4,4 @@ namespace: monitoring
 resources:
 - service.yaml
 - servicemonitor.yaml
+- endpoint.yaml
