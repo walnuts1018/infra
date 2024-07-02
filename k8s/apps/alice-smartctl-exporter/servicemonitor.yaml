@@ -1,9 +1,9 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: alice-node-exporter
+  name: alice-smartctl-exporter
   labels:
-    app: alice-node-exporter
+    app: alice-smartctl-exporter
 spec:
   jobLabel: job
   namespaceSelector:
@@ -11,7 +11,7 @@ spec:
     - monitoring
   selector:
     matchLabels:
-      app: alice-node-exporter
+      app: alice-smartctl-exporter
   endpoints:
   # If honor_labels is set to "true", label conflicts are resolved by keeping label values from the scraped data and ignoring the conflicting server-side labels.
   # If honor_labels is set to "false", label conflicts are resolved by renaming conflicting labels in the scraped data to "exported_<original-label>" (for example "exported_instance", "exported_job") and then attaching server-side labels.
