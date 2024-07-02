@@ -4,7 +4,7 @@ metadata:
   name: alice-smartctl-exporter
   labels:
     app: alice-smartctl-exporter
-    job: node-exporter
+    job: smartctl-exporter-prometheus-smartctl-exporter
 spec:
   type: ExternalName
   externalName: 192.168.0.11
