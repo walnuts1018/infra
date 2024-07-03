@@ -43,9 +43,9 @@ spec:
         storageClass: longhorn
       resources:
         requests:
-          memory: 300Mi
+          memory: 350Mi
         limits:
-          memory: 512Mi
+          memory: 1Gi
     write:
       replicas: 0
     read:
