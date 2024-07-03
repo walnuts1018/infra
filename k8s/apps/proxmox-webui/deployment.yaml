@@ -27,9 +27,10 @@ spec:
         - mountPath: /var/log/nginx
           name: log
         resources:
-          limits: {}
+          limits:
+            memory: 100Mi
           requests:
-            memory: 5Mi
+            memory: 10Mi
       volumes:
       - name: proxmox-webui-conf
         configMap:
