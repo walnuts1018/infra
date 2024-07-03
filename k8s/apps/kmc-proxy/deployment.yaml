@@ -25,8 +25,9 @@ spec:
           name: kmc-proxy-volume
         resources:
           requests:
-            memory: 1Mi
-          limits: {}
+            memory: 5Mi
+          limits:
+            memory: 100Mi
       volumes:
       - name: kmc-proxy-volume
         projected:
