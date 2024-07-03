@@ -47,7 +47,7 @@ spec:
             memory: "4Gi"
             cpu: "1000m"
           requests:
-            memory: "100Mi"
+            memory: "850Mi"
             cpu: "10m"
       nodeSelector:
         kubernetes.io/hostname: cake
