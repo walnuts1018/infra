@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: kibana
-        image: docker.elastic.co/kibana/kibana:8.14.1 # {"$imagepolicy": "default:kibana"}
+        image: docker.elastic.co/kibana/kibana:8.14.2 # {"$imagepolicy": "default:kibana"}
         ports:
         - name: http
           containerPort: 5601
