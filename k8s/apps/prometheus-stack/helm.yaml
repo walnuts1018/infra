@@ -82,6 +82,11 @@ spec:
           name: grafana
           user: grafana
           password: $__file{/etc/secrets/postgres_password}
+      sidecar:
+        plugins:
+          enabled: true
+      plugins:
+      - knightss27-weathermap-panel
     prometheus-node-exporter:
       prometheus:
         monitor:
