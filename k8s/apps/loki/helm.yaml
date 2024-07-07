@@ -23,9 +23,9 @@ spec:
       storage:
         type: s3
         bucketNames:
-          chunks: "chunks"
-          ruler: "ruler"
-          admin: "admin"
+          chunks: "loki-chunks"
+          ruler: "loki-ruler"
+          admin: "loki-admin"
         s3:
           endpoint: "https://minio.walnuts.dev"
           secretAccessKey: "${secretAccessKey}"
