@@ -41,7 +41,7 @@ spec:
           index:
             prefix: loki_index_
             period: 24h
-          object_store: filesystem
+          object_store: s3
           schema: v13
       limits_config:
         allow_structured_metadata: true
