@@ -5,3 +5,4 @@ components:
 - ../../components/helm
 resources:
 - helm.yaml
+- externalsecret.yaml

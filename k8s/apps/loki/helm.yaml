@@ -15,13 +15,21 @@ spec:
       chart: loki
       version: 6.6.5
   values:
-    deploymentMode: SingleBinary
+    deploymentMode: SimpleScalable
     loki:
       auth_enabled: false
       commonConfig:
         replication_factor: 1
       storage:
-        type: filesystem
+        type: s3
+        bucketNames:
+          chunks: "chunks"
+          ruler: "ruler"
+          admin: "admin"
+        s3:
+          endpoint: "https://minio.walnuts.dev"
+          secretAccessKey: "${secretAccessKey}"
+          accessKeyId: "${accessKeyId}"
       server:
         # "error": "HTTP 500 \"Internal Server Error\": rpc error: code = ResourceExhausted desc = grpc: received message larger than max (4840865 vs. 4194304)"
         # https://grafana.com/docs/loki/latest/configure/
@@ -38,18 +46,35 @@ spec:
       limits_config:
         allow_structured_metadata: true
         retention_period: 336h
-    singleBinary:
-      replicas: 1
-      persistence:
-        storageClass: longhorn
-      resources:
-        requests:
-          memory: 350Mi
-        limits:
-          memory: 1Gi
     write:
-      replicas: 0
+      replicas: 1
+      autoscaling:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: 3
+      extraArgs: ["-config.expand-env=true"]
+      extraEnvFrom:
+      - secretRef:
+          name: loki-minio
     read:
-      replicas: 0
+      replicas: 1
+      autoscaling:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: 3
+      extraArgs: ["-config.expand-env=true"]
+      extraEnvFrom:
+      - secretRef:
+          name: loki-minio
     backend:
+      replicas: 2
+      autoscaling:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 3
+      extraArgs: ["-config.expand-env=true"]
+      extraEnvFrom:
+      - secretRef:
+          name: loki-minio
+    singleBinary:
       replicas: 0
