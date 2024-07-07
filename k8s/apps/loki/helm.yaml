@@ -28,6 +28,7 @@ spec:
           admin: "loki-admin"
         s3:
           endpoint: "https://minio.walnuts.dev"
+          region: ap-northeast-1
           secretAccessKey: "${secretAccessKey}"
           accessKeyId: "${accessKeyId}"
           s3ForcePathStyle: true
