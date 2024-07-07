@@ -49,9 +49,12 @@ spec:
         chunk_encoding: snappy
       tracing:
         enabled: true
+      querier:
+        max_concurrent: 4
       limits_config:
         allow_structured_metadata: true
         retention_period: 336h
+        ingestion_burst_size_mb: 100
     write:
       replicas: 2
       autoscaling:
