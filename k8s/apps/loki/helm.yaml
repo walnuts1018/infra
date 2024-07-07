@@ -56,6 +56,10 @@ spec:
       extraEnvFrom:
       - secretRef:
           name: loki-minio
+      persistence:
+        volumeClaimsEnabled: false
+        dataVolumeParameters:
+          emptyDir: {}
     read:
       replicas: 1
       autoscaling:
@@ -66,6 +70,10 @@ spec:
       extraEnvFrom:
       - secretRef:
           name: loki-minio
+      persistence:
+        volumeClaimsEnabled: false
+        dataVolumeParameters:
+          emptyDir: {}
     backend:
       replicas: 2
       autoscaling:
@@ -76,5 +84,9 @@ spec:
       extraEnvFrom:
       - secretRef:
           name: loki-minio
+      persistence:
+        volumeClaimsEnabled: false
+        dataVolumeParameters:
+          emptyDir: {}
     singleBinary:
       replicas: 0
