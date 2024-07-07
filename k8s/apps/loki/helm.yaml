@@ -46,13 +46,6 @@ spec:
       limits_config:
         allow_structured_metadata: true
         retention_period: 336h
-      containerSecurityContext:
-        readOnlyRootFilesystem: false
-      podSecurityContext:
-        fsGroup: 10001
-        runAsGroup: 10001
-        runAsNonRoot: false
-        runAsUser: 0
     write:
       replicas: 1
       autoscaling:
