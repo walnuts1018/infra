@@ -30,6 +30,7 @@ spec:
           endpoint: "https://minio.walnuts.dev"
           secretAccessKey: "${secretAccessKey}"
           accessKeyId: "${accessKeyId}"
+          s3forcepathstyle: true
       server:
         # "error": "HTTP 500 \"Internal Server Error\": rpc error: code = ResourceExhausted desc = grpc: received message larger than max (4840865 vs. 4194304)"
         # https://grafana.com/docs/loki/latest/configure/
@@ -43,6 +44,10 @@ spec:
             period: 24h
           object_store: s3
           schema: v13
+      ingester:
+        chunk_encoding: snappy
+      tracing:
+        enabled: true
       limits_config:
         allow_structured_metadata: true
         retention_period: 336h
