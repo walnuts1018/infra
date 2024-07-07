@@ -60,13 +60,22 @@ spec:
         volumeClaimsEnabled: false
         dataVolumeParameters:
           emptyDir: {}
-      extraVolumeMounts:
-      - name: data-override
-        mountPath: /var/loki
-      extraVolumes:
-      - name: data-override
-        emptyDir: {}
-        defaultMode: 755
+      initContainers:
+      - name: fix-permissions
+        image: busybox:1.36.1
+        securityContext:
+          privileged: true
+          runAsGroup: 0
+          runAsNonRoot: false
+          runAsUser: 0
+        command:
+        - sh
+        - -c
+        - >-
+          id; chown 10001:10001 /var/loki
+        volumeMounts:
+        - mountPath: /var/loki
+          name: data
     read:
       replicas: 1
       autoscaling:
@@ -77,13 +86,23 @@ spec:
       extraEnvFrom:
       - secretRef:
           name: loki-minio
-      extraVolumeMounts:
-      - name: data-override
-        mountPath: /var/loki
-      extraVolumes:
-      - name: data-override
-        emptyDir: {}
-        defaultMode: 755
+      initContainers:
+      - name: fix-permissions
+        image: busybox:1.36.1
+        securityContext:
+          privileged: true
+          runAsGroup: 0
+          runAsNonRoot: false
+          runAsUser: 0
+        command:
+        - sh
+        - -c
+        - >-
+          id; chown 10001:10001 /var/loki
+        volumeMounts:
+        - mountPath: /var/loki
+          name: data
+
     backend:
       replicas: 2
       autoscaling:
@@ -98,12 +117,22 @@ spec:
         volumeClaimsEnabled: false
         dataVolumeParameters:
           emptyDir: {}
-      extraVolumeMounts:
-      - name: data-override
-        mountPath: /var/loki
-      extraVolumes:
-      - name: data-override
-        emptyDir: {}
-        defaultMode: 755
+      initContainers:
+      - name: fix-permissions
+        image: busybox:1.36.1
+        securityContext:
+          privileged: true
+          runAsGroup: 0
+          runAsNonRoot: false
+          runAsUser: 0
+        command:
+        - sh
+        - -c
+        - >-
+          id; chown 10001:10001 /var/loki
+        volumeMounts:
+        - mountPath: /var/loki
+          name: data
+
     singleBinary:
       replicas: 0
