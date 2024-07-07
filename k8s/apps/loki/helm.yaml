@@ -30,7 +30,7 @@ spec:
           endpoint: "https://minio.walnuts.dev"
           secretAccessKey: "${secretAccessKey}"
           accessKeyId: "${accessKeyId}"
-          s3forcepathstyle: true
+          s3ForcePathStyle: true
       server:
         # "error": "HTTP 500 \"Internal Server Error\": rpc error: code = ResourceExhausted desc = grpc: received message larger than max (4840865 vs. 4194304)"
         # https://grafana.com/docs/loki/latest/configure/
