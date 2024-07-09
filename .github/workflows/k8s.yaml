@@ -137,16 +137,27 @@ jobs:
         run: |
           echo "# Manifest diff
 
-          ## diff
           <details>
           <summary>Click to expand</summary>
 
           \`\`\`diff
           $(diff -u manifests-base.yaml manifests-head.yaml)
           \`\`\`
-          </details>
+          </details>" | tee /tmp/diff.md
 
-          ## dyff
+      # PRへのコメントだけど、issue commentのAPIを使うらしい
+      - name: Comment manifest diff to GitHub PR
+        run: |
+          cat /tmp/diff.md | jq -Rs '{ "body": . }' | curl --fail \
+            -X POST -H 'Accept: application/vnd.github.v3+json' \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/comments \
+            -d @-
+
+      - name: Build markdown comment with manifest dyff
+        run: |
+          echo "# Manifest dyff
+
           <details>
           <summary>Click to expand</summary>
 
@@ -154,12 +165,12 @@ jobs:
           $(./dyff between manifests-base.yaml manifests-head.yaml)
           \`\`\`
 
-          </details>" | tee /tmp/comment.md
+          </details>" | tee /tmp/dyff.md
 
       # PRへのコメントだけど、issue commentのAPIを使うらしい
       - name: Comment manifest diff to GitHub PR
         run: |
-          cat /tmp/comment.md | jq -Rs '{ "body": . }' | curl --fail \
+          cat /tmp/dyff.md | jq -Rs '{ "body": . }' | curl --fail \
             -X POST -H 'Accept: application/vnd.github.v3+json' \
             --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/comments \
