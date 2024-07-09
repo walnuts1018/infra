@@ -28,8 +28,10 @@ spec:
           admin: "loki-admin"
         s3:
           endpoint: "https://minio.walnuts.dev"
+          region: ap-northeast-1
           secretAccessKey: "${secretAccessKey}"
           accessKeyId: "${accessKeyId}"
+          s3ForcePathStyle: true
       server:
         # "error": "HTTP 500 \"Internal Server Error\": rpc error: code = ResourceExhausted desc = grpc: received message larger than max (4840865 vs. 4194304)"
         # https://grafana.com/docs/loki/latest/configure/
@@ -41,17 +43,33 @@ spec:
           index:
             prefix: loki_index_
             period: 24h
-          object_store: filesystem
+          object_store: s3
           schema: v13
+      ingester:
+        chunk_encoding: snappy
+      tracing:
+        enabled: true
+      querier:
+        max_concurrent: 4
       limits_config:
         allow_structured_metadata: true
         retention_period: 336h
+        ingestion_burst_size_mb: 100
     write:
-      replicas: 1
+      replicas: 2
       autoscaling:
         enabled: true
         minReplicas: 1
         maxReplicas: 3
+        targetCPUUtilizationPercentage: 700
+        targetMemoryUtilizationPercentage: 200
+      resources:
+        requests:
+          memory: 300Mi
+          cpu: 100m
+        limits:
+          memory: 1Gi
+          cpu: 1
       extraArgs: ["-config.expand-env=true"]
       extraEnvFrom:
       - secretRef:
@@ -62,11 +80,20 @@ spec:
           emptyDir: {}
 
     read:
-      replicas: 1
+      replicas: 2
       autoscaling:
         enabled: true
         minReplicas: 1
         maxReplicas: 3
+        targetCPUUtilizationPercentage: 500
+        targetMemoryUtilizationPercentage: 200
+      resources:
+        requests:
+          memory: 200Mi
+          cpu: 10m
+        limits:
+          memory: 1Gi
+          cpu: 100m
       extraArgs: ["-config.expand-env=true"]
       extraEnvFrom:
       - secretRef:
@@ -78,6 +105,15 @@ spec:
         enabled: true
         minReplicas: 2
         maxReplicas: 3
+        targetCPUUtilizationPercentage: 800
+        targetMemoryUtilizationPercentage: 200
+      resources:
+        requests:
+          memory: 256Mi
+          cpu: 10m
+        limits:
+          memory: 1Gi
+          cpu: 100m
       extraArgs: ["-config.expand-env=true"]
       extraEnvFrom:
       - secretRef:
@@ -89,3 +125,12 @@ spec:
 
     singleBinary:
       replicas: 0
+
+    sidecar:
+      resources:
+        limits:
+          cpu: 100m
+          memory: 100Mi
+        requests:
+          cpu: 50m
+          memory: 50Mi
