@@ -52,6 +52,7 @@ spec:
           level: debug
         auth:
           disable_login_form: true
+          oauth_auto_login: true
         auth.basic:
           enabled: false
         auth.generic_oauth:
