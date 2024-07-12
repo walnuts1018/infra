@@ -8,7 +8,7 @@ spec:
   storageClassName: longhorn
   volumeName: elasticsearch
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
