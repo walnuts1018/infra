@@ -6,7 +6,7 @@ spec:
   storageClassName: longhorn
   volumeName: dashy
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
