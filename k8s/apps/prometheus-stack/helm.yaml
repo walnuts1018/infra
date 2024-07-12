@@ -108,7 +108,7 @@ spec:
           volumeClaimTemplate:
             spec:
               storageClassName: longhorn-local
-              accessModes: ["ReadWriteOnce"]
+              accessModes: ["ReadWriteMany"]
               resources:
                 requests:
                   storage: 32Gi

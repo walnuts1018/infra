@@ -47,7 +47,7 @@ spec:
   - metadata:
       name: mysql-data
     spec:
-      accessModes: ["ReadWriteOnce"]
+      accessModes: ["ReadWriteMany"]
       storageClassName: "longhorn"
       resources:
         requests:
