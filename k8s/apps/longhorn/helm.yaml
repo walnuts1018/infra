@@ -30,6 +30,8 @@ spec:
         type: ClusterIP
     persistence:
       defaultClassReplicaCount: 2
+      reclaimPolicy: Retain
+      
     longhornUI:
       replicas: 2
     longhornConversionWebhook:
