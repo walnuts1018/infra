@@ -28,7 +28,7 @@ spec:
       enabled: true
       storageClass: "longhorn"
       volumeName: influxdb
-      accessMode: ReadWriteMany
+      accessMode: ReadWriteOnce
       size: 10Gi
       mountPath: /var/lib/influxdb2
       subPath: ""
