@@ -20,6 +20,7 @@ spec:
       storageClass: longhorn
       size: 8Gi
       volumeName: minio
+      accessMode: ReadWriteMany
     ingress:
       enabled: true
       ingressClassName: nginx
