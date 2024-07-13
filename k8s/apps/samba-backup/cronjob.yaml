@@ -19,16 +19,23 @@ spec:
             - sh
             - /backup.sh
             env:
-            - name: SSH_PRIVATE_KEY
+            - name: SAMBA_USER
               valueFrom:
                 secretKeyRef:
                   name: samba-backup-secret
-                  key: id_ed25519
+                  key: user
+            - name: SAMBA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: samba-backup-secret
+                  key: password
             readinessProbe:
               exec:
                 command:
                 - cat
                 - /tmp/healthy
+            securityContext:
+              privileged: true
             resources:
               requests:
                 cpu: 10m

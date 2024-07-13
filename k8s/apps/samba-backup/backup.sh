@@ -2,17 +2,19 @@
 
 # constants
 timeout=60*60*20 #20時間
-alice_ip=root@192.168.0.11
+lycoris_ip=192.168.0.12
+
+mkdir -p /samba-backup
 
 # install dependency
 apt-get update
-apt-get install rsync ssh -y
+apt-get install rsync ssh samba-client cifs-utils -y
 
-# aliceが起動するまで待つ
+# Lycorisが起動するまで待つ
 now=$(date +%s)
 end=$(($now + $timeout))
 while [ $(date +%s) -lt $end ]; do
-    ssh -o "StrictHostKeyChecking no" $alice_ip exit
+    mount -t cifs -o user=$SAMBA_USER,password=$SAMBA_PASSWORD,uid=1000,gid=1000,file_mode=0755,dir_mode=0755 //$lycoris_ip/f /samba-backup
     if [ $? -eq 0 ]; then
         break
     fi
@@ -20,29 +22,31 @@ while [ $(date +%s) -lt $end ]; do
 done
 
 if [ $(date +%s) -ge $end ]; then
-    echo "alice did not start"
+    echo "Lycoris did not start"
     exit 1
 fi
+
+# samba-backupをマウント
 
 # for k8s liveness probe
 touch /tmp/healthy
 
-# aliceが起動したらrsyncでバックアップを取る
-DISTDIR="/mnt/HDD1TB/smb-backup"
-LATEST_BACKUP_DIR=$(ssh $alice_ip "ls -d $DISTDIR/*/ | grep "/backup-" | tail -n 1")
+# Lycorisが起動したらrsyncでバックアップを取る
+DISTDIR="/samba-backup"
+LATEST_BACKUP_DIR=$(ls -d $DISTDIR/*/ | grep "/backup-" | tail -n 1)
 echo "Latest backup dir: $LATEST_BACKUP_DIR"
 
 DATE_SUFFIX=$(date +%Y-%m-%d_%Hh%Mm%Ss)
 DATEDIR="$DISTDIR/tmp-backup-$DATE_SUFFIX"
 echo "New backup dir: $DATEDIR"
 
-ssh $alice_ip mkdir $DATEDIR
-# rsync -avh --stats --dry-run --link-dest="$LATEST_BACKUP_DIR" --exclude='$RECYCLE.BIN' --exclude="longhorn" /samba-share/ "$alice_ip:$DATEDIR"
-rsync -avh --link-dest="$LATEST_BACKUP_DIR" --exclude='$RECYCLE.BIN' --exclude="longhorn" /samba-share/ "$alice_ip:$DATEDIR"
+mkdir $DATEDIR
+# rsync -avh --stats --dry-run --link-dest="$LATEST_BACKUP_DIR" --exclude='$RECYCLE.BIN' --exclude="longhorn" /samba-share/ "$DATEDIR"
+rsync -avh --link-dest="$LATEST_BACKUP_DIR" --exclude='$RECYCLE.BIN' --exclude="longhorn" /samba-share/ "$DATEDIR"
 
 if [ $? -ne 0 ]; then
     echo "rsync failed"
     exit 1
 fi
 
-ssh $alice_ip "mv $DATEDIR $DISTDIR/backup-$DATE_SUFFIX"
+mv $DATEDIR $DISTDIR/backup-$DATE_SUFFIX
