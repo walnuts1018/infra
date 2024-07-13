@@ -119,4 +119,4 @@ spec:
             memory: 4000Mi
         retention: 14d
         retentionSize: 30GiB
-        replicas: 2
+        replicas: 1
