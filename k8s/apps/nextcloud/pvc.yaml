@@ -6,7 +6,7 @@ spec:
   storageClassName: longhorn
   volumeName: nextcloud
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   resources:
     requests:
       storage: 8Gi
@@ -21,7 +21,7 @@ spec:
   storageClassName: longhorn-local
   volumeName: nextcloud-data
   accessModes:
-  - ReadWriteMany
+  - ReadWriteOnce
   resources:
     requests:
       storage: 5Gi
