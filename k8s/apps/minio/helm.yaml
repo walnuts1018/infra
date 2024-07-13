@@ -35,6 +35,9 @@ spec:
       ingressClassName: nginx
       hosts:
       - minio-console.walnuts.dev
+    resources:
+      requests:
+        memory: 500Mi
     oidc:
       enabled: false
       configUrl: "https://auth.walnuts.dev/.well-known/openid-configuration"
