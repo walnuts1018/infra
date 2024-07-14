@@ -4,7 +4,6 @@ metadata:
   name: photoprism-import
 spec:
   storageClassName: longhorn-local
-  volumeName: pvc-fd3d2aab-206c-4d17-b3b6-59468f7b6ba1
   accessModes:
   - ReadWriteOnce
   resources:
@@ -17,7 +16,6 @@ metadata:
   name: photoprism-cache
 spec:
   storageClassName: longhorn-local
-  volumeName: pvc-80ab6a32-7dd7-4d58-8822-a1e3801b6ce5
   accessModes:
   - ReadWriteOnce
   resources:
