@@ -28,7 +28,7 @@ spec:
         - id: parser-crio # Parse CRI-O format
           type: regex_parser
           regex: '^(?P<time>[^ Z]+) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) ?(?P<log>.*)$'
-          # output: extract_metadata_from_filepath
+          output: extract_metadata_from_filepath
           timestamp:
             parse_from: attributes.time
             layout_type: gotime
@@ -36,17 +36,18 @@ spec:
         - id: parser-containerd # Parse CRI-Containerd format
           type: regex_parser
           regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) ?(?P<log>.*)$'
-          # output: extract_metadata_from_filepath
+          output: extract_metadata_from_filepath
           timestamp:
             parse_from: attributes.time
             layout: '%Y-%m-%dT%H:%M:%S.%LZ'
         - id: parser-docker # Parse Docker format
           type: json_parser
-          # output: extract_metadata_from_filepath
+          output: extract_metadata_from_filepath
           timestamp:
             parse_from: attributes.time
             layout: '%Y-%m-%dT%H:%M:%S.%LZ'
         - type: move
+          id: extract_metadata_from_filepath
           from: attributes.log
           to: body
         # - id: extract_metadata_from_filepath
