@@ -45,11 +45,11 @@ spec:
       # Provide existing client secret from the Kubernetes Secret resource, existing secret will have priority over `clientSecret`
       existingClientSecretName: "minio"
       existingClientSecretKey: "client-secret"
-      claimPrefix: "minio-"
-      claimName: "my:zitadel:grants"
+      claimName: "minio-policy"
       scopes: "openid,profile,email"
       redirectUri: "https://minio-console.walnuts.dev/oauth_callback"
       displayName: "Walnuts.dev"
     environment:
+      MINIO_IDENTITY_OPENID_REDIRECT_URI: "https://minio-console.walnuts.dev/oauth_callback"
       MINIO_SERVER_URL: "https://minio.walnuts.dev"
       MINIO_BROWSER_REDIRECT_URL: "https://minio-console.walnuts.dev"
