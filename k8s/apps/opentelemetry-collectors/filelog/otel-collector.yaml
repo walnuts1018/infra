@@ -19,12 +19,12 @@ spec:
         - id: get-format # Find out which format is used by kubernetes
           type: router
           routes:
-          - output: parser-docker
-            expr: 'body matches "^\\{"'
           - output: parser-crio
             expr: 'body matches "^[^ Z]+ "'
           - output: parser-containerd
             expr: 'body matches "^[^ Z]+Z"'
+          - output: parser-docker
+            expr: 'body matches "^\\{"'
         - id: parser-crio # Parse CRI-O format
           type: regex_parser
           regex: '^(?P<time>[^ Z]+) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) ?(?P<log>.*)$'
