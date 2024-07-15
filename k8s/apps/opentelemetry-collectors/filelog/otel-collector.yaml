@@ -46,15 +46,15 @@ spec:
           timestamp:
             parse_from: attributes.time
             layout: '%Y-%m-%dT%H:%M:%S.%LZ'
-        - type: move
-          from: attributes.log
-          to: body
         - id: extract_metadata_from_filepath
           type: regex_parser
           regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<restart_count>\d+)\.log$'
           parse_from: attributes["log.file.path"]
           cache:
             size: 128
+        - type: move
+          from: attributes.log
+          to: body
         - type: move
           from: attributes.stream
           to: attributes["log.iostream"]
