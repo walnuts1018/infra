@@ -35,6 +35,7 @@ spec:
       server:
         # "error": "HTTP 500 \"Internal Server Error\": rpc error: code = ResourceExhausted desc = grpc: received message larger than max (4840865 vs. 4194304)"
         # https://grafana.com/docs/loki/latest/configure/
+        grpc_server_max_recv_msg_size: 104857600
         grpc_server_max_send_msg_size: 104857600
       schemaConfig:
         configs:
