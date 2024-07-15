@@ -4,6 +4,5 @@ namespace: minio
 resources:
 - externalsecret.yaml
 - helm.yaml
-- ./old
 components:
 - ../../components/helm
