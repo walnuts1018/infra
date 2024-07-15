@@ -3,4 +3,3 @@ kind: Kustomization
 namespace: monitoring
 resources:
 - otel-collector.yaml
-- servicemonitor.yaml

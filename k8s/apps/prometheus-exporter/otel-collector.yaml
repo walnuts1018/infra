@@ -24,21 +24,14 @@ spec:
         send_batch_size: 10000
         timeout: 10s
     exporters:
-      prometheus:
-        endpoint: "0.0.0.0:8080"
-        send_timestamps: true
-        metric_expiration: 180m
-        enable_open_metrics: true
-        add_metric_suffixes: false
-        # https://github.com/open-telemetry/opentelemetry-collector-contrib/issues/14900
-        resource_to_telemetry_conversion:
-          enabled: false
+      prometheusremotewrite:
+        endpoint: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local/api/v1/push"
     service:
       pipelines:
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [prometheus]
+          exporters: [prometheusremotewrite]
   resources:
     requests:
       memory: 3Gi
