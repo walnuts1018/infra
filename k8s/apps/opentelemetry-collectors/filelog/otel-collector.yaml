@@ -16,36 +16,36 @@ spec:
         include_file_path: true
         include_file_name: false
         operators:
-        # - type: router
-        #   id: get-format
-        #   routes:
-        #   - output: parser-docker
-        #     expr: 'body matches "^\\{"'
-        #   - output: parser-crio
-        #     expr: 'body matches "^[^ Z]+ "'
-        #   - output: parser-containerd
-        #     expr: 'body matches "^[^ Z]+Z"'
-        # - type: regex_parser
-        #   id: parser-crio
-        #   regex: '^(?P<time>[^ Z]+) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) ?(?P<log>.*)$'
-        #   output: extract_metadata_from_filepath
-        #   timestamp:
-        #     parse_from: attributes.time
-        #     layout_type: gotime
-        #     layout: '2006-01-02T15:04:05.999999999Z07:00'
-        # - type: regex_parser
-        #   id: parser-containerd
-        #   regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) ?(?P<log>.*)$'
-        #   output: extract_metadata_from_filepath
-        #   timestamp:
-        #     parse_from: attributes.time
-        #     layout: '%Y-%m-%dT%H:%M:%S.%LZ'
-        # - type: json_parser
-        #   id: parser-docker
-        #   output: extract_metadata_from_filepath
-        #   timestamp:
-        #     parse_from: attributes.time
-        #     layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+        - id: get-format # Find out which format is used by kubernetes
+          type: router
+          routes:
+          - output: parser-docker
+            expr: 'body matches "^\\{"'
+          - output: parser-crio
+            expr: 'body matches "^[^ Z]+ "'
+          - output: parser-containerd
+            expr: 'body matches "^[^ Z]+Z"'
+        - id: parser-crio # Parse CRI-O format
+          type: regex_parser
+          regex: '^(?P<time>[^ Z]+) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) ?(?P<log>.*)$'
+          output: extract_metadata_from_filepath
+          timestamp:
+            parse_from: attributes.time
+            layout_type: gotime
+            layout: '2006-01-02T15:04:05.999999999Z07:00'
+        - id: parser-containerd # Parse CRI-Containerd format
+          type: regex_parser
+          regex: '^(?P<time>[^ ^Z]+Z) (?P<stream>stdout|stderr) (?P<logtag>[^ ]*) ?(?P<log>.*)$'
+          output: extract_metadata_from_filepath
+          timestamp:
+            parse_from: attributes.time
+            layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+        - id: parser-docker # Parse Docker format
+          type: json_parser
+          output: extract_metadata_from_filepath
+          timestamp:
+            parse_from: attributes.time
+            layout: '%Y-%m-%dT%H:%M:%S.%LZ'
         - id: extract_metadata_from_filepath
           type: regex_parser
           regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<restart_count>\d+)\.log$'
