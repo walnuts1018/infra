@@ -97,7 +97,7 @@ spec:
           cpu: 10m
         limits:
           memory: 1Gi
-          cpu: 100m
+          cpu: 1
       extraArgs: ["-config.expand-env=true"]
       extraEnvFrom:
       - secretRef:
