@@ -32,12 +32,13 @@ spec:
         type: LoadBalancer
         loadBalancerIP: "192.168.0.135"
       resourcesPreset: "medium"
-
-    resources:
-      requests:
-        memory: 256Mi
-      limits:
-        memory: 512Mi
+      resources:
+        requests:
+          # cpu: 50m
+          memory: 256Mi
+        limits:
+          # cpu: 1
+          memory: 1Gi
 
 # when architecture is set to "replication" the following values are required
 # secondary:
