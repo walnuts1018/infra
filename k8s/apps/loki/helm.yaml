@@ -56,6 +56,9 @@ spec:
         allow_structured_metadata: true
         retention_period: 336h
         ingestion_burst_size_mb: 100
+        shard_streams:
+          enabled: true
+          desired_rate: 104857600 # 10MiB
     write:
       replicas: 2
       autoscaling:
