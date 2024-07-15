@@ -20,7 +20,7 @@ spec:
     existingSecret: minio
     persistence:
       storageClass: longhorn
-      size: 8Gi
+      size: 16Gi
       volumeName: minio
       accessMode: ReadWriteOnce
     ingress:
