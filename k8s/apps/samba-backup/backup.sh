@@ -41,8 +41,9 @@ DATEDIR="$DISTDIR/tmp-backup-$DATE_SUFFIX"
 echo "New backup dir: $DATEDIR"
 
 mkdir $DATEDIR
-# rsync -avh --stats --dry-run --link-dest="$LATEST_BACKUP_DIR" --exclude='$RECYCLE.BIN' --exclude="longhorn" /samba-share/ "$DATEDIR"
-rsync -avh --link-dest="$LATEST_BACKUP_DIR" --exclude='$RECYCLE.BIN' --exclude="longhorn" /samba-share/ "$DATEDIR"
+
+#rsync -avh --link-dest="$LATEST_BACKUP_DIR" --exclude='$RECYCLE.BIN' --exclude="longhorn" /samba-share/ "$DATEDIR"
+rsync -rltDvh --link-dest="$LATEST_BACKUP_DIR" --exclude='$RECYCLE.BIN' --exclude="longhorn" /samba-share/ "$DATEDIR" # NTFSだと権限が正しくコピーされず、リンクが張れないので-pgoを使わない
 
 if [ $? -ne 0 ]; then
     echo "rsync failed"
