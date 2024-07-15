@@ -49,7 +49,7 @@ spec:
       claimName: "my:zitadel:grants"
       scopes: "openid,profile,email"
       redirectUri: "https://minio-console.walnuts.dev/oauth_callback"
-      displayName: "walnuts.dev"
+      displayName: "Walnuts.dev"
     environment:
       MINIO_IDENTITY_OPENID_REDIRECT_URI: "https://minio-console.walnuts.dev/oauth_callback"
       MINIO_SERVER_URL: "https://minio.walnuts.dev"
