@@ -8,4 +8,5 @@ resources:
 - ./kubelet
 - ./cluster
 - ./loki-exporter
-- ./prometheus
+- ./servicemonitor
+- ./prometheus-exporter
