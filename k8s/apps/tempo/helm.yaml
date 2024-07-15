@@ -17,18 +17,19 @@ spec:
   values:
     tempo:
       resources:
-       requests:
-         memory: 2Gi
-       limits:
-         memory: 4Gi
+        requests:
+          memory: 2Gi
+        limits:
+          memory: 4Gi
       storage:
         trace:
           backend: s3
           s3:
             bucket: tempo
-            endpoint: minio.walnuts.dev
+            endpoint: "http://minio.minio.svc.cluster.local:9000"
             access_key: '${MINIO_ACCESS_KEY}'
             secret_key: '${MINIO_SECRET_KEY}'
+            insecure: true
       extraEnv:
       - name: MINIO_ACCESS_KEY
         valueFrom:
