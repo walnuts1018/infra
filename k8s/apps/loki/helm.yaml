@@ -27,11 +27,14 @@ spec:
           ruler: "loki-ruler"
           admin: "loki-admin"
         s3:
-          endpoint: "https://minio.walnuts.dev"
+          endpoint: "http://minio.minio.svc.cluster.local:9000"
           region: ap-northeast-1
           secretAccessKey: "${secretAccessKey}"
           accessKeyId: "${accessKeyId}"
           s3ForcePathStyle: true
+          insecure: true
+          http_config:
+            insecure_skip_verify: true
       server:
         # "error": "HTTP 500 \"Internal Server Error\": rpc error: code = ResourceExhausted desc = grpc: received message larger than max (4840865 vs. 4194304)"
         # https://grafana.com/docs/loki/latest/configure/
