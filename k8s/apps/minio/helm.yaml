@@ -15,6 +15,8 @@ spec:
       chart: minio
       version: 5.2.0
   values:
+    mode: distributed
+    replicas: 3
     existingSecret: minio
     persistence:
       storageClass: longhorn
@@ -28,8 +30,6 @@ spec:
         nginx.ingress.kubernetes.io/proxy-body-size: 128G
       hosts:
       - minio.walnuts.dev
-    replicas: 1
-    mode: standalone
     consoleIngress:
       enabled: true
       ingressClassName: nginx
