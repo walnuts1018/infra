@@ -15,12 +15,13 @@ spec:
       chart: minio
       version: 5.2.0
   values:
-    mode: distributed
-    replicas: 3
+    mode: standalone
+    replicas: 1
     existingSecret: minio
     persistence:
       storageClass: longhorn
       size: 8Gi
+      volumeName: minio
       accessMode: ReadWriteOnce
     ingress:
       enabled: true
