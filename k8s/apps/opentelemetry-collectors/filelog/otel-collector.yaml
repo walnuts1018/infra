@@ -105,8 +105,8 @@ spec:
         endpoint: default-collector.opentelemetry-collector.svc.cluster.local:4317
         tls:
           insecure: true
-      logging:
-        loglevel: debug
+      debug:
+        verbosity: detailed
         sampling_initial: 5
         sampling_thereafter: 200
     service:
@@ -114,7 +114,7 @@ spec:
         logs:
           receivers: [filelog]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/default, logging]
+          exporters: [otlp/default, debug]
   volumeMounts:
   - name: varlogpods
     mountPath: /var/log/pods
