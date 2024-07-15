@@ -42,3 +42,8 @@ spec:
           receivers: [otlp]
           processors: [memory_limiter, batch, resource]
           exporters: [loki]
+  resources:
+    requests:
+      memory: 100Mi
+    limits:
+      memory: 4Gi
