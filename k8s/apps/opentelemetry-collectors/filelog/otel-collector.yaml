@@ -56,9 +56,6 @@ spec:
           cache:
             size: 128
         - type: move
-          from: attributes.stream
-          to: attributes["log.iostream"]
-        - type: move
           from: attributes.container_name
           to: resource["k8s.container.name"]
         - type: move
