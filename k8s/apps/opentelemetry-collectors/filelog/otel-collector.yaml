@@ -52,7 +52,7 @@ spec:
         - id: extract_metadata_from_filepath
           type: move
           from: attributes["log.file.path"]
-          to: attributes.debug
+          to: resource.debug
     # - id: extract_metadata_from_filepath
     #   type: regex_parser
     #   regex: '^.*\/(?P<namespace>[^_]+)_(?P<pod_name>[^_]+)_(?P<uid>[a-f0-9\-]{36})\/(?P<container_name>[^\._]+)\/(?P<restart_count>\d+)\.log$'
