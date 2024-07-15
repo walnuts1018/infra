@@ -120,3 +120,4 @@ spec:
         retention: 14d
         retentionSize: 30GiB
         replicas: 1
+        enableRemoteWriteReceiver: true
