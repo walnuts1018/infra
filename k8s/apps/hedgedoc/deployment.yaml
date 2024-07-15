@@ -80,11 +80,11 @@ spec:
               name: hedgedoc-secret
               key: minio-secret-key
         - name: CMD_MINIO_ENDPOINT
-          value: "minio.walnuts.dev"
+          value: "minio.minio.svc.cluster.local"
         - name: CMD_MINIO_PORT
-          value: "443"
+          value: "9000"
         - name: CMD_MINIO_SECURE
-          value: "true"
+          value: "false"
         - name: CMD_S3_BUCKET
           value: "hedgedoc"
         - name: CMD_DEFAULT_PERMISSION
