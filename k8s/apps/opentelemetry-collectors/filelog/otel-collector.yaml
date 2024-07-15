@@ -47,7 +47,7 @@ spec:
             parse_from: attributes.time
             layout: '%Y-%m-%dT%H:%M:%S.%LZ'
         - type: move
-          id: extract_metadata_from_filepath
+          id: extract_metadata_from_filepath #TODO: rm
           from: attributes.log
           to: body
         # - id: extract_metadata_from_filepath
@@ -115,7 +115,7 @@ spec:
         logs:
           receivers: [filelog]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/default, debug]
+          exporters: [otlp/default]
   volumeMounts:
   - name: varlogpods
     mountPath: /var/log/pods
