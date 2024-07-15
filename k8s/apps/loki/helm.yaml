@@ -64,7 +64,7 @@ spec:
       autoscaling:
         enabled: true
         minReplicas: 1
-        maxReplicas: 3
+        maxReplicas: 6
         targetCPUUtilizationPercentage: 700
         targetMemoryUtilizationPercentage: 200
       resources:
@@ -88,7 +88,7 @@ spec:
       autoscaling:
         enabled: true
         minReplicas: 1
-        maxReplicas: 3
+        maxReplicas: 6
         targetCPUUtilizationPercentage: 500
         targetMemoryUtilizationPercentage: 200
       resources:
@@ -108,7 +108,7 @@ spec:
       autoscaling:
         enabled: true
         minReplicas: 2
-        maxReplicas: 3
+        maxReplicas: 6
         targetCPUUtilizationPercentage: 800
         targetMemoryUtilizationPercentage: 200
       resources:
