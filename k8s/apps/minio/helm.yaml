@@ -21,7 +21,6 @@ spec:
     persistence:
       storageClass: longhorn
       size: 8Gi
-      volumeName: minio
       accessMode: ReadWriteOnce
     ingress:
       enabled: true
