@@ -25,7 +25,7 @@ spec:
         timeout: 10s
     exporters:
       prometheusremotewrite:
-        endpoint: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local/api/v1/push"
+        endpoint: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/push"
     service:
       pipelines:
         metrics:
