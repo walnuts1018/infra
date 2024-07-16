@@ -10,10 +10,9 @@ spec:
   minReplicas: 1
   maxReplicas: 10
   metrics:
-  - type: Pods
-    pods:
-      metric:
-        name: gin_request_total
+  - type: Resource
+    resource:
+      name: cpu
       target:
-        type: AverageValue
-        averageValue: "400"
+        type: Utilization
+        averageUtilization: 300
