@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: loki
-      version: 6.6.6
+      version: 6.7.1
   values:
     deploymentMode: SimpleScalable
     loki:
