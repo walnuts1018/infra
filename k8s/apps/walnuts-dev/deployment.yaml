@@ -30,6 +30,14 @@ spec:
         env:
         - name: NEXT_PUBLIC_GA_ID
           value: G-NB6F68ZQ9P
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
       priorityClassName: high
       affinity:
         nodeAffinity:
