@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: walnuts-dev
-        image: ghcr.io/walnuts1018/walnuts.dev:683e12866fca657e3c100c1662d229174b0507e2-214 # {"$imagepolicy": "default:walnuts-dev"}
+        image: ghcr.io/walnuts1018/walnuts.dev:99cb2f685af7f1f8dce297bd912c28277b6f8aae-215 # {"$imagepolicy": "default:walnuts-dev"}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
