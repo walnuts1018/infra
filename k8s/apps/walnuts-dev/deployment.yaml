@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: walnuts-dev
-        image: ghcr.io/walnuts1018/walnuts.dev:293347303800f4d5c25de5b47b880937292b3f6e-212 # {"$imagepolicy": "default:walnuts-dev"}
+        image: ghcr.io/walnuts1018/walnuts.dev:9fc7a910f1e5bebca05bb0d4fd978cd241c77e64-218 # {"$imagepolicy": "default:walnuts-dev"}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
@@ -30,6 +30,14 @@ spec:
         env:
         - name: NEXT_PUBLIC_GA_ID
           value: G-NB6F68ZQ9P
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
       priorityClassName: high
       affinity:
         nodeAffinity:
