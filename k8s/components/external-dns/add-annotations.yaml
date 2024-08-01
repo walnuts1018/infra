@@ -1,0 +1,3 @@
+- op: add
+  path: /metadata/annotations/external-dns.alpha.kubernetes.io~1target
+  value: 6e83921d-658f-4f74-9c52-563082d88f29.cfargotunnel.com"

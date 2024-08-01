@@ -28,7 +28,7 @@ kind: ImageRepository
 metadata:
   name: external-dns
 spec:
-  image: ghcr.io/walnuts1018/external-dns
+  image: registry.k8s.io/external-dns/external-dns
   interval: 2m0s
   secretRef:
     name: ghcr-login-secret
@@ -40,10 +40,6 @@ metadata:
 spec:
   imageRepositoryRef:
     name: external-dns
-  filterTags:
-    ## use "pattern: '[a-f0-9]+-(?P<ts>[0-9]+)'" if you copied the workflow example using github.run_number
-    pattern: ".*-[a-f0-9]+-(?P<ts>[0-9]+)"
-    extract: "$ts"
   policy:
     numerical:
       order: asc

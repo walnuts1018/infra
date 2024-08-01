@@ -8,3 +8,4 @@ resources:
 - image-policy.yaml
 components:
 - ../../components/deployment-with-hpa
+- ../../components/external-dns
