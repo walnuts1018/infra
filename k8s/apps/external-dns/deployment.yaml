@@ -31,7 +31,7 @@ spec:
         - name: CF_ACCOUNT_ID
           value: 38b5eab012d216dfcc52dcd69e7764b5
         - name: CF_TUNNEL_ID
-          value: 6e83921d-658f-4f74-9c52-563082d88f29
+          value: 603f4f99-268a-4d2a-8c2a-66d29ef1f528
         resources:
           requests:
             memory: 32Mi
