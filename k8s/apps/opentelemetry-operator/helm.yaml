@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: opentelemetry-operator
-      version: 0.64.4
+      version: 0.65.0
   values:
     manager:
       collectorImage:
