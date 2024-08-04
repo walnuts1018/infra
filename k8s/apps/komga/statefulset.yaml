@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: komga
+spec:
+  selector:
+    matchLabels:
+      app: komga
+  serviceName: komga
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: komga
+    spec:
+      containers:
+      - name: komga
+        image: gotson/komga:1.11.2
+        resources: {}
+        ports:
+        - containerPort: 25600
+          name: http
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: komga
