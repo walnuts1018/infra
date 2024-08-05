@@ -25,6 +25,8 @@ spec:
           name: config-dir
         - mountPath: /config
           name: config-file
+          subPath: application.yml
+          readOnly: true
       volumes:
       - name: config-dir
         persistentVolumeClaim:
