@@ -23,7 +23,13 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: data
+        - mountPath: /config
+          name: config
+          readOnly: true
       volumes:
       - name: data
         persistentVolumeClaim:
           claimName: komga
+      - name: config
+        secret:
+          secretName: komga-config
