@@ -23,6 +23,10 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: data
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: http
       volumes:
       - name: data
         persistentVolumeClaim:
