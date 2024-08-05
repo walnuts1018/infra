@@ -15,6 +15,9 @@ spec:
         allocatable_types_to_report:
         - cpu
         - memory
+        resource_attributes:
+          k8s.container.status.last_terminated_reason:
+            enabled: true
     processors:
       memory_limiter:
         check_interval: 1s
