@@ -16,6 +16,13 @@ spec:
         - node
         - pod
         - container
+        metrics:
+          container.cpu.utilization:
+            enabled: false
+          k8s.node.cpu.utilization:
+            enabled: false
+          k8s.pod.cpu.utilization:
+            enabled: false
     processors:
       memory_limiter:
         check_interval: 1s
