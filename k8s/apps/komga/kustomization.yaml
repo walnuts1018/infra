@@ -7,4 +7,9 @@ resources:
 - ingress.yaml
 - statefulset.yaml
 - pvc.yaml
-
+configMapGenerator:
+- name: komga-conf
+  files:
+  - application.yml
+generatorOptions:
+  disableNameSuffixHash: true
