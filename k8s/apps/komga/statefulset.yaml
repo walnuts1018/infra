@@ -21,15 +21,14 @@ spec:
         - containerPort: 25600
           name: http
         volumeMounts:
-        - mountPath: /data
-          name: data
         - mountPath: /config
-          name: config
-          readOnly: true
+          name: config-dir
+        - mountPath: /config
+          name: config-file
       volumes:
-      - name: data
+      - name: config-dir
         persistentVolumeClaim:
-          claimName: komga
-      - name: config
+          claimName: komga-config
+      - name: config-file
         secret:
           secretName: komga-config
