@@ -41,7 +41,6 @@ spec:
           - k8s.job.name
           - k8s.daemonset.name
           - k8s.statefulset.name
-          - k8s.cluster.name
         pod_association: # How to associate the data to a pod (order matters)
         - sources: # First try to use the value of the resource attribute k8s.pod.ip
           - from: resource_attribute
