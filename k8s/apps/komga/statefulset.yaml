@@ -23,7 +23,7 @@ spec:
         volumeMounts:
         - mountPath: /config
           name: config-dir
-        - mountPath: /config
+        - mountPath: /config/application.yml
           name: config-file
           subPath: application.yml
           readOnly: true
