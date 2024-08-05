@@ -8,7 +8,7 @@ resources:
 - statefulset.yaml
 - pvc.yaml
 configMapGenerator:
-- name: komga-conf
+- name: komga-config
   files:
   - application.yml
 generatorOptions:
