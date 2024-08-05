@@ -16,4 +16,4 @@ spring:
           zitadel: # this must match the provider above
             user-name-attribute: sub
             # either set the issuer-uri, in which case the app will lookup the configuration for you automatically
-            issuer-uri: https://auth.walnuts.dev/
+            issuer-uri: https://auth.walnuts.dev
