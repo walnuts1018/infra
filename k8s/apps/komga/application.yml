@@ -1,0 +1,19 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          zitadel:
+            provider: zitadel
+            client-id: 279063228187738375@walnuts.dev
+            client-secret: "{{ .clientsecret }}"
+            client-name: zitadel
+            scope: openid,email
+            authorization-grant-type: authorization_code
+            # the placeholders in {} will be replaced automatically, you don't need to change this line
+            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+        provider:
+          zitadel: # this must match the provider above
+            user-name-attribute: sub
+            # either set the issuer-uri, in which case the app will lookup the configuration for you automatically
+            issuer-uri: https://auth.walnuts.dev

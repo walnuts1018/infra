@@ -20,14 +20,29 @@ spec:
         ports:
         - containerPort: 25600
           name: http
-        volumeMounts:
-        - mountPath: /data
-          name: data
         readinessProbe:
           httpGet:
             path: /actuator/health
             port: http
+        volumeMounts:
+        - mountPath: /config
+          name: config-dir
+        - mountPath: /config/application.yml
+          name: config-file
+          subPath: application.yml
+          readOnly: true
+        - mountPath: /books
+          name: book-dir
       volumes:
-      - name: data
+      - name: config-dir
         persistentVolumeClaim:
-          claimName: komga
+          claimName: komga-config
+      - name: config-file
+        secret:
+          secretName: komga-config
+      - name: book-dir
+        hostPath:
+          path: /mnt/data/share/Books
+          type: Directory
+      nodeSelector:
+        kubernetes.io/hostname: cake
