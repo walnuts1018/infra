@@ -22,6 +22,7 @@ spec:
         timeout: 10s
       k8sattributes:
         auth_type: 'serviceAccount'
+        passthrough: true
         filter:
           node_from_env_var: K8S_NODE_NAME
         extract:
