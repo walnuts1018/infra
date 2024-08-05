@@ -7,6 +7,7 @@ resources:
 - ingress.yaml
 - statefulset.yaml
 - pvc.yaml
+- image-policy.yaml
 configMapGenerator:
 - name: komga-config
   files:
