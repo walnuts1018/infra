@@ -18,3 +18,6 @@ spring:
             # either set the issuer-uri, in which case the app will lookup the configuration for you automatically
             issuer-uri: http://localhost:8085/auth/realms/komgatest
 
+komga:
+  database:
+    file: /data/database.sqlite
