@@ -27,6 +27,15 @@ spec:
         extract:
           metadata:
           - k8s.cluster.uid
+        pod_association: # How to associate the data to a pod (order matters)
+        - sources: # First try to use the value of the resource attribute k8s.pod.ip
+          - from: resource_attribute
+            name: k8s.pod.ip
+        - sources: # Then try to use the value of the resource attribute k8s.pod.uid
+          - from: resource_attribute
+            name: k8s.pod.uid
+        - sources: # If neither of those work, use the request's connection to get the pod IP.
+          - from: connection
     exporters:
       otlp/tempo:
         endpoint: tempo.monitoring.svc.cluster.local:4317
