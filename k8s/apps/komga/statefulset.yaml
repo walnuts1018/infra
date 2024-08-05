@@ -36,7 +36,6 @@ spec:
       - name: config-file
         secret:
           secretName: komga-config
-   volumes:
       - name: book-dir
         hostPath:
           path: /mnt/data/share/Books
