@@ -18,4 +18,6 @@ spec:
     spec:
       chart: cilium
       version: 1.16.1
-
+  values:
+    envoy:
+      enabled: false
