@@ -253,19 +253,21 @@ sudo systemctl start nginx
 
 ```bash
 rm kubeadm-config.yaml
-echo "apiVersion: kubeadm.k8s.io/v1beta3
+echo "apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
 clusterName: kurumi
-networking:
-  podSubnet: 10.244.0.0/16
 controlPlaneEndpoint: 192.168.0.17:16443
+---
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: InitConfiguration
+nodeRegistration:
+  criSocket: unix:///var/run/crio/crio.sock
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 failSwapOn: false
 featureGates:
   NodeSwap: true
-  AppArmor: false
 memorySwap:
   swapBehavior: LimitedSwap" > kubeadm-config.yaml
 
