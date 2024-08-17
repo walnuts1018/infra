@@ -21,3 +21,5 @@ spec:
   values:
     envoy:
       enabled: false
+    ipam:
+      mode: kubernetes
