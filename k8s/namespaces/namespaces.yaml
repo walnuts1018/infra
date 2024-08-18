@@ -41,11 +41,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: sweets-rebellion
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: databases
 ---
 apiVersion: v1
