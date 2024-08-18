@@ -13,6 +13,6 @@ spec:
   chart:
     spec:
       chart: cert-manager
-      version: v1.15.2
+      version: v1.15.3
   values:
     installCRDs: true
