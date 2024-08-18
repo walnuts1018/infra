@@ -382,7 +382,7 @@ kubectl apply -f - -n kube-system
 ## labels
 
 ```bash
-kubectl label nodes cheese walnuts.dev/ondemand=true
+kubectl label nodes peach walnuts.dev/ondemand=true
 ```
 
 ## Vault
