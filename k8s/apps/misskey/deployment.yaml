@@ -21,7 +21,7 @@ spec:
         fsGroupChangePolicy: "OnRootMismatch"
       initContainers:
       - name: misskey-init
-        image: misskey/misskey:2024.7.0 # {"$imagepolicy": "misskey:misskey"}
+        image: misskey/misskey:2024.8.0 # {"$imagepolicy": "misskey:misskey"}
         imagePullPolicy: IfNotPresent
         command:
         - pnpm
@@ -35,7 +35,7 @@ spec:
           readOnly: true
       containers:
       - name: misskey
-        image: misskey/misskey:2024.7.0 # {"$imagepolicy": "misskey:misskey"}
+        image: misskey/misskey:2024.8.0 # {"$imagepolicy": "misskey:misskey"}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
