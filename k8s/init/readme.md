@@ -315,12 +315,6 @@ echo "sudo" $(sudo kubeadm token create --print-join-command) "--control-plane -
 echo "sudo" $(sudo kubeadm token create --print-join-command) "--cri-socket unix:///var/run/crio/crio.sock"
 ```
 
-```bash
-sudo kubeadm join 192.168.0.17:16443 --token xxx \
-        --discovery-token-ca-cert-hash sha256:xxx \
-        --control-plane --certificate-key xxxx
-```
-
 ## helm
 
 ```bash
