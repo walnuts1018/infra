@@ -86,11 +86,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: archivebox
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: opentelemetry-operator-system
 ---
 apiVersion: v1
