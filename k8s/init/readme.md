@@ -38,7 +38,7 @@ static domain_name_servers=192.168.0.1" >> /etc/dhcpcd.conf
 
 ## cgroups
 
-###rasp
+### rasp
 
 ```bash
 sudo sed -i 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/g' /boot/cmdline.txt
