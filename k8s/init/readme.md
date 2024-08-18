@@ -85,9 +85,9 @@ sudo systemctl start crio
 ## k8s 本体
 
 ```bash
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key |
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key |
     gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /" |
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /" |
     tee /etc/apt/sources.list.d/kubernetes.list
 
 sudo apt update
@@ -253,19 +253,21 @@ sudo systemctl start nginx
 
 ```bash
 rm kubeadm-config.yaml
-echo "apiVersion: kubeadm.k8s.io/v1beta3
+echo "apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
 clusterName: kurumi
-networking:
-  podSubnet: 10.244.0.0/16
 controlPlaneEndpoint: 192.168.0.17:16443
+---
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: InitConfiguration
+nodeRegistration:
+  criSocket: unix:///var/run/crio/crio.sock
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 failSwapOn: false
 featureGates:
   NodeSwap: true
-  AppArmor: false
 memorySwap:
   swapBehavior: LimitedSwap" > kubeadm-config.yaml
 
@@ -302,7 +304,7 @@ kubectl taint node $(hostname) node-role.kubernetes.io/control-plane:NoSchedule-
 ### Control Plane
 
 ```bash
-echo "sudo" $(sudo kubeadm token create --print-join-command) "--control-plane --certificate-key" $(sudo kubeadm init phase upload-certs --upload-certs | tail -n 1)
+echo "sudo" $(sudo kubeadm token create --print-join-command) "--control-plane --certificate-key" $(sudo kubeadm init phase upload-certs --upload-certs | tail -n 1) "--cri-socket unix:///var/run/crio/crio.sock"
 ```
 
 👆 を実行
@@ -310,7 +312,7 @@ echo "sudo" $(sudo kubeadm token create --print-join-command) "--control-plane -
 ### Worker
 
 ```bash
-echo "sudo" $(sudo kubeadm token create --print-join-command)
+echo "sudo" $(sudo kubeadm token create --print-join-command) "--cri-socket unix:///var/run/crio/crio.sock"
 ```
 
 ```bash
@@ -349,7 +351,7 @@ sudo systemctl enable iscsid
 
 ```bash
 curl -s https://fluxcd.io/install.sh | sudo bash
-echo "[[ /usr/bin/flux ]] && source <(flux completion zsh)" >> ~/.zshrc
+# echo "[[ /usr/bin/flux ]] && source <(flux completion zsh)" >> ~/.zshrc
 ```
 
 ```bash

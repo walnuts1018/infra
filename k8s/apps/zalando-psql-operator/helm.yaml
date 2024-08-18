@@ -31,3 +31,11 @@ spec:
       pod_antiaffinity_topology_key: "kubernetes.io/hostname"
     nodeSelector:
       kubernetes.io/arch: amd64
+
+    resources:
+      limits:
+        cpu: 500m
+        memory: 500Mi
+      requests:
+        cpu: 10m
+        memory: 50Mi

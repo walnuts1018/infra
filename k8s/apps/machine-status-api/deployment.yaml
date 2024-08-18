@@ -44,7 +44,7 @@ spec:
           limits: {}
       priorityClassName: high
       nodeSelector:
-        kubernetes.io/hostname: snow
+        kubernetes.io/hostname: cheese
       tolerations:
       - key: "node-role.kubernetes.io/control-plane"
         operator: "Exists"

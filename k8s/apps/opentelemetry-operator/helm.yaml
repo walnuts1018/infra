@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: opentelemetry-operator
-      version: 0.65.1
+      version: 0.68.0
   values:
     manager:
       collectorImage:
@@ -21,3 +21,9 @@ spec:
       extraArgs:
       - --enable-go-instrumentation=true
       - --enable-nginx-instrumentation=true
+      resources:
+        limits:
+          memory: 128Mi
+        requests:
+          cpu: 5m
+          memory: 64Mi
