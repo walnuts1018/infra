@@ -26,3 +26,7 @@ spec:
               operator: In
               values:
               - amd64
+    resources:
+      requests:
+        cpu: 10m
+        memory: 20Mi
