@@ -57,7 +57,7 @@ spec:
     - hostssl    replication     standby      all                md5
     - hostssl    all             +zalandos    all                pam
     - hostssl    all             all          all                md5
-    - host       all             all          10.244.0.0/16      md5
+    - host       all             all          10.0.0.0/8      md5
   nodeAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
     - weight: 100
