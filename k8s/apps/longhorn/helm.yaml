@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: longhorn
-      version: 1.6.2
+      version: 1.7.0
   values:
     defaultSettings:
       allowNodeDrainWithLastHealthyReplica: true
