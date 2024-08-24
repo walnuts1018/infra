@@ -293,6 +293,13 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
+## kubeproxy
+
+```bash
+kubectl -n kube-system delete ds kube-proxy
+kubectl -n kube-system delete cm kube-proxy
+```
+
 ## taint
 
 ```bash

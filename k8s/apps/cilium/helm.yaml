@@ -24,5 +24,8 @@ spec:
     kubeProxyReplacement: true
     k8sServiceHost: 192.168.0.17
     k8sServicePort: 16443
-    # ipam:
-#   mode: kubernetes
+    l2announcements:
+      enabled: true
+    k8sClientRateLimit:
+      qps: 10
+      burst: 20
