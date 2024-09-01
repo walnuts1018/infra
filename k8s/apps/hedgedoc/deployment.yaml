@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: hedgedoc
-        image: quay.io/hedgedoc/hedgedoc:1.10.0 # {"$imagepolicy": "default:hedgedoc"}
+        image: quay.io/hedgedoc/hedgedoc:1.9.9 # {"$imagepolicy": "default:hedgedoc"}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
