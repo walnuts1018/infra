@@ -42,7 +42,7 @@ jobs:
           private-key: ${{ secrets.PRIVATE_KEY }}
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.generate_token.outputs.token }}
           branch: update-flux
