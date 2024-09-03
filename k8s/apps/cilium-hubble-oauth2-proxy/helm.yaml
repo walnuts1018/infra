@@ -1,14 +1,14 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: dashy-oauth2-proxy
+  name: hubble-oauth2-proxy
 spec:
   url: https://oauth2-proxy.github.io/manifests
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: dashy-oauth2-proxy
+  name: hubble-oauth2-proxy
 spec:
   chart:
     spec:
@@ -16,18 +16,18 @@ spec:
       version: 7.7.14
   values:
     config:
-      existingSecret: dashy-oauth2-proxy
+      existingSecret: hubble-oauth2-proxy
       configFile: |-
         email_domains = [ "*" ]
-        upstreams = [ "http://dashy.default.svc.cluster.local:8080/" ]
+        upstreams = [ "http://hubble-ui.cilium-system.svc.cluster.local:80" ]
         pass_access_token = true
         user_id_claim = "sub"
         oidc_groups_claim="my:zitadel:grants"
-        allowed_groups = ["237477822715658605:dashy"]
+        allowed_groups = ["237477822715658605:hubble-admin"]
 
     extraArgs:
       provider: oidc
-      redirect-url: https://dashy.walnuts.dev/oauth2/callback
+      redirect-url: https://hubble.walnuts.dev/oauth2/callback
       oidc-issuer-url: https://auth.walnuts.dev
       skip-provider-button: true
     ingress:
@@ -36,15 +36,15 @@ spec:
       path: /
       pathType: Prefix
       hosts:
-      - "dashy.walnuts.dev"
+      - "hubble.walnuts.dev"
     sessionStorage:
       type: redis
       redis:
-        existingSecret: "dashy-oauth2-proxy"
+        existingSecret: "hubble-oauth2-proxy"
         passwordKey: "redis-password"
         clientType: "sentinel"
         sentinel:
-          existingSecret: "dashy-oauth2-proxy"
+          existingSecret: "hubble-oauth2-proxy"
           passwordKey: "redis-password"
           masterName: "mymaster"
           connectionUrls: "redis://redis.databases.svc.cluster.local:6379,redis://redis.databases.svc.cluster.local:26379"
