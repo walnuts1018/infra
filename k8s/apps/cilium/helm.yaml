@@ -19,7 +19,18 @@ spec:
       chart: cilium
       version: 1.16.1
   values:
-    envoy:
-      enabled: false
-    # ipam:
-#   mode: kubernetes
+    # envoy:
+    #   enabled: false
+    kubeProxyReplacement: true
+    k8sServiceHost: 192.168.0.17
+    k8sServicePort: 16443
+    l2announcements:
+      enabled: true
+    k8sClientRateLimit:
+      qps: 10
+      burst: 20
+    hubble:
+      relay:
+        enabled: true
+      ui:
+        enabled: true

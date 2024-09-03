@@ -293,6 +293,13 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
+## kubeproxy
+
+```bash
+kubectl -n kube-system delete ds kube-proxy
+kubectl -n kube-system delete cm kube-proxy
+```
+
 ## taint
 
 ```bash
@@ -313,12 +320,6 @@ echo "sudo" $(sudo kubeadm token create --print-join-command) "--control-plane -
 
 ```bash
 echo "sudo" $(sudo kubeadm token create --print-join-command) "--cri-socket unix:///var/run/crio/crio.sock"
-```
-
-```bash
-sudo kubeadm join 192.168.0.17:16443 --token xxx \
-        --discovery-token-ca-cert-hash sha256:xxx \
-        --control-plane --certificate-key xxxx
 ```
 
 ## helm
@@ -388,7 +389,7 @@ kubectl apply -f - -n kube-system
 ## labels
 
 ```bash
-kubectl label nodes cheese walnuts.dev/ondemand=true
+kubectl label nodes peach walnuts.dev/ondemand=true
 ```
 
 ## Vault
