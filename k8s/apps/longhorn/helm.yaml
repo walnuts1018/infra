@@ -20,6 +20,7 @@ spec:
       orphanAutoDeletion: true
       backupTarget: "cifs://samba.walnuts.dev/share/longhorn"
       backupTargetCredentialSecret: "cifs-secret"
+      defaultReplicaCount: 2
     csi:
       attacherReplicaCount: 2
       provisionerReplicaCount: 2
@@ -31,7 +32,7 @@ spec:
     persistence:
       defaultClassReplicaCount: 2
       reclaimPolicy: Retain
-      
+
     longhornUI:
       replicas: 2
     longhornConversionWebhook:
