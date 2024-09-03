@@ -11,5 +11,5 @@ spec:
   labels:
     automated: "true"
   name: cifs-backup
-  retain: 1
+  retain: 5
   task: backup
