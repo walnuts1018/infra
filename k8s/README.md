@@ -68,5 +68,4 @@ Kubernetes クラスタに適用される Manifest 群です。
 - \*-oauth2-proxy: 各サービスに OIDC 認証を提供するプロキシ
 - machine-status-api: 物理マシンや VM の起動を管理する API
 - proxmox-webui, proxmox-backup-webui: Proxmox WebUI へのリバースプロキシ
-- sweets-rebellion: KMC のゲーム、スイーツリベリオンの WebGL Build
 - wakatime-to-slack-profile: WakaTime のデータを Slack の Status に反映する
