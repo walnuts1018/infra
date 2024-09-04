@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: komga
-        image: gotson/komga:1.12.0 # {"$imagepolicy": "komga:komga"}
+        image: gotson/komga:1.12.1 # {"$imagepolicy": "komga:komga"}
         resources: {}
         ports:
         - containerPort: 25600
