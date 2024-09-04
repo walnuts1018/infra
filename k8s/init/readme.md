@@ -70,8 +70,8 @@ sudo apt install -y software-properties-common curl
 ```
 
 ````bash
-curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.30/deb /" | tee /etc/apt/sources.list.d/cri-o.list
+curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.30/deb /" | sudo tee /etc/apt/sources.list.d/cri-o.list
 ```
 
 ```bash
@@ -85,10 +85,8 @@ sudo systemctl start crio
 ## k8s 本体
 
 ```bash
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key |
-    gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /" |
-    tee /etc/apt/sources.list.d/kubernetes.list
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 sudo apt update
 sudo apt install -y kubelet kubeadm kubectl
@@ -104,11 +102,15 @@ sudo systemctl enable kubelet
 sudo systemctl start kubelet
 ```
 
-## keepalived & nginx
+## nginx & keepalived
 
 ```bash
+sudo apt install -y curl gnupg2 ca-certificates lsb-release ubuntu-keyring
+curl https://nginx.org/keys/nginx_signing.key | sudo gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
+echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
+sudo apt update
 sudo apt install keepalived nginx -y
-keepalived --version
 ```
 
 ```bash
@@ -127,7 +129,7 @@ events {
 stream {
   upstream kube_apiserver {
     least_conn;
-    server 192.168.0.16:6443; # to be changed
+    server $(hostname -I | cut -f1 -d' '):6443; # to be changed
     }
 
   server {
@@ -169,7 +171,7 @@ EOF
 cat <<EOF | sudo tee /etc/keepalived/chk_nginx_proc.sh
 #!/usr/bin/bash
 
-timeout 5 curl -k https://localhost:16443 # to be changed
+timeout 5 curl -k https://localhost:16443
 status=\$?
 
 if [ \$status -eq 0 ]; then
@@ -376,14 +378,6 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb
 git clone https://github.com/kubernetes/autoscaler.git
 cd autoscaler/vertical-pod-autoscaler
 ./hack/vpa-up.sh
-```
-
-## MetalLB
-
-```bash
-kubectl get configmap kube-proxy -n kube-system -o yaml | \
-sed -e "s/strictARP: false/strictARP: true/" | \
-kubectl apply -f - -n kube-system
 ```
 
 ## labels
