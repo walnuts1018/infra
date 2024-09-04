@@ -18,7 +18,7 @@ metadata:
   labels:
     recurring-job-group.longhorn.io/default: enabled
 spec:
-  storageClassName: longhorn-local
+  storageClassName: longhorn
   volumeName: nextcloud-data
   accessModes:
   - ReadWriteOnce
