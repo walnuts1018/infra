@@ -14,7 +14,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: samba-backup
-            image: debian:12.6 # {"$imagepolicy": "default:samba-backup"}
+            image: debian:12.7 # {"$imagepolicy": "default:samba-backup"}
             command:
             - sh
             - /backup.sh
