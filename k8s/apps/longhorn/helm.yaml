@@ -41,17 +41,6 @@ spec:
       replicas: 2
     longhornRecoveryBackend:
       replicas: 2
-
-    longhornManager:
-      tolerations:
-      - key: "node-role.kubernetes.io/control-plane"
-        operator: "Exists"
-        effect: "NoSchedule"
-    longhornDriver:
-      tolerations:
-      - key: "node-role.kubernetes.io/control-plane"
-        operator: "Exists"
-        effect: "NoSchedule"
     metrics:
       serviceMonitor:
         enabled: true
