@@ -5,6 +5,7 @@ metadata:
 spec:
   serviceAccount: otel-collector
   mode: deployment
+  image: otel/opentelemetry-collector-k8s:0.108.0
   config:
     receivers:
       k8s_cluster:
@@ -18,6 +19,8 @@ spec:
         resource_attributes:
           k8s.container.status.last_terminated_reason:
             enabled: true
+          k8s.deployment.name:
+            enabled: true
     processors:
       memory_limiter:
         check_interval: 1s
@@ -26,6 +29,20 @@ spec:
       batch:
         send_batch_size: 10000
         timeout: 10s
+      k8sattributes:
+        auth_type: 'serviceAccount'
+        extract:
+          metadata:
+          - k8s.cluster.uid
+        pod_association: # How to associate the data to a pod (order matters)
+        - sources: # First try to use the value of the resource attribute k8s.pod.ip
+          - from: resource_attribute
+            name: k8s.pod.ip
+        - sources: # Then try to use the value of the resource attribute k8s.pod.uid
+          - from: resource_attribute
+            name: k8s.pod.uid
+        - sources: # If neither of those work, use the request's connection to get the pod IP.
+          - from: connection
     exporters:
       otlp/default:
         endpoint: default-collector.opentelemetry-collector.svc.cluster.local:4317
@@ -35,7 +52,7 @@ spec:
       pipelines:
         metrics:
           receivers: [k8s_cluster]
-          processors: [memory_limiter, batch]
+          processors: [memory_limiter, batch, k8sattributes]
           exporters: [otlp/default]
   env:
   - name: K8S_NODE_IP

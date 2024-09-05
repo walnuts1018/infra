@@ -5,8 +5,8 @@ resources:
 - sa.yaml
 - ./default
 - ./filelog
-- ./kubelet
-- ./cluster
+- ./k8s-daemonset
+- ./k8s-deployment
 - ./loki-exporter
 - ./servicemonitor
 - ./prometheus-exporter
