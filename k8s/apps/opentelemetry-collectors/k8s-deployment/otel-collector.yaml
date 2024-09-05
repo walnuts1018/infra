@@ -1,7 +1,7 @@
 apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
-  name: cluster
+  name: k8s-deployment
 spec:
   serviceAccount: otel-collector
   mode: deployment
