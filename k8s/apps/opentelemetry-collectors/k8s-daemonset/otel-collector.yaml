@@ -1,12 +1,25 @@
 apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
-  name: kubelet
+  name: k8s-daemonset
 spec:
   serviceAccount: otel-collector
   mode: daemonset
+  image: otel/opentelemetry-collector-k8s:0.108.0
   config:
     receivers:
+      hostmetrics:
+        collection_interval: 10s
+        scrapers:
+          cpu:
+          load:
+          memory:
+            metrics:
+              system.memory.utilization:
+                enabled: true
+          disk:
+          filesystem:
+          network:
       kubeletstats:
         collection_interval: 10s
         auth_type: 'serviceAccount'
@@ -69,7 +82,7 @@ spec:
     service:
       pipelines:
         metrics:
-          receivers: [kubeletstats]
+          receivers: [hostmetrics, kubeletstats]
           processors: [memory_limiter, batch, k8sattributes]
           exporters: [otlp/default]
   env:
@@ -81,3 +94,6 @@ spec:
     valueFrom:
       fieldRef:
         fieldPath: spec.nodeName
+
+  tolerations:
+  - operator: "Exists"
