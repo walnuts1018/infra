@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: redis
-      version: 20.0.3
+      version: 20.0.5
   values:
     auth:
       sentinel: true
@@ -24,7 +24,7 @@ spec:
       kind: StatefulSet
       persistence:
         enabled: true
-        storageClass: "longhorn-local"
+        storageClass: "longhorn"
         size: 512Mi
       service:
         type: LoadBalancer
@@ -65,7 +65,7 @@ spec:
       replicaCount: 3
       persistence:
         enabled: true
-        storageClass: "longhorn-local"
+        storageClass: "longhorn"
         size: 512Mi
       service:
         type: ClusterIP
@@ -108,7 +108,7 @@ spec:
       quorum: 2
       persistence:
         enabled: true
-        storageClass: "longhorn-local"
+        storageClass: "longhorn"
         size: 100Mi
       service:
         type: ClusterIP

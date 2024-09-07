@@ -13,13 +13,14 @@ spec:
   chart:
     spec:
       chart: longhorn
-      version: 1.6.2
+      version: 1.7.1
   values:
     defaultSettings:
       allowNodeDrainWithLastHealthyReplica: true
       orphanAutoDeletion: true
       backupTarget: "cifs://samba.walnuts.dev/share/longhorn"
       backupTargetCredentialSecret: "cifs-secret"
+      defaultReplicaCount: 2
     csi:
       attacherReplicaCount: 2
       provisionerReplicaCount: 2
@@ -31,7 +32,7 @@ spec:
     persistence:
       defaultClassReplicaCount: 2
       reclaimPolicy: Retain
-      
+
     longhornUI:
       replicas: 2
     longhornConversionWebhook:
@@ -40,17 +41,6 @@ spec:
       replicas: 2
     longhornRecoveryBackend:
       replicas: 2
-
-    longhornManager:
-      tolerations:
-      - key: "node-role.kubernetes.io/control-plane"
-        operator: "Exists"
-        effect: "NoSchedule"
-    longhornDriver:
-      tolerations:
-      - key: "node-role.kubernetes.io/control-plane"
-        operator: "Exists"
-        effect: "NoSchedule"
     metrics:
       serviceMonitor:
         enabled: true
