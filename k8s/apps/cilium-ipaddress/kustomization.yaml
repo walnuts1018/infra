@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: cilium-system
 resources:
 - loadbalancerippool.yaml
+- l2-announcement-policy.yaml
