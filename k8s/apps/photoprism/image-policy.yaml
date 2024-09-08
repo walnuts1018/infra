@@ -1,0 +1,45 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: photoprism
+spec:
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
+    push:
+      branch: fluxcd/photoprism
+  interval: 1m0s
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  update:
+    path: ./k8s/apps/photoprism
+    strategy: Setters
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: photoprism
+spec:
+  image: photoprism/photoprism
+  interval: 2m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: photoprism
+spec:
+  imageRepositoryRef:
+    name: photoprism
+  filterTags:
+    pattern: '(?P<year>[0-9]{4})\.(?P<month>[0-9]+)\.(?P<version>[0-9]+)'
+  policy:
+    semver:
+      range: ">=0.0.0"
