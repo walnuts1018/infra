@@ -16,14 +16,16 @@ spec:
     spec:
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - redis-haproxy
-            topologyKey: "kubernetes.io/hostname"
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 10
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - redis-haproxy
+              topologyKey: "kubernetes.io/hostname"
       containers:
       - name: haproxy
         image: haproxy:3.0.4 # {"$imagepolicy": "databases:redis-haproxy"}
