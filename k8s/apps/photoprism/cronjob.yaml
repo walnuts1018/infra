@@ -38,10 +38,6 @@ spec:
               value: "2342"
             - name: PHOTOPRISM_ADMIN_USER
               value: photoprism
-            - name: PHOTOPRISM_SITE_URL
-              value: https://photoprism.walnuts.dev/
-            - name: PHOTOPRISM_DISABLE_TLS
-              value: "true"
             envFrom:
             - secretRef:
                 name: photoprism
