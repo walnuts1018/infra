@@ -59,7 +59,7 @@ spec:
         - name: PHOTOPRISM_OIDC_REGISTER
           value: "true"
         - name: PHOTOPRISM_OIDC_REDIRECT
-          value: "true"
+          value: "false"
 
         # Load database DSN & admin password from secret
         envFrom:
