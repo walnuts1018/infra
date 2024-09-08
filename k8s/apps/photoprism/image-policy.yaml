@@ -39,7 +39,7 @@ spec:
   imageRepositoryRef:
     name: photoprism
   filterTags:
-    pattern: '[0-9]{6}'
+    pattern: '^[0-9]{6}$'
   policy:
     numerical:
       order: asc
