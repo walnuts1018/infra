@@ -24,8 +24,8 @@ spec:
             cpu: "2"
             memory: 4Gi
         env:
-        - name: PHOTOPRISM_DEBUG
-          value: "true"
+        # - name: PHOTOPRISM_DEBUG
+        #   value: "true"
         - name: PHOTOPRISM_ORIGINALS_LIMIT
           value: "-1"
         - name: PHOTOPRISM_DETECT_NSFW
