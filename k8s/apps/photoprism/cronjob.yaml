@@ -37,7 +37,7 @@ spec:
             - name: PHOTOPRISM_HTTP_PORT
               value: "2342"
             - name: PHOTOPRISM_ADMIN_USER
-              value: photoprism
+              value: juglans
             envFrom:
             - secretRef:
                 name: photoprism
