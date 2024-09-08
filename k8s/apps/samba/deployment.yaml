@@ -17,7 +17,7 @@ spec:
         fsGroup: 1000
         fsGroupChangePolicy: "OnRootMismatch"
       containers:
-      - image: ghcr.io/servercontainers/samba:a3.19.0-s4.18.9-r0
+      - image: ghcr.io/servercontainers/samba:a3.20.3-s4.19.6-r0
         imagePullPolicy: IfNotPresent
         name: samba
         env:
