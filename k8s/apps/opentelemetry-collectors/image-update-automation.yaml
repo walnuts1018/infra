@@ -1,7 +1,7 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageUpdateAutomation
 metadata:
-  name: opentelemetry-collector
+  name: opentelemetry-collectors
 spec:
   git:
     checkout:
@@ -13,13 +13,13 @@ spec:
         name: fluxcdbot
       messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
     push:
-      branch: fluxcd/opentelemetry-collector
+      branch: fluxcd/opentelemetry-collectors
   interval: 1m0s
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   update:
-    path: ./k8s/apps/opentelemetry-collector
+    path: ./k8s/apps/opentelemetry-collectors
     strategy: Setters
 
