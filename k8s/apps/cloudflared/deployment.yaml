@@ -18,7 +18,7 @@ spec:
           value: "0 2147483647"
       containers:
       - name: cloudflared
-        image: cloudflare/cloudflared:2024.6.1
+        image: cloudflare/cloudflared:2024.6.1 # {"$imagepolicy": "network-exporter:cloudflared"}
         imagePullPolicy: IfNotPresent
         args:
         - --no-autoupdate
