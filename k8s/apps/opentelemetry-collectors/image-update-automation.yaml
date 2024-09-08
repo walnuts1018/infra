@@ -22,4 +22,3 @@ spec:
   update:
     path: ./k8s/apps/opentelemetry-collectors
     strategy: Setters
-
