@@ -26,7 +26,7 @@ spec:
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository
 metadata:
-  name: oekaki-dengon-game-front
+  name: oekaki-dengon-game-front 
 spec:
   image: ghcr.io/kmc-jp/oekaki-dengon-game-front
   interval: 2m0s
