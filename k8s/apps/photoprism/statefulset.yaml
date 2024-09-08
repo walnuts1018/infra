@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: photoprism
-        image: photoprism/photoprism:240420 # {"$imagepolicy": "photoprism:photoprism"}
+        image: photoprism/photoprism:240711 # {"$imagepolicy": "photoprism:photoprism"}
         resources:
           requests:
             cpu: "0"
