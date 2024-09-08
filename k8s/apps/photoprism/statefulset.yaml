@@ -37,7 +37,7 @@ spec:
         - name: PHOTOPRISM_HTTP_PORT
           value: "2342"
         - name: PHOTOPRISM_ADMIN_USER
-          value: photoprism
+          value: juglans
         - name: PHOTOPRISM_SITE_URL
           value: https://photoprism.walnuts.dev/
         - name: PHOTOPRISM_DISABLE_TLS
