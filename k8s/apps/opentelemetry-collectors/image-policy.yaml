@@ -1,0 +1,42 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: opentelemetry-collector-contrib
+spec:
+  image: otel/opentelemetry-collector-contrib
+  interval: 2m0s
+  secretRef:
+    name: ghcr-login-secret
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: opentelemetry-collector-contrib
+spec:
+  imageRepositoryRef:
+    name: opentelemetry-collector-contrib
+  policy:
+    semver:
+      range: ">=0.0.0"
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: opentelemetry-collector-k8s
+spec:
+  image: otel/opentelemetry-collector-k8s
+  interval: 2m0s
+  secretRef:
+    name: ghcr-login-secret
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: opentelemetry-collector-k8s
+spec:
+  imageRepositoryRef:
+    name: opentelemetry-collector-k8s
+  policy:
+    semver:
+      range: ">=0.0.0"

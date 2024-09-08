@@ -3,6 +3,8 @@ kind: Kustomization
 namespace: opentelemetry-collector
 resources:
 - sa.yaml
+- image-policy.yaml
+- image-update-automation.yaml
 - ./default
 - ./filelog
 - ./k8s-daemonset
