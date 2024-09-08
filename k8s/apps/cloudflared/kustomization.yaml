@@ -4,3 +4,4 @@ namespace: network-exporter
 resources:
 - deployment.yaml
 - externalsecret.yaml
+- image-policy.yaml
