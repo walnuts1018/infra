@@ -38,6 +38,25 @@ spec:
           value: "2342"
         - name: PHOTOPRISM_ADMIN_USER
           value: photoprism
+        - name: PHOTOPRISM_OIDC_URI
+          value: https://auth.walnuts.dev
+        - name: PHOTOPRISM_OIDC_CLIENT
+          valueFrom:
+            secretKeyRef:
+              name: photoprism-oidc
+              key: client-id
+        - name: PHOTOPRISM_OIDC_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: photoprism-oidc
+              key: client-secret
+        - name: PHOTOPRISM_OIDC_PROVIDER
+          value: "walnuts.dev"
+        - name: PHOTOPRISM_OIDC_REGISTER
+          value: "true"
+        - name: PHOTOPRISM_OIDC_REDIRECT
+          value: "true"
+
         # Load database DSN & admin password from secret
         envFrom:
         - secretRef:
