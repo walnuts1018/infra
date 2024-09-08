@@ -39,3 +39,15 @@ spec:
           initialDelaySeconds: 10
           periodSeconds: 10
         resources: {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 10
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - cloudflared
+              topologyKey: "kubernetes.io/hostname"
