@@ -58,8 +58,9 @@ spec:
           value: "walnuts.dev"
         - name: PHOTOPRISM_OIDC_REGISTER
           value: "true"
-        - name: PHOTOPRISM_OIDC_REDIRECT
+        - name: PHOTOPRISM_DISABLE_OIDC
           value: "false"
+
 
         # Load database DSN & admin password from secret
         envFrom:
