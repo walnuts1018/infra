@@ -42,20 +42,20 @@ spec:
           value: https://photoprism.walnuts.dev/
         - name: PHOTOPRISM_DISABLE_TLS
           value: "true"
-        - name: PHOTOPRISM_OIDC_URI
-          value: https://auth.walnuts.dev
-        - name: PHOTOPRISM_OIDC_CLIENT
-          valueFrom:
-            secretKeyRef:
-              name: photoprism-oidc
-              key: client-id
-        - name: PHOTOPRISM_OIDC_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: photoprism-oidc
-              key: client-secret
-        - name: PHOTOPRISM_OIDC_PROVIDER
-          value: "walnuts.dev"
+        # - name: PHOTOPRISM_OIDC_URI
+        #   value: https://auth.walnuts.dev
+        # - name: PHOTOPRISM_OIDC_CLIENT
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: photoprism-oidc
+        #       key: client-id
+        # - name: PHOTOPRISM_OIDC_SECRET
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: photoprism-oidc
+        #       key: client-secret
+        # - name: PHOTOPRISM_OIDC_PROVIDER
+        #   value: "walnuts.dev"
 
 
         # Load database DSN & admin password from secret
