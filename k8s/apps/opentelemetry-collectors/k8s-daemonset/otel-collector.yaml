@@ -5,7 +5,7 @@ metadata:
 spec:
   serviceAccount: otel-collector
   mode: daemonset
-  image: otel/opentelemetry-collector-k8s:0.108.0 # {"$imagepolicy": "opentelemetry-collector:opentelemetry-collector-k8s"}
+  image: otel/opentelemetry-collector-k8s:0.109.0 # {"$imagepolicy": "opentelemetry-collector:opentelemetry-collector-k8s"}
   config:
     receivers:
       hostmetrics:
@@ -94,6 +94,5 @@ spec:
     valueFrom:
       fieldRef:
         fieldPath: spec.nodeName
-
   tolerations:
   - operator: "Exists"
