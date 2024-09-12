@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 62.6.0
+      version: 62.7.0
   values:
     grafana:
       replicas: 2
