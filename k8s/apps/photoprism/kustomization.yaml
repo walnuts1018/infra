@@ -9,5 +9,4 @@ resources:
 - pvc.yaml
 - cronjob.yaml
 - image-policy.yaml
-- onepassword-item.yaml
 - ./mariadb
