@@ -2,7 +2,7 @@
   path: /spec
   value:
     secretStoreRef:
-      name: vault-secretstore
+      name: vault
       kind: ClusterSecretStore
     refreshInterval: 1m
     target:
