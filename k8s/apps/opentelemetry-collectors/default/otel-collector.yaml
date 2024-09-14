@@ -15,8 +15,8 @@ spec:
           http: {}
     processors:
       memory_limiter:
-        check_interval: 1s
-        limit_percentage: 75
+        check_interval: 5s
+        limit_mib: 2000
         spike_limit_percentage: 15
       batch:
         send_batch_size: 5000
@@ -80,7 +80,7 @@ spec:
         name: memory
         target:
           type: Utilization
-          averageUtilization: 200
+          averageUtilization: 500
   resources:
     requests:
       memory: 100Mi

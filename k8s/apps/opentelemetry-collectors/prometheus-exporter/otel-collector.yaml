@@ -18,8 +18,8 @@ spec:
           http: {}
     processors:
       memory_limiter:
-        check_interval: 1s
-        limit_percentage: 85
+        check_interval: 5s
+        limit_mib: 2000
         spike_limit_percentage: 15
       batch:
         send_batch_size: 10000
@@ -37,6 +37,14 @@ spec:
           exporters: [prometheusremotewrite]
   resources:
     requests:
-      memory: 3Gi
-    limits:
-      memory: 6Gi
+      memory: 200Mi
+  autoscaler:
+    minReplicas: 1
+    maxReplicas: 5
+    metrics:
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 500
