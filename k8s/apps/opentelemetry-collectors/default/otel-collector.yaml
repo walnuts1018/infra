@@ -56,7 +56,7 @@ spec:
         endpoint: "https://otlp-vaxila.mackerelio.com"
         headers:
           Accept: "*/*"
-          "Mackerel-Api-Key": ${env:MACKEREL_APIKEY}
+          "Mackerel-Api-Key": ${env:VAXILA_APIKEY}
     service:
       pipelines:
         traces:
@@ -80,8 +80,8 @@ spec:
     valueFrom:
       fieldRef:
         fieldPath: spec.nodeName
-  - name: MACKEREL_APIKEY
+  - name: VAXILA_APIKEY
     valueFrom:
       secretKeyRef:
         name: opentelemetry-collector
-        key: mackerel-api-key
+        key: vaxila-api-key
