@@ -51,11 +51,6 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: vault
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: minio
 ---
 apiVersion: v1
