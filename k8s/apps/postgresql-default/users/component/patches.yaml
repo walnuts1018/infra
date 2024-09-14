@@ -2,7 +2,7 @@
   path: /spec
   value:
     secretStoreRef:
-      name: vault
+      name: onepassword
       kind: ClusterSecretStore
     refreshInterval: 1m
     target:
