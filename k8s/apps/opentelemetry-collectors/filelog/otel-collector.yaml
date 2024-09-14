@@ -5,6 +5,7 @@ metadata:
 spec:
   mode: daemonset
   serviceAccount: otel-collector
+  managementState: managed
   config:
     receivers:
       filelog:
