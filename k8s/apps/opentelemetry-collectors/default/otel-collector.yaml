@@ -5,6 +5,7 @@ metadata:
 spec:
   mode: deployment
   serviceAccount: otel-collector
+  managementState: managed
   config:
     receivers:
       otlp:
@@ -18,7 +19,8 @@ spec:
         limit_percentage: 75
         spike_limit_percentage: 15
       batch:
-        send_batch_size: 10000
+        send_batch_size: 5000
+        send_batch_max_size: 5000
         timeout: 10s
       k8sattributes:
         auth_type: 'serviceAccount'
@@ -50,12 +52,17 @@ spec:
         endpoint: prometheus-exporter-collector.opentelemetry-collector.svc.cluster.local:4317
         tls:
           insecure: true
+      otlphttp/vaxila:
+        endpoint: "https://otlp-vaxila.mackerelio.com"
+        headers:
+          Accept: "*/*"
+          "Mackerel-Api-Key": ${env:MACKEREL_APIKEY}
     service:
       pipelines:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/tempo]
+          exporters: [otlp/tempo, otlphttp/vaxila]
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
@@ -73,3 +80,8 @@ spec:
     valueFrom:
       fieldRef:
         fieldPath: spec.nodeName
+  - name: MACKEREL_APIKEY
+    valueFrom:
+      secretKeyRef:
+        name: opentelemetry-collector
+        key: mackerel-api-key
