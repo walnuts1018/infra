@@ -46,3 +46,13 @@ spec:
   resources:
     requests:
       memory: 100Mi
+  autoscaler:
+    minReplicas: 1
+    maxReplicas: 5
+    metrics:
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 500
