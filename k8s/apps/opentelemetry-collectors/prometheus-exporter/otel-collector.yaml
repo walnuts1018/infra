@@ -8,6 +8,7 @@ metadata:
 spec:
   mode: deployment
   image: otel/opentelemetry-collector-contrib:0.109.0 # {"$imagepolicy": "opentelemetry-collector:opentelemetry-collector-contrib"}
+  managementState: managed
   config:
     receivers:
       otlp:

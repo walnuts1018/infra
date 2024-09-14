@@ -16,6 +16,7 @@ spec:
           operator: NotIn
           values:
           - prometheus
+  managementState: managed
   config:
     receivers:
       prometheus:
