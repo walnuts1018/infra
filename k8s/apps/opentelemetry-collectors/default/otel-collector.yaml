@@ -75,7 +75,7 @@ spec:
     minReplicas: 1
     maxReplicas: 5
     metrics:
-    - type: Pod
+    - type: Pods
       pods:
         metric:
           name: memory
