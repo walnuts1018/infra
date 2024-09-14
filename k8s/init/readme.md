@@ -1,18 +1,14 @@
 # Init
 
+## 前提
+
+- OS: Ubuntu24.04
+
 ## 初期設定
 
 - [zsh&dotfile](https://github.com/walnuts1018/dotfiles)
 
 ## Timezone
-
-### rasp
-
-```bash
-sudo raspi-config nonint do_change_timezone Asia/Tokyo
-```
-
-### Ubuntu
 
 ```bash
 sudo timedatectl set-timezone Asia/Tokyo
@@ -20,31 +16,7 @@ sudo timedatectl set-timezone Asia/Tokyo
 
 ## IP 固定
 
-### rasp
-
-```bash
-echo "
-eth0
-static ip_address=192.168.xxx.yyy/24
-static routers=192.168.0.1
-static domain_name_servers=192.168.0.1" >> /etc/dhcpcd.conf
-```
-
-再起動
-
-### Ubuntu
-
 インストールの時にやる
-
-## cgroups
-
-### rasp
-
-```bash
-sudo sed -i 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/g' /boot/cmdline.txt
-```
-
-再起動
 
 ## crio
 
@@ -251,6 +223,14 @@ sudo systemctl enable nginx
 sudo systemctl start nginx
 ```
 
+## longhorn
+
+```bash
+sudo apt -y install open-iscsi nfs-common
+sudo systemctl start iscsid
+sudo systemctl enable iscsid
+```
+
 ## kubeadm
 
 ```bash
@@ -324,6 +304,8 @@ echo "sudo" $(sudo kubeadm token create --print-join-command) "--control-plane -
 echo "sudo" $(sudo kubeadm token create --print-join-command) "--cri-socket unix:///var/run/crio/crio.sock"
 ```
 
+👆 を実行
+
 ## helm
 
 ```bash
@@ -332,21 +314,6 @@ sudo apt-get install apt-transport-https --yes
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 sudo apt-get update
 sudo apt-get install helm
-```
-
-## zsh-completion
-
-```bash
-echo "[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh)
-[[ /usr/bin/helm ]] && source <(helm completion zsh)" >> .zshrc
-```
-
-## longhorn
-
-```bash
-sudo apt -y install open-iscsi nfs-common
-sudo systemctl start iscsid
-sudo systemctl enable iscsid
 ```
 
 ## fluxcd
@@ -360,25 +327,6 @@ curl -s https://fluxcd.io/install.sh | sudo bash
 flux bootstrap github --owner=walnuts1018 --repository=infra --branch=deploy --path=./k8s/_flux/kurumi/ --components-extra=image-reflector-controller,image-automation-controller --reconcile --ssh-key-algorithm=ed25519 --read-write-key=true
 ```
 
-<!--
-## SMB CSI Driver
-
-```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/deploy/v1.9.0/rbac-csi-smb.yaml
-kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/deploy/v1.9.0/csi-smb-driver.yaml
-kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/deploy/v1.9.0/csi-smb-controller.yaml
-kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-smb/master/deploy/v1.9.0/csi-smb-node.yaml
-```
---->
-
-## VPA
-
-```bash
-git clone https://github.com/kubernetes/autoscaler.git
-cd autoscaler/vertical-pod-autoscaler
-./hack/vpa-up.sh
-```
-
 ## labels
 
 ```bash
@@ -389,33 +337,4 @@ kubectl label nodes peach walnuts.dev/ondemand=true
 
 ```bash
 helm install onepassword-connect -n onepassword --create-namespace  1password/connect --set connect.credentials='(op read "op://kurumi k8s cluster/kurumi Credentials File/1password-credentials.json")' --set operator.create=true --set operator.token.value='(op read "op://kurumi k8s cluster/mhc7wnb4oe3kevaiubx3cxz7du/credential")'
-```
-
-## Vault
-
-```bash
-wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install vault
-```
-
-```bash
-kubectl port-forward service/vault -n vault 8200:8200 &
-export VAULT_ADDR=http://localhost:8200
-vault operator unseal
-```
-
-```bash
-vault login
-```
-
-```bash
-export SA_JWT_TOKEN=$(kubectl get secret -n vault vault-auth-secret --output 'go-template={{ .data.token }}' | base64 --decode)
-export SA_CA_CRT=$(kubectl config view --raw --minify --flatten --output 'jsonpath={.clusters[].cluster.certificate-authority-data}' | base64 --decode)
-
-vault write auth/kubernetes/config \
-     token_reviewer_jwt="$SA_JWT_TOKEN" \
-     kubernetes_host="https://192.168.0.17:16443" \
-     kubernetes_ca_cert="$SA_CA_CRT" \
-     issuer="https://kubernetes.default.svc.cluster.local"
 ```
