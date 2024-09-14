@@ -47,5 +47,5 @@ spec:
         metric:
           name: memory
         target:
-          type: Value
-          value: 1Gi
+          type: AverageValue
+          averageValue: 1Gi
