@@ -47,5 +47,5 @@ spec:
         metric:
           name: memory
         target:
-          type: Utilization
-          averageUtilization: 500
+          type: Value
+          value: 1Gi
