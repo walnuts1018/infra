@@ -71,6 +71,19 @@ spec:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
           exporters: [otlp/loki-exporter]
+  autoscaler:
+    minReplicas: 1
+    maxReplicas: 5
+    metrics:
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 200
+  resources:
+    requests:
+      memory: 100Mi
   env:
   - name: K8S_NODE_IP
     valueFrom:
@@ -85,3 +98,4 @@ spec:
       secretKeyRef:
         name: opentelemetry-collector
         key: vaxila-api-key
+
