@@ -1,9 +1,0 @@
-Host kmc
-    HostName kmc.gr.jp
-    User walnuts
-    LocalForward 25565 mina.box2.kmc.gr.jp:25565
-    LocalForward 8123 mina.box2.kmc.gr.jp:8123
-    LocalForward 8124 mina.box2.kmc.gr.jp:8124
-    LocalForward 6443 k8s-kmc.box2.kmc.gr.jp:6443
-    ServerAliveInterval 25
-    ServerAliveCountMax 5
