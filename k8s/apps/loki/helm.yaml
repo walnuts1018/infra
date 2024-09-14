@@ -62,6 +62,7 @@ spec:
         shard_streams:
           enabled: true
           desired_rate: 104857600 # 10MiB
+        reject_old_samples: false
     write:
       replicas: 2
       autoscaling:
