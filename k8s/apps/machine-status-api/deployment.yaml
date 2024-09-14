@@ -29,15 +29,9 @@ spec:
         - name: PVE_API_URL
           value: "https://proxmox.walnuts.dev/api2/json/"
         - name: PVE_API_TOKEN_ID
-          valueFrom:
-            secretKeyRef:
-              name: machine-status-api-secret
-              key: token
+          value: "invalid"
         - name: PVE_API_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: machine-status-api-secret
-              key: secret
+          value: "invalid"
         resources:
           requests:
             memory: "10Mi"
