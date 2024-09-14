@@ -27,7 +27,7 @@ spec:
         - name: GIN_MODE
           value: "release"
         - name: PVE_API_URL
-          value: "https://proxmox.walnuts.dev/api2/json/"
+          value: "invalid"
         - name: PVE_API_TOKEN_ID
           value: "invalid"
         - name: PVE_API_SECRET
