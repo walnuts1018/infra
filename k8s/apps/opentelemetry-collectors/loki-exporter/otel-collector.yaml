@@ -50,9 +50,10 @@ spec:
     minReplicas: 1
     maxReplicas: 5
     metrics:
-    - type: Resource
-      resource:
-        name: memory
+    - type: Pod
+      pods:
+        metric:
+          name: memory
         target:
           type: Utilization
           averageUtilization: 500
