@@ -4,5 +4,4 @@ namespace: default
 resources:
 - deployment.yaml
 - service.yaml
-- externalsecret.yaml
 - image-policy.yaml
