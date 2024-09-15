@@ -231,6 +231,15 @@ sudo systemctl start iscsid
 sudo systemctl enable iscsid
 ```
 
+```bash
+cat <<EOF | sudo tee /etc/modules-load.d/longhorn.conf
+nvme_tcp
+uio_pci_generic
+EOF
+sudo modprobe nvme_tcp
+sudo modprobe uio_pci_generic
+```
+
 ## kubeadm
 
 ```bash
