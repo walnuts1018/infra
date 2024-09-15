@@ -16,6 +16,8 @@ spec:
     spec:
       containers:
       - name: dashy
+        securityContext:
+          readOnlyRootFilesystem: true
         image: lissy93/dashy:3.1.0 # {"$imagepolicy": "default:dashy"}
         imagePullPolicy: IfNotPresent
         ports:

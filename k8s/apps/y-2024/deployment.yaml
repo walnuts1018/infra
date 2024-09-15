@@ -14,6 +14,8 @@ spec:
     spec:
       containers:
       - name: y-2024
+        securityContext:
+          readOnlyRootFilesystem: true
         image: ghcr.io/walnuts1018/2024-y:c638b12298b8f6959ac1b54a9fa961c03fb01586-9 # {"$imagepolicy": "default:y-2024"}
         imagePullPolicy: IfNotPresent
         ports:

@@ -14,6 +14,8 @@ spec:
     spec:
       containers:
       - name: walnuts-dev-www-redirect
+        securityContext:
+          readOnlyRootFilesystem: true
         image: nginx:1.27.1 # {"$imagepolicy": "default:walnuts-dev-www-redirect"}
         ports:
         - containerPort: 80

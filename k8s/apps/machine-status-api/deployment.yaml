@@ -21,6 +21,7 @@ spec:
         securityContext:
           runAsGroup: 997
           privileged: true
+          readOnlyRootFilesystem: true
         ports:
         - containerPort: 8080
         env:

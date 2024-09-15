@@ -37,6 +37,8 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       containers:
       - name: mysqld
+        securityContext:
+          readOnlyRootFilesystem: true
         image: ghcr.io/cybozu-go/moco/mysql:8.4.0
         resources:
           requests:

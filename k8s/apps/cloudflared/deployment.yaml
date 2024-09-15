@@ -18,6 +18,8 @@ spec:
           value: "0 2147483647"
       containers:
       - name: cloudflared
+        securityContext:
+          readOnlyRootFilesystem: true
         image: cloudflare/cloudflared:2024.9.1 # {"$imagepolicy": "network-exporter:cloudflared"}
         imagePullPolicy: IfNotPresent
         args:

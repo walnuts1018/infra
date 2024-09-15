@@ -16,6 +16,8 @@ spec:
     spec:
       containers:
       - name: fitbit-manager
+        securityContext:
+          readOnlyRootFilesystem: true
         image: ghcr.io/walnuts1018/fitbit-manager:0.8.1 # {"$imagepolicy": "default:fitbit-manager"}
         imagePullPolicy: IfNotPresent
         ports:
