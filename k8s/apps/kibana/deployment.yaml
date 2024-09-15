@@ -31,3 +31,9 @@ spec:
           limits: {}
           requests:
             memory: 350Mi
+        volumeMounts:
+        - mountPath: /usr/share/kibana/data
+          name: kibana-data
+      volumes:
+      - name: kibana-data
+        emptyDir: {}
