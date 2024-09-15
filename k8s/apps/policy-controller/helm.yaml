@@ -14,4 +14,3 @@ spec:
     spec:
       chart: policy-controller
       version: 0.7.0
-  values:

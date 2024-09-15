@@ -232,7 +232,30 @@ sudo systemctl enable iscsid
 ```
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.7.1/deploy/prerequisite/longhorn-spdk-setup.yaml
+cat <<EOF | sudo tee /etc/modules-load.d/longhorn.conf
+nvme_tcp
+vfio_pci
+uio_pci_generic
+EOF
+sudo modprobe nvme_tcp
+sudo modprobe vfio_pci
+sudo modprobe uio_pci_generic
+
+cat <<EOF | sudo tee /etc/sysctl.d/99-longhorn.conf
+vm.nr_hugepages = 1024
+EOF
+sudo sysctl --system
+
+cat <<EOF | sudo tee /etc/multipath.conf
+defaults {
+    user_friendly_names yes
+}
+
+blacklist {
+    devnode "^sd[a-z0-9]+"
+}
+EOF
+sudo systemctl restart multipathd.service
 ```
 
 ## kubeadm
