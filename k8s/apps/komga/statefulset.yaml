@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
       - name: komga
-        securityContext:
-          readOnlyRootFilesystem: true
+        # securityContext:
+        #   readOnlyRootFilesystem: true
         image: gotson/komga:1.13.0 # {"$imagepolicy": "komga:komga"}
         resources: {}
         ports:
