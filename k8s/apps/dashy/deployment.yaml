@@ -32,8 +32,12 @@ spec:
         volumeMounts:
         - name: dashy
           mountPath: /app/user-data
+        - name: tmp
+          mountPath: /tmp
       volumes:
       - name: dashy
         persistentVolumeClaim:
           claimName: dashy
+      - name: tmp
+        emptyDir: {}
       priorityClassName: low
