@@ -17,7 +17,7 @@ spec:
       - name: photoprism
         # securityContext:
         #   readOnlyRootFilesystem: true
-        image: photoprism/photoprism:240711 # {"$imagepolicy": "photoprism:photoprism"}
+        image: photoprism/photoprism:240915 # {"$imagepolicy": "photoprism:photoprism"}
         resources:
           requests:
             cpu: "0"
@@ -58,7 +58,6 @@ spec:
         #       key: client-secret
         # - name: PHOTOPRISM_OIDC_PROVIDER
         #   value: "walnuts.dev"
-
 
         # Load database DSN & admin password from secret
         envFrom:
