@@ -18,7 +18,7 @@ spec:
       - name: walnuts-dev
         securityContext:
           readOnlyRootFilesystem: true
-        image: ghcr.io/walnuts1018/walnuts.dev:919820253309923451aa2deb2be6446c200f2f5f-224 # {"$imagepolicy": "default:walnuts-dev"}
+        image: ghcr.io/walnuts1018/walnuts.dev:16c3ebaaa56f8cda2dbdf7e4655945a1b0eba24d-225 # {"$imagepolicy": "default:walnuts-dev"}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
