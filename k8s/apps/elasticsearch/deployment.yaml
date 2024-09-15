@@ -41,6 +41,8 @@ spec:
           readOnly: true
         - name: data
           mountPath: /usr/share/elasticsearch/data
+        - name: tmp
+          mountPath: /tmp
       volumes:
       - name: config
         configMap:
@@ -48,3 +50,5 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: elasticsearch
+      - name: tmp
+        emptyDir: {}
