@@ -27,6 +27,8 @@ spec:
           name: log
         - mountPath: /var/cache/nginx/
           name: cache
+        - mountPath: /var/run
+          name: var-run
         resources:
           limits:
             memory: 100Mi
@@ -44,4 +46,6 @@ spec:
       - name: log
         emptyDir: {}
       - name: cache
+        emptyDir: {}
+      - name: var-run
         emptyDir: {}
