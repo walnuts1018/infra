@@ -19,7 +19,7 @@ spec:
       securityContext:
         fsGroup: 991
         fsGroupChangePolicy: "OnRootMismatch"
-      initcontainers:
+      initContainers:
       - name: misskey-init
         securityContext:
           readOnlyRootFilesystem: true
