@@ -232,12 +232,7 @@ sudo systemctl enable iscsid
 ```
 
 ```bash
-cat <<EOF | sudo tee /etc/modules-load.d/longhorn.conf
-nvme_tcp
-uio_pci_generic
-EOF
-sudo modprobe nvme_tcp
-sudo modprobe uio_pci_generic
+kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.7.1/deploy/prerequisite/longhorn-spdk-setup.yaml
 ```
 
 ## kubeadm
