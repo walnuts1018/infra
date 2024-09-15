@@ -45,4 +45,10 @@ spec:
           requests:
             memory: "20Mi"
           limits: {}
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
       priorityClassName: high
+      volumes:
+      - emptyDir: {}
+        name: tmp

@@ -25,6 +25,8 @@ spec:
           name: blog-conf
         - mountPath: /var/log/nginx
           name: log
+        - mountPath: /var/cache/nginx/
+          name: cache
         resources:
           limits:
             memory: 100Mi
@@ -40,4 +42,6 @@ spec:
           - key: virtualhost.conf
             path: virtualhost/virtualhost.conf
       - name: log
+        emptyDir: {}
+      - name: cache
         emptyDir: {}

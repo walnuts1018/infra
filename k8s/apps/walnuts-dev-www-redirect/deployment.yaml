@@ -25,6 +25,8 @@ spec:
           name: walnuts-dev-www-redirect-conf
         - mountPath: /var/log/nginx
           name: log
+        - mountPath: /var/cache/nginx/
+          name: cache
         resources:
           limits: {}
           requests:
@@ -39,5 +41,7 @@ spec:
           - key: virtualhost.conf
             path: virtualhost/virtualhost.conf
       - name: log
+        emptyDir: {}
+      - name: cache
         emptyDir: {}
       priorityClassName: high
