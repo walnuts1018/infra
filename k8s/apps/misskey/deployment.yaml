@@ -49,6 +49,8 @@ spec:
         - name: misskey-config
           mountPath: /misskey/.config
           readOnly: true
+        - name: tmp
+          mountPath: /tmp
         env:
         - name: POSTGRES_USER
           value: "misskey"
@@ -82,3 +84,5 @@ spec:
       - name: misskey-config
         secret:
           secretName: misskey-secret
+      - name: tmp
+        emptyDir: {}
