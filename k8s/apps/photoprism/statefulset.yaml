@@ -77,6 +77,8 @@ spec:
           name: storage
         - mountPath: /photoprism/storage/cache
           name: cache
+        - mountPath: /tmp
+          name: tmp
         readinessProbe:
           httpGet:
             path: /api/v1/status
@@ -95,5 +97,7 @@ spec:
       - name: storage
         persistentVolumeClaim:
           claimName: photoprism-storage2
+      - name: tmp
+        emptyDir: {}
       nodeSelector:
         kubernetes.io/hostname: cake

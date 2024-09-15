@@ -54,6 +54,8 @@ spec:
               name: storage
             - mountPath: /photoprism/storage/cache
               name: cache
+            - mountPath: /tmp
+              name: tmp
           volumes:
           - name: originals
             hostPath:
@@ -68,5 +70,7 @@ spec:
           - name: storage
             persistentVolumeClaim:
               claimName: photoprism-storage2
+          - name: tmp
+            emptyDir: {}
           nodeSelector:
             kubernetes.io/hostname: cake
