@@ -35,6 +35,8 @@ spec:
           readOnly: true
         - mountPath: /books
           name: book-dir
+        - mountPath: /tmp
+          name: tmp
       volumes:
       - name: config-dir
         persistentVolumeClaim:
@@ -46,5 +48,7 @@ spec:
         hostPath:
           path: /mnt/data/share/Books
           type: Directory
+      - emptyDir: {}
+        name: tmp
       nodeSelector:
         kubernetes.io/hostname: cake
