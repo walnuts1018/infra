@@ -13,7 +13,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: photoprism
-            image: photoprism/photoprism:240711 # {"$imagepolicy": "photoprism:photoprism"}
+            image: photoprism/photoprism:240915 # {"$imagepolicy": "photoprism:photoprism"}
             command:
             - photoprism
             - index
