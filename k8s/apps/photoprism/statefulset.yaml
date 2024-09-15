@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
       - name: photoprism
-        securityContext:
-          readOnlyRootFilesystem: true
+        # securityContext:
+        #   readOnlyRootFilesystem: true
         image: photoprism/photoprism:240711 # {"$imagepolicy": "photoprism:photoprism"}
         resources:
           requests:
