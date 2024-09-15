@@ -19,8 +19,10 @@ spec:
       securityContext:
         fsGroup: 991
         fsGroupChangePolicy: "OnRootMismatch"
-      initContainers:
+      initcontainers:
       - name: misskey-init
+        securityContext:
+          readOnlyRootFilesystem: true
         image: misskey/misskey:2024.8.0 # {"$imagepolicy": "misskey:misskey"}
         imagePullPolicy: IfNotPresent
         command:
@@ -35,6 +37,8 @@ spec:
           readOnly: true
       containers:
       - name: misskey
+        securityContext:
+          readOnlyRootFilesystem: true
         image: misskey/misskey:2024.8.0 # {"$imagepolicy": "misskey:misskey"}
         imagePullPolicy: IfNotPresent
         ports:

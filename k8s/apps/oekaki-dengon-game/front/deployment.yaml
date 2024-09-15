@@ -18,6 +18,8 @@ spec:
       - name: ghcr-login-secret
       containers:
       - name: oekaki-dengon-game-front
+        securityContext:
+          readOnlyRootFilesystem: true
         image: ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-a6d6d6e7d66e6d0dfafbf416b462be908b208489-87 # {"$imagepolicy": "default:oekaki-dengon-game-front"}
         imagePullPolicy: IfNotPresent
         ports:
