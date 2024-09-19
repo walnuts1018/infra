@@ -32,7 +32,7 @@ spec:
           readOnlyRootFilesystem: true
           seccompProfile:
             type: RuntimeDefault
-        image: haproxy:3.0.4 # {"$imagepolicy": "databases:redis-haproxy"}
+        image: haproxy:3.0.5 # {"$imagepolicy": "databases:redis-haproxy"}
         ports:
         - containerPort: 8080
         - containerPort: 6380
