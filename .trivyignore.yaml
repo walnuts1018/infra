@@ -1,0 +1,5 @@
+vulnerabilities:
+- id: KSV017
+  paths:
+  - "k8s/apps/machine-status-api"
+  statement: Accept Privileged
