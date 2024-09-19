@@ -1,4 +1,4 @@
-kubernetes:
+vulnerability:
 - id: KSV017
   paths:
   - "k8s/apps/machine-status-api/deployment.yaml"
