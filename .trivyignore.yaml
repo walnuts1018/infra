@@ -1,8 +1,8 @@
 misconfigurations:
-- id: KSV017
+- id: KSV022
   paths:
   - "k8s/apps/machine-status-api/deployment.yaml"
-  statement: Accept Privileged
+  statement: Accept capabilities.add
 - id: KSV046
   paths:
   - "k8s/_flux/pre-kurumi/flux-system/gotk-components.yaml"
