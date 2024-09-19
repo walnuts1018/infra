@@ -42,6 +42,8 @@ spec:
         volumeMounts:
         - mountPath: /dev/gpiomem
           name: gpiomem
+        - mountPath: /dev/mem
+          name: mem
       priorityClassName: high
       nodeSelector:
         kubernetes.io/hostname: cheese
@@ -53,3 +55,6 @@ spec:
       - name: gpiomem
         hostPath:
           path: /dev/gpiomem
+      - name: mem
+        hostPath:
+          path: /dev/mem
