@@ -1,5 +1,9 @@
 misconfigurations:
 - id: KSV017
   paths:
-  - "k8s/apps/machine-status-api"
+  - "k8s/apps/machine-status-api/deployment.yaml"
   statement: Accept Privileged
+- id: KSV046
+  paths:
+  - "k8s/_flux"
+  statement: fluxcd must manage all resource
