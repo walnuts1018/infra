@@ -21,10 +21,14 @@ spec:
         - mountPath: /etc/nginx
           readOnly: true
           name: blog-conf
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /var/tmp
+          name: tmp
         - mountPath: /var/log/nginx
-          name: log
-        - mountPath: /var/cache/nginx/
-          name: cache
+          name: log-nginx
+        - mountPath: /var/cache/nginx
+          name: cache-nginx
         - mountPath: /var/run
           name: var-run
         resources:
@@ -41,9 +45,11 @@ spec:
             path: nginx.conf
           - key: virtualhost.conf
             path: virtualhost/virtualhost.conf
-      - name: log
+      - name: tmp
         emptyDir: {}
-      - name: cache
+      - name: log-nginx
+        emptyDir: {}
+      - name: cache-nginx
         emptyDir: {}
       - name: var-run
         emptyDir: {}
