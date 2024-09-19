@@ -12,7 +12,6 @@ on:
     paths:
       - .github/workflows/security-scan.yaml
       - "k8s/**"
-      - "trivy.yaml"
       - ".trivyignore.yaml"
   workflow_dispatch:
 jobs:
