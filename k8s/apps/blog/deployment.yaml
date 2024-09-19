@@ -16,7 +16,7 @@ spec:
       - name: blog
         image: nginx:1.27.1 # {"$imagepolicy": "default:blog"}
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         volumeMounts:
         - mountPath: /etc/nginx
           readOnly: true
