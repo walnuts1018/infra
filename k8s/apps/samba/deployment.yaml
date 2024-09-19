@@ -20,6 +20,9 @@ spec:
       - image: ghcr.io/servercontainers/samba:a3.20.3-s4.19.6-r0
         imagePullPolicy: IfNotPresent
         name: samba
+        securityContext:
+          seccompProfile:
+            type: RuntimeDefault
         env:
         - name: ACCOUNT_samba
           valueFrom:

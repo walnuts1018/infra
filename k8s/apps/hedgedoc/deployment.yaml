@@ -18,6 +18,8 @@ spec:
       - name: hedgedoc
         securityContext:
           readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
         image: quay.io/hedgedoc/hedgedoc:1.10.0 # {"$imagepolicy": "default:hedgedoc"}
         imagePullPolicy: IfNotPresent
         ports:
