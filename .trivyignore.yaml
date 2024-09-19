@@ -16,4 +16,5 @@ misconfigurations:
 - id: KSV023
   paths:
   - "k8s/apps/samba/deployment.yaml"
+  - "k8s/apps/machine-status-api/deployment.yaml"
   statement: accept hostpath
