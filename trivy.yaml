@@ -1,4 +1,4 @@
 # scan:
 # skip-dirs:
 # - "./k8s/_flux"
-ignorefile: ".trivyignore"
+ignorefile: ".trivyignore.yaml"
