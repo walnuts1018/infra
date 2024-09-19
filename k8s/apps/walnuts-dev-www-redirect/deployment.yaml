@@ -20,6 +20,8 @@ spec:
         - containerPort: 8080
         securityContext:
           readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
         volumeMounts:
         - mountPath: /etc/nginx
           readOnly: true
