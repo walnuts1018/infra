@@ -21,9 +21,7 @@ spec:
         securityContext:
           runAsGroup: 997
           readOnlyRootFilesystem: true
-          capabilities:
-            add:
-            - "SYS_RAWIO"
+          privileged: true
         ports:
         - containerPort: 8080
         env:
@@ -39,11 +37,6 @@ spec:
           requests:
             memory: "10Mi"
           limits: {}
-        volumeMounts:
-        - mountPath: /dev/gpiomem
-          name: gpiomem
-        - mountPath: /dev/mem
-          name: mem
       priorityClassName: high
       nodeSelector:
         kubernetes.io/hostname: cheese
@@ -51,10 +44,3 @@ spec:
       - key: "node-role.kubernetes.io/control-plane"
         operator: "Exists"
         effect: "NoSchedule"
-      volumes:
-      - name: gpiomem
-        hostPath:
-          path: /dev/gpiomem
-      - name: mem
-        hostPath:
-          path: /dev/mem
