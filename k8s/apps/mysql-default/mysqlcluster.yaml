@@ -39,6 +39,7 @@ spec:
       - name: mysqld
         securityContext:
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
           seccompProfile:
             type: RuntimeDefault
         image: ghcr.io/cybozu-go/moco/mysql:8.4.0
