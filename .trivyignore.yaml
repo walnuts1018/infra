@@ -8,3 +8,8 @@ misconfigurations:
   - "k8s/_flux/pre-kurumi/flux-system/gotk-components.yaml"
   - "k8s/_flux/kurumi/flux-system/gotk-components.yaml"
   statement: fluxcd must manage all resource
+- id: KSV041
+  paths:
+  - "k8s/_flux/pre-kurumi/flux-system/gotk-components.yaml"
+  - "k8s/_flux/kurumi/flux-system/gotk-components.yaml"
+  statement: fluxcd must manage secret
