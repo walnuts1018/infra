@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - "k8s/**"
+      - "trivy.yaml"
   workflow_dispatch:
 jobs:
   scan:
