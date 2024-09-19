@@ -13,3 +13,7 @@ misconfigurations:
   - "k8s/_flux/pre-kurumi/flux-system/gotk-components.yaml"
   - "k8s/_flux/kurumi/flux-system/gotk-components.yaml"
   statement: fluxcd must manage secret
+- id: KSV023
+  paths:
+  - "k8s/apps/samba/deployment.yaml"
+  statement: accept hostpath
