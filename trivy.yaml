@@ -1,3 +1,5 @@
 scan:
   skip-dirs:
   - "./k8s/_flux"
+  skip-files:
+ignorefile: ".trivyignore"
