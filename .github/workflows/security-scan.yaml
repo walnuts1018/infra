@@ -3,11 +3,14 @@ name: Config Scan
 on:
   pull_request:
     paths:
+      - .github/workflows/security-scan.yaml
       - "k8s/**"
+      - "trivy.yaml"
   push:
     branches:
       - main
     paths:
+      - .github/workflows/security-scan.yaml
       - "k8s/**"
       - "trivy.yaml"
   workflow_dispatch:
