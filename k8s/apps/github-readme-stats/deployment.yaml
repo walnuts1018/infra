@@ -16,6 +16,8 @@ spec:
       - name: github-readme-stats
         securityContext:
           readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
         image: ghcr.io/walnuts1018/github-readme-stats:v1.0.3 # {"$imagepolicy": "default:github-readme-stats"}
         imagePullPolicy: IfNotPresent
         ports:

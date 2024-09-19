@@ -17,7 +17,9 @@ spec:
         fsGroupChangePolicy: "OnRootMismatch"
       containers:
       - name: elasticsearch
-        # securityContext:
+        securityContext:
+          seccompProfile:
+            type: RuntimeDefault
         #   readOnlyRootFilesystem: true
         image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1 # {"$imagepolicy": "databases:elasticsearch"}
         ports:
