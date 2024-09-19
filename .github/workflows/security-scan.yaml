@@ -5,6 +5,7 @@ on:
     paths:
       - .github/workflows/security-scan.yaml
       - "k8s/**"
+      - "trivy.yaml"
       - ".trivyignore.yaml"
   push:
     branches:
@@ -12,6 +13,7 @@ on:
     paths:
       - .github/workflows/security-scan.yaml
       - "k8s/**"
+      - "trivy.yaml"
       - ".trivyignore.yaml"
   workflow_dispatch:
 jobs:
@@ -28,7 +30,7 @@ jobs:
           output: "trivy-results.sarif"
           ignore-unfixed: true
           severity: "CRITICAL,HIGH"
-          trivyignores: ".trivyignore.yaml"
+          trivy-config: trivy.yaml
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
