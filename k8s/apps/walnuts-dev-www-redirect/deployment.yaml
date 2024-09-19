@@ -12,25 +12,33 @@ spec:
       labels:
         app: walnuts-dev-www-redirect
     spec:
+      priorityClassName: high
       containers:
       - name: walnuts-dev-www-redirect
         image: nginx:1.27.1 # {"$imagepolicy": "default:walnuts-dev-www-redirect"}
         ports:
         - containerPort: 8080
+        securityContext:
+          readOnlyRootFilesystem: true
         volumeMounts:
         - mountPath: /etc/nginx
           readOnly: true
           name: walnuts-dev-www-redirect-conf
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /var/tmp
+          name: tmp
         - mountPath: /var/log/nginx
-          name: log
-        - mountPath: /var/cache/nginx/
-          name: cache
+          name: log-nginx
+        - mountPath: /var/cache/nginx
+          name: cache-nginx
         - mountPath: /var/run
           name: var-run
         resources:
-          limits: {}
+          limits:
+            memory: 100Mi
           requests:
-            memory: 128Mi
+            memory: 5Mi
       volumes:
       - name: walnuts-dev-www-redirect-conf
         configMap:
@@ -40,10 +48,11 @@ spec:
             path: nginx.conf
           - key: virtualhost.conf
             path: virtualhost/virtualhost.conf
-      - name: log
+      - name: tmp
         emptyDir: {}
-      - name: cache
+      - name: log-nginx
+        emptyDir: {}
+      - name: cache-nginx
         emptyDir: {}
       - name: var-run
         emptyDir: {}
-      priorityClassName: high
