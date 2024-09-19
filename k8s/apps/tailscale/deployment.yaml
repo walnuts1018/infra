@@ -41,6 +41,7 @@ spec:
           runAsUser: 1000
           runAsGroup: 1000
           readOnlyRootFilesystem: true
+          runAsNonRoot: true
           seccompProfile:
             type: RuntimeDefault
         resources:
