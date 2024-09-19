@@ -16,7 +16,7 @@ spec:
       - name: walnuts-dev-www-redirect
         image: nginx:1.27.1 # {"$imagepolicy": "default:walnuts-dev-www-redirect"}
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         volumeMounts:
         - mountPath: /etc/nginx
           readOnly: true
