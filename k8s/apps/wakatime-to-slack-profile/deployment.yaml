@@ -18,6 +18,8 @@ spec:
       - name: wakatime-to-slack-profile
         securityContext:
           readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
         image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.2.2 # {"$imagepolicy": "default:wakatime-to-slack-profile"}
         imagePullPolicy: IfNotPresent
         ports:

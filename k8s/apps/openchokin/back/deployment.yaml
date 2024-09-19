@@ -18,6 +18,8 @@ spec:
       - name: openchokin-back
         securityContext:
           readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
         image: "ghcr.io/walnuts1018/openchokin-back:v0.0.0-cd205cba77a922ba01009c04203a0e4b962a31d8-97" # {"$imagepolicy": "default:openchokin-back"}
         imagePullPolicy: IfNotPresent
         ports:
