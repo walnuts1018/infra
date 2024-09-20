@@ -14,11 +14,6 @@ spec:
     spec:
       chart: flagger
       version: 1.38.0
-  valuesFrom:
-  - kind: Secret
-    name: flagger
-    valuesKey: slack-webhook-url
-    targetPath: slack.url
   values:
     metricsServer: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090"
     meshProvider: kubernetes
@@ -27,3 +22,9 @@ spec:
     slack:
       user: flagger
       channel: walnuts-sysop
+    env:
+    - name: SLACK_URL
+      valueFrom:
+        secretKeyRef:
+          name: flagger
+          key: slack-webhook-url
