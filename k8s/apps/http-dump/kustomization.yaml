@@ -6,3 +6,4 @@ resources:
 - service.yaml
 - deployment.yaml
 - image-policy.yaml
+- canary.yaml

@@ -1,0 +1,31 @@
+apiVersion: flagger.app/v1beta1
+kind: Canary
+metadata:
+  name: http-dump
+spec:
+  provider: kubernetes
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: http-dump
+  progressDeadlineSeconds: 60
+  # autoscalerRef:
+  #   apiVersion: autoscaling/v2beta2
+  #   kind: HorizontalPodAutoscaler
+  #   name: http-dump
+  service:
+    port: 8080
+    portDiscovery: true
+  analysis:
+    interval: 60s
+    threshold: 2
+    iterations: 10
+    metrics:
+    - name: request-success-rate
+      thresholdRange:
+        min: 99 # minimum req success rate (non 5xx responses) (%)
+      interval: 1m
+    - name: request-duration
+      thresholdRange:
+        max: 500 # maximum req duration P99 (milliseconds)
+      interval: 30s
