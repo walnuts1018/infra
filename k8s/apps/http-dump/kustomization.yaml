@@ -3,7 +3,6 @@ kind: Kustomization
 namespace: default
 resources:
 - ingress.yaml
-- service.yaml
 - deployment.yaml
 - image-policy.yaml
 - canary.yaml
