@@ -3,7 +3,8 @@ kind: HelmRepository
 metadata:
   name: flagger
 spec:
-  url: https://flagger.app
+  url: oci://ghcr.io/fluxcd/charts
+  type: oci
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -14,6 +15,8 @@ spec:
     spec:
       chart: flagger
       version: 1.38.0
+      verify:
+        provider: cosign
   values:
     metricsServer: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090"
     meshProvider: kubernetes
