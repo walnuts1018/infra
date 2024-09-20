@@ -8,6 +8,10 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: http-dump
+  ingressRef:
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    name: http-dump
   progressDeadlineSeconds: 60
   # autoscalerRef:
   #   apiVersion: autoscaling/v2beta2
