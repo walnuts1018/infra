@@ -17,7 +17,7 @@ spec:
       - name: http-dump
         securityContext:
           readOnlyRootFilesystem: true
-        image: ghcr.io/walnuts1018/http-dump:e0bba65edee83cdf30187f7c6b91209e4ae69b80-22 # {"$imagepolicy": "default:http-dump"}
+        image: ghcr.io/walnuts1018/http-dump:05e1e4aa22db76e82d7c7313717ca1aba0ef926c-23 # {"$imagepolicy": "default:http-dump"}
         ports:
         - name: http
           containerPort: 8080
