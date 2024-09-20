@@ -19,7 +19,7 @@ spec:
         provider: cosign
   values:
     metricsServer: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090"
-    meshProvider: kubernetes
+    meshProvider: nginx
     ingressClass: nginx
     clusterName: kurumi
     slack:
