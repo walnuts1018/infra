@@ -5,6 +5,7 @@ metadata:
 spec:
   provider:
     type: prometheus
+    address: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090"
   query: |
     sum(
       rate(
