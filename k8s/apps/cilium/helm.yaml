@@ -19,6 +19,8 @@ spec:
       chart: cilium
       version: 1.16.1
   values:
+    image:
+      useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
     kubeProxyReplacement: true
     k8sServiceHost: 192.168.0.17
     k8sServicePort: 16443
@@ -30,8 +32,16 @@ spec:
     hubble:
       relay:
         enabled: true
+        image:
+          useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
       ui:
         enabled: true
+        backend:
+          image:
+            useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
+        frontend:
+          image:
+            useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
       metrics:
         enableOpenMetrics: true
         enabled:
@@ -44,3 +54,9 @@ spec:
         - httpV2:exemplars=true
         serviceMonitor:
           enabled: true
+    envoy:
+      image:
+        useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
+    operator:
+      image:
+        useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
