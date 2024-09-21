@@ -40,7 +40,10 @@ spec:
                 operator: In
                 values:
                 - amd64
-
       opentelemetry:
         enabled: true
         name: opentelemetry
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
