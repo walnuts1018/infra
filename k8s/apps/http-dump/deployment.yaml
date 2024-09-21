@@ -33,5 +33,3 @@ spec:
           value: "true"
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
           value: "http://default-collector.opentelemetry-collector.svc.cluster.local:4317"
-        - name: hoge
-          value: fuga
