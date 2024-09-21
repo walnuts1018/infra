@@ -39,7 +39,7 @@ spec:
         namespace: flagger
       thresholdRange:
         max: 500 # maximum req duration P99 (milliseconds)
-      interval: 30s
+      interval: 1m
     webhooks:
     - name: smoke-test
       type: pre-rollout
