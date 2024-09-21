@@ -14,14 +14,21 @@ spec:
     spec:
       chart: ingress-nginx
       version: 4.11.2
+  postRenderers:
+  - kustomize:
+      # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
+      images:
+      - name: registry.k8s.io/ingress-nginx/controller
+        newName: registry.k8s.io/ingress-nginx/controller
+        newTag: v1.11.2
+      - name: registry.k8s.io/ingress-nginx/opentelemetry-1.25.3
+        newName: registry.k8s.io/ingress-nginx/opentelemetry-1.25.3
+        newTag: v20240813-b933310d
+      - name: registry.k8s.io/ingress-nginx/kube-webhook-certgen
+        newName: registry.k8s.io/ingress-nginx/kube-webhook-certgen
+        newTag: v1.4.3
   values:
     controller:
-      image:
-        digest: "" # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
-      admissionWebHooks:
-        patch:
-          image:
-            digest: "" # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
       config:
         use-forwarded-headers: true
         enable-opentelemetry: "true"
@@ -49,8 +56,6 @@ spec:
       opentelemetry:
         enabled: true
         name: opentelemetry
-        image:
-          digest: "" # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
       metrics:
         enabled: true
         serviceMonitor:
