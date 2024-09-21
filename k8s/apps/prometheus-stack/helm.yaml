@@ -101,9 +101,6 @@ spec:
     prometheus:
       prometheusSpec:
         serviceMonitorSelectorNilUsesHelmValues: false
-        serviceMonitorSelector:
-          matchLabels:
-            walnuts.dev/scraped-by: prometheus
         storageSpec:
           volumeClaimTemplate:
             spec:
