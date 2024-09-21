@@ -4,7 +4,7 @@ metadata:
   name: http-dump
   labels:
     app: http-dump
-    hoge: hoge
+    hoge: hoge2
 spec:
   selector:
     matchLabels:
