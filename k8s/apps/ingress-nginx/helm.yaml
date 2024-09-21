@@ -24,9 +24,6 @@ spec:
       - name: registry.k8s.io/ingress-nginx/opentelemetry-1.25.3
         newName: registry.k8s.io/ingress-nginx/opentelemetry-1.25.3
         newTag: v20240813-b933310d
-      - name: registry.k8s.io/ingress-nginx/kube-webhook-certgen
-        newName: registry.k8s.io/ingress-nginx/kube-webhook-certgen
-        newTag: v1.4.3
   values:
     controller:
       config:
@@ -35,6 +32,10 @@ spec:
         opentelemetry-trust-incoming-span: "true"
         otlp-collector-host: "default-collector.opentelemetry-collector.svc.cluster.local"
         otel-service-name: "ingress-nginx"
+      admissionWebhooks:
+        patch:
+          image:
+            digest: ""
       service:
         enabled: true
         loadBalancerIP: "192.168.0.128"
