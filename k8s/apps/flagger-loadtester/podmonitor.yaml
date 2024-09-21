@@ -12,9 +12,6 @@ spec:
     path: /metrics
     targetPort: 8080
   jobLabel: flagger-loadtester
-  # namespaceSelector:
-  #   matchNames:
-  #   - flagger
   selector:
     matchLabels:
       app: loadtester
