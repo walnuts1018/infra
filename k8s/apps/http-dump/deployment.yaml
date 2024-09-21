@@ -22,7 +22,8 @@ spec:
         - name: http
           containerPort: 8080
         resources:
-          limits: {}
+          limits:
+            memory: 500Mi
           requests:
             memory: 10Mi
         env:
