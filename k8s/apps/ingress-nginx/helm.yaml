@@ -18,6 +18,10 @@ spec:
     controller:
       image:
         digest: "" # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
+      admissionWebHooks:
+        patch:
+          image:
+            digest: "" # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
       config:
         use-forwarded-headers: true
         enable-opentelemetry: "true"
