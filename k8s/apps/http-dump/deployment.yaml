@@ -23,8 +23,10 @@ spec:
           containerPort: 8080
         resources:
           limits:
+            cpu: "1"
             memory: 500Mi
           requests:
+            cpu: "0"
             memory: 10Mi
         env:
         - name: OTEL_EXPORTER_OTLP_INSECURE
