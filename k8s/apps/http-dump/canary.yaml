@@ -19,7 +19,7 @@ spec:
   #   name: http-dump
   service:
     port: 8080
-    portDiscovery: true
+    targetPort: 8080
   analysis:
     interval: 60s
     threshold: 2
