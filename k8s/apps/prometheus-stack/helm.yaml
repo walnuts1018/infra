@@ -100,8 +100,8 @@ spec:
             action: replace
     prometheus:
       prometheusSpec:
-        serviceMonitorSelectorNilUsesHelmValues: false
-        podMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false # serviceMonitorSelectorが{}である時、全てのServiceMonitorを監視対象にする
+        podMonitorSelectorNilUsesHelmValues: false # podMonitorSelectorが{}である時、全てのPodMonitorを監視対象にする
         storageSpec:
           volumeClaimTemplate:
             spec:
