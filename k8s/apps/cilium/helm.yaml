@@ -19,8 +19,6 @@ spec:
       chart: cilium
       version: 1.16.1
   values:
-    # envoy:
-    #   enabled: false
     kubeProxyReplacement: true
     k8sServiceHost: 192.168.0.17
     k8sServicePort: 16443
@@ -34,3 +32,7 @@ spec:
         enabled: true
       ui:
         enabled: true
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
