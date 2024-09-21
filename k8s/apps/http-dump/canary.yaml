@@ -26,10 +26,16 @@ spec:
     iterations: 10
     metrics:
     - name: request-success-rate
+      templateRef:
+        name: request-success-rate
+        namespace: flagger
       thresholdRange:
         min: 99 # minimum req success rate (non 5xx responses) (%)
       interval: 1m
     - name: request-duration
+      templateRef:
+        name: request-duration
+        namespace: flagger
       thresholdRange:
         max: 500 # maximum req duration P99 (milliseconds)
       interval: 30s
