@@ -33,6 +33,6 @@ spec:
       ui:
         enabled: true
       metrics:
-        enabled: true
+
         serviceMonitor:
           enabled: true
