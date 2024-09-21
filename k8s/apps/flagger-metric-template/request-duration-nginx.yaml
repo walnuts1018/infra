@@ -1,0 +1,9 @@
+apiVersion: flagger.app/v1beta1
+kind: MetricTemplate
+metadata:
+  name: request-duration-nginx
+spec:
+  provider:
+    type: prometheus
+    address: http://prometheus.linkerd-viz:9090
+  query: "sum(\n  rate(\n    nginx_ingress_controller_response_duration_seconds_sum{\n      exported_namespace=\"{{ namespace }}\",\n      ingress=\"{{ ingress }}\",\n      canary!=\"\"\n    }[{{ interval }}]\n  )\n) \n/ \nsum(\n  rate(\n    nginx_ingress_controller_response_duration_seconds_count{\n      exported_namespace=\"{{ namespace }}\",\n      ingress=\"{{ ingress }}\",\n      canary!=\"\"\n    }[{{ interval }}]\n  )\n) \n* 1000\n"

@@ -26,16 +26,16 @@ spec:
     maxWeight: 50
     stepWeight: 10
     metrics:
-    - name: request-success-rate
+    - name: request-success-rate-nginx
       templateRef:
-        name: request-success-rate
+        name: request-success-rate-nginx
         namespace: flagger
       thresholdRange:
         min: 99 # minimum req success rate (non 5xx responses) (%)
       interval: 1m
-    - name: request-duration
+    - name: request-duration-nginx
       templateRef:
-        name: request-duration
+        name: request-duration-nginx
         namespace: flagger
       thresholdRange:
         max: 500 # maximum req duration P99 (milliseconds)

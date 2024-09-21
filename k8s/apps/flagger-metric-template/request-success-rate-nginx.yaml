@@ -1,0 +1,9 @@
+apiVersion: flagger.app/v1beta1
+kind: MetricTemplate
+metadata:
+  name: request-success-rate-nginx
+spec:
+  provider:
+    type: prometheus
+    address: http://prometheus.linkerd-viz:9090
+  query: "sum(\n  rate(\n    nginx_ingress_controller_requests{\n      exported_namespace=\"{{ namespace }}\",\n      ingress=\"{{ ingress }}\",\n      canary!=\"\",\n      status!~\"5.*\"\n    }[{{ interval }}]\n  )\n) \n/ \nsum(\n  rate(\n    nginx_ingress_controller_requests{\n      exported_namespace=\"{{ namespace }}\",\n      ingress=\"{{ ingress }}\",\n      canary!=\"\"\n    }[{{ interval }}]\n  )\n) \n* 100\n"
