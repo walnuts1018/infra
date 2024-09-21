@@ -3,7 +3,7 @@ kind: Canary
 metadata:
   name: http-dump
 spec:
-  provider: kubernetes
+  provider: nginx
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
