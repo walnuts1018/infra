@@ -21,9 +21,10 @@ spec:
     port: 8080
     targetPort: 8080
   analysis:
-    interval: 60s
-    threshold: 2
-    iterations: 10
+    interval: 30s
+    threshold: 10
+    maxWeight: 50
+    stepWeight: 10
     metrics:
     - name: request-success-rate
       templateRef:
