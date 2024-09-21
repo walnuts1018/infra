@@ -4,7 +4,6 @@ metadata:
   name: http-dump
   labels:
     app: http-dump
-    hoge: hoge2
 spec:
   selector:
     matchLabels:
@@ -24,7 +23,7 @@ spec:
           containerPort: 8080
         resources:
           limits:
-            cpu: "0.5"
+            cpu: "500m"
             memory: 500Mi
           requests:
             cpu: "0"
