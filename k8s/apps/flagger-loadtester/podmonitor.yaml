@@ -6,11 +6,11 @@ metadata:
     app: loadtester
     app.kubernetes.io/name: loadtester
 spec:
-  endpoints:
+  podMetricsEndpoints:
   - honorLabels: false
     honorTimestamps: true
     path: /metrics
-    port: 8080
+    targetPort: 8080
   jobLabel: flagger-loadtester
   # namespaceSelector:
   #   matchNames:
