@@ -3,5 +3,6 @@ kind: Kustomization
 namespace: flagger
 resources:
 - helm.yaml
+- podmonitor.yaml
 components:
 - ../../components/helm

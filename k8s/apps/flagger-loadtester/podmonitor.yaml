@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: flagger-loadtester
+  labels:
+    app: loadtester
+    app.kubernetes.io/name: loadtester
+spec:
+  endpoints:
+  - honorLabels: false
+    honorTimestamps: true
+    path: /metrics
+    port: 8080
+  jobLabel: flagger-loadtester
+  # namespaceSelector:
+  #   matchNames:
+  #   - flagger
+  selector:
+    matchLabels:
+      app: loadtester
+      app.kubernetes.io/name: loadtester
