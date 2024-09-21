@@ -35,7 +35,7 @@ spec:
       admissionWebhooks:
         patch:
           image:
-            digest: ""
+            digest: "" # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
       service:
         enabled: true
         loadBalancerIP: "192.168.0.128"
