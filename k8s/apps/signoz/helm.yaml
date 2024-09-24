@@ -1,0 +1,19 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: signoz
+spec:
+  url: https://charts.signoz.io
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: signoz
+spec:
+  chart:
+    spec:
+      chart: signoz
+      version: 0.52.0
+  values:
+    global:
+      storageClass: "longhorn"
