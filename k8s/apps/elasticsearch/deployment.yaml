@@ -21,7 +21,7 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         #   readOnlyRootFilesystem: true
-        image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1 # {"$imagepolicy": "databases:elasticsearch"}
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.15.2 # {"$imagepolicy": "databases:elasticsearch"}
         ports:
         - containerPort: 9200
         resources:
