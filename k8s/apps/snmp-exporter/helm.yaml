@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: prometheus-snmp-exporter
-      version: 5.5.0
+      version: 5.5.1
   values:
     serviceMonitor:
       enabled: true
