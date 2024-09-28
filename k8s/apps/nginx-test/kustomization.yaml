@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: default
+labels:
+- includeSelectors: true
+  pairs:
+    app: nginx-test
+resources:
+- deployment.yaml
+- ingress.yaml
+- service.yaml
+- image-policy.yaml
+configMapGenerator:
+- name: nginx-test-conf
+  files:
+  - nginx.conf
+  - virtualhost.conf

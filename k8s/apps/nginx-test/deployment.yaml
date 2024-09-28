@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-test
+  template:
+    metadata:
+      labels:
+        app: nginx-test
+    spec:
+      containers:
+      - name: nginx-test
+        image: nginx:1.27.1
+        ports:
+        - containerPort: 8080
+        securityContext:
+          readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /etc/nginx
+          readOnly: true
+          name: nginx-test-conf
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /var/tmp
+          name: tmp
+        - mountPath: /var/log/nginx
+          name: log-nginx
+        - mountPath: /var/cache/nginx
+          name: cache-nginx
+        - mountPath: /var/run
+          name: var-run
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            memory: 5Mi
+      volumes:
+      - name: nginx-test-conf
+        configMap:
+          name: nginx-test-conf
+          items:
+          - key: nginx.conf
+            path: nginx.conf
+          - key: virtualhost.conf
+            path: virtualhost/virtualhost.conf
+      - name: tmp
+        emptyDir: {}
+      - name: log-nginx
+        emptyDir: {}
+      - name: cache-nginx
+        emptyDir: {}
+      - name: var-run
+        emptyDir: {}
