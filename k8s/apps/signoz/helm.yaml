@@ -17,3 +17,13 @@ spec:
   values:
     global:
       storageClass: "longhorn"
+    frontend:
+      ingress:
+        enabled: true
+        className: "nginx"
+        hosts:
+        - host: signoz.walnuts.dev
+          paths:
+          - path: /
+            pathType: ImplementationSpecific
+            port: 3301
