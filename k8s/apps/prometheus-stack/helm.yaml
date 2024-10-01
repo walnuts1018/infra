@@ -101,9 +101,9 @@ spec:
     prometheus:
       prometheusSpec:
         serviceMonitorSelector:
-          matchLabels: nil #全てのServiceMonitorを監視対象にする
+          matchLabels: null #全てのServiceMonitorを監視対象にする
         podMonitorSelector:
-          matchLabels: nil #全てのPodMonitorを監視対象にする
+          matchLabels: null #全てのPodMonitorを監視対象にする
         storageSpec:
           volumeClaimTemplate:
             spec:
