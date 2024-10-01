@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: minio
 resources:
 - externalsecret.yaml
+- image-policy.yaml
 - helm.yaml
 components:
 - ../../components/helm

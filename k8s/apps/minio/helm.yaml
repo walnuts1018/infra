@@ -16,6 +16,10 @@ spec:
       version: 5.2.0
   postRenderers:
   - kustomize:
+      images:
+      - name: curlimages/curl
+        newName: curlimages/curl
+        newTag: 8.10.0 # {"$imagepolicy": "minio:minio-curl"}
       patches:
       - target:
           version: v1
@@ -27,7 +31,7 @@ spec:
             path: /spec/template/spec/initContainers
             value:
             - name: wait-zitadel
-              image: curlimages/curl:8.10.1
+              image: curlimages/curl
               imagePullPolicy: IfNotPresent
               command:
                 - "curl"
