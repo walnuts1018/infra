@@ -14,8 +14,8 @@ spec:
     spec:
       chart: flagger
       version: 1.38.0
-      verify:
-        provider: cosign
+      # verify:
+  #   provider: cosign
   values:
     metricsServer: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090"
     meshProvider: nginx
