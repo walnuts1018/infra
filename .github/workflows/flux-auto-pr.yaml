@@ -23,8 +23,22 @@ jobs:
       - uses: actions/checkout@v4
         name: checkout
 
+      - name: Get Image Tag
+        id: get_image_tag
+        run: |
+          python3 .github/scripts/check-automerge.py
+
+      - name: Create PR Metadata
+        id: create_pr_metadata
+        run: |
+          echo "pr_title='Update image tag'" >> $GITHUB_OUTPUT
+          echo "pr_body=':crown: *An automated PR*'" >> $GITHUB_OUTPUT
+
       - name: create pull-request
         run: |
-          gh pr create --body ":crown: *An automated PR*" --base main --title "Update image tag"
-          gh pr merge --merge --auto
+          gh pr create --body ${{ steps.create_pr_metadata.outputs.pr_body }} --base main --title ${{ steps.create_pr_metadata.outputs.pr_title }}
 
+      - name: Enable automerge
+        if: steps.get_image_tag.outputs.automerge == 'true'
+        run: |
+          gh pr merge --merge --auto
