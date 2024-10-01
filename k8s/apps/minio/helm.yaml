@@ -19,7 +19,7 @@ spec:
       images:
       - name: curlimages/curl
         newName: curlimages/curl
-        newTag: 8.10.0 # {"$imagepolicy": "minio:minio-curl:tag"}
+        newTag: 8.9.1 # {"$imagepolicy": "minio:minio-curl:tag"}
       patches:
       - target:
           version: v1
