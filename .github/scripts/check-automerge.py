@@ -5,7 +5,6 @@ import os
 automerge = False
 old_major = old_minor = old_patch = new_major = new_minor = new_patch = None
 
-
 result = subprocess.run("gh pr diff", shell=True, capture_output=True)
 if result.returncode == 0:
     diff = result.stdout.decode("utf-8")
