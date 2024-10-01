@@ -14,6 +14,24 @@ spec:
     spec:
       chart: minio
       version: 5.2.0
+  postRenderers:
+  - kustomize:
+      patches:
+      - target:
+          version: v1
+          kind: Deployment
+          name: minio
+        patch: |
+          - op: add
+            path: /spec/template/spec/init/initContainers
+            value:
+            - name: wait-zitadel
+              image: curlimages/curl:8.10.1
+              imagePullPolicy: IfNotPresent
+              command:
+                - curl
+                - "-f"
+                - https://auth.walnuts.dev/.well-known/openid-configuration
   values:
     mode: standalone
     replicas: 1
