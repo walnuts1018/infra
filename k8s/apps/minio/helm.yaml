@@ -21,6 +21,7 @@ spec:
           version: v1
           kind: Deployment
           name: minio
+        # 起動時にauth.walnuts.devがダウンしていると、OIDC Loginが使えない
         patch: |
           - op: add
             path: /spec/template/spec/initContainers
