@@ -57,20 +57,24 @@ spec:
         headers:
           Accept: "*/*"
           "Mackerel-Api-Key": ${env:VAXILA_APIKEY}
+      otlp/signoz:
+        endpoint: signoz-otel-collector.signoz.svc.cluster.local:4317
+        tls:
+          insecure: true
     service:
       pipelines:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/tempo, otlphttp/vaxila]
+          exporters: [otlp/tempo, otlp/signoz]
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/prometheus-exporter]
+          exporters: [otlp/prometheus-exporter, otlp/signoz]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/loki-exporter]
+          exporters: [otlp/loki-exporter, otlp/signoz]
   autoscaler:
     minReplicas: 1
     maxReplicas: 5
