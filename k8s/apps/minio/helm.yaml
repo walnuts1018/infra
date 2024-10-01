@@ -30,9 +30,12 @@ spec:
               image: curlimages/curl:8.10.1
               imagePullPolicy: IfNotPresent
               command:
-                - curl
+                - "curl"
                 - "-f"
-                - https://auth.walnuts.dev/.well-known/openid-configuration
+                - "-s"
+                - "-o"
+                - "/dev/null"
+                - "https://auth.walnuts.dev/.well-known/openid-configuration"
   values:
     mode: standalone
     replicas: 1
