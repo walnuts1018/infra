@@ -2,7 +2,7 @@ apiVersion: cs.walnuts.dev/v1alpha2
 kind: CodeServerDeployment
 metadata:
   labels:
-    app.kubernetes.io/name: codebox
+    app: codebox
   name: codebox-knative
 spec:
   replicas: 1
