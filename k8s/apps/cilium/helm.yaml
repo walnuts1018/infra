@@ -38,7 +38,7 @@ spec:
             certManagerIssuerRef:
               group: cert-manager.io
               kind: ClusterIssuer
-              name: letsencrypt-prod
+              name: selfsigned
     hubble:
       tls:
         enabled: true
@@ -48,7 +48,7 @@ spec:
           certManagerIssuerRef:
             group: cert-manager.io
             kind: ClusterIssuer
-            name: letsencrypt-prod
+            name: selfsigned
       relay:
         enabled: true
         image:
