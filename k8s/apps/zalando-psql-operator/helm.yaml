@@ -48,5 +48,8 @@ spec:
       # S3 retention time for stored backups for example "2 week" or "7 days"
       logical_backup_s3_retention_time: ""
       # backup schedule in the cron format
-      logical_backup_schedule: "33 4 * * *"
+      logical_backup_schedule: "0 18 * * *"
       logical_backup_cronjob_environment_secret: "zalando-minio"
+
+    configDebug:
+      debug_logging: false
