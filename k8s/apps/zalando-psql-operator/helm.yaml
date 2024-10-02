@@ -44,7 +44,7 @@ spec:
       logical_backup_s3_bucket_prefix: "spilo"
       logical_backup_s3_region: "ap-northeast-1"
       logical_backup_s3_endpoint: "https://minio.walnuts.dev/"
-      logical_backup_s3_sse: "AES256"
+      logical_backup_s3_sse: ""
       # S3 retention time for stored backups for example "2 week" or "7 days"
       logical_backup_s3_retention_time: ""
       # backup schedule in the cron format
