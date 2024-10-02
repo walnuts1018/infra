@@ -39,7 +39,7 @@ spec:
     ac_hacking: ac_hacking
     y_2024: y_2024
   postgresql:
-    version: "15"
+    version: "16"
   resources:
     requests:
       cpu: 10m
