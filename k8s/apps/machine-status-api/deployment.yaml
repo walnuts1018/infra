@@ -43,6 +43,4 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: cheese
       tolerations:
-      - key: "node-role.kubernetes.io/control-plane"
-        operator: "Exists"
-        effect: "NoSchedule"
+      - operator: "Exists"
