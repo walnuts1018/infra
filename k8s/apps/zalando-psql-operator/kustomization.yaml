@@ -3,5 +3,6 @@ kind: Kustomization
 namespace: databases
 resources:
 - helm.yaml
+- externalsecret.yaml
 components:
 - ../../components/helm
