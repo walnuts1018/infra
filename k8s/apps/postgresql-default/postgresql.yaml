@@ -40,6 +40,9 @@ spec:
     y_2024: y_2024
   postgresql:
     version: "16"
+    parameters:
+      max_standby_archive_delay: "180s"
+      max_standby_streaming_delay: "180s"
   resources:
     requests:
       cpu: 10m
