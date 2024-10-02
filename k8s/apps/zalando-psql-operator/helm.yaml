@@ -39,3 +39,14 @@ spec:
       requests:
         cpu: 10m
         memory: 50Mi
+    configLogicalBackup:
+      logical_backup_s3_bucket: "zalando-backup"
+      logical_backup_s3_bucket_prefix: "spilo"
+      logical_backup_s3_region: "ap-northeast-1"
+      logical_backup_s3_endpoint: "https://minio.walnuts.dev/"
+      logical_backup_s3_sse: "AES256"
+      # S3 retention time for stored backups for example "2 week" or "7 days"
+      logical_backup_s3_retention_time: ""
+      # backup schedule in the cron format
+      logical_backup_schedule: "30 00 * * *"
+      logical_backup_cronjob_environment_secret: "zalando-minio"
