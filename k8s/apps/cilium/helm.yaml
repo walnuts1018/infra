@@ -29,7 +29,18 @@ spec:
     k8sClientRateLimit:
       qps: 10
       burst: 20
+    clustermesh:
+      apiserver:
+        tls:
+          auto:
+            enabled: true
+            method: certmanager
     hubble:
+      tls:
+        enabled: true
+        auto:
+          enabled: true
+          method: certmanager
       relay:
         enabled: true
         image:
