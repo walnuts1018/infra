@@ -74,3 +74,6 @@ spec:
           operator: NotIn
           values:
           - donut
+  enableLogicalBackup: true
+  # logicalBackupRetention: "2 week"
+  logicalBackupSchedule: "0 18 * * *"
