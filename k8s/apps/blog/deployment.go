@@ -1,9 +1,6 @@
 package blog
 
 import (
-	"maps"
-	"slices"
-
 	"github.com/aws/jsii-runtime-go"
 	"github.com/walnuts1018/infra/k8s/imports/k8s"
 	"github.com/walnuts1018/infra/k8s/util/props"
@@ -71,7 +68,7 @@ var deploy = k8s.KubeDeploymentProps{
 						Resources: props.NewResourceRequirements("", "", "50Mi", "100Mi"),
 					},
 				},
-				Volumes: ptr.To(slices.Collect(maps.Values(volumes))),
+				Volumes: props.ToVolumeSlice(volumes),
 			},
 		},
 	},

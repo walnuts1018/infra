@@ -1,6 +1,10 @@
 package props
 
 import (
+	"maps"
+	"slices"
+	"sort"
+
 	"github.com/walnuts1018/infra/k8s/imports/k8s"
 	"k8s.io/utils/ptr"
 )
@@ -28,4 +32,12 @@ func NewEmptyDirVolume(volumeName string) *k8s.Volume {
 		Name:     &volumeName,
 		EmptyDir: &k8s.EmptyDirVolumeSource{},
 	}
+}
+
+func ToVolumeSlice(volumes map[string]*k8s.Volume) *[]*k8s.Volume {
+	s := slices.Collect(maps.Values(volumes))
+	sort.Slice(s, func(i, j int) bool {
+		return *s[i].Name < *s[j].Name
+	})
+	return &s
 }

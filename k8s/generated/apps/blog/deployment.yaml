@@ -56,10 +56,10 @@ spec:
             name: blog-conf
           name: blog-conf
         - emptyDir: {}
-          name: tmp
+          name: cache-nginx
         - emptyDir: {}
           name: log-nginx
         - emptyDir: {}
-          name: cache-nginx
+          name: tmp
         - emptyDir: {}
           name: var-run
