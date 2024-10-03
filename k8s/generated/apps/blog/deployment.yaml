@@ -47,19 +47,19 @@ spec:
             - mountPath: /var/run
               name: var-run
       volumes:
-        - emptyDir: {}
-          name: cache-nginx
-        - emptyDir: {}
-          name: var-run
         - configMap:
             items:
-              - key: virtualhost.conf
-                path: virtualhost/virtualhost.conf
               - key: nginx.conf
                 path: nginx.conf
+              - key: virtualhost.conf
+                path: virtualhost/virtualhost.conf
             name: blog-conf
           name: blog-conf
         - emptyDir: {}
           name: tmp
         - emptyDir: {}
           name: log-nginx
+        - emptyDir: {}
+          name: cache-nginx
+        - emptyDir: {}
+          name: var-run
