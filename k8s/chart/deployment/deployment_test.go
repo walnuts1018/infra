@@ -8,13 +8,14 @@ import (
 	"github.com/cdk8s-team/cdk8s-core-go/cdk8s/v2"
 	"github.com/walnuts1018/infra/k8s/chart/app"
 	"github.com/walnuts1018/infra/k8s/imports/k8s"
+	"github.com/walnuts1018/infra/k8s/namespace"
 )
 
 func TestNewDeploymentChart(t *testing.T) {
 	type args struct {
 		app       cdk8s.App
 		name      string
-		namespace string
+		namespace namespace.Namespace
 		deploy    *k8s.KubeDeploymentProps
 	}
 	tests := []struct {
@@ -27,11 +28,11 @@ func TestNewDeploymentChart(t *testing.T) {
 			args: args{
 				app:       app.NewApp("app/test"),
 				name:      "k8s_name",
-				namespace: "k8s_namespace",
+				namespace: namespace.Default,
 				deploy: &k8s.KubeDeploymentProps{
 					Metadata: &k8s.ObjectMeta{
 						Name:      jsii.String("k8s_name"),
-						Namespace: jsii.String("k8s_namespace"),
+						Namespace: jsii.String("default"),
 					},
 					Spec: &k8s.DeploymentSpec{
 						Replicas: jsii.Number(3),
@@ -56,7 +57,7 @@ metadata:
     app: k8s_name
     app.kubernetes.io/name: k8s_name
   name: k8s_name
-  namespace: k8s_namespace
+  namespace: default
 spec:
   replicas: 3
   selector:

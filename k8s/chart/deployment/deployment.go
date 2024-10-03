@@ -6,15 +6,16 @@ import (
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/cdk8s-team/cdk8s-core-go/cdk8s/v2"
 	"github.com/walnuts1018/infra/k8s/imports/k8s"
+	"github.com/walnuts1018/infra/k8s/namespace"
 	"k8s.io/utils/ptr"
 )
 
 const id = "deployment"
 
-func NewDeploymentChart(scope constructs.Construct, name, namespace string, deploy *k8s.KubeDeploymentProps) cdk8s.Chart {
+func NewDeploymentChart(scope constructs.Construct, name string, namespace namespace.Namespace, deploy *k8s.KubeDeploymentProps) cdk8s.Chart {
 	chart := cdk8s.NewChart(scope, ptr.To(id), &cdk8s.ChartProps{
 		DisableResourceNameHashes: ptr.To(true),
-		Namespace:                 ptr.To(namespace),
+		Namespace:                 ptr.To(string(namespace)),
 	})
 
 	if deploy.Metadata == nil {
@@ -22,7 +23,7 @@ func NewDeploymentChart(scope constructs.Construct, name, namespace string, depl
 	}
 
 	deploy.Metadata.Name = ptr.To(name)
-	deploy.Metadata.Namespace = ptr.To(namespace)
+	deploy.Metadata.Namespace = ptr.To(string(namespace))
 
 	addLabels(deploy, name)
 	addContainerSecurityContext(deploy)
