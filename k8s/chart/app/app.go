@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	GenerateDir = "generated"
+	GenerateDir = "_generated"
 	AppDir      = "apps"
 )
 
