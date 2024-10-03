@@ -19,7 +19,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
-  path: ./k8s/generated/_flux/kurumi
+  path: ./k8s/_flux/kurumi
   prune: true
   sourceRef:
     kind: GitRepository
