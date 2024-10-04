@@ -40,7 +40,7 @@ spec:
         - name: SAMBA_VOLUME_CONFIG_share
           value: "[share]; path=/samba-share; valid users = samba; public = no; read only = no; browseable = yes; available = yes"
         ports:
-        - containerPort: 445
+        - containerPort: 10445
           name: samba
         volumeMounts:
         - name: samba-local-dir

@@ -8,7 +8,7 @@ spec:
   ports:
   - port: 445
     protocol: TCP
-    targetPort: 445
+    targetPort: 10445
   selector:
     app: samba
   type: LoadBalancer
