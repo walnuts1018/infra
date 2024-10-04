@@ -20,7 +20,7 @@ spec:
           readOnlyRootFilesystem: true
           seccompProfile:
             type: RuntimeDefault
-        image: ghcr.io/walnuts1018/fitbit-manager:0.8.2 # {"$imagepolicy": "default:fitbit-manager"}
+        image: ghcr.io/walnuts1018/fitbit-manager:0.8.3 # {"$imagepolicy": "default:fitbit-manager"}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
