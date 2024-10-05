@@ -20,7 +20,7 @@ spec:
           readOnlyRootFilesystem: true
           seccompProfile:
             type: RuntimeDefault
-        image: ghcr.io/walnuts1018/walnuts.dev:ec2d2e944c46af9326dfd87143f55d0a2f6b886e-228 # {"$imagepolicy": "default:walnuts-dev"}
+        image: ghcr.io/walnuts1018/walnuts.dev:db9c56bca5a2334afb99b92a03be9a24fc08a29f-232 # {"$imagepolicy": "default:walnuts-dev"}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
