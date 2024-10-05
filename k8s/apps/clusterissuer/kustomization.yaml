@@ -5,4 +5,3 @@ resources:
 - letsencrypt-prod.yaml
 - letsencrypt-stg.yaml
 - selfsigned.yaml
-- ca.yaml
