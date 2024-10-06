@@ -26,6 +26,8 @@ spec:
     k8sServicePort: 16443
     l2announcements:
       enabled: true
+    bgpControlPlane:
+      enabled: true
     k8sClientRateLimit:
       qps: 10
       burst: 20
