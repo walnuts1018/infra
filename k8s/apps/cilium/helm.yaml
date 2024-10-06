@@ -34,21 +34,13 @@ spec:
         tls:
           auto:
             enabled: true
-            method: certmanager
-            certManagerIssuerRef:
-              group: cert-manager.io
-              kind: ClusterIssuer
-              name: selfsigned
+            method: cronJob
     hubble:
       tls:
         enabled: true
         auto:
           enabled: true
-          method: certmanager
-          certManagerIssuerRef:
-            group: cert-manager.io
-            kind: ClusterIssuer
-            name: selfsigned
+          method: cronJob
       relay:
         enabled: true
         image:
