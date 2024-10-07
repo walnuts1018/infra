@@ -21,7 +21,7 @@ spec:
         limits:
           memory: 800Mi
         requests:
-          memory: 220Mi
+          memory: 330Mi
       ingress:
         enabled: true
         hosts:
