@@ -45,7 +45,7 @@ spec:
           exporters: [loki]
   resources:
     requests:
-      memory: 100Mi
+      memory: 200Mi
   autoscaler:
     minReplicas: 1
     maxReplicas: 5
