@@ -18,7 +18,10 @@ spec:
         # securityContext:
         #   readOnlyRootFilesystem: true
         image: gotson/komga:1.14.0 # {"$imagepolicy": "komga:komga"}
-        resources: {}
+        resources:
+          limits: {}
+          requests:
+            memory: 600Mi
         ports:
         - containerPort: 25600
           name: http
