@@ -88,7 +88,7 @@ spec:
           averageValue: 1Gi
   resources:
     requests:
-      memory: 100Mi
+      memory: 300Mi
   env:
   - name: K8S_NODE_IP
     valueFrom:
