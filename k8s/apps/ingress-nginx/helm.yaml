@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: ingress-nginx
-      version: 4.11.2
+      version: 4.11.3
   postRenderers:
   - kustomize:
       # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
