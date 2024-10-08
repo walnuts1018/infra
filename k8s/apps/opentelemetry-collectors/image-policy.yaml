@@ -15,7 +15,7 @@ spec:
     name: opentelemetry-collector-contrib
   policy:
     semver:
-      range: "<=0.108.0"
+      range: "<=0.109.0"
 
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
@@ -35,4 +35,4 @@ spec:
     name: opentelemetry-collector-k8s
   policy:
     semver:
-      range: "<=0.108.0"
+      range: "<=0.109.0"
