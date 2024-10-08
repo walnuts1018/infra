@@ -40,7 +40,13 @@ spec:
           failureThreshold: 1
           initialDelaySeconds: 10
           periodSeconds: 10
-        resources: {}
+        resources:
+          requests:
+            memory: 32Mi
+            cpu: 10m
+          limits:
+            memory: 512Mi
+            cpu: 100m
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
