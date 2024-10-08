@@ -143,6 +143,7 @@ spec:
           cpu: 50m
           memory: 50Mi
     chunksCache:
+      allocatedMemory: 8192
       resources:
         requests:
           cpu: 50m
@@ -150,6 +151,7 @@ spec:
         limits:
           memory: 9830Mi
     resultsCache:
+      allocatedMemory: 1024
       resources:
         requests:
           cpu: 50m
