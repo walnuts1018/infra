@@ -142,3 +142,13 @@ spec:
         requests:
           cpu: 50m
           memory: 50Mi
+    chunksCache:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 300Mi
+    resultsCache:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 50Mi
