@@ -66,15 +66,15 @@ spec:
         traces:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/tempo, otlp/signoz]
+          exporters: [otlp/tempo]
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/prometheus-exporter, otlp/signoz]
+          exporters: [otlp/prometheus-exporter]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/loki-exporter, otlp/signoz]
+          exporters: [otlp/loki-exporter]
   autoscaler:
     minReplicas: 1
     maxReplicas: 5
