@@ -5,7 +5,7 @@ metadata:
 spec:
   serviceAccount: otel-collector
   mode: deployment
-  image: otel/opentelemetry-collector-k8s:0.109.0 # {"$imagepolicy": "opentelemetry-collector:opentelemetry-collector-k8s"}
+  image: otel/opentelemetry-collector-k8s:0.110.0 # {"$imagepolicy": "opentelemetry-collector:opentelemetry-collector-k8s"}
   managementState: managed
   config:
     receivers:
