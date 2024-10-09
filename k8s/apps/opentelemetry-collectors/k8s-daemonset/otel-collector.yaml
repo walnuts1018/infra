@@ -20,6 +20,9 @@ spec:
           disk:
           filesystem:
           network:
+        metrics:
+          system.linux.memory.available:
+            enabled: true
       kubeletstats:
         collection_interval: 10s
         auth_type: 'serviceAccount'
