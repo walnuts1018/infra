@@ -1,7 +1,7 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["config:recommended"],
-  dependencyDashboard: false,
+  dependencyDashboard: true,
   timezone: "Asia/Tokyo",
   minimumReleaseAge: "8 days",
   flux: {
