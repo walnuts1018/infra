@@ -23,7 +23,7 @@ spec:
       - name: misskey-init
         securityContext:
           readOnlyRootFilesystem: true
-        image: misskey/misskey:2024.9.0 # {"$imagepolicy": "misskey:misskey"}
+        image: misskey/misskey:2024.10.0 # {"$imagepolicy": "misskey:misskey"}
         imagePullPolicy: IfNotPresent
         command:
         - pnpm
@@ -39,7 +39,7 @@ spec:
       - name: misskey
         securityContext:
           readOnlyRootFilesystem: true
-        image: misskey/misskey:2024.9.0 # {"$imagepolicy": "misskey:misskey"}
+        image: misskey/misskey:2024.10.0 # {"$imagepolicy": "misskey:misskey"}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
