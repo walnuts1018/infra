@@ -74,6 +74,7 @@ spec:
             name: k8s.pod.uid
         - sources: # If neither of those work, use the request's connection to get the pod IP.
           - from: connection
+      # k8s attribute processorはhostmetricsに適用されない
       resourcedetection:
         detectors: [env]
         timeout: 15s
