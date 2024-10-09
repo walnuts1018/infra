@@ -88,7 +88,7 @@ spec:
       pipelines:
         metrics:
           receivers: [hostmetrics, kubeletstats]
-          processors: [memory_limiter, batch, k8sattributes]
+          processors: [memory_limiter, batch, k8sattributes, resourcedetection]
           exporters: [otlp/default]
   env:
   - name: K8S_NODE_IP
