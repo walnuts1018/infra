@@ -74,6 +74,10 @@ spec:
             name: k8s.pod.uid
         - sources: # If neither of those work, use the request's connection to get the pod IP.
           - from: connection
+      resourcedetection:
+        detectors: [env]
+        timeout: 15s
+        override: false
     exporters:
       otlp/default:
         endpoint: default-collector.opentelemetry-collector.svc.cluster.local:4317
@@ -94,5 +98,7 @@ spec:
     valueFrom:
       fieldRef:
         fieldPath: spec.nodeName
+  - name: OTEL_RESOURCE_ATTRIBUTES
+    value: "k8s.node.name=$(K8S_NODE_NAME),k8s.node.ip=$(K8S_NODE_IP)"
   tolerations:
   - operator: "Exists"
