@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: mariadb
-      version: 19.0.7
+      version: 19.1.0
   values:
     auth:
       database: photoprism
