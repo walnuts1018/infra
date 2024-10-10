@@ -52,6 +52,10 @@ spec:
         endpoint: loki-exporter-collector.opentelemetry-collector.svc.cluster.local:4317
         tls:
           insecure: true
+      otlp/prometheus-exporter:
+        endpoint: prometheus-exporter-collector.opentelemetry-collector.svc.cluster.local:4317
+        tls:
+          insecure: true
       otlphttp/vaxila:
         endpoint: "https://otlp-vaxila.mackerelio.com"
         headers:

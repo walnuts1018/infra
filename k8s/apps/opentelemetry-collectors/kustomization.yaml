@@ -9,3 +9,4 @@ resources:
 - ./k8s-daemonset
 - ./k8s-deployment
 - ./loki-exporter
+- ./prometheus-exporter
