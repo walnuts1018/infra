@@ -40,7 +40,7 @@ spec:
         - sources: # If neither of those work, use the request's connection to get the pod IP.
           - from: connection
     exporters:
-      otlp/prometheus:
+      otlphttp/prometheus:
         endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/otlp/v1/metrics
         tls:
           insecure: true
