@@ -121,3 +121,5 @@ spec:
         retentionSize: 30GiB
         replicas: 1
         enableRemoteWriteReceiver: true
+        enableFeatures:
+        - otlp-write-receiver
