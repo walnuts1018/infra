@@ -74,7 +74,7 @@ spec:
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/prometheus, otlp/signoz]
+          exporters: [otlphttp/prometheus, otlp/signoz]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
