@@ -41,7 +41,7 @@ spec:
           - from: connection
     exporters:
       otlphttp/prometheus:
-        endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/otlp/v1/metrics
+        endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/otlp
         tls:
           insecure: true
       otlp/tempo:
