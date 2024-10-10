@@ -15,7 +15,7 @@ spec:
           load:
           memory:
             metrics:
-              system.memory.utilization:
+              system.memory.limit:
                 enabled: true
               system.linux.memory.available:
                 enabled: true
