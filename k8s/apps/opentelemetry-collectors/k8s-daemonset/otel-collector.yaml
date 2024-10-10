@@ -32,7 +32,6 @@ spec:
         - node
         - pod
         - container
-        enableCPUUsageMetrics: true
     processors:
       memory_limiter:
         check_interval: 1s
