@@ -40,6 +40,10 @@ spec:
         - sources: # If neither of those work, use the request's connection to get the pod IP.
           - from: connection
     exporters:
+      otlp/prometheus:
+        endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/otlp/v1/metrics
+        tls:
+          insecure: true
       otlp/tempo:
         endpoint: tempo.monitoring.svc.cluster.local:4317
         tls:
@@ -70,7 +74,7 @@ spec:
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/prometheus-exporter, otlp/signoz]
+          exporters: [otlp/prometheus, otlp/signoz]
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
