@@ -85,7 +85,7 @@ spec:
           name: memory
         target:
           type: AverageValue
-          averageValue: 1Gi
+          averageValue: 500Mi
   resources:
     requests:
       memory: 300Mi
