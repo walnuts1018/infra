@@ -3,9 +3,10 @@ kind: OpenTelemetryCollector
 metadata:
   name: k8s-daemonset
 spec:
+  managementState: managed
   serviceAccount: otel-collector
   mode: daemonset
-  image: otel/opentelemetry-collector-k8s:0.110.0 # {"$imagepolicy": "opentelemetry-collector:opentelemetry-collector-k8s"}
+  image: otel/opentelemetry-collector-k8s
   config:
     receivers:
       hostmetrics:
