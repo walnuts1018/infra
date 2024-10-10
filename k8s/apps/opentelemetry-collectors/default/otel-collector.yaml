@@ -86,10 +86,23 @@ spec:
         target:
           type: AverageValue
           averageValue: 1Gi
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 10
+          type: Utilization
+      type: Resource
+    - resource:
+        name: memory
+        target:
+          averageUtilization: 800
+          type: Utilization
+      type: Resource
+
   resources:
     requests:
       cpu: 10m
-      memory: 300Mi
+      memory: 200Mi
   env:
   - name: K8S_NODE_IP
     valueFrom:
