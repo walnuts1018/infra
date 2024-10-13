@@ -78,5 +78,5 @@ spec:
           values:
           - donut
   enableLogicalBackup: true
-  # logicalBackupRetention: "2 week"
+  logicalBackupRetention: "1 week"
   logicalBackupSchedule: "0 18 * * *"
