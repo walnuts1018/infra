@@ -3,7 +3,7 @@ kind: Kustomization
 labels:
 - includeSelectors: true
   pairs:
-    app: mucaron-encode-tmp
+    app: mucaron-back
 resources:
 - deployment.yaml
 - service.yaml

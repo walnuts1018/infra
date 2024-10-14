@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mucaron
+  name: mucaron-encode-tmp
 spec:
   storageClassName: longhorn
   accessModes:
