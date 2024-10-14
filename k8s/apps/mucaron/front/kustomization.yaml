@@ -3,7 +3,7 @@ kind: Kustomization
 labels:
 - includeSelectors: true
   pairs:
-    app: ac-hacking-2024-front
+    app: mucaron-front
 resources:
 - deployment.yaml
 - service.yaml
