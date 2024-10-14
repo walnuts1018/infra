@@ -39,7 +39,7 @@ spec:
         - name: PSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mucaron
+              name: mucaron-backend
               key: postgres_password
         - name: PSQL_SSLMODE
           value: "disable"
@@ -51,7 +51,7 @@ spec:
         - name: MINIO_SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: mucaron
+              name: mucaron-backend
               key: minio_secret_key
         - name: MINIO_BUCKET
           value: "mucaron"
@@ -66,14 +66,14 @@ spec:
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mucaron
+              name: mucaron-backend
               key: redis_password
         - name: REDIS_DB
           value: "6"
         - name: SESSION_SECRET
           valueFrom:
             secretKeyRef:
-              name: mucaron
+              name: mucaron-backend
               key: session_secret
         volumeMounts:
         - name: mucaron-log
