@@ -3,9 +3,10 @@ kind: Kustomization
 labels:
 - includeSelectors: true
   pairs:
-    app: mucaron-backend
+    app: mucaron-encode-tmp
 resources:
 - deployment.yaml
 - service.yaml
 - image-policy.yaml
 - externalsecret.yaml
+- pvc.yaml
