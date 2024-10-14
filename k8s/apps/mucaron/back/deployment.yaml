@@ -57,7 +57,7 @@ spec:
           value: "mucaron"
         - name: MINIO_REGION
           value: "ap-northeast-1"
-        - name: MINIO_SSL
+        - name: MINIO_USE_SSL
           value: "true"
         - name: REDIS_HOST
           value: "redis-haproxy.databases.svc.cluster.local"
