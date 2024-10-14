@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mucaron-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mucaron-front
+  template:
+    metadata:
+      labels:
+        app: mucaron-front
+    spec:
+      containers:
+      - name: mucaron-front
+        securityContext:
+          readOnlyRootFilesystem: true
+        image: ghcr.io/walnuts1018/mucaron-frontend:f6e9ee75a7630a262a901e37c37d5466cc69d39d-8 # {"$imagepolicy": "mucaron:mucaron-front"}
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            memory: 20Mi

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mucaron
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: "mucaron.walnuts.dev"
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: mucaron-back
+            port:
+              number: 8080
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mucaron-front
+            port:
+              number: 3000

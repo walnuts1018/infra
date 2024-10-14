@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mucaron-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mucaron-backend
+  template:
+    metadata:
+      labels:
+        app: mucaron-backend
+    spec:
+      containers:
+      - name: mucaron-backend
+        securityContext:
+          readOnlyRootFilesystem: true
+        image: ghcr.io/walnuts1018/mucaron-backend:2ddcc938445d7c2d8f127e751ebb4ba52863b513-9 # {"$imagepolicy": "mucaron:mucaron-backend"}
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: 512Mi
+          limits:
+            cpu: "2"
+            memory: 2Gi
+        env:
+        - name: SERVER_ENDPOINT
+          value: "https://mucaron.walnuts.dev"
+        - name: PSQL_HOST
+          value: "postgresql-default.databases.svc.cluster.local"
+        - name: PSQL_PORT
+          value: "5432"
+        - name: PSQL_DATABASE
+          value: "mucaron"
+        - name: PSQL_USER
+          value: "mucaron"
+        - name: PSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mucaron
+              key: postgres_password
+        - name: PSQL_SSLMODE
+          value: "disable"
+
+        - name: MINIO_ENDPOINT
+          value: "https://mucaron.walnuts.dev"
+        - name: MINIO_ACCESS_KEY
+          value: "oZzVGMWfbXtGtuzgPd3R"
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: mucaron
+              key: minio_secret_key
+        - name: MINIO_BUCKET
+          value: "mucaron"
+        - name: MINIO_REGION
+          value: "ap-northeast-1"
+        - name: MINIO_SSL
+          value: "true"
+        - name: REDIS_HOST
+          value: "redis-haproxy.databases.svc.cluster.local"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mucaron
+              key: redis_password
+        - name: REDIS_DB
+          value: "6"
+        - name: SESSION_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: mucaron
+              key: session_secret
+        volumeMounts:
+        - name: mucaron-log
+          mountPath: /var/log/mucaron
+        - name: tmp
+          mountPath: /tmp
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      volumes:
+      - name: mucaron-log
+        emptyDir: {}
+      - name: tmp
+        persistentVolumeClaim:
+          claimName: mucaron-encode-dir
+

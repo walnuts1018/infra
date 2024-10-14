@@ -24,6 +24,7 @@ spec:
     zitadel: []
     ac_hacking: []
     y_2024: []
+    mucaron: []
   databases:
     # dbname: owner
     juglans: juglans
@@ -38,6 +39,7 @@ spec:
     zitadel: zitadel
     ac_hacking: ac_hacking
     y_2024: y_2024
+    mucaron: mucaron
   postgresql:
     version: "16"
     parameters:
