@@ -45,7 +45,7 @@ spec:
           value: "disable"
 
         - name: MINIO_ENDPOINT
-          value: "minio.walnuts.dev"
+          value: "https://minio.walnuts.dev"
         - name: MINIO_ACCESS_KEY
           value: "oZzVGMWfbXtGtuzgPd3R"
         - name: MINIO_SECRET_KEY
