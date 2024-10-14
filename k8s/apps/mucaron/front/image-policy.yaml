@@ -28,7 +28,7 @@ kind: ImageRepository
 metadata:
   name: mucaron-front
 spec:
-  image: ghcr.io/walnuts1018/mucaron-front
+  image: ghcr.io/walnuts1018/mucaron-frontend
   interval: 2m0s
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
