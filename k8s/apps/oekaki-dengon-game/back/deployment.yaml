@@ -66,6 +66,8 @@ spec:
           value: "oekaki-dengon-game"
         - name: MINIO_KEY_PREFIX
           value: ""
+        - name: MINIO_USE_SSL
+          value: "true"
         resources:
           requests:
             memory: 10Mi
