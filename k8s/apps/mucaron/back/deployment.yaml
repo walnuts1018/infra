@@ -87,5 +87,5 @@ spec:
         emptyDir: {}
       - name: tmp
         persistentVolumeClaim:
-          claimName: mucaron-encode-dir
+          claimName: mucaron-encode-tmp
 

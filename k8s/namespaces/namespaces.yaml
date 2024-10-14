@@ -107,3 +107,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: signoz
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mucaron
