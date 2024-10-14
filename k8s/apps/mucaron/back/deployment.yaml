@@ -43,7 +43,6 @@ spec:
               key: postgres_password
         - name: PSQL_SSLMODE
           value: "disable"
-
         - name: MINIO_ENDPOINT
           value: "https://minio.walnuts.dev"
         - name: MINIO_ACCESS_KEY
@@ -75,6 +74,14 @@ spec:
             secretKeyRef:
               name: mucaron-backend
               key: session_secret
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
         volumeMounts:
         - name: mucaron-log
           mountPath: /var/log/mucaron
