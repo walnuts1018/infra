@@ -5,7 +5,6 @@ resources:
 - sa.yaml
 - externalsecret.yaml
 - ./default
-- ./filelog
 - ./k8s-daemonset
 - ./k8s-deployment
 - ./prometheus-exporter
