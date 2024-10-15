@@ -48,10 +48,6 @@ spec:
         endpoint: tempo.monitoring.svc.cluster.local:4317
         tls:
           insecure: true
-      otlp/loki-exporter:
-        endpoint: loki-exporter-collector.opentelemetry-collector.svc.cluster.local:4317
-        tls:
-          insecure: true
       otlp/prometheus-exporter:
         endpoint: prometheus-exporter-collector.opentelemetry-collector.svc.cluster.local:4317
         tls:
@@ -63,6 +59,10 @@ spec:
           "Mackerel-Api-Key": ${env:VAXILA_APIKEY}
       otlp/signoz:
         endpoint: signoz-otel-collector.signoz.svc.cluster.local:4317
+        tls:
+          insecure: true
+      otlphttp/loki:
+        endpoint: http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push
         tls:
           insecure: true
     service:
@@ -78,7 +78,7 @@ spec:
         logs:
           receivers: [otlp]
           processors: [memory_limiter, batch, k8sattributes]
-          exporters: [otlp/loki-exporter, otlp/signoz]
+          exporters: [otlphttp/loki, otlp/signoz]
   autoscaler:
     minReplicas: 1
     maxReplicas: 5
