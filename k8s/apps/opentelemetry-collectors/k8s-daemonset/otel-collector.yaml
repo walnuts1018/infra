@@ -9,6 +9,13 @@ spec:
   image: otel/opentelemetry-collector-k8s
   config:
     receivers:
+      filelog:
+        include_file_path: true
+        include:
+        - /var/log/pods/*/*/*.log
+        operators:
+        - id: container-parser
+          type: container
       hostmetrics:
         collection_interval: 10s
         scrapers:
@@ -89,6 +96,10 @@ spec:
           receivers: [hostmetrics, kubeletstats]
           processors: [memory_limiter, batch, k8sattributes, resourcedetection]
           exporters: [otlp/default]
+        logs:
+          receivers: [filelog]
+          processors: [memory_limiter, batch, k8sattributes]
+          exporters: [otlp/default]
   env:
   - name: K8S_NODE_IP
     valueFrom:
@@ -102,3 +113,21 @@ spec:
     value: "k8s.node.name=$(K8S_NODE_NAME),k8s.node.ip=$(K8S_NODE_IP)"
   tolerations:
   - operator: "Exists"
+
+  volumeMounts:
+  - name: varlogpods
+    mountPath: /var/log/pods
+    readOnly: true
+  - name: varlibdockercontainers
+    mountPath: /var/lib/docker/containers
+    readOnly: true
+  volumes:
+  - name: varlogpods
+    hostPath:
+      path: /var/log/pods
+  - name: varlibdockercontainers
+    hostPath:
+      path: /var/lib/docker/containers
+  securityContext:
+    runAsUser: 0
+    runAsGroup: 0
