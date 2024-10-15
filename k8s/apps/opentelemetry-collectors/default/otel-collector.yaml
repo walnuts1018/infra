@@ -62,7 +62,7 @@ spec:
         tls:
           insecure: true
       otlphttp/loki:
-        endpoint: http://loki-gateway.monitoring.svc.cluster.local/otlp/v1/logs
+        endpoint: http://loki-gateway.monitoring.svc.cluster.local/otlp
         tls:
           insecure: true
     service:
