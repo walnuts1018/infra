@@ -37,6 +37,10 @@ spec:
           value: "mucaron"
         - name: PSQL_USER
           value: "mucaron"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+        - name: OTEL_EXPORTER_OTLP_INSECURE
+          value: "true"
         - name: PSQL_PASSWORD
           valueFrom:
             secretKeyRef:
