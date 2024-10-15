@@ -17,7 +17,7 @@ spec:
       - name: komga
         # securityContext:
         #   readOnlyRootFilesystem: true
-        image: gotson/komga:1.14.0 # {"$imagepolicy": "komga:komga"}
+        image: gotson/komga:1.14.1 # {"$imagepolicy": "komga:komga"}
         resources:
           limits: {}
           requests:
