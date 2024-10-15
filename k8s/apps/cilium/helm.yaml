@@ -17,7 +17,7 @@ spec:
   chart:
     spec:
       chart: cilium
-      version: 1.16.2
+      version: 1.16.3
   values:
     image:
       useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
