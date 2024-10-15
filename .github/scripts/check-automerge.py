@@ -18,6 +18,9 @@ if result.returncode == 0:
         automerge = True
 
 with open(os.environ["GITHUB_OUTPUT"], "a") as f :
+    print("Automerge: %s" % automerge)
     print("{0}={1}".format("automerge", automerge), file=f)
+    print("Old tag: %s.%s.%s" % (old_major, old_minor, old_patch))
     print("{0}={1}".format("old_tag", "%s.%s.%s" % (old_major, old_minor, old_patch)), file=f)
+    print("New tag: %s.%s.%s" % (new_major, new_minor, new_patch))
     print("{0}={1}".format("new_tag", "%s.%s.%s" % (new_major, new_minor, new_patch)), file=f)
