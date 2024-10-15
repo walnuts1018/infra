@@ -5,7 +5,7 @@ import os
 automerge = False
 old_major = old_minor = old_patch = new_major = new_minor = new_patch = None
 
-result = subprocess.run("git diff", shell=True, capture_output=True)
+result = subprocess.run("gh pr diff", shell=True, capture_output=True)
 if result.returncode == 0:
     diff = result.stdout.decode("utf-8")
     if match := re.search(r"\-.+?(\d+)\.(\d+)\.(\d+).+\"\$imagepolicy\"", diff):
