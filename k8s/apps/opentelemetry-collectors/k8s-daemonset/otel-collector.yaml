@@ -42,6 +42,7 @@ spec:
         - node
         - pod
         - container
+        - volume
     processors:
       memory_limiter:
         check_interval: 1s
