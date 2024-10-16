@@ -17,6 +17,7 @@ rules:
   - nodes
   - nodes/spec
   - nodes/stats
+  - nodes/proxy
   - pods
   - pods/status
   - replicationcontrollers
