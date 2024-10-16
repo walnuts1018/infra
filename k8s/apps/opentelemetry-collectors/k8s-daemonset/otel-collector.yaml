@@ -38,6 +38,8 @@ spec:
         auth_type: 'serviceAccount'
         endpoint: '${env:K8S_NODE_IP}:10250'
         insecure_skip_verify: true
+        extra_metadata_labels:
+        - k8s.volume.type
         metric_groups:
         - node
         - pod
