@@ -40,6 +40,8 @@ spec:
         insecure_skip_verify: true
         extra_metadata_labels:
         - k8s.volume.type
+        k8s_api_config:
+          auth_type: serviceAccount
         metric_groups:
         - node
         - pod
