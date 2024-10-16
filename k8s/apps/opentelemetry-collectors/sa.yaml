@@ -27,6 +27,7 @@ rules:
   - configmaps
   - nodes/metrics
   - endpoints
+  - persistentvolumes
   - persistentvolumeclaims
   verbs:
   - get
