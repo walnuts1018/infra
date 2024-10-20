@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: nextcloud
-      version: 6.1.0
+      version: 6.1.1
   values:
     ingress:
       enabled: true
