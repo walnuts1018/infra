@@ -13,7 +13,7 @@ spec:
   chart:
     spec:
       chart: oauth2-proxy
-      version: 7.7.27
+      version: 7.7.28
   values:
     config:
       existingSecret: kibana-oauth2-proxy
