@@ -16,7 +16,7 @@ spec:
       - name: mucaron-front
         securityContext:
           readOnlyRootFilesystem: true
-        image: ghcr.io/walnuts1018/mucaron-frontend:f6e9ee75a7630a262a901e37c37d5466cc69d39d-8 # {"$imagepolicy": "mucaron:mucaron-front"}
+        image: ghcr.io/walnuts1018/mucaron-frontend:98b948663964e28472c45676f0ef7b60f4abf1fb-30 # {"$imagepolicy": "mucaron:mucaron-front"}
         ports:
         - containerPort: 3000
         resources:

@@ -19,7 +19,7 @@ spec:
         securityContext:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
-        image: docker.elastic.co/kibana/kibana:8.15.2 # {"$imagepolicy": "default:kibana"}
+        image: docker.elastic.co/kibana/kibana:8.15.3 # {"$imagepolicy": "default:kibana"}
         ports:
         - name: http
           containerPort: 5601

@@ -7,6 +7,9 @@
   flux: {
     enabled: false,
   },
+  kubernetes: {
+    fileMatch: ["k8s/.+\\.yaml$"],
+  },
   customManagers: [
     {
       customType: "regex",
@@ -23,8 +26,9 @@
       fileMatch: "^k8s/apps/.*/kustomization.yaml$",
       matchStringsStrategy: "any",
       matchStrings: [
-        "https:\\/\\/github\\.com\\/(?<depName>.*?)\\/releases\\/download\\/(?<currentValue>\\S+)\\/.*\\s*",
-        "https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^/]+\\/[^/]+?)\\/(?<currentValue>\\S+?)\\/.*\\s*",
+        "https:\\/\\/github\\.com\\/(?<depName>.*?)\\/releases\\/download\\/(?<currentValue>[^\\/]+)\\/.*\\s*",
+        "https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>.*?)\\/refs\\/tags\\/(?<currentValue>[^\\/]+)\\/.*\\s*",
+        "https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^/]+\\/[^/]+?)\\/(?<currentValue>[^\\/]+?)\\/.*\\s*",
       ],
       datasourceTemplate: "github-tags",
     },
@@ -42,8 +46,14 @@
       matchCurrentVersion: "!/^0/",
       automerge: true,
     },
+    {
+      matchManagers: ["kubernetes"],
+      matchDatasources: ["docker"],
+      enabled: false,
+    },
   ],
   internalChecksFilter: "none",
   prHourlyLimit: 0,
   prConcurrentLimit: 100,
+  assignees: ["walnuts1018"],
 }
