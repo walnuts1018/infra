@@ -42,6 +42,9 @@ spec:
           httpGet:
             path: /healthz
             port: 3000
+        volumeMounts:
+        - name: next-cache
+          mountPath: /app/.next/cache
       priorityClassName: high
       affinity:
         nodeAffinity:
@@ -60,3 +63,6 @@ spec:
                 operator: NotIn
                 values:
                 - donut
+      volumes:
+      - name: next-cache
+        emptyDir: {}
