@@ -17,6 +17,8 @@ rules:
   - nodes
   - nodes/spec
   - nodes/stats
+  - nodes/metrics
+  - nodes/proxy
   - pods
   - pods/status
   - replicationcontrollers
@@ -24,8 +26,9 @@ rules:
   - resourcequotas
   - services
   - configmaps
-  - nodes/metrics
   - endpoints
+  - persistentvolumes
+  - persistentvolumeclaims
   verbs:
   - get
   - watch
