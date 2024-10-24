@@ -20,7 +20,7 @@ spec:
       - name: cloudflared
         securityContext:
           readOnlyRootFilesystem: true
-        image: cloudflare/cloudflared:2024.10.0 # {"$imagepolicy": "network-exporter:cloudflared"}
+        image: cloudflare/cloudflared:2024.10.1 # {"$imagepolicy": "network-exporter:cloudflared"}
         imagePullPolicy: IfNotPresent
         args:
         - --no-autoupdate
