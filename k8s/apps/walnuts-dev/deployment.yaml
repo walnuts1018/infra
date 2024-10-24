@@ -34,6 +34,8 @@ spec:
         env:
         - name: NEXT_PUBLIC_GA_ID
           value: G-NB6F68ZQ9P
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://default-collector.opentelemetry-collector.svc.cluster.local:4317"
         livenessProbe:
           httpGet:
             path: /healthz
