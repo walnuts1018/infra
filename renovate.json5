@@ -7,9 +7,6 @@
   flux: {
     enabled: false,
   },
-  kubernetes: {
-    fileMatch: ["k8s/.+\\.yaml$"],
-  },
   customManagers: [
     {
       customType: "regex",
@@ -31,6 +28,17 @@
         "https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^/]+\\/[^/]+?)\\/(?<currentValue>[^\\/]+?)\\/.*\\s*",
       ],
       datasourceTemplate: "github-tags",
+    },
+    {
+      customType: "regex",
+      fileMatch: ["^k8s/.+\\.yaml$"],
+      matchStringsStrategy: "combination",
+      matchStrings: [
+        "apiVersion:\\s(?<currentValue>\\S+)\\s*",
+        "kind: (?<depName>\\S+)\\s*",
+      ],
+      datasourceTemplate: "kubernetes-api",
+      versioningTemplate: "kubernetes-api",
     },
   ],
   packageRules: [
