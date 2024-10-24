@@ -17,7 +17,7 @@ spec:
       - name: photoprism
         # securityContext:
         #   readOnlyRootFilesystem: true
-        image: photoprism/photoprism:240915 # {"$imagepolicy": "photoprism:photoprism"}
+        image: photoprism/photoprism:20220121 # {"$imagepolicy": "photoprism:photoprism"}
         resources:
           requests:
             cpu: "0"
