@@ -13,14 +13,14 @@ spec:
         name: fluxcdbot
       messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
     push:
-      branch: fluxcd/ nginx-test
+      branch: fluxcd/nginx-test
   interval: 1m0s
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   update:
-    path: ./k8s/apps/ nginx-test
+    path: ./k8s/apps/nginx-test
     strategy: Setters
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
