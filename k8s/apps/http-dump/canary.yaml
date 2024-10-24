@@ -14,7 +14,7 @@ spec:
     name: http-dump
   progressDeadlineSeconds: 60
   # autoscalerRef:
-  #   apiVersion: autoscaling/v2beta2
+  #   apiVersion: autoscaling/v2
   #   kind: HorizontalPodAutoscaler
   #   name: http-dump
   service:
