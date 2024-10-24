@@ -23,8 +23,9 @@
       fileMatch: "^k8s/apps/.*/kustomization.yaml$",
       matchStringsStrategy: "any",
       matchStrings: [
-        "https:\\/\\/github\\.com\\/(?<depName>.*?)\\/releases\\/download\\/(?<currentValue>\\S+)\\/.*\\s*",
-        "https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^/]+\\/[^/]+?)\\/(?<currentValue>\\S+?)\\/.*\\s*",
+        "https:\\/\\/github\\.com\\/(?<depName>.*?)\\/releases\\/download\\/(?<currentValue>[^\\/]+)\\/.*\\s*",
+        "https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>.*?)\\/refs\\/tags\\/(?<currentValue>[^\\/]+)\\/.*\\s*",
+        "https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^/]+\\/[^/]+?)\\/(?<currentValue>[^\\/]+?)\\/.*\\s*",
       ],
       datasourceTemplate: "github-tags",
     },
