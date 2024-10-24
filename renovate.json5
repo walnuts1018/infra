@@ -55,4 +55,5 @@
   internalChecksFilter: "none",
   prHourlyLimit: 0,
   prConcurrentLimit: 100,
+  assignees: ["walnuts1018"],
 }
