@@ -16,11 +16,29 @@ spec:
       - name: mucaron-front
         securityContext:
           readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault
         image: ghcr.io/walnuts1018/mucaron-frontend:98b948663964e28472c45676f0ef7b60f4abf1fb-30 # {"$imagepolicy": "mucaron:mucaron-front"}
         ports:
         - containerPort: 3000
         resources:
           limits:
-            memory: 100Mi
+            cpu: 500m
+            memory: 512Mi
           requests:
+            cpu: 10m
             memory: 20Mi
+        volumeMounts:
+        - name: next-cache
+          mountPath: /app/.next/cache
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+      volumes:
+      - name: next-cache
+        emptyDir: {}
