@@ -68,4 +68,4 @@ spec:
               values:
               - donut
     image:
-      tag: v2.61.0 # {"$imagepolicy": "zitadel:zitadel:tag"}
+      tag: v2.61.0 # {"$imagepolicy": "default:zitadel:tag"}
