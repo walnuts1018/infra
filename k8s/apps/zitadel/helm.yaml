@@ -67,3 +67,5 @@ spec:
               operator: NotIn
               values:
               - donut
+    image:
+      tag: v2.61.0 # {"$imagepolicy": "zitadel:zitadel:tag"}
