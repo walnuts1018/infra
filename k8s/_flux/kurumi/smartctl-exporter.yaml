@@ -1,0 +1,13 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: smartctl-exporter
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ./k8s/apps/smartctl-exporter
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
