@@ -122,3 +122,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: dashy
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: oekaki-dengon-game
