@@ -137,3 +137,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: http-dump
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: elasticsearch
