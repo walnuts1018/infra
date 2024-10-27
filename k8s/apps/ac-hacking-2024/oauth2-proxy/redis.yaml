@@ -43,6 +43,9 @@ spec:
   kubernetesConfig:
     image: "quay.io/opstree/redis-sentinel:v7.0.15"
     imagePullPolicy: "IfNotPresent"
+    redisSecret:
+      name: "ac-hacking-oauth2-proxy"
+      key: "redis-password"
   podSecurityContext:
     fsGroup: 1000
     runAsUser: 1000
