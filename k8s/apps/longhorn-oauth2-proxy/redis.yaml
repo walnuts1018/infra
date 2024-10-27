@@ -1,0 +1,51 @@
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: RedisReplication
+metadata:
+  name: longhorn-oauth2-proxy-redis
+  labels:
+    app.kubernetes.io/name: longhorn-oauth2-proxy-redis
+spec:
+  clusterSize: 2
+  kubernetesConfig:
+    image: "quay.io/opstree/redis:v7.0.15" # {"$imagepolicy": "redis-operator:redis"}
+    imagePullPolicy: "IfNotPresent"
+    redisSecret:
+      name: "longhorn-oauth2-proxy"
+      key: "redis-password"
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+  podSecurityContext:
+    fsGroup: 1000
+    runAsUser: 1000
+---
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: RedisSentinel
+metadata:
+  name: longhorn-oauth2-proxy-redis
+  labels:
+    app.kubernetes.io/name: longhorn-oauth2-proxy-redis
+spec:
+  clusterSize: 3
+  redisSentinelConfig:
+    redisReplicationName: longhorn-oauth2-proxy-redis
+    masterGroupName: "mymaster"
+    redisPort: "6379"
+    quorum: "2"
+    parallelSyncs: "1"
+    failoverTimeout: "180000"
+    downAfterMilliseconds: "30000"
+  kubernetesConfig:
+    image: "quay.io/opstree/redis-sentinel:v7.0.15" # {"$imagepolicy": "redis-operator:redis-sentinel"}
+    imagePullPolicy: "IfNotPresent"
+    redisSecret:
+      name: "longhorn-oauth2-proxy"
+      key: "redis-password"
+  podSecurityContext:
+    fsGroup: 1000
+    runAsUser: 1000

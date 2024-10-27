@@ -47,6 +47,6 @@ spec:
           existingSecret: "longhorn-oauth2-proxy"
           passwordKey: "redis-password"
           masterName: "mymaster"
-          connectionUrls: "redis://redis.databases.svc.cluster.local:6379,redis://redis.databases.svc.cluster.local:26379"
+          connectionUrls: "redis://longhorn-oauth2-proxy-redis:6379,redis://longhorn-oauth2-proxy-redis-sentinel:26379"
     metrics:
       enabled: true
