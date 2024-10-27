@@ -23,3 +23,6 @@ spec:
         cpu: 500m
         memory: 500Mi
 
+    redisOperator:
+      extraArgs:
+      - "-zap-log-level=debug"
