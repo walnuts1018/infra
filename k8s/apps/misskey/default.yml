@@ -8,10 +8,9 @@ db:
   pass: "{{ .misskeydbpassword }}"
 dbReplications: false
 redis:
-  host: redis-haproxy.databases.svc.cluster.local
+  host: misskey-redis
   port: 6379
   pass: "{{ .redispassword }}"
-  db: 1
 id: 'aidx'
 proxyBypassHosts:
 - api.deepl.com
