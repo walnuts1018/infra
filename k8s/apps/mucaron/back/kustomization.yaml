@@ -10,3 +10,4 @@ resources:
 - image-policy.yaml
 - externalsecret.yaml
 - pvc.yaml
+- redis.yaml
