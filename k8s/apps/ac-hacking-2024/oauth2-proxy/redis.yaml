@@ -17,6 +17,9 @@ spec:
         resources:
           requests:
             storage: 1Gi
+  podSecurityContext:
+    fsGroup: 1000
+    runAsUser: 1000
 ---
 apiVersion: redis.redis.opstreelabs.in/v1beta2
 kind: RedisSentinel
@@ -37,3 +40,6 @@ spec:
   kubernetesConfig:
     image: "quay.io/opstree/redis-sentinel:v7.0.15"
     imagePullPolicy: "IfNotPresent"
+  podSecurityContext:
+    fsGroup: 1000
+    runAsUser: 1000
