@@ -71,7 +71,7 @@ spec:
           # Redis sentinel master name
           masterName: "mymaster"
           # List of Redis sentinel connection URLs (e.g. `["redis://127.0.0.1:8000", "redis://127.0.0.1:8000"]`)
-          connectionUrls: "redis://redis.databases.svc.cluster.local:6379,redis://redis.databases.svc.cluster.local:26379"
+          connectionUrls: "redis://oekaki-oauth2-proxy-redis:6379,redis://oekaki-oauth2-proxy-redis-sentinel:26379"
 
     metrics:
       enabled: true
