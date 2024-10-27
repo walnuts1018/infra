@@ -1,4 +1,24 @@
 apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: RedisReplication
+metadata:
+  name: ac-hacking-oauth2-proxy
+  labels:
+    app.kubernetes.io/name: ac-hacking-oauth2-proxy
+spec:
+  clusterSize: 2
+  kubernetesConfig:
+    image: "quay.io/opstree/redis:v7.0.15"
+    imagePullPolicy: "IfNotPresent"
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: redis.redis.opstreelabs.in/v1beta2
 kind: RedisSentinel
 metadata:
   name: ac-hacking-oauth2-proxy
@@ -7,8 +27,8 @@ metadata:
 spec:
   clusterSize: 3
   redisSentinelConfig:
-    redisReplicationName: redis-replication
-    masterGroupName: "myMaster"
+    redisReplicationName: ac-hacking-oauth2-proxy
+    masterGroupName: "mymaster"
     redisPort: "6379"
     quorum: "2"
     parallelSyncs: "1"
@@ -17,10 +37,3 @@ spec:
   kubernetesConfig:
     image: "quay.io/opstree/redis-sentinel:v7.0.15"
     imagePullPolicy: "IfNotPresent"
-  redisExporter:
-    enabled: false
-    image: "quay.io/opstree/redis-exporter:v1.44.0"
-    imagePullPolicy: "IfNotPresent"
-  podSecurityContext:
-    fsGroup: 1000
-    runAsUser: 1000
