@@ -4,5 +4,6 @@ namespace: monitoring
 resources:
 - externalsecret.yaml
 - helm.yaml
+- redis.yaml
 components:
 - ../../components/helm
