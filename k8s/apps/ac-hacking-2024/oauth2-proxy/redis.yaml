@@ -9,6 +9,9 @@ spec:
   kubernetesConfig:
     image: "quay.io/opstree/redis:v7.0.15"
     imagePullPolicy: "IfNotPresent"
+    redisSecret:
+      name: "ac-hacking-oauth2-proxy"
+      key: "redis-password"
   storage:
     volumeClaimTemplate:
       spec:
