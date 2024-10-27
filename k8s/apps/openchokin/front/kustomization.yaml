@@ -5,3 +5,4 @@ resources:
 - service.yaml
 - image-policy.yaml
 - ingress.yaml
+- redis.yaml
