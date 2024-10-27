@@ -49,7 +49,7 @@ spec:
               name: openchokin-secret
               key: nextauth-secret
         - name: REDIS_SENTINEL_HOST
-          value: "openchokin-front-redis"
+          value: "openchokin-front-redis-sentinel"
         - name: REDIS_SENTINEL_PORT
           value: "26379"
         - name: REDIS_SENTINEL_NAME
