@@ -1,9 +1,9 @@
 apiVersion: redis.redis.opstreelabs.in/v1beta2
 kind: RedisReplication
 metadata:
-  name: ac-hacking-oauth2-proxy
+  name: ac-hacking-oauth2-proxy-redis
   labels:
-    app.kubernetes.io/name: ac-hacking-oauth2-proxy
+    app.kubernetes.io/name: ac-hacking-oauth2-proxy-redis
 spec:
   clusterSize: 2
   kubernetesConfig:
@@ -21,13 +21,13 @@ spec:
 apiVersion: redis.redis.opstreelabs.in/v1beta2
 kind: RedisSentinel
 metadata:
-  name: ac-hacking-oauth2-proxy
+  name: ac-hacking-oauth2-proxy-redis
   labels:
-    app.kubernetes.io/name: ac-hacking-oauth2-proxy
+    app.kubernetes.io/name: ac-hacking-oauth2-proxy-redis
 spec:
   clusterSize: 3
   redisSentinelConfig:
-    redisReplicationName: ac-hacking-oauth2-proxy
+    redisReplicationName: ac-hacking-oauth2-proxy-redis
     masterGroupName: "mymaster"
     redisPort: "6379"
     quorum: "2"
