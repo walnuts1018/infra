@@ -117,3 +117,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: openchokin
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dashy
