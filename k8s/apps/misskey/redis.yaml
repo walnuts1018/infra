@@ -1,17 +1,10 @@
 apiVersion: redis.redis.opstreelabs.in/v1beta2
-kind: RedisCluster
+kind: Redis
 metadata:
   name: misskey-redis
   labels:
     app.kubernetes.io/name: misskey-redis
 spec:
-  clusterSize: 3
-  persistenceEnabled: true
-  clusterVersion: v7
-  redisLeader:
-    replicas: 3
-  redisFollower:
-    replicas: 3
   kubernetesConfig:
     image: "quay.io/opstree/redis:v7.0.15" # {"$imagepolicy": "redis-operator:redis"}
     imagePullPolicy: "IfNotPresent"
@@ -19,14 +12,6 @@ spec:
       name: "misskey-secret"
       key: "redispassword"
   storage:
-    nodeConfVolume: true
-    nodeConfVolumeClaimTemplate:
-      spec:
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 1Gi
     volumeClaimTemplate:
       spec:
         accessModes:
