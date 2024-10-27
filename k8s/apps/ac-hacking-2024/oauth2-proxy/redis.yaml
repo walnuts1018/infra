@@ -4,9 +4,8 @@ metadata:
   name: ac-hacking-oauth2-proxy
   labels:
     app.kubernetes.io/name: ac-hacking-oauth2-proxy
-
+spec:
   clusterSize: 3
-
   redisSentinelConfig:
     redisReplicationName: redis-replication
     masterGroupName: "myMaster"
@@ -15,15 +14,13 @@ metadata:
     parallelSyncs: "1"
     failoverTimeout: "180000"
     downAfterMilliseconds: "30000"
-
   kubernetesConfig:
-    image: quay.io/opstree/redis-sentinel:v7.0.15
+    image: "quay.io/opstree/redis-sentinel:v7.0.15"
     imagePullPolicy: "IfNotPresent"
-
-  # redisExporter:
-  #   enabled: false
-  #   image: "quay.io/opstree/redis-exporter:v1.44.0"
-  #   imagePullPolicy: "IfNotPresent"
+  redisExporter:
+    enabled: false
+    image: "quay.io/opstree/redis-exporter:v1.44.0"
+    imagePullPolicy: "IfNotPresent"
   podSecurityContext:
     fsGroup: 1000
     runAsUser: 1000
