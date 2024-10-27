@@ -47,6 +47,6 @@ spec:
           existingSecret: "hubble-oauth2-proxy"
           passwordKey: "redis-password"
           masterName: "mymaster"
-          connectionUrls: "redis://cilium-hubble-oauth2-proxy-redis:6379,redis://cilium-hubble-oauth2-proxy-redis-sentinel:26379"
+          connectionUrls: "redis://hubble-oauth2-proxy-redis:6379,redis://hubble-oauth2-proxy-redis-sentinel:26379"
     metrics:
       enabled: true

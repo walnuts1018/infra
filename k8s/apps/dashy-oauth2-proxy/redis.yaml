@@ -10,7 +10,7 @@ spec:
     image: "quay.io/opstree/redis:v7.0.15" # {"$imagepolicy": "redis-operator:redis"}
     imagePullPolicy: "IfNotPresent"
     redisSecret:
-      name: "ac-hacking-oauth2-proxy"
+      name: "dashy-oauth2-proxy"
       key: "redis-password"
   storage:
     volumeClaimTemplate:
@@ -44,7 +44,7 @@ spec:
     image: "quay.io/opstree/redis-sentinel:v7.0.15" # {"$imagepolicy": "redis-operator:redis-sentinel"}
     imagePullPolicy: "IfNotPresent"
     redisSecret:
-      name: "hubble-oauth2-proxy"
+      name: "dashy-oauth2-proxy"
       key: "redis-password"
   podSecurityContext:
     fsGroup: 1000

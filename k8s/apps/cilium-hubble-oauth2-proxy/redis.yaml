@@ -1,16 +1,16 @@
 apiVersion: redis.redis.opstreelabs.in/v1beta2
 kind: RedisReplication
 metadata:
-  name: cilium-hubble-oauth2-proxy-redis
+  name: hubble-oauth2-proxy-redis
   labels:
-    app.kubernetes.io/name: cilium-hubble-oauth2-proxy-redis
+    app.kubernetes.io/name: hubble-oauth2-proxy-redis
 spec:
   clusterSize: 2
   kubernetesConfig:
     image: "quay.io/opstree/redis:v7.0.15" # {"$imagepolicy": "redis-operator:redis"}
     imagePullPolicy: "IfNotPresent"
     redisSecret:
-      name: "ac-hacking-oauth2-proxy"
+      name: "hubble-oauth2-proxy"
       key: "redis-password"
   storage:
     volumeClaimTemplate:
@@ -27,13 +27,13 @@ spec:
 apiVersion: redis.redis.opstreelabs.in/v1beta2
 kind: RedisSentinel
 metadata:
-  name: cilium-hubble-oauth2-proxy-redis
+  name: hubble-oauth2-proxy-redis
   labels:
-    app.kubernetes.io/name: cilium-hubble-oauth2-proxy-redis
+    app.kubernetes.io/name: hubble-oauth2-proxy-redis
 spec:
   clusterSize: 3
   redisSentinelConfig:
-    redisReplicationName: cilium-hubble-oauth2-proxy-redis
+    redisReplicationName: hubble-oauth2-proxy-redis
     masterGroupName: "mymaster"
     redisPort: "6379"
     quorum: "2"
