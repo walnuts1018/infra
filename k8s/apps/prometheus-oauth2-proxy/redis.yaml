@@ -7,7 +7,7 @@ metadata:
 spec:
   clusterSize: 2
   kubernetesConfig:
-    image: "quay.io/opstree/redis:v7.2.3" # {"$imagepolicy": "redis-operator:redis"}
+    image: "quay.io/opstree/redis:v7.0.12" # {"$imagepolicy": "redis-operator:redis"}
     imagePullPolicy: "IfNotPresent"
     redisSecret:
       name: "prometheus-oauth2-proxy"
@@ -41,7 +41,7 @@ spec:
     failoverTimeout: "180000"
     downAfterMilliseconds: "30000"
   kubernetesConfig:
-    image: "quay.io/opstree/redis-sentinel:v7.2.3" # {"$imagepolicy": "redis-operator:redis-sentinel"}
+    image: "quay.io/opstree/redis-sentinel:v7.0.12" # {"$imagepolicy": "redis-operator:redis-sentinel"}
     imagePullPolicy: "IfNotPresent"
     redisSecret:
       name: "prometheus-oauth2-proxy"
