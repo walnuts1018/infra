@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: nextcloud-redis
 spec:
   kubernetesConfig:
-    image: "quay.io/opstree/redis:v7.2.3" # {"$imagepolicy": "redis-operator:redis"}
+    image: "quay.io/opstree/redis:v7.0.12" # {"$imagepolicy": "redis-operator:redis"}
     imagePullPolicy: "IfNotPresent"
     redisSecret:
       name: "nextcloud"
