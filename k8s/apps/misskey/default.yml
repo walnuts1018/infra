@@ -8,7 +8,7 @@ db:
   pass: "{{ .misskeydbpassword }}"
 dbReplications: false
 redis:
-  host: misskey-redis
+  host: misskey-redis-leader
   port: 6379
   pass: "{{ .redispassword }}"
 id: 'aidx'
