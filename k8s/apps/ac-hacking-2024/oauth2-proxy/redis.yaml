@@ -1,0 +1,29 @@
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: RedisSentinel
+metadata:
+  name: ac-hacking-oauth2-proxy
+  labels:
+    app.kubernetes.io/name: ac-hacking-oauth2-proxy
+
+  clusterSize: 3
+
+  redisSentinelConfig:
+    redisReplicationName: redis-replication
+    masterGroupName: "myMaster"
+    redisPort: "6379"
+    quorum: "2"
+    parallelSyncs: "1"
+    failoverTimeout: "180000"
+    downAfterMilliseconds: "30000"
+
+  kubernetesConfig:
+    image: quay.io/opstree/redis-sentinel:v7.0.15
+    imagePullPolicy: "IfNotPresent"
+
+  # redisExporter:
+  #   enabled: false
+  #   image: "quay.io/opstree/redis-exporter:v1.44.0"
+  #   imagePullPolicy: "IfNotPresent"
+  podSecurityContext:
+    fsGroup: 1000
+    runAsUser: 1000
