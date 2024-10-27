@@ -21,7 +21,7 @@ spec:
             type: RuntimeDefault
           runAsNonRoot: true
           allowPrivilegeEscalation: false
-        image: ghcr.io/walnuts1018/http-dump:629824cedeccfb239b7d490f2f6dffb70f12a5f7-24 # {"$imagepolicy": "default:http-dump"}
+        image: ghcr.io/walnuts1018/http-dump:629824cedeccfb239b7d490f2f6dffb70f12a5f7-24 # {"$imagepolicy": "http-dump:http-dump"}
         ports:
         - name: http
           containerPort: 8080

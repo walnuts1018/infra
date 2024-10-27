@@ -47,7 +47,7 @@ spec:
       timeout: 15s
       metadata:
         type: bash
-        cmd: "curl -s http://http-dump-canary.default:8080/"
+        cmd: "curl -s http://http-dump-canary.http-dump:8080/"
     - name: load-test
       url: http://flagger-loadtester.flagger/
       timeout: 5s
