@@ -5,3 +5,5 @@ components:
 - ../../components/helm
 resources:
 - helm.yaml
+- image-policy-redis.yaml
+- image-policy-redis-sentinel.yaml
