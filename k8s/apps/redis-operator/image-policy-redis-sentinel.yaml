@@ -40,4 +40,4 @@ spec:
     name: redis-sentinel
   policy:
     semver:
-      range: ">=0.0.0"
+      range: "<=7.0.12"
