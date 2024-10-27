@@ -147,3 +147,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: samba
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zitadel
