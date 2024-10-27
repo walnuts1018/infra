@@ -110,7 +110,7 @@ spec:
               'memcache.distributed' => '\OC\Memcache\Redis',
               'memcache.locking' => '\OC\Memcache\Redis',
               'redis' => array(
-                'host' => 'nextcloud-redis-leader',
+                'host' => 'nextcloud-redis',
                 'port' => '6379',
                 'password' => getenv('REDIS_HOST_PASSWORD'),
               ),
