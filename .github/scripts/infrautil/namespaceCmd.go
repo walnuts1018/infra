@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"os"
+	"slices"
 
 	"github.com/google/subcommands"
 )
@@ -45,6 +47,14 @@ func (n *namespaceCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) sub
 			ns = append(ns, tmp...)
 		}
 
+		if len(ns) == 0 {
+			return errors.New("no namespaces found")
+		}
+
+		if !slices.Contains(ns, "default") {
+			return errors.New("default namespace not found")
+		}
+
 		var nsManifests RawManifests
 		for _, n := range ns {
 			m, err := createNamespaceManifest(n)
@@ -54,10 +64,12 @@ func (n *namespaceCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) sub
 			nsManifests = append(nsManifests, m)
 		}
 
-		if len(nsManifests) != 0 {
-			if err := os.WriteFile(n.outFilePath, []byte(nsManifests.String()), 0644); err != nil {
-				return err
-			}
+		if len(nsManifests) == 0 {
+			return errors.New("no namespace manifests created")
+		}
+
+		if err := os.WriteFile(n.outFilePath, []byte(nsManifests.String()), 0644); err != nil {
+			return err
 		}
 
 		return nil
