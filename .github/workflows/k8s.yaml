@@ -173,6 +173,7 @@ jobs:
 
       # PRへのコメントだけど、issue commentのAPIを使うらしい
       - name: Comment manifest diff to GitHub PR
+        continue-on-error: true
         run: |
           cat /tmp/dyff.md | jq -Rs '{ "body": . }' | curl --fail \
             -X POST -H 'Accept: application/vnd.github.v3+json' \
