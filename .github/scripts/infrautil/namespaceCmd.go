@@ -8,27 +8,30 @@ import (
 	"github.com/google/subcommands"
 )
 
-type nsCmd struct {
+type namespaceCmd struct {
+	outFilePath string
 }
 
-func (*nsCmd) Name() string     { return "ns" }
-func (*nsCmd) Synopsis() string { return "create namespace manifests" }
-func (*nsCmd) Usage() string {
+func (*namespaceCmd) Name() string     { return "namespace" }
+func (*namespaceCmd) Synopsis() string { return "create namespace manifests" }
+func (*namespaceCmd) Usage() string {
 	return `ns <file>:`
 }
 
-func (*nsCmd) SetFlags(f *flag.FlagSet) {
+func (n *namespaceCmd) SetFlags(f *flag.FlagSet) {
+	f.StringVar(&n.outFilePath, "o", "namespaces.yaml", "output file path")
+
 }
 
-func (*nsCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subcommands.ExitStatus {
+func (n *namespaceCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subcommands.ExitStatus {
 	return ExecuteHelper(func() error {
-		args := f.Args()
-		if len(args) == 0 {
+		filepathes := f.Args()
+		if len(filepathes) == 0 {
 			return ErrUsage
 		}
 
 		var ns []Namespace
-		for _, filepath := range args {
+		for _, filepath := range filepathes {
 			file, err := os.Open(filepath)
 			if err != nil {
 				return err
@@ -52,7 +55,7 @@ func (*nsCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subcommands.
 		}
 
 		if len(nsManifests) != 0 {
-			if err := os.WriteFile("namespaces.yaml", []byte(nsManifests.String()), 0644); err != nil {
+			if err := os.WriteFile(n.outFilePath, []byte(nsManifests.String()), 0644); err != nil {
 				return err
 			}
 		}

@@ -4,8 +4,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-latest
     steps:
       - name: Check out
@@ -17,6 +18,21 @@ jobs:
       - name: Generate _flux/kurumi Kustomization
         shell: bash
         run: bash .github/scripts/gen-fluxcd-kustomize.sh
+
+      - name: setup-go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ".github/scripts/infrautil/go.mod"
+          cache-dependency-path: ".github/scripts/infrautil/go.sum"
+
+      - name: build
+        run: make tool-build
+
+      - name: run snapshot
+        run: make snapshot
+
+      - name: run namespace
+        run: make namespace
 
       - name: push
         run: |

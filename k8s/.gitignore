@@ -2,3 +2,5 @@ secret.*
 secrets.*
 !/apps/template/secret.yaml
 ./tmp
+
+.snapshot.yaml

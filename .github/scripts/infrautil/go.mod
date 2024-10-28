@@ -1,4 +1,4 @@
-module github.com/walnuts1018/infra/.github/scripts/k8s
+module github.com/walnuts1018/infra/.github/scripts/infrautil
 
 go 1.23.2
 
@@ -7,6 +7,7 @@ require (
 	github.com/google/subcommands v1.2.0
 	gopkg.in/yaml.v3 v3.0.1
 	sigs.k8s.io/kustomize/api v0.18.0
+	sigs.k8s.io/kustomize/kyaml v0.18.1
 )
 
 require (
@@ -28,6 +29,5 @@ require (
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/evanphx/json-patch.v4 v4.12.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20231010175941-2dd684a91f00 // indirect
-	sigs.k8s.io/kustomize/kyaml v0.18.1 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
