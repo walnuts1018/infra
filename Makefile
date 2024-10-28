@@ -1,12 +1,12 @@
-.PHONY: tool-build
-tool-build:
+INFRAUTIL ?= .github/scripts/infrautil/infrautil
+
+$(INFRAUTIL):
 	cd .github/scripts/infrautil && go build -o infrautil .
 
-
 .PHONY: snapshot
-snapshot:
-	./.github/scripts/infrautil/infrautil snapshot ./k8s/apps ./k8s/.snapshot.yaml
+snapshot: $(INFRAUTIL)
+	$(INFRAUTIL) snapshot ./k8s/apps ./k8s/.snapshot.yaml
 
 .PHONY: namespace
-namespace:
-	./.github/scripts/infrautil/infrautil namespace -o ./k8s/namespaces/namespaces.yaml ./k8s/.snapshot.yaml
+namespace: $(INFRAUTIL)
+	$(INFRAUTIL) namespace -o ./k8s/namespaces/namespaces.yaml ./k8s/.snapshot.yaml
