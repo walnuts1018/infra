@@ -125,11 +125,8 @@ jobs:
 
       - name: rm labels
         run: |
-          sed -e "s/^\s*helm\.sh\/chart:\s+.+$//g" -i manifests-head.yaml
-          sed -e "s/^\s*app\.kubernetes\.io\/version\:\s+.+$//g" -i manifests-head.yaml
-
-          sed -e "s/^\s*helm\.sh\/chart:\s+.+$//g" -i manifests-base.yaml
-          sed -e "s/^\s*app\.kubernetes\.io\/version\:\s+.+$//g" -i manifests-base.yaml
+          sed -r -e "s/^\s*helm\.sh\/chart:\s+.+$//g" -e "s/^\s*app\.kubernetes\.io\/version\:\s+.+$//g" -i manifests-head.yaml
+          sed -r -e "s/^\s*helm\.sh\/chart:\s+.+$//g" -e "s/^\s*app\.kubernetes\.io\/version\:\s+.+$//g" -i manifests-base.yaml
 
       - name: install dyff
         run: |
