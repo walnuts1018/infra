@@ -1,3 +1,4 @@
+# infrautil namespaceコマンドで自動生成されます
 apiVersion: v1
 kind: Namespace
 metadata:
