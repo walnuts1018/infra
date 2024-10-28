@@ -60,8 +60,8 @@ func (*snapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subcom
 			return err
 		}
 
-		baseKustomizeDir := filepath.Join(workDir, ".snapshot.tmp")
-		if err := os.MkdirAll(baseKustomizeDir, 0755); err != nil {
+		baseKustomizeDir, err := os.MkdirTemp(workDir, ".snapshot.tmp")
+		if err != nil {
 			return err
 		}
 		defer os.RemoveAll(baseKustomizeDir)

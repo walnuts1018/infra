@@ -25,9 +25,6 @@ jobs:
           go-version-file: ".github/scripts/infrautil/go.mod"
           cache-dependency-path: ".github/scripts/infrautil/go.sum"
 
-      - name: build
-        run: make tool-build
-
       - name: run snapshot
         run: make snapshot
 
