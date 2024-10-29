@@ -16,7 +16,7 @@ spec:
       - name: mucaron-backend
         securityContext:
           readOnlyRootFilesystem: true
-        image: ghcr.io/walnuts1018/mucaron-backend:a99713669c9ef5b78eb4378ad2dcbe16e7d02817-60 # {"$imagepolicy": "mucaron:mucaron-backend"}
+        image: ghcr.io/walnuts1018/mucaron-backend:d6be1e4266c1e34e7265cd7c46cdef25c192a5da-62 # {"$imagepolicy": "mucaron:mucaron-backend"}
         ports:
         - containerPort: 8080
         resources:
