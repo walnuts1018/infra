@@ -64,7 +64,7 @@ spec:
         - name: MINIO_USE_SSL
           value: "true"
         - name: REDIS_HOST
-          value: "mucaron-redis-leader"
+          value: "mucaron-redis"
         - name: REDIS_PORT
           value: "6379"
         - name: REDIS_PASSWORD
