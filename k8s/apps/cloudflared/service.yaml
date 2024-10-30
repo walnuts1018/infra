@@ -10,6 +10,6 @@ spec:
     app: cloudflared
   ports:
   - protocol: TCP
-    port: 2000
-    targetPort: 2000
+    port: 60123
+    targetPort: 60123
   type: ClusterIP
