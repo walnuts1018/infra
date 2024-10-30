@@ -14,7 +14,7 @@ spec:
   jobLabel: cloudflared
   namespaceSelector:
     matchNames:
-    - cloudflared
+    - network-exporter
   selector:
     matchLabels:
       app: cloudflared
