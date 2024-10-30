@@ -5,3 +5,5 @@ resources:
 - deployment.yaml
 - externalsecret.yaml
 - image-policy.yaml
+- service.yaml
+- podmonitor.yaml
