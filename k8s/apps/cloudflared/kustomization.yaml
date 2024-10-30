@@ -6,4 +6,4 @@ resources:
 - externalsecret.yaml
 - image-policy.yaml
 - service.yaml
-- podmonitor.yaml
+- service-monitor.yaml
