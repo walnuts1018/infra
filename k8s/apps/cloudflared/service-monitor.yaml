@@ -10,7 +10,7 @@ spec:
   - honorLabels: false
     honorTimestamps: true
     path: /metrics
-    port: 60123
+    targetPort: 60123
   jobLabel: cloudflared
   namespaceSelector:
     matchNames:
