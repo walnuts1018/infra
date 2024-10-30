@@ -33,6 +33,8 @@ spec:
             secretKeyRef:
               name: cloudflared-secret
               key: cloudflared-token
+        ports:
+        - containerPort: 2000
         livenessProbe:
           httpGet:
             path: /ready

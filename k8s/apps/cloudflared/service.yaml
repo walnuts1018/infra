@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: cloudflared
+  labels:
+    app: cloudflared
+    app.kubernetes.io/name: cloudflared
+spec:
+  selector:
+    app: cloudflared
+  ports:
+  - protocol: TCP
+    port: 2000
+    targetPort: 2000
+  type: ClusterIP
