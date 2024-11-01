@@ -19,7 +19,7 @@
                 service: {
                   name: 'argocd-server',
                   port: {
-                    number: 443,
+                    name: 'http',
                   },
                 },
               },
