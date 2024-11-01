@@ -4,7 +4,8 @@
   chart:: error 'chart is required',
   repoURL:: error 'repoURL is required',
   targetRevision:: error 'targetRevision is required',
-  values:: error 'values is required',
+  values:: '',
+  valuesObject:: {},
 
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'Application',
@@ -31,6 +32,7 @@
       helm: {
         releaseName: 'argocd',
         values: $.values,
+        valuesObject: $.valuesObject,
       },
     },
   },
