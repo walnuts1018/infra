@@ -1,0 +1,29 @@
+global:
+  domain: argocd.walnuts.dev
+  logging:
+    format: json
+    level: info
+
+configs:
+  cm:
+    statusbadge.enabled: true
+    dex.config: |
+      connectors:
+      - type: oidc
+        id: walnuts-dev
+        name: walnuts-dev
+        config:
+          clientID: 291851981864108044
+          clientSecret: argocd-oidc:client-secret
+          issuer: https://auth.walnuts.dev
+
+  params:
+    otlp.address: 'default-collector.opentelemetry-collector.svc.cluster.local:4317'
+    server.insecure: true
+    server.basehref: /
+
+server:
+  ingress:
+    enabled: true
+    controller: generic
+    ingressClassName: "nginx"
