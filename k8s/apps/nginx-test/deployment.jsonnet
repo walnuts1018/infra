@@ -66,7 +66,7 @@
           {
             name: 'nginx-test-conf',
             configMap: {
-              name: 'nginx-test-conf',
+              name: (import 'configmap.jsonnet').metadata.name,
               items: [
                 {
                   key: 'nginx.conf',
