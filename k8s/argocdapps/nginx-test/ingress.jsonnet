@@ -2,9 +2,9 @@
   apiVersion: 'networking.k8s.io/v1',
   kind: 'Ingress',
   metadata: {
-    name: (import 'app.libsonnet').appname,
-    namespace: (import 'app.libsonnet').namespace,
-    labels: (import 'app.libsonnet').labels,
+    name: (import 'app.json5').name
+    namespace: (import 'app.json5').namespace,
+    labels: (import '../../common/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
     ingressClassName: 'nginx',
