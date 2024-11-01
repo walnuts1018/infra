@@ -3,6 +3,7 @@
   kind: 'ConfigMap',
   metadata: {
     name: 'nginx-test-conf',
+    namespace: (import 'app.libsonnet').namespace,
     labels: (import 'app.libsonnet').labels,
   },
   data: {

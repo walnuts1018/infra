@@ -3,6 +3,7 @@
   kind: 'Ingress',
   metadata: {
     name: (import 'app.libsonnet').appname,
+    namespace: (import 'app.libsonnet').namespace,
     labels: (import 'app.libsonnet').labels,
   },
   spec: {
