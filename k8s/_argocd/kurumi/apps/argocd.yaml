@@ -15,7 +15,7 @@ spec:
     helm:
       releaseName: argocd
       valueFiles:
-      - $repo/values.yaml
+      - $repo/k8s/_argocd/_components/values.yaml
   - path: k8s/_argocd/_components
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
