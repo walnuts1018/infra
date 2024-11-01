@@ -12,6 +12,12 @@ spec:
     path: k8s/_argocd/_components
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
+    directory:
+      jsonnet:
+        tlas:
+        - name: ''
+          value: ''
   syncPolicy:
     automated:
       selfHeal: true
+
