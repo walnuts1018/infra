@@ -9,7 +9,7 @@ spec:
       repoURL: https://github.com/walnuts1018/infra
       revision: main
       files:
-      - path: "k8s/argocdapps/*/app.json5"
+      - path: "k8s/argocdapps/*/app.json"
   template:
     metadata:
      name: '{{.name}}'
