@@ -2,12 +2,12 @@
   apiVersion: 'v1',
   kind: 'Service',
   metadata: {
-    name: (import 'app.libsonnet').appname,
-    namespace: (import 'app.libsonnet').namespace,
-    labels: (import 'app.libsonnet').labels,
+    name: (import 'app.json5').name
+    namespace: (import 'app.json5').namespace,
+    labels: (import '../../common/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
-    selector: (import 'app.libsonnet').labels,
+    selector: (import '../../common/labels.libsonnet') + { appname: (import 'app.json5').name },
     ports: [
       {
         protocol: 'TCP',
