@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": [
+        "name",
+        "namespace"
+    ],
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "namespace": {
+            "type": "string"
+        }
+    }
+}
