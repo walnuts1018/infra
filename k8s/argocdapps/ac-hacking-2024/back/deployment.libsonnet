@@ -57,7 +57,7 @@
                 name: 'PSQL_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import './external-secret.libsonnet').name,
+                    name: (import './external-secret.libsonnet').metadata.name,
                     key: 'postgres_password',
                   },
                 },
