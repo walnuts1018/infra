@@ -14,7 +14,7 @@
           paths: [
             {
               path: '/*',
-              pathType: 'ImplementationSpecific',
+              pathType: 'Prefix',
               backend: {
                 service: {
                   name: 'argocd-server',
