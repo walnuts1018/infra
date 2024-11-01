@@ -9,10 +9,7 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   sources:
-  - path: k8s/_argocd/kurumi/apps.yaml
-    repoURL: 'https://github.com/walnuts1018/infra'
-    targetRevision: main
-  - path: k8s/_argocd/kurumi/argocd.yaml
+  - path: k8s/_argocd/kurumi/applications
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
   syncPolicy:
