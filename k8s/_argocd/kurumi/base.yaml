@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: base
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  source:
+    path: k8s/_argocd/kurumi/apps
+    repoURL: 'https://github.com/walnuts1018/infra'
+    targetRevision: argo-jsonnet
+  syncPolicy:
+    automated:
+      selfHeal: true
