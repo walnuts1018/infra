@@ -14,7 +14,7 @@ configs:
         name: walnuts-dev
         config:
           clientID: 291851981864108044
-          clientSecret: argocd-oidc:client-secret
+          clientSecret: $argocd-oidc:client-secret
           issuer: https://auth.walnuts.dev
 
   params:
@@ -27,3 +27,4 @@ server:
     enabled: true
     controller: generic
     ingressClassName: "nginx"
+    tls: false
