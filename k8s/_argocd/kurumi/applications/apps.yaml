@@ -4,6 +4,8 @@ metadata:
   name: apps
   namespace: argocd
 spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
   generators:
   - git:
       repoURL: https://github.com/walnuts1018/infra
