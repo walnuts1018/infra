@@ -34,7 +34,7 @@
         existingSecret: $.secret_name,
         passwordKey: 'redis-password',
         masterName: 'mymaster',
-        connectionUrls: 'redis://%s:6379,redis://%s-sentinel:26379' % [$.redis_name, $.redis_name + '-sentinel'],
+        connectionUrls: 'redis://%s:6379,redis://%s:26379' % [$.redis_name, $.redis_name + '-sentinel'],
       },
     },
   },
