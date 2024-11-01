@@ -1,6 +1,6 @@
 (import '../../common/application-with-helm.libsonnet') {
-  name: (import 'app.libsonnet').appname,
-  namespace: (import 'app.libsonnet').namespace,
+  name: (import 'app.json5').name,
+  namespace: (import 'app.json5').namespace,
   chart: 'argo-cd',
   repoURL: 'https://argoproj.github.io/argo-helm',
   targetRevision: '7.6.12',

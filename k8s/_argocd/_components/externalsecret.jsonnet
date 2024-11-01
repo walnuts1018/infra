@@ -3,7 +3,7 @@
   kind: 'ExternalSecret',
   metadata: {
     name: 'argocd-oidc',
-    namespace: (import 'app.libsonnet').namespace,
+    namespace: (import 'app.json5').namespace,
     labels: {
       'app.kubernetes.io/part-of': 'argocd',
     },
