@@ -5,7 +5,7 @@
   repoURL:: error 'repoURL is required',
   targetRevision:: error 'targetRevision is required',
   values:: '',
-  valuesObject:: {},
+  valuesObject:: null,
 
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'Application',
@@ -31,8 +31,8 @@
       targetRevision: $.targetRevision,
       helm: {
         releaseName: 'argocd',
-        values: $.values,
-        valuesObject: $.valuesObject,
+        [if $.values != '' then 'values']: $.values,
+        [if $.valuesObject != null then 'valuesObject']: $.valuesObject,
       },
     },
   },
