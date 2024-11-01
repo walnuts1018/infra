@@ -8,10 +8,18 @@ spec:
   destination:
     namespace: argocd
     server: https://kubernetes.default.svc
-  source:
-    path: k8s/_argocd/_components
+  sources:
+  - chart: argo-cd
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 7.6.12
+    helm:
+      releaseName: argocd
+      valueFiles:
+      - $repo/values.yaml
+  - path: k8s/_argocd/_components
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
+    ref: repo
   syncPolicy:
     automated:
       selfHeal: true
