@@ -5,7 +5,7 @@
     name: 'argocd-oidc',
     namespace: (import 'app.libsonnet').namespace,
     labels: {
-      app.kubernetes.io/part-of: "argocd",
+      'app.kubernetes.io/part-of': 'argocd',
     },
   },
   spec: {
