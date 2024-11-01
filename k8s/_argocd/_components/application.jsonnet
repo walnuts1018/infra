@@ -1,4 +1,4 @@
-(import '../../common/application-with-helm.libsonnet') {
+(import '../../common/helm.libsonnet') {
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
   chart: 'argo-cd',
