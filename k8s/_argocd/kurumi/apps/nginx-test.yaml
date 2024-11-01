@@ -11,7 +11,7 @@ spec:
   source:
     path: k8s/apps/nginx-test
     repoURL: 'https://github.com/walnuts1018/infra'
-    targetRevision: argo-jsonnet
+    targetRevision: main
     directory:
       jsonnet:
         tlas:

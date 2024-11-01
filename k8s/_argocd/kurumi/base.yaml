@@ -11,7 +11,7 @@ spec:
   source:
     path: k8s/_argocd/kurumi/apps
     repoURL: 'https://github.com/walnuts1018/infra'
-    targetRevision: argo-jsonnet
+    targetRevision: main
   syncPolicy:
     automated:
       selfHeal: true
