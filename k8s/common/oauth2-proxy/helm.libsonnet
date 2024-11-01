@@ -1,4 +1,4 @@
-(import '../application-with-helm.libsonnet') {
+(import '../helm.libsonnet') {
   upstream:: error 'upstream is required',
   allowed_groups:: error 'allowed_groups is required',
   domain:: error 'domain is required',
