@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/walnuts1018/infra/main/k8s/common/app.json",
   "name": "blog",
   "namespace": "default"
 }
