@@ -21,6 +21,7 @@
     syncPolicy: {
       automated: {
         selfHeal: true,
+        prune: true,
       },
     },
     source: {
