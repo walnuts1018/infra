@@ -6,6 +6,9 @@ global:
 
 configs:
   cm:
+    admin.enabled: false
+    accounts.r.juglans.1018@gmail.com: apiKey, login
+    accounts.r.juglans.1018@gmail.com.enabled: true
     statusbadge.enabled: true
     dex.config: |
       connectors:
