@@ -362,6 +362,6 @@ kubectl label nodes peach walnuts.dev/ondemand=true
 
 ## 1Password
 
-```bash
-helm install onepassword-connect -n onepassword --create-namespace  1password/connect --set connect.credentials='(op read "op://kurumi k8s cluster/kurumi Credentials File/1password-credentials.json")' --set operator.create=true --set operator.token.value='(op read "op://kurumi k8s cluster/mhc7wnb4oe3kevaiubx3cxz7du/credential")'
+```shell
+helm install onepassword-connect -n onepassword --create-namespace  1password/connect --set-literal connect.credentials="$(op read "op://kurumi/kurumi Credentials File/1password-credentials.json")" --set operator.create=true --set operator.token.value="$(op item get mhc7wnb4oe3kevaiubx3cxz7du --reveal --fields label=credential)"
 ```
