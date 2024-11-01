@@ -14,7 +14,7 @@ spec:
       - path: "k8s/argocdapps/*/app.json5"
   template:
     metadata:
-     name: '{{.namespace}}'
+     name: 'ns-{{.namespace}}'
     spec:
       project: default
       destination:
