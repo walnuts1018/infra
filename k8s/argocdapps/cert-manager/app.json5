@@ -1,0 +1,4 @@
+{
+  name: "cert-manager",
+  namespace: "cert-manager",
+}
