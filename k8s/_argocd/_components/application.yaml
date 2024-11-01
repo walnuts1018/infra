@@ -16,3 +16,6 @@ spec:
       releaseName: argocd
       valueFiles:
       - values.yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
