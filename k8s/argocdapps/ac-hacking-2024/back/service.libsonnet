@@ -11,7 +11,7 @@
       {
         protocol: 'TCP',
         port: 8080,
-        targetPort: (import 'deployment.jsonnet').spec.template.spec.containers[0].ports[0].containerPort,
+        targetPort: (import 'deployment.libsonnet').spec.template.spec.containers[0].ports[0].containerPort,
       },
     ],
     type: 'ClusterIP',
