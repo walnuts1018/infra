@@ -1,5 +1,5 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["config:recommended"],
   dependencyDashboard: true,
   timezone: "Asia/Tokyo",
@@ -16,9 +16,9 @@
       fileMatch: ["^k8s/argocdapps/.*/helm.jsonnet$"],
       matchStringsStrategy: "combination",
       matchStrings: [
-        'chart:\\s+["'']?(?<depName>[a-z0-9-]+)["'']',
-        'repoURL:\\s+["'']?(?<registryUrl>\\S+)["'']',
-        'targetRevision:\\s+["'']?(?<currentValue>\\S+)["'']'
+        "chart:\\s+[\"']?(?<depName>[a-z0-9-]+)[\"']",
+        "repoURL:\\s+[\"']?(?<registryUrl>\\S+)[\"']",
+        "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
       ],
       datasourceTemplate: "helm",
     },
