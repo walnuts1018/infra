@@ -1,0 +1,4 @@
+{
+  name: "opentelemetry-operator",
+  namespace: "opentelemetry-operator-system",
+}

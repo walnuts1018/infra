@@ -1,0 +1,12 @@
+manager:
+  collectorImage:
+    repository: "otel/opentelemetry-collector-k8s"
+  extraArgs:
+  - --enable-go-instrumentation=true
+  - --enable-nginx-instrumentation=true
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      cpu: 5m
+      memory: 64Mi
