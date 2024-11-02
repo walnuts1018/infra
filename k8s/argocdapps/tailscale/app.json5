@@ -1,0 +1,4 @@
+{
+  name: "tailscale",
+  namespace: "network-exporter",
+}
