@@ -2,15 +2,17 @@ package main
 
 import (
 	"context"
-	"errors"
 	"flag"
+	"io"
+	"log/slog"
 	"os"
-	"slices"
 
 	"github.com/google/subcommands"
+	"github.com/walnuts1018/infra/.github/scripts/infrautil/lib"
 )
 
 type namespaceCmd struct {
+	appDir      string
 	outFilePath string
 }
 
@@ -21,57 +23,51 @@ func (*namespaceCmd) Usage() string {
 }
 
 func (n *namespaceCmd) SetFlags(f *flag.FlagSet) {
-	f.StringVar(&n.outFilePath, "o", "namespaces.yaml", "output file path")
+	f.StringVar(&n.appDir, "d", "k8s/argocdapps", "app directory")
+	f.StringVar(&n.outFilePath, "o", "argo_namespaces/namespaces.yaml", "output file path")
 
 }
 
 func (n *namespaceCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subcommands.ExitStatus {
-	return ExecuteHelper(func() error {
-		filepathes := f.Args()
-		if len(filepathes) == 0 {
-			return ErrUsage
-		}
+	appJSONs, err := lib.GetAppJSON(n.appDir)
+	if err != nil {
+		slog.Error("failed to get app json", slog.Any("error", err))
+		return subcommands.ExitFailure
+	}
 
-		var ns []Namespace
-		for _, filepath := range filepathes {
-			file, err := os.Open(filepath)
-			if err != nil {
-				return err
-			}
-			defer file.Close()
+	namespaceJSONFile, err := os.OpenFile(n.outFilePath, os.O_CREATE|os.O_RDWR, 0666)
+	if err != nil {
+		slog.Error("failed to open file", slog.Any("error", err))
+		return subcommands.ExitFailure
+	}
+	defer namespaceJSONFile.Close()
 
-			tmp, err := getNamespaces(getManifests(file))
-			if err != nil {
-				return err
-			}
-			ns = append(ns, tmp...)
-		}
+	ns, err := lib.GetNamespaces(namespaceJSONFile)
+	if err != nil {
+		slog.Error("failed to get namespaces", slog.Any("error", err))
+		return subcommands.ExitFailure
+	}
 
-		if len(ns) == 0 {
-			return errors.New("no namespaces found")
-		}
+	r, err := lib.GenNamespaceJSON(appJSONs, ns...)
+	if err != nil {
+		slog.Error("failed to generate namespace json", slog.Any("error", err))
+		return subcommands.ExitFailure
+	}
 
-		if !slices.Contains(ns, "default") {
-			return errors.New("default namespace not found")
-		}
+	if err := namespaceJSONFile.Truncate(0); err != nil {
+		slog.Error("failed to seek namespace json", slog.Any("error", err))
+		return subcommands.ExitFailure
+	}
 
-		var nsManifests RawManifests
-		for _, n := range ns {
-			m, err := createNamespaceManifest(n)
-			if err != nil {
-				return err
-			}
-			nsManifests = append(nsManifests, m)
-		}
+	if _, err := namespaceJSONFile.Seek(0, 0); err != nil {
+		slog.Error("failed to seek namespace json", slog.Any("error", err))
+		return subcommands.ExitFailure
+	}
 
-		if len(nsManifests) == 0 {
-			return errors.New("no namespace manifests created")
-		}
+	if _, err := io.Copy(namespaceJSONFile, r); err != nil {
+		slog.Error("failed to write namespace json", slog.Any("error", err))
+		return subcommands.ExitFailure
+	}
 
-		if err := os.WriteFile(n.outFilePath, []byte(nsManifests.String()), 0644); err != nil {
-			return err
-		}
-
-		return nil
-	})
+	return subcommands.ExitSuccess
 }
