@@ -45,9 +45,7 @@ jobs:
           git config pull.rebase false
           git checkout -b auto-gen-namespace
           git add .
-          git commit -m "namespace auto-gen"
-          git pull origin auto-gen-namespace
-          git push origin auto-gen-namespace
+          git push origin auto-gen-namespace --force
 
       - name: create PR
         if: steps.check-diff.outputs.diff > 0
