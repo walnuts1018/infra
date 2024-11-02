@@ -1,17 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: base
+  name: namespaces
   namespace: argocd
 spec:
   project: default
   destination:
-    namespace: argocd
     server: https://kubernetes.default.svc
-  sources:
-  - path: k8s/_argocd/_applications
+  source:
+    path: k8s/argo_namespaces
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
+    directory:
+      jsonnet:
+        tlas:
+        - name: ''
+          value: ''
   syncPolicy:
     automated:
       selfHeal: true
