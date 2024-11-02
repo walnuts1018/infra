@@ -1,14 +1,11 @@
 INFRAUTIL ?= .github/scripts/infrautil/infrautil
 
 .PHONY: build-tools
-build-tools $(INFRAUTIL):
+build-tools: build-infrautil build-infrautil2
+
+build-infrautil:
 	cd .github/scripts/infrautil && go build -o infrautil .
 
-.PHONY: snapshot
-snapshot: $(INFRAUTIL)
-	$(INFRAUTIL) snapshot ./k8s/apps ./k8s/.snapshot.yaml
-
 .PHONY: namespace
-namespace: $(INFRAUTIL)
-	# make snapshot
-	$(INFRAUTIL) namespace -o ./k8s/namespaces/namespaces.yaml ./k8s/.snapshot.yaml
+namespace: build-infrautil
+	$(INFRAUTIL) namespace -d ./k8s/argocdapps -o ./k8s/argo_namespaces/namespaces.json5

@@ -19,6 +19,12 @@ jobs:
         shell: bash
         run: bash .github/scripts/gen-fluxcd-kustomize.sh
 
+      - name: setup-go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ".github/scripts/infrautil2/go.mod"
+          cache-dependency-path: ".github/scripts/infrautil2/go.sum"
+
       - name: push
         run: |
           git config user.name  "github-actions[bot]"
