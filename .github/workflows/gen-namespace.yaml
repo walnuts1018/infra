@@ -25,6 +25,11 @@ jobs:
         run: |
           echo "diff=$(git diff --name-only | wc -l)" >> $GITHUB_OUTPUT
 
+      - name: Set env
+        if: steps.check-diff.outputs.diff > 0
+        run: |
+          echo "GH_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
+
       - name: push
         if: steps.check-diff.outputs.diff > 0
         run: |
