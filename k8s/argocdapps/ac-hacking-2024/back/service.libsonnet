@@ -3,10 +3,10 @@
   kind: 'Service',
   metadata: {
     name: (import '../app.json5').backend.name,
-    labels: (import '../../../common/labels.libsonnet') + { appname: (import '../app.json5').backend.name },
+    labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').backend.name },
   },
   spec: {
-    selector: (import '../../../common/labels.libsonnet') + { appname: (import '../app.json5').backend.name },
+    selector: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').backend.name },
     ports: [
       {
         protocol: 'TCP',

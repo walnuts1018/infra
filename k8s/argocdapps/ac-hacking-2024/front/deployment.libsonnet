@@ -4,20 +4,20 @@
   metadata: {
     name: (import '../app.json5').frontend.name,
     namespace: (import '../app.json5').namespace,
-    labels: (import '../../../common/labels.libsonnet') + { appname: (import '../app.json5').frontend.name },
+    labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').frontend.name },
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../../common/labels.libsonnet') + { appname: (import '../app.json5').frontend.name },
+      matchLabels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').frontend.name },
     },
     template: {
       metadata: {
-        labels: (import '../../../common/labels.libsonnet') + { appname: (import '../app.json5').frontend.name },
+        labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').frontend.name },
       },
       spec: {
         containers: [
-          (import '../../../common/container.libsonnet') {
+          (import '../../../components/container.libsonnet') {
             name: 'ac-hacking-2024-front',
             securityContext: {
               readOnlyRootFilesystem: true,
