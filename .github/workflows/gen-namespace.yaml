@@ -30,6 +30,12 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b auto-gen-namespace
           git add .
           git commit -m "namespace auto-gen"
-          git push
+          git push origin auto-gen-namespace
+
+      - name: create PR
+        if: steps.check-diff.outputs.diff > 0
+        run: |
+          gh pr create --title "auto-gen-namespace" --body "auto-gen-namespace" --base main --head auto-gen-namespace
