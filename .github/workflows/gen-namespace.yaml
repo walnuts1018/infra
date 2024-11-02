@@ -1,8 +1,6 @@
 name: Manifest Auto Generation
 on:
   push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
