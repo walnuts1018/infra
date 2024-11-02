@@ -1,0 +1,4 @@
+{
+  name: "cilium",
+  namespace: "cilium-system",
+}
