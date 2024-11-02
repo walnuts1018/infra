@@ -30,7 +30,7 @@
       repoURL: $.repoURL,
       targetRevision: $.targetRevision,
       helm: {
-        releaseName: 'argocd',
+        releaseName: $.name,
         [if $.values != '' then 'values']: $.values,
         [if $.valuesObject != null then 'valuesObject']: $.valuesObject,
       },
