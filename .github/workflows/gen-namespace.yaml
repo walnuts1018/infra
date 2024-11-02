@@ -1,4 +1,4 @@
-name: Manifest Auto Generation
+name: Namespace Auto Generation
 on:
   push:
   workflow_dispatch:
