@@ -8,7 +8,7 @@
     enabled: false,
   },
   kubernetes: {
-    fileMatch: ["k8s/.+\\.jsonnet$"],
+    fileMatch: ["k8s/.+\\.yaml$"],
   },
   customManagers: [
     {
