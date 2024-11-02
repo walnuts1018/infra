@@ -1,0 +1,11 @@
+{
+  apiVersion: 'cilium.io/v2alpha1',
+  kind: 'CiliumL2AnnouncementPolicy',
+  metadata: {
+    name: 'default',
+  },
+  spec: {
+    externalIPs: true,
+    loadBalancerIPs: true,
+  },
+}
