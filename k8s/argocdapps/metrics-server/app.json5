@@ -1,0 +1,4 @@
+{
+  name: "metrics-server",
+  namespace: "monitoring",
+}
