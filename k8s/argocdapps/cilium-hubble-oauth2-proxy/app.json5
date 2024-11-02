@@ -1,0 +1,4 @@
+{
+  name: "hubble",
+  namespace: "cilium-system",
+}
