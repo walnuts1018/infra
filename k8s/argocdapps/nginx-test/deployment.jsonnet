@@ -4,20 +4,20 @@
   metadata: {
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../common/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../common/labels.libsonnet') + { appname: (import 'app.json5').name },
+      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
     },
     template: {
       metadata: {
-        labels: (import '../../common/labels.libsonnet') + { appname: (import 'app.json5').name },
+        labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
       },
       spec: {
         containers: [
-          (import '../../common/container.libsonnet') {
+          (import '../../components/container.libsonnet') {
             name: 'nginx-test',
             image: 'nginx:1.27.2',
             ports: [

@@ -4,20 +4,20 @@
   metadata: {
     name: (import '../app.json5').backend.name,
     namespace: (import '../app.json5').namespace,
-    labels: (import '../../../common/labels.libsonnet') + { appname: (import '../app.json5').backend.name },
+    labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').backend.name },
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../../common/labels.libsonnet') + { appname: (import '../app.json5').backend.name },
+      matchLabels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').backend.name },
     },
     template: {
       metadata: {
-        labels: (import '../../../common/labels.libsonnet') + { appname: (import '../app.json5').backend.name },
+        labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').backend.name },
       },
       spec: {
         containers: [
-          (import '../../../common/container.libsonnet') {
+          (import '../../../components/container.libsonnet') {
             name: 'ac-hacking-2024-back',
             image: 'ghcr.io/walnuts1018/2024-ac-hacking:1c4c5593eb14f8656449d2176c177ca20679ef56-11',
             securityContext: {

@@ -8,4 +8,4 @@ build-infrautil:
 
 .PHONY: namespace
 namespace: build-infrautil
-	$(INFRAUTIL) namespace -d ./k8s/argocdapps -o ./k8s/argo_namespaces/namespaces.json5
+	$(INFRAUTIL) namespace -d ./k8s/argocdapps -o ./k8s/namespaces/namespaces.json5

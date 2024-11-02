@@ -1,4 +1,4 @@
-(import '../../common/oauth2-proxy/oauth2-proxy.libsonnet') {
+(import '../../components/oauth2-proxy/oauth2-proxy.libsonnet') {
   app:: {
     name: 'ac-hacking',
     namespace: (import 'app.json5').namespace,

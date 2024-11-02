@@ -8,7 +8,7 @@ spec:
   destination:
     server: https://kubernetes.default.svc
   source:
-    path: k8s/argo_namespaces
+    path: k8s/namespaces
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
     directory:

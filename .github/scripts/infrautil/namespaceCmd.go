@@ -24,7 +24,7 @@ func (*namespaceCmd) Usage() string {
 
 func (n *namespaceCmd) SetFlags(f *flag.FlagSet) {
 	f.StringVar(&n.appDir, "d", "k8s/argocdapps", "app directory")
-	f.StringVar(&n.outFilePath, "o", "argo_namespaces/namespaces.yaml", "output file path")
+	f.StringVar(&n.outFilePath, "o", "namespaces/namespaces.yaml", "output file path")
 
 }
 
