@@ -1,0 +1,38 @@
+# general configuration parameters
+configGeneral:
+  # number of routines the operator spawns to process requests concurrently
+  workers: 8
+
+configKubernetes:
+  # allow user secrets in other namespaces than the Postgres cluster
+  enable_cross_namespace_secret: true
+  # toggles pod anti affinity on the Postgres pods
+  enable_pod_antiaffinity: true
+  # switches pod anti affinity type to `preferredDuringSchedulingIgnoredDuringExecution`
+  pod_antiaffinity_preferred_during_scheduling: true
+  # override topology key for pod anti affinity
+  pod_antiaffinity_topology_key: "kubernetes.io/hostname"
+nodeSelector:
+  kubernetes.io/arch: amd64
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 500Mi
+  requests:
+    cpu: 10m
+    memory: 50Mi
+configLogicalBackup:
+  logical_backup_s3_bucket: "zalando-backup"
+  logical_backup_s3_bucket_prefix: "spilo"
+  logical_backup_s3_region: "ap-northeast-1"
+  logical_backup_s3_endpoint: "https://minio.walnuts.dev/"
+  logical_backup_s3_sse: ""
+  # S3 retention time for stored backups for example "2 week" or "7 days"
+  logical_backup_s3_retention_time: ""
+  # backup schedule in the cron format
+  logical_backup_schedule: "0 18 * * *"
+  logical_backup_cronjob_environment_secret: "zalando-minio"
+
+configDebug:
+  debug_logging: false
