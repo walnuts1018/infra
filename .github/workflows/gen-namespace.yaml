@@ -12,23 +12,22 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
-      - name: switch to deploy branch
-        run: git switch -c deploy
-
-      - name: Generate _flux/kurumi Kustomization
-        shell: bash
-        run: bash .github/scripts/gen-fluxcd-kustomize.sh
-
       - name: setup-go
         uses: actions/setup-go@v5
         with:
-          go-version-file: ".github/scripts/infrautil2/go.mod"
-          cache-dependency-path: ".github/scripts/infrautil2/go.sum"
+          go-version-file: ".github/scripts/infrautil/go.mod"
+          cache-dependency-path: ".github/scripts/infrautil/go.sum"
+
+      - name: check diff
+        id: check-diff
+        run: |
+          echo "diff=$(git diff --name-only | wc -l)" >> $GITHUB_OUTPUT
 
       - name: push
+        if: steps.check-diff.outputs.diff > 0
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "auto-gen"
-          git push --set-upstream origin deploy --force
+          git commit -m "namespace auto-gen"
+          git push
