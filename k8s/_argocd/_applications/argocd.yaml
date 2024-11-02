@@ -9,7 +9,7 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   source:
-    path: k8s/_argocd/_components
+    path: k8s/_argocd/_argocd_components
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
     directory:
