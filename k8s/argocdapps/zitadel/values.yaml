@@ -1,0 +1,52 @@
+zitadel:
+  configmapConfig:
+    ExternalDomain: auth.walnuts.dev
+    TLS:
+      Enabled: false
+    ExternalPort: 443
+    ExternalSecure: true
+  masterkeySecretName: "zitadel"
+  configSecretName: zitadel
+  configSecretKey: "config.yaml"
+replicaCount: 2
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  hosts:
+  - host: auth.walnuts.dev
+    paths:
+    - path: /
+      pathType: Prefix
+env:
+#  - name: ZITADEL_LOG_LEVEL
+#    value: "debug"
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+resources:
+  requests:
+    memory: 128Mi
+  limits:
+    memory: 512Mi
+affinity:
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      preference:
+        matchExpressions:
+        - key: kubernetes.io/arch
+          operator: In
+          values:
+          - amd64
+    - weight: 10
+      preference:
+        matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: NotIn
+          values:
+          - donut
+# image:
+#   tag: v2.64.1 # {"$imagepolicy": "zitadel:zitadel:tag"}
