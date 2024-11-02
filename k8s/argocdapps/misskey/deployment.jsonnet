@@ -90,7 +90,7 @@
                 name: 'POSTGRES_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: 'misskey-secret',
+                    name: (import 'external-secret.jsonnet').metadata.name,
                     key: 'misskeydbpassword',
                   },
                 },
