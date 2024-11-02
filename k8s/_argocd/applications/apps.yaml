@@ -25,6 +25,7 @@ spec:
         targetRevision: main
         path: '{{.path.path}}'
         directory:
+          recurse: true
           jsonnet:
             tlas:
             - name: ''
