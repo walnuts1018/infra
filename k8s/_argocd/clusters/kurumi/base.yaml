@@ -9,7 +9,7 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   sources:
-  - path: k8s/_argocd/_applications
+  - path: k8s/_argocd/applications
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
   syncPolicy:
