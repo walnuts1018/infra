@@ -5,6 +5,7 @@
     name: 'default',
   },
   spec: {
+    replicas: 1,
     mode: 'deployment',
     serviceAccount: 'otel-collector',
     managementState: 'managed',
