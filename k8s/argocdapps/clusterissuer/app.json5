@@ -1,0 +1,4 @@
+{
+  name: "clusterissuer",
+  namespace: "cert-manager",
+}
