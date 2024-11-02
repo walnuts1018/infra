@@ -1,5 +1,5 @@
 {
-  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["config:recommended"],
   dependencyDashboard: true,
   timezone: "Asia/Tokyo",
@@ -8,16 +8,17 @@
     enabled: false,
   },
   kubernetes: {
-    fileMatch: ["k8s/.+\\.yaml$"],
+    fileMatch: ["k8s/.+\\.jsonnet$"],
   },
   customManagers: [
     {
       customType: "regex",
-      fileMatch: ["^k8s/apps/.*/helm.yaml$"],
+      fileMatch: ["^k8s/argocdapps/.*/helm.jsonnet$"],
       matchStringsStrategy: "combination",
       matchStrings: [
-        '  url: "?(?<registryUrl>\\S+)"?\\s*',
-        '      chart: "?(?<depName>[a-z0-9-]+)"?\\s*\n      version: "?(?<currentValue>\\S+)"?\\s*',
+        'chart:\\s+["'']?(?<depName>[a-z0-9-]+)["'']',
+        'repoURL:\\s+["'']?(?<registryUrl>\\S+)["'']',
+        'targetRevision:\\s+["'']?(?<currentValue>\\S+)["'']'
       ],
       datasourceTemplate: "helm",
     },
