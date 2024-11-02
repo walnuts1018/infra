@@ -1,0 +1,4 @@
+{
+  name: "opentelemetry-instrumentations",
+  namespace: "opentelemetry-collector",
+}
