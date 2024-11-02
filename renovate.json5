@@ -10,10 +10,13 @@
   kubernetes: {
     fileMatch: ["k8s/.+\\.yaml$"],
   },
+  argocd: {
+    fileMatch: ["k8s/_argocd/applications/.+\\.yaml$"],
+  },
   customManagers: [
     {
       customType: "regex",
-      fileMatch: ["^k8s/argocdapps/.*/helm.jsonnet$"],
+      fileMatch: ["^k8s/.*/helm.jsonnet$"],
       matchStringsStrategy: "combination",
       matchStrings: [
         "chart:\\s+[\"']?(?<depName>[a-z0-9-]+)[\"']",
