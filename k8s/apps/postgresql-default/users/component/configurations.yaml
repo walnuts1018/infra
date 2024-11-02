@@ -1,3 +1,0 @@
-nameSuffix:
-- path: spec/target/name
-  kind: ExternalSecret
