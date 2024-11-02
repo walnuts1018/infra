@@ -39,3 +39,9 @@ environment:
 metrics:
   serviceMonitor:
     enabled: true
+
+users:
+  - accessKey: minio-admin
+    policy: consoleAdmin
+    existingSecret: minio
+    existingSecretKey: admin-secret-key
