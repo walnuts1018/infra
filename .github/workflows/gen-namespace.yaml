@@ -25,6 +25,13 @@ jobs:
         run: |
           echo "diff=$(git diff --name-only | wc -l)" >> $GITHUB_OUTPUT
 
+      - uses: actions/create-github-app-token@v1
+        id: generate_token
+        if: steps.check-diff.outputs.diff > 0
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
       - name: Set env
         if: steps.check-diff.outputs.diff > 0
         run: |
