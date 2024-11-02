@@ -45,3 +45,4 @@ users:
     policy: consoleAdmin
     existingSecret: minio
     existingSecretKey: admin-secret-key
+  - 
