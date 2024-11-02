@@ -5,6 +5,7 @@
     name: 'k8s-deployment',
   },
   spec: {
+    replicas: 1,
     serviceAccount: 'otel-collector',
     mode: 'deployment',
     image: 'otel/opentelemetry-collector-k8s',
