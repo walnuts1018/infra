@@ -2,10 +2,9 @@
   apiVersion: 'v1',
   kind: 'Service',
   metadata: {
-    name: 'samba',
-    labels: {
-      app: 'samba',
-    },
+    name: (import 'app.json5').name,
+    namespace: (import 'app.json5').namespace,
+    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
     ports: [
@@ -15,9 +14,7 @@
         targetPort: 10445,
       },
     ],
-    selector: {
-      app: 'samba',
-    },
+    selector: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
     type: 'LoadBalancer',
     loadBalancerIP: '192.168.0.132',
   },
