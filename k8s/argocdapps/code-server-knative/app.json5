@@ -1,0 +1,4 @@
+{
+  name: "code-server-knative",
+  namespace: "code-server",
+}
