@@ -45,7 +45,7 @@ jobs:
           git checkout -b auto-gen-namespace
           git add .
           git commit -m "namespace auto-gen"
-          git pull
+          git pull origin auto-gen-namespace
           git push origin auto-gen-namespace
 
       - name: create PR
