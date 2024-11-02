@@ -12,6 +12,9 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
+      - name: switch to auto-gen-namespace branch
+        run: git switch -c auto-gen-namespace
+
       - name: setup-go
         uses: actions/setup-go@v5
         with:
@@ -44,7 +47,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b auto-gen-namespace
           git add .
           git push origin auto-gen-namespace --force
 
