@@ -1,0 +1,109 @@
+{
+  apiVersion: 'apps/v1',
+  kind: 'Deployment',
+  metadata: {
+    name: (import 'app.json5').name,
+    namespace: (import 'app.json5').namespace,
+    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+  },
+  spec: {
+    selector: {
+      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    },
+    strategy: {
+      type: 'Recreate',
+    },
+    template: {
+      metadata: {
+        labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+      },
+      spec: {
+        securityContext: {
+          fsGroup: 1000,
+          fsGroupChangePolicy: 'OnRootMismatch',
+        },
+        containers: [
+          (import '../../components/container.libsonnet') {
+            image: 'ghcr.io/servercontainers/samba:a3.20.3-s4.19.6-r0',
+            imagePullPolicy: 'IfNotPresent',
+            name: 'samba',
+            securityContext: {
+              seccompProfile: {
+                type: 'RuntimeDefault',
+              },
+            },
+            env: [
+              {
+                name: 'ACCOUNT_samba',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').metadata.name,
+                    key: 'account-samba',
+                  },
+                },
+              },
+              {
+                name: 'SAMBA_CONF_LOG_LEVEL',
+                value: '3',
+              },
+              {
+                name: 'WSDD2_DISABLE',
+                value: '1',
+              },
+              {
+                name: 'AVAHI_DISABLE',
+                value: '1',
+              },
+              {
+                name: 'GROUPS_samba',
+                value: 'samba',
+              },
+              {
+                name: 'SAMBA_VOLUME_CONFIG_share',
+                value: '[share]; path=/samba-share; valid users = samba; public = no; read only = no; browseable = yes; available = yes',
+              },
+              {
+                name: 'SAMBA_GLOBAL_CONFIG_smb_SPACE_ports',
+                value: '10445 10139',
+              },
+            ],
+            ports: [
+              {
+                containerPort: 10445,
+                name: 'samba',
+              },
+            ],
+            volumeMounts: [
+              {
+                name: 'samba-local-dir',
+                mountPath: '/samba-share',
+              },
+            ],
+            resources: {
+              limits: {
+                memory: '10Gi',
+                cpu: '1000m',
+              },
+              requests: {
+                memory: '850Mi',
+                cpu: '10m',
+              },
+            },
+          },
+        ],
+        nodeSelector: {
+          'kubernetes.io/hostname': 'cake',
+        },
+        volumes: [
+          {
+            name: 'samba-local-dir',
+            hostPath: {
+              path: '/mnt/data/share',
+              type: 'Directory',
+            },
+          },
+        ],
+      },
+    },
+  },
+}
