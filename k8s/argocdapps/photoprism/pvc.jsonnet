@@ -49,7 +49,7 @@
       ],
       resources: {
         requests: {
-          storage: '8Gi',
+          storage: '4Gi',
         },
       },
     },
