@@ -1,0 +1,16 @@
+[
+  'postgres',
+  'juglans',
+  'fitbit-manager',
+  'grafana',
+  'hedgedoc',
+  'misskey',
+  'nextcloud',
+  'oekaki-dengon-game',
+  'openchokin',
+  'wakatime',
+  'zitadel',
+  'ac-hacking',
+  'y-2024',
+  'mucaron',
+]
