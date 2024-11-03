@@ -9,8 +9,20 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: generate_token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Set env
+        run: |
+          echo "GH_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
+
       - name: Check out
         uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
 
       - name: switch to snapshot branch
         run: git switch -c snapshot
@@ -29,16 +41,6 @@ jobs:
         run: |
           rm -rf k8s/argocdapps
           mv k8s/snapshots/argocdapps k8s/argocdapps
-
-      - uses: actions/create-github-app-token@v1
-        id: generate_token
-        with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
-
-      - name: Set env
-        run: |
-          echo "GH_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
 
       - name: push
         run: |
