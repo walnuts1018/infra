@@ -8,6 +8,8 @@ configs:
   cm:
     admin.enabled: true
     statusbadge.enabled: true
+
+    # https://docs.cilium.io/en/latest/configuration/argocd-issues/
     resource.exclusions: |
       - apiGroups:
         - cilium.io
