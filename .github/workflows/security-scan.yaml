@@ -1,15 +1,9 @@
 name: Config Scan
 
 on:
-  pull_request:
-    paths:
-      - .github/workflows/security-scan.yaml
-      - "k8s/**"
-      - "trivy.yaml"
-      - ".trivyignore.yaml"
   push:
     branches:
-      - main
+      - snapshot
     paths:
       - .github/workflows/security-scan.yaml
       - "k8s/**"
