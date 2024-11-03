@@ -25,7 +25,15 @@
                 containerPort: 8080,
               },
             ],
-            securityContext: {},
+            livenessProbe: {
+              httpGet: {
+                path: '/',
+                port: 8080,
+              },
+              failureThreshold: 1,
+              initialDelaySeconds: 10,
+              periodSeconds: 10,
+            },
             volumeMounts: [
               {
                 mountPath: '/etc/nginx',
