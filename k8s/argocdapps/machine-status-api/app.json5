@@ -1,0 +1,4 @@
+{
+  name: "machine-status-api",
+  namespace: "default",
+}
