@@ -1,4 +1,4 @@
-name: Config Scan
+name: Scan / Lint
 
 on:
   push:
@@ -30,3 +30,12 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: "trivy-results.sarif"
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint manifest with kubeconform
+        uses: docker://ghcr.io/yannh/kubeconform:latest
+        with:
+          args: "-ignore-missing-schemas -strict -summary k8s/argocdapps"
