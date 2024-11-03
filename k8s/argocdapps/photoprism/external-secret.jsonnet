@@ -18,7 +18,7 @@
         engineVersion: 'v2',
         type: 'Opaque',
         data: {
-          PHOTOPRISM_DATABASE_DSN: 'photoprism:{{ .dbpassword }}@tcp(mariadb.photoprism.svc.cluster.local:3306)/photoprism?charset=utf8mb4,utf8&parseTime=true',
+          PHOTOPRISM_DATABASE_DSN: 'photoprism:{{ .dbpassword }}@tcp(photoprism-mariadb.photoprism.svc.cluster.local:3306)/photoprism?charset=utf8mb4,utf8&parseTime=true',
           PHOTOPRISM_ADMIN_PASSWORD: '{{ .adminpassword }}',
         },
       },
