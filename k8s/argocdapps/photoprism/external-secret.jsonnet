@@ -2,7 +2,7 @@
   apiVersion: 'external-secrets.io/v1beta1',
   kind: 'ExternalSecret',
   metadata: {
-    name: (import 'app.json5').name + '-' + std.md5(std.toString($.spec))[0:6],
+    name: (import 'app.json5').name + '-' + std.md5(std.toString($.spec.data) + { spec: { target: { name: null } } })[0:6],
     namespace: (import 'app.json5').namespace,
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
