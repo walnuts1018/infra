@@ -11,11 +11,25 @@
       namespace: (import 'app.json5').namespace,
       server: 'https://kubernetes.default.svc',
     },
-    source: {
-      path: 'deploy',
-      repoURL: 'https://github.com/rancher/local-path-provisioner',
-      targetRevision: 'v0.0.30',
-    },
+    sources: [
+      {
+        repoURL: 'https://github.com/walnuts1018/infra/',
+        path: 'k8s/argocdapps/local-path-provisioner',
+        ref: 'patch',
+      },
+      {
+        path: 'deploy',
+        repoURL: 'https://github.com/rancher/local-path-provisioner',
+        targetRevision: 'v0.0.30',
+        kustomize: {
+          patches: [
+            {
+              path: '$patch/namespace.yaml',
+            },
+          ],
+        },
+      },
+    ],
     syncPolicy: {
       automated: {
         selfHeal: true,
