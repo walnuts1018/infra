@@ -8,6 +8,13 @@ configs:
   cm:
     admin.enabled: true
     statusbadge.enabled: true
+    resource.exclusions: |
+      - apiGroups:
+        - cilium.io
+        kinds:
+        - CiliumIdentity
+        clusters:
+        - "*"
     dex.config: |
       connectors:
       - type: oidc
