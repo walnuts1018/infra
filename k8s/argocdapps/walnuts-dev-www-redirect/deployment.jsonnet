@@ -16,8 +16,12 @@
         labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
       },
       spec: {
+        securityContext: {
+          fsGroup: 101,
+          fsGroupChangePolicy: 'OnRootMismatch',
+        },
         containers: [
-          (import '../../components/container.libsonnet') {
+          std.mergePatch((import '../../components/container.libsonnet') {
             name: 'walnuts-dev-www-redirect',
             image: 'nginx:1.27.2',
             ports: [
@@ -69,7 +73,11 @@
                 memory: '5Mi',
               },
             },
-          },
+          }, {
+            securityContext: {
+              runAsUser: 101,
+            },
+          }),
         ],
         volumes: [
           {
