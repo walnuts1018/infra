@@ -19,10 +19,19 @@ func BuildYAML(filepath string) (string, error) {
 		return "", err
 	}
 
-	yamlBytes, err := yaml.Marshal(jsonResult)
-	if err != nil {
-		return "", err
+	jsonResults, ok := jsonResult.([]interface{})
+	if !ok {
+		jsonResults = []interface{}{jsonResult}
 	}
 
-	return string(yamlBytes), nil
+	var yamlResult string
+	for _, result := range jsonResults {
+		yamlBytes, err := yaml.Marshal(result)
+		if err != nil {
+			return "", err
+		}
+		yamlResult += string(yamlBytes)
+		yamlResult += "\n---\n"
+	}
+	return yamlResult, nil
 }
