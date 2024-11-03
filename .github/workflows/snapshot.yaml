@@ -50,9 +50,3 @@ jobs:
           git add .
           git commit -m "snapshot"
           git push origin snapshot --force
-
-      - name: create PR
-        if: steps.check-diff.outputs.diff > 0
-        run: |
-          gh pr create --title "snapshot" --body "snapshot" --base main --head snapshot
-          gh pr merge --merge
