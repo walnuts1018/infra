@@ -65,6 +65,15 @@
                 value: 'true',
               },
             ],
+            livenessProbe: {
+              httpGet: {
+                path: '/health',
+                port: 2342,
+              },
+              failureThreshold: 1,
+              initialDelaySeconds: 10,
+              periodSeconds: 10,
+            },
             envFrom: [
               {
                 secretRef: {
