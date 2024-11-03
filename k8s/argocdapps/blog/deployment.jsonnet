@@ -16,9 +16,13 @@
         labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
       },
       spec: {
+        securityContext: {
+          fsGroup: 101,
+          fsGroupChangePolicy: 'OnRootMismatch',
+        },
         containers: [
-          (import '../../components/container.libsonnet') {
-            name: 'blog',
+          std.mergePatch((import '../../components/container.libsonnet') {
+            name: 'nginx',
             image: 'nginx:1.27.2',
             ports: [
               {
@@ -38,7 +42,7 @@
               {
                 mountPath: '/etc/nginx',
                 readOnly: true,
-                name: 'blog-conf',
+                name: 'nginx-conf',
               },
               {
                 mountPath: '/tmp',
@@ -69,11 +73,15 @@
                 memory: '5Mi',
               },
             },
-          },
+          }, {
+            securityContext: {
+              runAsUser: 101,
+            },
+          }),
         ],
         volumes: [
           {
-            name: 'blog-conf',
+            name: 'nginx-conf',
             configMap: {
               name: (import 'configmap.jsonnet').metadata.name,
               items: [
