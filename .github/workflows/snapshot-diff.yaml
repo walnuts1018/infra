@@ -65,7 +65,7 @@ jobs:
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(for f in $(find manifests-head -type f); do echo "## $f"; diff -u $f $(echo $f | sed 's/head/main/') | sed 's/^/  /'; done)
+          $(for f in $(find snapshots-head -type f); do echo "## $f"; diff -u $f $(echo $f | sed 's/head/main/') | sed 's/^/  /'; done)
           \`\`\`
           </details>" | tee /tmp/diff.md
 
@@ -88,7 +88,7 @@ jobs:
 
           \`\`\`diff
           # $(./dyff between manifests-base.yaml manifests-head.yaml)
-          $(for f in $(find manifests-head -type f); do echo "## $f"; ./dyff between $f $(echo $f | sed 's/head/main/') | sed 's/^/  /'; done)
+          $(for f in $(find snapshots-head -type f); do echo "## $f"; ./dyff between $f $(echo $f | sed 's/head/main/') | sed 's/^/  /'; done)
           \`\`\`
 
           </details>" | tee /tmp/dyff.md
