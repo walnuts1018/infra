@@ -183,7 +183,7 @@
         name: 'VAXILA_APIKEY',
         valueFrom: {
           secretKeyRef: {
-            name: 'opentelemetry-collector',
+            name: (import '../external-secret.jsonnet').spec.target.name,
             key: 'vaxila-api-key',
           },
         },

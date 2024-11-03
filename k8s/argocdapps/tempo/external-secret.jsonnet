@@ -1,5 +1,6 @@
 (import '../../components/external-secret.libsonnet') {
   name: 'tempo-credentials',
+  use_suffix: false,
   data: [
     {
       secretKey: 'MINIO_ACCESS_KEY',

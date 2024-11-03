@@ -1,5 +1,6 @@
 (import '../../components/external-secret.libsonnet') {
   name: 'grafana',
+  use_suffix: false,
   data: [
     {
       secretKey: 'admin-password',

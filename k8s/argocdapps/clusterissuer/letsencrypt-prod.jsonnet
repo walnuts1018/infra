@@ -16,7 +16,7 @@
           dns01: {
             cloudflare: {
               apiTokenSecretRef: {
-                name: (import 'external-secret.jsonnet').name,
+                name: (import 'external-secret.jsonnet').spec.target.name,
                 key: 'api-token',
               },
             },
