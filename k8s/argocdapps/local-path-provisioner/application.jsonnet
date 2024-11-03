@@ -11,25 +11,18 @@
       namespace: (import 'app.json5').namespace,
       server: 'https://kubernetes.default.svc',
     },
-    sources: [
-      {
-        repoURL: 'https://github.com/walnuts1018/infra/',
-        targetRevision: 'main',
-        ref: 'patch',
+    sources: {
+      path: 'deploy',
+      repoURL: 'https://github.com/rancher/local-path-provisioner',
+      targetRevision: 'v0.0.30',
+      kustomize: {
+        patches: [
+          {
+            patch: '$patch: delete\napiVersion: v1\nkind: Namespace\nmetadata:\n  name: local-path-storage',
+          },
+        ],
       },
-      {
-        path: 'deploy',
-        repoURL: 'https://github.com/rancher/local-path-provisioner',
-        targetRevision: 'v0.0.30',
-        kustomize: {
-          patches: [
-            {
-              path: '$patch/k8s/argocdapps/local-path-provisioner/namespace.yaml',
-            },
-          ],
-        },
-      },
-    ],
+    },
     syncPolicy: {
       automated: {
         selfHeal: true,
