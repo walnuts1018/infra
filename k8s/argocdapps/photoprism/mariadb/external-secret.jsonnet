@@ -1,5 +1,6 @@
 (import '../../../components/external-secret.libsonnet') {
   name: 'photoprism-mariadb',
+  use_suffix: false,
   data: [
     {
       secretKey: 'mariadb-root-password',

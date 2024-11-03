@@ -37,7 +37,7 @@
                 name: 'ACCOUNT_samba',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').metadata.name,
+                    name: (import 'external-secret.jsonnet').spec.target.name,
                     key: 'account-samba',
                   },
                 },

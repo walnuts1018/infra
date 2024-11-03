@@ -1,10 +1,12 @@
 {
   name:: error 'name is required',
+  use_suffix:: true,
   data:: error 'data is required',
   apiVersion: 'external-secrets.io/v1beta1',
   kind: 'ExternalSecret',
   metadata: {
-    name: $.name,
+    // name: $.name + '-' + std.md5(std.toString($.data) + { spec: { target: { name: null } } })[0:6],
+    name: if $.use_suffix then $.name + '-' + std.md5(std.toString($.data) + { spec: { target: { name: null } } })[0:6] else $.name,
   },
   spec: {
     secretStoreRef: {
@@ -13,7 +15,7 @@
     },
     refreshInterval: '1m',
     target: {
-      name: $.name,
+      name: $.metadata.name,
     },
     data: $.data,
   },
