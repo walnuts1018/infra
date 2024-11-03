@@ -14,7 +14,7 @@
     sources: [
       {
         repoURL: 'https://github.com/walnuts1018/infra/',
-        path: 'k8s/argocdapps/local-path-provisioner',
+        targetRevision: 'main',
         ref: 'patch',
       },
       {
@@ -24,7 +24,7 @@
         kustomize: {
           patches: [
             {
-              path: '$patch/namespace.yaml',
+              path: '$patch/k8s/argocdapps/local-path-provisioner/namespace.yaml',
             },
           ],
         },
