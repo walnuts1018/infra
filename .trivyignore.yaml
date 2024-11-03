@@ -1,19 +1,9 @@
 misconfigurations:
 - id: KSV017
   paths:
-  - "k8s/apps/machine-status-api/deployment.yaml"
+  - "k8s/argocdapps/machine-status-api/deployment.yaml"
   statement: Accept Privileged
-- id: KSV046
-  paths:
-  - "k8s/_flux/pre-kurumi/flux-system/gotk-components.yaml"
-  - "k8s/_flux/kurumi/flux-system/gotk-components.yaml"
-  statement: fluxcd must manage all resource
-- id: KSV041
-  paths:
-  - "k8s/_flux/pre-kurumi/flux-system/gotk-components.yaml"
-  - "k8s/_flux/kurumi/flux-system/gotk-components.yaml"
-  statement: fluxcd must manage secret
 - id: KSV023
   paths:
-  - "k8s/apps/samba/deployment.yaml"
+  - "k8s/argocdapps/samba/deployment.yaml"
   statement: accept hostpath
