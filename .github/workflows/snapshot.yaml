@@ -17,7 +17,7 @@ jobs:
 
       - name: Set env
         run: |
-          echo "GH_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
+          echo "GITHUB_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
 
       - name: Check out
         uses: actions/checkout@v4
