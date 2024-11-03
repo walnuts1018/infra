@@ -27,7 +27,7 @@
                     name: 'SAMBA_USER',
                     valueFrom: {
                       secretKeyRef: {
-                        name: 'samba-backup-secret',
+                        name: (import 'external-secret.jsonnet').spec.target.name,
                         key: 'user',
                       },
                     },
@@ -36,7 +36,7 @@
                     name: 'SAMBA_PASSWORD',
                     valueFrom: {
                       secretKeyRef: {
-                        name: 'samba-backup-secret',
+                        name: (import 'external-secret.jsonnet').spec.target.name,
                         key: 'password',
                       },
                     },
