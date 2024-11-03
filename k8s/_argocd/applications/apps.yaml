@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
+  goTemplateOptions: [ "missingkey=error" ]
   generators:
   - git:
       repoURL: https://github.com/walnuts1018/infra
@@ -14,9 +14,11 @@ spec:
       - path: "k8s/argocdapps/*/app.json5"
   template:
     metadata:
-     name: '{{.name}}'
+      name: '{{.name}}'
     spec:
       project: default
+      orphanedResources:
+        warn: true
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{.namespace}}'
