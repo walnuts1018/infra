@@ -25,6 +25,10 @@ Walnuts 家の自宅サーバ全般のリポジトリです。
 
 - [README](./k8s/README.md)
 
+### YAML
+このリポジトリではjsonnetを用いてマニフェスト管理を行っています。
+YAMLの生成結果は[snapshot](https://github.com/walnuts1018/infra/tree/snapshot)ブランチへと自動的にpushされるので、そちらを参照してください。
+
 ## Actions
 
 - [k8s-badge](./.github/workflows/badge.yaml)
