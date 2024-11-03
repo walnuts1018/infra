@@ -25,25 +25,22 @@ jobs:
         run: |
           make snapshot
 
-      - name: check diff
-        id: check-diff
+      - name: mv snapshot
         run: |
-          echo "diff=$(git diff --name-only | wc -l)" >> $GITHUB_OUTPUT
+          rm -rf k8s/argocdapps
+          mv k8s/snapshots/argocdapps k8s/argocdapps
 
       - uses: actions/create-github-app-token@v1
         id: generate_token
-        if: steps.check-diff.outputs.diff > 0
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
 
       - name: Set env
-        if: steps.check-diff.outputs.diff > 0
         run: |
           echo "GH_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
 
       - name: push
-        if: steps.check-diff.outputs.diff > 0
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
