@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: http-dump
+    app.kubernetes.io/name: http-dump
+  name: http-dump
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: httptest.walnuts.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: http-dump
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix
