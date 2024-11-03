@@ -74,6 +74,7 @@ jobs:
           sarif_file: "trivy-results.sarif"
   lint:
     runs-on: ubuntu-latest
+    needs: generate
     steps:
       - uses: actions/checkout@v4
         with:
