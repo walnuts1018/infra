@@ -4,5 +4,10 @@
     seccompProfile: {
       type: 'RuntimeDefault',
     },
+    capabilities: {
+      drop: [
+        'all',
+      ],
+    },
   },
 }
