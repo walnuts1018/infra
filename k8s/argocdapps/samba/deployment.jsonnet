@@ -23,7 +23,7 @@
           fsGroupChangePolicy: 'OnRootMismatch',
         },
         containers: [
-          std.mergePatch((import '../../components/container.libsonnet') {
+          (import '../../components/container.libsonnet') {
             image: 'ghcr.io/servercontainers/samba:a3.20.3-s4.19.6-r0',
             imagePullPolicy: 'IfNotPresent',
             name: 'samba',
@@ -84,14 +84,8 @@
                 cpu: '10m',
               },
             },
-          }, {
-            securityContext: {
-              readOnlyRootFilesystem: false,
-              capabilities: {
-                add: ['NET_BIND_SERVICE', 'SETGID'],
-              },
-            },
-          }),
+            securityContext:: null,
+          },
         ],
         nodeSelector: {
           'kubernetes.io/hostname': 'cake',
