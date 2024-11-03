@@ -22,7 +22,7 @@
         },
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
-            name: 'walnuts-dev-www-redirect',
+            name: 'nginx',
             image: 'nginx:1.27.2',
             ports: [
               {
@@ -42,7 +42,7 @@
               {
                 mountPath: '/etc/nginx',
                 readOnly: true,
-                name: 'walnuts-dev-www-redirect-conf',
+                name: 'nginx-conf',
               },
               {
                 mountPath: '/tmp',
@@ -81,7 +81,7 @@
         ],
         volumes: [
           {
-            name: 'walnuts-dev-www-redirect-conf',
+            name: 'nginx-conf',
             configMap: {
               name: (import 'configmap.jsonnet').metadata.name,
               items: [
