@@ -1,0 +1,104 @@
+name: Snapshot Auto Generation
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: setup-go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ".github/scripts/infrautil/go.mod"
+          cache-dependency-path: ".github/scripts/infrautil/go.sum"
+
+      - name: make snapshot
+        run: |
+          make snapshot
+          mv k8s/snapshots /tmp/snapshots-head
+
+      - name: Check out snapshot branch
+        uses: actions/checkout@v4
+        with:
+          ref: snapshot
+
+      - name: mv
+        run: |
+          mkdir /tmp/snapshots-main
+          mv k8s/argocdapps /tmp/snapshots-main/argocdapps
+
+      - name: Upload folder
+        uses: actions/upload-artifact@v4
+        with:
+          if-no-files-found: error
+          name: manifests
+          path: |
+            /tmp/snapshots-head
+            /tmp/snapshots-main
+
+  diff:
+    runs-on: ubuntu-latest
+    needs: generate
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: manifests
+
+      - name: install dyff
+        run: |
+          wget https://github.com/homeport/dyff/releases/download/v1.8.0/dyff_1.8.0_linux_amd64.tar.gz
+          tar -xvf dyff_1.8.0_linux_amd64.tar.gz
+          chmod +x dyff
+
+      - name: Build markdown comment with manifest diff
+        run: |
+          echo "# Manifest diff
+
+          <details>
+          <summary>Click to expand</summary>
+
+          \`\`\`diff
+          $(for f in $(find manifests-head -type f); do echo "## $f"; diff -u $f $(echo $f | sed 's/head/main/') | sed 's/^/  /'; done)
+          \`\`\`
+          </details>" | tee /tmp/diff.md
+
+      # PRへのコメントだけど、issue commentのAPIを使うらしい
+      - name: Comment manifest diff to GitHub PR
+        continue-on-error: true
+        run: |
+          cat /tmp/diff.md | jq -Rs '{ "body": . }' | curl --fail \
+            -X POST -H 'Accept: application/vnd.github.v3+json' \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/comments \
+            -d @-
+
+      - name: Build markdown comment with manifest dyff
+        run: |
+          echo "# Manifest dyff
+
+          <details>
+          <summary>Click to expand</summary>
+
+          \`\`\`diff
+          # $(./dyff between manifests-base.yaml manifests-head.yaml)
+          $(for f in $(find manifests-head -type f); do echo "## $f"; ./dyff between $f $(echo $f | sed 's/head/main/') | sed 's/^/  /'; done)
+          \`\`\`
+
+          </details>" | tee /tmp/dyff.md
+
+      # PRへのコメントだけど、issue commentのAPIを使うらしい
+      - name: Comment manifest diff to GitHub PR
+        continue-on-error: true
+        run: |
+          cat /tmp/dyff.md | jq -Rs '{ "body": . }' | curl --fail \
+            -X POST -H 'Accept: application/vnd.github.v3+json' \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/comments \
+            -d @-
