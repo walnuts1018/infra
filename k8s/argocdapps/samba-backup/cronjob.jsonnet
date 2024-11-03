@@ -72,6 +72,10 @@
                     mountPath: '/samba-share',
                   },
                   {
+                    name: 'samba-backup',
+                    mountPath: '/samba-backup',
+                  },
+                  {
                     name: 'samba-id-ed25519',
                     mountPath: '/root/.ssh/id_ed25519',
                     subPath: 'id_ed25519',
@@ -102,6 +106,10 @@
                   path: '/mnt/data/share',
                   type: 'Directory',
                 },
+              },
+              {
+                name: 'samba-backup',
+                emptyDir: {},
               },
               {
                 name: 'samba-id-ed25519',
