@@ -26,9 +26,6 @@
         initContainers: [
           (import '../../components/container.libsonnet') {
             name: 'misskey-init',
-            securityContext: {
-              readOnlyRootFilesystem: true,
-            },
             image: 'misskey/misskey:2024.10.1',
             imagePullPolicy: 'IfNotPresent',
             command: [
@@ -52,9 +49,6 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'misskey',
-            securityContext: {
-              readOnlyRootFilesystem: true,
-            },
             image: 'misskey/misskey:2024.10.1',
             imagePullPolicy: 'IfNotPresent',
             ports: [
