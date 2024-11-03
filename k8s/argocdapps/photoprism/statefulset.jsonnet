@@ -68,7 +68,7 @@
             envFrom: [
               {
                 secretRef: {
-                  name: (import 'external-secret.jsonnet').metadata.name,
+                  name: (import 'external-secret.jsonnet').spec.target.name,
                   optional: false,
                 },
               },
