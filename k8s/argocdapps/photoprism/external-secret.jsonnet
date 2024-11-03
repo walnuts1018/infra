@@ -13,7 +13,7 @@
     },
     refreshInterval: '1m',
     target: {
-      name: (import 'app.json5').name,
+      name: $.metadata.name,
       template: {
         engineVersion: 'v2',
         type: 'Opaque',
