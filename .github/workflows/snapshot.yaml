@@ -1,0 +1,58 @@
+name: Snapshot Auto Generation
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: switch to snapshot branch
+        run: git switch -c snapshot
+
+      - name: setup-go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ".github/scripts/infrautil/go.mod"
+          cache-dependency-path: ".github/scripts/infrautil/go.sum"
+
+      - name: make snapshot
+        run: |
+          make snapshot
+
+      - name: check diff
+        id: check-diff
+        run: |
+          echo "diff=$(git diff --name-only | wc -l)" >> $GITHUB_OUTPUT
+
+      - uses: actions/create-github-app-token@v1
+        id: generate_token
+        if: steps.check-diff.outputs.diff > 0
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Set env
+        if: steps.check-diff.outputs.diff > 0
+        run: |
+          echo "GH_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
+
+      - name: push
+        if: steps.check-diff.outputs.diff > 0
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "snapshot"
+          git push origin snapshot --force
+
+      - name: create PR
+        if: steps.check-diff.outputs.diff > 0
+        run: |
+          gh pr create --title "snapshot" --body "snapshot" --base main --head snapshot
+          gh pr merge --merge
