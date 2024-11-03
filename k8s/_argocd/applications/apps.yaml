@@ -17,8 +17,6 @@ spec:
       name: '{{.name}}'
     spec:
       project: default
-      orphanedResources:
-        warn: true
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{.namespace}}'
