@@ -15,7 +15,7 @@
           spec: {
             restartPolicy: 'OnFailure',
             containers: [
-              {
+              std.mergePatch((import '../../components/container.libsonnet') {
                 name: 'samba-backup',
                 image: 'debian:12.7',
                 command: [
@@ -50,9 +50,6 @@
                     ],
                   },
                 },
-                securityContext: {
-                  privileged: true,
-                },
                 resources: {
                   requests: {
                     cpu: '10m',
@@ -80,7 +77,11 @@
                     subPath: 'id_ed25519',
                   },
                 ],
-              },
+              }, {
+                securityContext: {
+                  privileged: true,
+                },
+              }),
             ],
             volumes: [
               {
