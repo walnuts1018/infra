@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: redis-operator-helm
+    namespace: argocd
+spec:
+    destination:
+        namespace: redis-operator
+        server: https://kubernetes.default.svc
+    project: default
+    source:
+        chart: redis-operator
+        helm:
+            releaseName: redis-operator
+            values: |
+                resources:
+                  limits:
+                    cpu: 500m
+                    memory: 500Mi
+                  requests:
+                    cpu: 500m
+                    memory: 500Mi
+
+                redisOperator:
+                  extraArgs:
+                  - "-zap-log-level=debug"
+        repoURL: https://ot-container-kit.github.io/helm-charts/
+        targetRevision: 0.18.3
+    syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
+        syncOptions:
+            - ServerSideApply=true
+
+---

@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: misskey
+        app.kubernetes.io/name: misskey
+    name: misskey
+    namespace: misskey
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: misskey
+            app.kubernetes.io/name: misskey
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                app: misskey
+                app.kubernetes.io/name: misskey
+        spec:
+            containers:
+                - env:
+                    - name: POSTGRES_USER
+                      value: misskey
+                    - name: POSTGRES_DB
+                      value: misskey
+                    - name: POSTGRES_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                            key: misskeydbpassword
+                            name: misskey
+                  image: misskey/misskey:2024.10.1
+                  imagePullPolicy: IfNotPresent
+                  livenessProbe:
+                    httpGet:
+                        path: /healthz
+                        port: 3000
+                    initialDelaySeconds: 3
+                    periodSeconds: 3
+                  name: misskey
+                  ports:
+                    - containerPort: 3000
+                  resources:
+                    limits: {}
+                    requests:
+                        memory: 512Mi
+                  securityContext:
+                    readOnlyRootFilesystem: true
+                  startupProbe:
+                    failureThreshold: 30
+                    httpGet:
+                        path: /healthz
+                        port: 3000
+                    periodSeconds: 10
+                  volumeMounts:
+                    - mountPath: /misskey/files
+                      name: misskey-pv
+                    - mountPath: /misskey/.config
+                      name: misskey-config
+                      readOnly: true
+                    - mountPath: /tmp
+                      name: tmp
+            initContainers:
+                - command:
+                    - pnpm
+                    - run
+                    - init
+                  image: misskey/misskey:2024.10.1
+                  imagePullPolicy: IfNotPresent
+                  name: misskey-init
+                  securityContext:
+                    readOnlyRootFilesystem: true
+                  volumeMounts:
+                    - mountPath: /misskey/files
+                      name: misskey-pv
+                    - mountPath: /misskey/.config
+                      name: misskey-config
+                      readOnly: true
+            securityContext:
+                fsGroup: 991
+                fsGroupChangePolicy: OnRootMismatch
+            volumes:
+                - name: misskey-pv
+                  persistentVolumeClaim:
+                    claimName: misskey
+                - name: misskey-config
+                  secret:
+                    secretName: misskey
+                - emptyDir: {}
+                  name: tmp
+
+---

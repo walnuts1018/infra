@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: walnuts-dev
+        app.kubernetes.io/name: walnuts-dev
+    name: walnuts-dev
+    namespace: walnuts-dev
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: walnuts-dev
+            app.kubernetes.io/name: walnuts-dev
+    template:
+        metadata:
+            labels:
+                app: walnuts-dev
+                app.kubernetes.io/name: walnuts-dev
+        spec:
+            affinity:
+                nodeAffinity:
+                    preferredDuringSchedulingIgnoredDuringExecution:
+                        - preference:
+                            matchExpressions:
+                                - key: kubernetes.io/arch
+                                  operator: In
+                                  values:
+                                    - amd64
+                          weight: 100
+                        - preference:
+                            matchExpressions:
+                                - key: kubernetes.io/hostname
+                                  operator: NotIn
+                                  values:
+                                    - donut
+                          weight: 10
+            containers:
+                - env:
+                    - name: NEXT_PUBLIC_GA_ID
+                      value: G-NB6F68ZQ9P
+                    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+                      value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+                  image: ghcr.io/walnuts1018/walnuts.dev:149b65e8e64d96baedd360cec387ed8871648a2a-239
+                  imagePullPolicy: IfNotPresent
+                  livenessProbe:
+                    httpGet:
+                        path: /healthz
+                        port: 3000
+                  name: walnuts-dev
+                  ports:
+                    - containerPort: 3000
+                  readinessProbe:
+                    httpGet:
+                        path: /healthz
+                        port: 3000
+                  resources:
+                    limits:
+                        cpu: 500m
+                        memory: 200Mi
+                    requests:
+                        cpu: 10m
+                        memory: 50Mi
+                  securityContext:
+                    readOnlyRootFilesystem: true
+                    seccompProfile:
+                        type: RuntimeDefault
+                  volumeMounts:
+                    - mountPath: /app/.next/cache
+                      name: next-cache
+            priorityClassName: high
+            volumes:
+                - emptyDir: {}
+                  name: next-cache
+
+---

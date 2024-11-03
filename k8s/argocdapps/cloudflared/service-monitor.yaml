@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+    labels:
+        app: cloudflared
+        app.kubernetes.io/name: cloudflared
+    name: cloudflared
+    namespace: network-exporter
+spec:
+    endpoints:
+        - honorLabels: false
+          honorTimestamps: true
+          path: /metrics
+          targetPort: 60123
+    jobLabel: cloudflared
+    namespaceSelector:
+        matchNames:
+            - network-exporter
+    selector:
+        matchLabels:
+            app: cloudflared
+            app.kubernetes.io/name: cloudflared
+
+---

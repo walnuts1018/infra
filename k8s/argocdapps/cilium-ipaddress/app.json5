@@ -1,4 +1,0 @@
-{
-  name: "cilium-ipaddress",
-  namespace: "cilium-system",
-}

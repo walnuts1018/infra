@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+        app: walnuts-dev
+        app.kubernetes.io/name: walnuts-dev
+    name: walnuts-dev
+    namespace: walnuts-dev
+spec:
+    ports:
+        - name: http
+          port: 3000
+          targetPort: 3000
+    selector:
+        app: walnuts-dev
+        app.kubernetes.io/name: walnuts-dev
+    type: ClusterIP
+
+---

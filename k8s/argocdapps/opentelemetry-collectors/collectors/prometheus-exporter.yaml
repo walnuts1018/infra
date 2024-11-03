@@ -1,0 +1,54 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+    name: prometheus-exporter
+spec:
+    autoscaler:
+        maxReplicas: 5
+        metrics:
+            - pods:
+                metric:
+                    name: memory
+                target:
+                    averageValue: 1Gi
+                    type: AverageValue
+              type: Pods
+        minReplicas: 1
+    config:
+        exporters:
+            prometheusremotewrite:
+                endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/write
+                resource_to_telemetry_conversion:
+                    enabled: true
+        processors:
+            batch:
+                send_batch_size: 10000
+                timeout: 10s
+            memory_limiter:
+                check_interval: 5s
+                limit_mib: 2000
+                spike_limit_percentage: 15
+        receivers:
+            otlp:
+                protocols:
+                    grpc:
+                        max_recv_msg_size_mib: 100
+                    http: {}
+        service:
+            pipelines:
+                metrics:
+                    exporters:
+                        - prometheusremotewrite
+                    processors:
+                        - memory_limiter
+                        - batch
+                    receivers:
+                        - otlp
+    image: otel/opentelemetry-collector-contrib
+    managementState: managed
+    mode: deployment
+    resources:
+        requests:
+            memory: 200Mi
+
+---

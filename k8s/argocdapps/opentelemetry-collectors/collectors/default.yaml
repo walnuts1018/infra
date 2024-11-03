@@ -1,0 +1,120 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+    name: default
+spec:
+    autoscaler:
+        maxReplicas: 5
+        minReplicas: 1
+    config:
+        exporters:
+            otlp/prometheus-exporter:
+                endpoint: prometheus-exporter-collector.opentelemetry-collector.svc.cluster.local:4317
+                tls:
+                    insecure: true
+            otlp/signoz:
+                endpoint: signoz-otel-collector.signoz.svc.cluster.local:4317
+                tls:
+                    insecure: true
+            otlp/tempo:
+                endpoint: tempo.monitoring.svc.cluster.local:4317
+                tls:
+                    insecure: true
+            otlphttp/loki:
+                endpoint: http://loki-gateway.loki.svc.cluster.local/otlp
+                tls:
+                    insecure: true
+            otlphttp/prometheus:
+                endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/otlp
+                tls:
+                    insecure: true
+            otlphttp/vaxila:
+                endpoint: https://otlp-vaxila.mackerelio.com
+                headers:
+                    Accept: '*/*'
+                    Mackerel-Api-Key: ${env:VAXILA_APIKEY}
+        processors:
+            batch:
+                send_batch_max_size: 5000
+                send_batch_size: 5000
+                timeout: 10s
+            k8sattributes:
+                auth_type: serviceAccount
+                extract:
+                    metadata:
+                        - k8s.cluster.uid
+                filter:
+                    node_from_env_var: K8S_NODE_NAME
+                passthrough: true
+                pod_association:
+                    - sources:
+                        - from: resource_attribute
+                          name: k8s.pod.ip
+                    - sources:
+                        - from: resource_attribute
+                          name: k8s.pod.uid
+                    - sources:
+                        - from: connection
+            memory_limiter:
+                check_interval: 5s
+                limit_mib: 2000
+                spike_limit_percentage: 15
+        receivers:
+            otlp:
+                protocols:
+                    grpc:
+                        max_recv_msg_size_mib: 100
+                    http: {}
+        service:
+            pipelines:
+                logs:
+                    exporters:
+                        - otlphttp/loki
+                    processors:
+                        - memory_limiter
+                        - batch
+                        - k8sattributes
+                    receivers:
+                        - otlp
+                metrics:
+                    exporters:
+                        - otlp/prometheus-exporter
+                    processors:
+                        - memory_limiter
+                        - batch
+                        - k8sattributes
+                    receivers:
+                        - otlp
+                traces:
+                    exporters:
+                        - otlp/tempo
+                    processors:
+                        - memory_limiter
+                        - batch
+                        - k8sattributes
+                    receivers:
+                        - otlp
+    env:
+        - name: K8S_NODE_IP
+          valueFrom:
+            fieldRef:
+                fieldPath: status.hostIP
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+                fieldPath: spec.nodeName
+        - name: VAXILA_APIKEY
+          valueFrom:
+            secretKeyRef:
+                key: vaxila-api-key
+                name: opentelemetry-collector
+    managementState: managed
+    mode: deployment
+    replicas: 1
+    resources:
+        requests:
+            cpu: 20m
+            memory: 200Mi
+    serviceAccount: otel-collector
+
+---

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: nginx-test
+        app.kubernetes.io/name: nginx-test
+    name: nginx-test
+    namespace: default
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: nginx-test
+            app.kubernetes.io/name: nginx-test
+    template:
+        metadata:
+            labels:
+                app: nginx-test
+                app.kubernetes.io/name: nginx-test
+        spec:
+            containers:
+                - image: nginx:1.27.2
+                  name: nginx-test
+                  ports:
+                    - containerPort: 8080
+                  resources:
+                    limits:
+                        memory: 100Mi
+                    requests:
+                        memory: 5Mi
+                  securityContext: {}
+                  volumeMounts:
+                    - mountPath: /etc/nginx
+                      name: nginx-test-conf
+                      readOnly: true
+                    - mountPath: /tmp
+                      name: tmp
+                    - mountPath: /var/tmp
+                      name: tmp
+                    - mountPath: /var/log/nginx
+                      name: log-nginx
+                    - mountPath: /var/cache/nginx
+                      name: cache-nginx
+                    - mountPath: /var/run
+                      name: var-run
+            volumes:
+                - configMap:
+                    items:
+                        - key: nginx.conf
+                          path: nginx.conf
+                        - key: virtualhost.conf
+                          path: virtualhost/virtualhost.conf
+                    name: nginx-test
+                  name: nginx-test-conf
+                - emptyDir: {}
+                  name: tmp
+                - emptyDir: {}
+                  name: log-nginx
+                - emptyDir: {}
+                  name: cache-nginx
+                - emptyDir: {}
+                  name: var-run
+
+---

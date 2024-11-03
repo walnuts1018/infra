@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: local-path-storage-external
+    namespace: argocd
+spec:
+    destination:
+        namespace: local-path-storage
+        server: https://kubernetes.default.svc
+    project: default
+    source:
+        path: deploy
+        repoURL: https://github.com/rancher/local-path-provisioner
+        targetRevision: v0.0.30
+    syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
+
+---

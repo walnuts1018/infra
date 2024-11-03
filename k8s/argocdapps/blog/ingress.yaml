@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    labels:
+        app: blog
+        app.kubernetes.io/name: blog
+    name: blog
+    namespace: default
+spec:
+    ingressClassName: nginx
+    rules:
+        - host: blog.walnuts.dev
+          http:
+            paths:
+                - backend:
+                    service:
+                        name: blog
+                        port:
+                            number: 8080
+                  path: /
+                  pathType: Prefix
+
+---

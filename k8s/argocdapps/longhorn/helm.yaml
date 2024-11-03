@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: longhorn-helm
+    namespace: argocd
+spec:
+    destination:
+        namespace: longhorn-system
+        server: https://kubernetes.default.svc
+    project: default
+    source:
+        chart: longhorn
+        helm:
+            releaseName: longhorn
+            values: |
+                defaultSettings:
+                  allowNodeDrainWithLastHealthyReplica: true
+                  orphanAutoDeletion: true
+                  backupTarget: "cifs://samba.walnuts.dev/share/longhorn"
+                  backupTargetCredentialSecret: "cifs-secret"
+                  defaultReplicaCount: 2
+                csi:
+                  attacherReplicaCount: 2
+                  provisionerReplicaCount: 2
+                  resizerReplicaCount: 2
+                  snapshotterReplicaCount: 2
+                service:
+                  ui:
+                    type: ClusterIP
+                persistence:
+                  defaultClassReplicaCount: 2
+                  reclaimPolicy: Retain
+
+                longhornUI:
+                  replicas: 2
+                longhornConversionWebhook:
+                  replicas: 2
+                longhornAdmissionWebhook:
+                  replicas: 2
+                longhornRecoveryBackend:
+                  replicas: 2
+                metrics:
+                  serviceMonitor:
+                    enabled: true
+        repoURL: https://charts.longhorn.io
+        targetRevision: 1.7.2
+    syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
+
+---

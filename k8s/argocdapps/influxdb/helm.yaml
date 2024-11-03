@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: influxdb-helm
+    namespace: argocd
+spec:
+    destination:
+        namespace: databases
+        server: https://kubernetes.default.svc
+    project: default
+    source:
+        chart: influxdb2
+        helm:
+            releaseName: influxdb
+            values: |
+                ## Create default user through docker entrypoint
+                ## Defaults indicated below
+                ##
+                adminUser:
+                  user: "admin"
+                  ## The password and token are obtained from an existing secret. The expected
+                  ## keys are `admin-password` and `admin-token`.
+                  existingSecret: influxdb
+
+                persistence:
+                  enabled: true
+                  storageClass: "longhorn"
+                  volumeName: influxdb
+                  accessMode: ReadWriteOnce
+                  size: 10Gi
+                  mountPath: /var/lib/influxdb2
+                  subPath: ""
+
+                ingress:
+                  enabled: true
+                  # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+                  # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+                  className: nginx
+                  tls: false
+                  # secretName: my-tls-cert # only needed if tls above is true or default certificate is not configured for Nginx
+                  hostname: influxdb.walnuts.dev
+                  annotations: {}
+                  # kubernetes.io/ingress.class: "nginx"
+                  # kubernetes.io/tls-acme: "true"
+                  path: /
+
+                resources:
+                  requests:
+                    memory: 200Mi
+                  limits:
+                    memory: 512Mi
+        repoURL: https://helm.influxdata.com/
+        targetRevision: 2.1.2
+    syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
+
+---

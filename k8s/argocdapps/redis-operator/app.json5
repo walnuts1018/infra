@@ -1,4 +1,0 @@
-{
-  name: "redis-operator",
-  namespace: "redis-operator",
-}

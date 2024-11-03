@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: tempo-helm
+    namespace: argocd
+spec:
+    destination:
+        namespace: monitoring
+        server: https://kubernetes.default.svc
+    project: default
+    source:
+        chart: tempo
+        helm:
+            releaseName: tempo
+            values: |
+                tempo:
+                  resources:
+                    requests:
+                      memory: 300Mi
+                    limits:
+                      memory: 4Gi
+                  storage:
+                    trace:
+                      backend: s3
+                      s3:
+                        bucket: tempo
+                        endpoint: "minio.minio.svc.cluster.local:9000"
+                        access_key: '${MINIO_ACCESS_KEY}'
+                        secret_key: '${MINIO_SECRET_KEY}'
+                        insecure: true
+                  extraEnv:
+                  - name: MINIO_ACCESS_KEY
+                    valueFrom:
+                      secretKeyRef:
+                        name: tempo-credentials
+                        key: MINIO_ACCESS_KEY
+                  - name: MINIO_SECRET_KEY
+                    valueFrom:
+                      secretKeyRef:
+                        name: tempo-credentials
+                        key: MINIO_SECRET_KEY
+                  extraArgs:
+                    "-config.expand-env": true
+        repoURL: https://grafana.github.io/helm-charts
+        targetRevision: 1.11.0
+    syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
+
+---

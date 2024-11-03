@@ -1,0 +1,69 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: descheduler-helm
+    namespace: argocd
+spec:
+    destination:
+        namespace: kube-system
+        server: https://kubernetes.default.svc
+    project: default
+    source:
+        chart: descheduler
+        helm:
+            releaseName: descheduler
+            values: |
+                deschedulerPolicy:
+                  profiles:
+                  - name: default
+                    pluginConfig:
+                    - name: DefaultEvictor
+                      args:
+                        ignorePvcPods: true
+                        evictLocalStoragePods: true
+                    - name: RemoveDuplicates
+                    - name: RemovePodsHavingTooManyRestarts
+                      args:
+                        podRestartThreshold: 100
+                        includingInitContainers: true
+                    - name: RemovePodsViolatingNodeTaints
+                    - name: RemovePodsViolatingInterPodAntiAffinity
+                    - name: RemovePodsViolatingNodeAffinity
+                      args:
+                        nodeAffinityType:
+                        - requiredDuringSchedulingIgnoredDuringExecution
+                    - name: RemovePodsViolatingTopologySpreadConstraint
+                      args:
+                        constraints:
+                        - ScheduleAnyway
+                    - name: LowNodeUtilization
+                      args:
+                        thresholds:
+                          cpu: 30
+                          memory: 50
+                          pods: 30
+                        targetThresholds:
+                          cpu: 50
+                          memory: 60
+                          pods: 50
+                    plugins:
+                      balance:
+                        enabled:
+                        - RemoveDuplicates
+                        - RemovePodsViolatingNodeAffinity
+                        - RemovePodsViolatingTopologySpreadConstraint
+                        - LowNodeUtilization
+                      deschedule:
+                        enabled:
+                        - RemovePodsHavingTooManyRestarts
+                        - RemovePodsViolatingNodeTaints
+                        - RemovePodsViolatingNodeAffinity
+                        - RemovePodsViolatingInterPodAntiAffinity
+        repoURL: https://kubernetes-sigs.github.io/descheduler/
+        targetRevision: 0.31.0
+    syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
+
+---

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    labels:
+        app: nginx-test
+        app.kubernetes.io/name: nginx-test
+    name: nginx-test
+    namespace: default
+spec:
+    ingressClassName: nginx
+    rules:
+        - host: nginxtest.walnuts.dev
+          http:
+            paths:
+                - backend:
+                    service:
+                        name: nginx-test
+                        port:
+                            number: 8080
+                  path: /
+                  pathType: Prefix
+
+---

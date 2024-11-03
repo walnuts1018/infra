@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: code-server-operator-helm
+    namespace: argocd
+spec:
+    destination:
+        namespace: code-server
+        server: https://kubernetes.default.svc
+    project: default
+    source:
+        chart: code-server-operator
+        helm:
+            releaseName: code-server-operator
+            values: |
+                fullnameOverride: code-server-operator
+        repoURL: https://walnuts1018.github.io/code-server-operator/
+        targetRevision: 0.5.7
+    syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
+
+---

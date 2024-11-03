@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: tailscale
+        app.kubernetes.io/name: tailscale
+    name: tailscale
+    namespace: network-exporter
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: tailscale
+            app.kubernetes.io/name: tailscale
+    template:
+        metadata:
+            annotations:
+                k8s.v1.cni.cncf.io/networks: '[{"name": "tailscale-bridge", "ips": ["192.168.0.24/24"]}]'
+            labels:
+                app: tailscale
+                app.kubernetes.io/name: tailscale
+        spec:
+            containers:
+                - env:
+                    - name: TS_KUBE_SECRET
+                      value: tailscale
+                    - name: TS_USERSPACE
+                      value: "true"
+                    - name: TS_AUTH_KEY
+                      valueFrom:
+                        secretKeyRef:
+                            key: TS_AUTH_KEY
+                            name: tailscale-auth1
+                            optional: true
+                    - name: TS_ROUTES
+                      value: 192.168.0.2/31,192.168.0.4/30,192.168.0.8/29,192.168.0.16/28,192.168.0.32/27,192.168.0.64/26,192.168.0.128/25,192.168.120.0/24
+                    - name: TS_EXTRA_ARGS
+                      value: --advertise-tags=tag:localserver --snat-subnet-routes=false --accept-routes --reset
+                  image: ghcr.io/tailscale/tailscale:v1.76.1
+                  imagePullPolicy: IfNotPresent
+                  name: tailscale
+                  resources:
+                    limits: {}
+                    requests:
+                        memory: 20Mi
+                  securityContext:
+                    readOnlyRootFilesystem: true
+                    runAsGroup: 1000
+                    runAsNonRoot: true
+                    runAsUser: 1000
+                    seccompProfile:
+                        type: RuntimeDefault
+                  volumeMounts:
+                    - mountPath: /tmp
+                      name: tmp
+            priorityClassName: high
+            serviceAccountName: tailscale
+            volumes:
+                - emptyDir: {}
+                  name: tmp
+
+---

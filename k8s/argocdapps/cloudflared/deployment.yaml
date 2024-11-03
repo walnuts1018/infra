@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: cloudflared
+        app.kubernetes.io/name: cloudflared
+    name: cloudflared
+    namespace: network-exporter
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: cloudflared
+            app.kubernetes.io/name: cloudflared
+    template:
+        metadata:
+            labels:
+                app: cloudflared
+                app.kubernetes.io/name: cloudflared
+        spec:
+            affinity:
+                podAntiAffinity:
+                    preferredDuringSchedulingIgnoredDuringExecution:
+                        - podAffinityTerm:
+                            labelSelector:
+                                matchExpressions:
+                                    - key: app
+                                      operator: In
+                                      values:
+                                        - cloudflared
+                            topologyKey: kubernetes.io/hostname
+                          weight: 10
+            containers:
+                - args:
+                    - --no-autoupdate
+                    - --metrics=0.0.0.0:60123
+                    - tunnel
+                    - run
+                  env:
+                    - name: TUNNEL_TOKEN
+                      valueFrom:
+                        secretKeyRef:
+                            key: cloudflared-token
+                            name: cloudflared
+                  image: cloudflare/cloudflared:2024.10.1
+                  imagePullPolicy: IfNotPresent
+                  livenessProbe:
+                    failureThreshold: 1
+                    httpGet:
+                        path: /ready
+                        port: 60123
+                    initialDelaySeconds: 10
+                    periodSeconds: 10
+                  name: cloudflared
+                  ports:
+                    - containerPort: 60123
+                  resources:
+                    limits:
+                        cpu: 100m
+                        memory: 512Mi
+                    requests:
+                        cpu: 10m
+                        memory: 32Mi
+                  securityContext:
+                    readOnlyRootFilesystem: true
+            securityContext:
+                sysctls:
+                    - name: net.ipv4.ping_group_range
+                      value: 0 2147483647
+
+---

@@ -1,0 +1,85 @@
+apiVersion: acid.zalan.do/v1
+kind: postgresql
+metadata:
+    name: default
+spec:
+    databases:
+        ac_hacking: ac_hacking
+        fitbit_manager: fitbit_manager
+        grafana: grafana
+        hedgedoc: hedgedoc
+        juglans: juglans
+        misskey: misskey
+        mucaron: mucaron
+        nextcloud: nextcloud
+        oekaki_dengon_game: oekaki_dengon_game
+        openchokin: openchokin
+        wakatime_to_slack: wakatime
+        y_2024: y_2024
+        zitadel: zitadel
+    enableLogicalBackup: true
+    logicalBackupRetention: 1 week
+    logicalBackupSchedule: 0 18 * * *
+    nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                    - key: kubernetes.io/arch
+                      operator: In
+                      values:
+                        - amd64
+              weight: 100
+            - preference:
+                matchExpressions:
+                    - key: kubernetes.io/hostname
+                      operator: NotIn
+                      values:
+                        - donut
+              weight: 10
+    numberOfInstances: 3
+    patroni:
+        pg_hba:
+            - local      all             all                             trust
+            - hostssl    all             +zalandos    127.0.0.1/32       pam
+            - host       all             all          127.0.0.1/32       md5
+            - hostssl    all             +zalandos    ::1/128            pam
+            - host       all             all          ::1/128            md5
+            - local      replication     standby                         trust
+            - hostssl    replication     standby      all                md5
+            - hostssl    all             +zalandos    all                pam
+            - hostssl    all             all          all                md5
+            - host       all             all          10.0.0.0/8      md5
+    postgresql:
+        parameters:
+            max_standby_archive_delay: 180s
+            max_standby_streaming_delay: 180s
+        version: "16"
+    resources:
+        limits:
+            memory: 2Gi
+        requests:
+            cpu: 10m
+            memory: 600Mi
+    teamId: default
+    users:
+        ac_hacking: []
+        fitbit_manager: []
+        grafana: []
+        hedgedoc: []
+        juglans: []
+        misskey: []
+        mucaron: []
+        nextcloud: []
+        oekaki_dengon_game: []
+        openchokin: []
+        postgres:
+            - superuser
+            - createdb
+        wakatime: []
+        y_2024: []
+        zitadel: []
+    volume:
+        size: 20Gi
+        storageClass: longhorn
+
+---

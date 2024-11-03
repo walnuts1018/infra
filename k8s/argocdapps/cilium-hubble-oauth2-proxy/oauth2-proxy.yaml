@@ -1,0 +1,140 @@
+apiVersion: v1
+items:
+    - apiVersion: external-secrets.io/v1beta1
+      kind: ExternalSecret
+      metadata:
+        name: hubble-oauth2-proxy
+      spec:
+        data:
+            - remoteRef:
+                key: hubble-oauth2-proxy
+                property: client-id
+              secretKey: client-id
+            - remoteRef:
+                key: hubble-oauth2-proxy
+                property: client-secret
+              secretKey: client-secret
+            - remoteRef:
+                key: hubble-oauth2-proxy
+                property: cookie-secret
+              secretKey: cookie-secret
+            - remoteRef:
+                key: redis
+                property: password
+              secretKey: redis-password
+        refreshInterval: 1m
+        secretStoreRef:
+            kind: ClusterSecretStore
+            name: onepassword
+        target:
+            name: hubble-oauth2-proxy
+    - apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: hubble-oauth2-proxy-helm
+        namespace: argocd
+      spec:
+        destination:
+            namespace: cilium-system
+            server: https://kubernetes.default.svc
+        project: default
+        source:
+            chart: oauth2-proxy
+            helm:
+                releaseName: hubble-oauth2-proxy
+                valuesObject:
+                    config:
+                        configFile: |-
+                            email_domains = [ "*" ]
+                            upstreams = [ "http://hubble-ui.cilium-system.svc.cluster.local:80" ]
+                            pass_access_token = true
+                            user_id_claim = "sub"
+                            oidc_groups_claim="my:zitadel:grants"
+                            allowed_groups = ["237477822715658605:hubble-admin"]
+                        existingSecret: hubble-oauth2-proxy
+                    extraArgs:
+                        oidc-issuer-url: https://auth.walnuts.dev
+                        provider: oidc
+                        redirect-url: https://hubble.walnuts.dev/oauth2/callback
+                        skip-provider-button: true
+                    ingress:
+                        className: nginx
+                        enabled: true
+                        hosts:
+                            - hubble.walnuts.dev
+                        path: /
+                        pathType: Prefix
+                    metrics:
+                        enabled: true
+                    sessionStorage:
+                        redis:
+                            clientType: sentinel
+                            existingSecret: hubble-oauth2-proxy
+                            passwordKey: redis-password
+                            sentinel:
+                                connectionUrls: redis://hubble-oauth2-proxy-redis:6379,redis://hubble-oauth2-proxy-redis-sentinel:26379
+                                existingSecret: hubble-oauth2-proxy
+                                masterName: mymaster
+                                passwordKey: redis-password
+                        type: redis
+            repoURL: https://oauth2-proxy.github.io/manifests
+            targetRevision: 7.7.28
+        syncPolicy:
+            automated:
+                prune: true
+                selfHeal: true
+    - apiVersion: redis.redis.opstreelabs.in/v1beta2
+      kind: RedisReplication
+      metadata:
+        labels:
+            app: hubble-oauth2-proxy-redis
+            app.kubernetes.io/name: hubble-oauth2-proxy-redis
+        name: hubble-oauth2-proxy-redis
+      spec:
+        clusterSize: 2
+        kubernetesConfig:
+            image: quay.io/opstree/redis:v7.0.12
+            imagePullPolicy: IfNotPresent
+            redisSecret:
+                key: redis-password
+                name: hubble-oauth2-proxy
+        podSecurityContext:
+            fsGroup: 1000
+            runAsUser: 1000
+        storage:
+            volumeClaimTemplate:
+                spec:
+                    accessModes:
+                        - ReadWriteOnce
+                    resources:
+                        requests:
+                            storage: 1Gi
+    - apiVersion: redis.redis.opstreelabs.in/v1beta2
+      kind: RedisSentinel
+      metadata:
+        labels:
+            app: hubble-oauth2-proxy-redis
+            app.kubernetes.io/name: hubble-oauth2-proxy-redis
+        name: hubble-oauth2-proxy-redis
+      spec:
+        clusterSize: 3
+        kubernetesConfig:
+            image: quay.io/opstree/redis-sentinel:v7.0.12
+            imagePullPolicy: IfNotPresent
+            redisSecret:
+                key: redis-password
+                name: hubble-oauth2-proxy
+        podSecurityContext:
+            fsGroup: 1000
+            runAsUser: 1000
+        redisSentinelConfig:
+            downAfterMilliseconds: "30000"
+            failoverTimeout: "180000"
+            masterGroupName: mymaster
+            parallelSyncs: "1"
+            quorum: "2"
+            redisPort: "6379"
+            redisReplicationName: hubble-oauth2-proxy-redis
+kind: List
+
+---

@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: samba
+        app.kubernetes.io/name: samba
+    name: samba
+    namespace: samba
+spec:
+    selector:
+        matchLabels:
+            app: samba
+            app.kubernetes.io/name: samba
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                app: samba
+                app.kubernetes.io/name: samba
+        spec:
+            containers:
+                - env:
+                    - name: ACCOUNT_samba
+                      valueFrom:
+                        secretKeyRef:
+                            key: account-samba
+                            name: samba-secret
+                    - name: SAMBA_CONF_LOG_LEVEL
+                      value: "3"
+                    - name: WSDD2_DISABLE
+                      value: "1"
+                    - name: AVAHI_DISABLE
+                      value: "1"
+                    - name: GROUPS_samba
+                      value: samba
+                    - name: SAMBA_VOLUME_CONFIG_share
+                      value: '[share]; path=/samba-share; valid users = samba; public = no; read only = no; browseable = yes; available = yes'
+                    - name: SAMBA_GLOBAL_CONFIG_smb_SPACE_ports
+                      value: 10445 10139
+                  image: ghcr.io/servercontainers/samba:a3.20.3-s4.19.6-r0
+                  imagePullPolicy: IfNotPresent
+                  name: samba
+                  ports:
+                    - containerPort: 10445
+                      name: samba
+                  resources:
+                    limits:
+                        cpu: 1000m
+                        memory: 10Gi
+                    requests:
+                        cpu: 10m
+                        memory: 850Mi
+                  securityContext:
+                    seccompProfile:
+                        type: RuntimeDefault
+                  volumeMounts:
+                    - mountPath: /samba-share
+                      name: samba-local-dir
+            nodeSelector:
+                kubernetes.io/hostname: cake
+            securityContext:
+                fsGroup: 1000
+                fsGroupChangePolicy: OnRootMismatch
+            volumes:
+                - hostPath:
+                    path: /mnt/data/share
+                    type: Directory
+                  name: samba-local-dir
+
+---

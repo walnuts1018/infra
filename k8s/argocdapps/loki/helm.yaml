@@ -1,0 +1,166 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: loki-helm
+    namespace: argocd
+spec:
+    destination:
+        namespace: loki
+        server: https://kubernetes.default.svc
+    project: default
+    source:
+        chart: loki
+        helm:
+            releaseName: loki
+            values: |
+                deploymentMode: SimpleScalable
+                loki:
+                  auth_enabled: false
+                  commonConfig:
+                    replication_factor: 1
+                  storage:
+                    type: s3
+                    bucketNames:
+                      chunks: "loki-chunks"
+                      ruler: "loki-ruler"
+                      admin: "loki-admin"
+                    s3:
+                      endpoint: "http://minio.minio.svc.cluster.local:9000"
+                      region: ap-northeast-1
+                      secretAccessKey: "${secretAccessKey}"
+                      accessKeyId: "${accessKeyId}"
+                      s3ForcePathStyle: true
+                      insecure: true
+                      http_config:
+                        insecure_skip_verify: true
+                  server:
+                    # "error": "HTTP 500 \"Internal Server Error\": rpc error: code = ResourceExhausted desc = grpc: received message larger than max (4840865 vs. 4194304)"
+                    # https://grafana.com/docs/loki/latest/configure/
+                    grpc_server_max_recv_msg_size: 104857600
+                    grpc_server_max_send_msg_size: 104857600
+                  schemaConfig:
+                    configs:
+                    - from: '2024-01-01'
+                      store: tsdb
+                      index:
+                        prefix: loki_index_
+                        period: 24h
+                      object_store: s3
+                      schema: v13
+                  ingester:
+                    chunk_encoding: snappy
+                  tracing:
+                    enabled: true
+                  querier:
+                    max_concurrent: 4
+                  limits_config:
+                    allow_structured_metadata: true
+                    retention_period: 336h
+                    ingestion_burst_size_mb: 100
+                    shard_streams:
+                      enabled: true
+                      desired_rate: 104857600 # 10MiB
+                    reject_old_samples: false
+                write:
+                  replicas: 2
+                  autoscaling:
+                    enabled: true
+                    minReplicas: 1
+                    maxReplicas: 6
+                    targetCPUUtilizationPercentage: 700
+                    targetMemoryUtilizationPercentage: 200
+                  resources:
+                    requests:
+                      memory: 300Mi
+                      cpu: 100m
+                    limits:
+                      memory: 1Gi
+                      cpu: 1
+                  extraArgs: ["-config.expand-env=true"]
+                  extraEnvFrom:
+                  - secretRef:
+                      name: loki-minio
+                  persistence:
+                    volumeClaimsEnabled: false
+                    dataVolumeParameters:
+                      emptyDir: {}
+
+                read:
+                  replicas: 2
+                  autoscaling:
+                    enabled: true
+                    minReplicas: 1
+                    maxReplicas: 6
+                    targetCPUUtilizationPercentage: 500
+                    targetMemoryUtilizationPercentage: 200
+                  resources:
+                    requests:
+                      memory: 200Mi
+                      cpu: 10m
+                    limits:
+                      memory: 1Gi
+                      cpu: 1
+                  extraArgs: ["-config.expand-env=true"]
+                  extraEnvFrom:
+                  - secretRef:
+                      name: loki-minio
+
+                backend:
+                  replicas: 2
+                  autoscaling:
+                    enabled: true
+                    minReplicas: 2
+                    maxReplicas: 6
+                    targetCPUUtilizationPercentage: 800
+                    targetMemoryUtilizationPercentage: 200
+                  resources:
+                    requests:
+                      memory: 256Mi
+                      cpu: 10m
+                    limits:
+                      memory: 1Gi
+                      cpu: 100m
+                  extraArgs: ["-config.expand-env=true"]
+                  extraEnvFrom:
+                  - secretRef:
+                      name: loki-minio
+                  persistence:
+                    volumeClaimsEnabled: false
+                    dataVolumeParameters:
+                      emptyDir: {}
+
+                singleBinary:
+                  replicas: 0
+
+                sidecar:
+                  resources:
+                    limits:
+                      cpu: 100m
+                      memory: 100Mi
+                    requests:
+                      cpu: 50m
+                      memory: 50Mi
+                chunksCache:
+                  allocatedMemory: 8192
+                  resources:
+                    requests:
+                      cpu: 50m
+                      memory: 300Mi
+                    limits:
+                      memory: 9830Mi
+                resultsCache:
+                  allocatedMemory: 1024
+                  resources:
+                    requests:
+                      cpu: 50m
+                      memory: 50Mi
+                    limits:
+                      memory: 1229Mi
+        repoURL: https://grafana.github.io/helm-charts
+        targetRevision: 6.18.0
+    syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
+
+---

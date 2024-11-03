@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: photoprism-mariadb-helm
+    namespace: argocd
+spec:
+    destination:
+        namespace: photoprism
+        server: https://kubernetes.default.svc
+    project: default
+    source:
+        chart: mariadb
+        helm:
+            releaseName: photoprism-mariadb
+            values: |
+                auth:
+                  database: photoprism
+                  username: "photoprism"
+                  replicationUser: replicator
+                  existingSecret: "photoprism-mariadb"
+                architecture: standalone
+                primary:
+                  name:
+                  persistence:
+                    enabled: true
+                    existingClaim: "photoprism-mariadb"
+                    storageClass: "longhorn"
+                    size: 8Gi
+                  service:
+                    type: LoadBalancer
+                    loadBalancerIP: "192.168.0.135"
+                  resourcesPreset: "medium"
+                  resources:
+                    requests:
+                      # cpu: 50m
+                      memory: 256Mi
+                    limits:
+                      # cpu: 1
+                      memory: 1Gi
+
+                # when architecture is set to "replication" the following values are required
+                # secondary:
+                #   persistence:
+                #     enabled: true
+                #     existingClaim: "photoprism-mariadb-secondary"
+                #     storageClass: "longhorn"
+                #     size: 8Gi
+                #   service:
+                #     type: ClusterIP
+                #   resourcesPreset: "medium"
+        repoURL: https://charts.bitnami.com/bitnami
+        targetRevision: 19.1.1
+    syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
+
+---

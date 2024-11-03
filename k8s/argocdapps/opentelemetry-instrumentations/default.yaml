@@ -1,0 +1,27 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+    name: default
+spec:
+    dotnet:
+        env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4318
+    exporter:
+        endpoint: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+    go:
+        env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4318
+    propagators:
+        - tracecontext
+        - baggage
+    python:
+        env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4318
+    sampler:
+        argument: "1"
+        type: parentbased_traceidratio
+
+---

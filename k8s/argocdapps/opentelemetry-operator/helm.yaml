@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+    name: opentelemetry-operator-helm
+    namespace: argocd
+spec:
+    destination:
+        namespace: opentelemetry-operator-system
+        server: https://kubernetes.default.svc
+    project: default
+    source:
+        chart: opentelemetry-operator
+        helm:
+            releaseName: opentelemetry-operator
+            values: |
+                manager:
+                  collectorImage:
+                    repository: "otel/opentelemetry-collector-k8s"
+                  extraArgs:
+                  - --enable-go-instrumentation=true
+                  - --enable-nginx-instrumentation=true
+                  resources:
+                    limits:
+                      memory: 128Mi
+                    requests:
+                      cpu: 5m
+                      memory: 64Mi
+        repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
+        targetRevision: 0.72.0
+    syncPolicy:
+        automated:
+            prune: true
+            selfHeal: true
+
+---

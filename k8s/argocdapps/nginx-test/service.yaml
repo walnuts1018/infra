@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+        app: nginx-test
+        app.kubernetes.io/name: nginx-test
+    name: nginx-test
+    namespace: default
+spec:
+    ports:
+        - port: 8080
+          protocol: TCP
+          targetPort: 8080
+    selector:
+        app: nginx-test
+        app.kubernetes.io/name: nginx-test
+    type: ClusterIP
+
+---
