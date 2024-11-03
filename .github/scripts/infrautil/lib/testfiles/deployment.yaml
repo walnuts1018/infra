@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: http-dump
+    app.kubernetes.io/name: http-dump
+  name: http-dump
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-dump
+      app.kubernetes.io/name: http-dump
+  template:
+    metadata:
+      labels:
+        app: http-dump
+        app.kubernetes.io/name: http-dump
+    spec:
+      containers:
+      - env:
+        - name: OTEL_EXPORTER_OTLP_INSECURE
+          value: "true"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+        image: ghcr.io/walnuts1018/http-dump:629824cedeccfb239b7d490f2f6dffb70f12a5f7-24
+        name: http-dump
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: "0"
+            memory: 10Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          seccompProfile:
+            type: RuntimeDefault

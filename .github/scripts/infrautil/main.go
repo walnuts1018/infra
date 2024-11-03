@@ -23,6 +23,7 @@ func main() {
 	subcommands.Register(subcommands.FlagsCommand(), "")
 	subcommands.Register(subcommands.CommandsCommand(), "")
 	subcommands.Register(&namespaceCmd{}, "")
+	subcommands.Register(&snapshotCmd{}, "")
 
 	flag.Parse()
 	ctx := context.Background()

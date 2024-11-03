@@ -10,10 +10,13 @@ build-infrautil:
 namespace: build-infrautil
 	$(INFRAUTIL) namespace -d ./k8s/argocdapps -o ./k8s/namespaces/namespaces.json5
 
-SECRET_KEY := $(shell op item get minio-default-secret-key --field secret_key --reveal)
+.PHONY: snapshot
+snapshot: build-infrautil
+	$(INFRAUTIL) snapshot -d ./k8s/argocdapps -o ./k8s/snapshots/argocdapps
 
-.PHONY: terraform
-terraform:
-	terraform -chdir=".\terraform\kurumi" init
-	terraform -chdir=".\terraform\kurumi" plan -var="minio_secret_key=$(SECRET_KEY)"
-	terraform -chdir=".\terraform\kurumi" apply -var="minio_secret_key=$(SECRET_KEY)" -auto-approve
+# SECRET_KEY := $(shell op item get minio-default-secret-key --field secret_key --reveal)
+# .PHONY: terraform
+# terraform: 
+# 	terraform -chdir=".\terraform\kurumi" init
+# 	terraform -chdir=".\terraform\kurumi" plan -var="minio_secret_key=$(SECRET_KEY)"
+# 	terraform -chdir=".\terraform\kurumi" apply -var="minio_secret_key=$(SECRET_KEY)" -auto-approve
