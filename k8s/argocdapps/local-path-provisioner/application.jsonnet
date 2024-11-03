@@ -11,7 +11,7 @@
       namespace: (import 'app.json5').namespace,
       server: 'https://kubernetes.default.svc',
     },
-    sources: {
+    source: {
       path: 'deploy',
       repoURL: 'https://github.com/rancher/local-path-provisioner',
       targetRevision: 'v0.0.30',
