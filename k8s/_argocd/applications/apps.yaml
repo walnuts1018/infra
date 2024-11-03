@@ -28,6 +28,7 @@ spec:
         path: '{{.path.path}}'
         directory:
           recurse: true
+          exclude: 'config/*'
           jsonnet:
             tlas:
             - name: ''
