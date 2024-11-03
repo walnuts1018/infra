@@ -5,7 +5,7 @@ on:
     branches:
       - snapshot
     paths:
-      - .github/workflows/security-scan.yaml
+      - .github/workflows/scan.yaml
       - "k8s/**"
       - "trivy.yaml"
       - ".trivyignore.yaml"
