@@ -106,7 +106,7 @@
                 name: 'samba-id-ed25519',
                 secret: {
                   secretName: (import 'external-secret.jsonnet').spec.target.name,
-                  defaultMode: 0600,
+                  defaultMode: 600,
                 },
               },
             ],
