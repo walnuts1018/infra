@@ -63,7 +63,7 @@
                 envFrom: [
                   {
                     secretRef: {
-                      name: 'photoprism',
+                      name: (import 'external-secret.jsonnet').spec.target.name,
                       optional: false,
                     },
                   },
