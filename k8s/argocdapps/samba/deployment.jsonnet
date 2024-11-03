@@ -87,6 +87,9 @@
           }, {
             securityContext: {
               readOnlyRootFilesystem: false,
+              capabilities: {
+                add: ['NET_BIND_SERVICE', 'SETGID'],
+              },
             },
           }),
         ],
