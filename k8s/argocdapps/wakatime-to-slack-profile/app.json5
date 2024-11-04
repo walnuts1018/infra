@@ -1,4 +1,4 @@
 {
   name: "wakatime-to-slack-profile",
-  namespace: "default",
+  namespace: "wakatime-to-slack-profile",
 }
