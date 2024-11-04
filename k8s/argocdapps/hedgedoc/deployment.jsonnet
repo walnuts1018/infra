@@ -26,6 +26,7 @@
                 containerPort: 3000,
               },
             ],
+            securityContext:: null,
             resources: {
               limits: {},
               requests: {
