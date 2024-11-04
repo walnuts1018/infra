@@ -18,7 +18,7 @@
               pathType: 'Prefix',
               backend: {
                 service: {
-                  name: (import 'service.json5').metadata.name,
+                  name: (import 'service.jsonnet').metadata.name,
                   port: {
                     number: 80,
                   },
