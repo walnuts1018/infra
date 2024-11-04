@@ -1,4 +1,4 @@
 {
   name: "http-dump",
-  namespace: "default",
+  namespace: "sandbox",
 }
