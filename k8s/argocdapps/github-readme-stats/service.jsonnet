@@ -7,9 +7,7 @@
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
-    selector: {
-      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
-    },
+    selector: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
     ports: [
       {
         protocol: 'TCP',
