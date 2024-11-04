@@ -45,7 +45,7 @@
                 name: 'CMD_DB_URL',
                 valueFrom: {
                   secretKeyRef: {
-                    name: 'hedgedoc-secret',
+                    name: (import 'external-secret.jsonnet').spec.target.name,
                     key: 'db-url',
                   },
                 },
