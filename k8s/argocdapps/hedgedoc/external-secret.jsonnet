@@ -1,26 +1,5 @@
-(import '../../components/external-secret.libsonnet') {
+std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: (import 'app.json5').name,
-  spec: {
-    secretStoreRef: {
-      name: 'onepassword',
-      kind: 'ClusterSecretStore',
-    },
-    refreshInterval: '1m',
-    target: {
-      name: $.metadata.name,
-      template: {
-        engineVersion: 'v2',
-        type: 'Opaque',
-        data: {
-          'db-url': 'postgres://hedgedoc:{{ .dbpassword }}@postgresql-default.databases.svc.cluster.local/hedgedoc',
-          'client-secret': '{{ .clientsecret }}',
-          'minio-access-key': '{{ .minioaccesskey }}',
-          'minio-secret-key': '{{ .miniosecretkey }}',
-          'session-secret': '{{ .sessionsecret }}',
-        },
-      },
-    },
-  },
   data: [
     {
       secretKey: 'dbpassword',
@@ -58,4 +37,20 @@
       },
     },
   ],
-}
+}, {
+  spec: {
+    target: {
+      template: {
+        engineVersion: 'v2',
+        type: 'Opaque',
+        data: {
+          'db-url': 'postgres://hedgedoc:{{ .dbpassword }}@postgresql-default.databases.svc.cluster.local/hedgedoc',
+          'client-secret': '{{ .clientsecret }}',
+          'minio-access-key': '{{ .minioaccesskey }}',
+          'minio-secret-key': '{{ .miniosecretkey }}',
+          'session-secret': '{{ .sessionsecret }}',
+        },
+      },
+    },
+  },
+})
