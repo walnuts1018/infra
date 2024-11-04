@@ -84,9 +84,7 @@
               }, {
                 securityContext: {
                   readOnlyRootFilesystem: false,
-                  capabilities: {
-                    add: ['NET_BIND_SERVICE', 'SYS_ADMIN'],
-                  },
+                  privileged: true,
                 },
               }),
             ],
