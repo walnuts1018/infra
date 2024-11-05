@@ -1,0 +1,16 @@
+image:
+  repository: ghcr.io/joryirving/smartctl_exporter
+  tag: "0.12.0"
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "9666"
+  prometheus.io/path: "/metrics"
+serviceMonitor:
+  enabled: true
+  relabelings:
+  - sourceLabels: [ __meta_kubernetes_pod_node_name ]
+    separator: ;
+    regex: ^(.*)$
+    targetLabel: node
+    replacement: $1
+    action: replace
