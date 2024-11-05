@@ -1,15 +1,11 @@
-(import '_base.libsonnet') + {
-  apiVersion: 'opentelemetry.io/v1beta1',
-  kind: 'OpenTelemetryCollector',
+std.mergePatch((import '_base.libsonnet'), {
   metadata: {
     name: 'k8s-deployment',
   },
   spec: {
     replicas: 1,
-    serviceAccount: 'otel-collector',
     mode: 'deployment',
     image: 'otel/opentelemetry-collector-k8s',
-    managementState: 'managed',
     config: {
       receivers: {
         k8s_cluster: {
@@ -113,4 +109,4 @@
       },
     ],
   },
-}
+})
