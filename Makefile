@@ -20,3 +20,11 @@ snapshot: build-infrautil
 # 	terraform -chdir=".\terraform\kurumi" init
 # 	terraform -chdir=".\terraform\kurumi" plan -var="minio_secret_key=$(SECRET_KEY)"
 # 	terraform -chdir=".\terraform\kurumi" apply -var="minio_secret_key=$(SECRET_KEY)" -auto-approve
+
+.PHONY: aquq
+aquq:
+	aqua i
+
+.PHONY: lint
+lint: snapshot
+	kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/argocdapps
