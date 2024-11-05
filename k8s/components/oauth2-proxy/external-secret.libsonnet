@@ -14,7 +14,7 @@
     },
     refreshInterval: '1m',
     target: {
-      name: $.name,
+      name: $.metadata.name,
     },
     data: [
       {

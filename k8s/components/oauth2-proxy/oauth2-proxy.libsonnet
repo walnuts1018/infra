@@ -12,8 +12,7 @@
     allowed_group:: error 'allowed_group is required',
   },
 
-  secret_name:: $.app.name + '-oauth2-proxy',
-
+  secret_name:: $.app.name + '-oauth2-proxy' + '-' + std.md5(std.toString($.oidc.secret))[0:6],
   redis:: (import './redis.libsonnet') {
     name: $.app.name + '-oauth2-proxy-redis',
     secret_name: $.secret_name,
