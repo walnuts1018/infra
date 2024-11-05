@@ -14,11 +14,12 @@
     template: {
       metadata: {
         labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-back' },
+        annotations: {
+          'instrumentation.opentelemetry.io/inject-go': 'opentelemetry-collector/default',
+          'instrumentation.opentelemetry.io/otel-go-auto-target-exe': '/app/server',
+        },
       },
-      annotations: {
-        'instrumentation.opentelemetry.io/inject-go': 'opentelemetry-collector/default',
-        'instrumentation.opentelemetry.io/otel-go-auto-target-exe': '/app/server',
-      },
+
     },
     spec: {
       imagePullSecrets: [
