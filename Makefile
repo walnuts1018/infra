@@ -8,11 +8,11 @@ build-infrautil:
 
 .PHONY: namespace
 namespace: build-infrautil
-	$(INFRAUTIL) namespace -d ./k8s/argocdapps -o ./k8s/namespaces/namespaces.json5
+	$(INFRAUTIL) namespace -d ./k8s/apps -o ./k8s/namespaces/namespaces.json5
 
 .PHONY: snapshot
 snapshot: build-infrautil
-	$(INFRAUTIL) snapshot -d ./k8s/argocdapps -o ./k8s/snapshots/argocdapps
+	$(INFRAUTIL) snapshot -d ./k8s/apps -o ./k8s/snapshots/apps
 
 # SECRET_KEY := $(shell op item get minio-default-secret-key --field secret_key --reveal)
 # .PHONY: terraform
@@ -27,4 +27,4 @@ aquq:
 
 .PHONY: lint
 lint: snapshot
-	kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/argocdapps
+	kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
