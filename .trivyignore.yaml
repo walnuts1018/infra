@@ -1,9 +1,9 @@
 misconfigurations:
 - id: KSV017
   paths:
-  - "k8s/argocdapps/machine-status-api/deployment.yaml"
+  - "k8s/apps/machine-status-api/deployment.yaml"
   statement: Accept Privileged
 - id: KSV023
   paths:
-  - "k8s/argocdapps/samba/deployment.yaml"
+  - "k8s/apps/samba/deployment.yaml"
   statement: accept hostpath
