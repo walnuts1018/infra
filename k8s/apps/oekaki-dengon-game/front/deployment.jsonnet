@@ -34,7 +34,7 @@
             env: [
               {
                 name: 'API_URL',
-                value: 'http://oekaki-dengon-game-front.oekaki-dengon-game.svc.cluster.local:8080/api',
+                value: 'http://' + (import '../../../utils/get-endpoint-from-service.libsonnet')(import 'service.jsonnet') + ':8080/api',
               },
             ],
             resources: {
