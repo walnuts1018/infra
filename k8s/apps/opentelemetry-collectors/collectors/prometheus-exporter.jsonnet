@@ -1,13 +1,10 @@
-(import '_base.libsonnet') + {
-  apiVersion: 'opentelemetry.io/v1beta1',
-  kind: 'OpenTelemetryCollector',
+std.mergePatch((import '_base.libsonnet'), {
   metadata: {
     name: 'prometheus-exporter',
   },
   spec: {
     mode: 'deployment',
     image: 'otel/opentelemetry-collector-contrib',
-    managementState: 'managed',
     config: {
       receivers: {
         otlp: {
@@ -79,4 +76,4 @@
       ],
     },
   },
-}
+})

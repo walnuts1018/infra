@@ -1,6 +1,4 @@
-(import '_base.libsonnet') + {
-  apiVersion: 'opentelemetry.io/v1beta1',
-  kind: 'OpenTelemetryCollector',
+std.mergePatch((import '_base.libsonnet'), {
   metadata: {
     name: 'k8s-daemonset',
   },
@@ -234,4 +232,4 @@
       runAsGroup: 0,
     },
   },
-}
+})
