@@ -7,7 +7,7 @@
   upstream: 'http://prometheus-operated.monitoring.svc.cluster.local:9090',
   oidc:: {
     secret:: {
-      onepassword_item_name: 'rometheus-oauth2-proxy',
+      onepassword_item_name: 'prometheus-oauth2-proxy',
     },
     allowed_group: '237477822715658605:prometheus-admin',
   },
