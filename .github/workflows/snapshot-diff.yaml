@@ -31,7 +31,7 @@ jobs:
       - name: mv
         run: |
           mkdir /tmp/snapshots-main
-          mv k8s/argocdapps /tmp/snapshots-main/argocdapps
+          mv k8s/apps /tmp/snapshots-main/apps
 
       - name: Upload folder
         uses: actions/upload-artifact@v4

@@ -24,8 +24,8 @@ func (*snapshotCmd) Usage() string {
 }
 
 func (b *snapshotCmd) SetFlags(f *flag.FlagSet) {
-	f.StringVar(&b.appBaseDir, "d", "k8s/argocdapps", "app directory")
-	f.StringVar(&b.outFilePath, "o", "k8s/snapshots/argocdapps", "output file path")
+	f.StringVar(&b.appBaseDir, "d", "k8s/apps", "app directory")
+	f.StringVar(&b.outFilePath, "o", "k8s/snapshots/apps", "output file path")
 }
 
 func (b *snapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subcommands.ExitStatus {
