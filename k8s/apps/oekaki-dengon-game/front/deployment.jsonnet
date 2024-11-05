@@ -24,7 +24,7 @@
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'oekaki-dengon-game-front',
-            image: 'ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-8c4f26887ee6615f8e0c4bf09e4ea338c4ddb631-88',
+            image: 'ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-a28ec4cf7314f2b7049329737bd57cb14abe907d-89',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
