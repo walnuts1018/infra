@@ -34,7 +34,7 @@
             env: [
               {
                 name: 'API_URL',
-                value: 'http://' + (import '../../../utils/get-endpoint-from-service.libsonnet')(import '../backend/service.jsonnet') + ':8080/api',
+                value: 'http://' + (import '../../../utils/get-endpoint-from-service.libsonnet')(import '../back/service.jsonnet') + ':8080/api',
               },
             ],
             resources: {
