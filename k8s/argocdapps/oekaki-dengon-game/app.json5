@@ -1,4 +1,4 @@
 {
-  name: "kibana",
-  namespace: "elasticsearch",
+  name: "oekaki-dengon-game",
+  namespace: "oekaki-dengon-game",
 }
