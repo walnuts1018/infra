@@ -16,51 +16,38 @@
         labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-front' },
       },
       spec: {
+        imagePullSecrets: [
+          {
+            name: 'ghcr-login-secret',
+          },
+        ],
         containers: [
           (import '../../../components/container.libsonnet') {
-            name: 'mucaron-front',
-            image: 'ghcr.io/walnuts1018/mucaron-frontend:6ee43def7714d6fc0c1dcfa0be59c4a4fbdeeaff-33',
+            name: 'oekaki-dengon-game-front',
+            image: 'ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-a6d6d6e7d66e6d0dfafbf416b462be908b208489-87',
+            imagePullPolicy: 'IfNotPresent',
             ports: [
               {
                 containerPort: 3000,
               },
             ],
-            resources: {
-              limits: {
-                cpu: '500m',
-                memory: '512Mi',
-              },
-              requests: {
-                cpu: '10m',
-                memory: '20Mi',
-              },
-            },
-            volumeMounts: [
+            env: [
               {
-                name: 'next-cache',
-                mountPath: '/app/.next/cache',
+                name: 'API_URL',
+                value: 'http://oekaki-dengon-game-front.oekaki-dengon-game.svc.cluster.local:8080/api',
               },
             ],
-            livenessProbe: {
-              httpGet: {
-                path: '/healthz',
-                port: 3000,
-              },
-            },
-            readinessProbe: {
-              httpGet: {
-                path: '/healthz',
-                port: 3000,
+            resources: {
+              limits: {},
+              requests: {
+                memory: '160Mi',
               },
             },
           },
         ],
-        volumes: [
-          {
-            name: 'next-cache',
-            emptyDir: {},
-          },
-        ],
+        nodeSelector: {
+          'kubernetes.io/arch': 'amd64',
+        },
       },
     },
   },

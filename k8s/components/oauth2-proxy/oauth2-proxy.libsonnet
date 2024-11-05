@@ -17,6 +17,7 @@
     name: $.app.name + '-oauth2-proxy-redis',
     secret_name: $.secret_name,
   },
+  valuesObject:: {},
 
   apiVersion: 'v1',
   kind: 'List',
@@ -34,6 +35,8 @@
       domain: $.domain,
       secret_name: $.secret_name,
       redis_name: $.redis.name,
+
+      valuesObjectOverride: $.valuesObject,
     },
     $.redis.items[0],
     $.redis.items[1],
