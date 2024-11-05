@@ -31,7 +31,6 @@
                 containerPort: 3000,
               },
             ],
-            securityContext:: null,
             env: [
               {
                 name: 'API_URL',
