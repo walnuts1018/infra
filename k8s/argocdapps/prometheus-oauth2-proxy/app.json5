@@ -1,0 +1,4 @@
+{
+  name: "prometheus-oauth2-proxy",
+  namespace: "monitoring",
+}
