@@ -1,0 +1,4 @@
+{
+  name: "mysql-default",
+  namespace: "databases",
+}
