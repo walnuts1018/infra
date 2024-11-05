@@ -4,6 +4,6 @@
 
   chart: 'prometheus-smartctl-exporter',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '0.10.0',
+  targetRevision: '0.11.0',
   values: (importstr 'values.yaml'),
 }
