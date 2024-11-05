@@ -1,0 +1,4 @@
+{
+  name: "snmp-exporter",
+  namespace: "monitoring",
+}
