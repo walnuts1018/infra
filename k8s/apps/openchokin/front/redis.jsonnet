@@ -12,7 +12,7 @@
         image: 'quay.io/opstree/redis:v7.0.12',
         imagePullPolicy: 'IfNotPresent',
         redisSecret: {
-          name: (import '../external-secret.jsonnet').name,
+          name: (import '../external-secret.jsonnet').spec.target.name,
           key: 'redis-password',
         },
       },
@@ -58,7 +58,7 @@
         image: 'quay.io/opstree/redis-sentinel:v7.0.12',
         imagePullPolicy: 'IfNotPresent',
         redisSecret: {
-          name: (import '../external-secret.jsonnet').name,
+          name: (import '../external-secret.jsonnet').spec.target.name,
           key: 'redis-password',
         },
       },
