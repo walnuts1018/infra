@@ -3,7 +3,7 @@ std.mergePatch((import '../../components/helm.libsonnet') {
   namespace: (import 'app.json5').namespace,
   chart: 'redis-operator',
   repoURL: 'https://ot-container-kit.github.io/helm-charts/',
-  targetRevision: '0.18.3',
+  targetRevision: '0.18.4',
   values: (importstr 'values.yaml'),
 }, {
   spec: {
