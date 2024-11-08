@@ -44,15 +44,6 @@
       datasourceTemplate: "kubernetes-api",
       versioningTemplate: "kubernetes-api",
     },
-    {
-      customType: "regex",
-      fileMatch: ["^k8s/.+\\.jsonnet$", "^k8s/.+\\.libsonnet$"],
-      matchStringsStrategy: "combination",
-      matchStrings: [
-        "image:\\s'(?<depName>.+):(?<currentValue>.+)'",
-      ],
-      datasourceTemplate: "docker",
-    },
   ],
   packageRules: [
     {
