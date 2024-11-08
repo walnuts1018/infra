@@ -24,6 +24,7 @@ func main() {
 	subcommands.Register(subcommands.CommandsCommand(), "")
 	subcommands.Register(&namespaceCmd{}, "")
 	subcommands.Register(&snapshotCmd{}, "")
+	subcommands.Register(&helmSnapshotCmd{}, "")
 
 	flag.Parse()
 	ctx := context.Background()
