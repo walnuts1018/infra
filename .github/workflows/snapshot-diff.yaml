@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir /tmp/snapshots-main
           mv k8s/apps /tmp/snapshots-main/apps
-          mv k8s/snapshots/helm /tmp/snapshots-main/helm
+          mv k8s/helm /tmp/snapshots-main/helm
 
       - name: Upload folder
         uses: actions/upload-artifact@v4
