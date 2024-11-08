@@ -1,4 +1,0 @@
-config:
-  gitCommitUser: "argocd-image-updater"
-  gitCommitMail: "noreply@argoproj.io"
-  gitCommitSignOff: true
