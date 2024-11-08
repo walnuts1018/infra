@@ -1,0 +1,4 @@
+{
+  name: "argocd-image-updater",
+  namespace: "argocd",
+}

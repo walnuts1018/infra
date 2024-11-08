@@ -1,0 +1,4 @@
+config:
+  gitCommitUser: ""
+  gitCommitMail: ""
+  gitCommitSignOff: true
