@@ -15,9 +15,6 @@ spec:
   template:
     metadata:
       name: '{{.name}}'
-      annotations:
-        argocd-image-updater.argoproj.io/write-back-method: git
-        argocd-image-updater.argoproj.io/git-branch: main:image-updater-{{.name}}
     spec:
       project: default
       destination:
