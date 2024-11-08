@@ -41,6 +41,7 @@ jobs:
         run: |
           rm -rf k8s/apps
           mv k8s/snapshots/apps k8s/apps
+          mv k8s/snapshots/helm k8s/helm
 
       - name: push
         run: |
