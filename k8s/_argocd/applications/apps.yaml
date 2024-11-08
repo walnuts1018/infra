@@ -3,9 +3,6 @@ kind: ApplicationSet
 metadata:
   name: apps
   namespace: argocd
-  annotations:
-    argocd-image-updater.argoproj.io/write-back-method: git
-    argocd-image-updater.argoproj.io/git-branch: main:image-updater{{range .Images}}-{{.Name}}{{end}}
 spec:
   goTemplate: true
   goTemplateOptions: [ "missingkey=error" ]
@@ -18,6 +15,9 @@ spec:
   template:
     metadata:
       name: '{{.name}}'
+      annotations:
+        argocd-image-updater.argoproj.io/write-back-method: git
+        argocd-image-updater.argoproj.io/git-branch: main:image-updater{{range .Images}}-{{.Name}}{{end}}
     spec:
       project: default
       destination:
