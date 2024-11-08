@@ -3,9 +3,6 @@ kind: Application
 metadata:
   name: argocd
   namespace: argocd
-  annotations:
-    argocd-image-updater.argoproj.io/write-back-method: git
-    argocd-image-updater.argoproj.io/git-branch: main:image-updater{{range .Images}}-{{.Name}}{{end}}
 spec:
   project: default
   destination:

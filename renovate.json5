@@ -52,8 +52,11 @@
     },
     {
       matchManagers: ["kubernetes"],
-      matchDatasources: ["docker"],
-      enabled: false,
+      automerge: false,
+    },
+    {
+      matchPackageNames: ["match-depName-below"],
+      versioning: "regex:^team-(?<major>\\d+)(\\.(?<minor>\\d+))?(\\.(?<patch>\\d+))-plugins$",
     },
   ],
   internalChecksFilter: "none",
