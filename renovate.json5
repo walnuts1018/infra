@@ -49,7 +49,7 @@
       fileMatch: ["^k8s/.+\\.jsonnet$", "^k8s/.+\\.libsonnet$"],
       matchStringsStrategy: "combination",
       matchStrings: [
-        "image:\\s'(?<registryUrl>.+\\/)(?<depName>.+):(?<currentValue>.+)'",
+        "image:\\s'(?<depName>.+):(?<currentValue>.+)'",
       ],
       datasourceTemplate: "docker",
     },
