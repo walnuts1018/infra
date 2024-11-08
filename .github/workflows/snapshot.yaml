@@ -40,7 +40,7 @@ jobs:
       - name: mv snapshot
         run: |
           rm -rf k8s/apps
-          mv k8s/snapshots/apps k8s/apps
+          cp -r k8s/snapshots/apps k8s/apps
 
       - name: push
         run: |
