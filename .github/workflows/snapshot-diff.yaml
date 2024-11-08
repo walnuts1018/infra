@@ -82,7 +82,7 @@ jobs:
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(for f in $(find snapshots-head/helm -type f); do echo "## $f"; diff -u $(echo $f | sed 's/head/main/') $f'; done)
+          $(for f in $(find snapshots-head/helm -type f); do echo "# Source: $f"; diff -u $(echo $f | sed 's/head/main/') $f'; done)
           \`\`\`
           </details>" | tee /tmp/diff.md
 
