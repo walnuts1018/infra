@@ -63,7 +63,11 @@
       automerge: false,
     },
     {
-      matchPackageNames: ["ghcr.io/walnuts1018/2024-ac-hacking"],
+      matchPackageNames: [
+        "ghcr.io/walnuts1018/2024-ac-hacking",
+        "ghcr.io/walnuts1018/2024-ac-hacking-front",
+        "ghcr.io/walnuts1018/walnuts.dev",
+      ],
       versioning: "regex:^[a-f0-9]+-(?<patch>[0-9]+)$",
     },
   ],
