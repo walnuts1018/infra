@@ -55,8 +55,8 @@
       automerge: false,
     },
     {
-      matchPackageNames: ["match-depName-below"],
-      versioning: "regex:^team-(?<major>\\d+)(\\.(?<minor>\\d+))?(\\.(?<patch>\\d+))-plugins$",
+      matchPackageNames: ["ghcr.io/walnuts1018/2024-ac-hacking"],
+      versioning: "regex:^[a-f0-9]+-(?<patch>[0-9]+)$",
     },
   ],
   internalChecksFilter: "none",
