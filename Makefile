@@ -1,8 +1,5 @@
 INFRAUTIL ?= .github/scripts/infrautil/infrautil
 
-.PHONY: build-tools
-build-tools: build-infrautil build-infrautil2
-
 build-infrautil:
 	cd .github/scripts/infrautil && go build -o infrautil .
 
@@ -11,8 +8,17 @@ namespace: build-infrautil
 	$(INFRAUTIL) namespace -d ./k8s/apps -o ./k8s/namespaces/namespaces.json5
 
 .PHONY: snapshot
-snapshot: build-infrautil
+snapshot:
+	make app-snapshot
+	make helm-snapshot
+
+.PHONY: app-snapshot
+app-snapshot: build-infrautil
 	$(INFRAUTIL) snapshot -d ./k8s/apps -o ./k8s/snapshots/apps
+
+.PHONY: helm-snapshot
+helm-snapshot: build-infrautil
+	$(INFRAUTIL) helm-snapshot -d ./k8s/snapshots/apps -o ./k8s/snapshots/helm
 
 # SECRET_KEY := $(shell op item get minio-default-secret-key --field secret_key --reveal)
 # .PHONY: terraform
