@@ -54,6 +54,10 @@
       automerge: true,
     },
     {
+      matchPackageNames: ["aquaproj/aqua-registry"],
+      automerge: true,
+    },
+    {
       matchPackageNames: [
         "ghcr.io/walnuts1018/2024-ac-hacking",
         "ghcr.io/walnuts1018/2024-ac-hacking-front",
