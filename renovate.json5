@@ -4,9 +4,6 @@
   dependencyDashboard: true,
   timezone: "Asia/Tokyo",
   minimumReleaseAge: "8 days",
-  flux: {
-    enabled: false,
-  },
   kubernetes: {
     fileMatch: ["k8s/.+\\.jsonnet$"],
   },
