@@ -1,8 +1,6 @@
 name: Snapshot Auto Generation
 on:
   push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -46,12 +44,14 @@ jobs:
             k8s/snapshots
 
       - name: mv snapshot
+        if: ${{ github.ref_name == 'main' }}
         run: |
           rm -rf k8s/apps
           mv k8s/snapshots/apps k8s/apps
           mv k8s/snapshots/helm k8s/helm
 
       - name: push
+        if: ${{ github.ref_name == 'main' }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -61,6 +61,7 @@ jobs:
 
   scan:
     runs-on: ubuntu-latest
+    if: ${{ github.ref_name == 'main' }}
     needs: snapshot
     steps:
       - uses: actions/checkout@v4
