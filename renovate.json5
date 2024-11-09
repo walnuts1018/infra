@@ -7,6 +7,9 @@
   flux: {
     enabled: false,
   },
+  kubernetes: {
+    fileMatch: ["k8s/.+\\.jsonnet$"],
+  },
   argocd: {
     fileMatch: ["k8s/_argocd/applications/.+\\.yaml$"],
   },
@@ -32,17 +35,6 @@
         "https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^/]+\\/[^/]+?)\\/(?<currentValue>[^\\/]+?)\\/.*\\s*",
       ],
       datasourceTemplate: "github-tags",
-    },
-    {
-      customType: "regex",
-      fileMatch: ["^k8s/.+\\.jsonnet$", "^k8s/.+\\.libsonnet$"],
-      matchStringsStrategy: "combination",
-      matchStrings: [
-        "apiVersion:\\s'(?<currentValue>\\S+)'\\s*",
-        "kind:\\s'(?<depName>\\S+)'\\s*",
-      ],
-      datasourceTemplate: "kubernetes-api",
-      versioningTemplate: "kubernetes-api",
     },
   ],
   packageRules: [
