@@ -96,7 +96,7 @@ jobs:
       - name: Lint manifest with kubeconform
         uses: docker://ghcr.io/yannh/kubeconform:latest
         with:
-          args: "-ignore-missing-schemas -strict -summary snapshots/apps"
+          args: "-ignore-missing-schemas -strict -summary apps"
 
   # auto merge用
   # auto megeはskipもsuccessとみなす
