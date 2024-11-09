@@ -95,6 +95,8 @@ jobs:
         with:
           args: "-ignore-missing-schemas -strict -summary snapshots/apps"
 
+  # auto merge用
+  # auto megeはskipもsuccessとみなす
   status-check:
     runs-on: ubuntu-latest
     needs: [lint]
