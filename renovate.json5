@@ -43,7 +43,7 @@
     {
       matchDatasources: ["helm"],
       minimumReleaseAge: "3 days",
-    }
+    },
     {
       matchUpdateTypes: ["patch"],
       matchDatasources: ["github-tags"],
