@@ -3,7 +3,6 @@
   extends: ["config:recommended", "github>aquaproj/aqua-renovate-config#2.3.1"],
   dependencyDashboard: true,
   timezone: "Asia/Tokyo",
-  minimumReleaseAge: "8 days",
   kubernetes: {
     fileMatch: ["k8s/.+\\.jsonnet$"],
   },
@@ -41,6 +40,10 @@
       matchCurrentVersion: "!/^0/",
       automerge: true,
     },
+    {
+      matchDatasources: ["helm"],
+      minimumReleaseAge: "3 days",
+    }
     {
       matchUpdateTypes: ["patch"],
       matchDatasources: ["github-tags"],
