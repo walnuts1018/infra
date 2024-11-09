@@ -51,8 +51,10 @@
       automerge: true,
     },
     {
-      matchManagers: ["kubernetes"],
-      automerge: false,
+      matchUpdateTypes: ["patch"],
+      matchDatasources: ["docker"],
+      matchCurrentVersion: "!/^0/",
+      automerge: true,
     },
     {
       matchPackageNames: [
