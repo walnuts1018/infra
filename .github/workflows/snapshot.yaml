@@ -1,6 +1,9 @@
 name: Snapshot Auto Generation
 on:
   push:
+    branches:
+      - "**"
+      - "!snapshot"
   workflow_dispatch:
 
 jobs:
@@ -93,7 +96,7 @@ jobs:
       - name: Lint manifest with kubeconform
         uses: docker://ghcr.io/yannh/kubeconform:latest
         with:
-          args: "-ignore-missing-schemas -strict -summary apps"
+          args: "-ignore-missing-schemas -strict -summary snapshots/apps"
 
   # auto merge用
   # auto megeはskipもsuccessとみなす
