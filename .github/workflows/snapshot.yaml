@@ -94,3 +94,10 @@ jobs:
         uses: docker://ghcr.io/yannh/kubeconform:latest
         with:
           args: "-ignore-missing-schemas -strict -summary snapshots/apps"
+
+  status-check:
+    runs-on: ubuntu-latest
+    needs: [lint]
+    if: failure()
+    steps:
+      - run: exit 1
