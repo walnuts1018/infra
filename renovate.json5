@@ -54,7 +54,6 @@
       matchManagers: ["kubernetes"],
       automerge: false,
     },
-    // Docker Imageタグ
     {
       matchPackageNames: [
         "ghcr.io/walnuts1018/2024-ac-hacking",
@@ -65,6 +64,15 @@
         "ghcr.io/walnuts1018/mucaron-frontend",
       ],
       versioning: "regex:^[a-f0-9]+-(?<patch>[0-9]+)$",
+    },
+    {
+      matchPackageNames: [
+        "ghcr.io/kmc-jp/oekaki-dengon-game-back",
+        "ghcr.io/kmc-jp/oekaki-dengon-game-front",
+        "ghcr.io/walnuts1018/openchokin-back",
+        "ghcr.io/walnuts1018/openchokin-front",
+      ],
+      versioning: "regex:^v0\\.0\\.0-[a-f0-9]+-(?<patch>[0-9]+)$",
     },
     {
       matchPackageNames: ["photoprism/photoprism"],
