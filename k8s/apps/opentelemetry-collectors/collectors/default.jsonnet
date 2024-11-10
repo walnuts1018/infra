@@ -150,11 +150,13 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
             exporters: [
               'otlp/tempo',
+              'spanmetrics',
             ],
           },
           metrics: {
             receivers: [
               'otlp',
+              'spanmetrics',
             ],
             processors: [
               'memory_limiter',
