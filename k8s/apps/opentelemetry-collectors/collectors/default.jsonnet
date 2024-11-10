@@ -6,6 +6,39 @@ std.mergePatch((import '_base.libsonnet'), {
     replicas: 1,
     mode: 'deployment',
     config: {
+      connectors: {
+        spanmetrics: {
+          histogram: {
+            explicit: {
+              buckets: [
+                '1ms',
+                '10ms',
+                '100ms',
+                '200ms',
+                '400ms',
+                '800ms',
+                '1s',
+              ],
+            },
+          },
+          dimensions: [
+            {
+              name: 'http.method',
+              default: 'GET',
+            },
+            {
+              name: 'http.host',
+            },
+            {
+              name: 'http.path',
+            },
+            {
+              name: 'http.status_code',
+            },
+          ],
+          metrics_flush_interval: '15s',
+        },
+      },
       receivers: {
         otlp: {
           protocols: {
