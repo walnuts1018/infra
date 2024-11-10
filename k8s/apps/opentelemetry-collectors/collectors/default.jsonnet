@@ -33,6 +33,9 @@ std.mergePatch((import '_base.libsonnet'), {
               name: 'http.path',
             },
             {
+              name: 'http.target',
+            },
+            {
               name: 'http.status_code',
             },
           ],
