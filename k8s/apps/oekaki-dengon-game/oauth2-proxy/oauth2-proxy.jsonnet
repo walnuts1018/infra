@@ -1,19 +1,24 @@
-(import '../../../components/oauth2-proxy/oauth2-proxy.libsonnet') {
-  app:: {
-    name: 'oekaki',
-    namespace: (import '../app.json5').namespace,
-  },
-  domain: 'oekaki.walnuts.dev',
-  upstream: 'http://oekaki-dengon-game-front.oekaki-dengon-game.svc.cluster.local:3000/',
-  oidc:: {
-    secret:: {
-      onepassword_item_name: 'oekaki-oauth2-proxy',
+local upstream = 'http://oekaki-dengon-game-front.oekaki-dengon-game.svc.cluster.local:3000/';
+local allowed_group = '237477822715658605:oekaki-admin';
+
+(import '../../../components/oauth2-proxy/oauth2-proxy.libsonnet')(
+  {
+    app: {
+      name: 'oekaki',
+      namespace: (import '../app.json5').namespace,
     },
-    allowed_group: '237477822715658605:oekaki-admin',
+    domain: 'oekaki.walnuts.dev',
+    upstream: upstream,
+    oidc: {
+      secret: {
+        onepassword_item_name: 'oekaki-oauth2-proxy',
+      },
+      allowed_group: allowed_group,
+    },
   },
-  valuesObject:: {
+  valuesObject={
     config: {
-      configFile: 'email_domains = [ "*" ]\nupstreams = [ "%s" ]\npass_access_token = true\nuser_id_claim = "sub"\noidc_groups_claim="my:zitadel:grants"\nallowed_groups = ["%s"]\nskip_auth_routes = ["/public","GET=/api","/_next", "/texture.png", "/favicon.ico", "site.webmanifest"]\ncustom_templates_dir = "/etc/oauth2-proxy/templates"' % [$.upstream, $.oidc.allowed_group],
+      configFile: 'email_domains = [ "*" ]\nupstreams = [ "%s" ]\npass_access_token = true\nuser_id_claim = "sub"\noidc_groups_claim="my:zitadel:grants"\nallowed_groups = ["%s"]\nskip_auth_routes = ["/public","GET=/api","/_next", "/texture.png", "/favicon.ico", "site.webmanifest"]\ncustom_templates_dir = "/etc/oauth2-proxy/templates"' % [upstream, allowed_group],
     },
     extraVolumes: [
       {
@@ -37,4 +42,4 @@
       },
     ],
   },
-}
+)

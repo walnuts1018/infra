@@ -32,6 +32,7 @@ jobs:
         run: |
           mkdir /tmp/snapshots-main
           mv k8s/apps /tmp/snapshots-main/apps
+          mv k8s/helm /tmp/snapshots-main/helm
 
       - name: Upload folder
         uses: actions/upload-artifact@v4
@@ -51,21 +52,15 @@ jobs:
         with:
           name: manifests
 
-      - name: install dyff
-        run: |
-          wget https://github.com/homeport/dyff/releases/download/v1.8.0/dyff_1.8.0_linux_amd64.tar.gz
-          tar -xvf dyff_1.8.0_linux_amd64.tar.gz
-          chmod +x dyff
-
       - name: Build markdown comment with manifest diff
         run: |
-          echo "# Manifest diff
+          echo "# Manifest (k8s/apps) diff
 
           <details>
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(for f in $(find snapshots-head -type f); do echo "## $f"; diff -u $f $(echo $f | sed 's/head/main/') | sed 's/^/  /'; done)
+          $(for f in $(find snapshots-head/apps -type f); do diff -u $(echo $f | sed 's/head/main/') $f; done)
           \`\`\`
           </details>" | tee /tmp/diff.md
 
@@ -79,25 +74,23 @@ jobs:
             https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/comments \
             -d @-
 
-      - name: Build markdown comment with manifest dyff
+      - name: Build markdown comment with helm diff
         run: |
-          echo "# Manifest dyff
+          echo "# Helm diff
 
           <details>
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          # $(./dyff between manifests-base.yaml manifests-head.yaml)
-          $(for f in $(find snapshots-head -type f); do echo "## $f"; ./dyff between $f $(echo $f | sed 's/head/main/') | sed 's/^/  /'; done)
+          $(for f in $(find snapshots-head/helm -type f); do diff -u $(echo $f | sed 's/head/main/') $f; done)
           \`\`\`
-
-          </details>" | tee /tmp/dyff.md
+          </details>" | tee /tmp/diff.md
 
       # PRへのコメントだけど、issue commentのAPIを使うらしい
       - name: Comment manifest diff to GitHub PR
         continue-on-error: true
         run: |
-          cat /tmp/dyff.md | jq -Rs '{ "body": . }' | curl --fail \
+          cat /tmp/diff.md | jq -Rs '{ "body": . }' | curl --fail \
             -X POST -H 'Accept: application/vnd.github.v3+json' \
             --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/comments \

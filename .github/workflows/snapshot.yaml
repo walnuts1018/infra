@@ -2,7 +2,8 @@ name: Snapshot Auto Generation
 on:
   push:
     branches:
-      - main
+      - "**"
+      - "!snapshot"
   workflow_dispatch:
 
 jobs:
@@ -37,12 +38,23 @@ jobs:
         run: |
           make snapshot
 
+      - name: Upload folder
+        uses: actions/upload-artifact@v4
+        with:
+          if-no-files-found: error
+          name: snapshots
+          path: |
+            k8s/snapshots
+
       - name: mv snapshot
+        if: ${{ github.ref_name == 'main' }}
         run: |
           rm -rf k8s/apps
           mv k8s/snapshots/apps k8s/apps
+          mv k8s/snapshots/helm k8s/helm
 
       - name: push
+        if: ${{ github.ref_name == 'main' }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -52,6 +64,7 @@ jobs:
 
   scan:
     runs-on: ubuntu-latest
+    if: ${{ github.ref_name == 'main' }}
     needs: snapshot
     steps:
       - uses: actions/checkout@v4
@@ -76,11 +89,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: snapshot
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
-          ref: snapshot
+          name: snapshots
 
       - name: Lint manifest with kubeconform
         uses: docker://ghcr.io/yannh/kubeconform:latest
         with:
-          args: "-ignore-missing-schemas -strict -summary k8s/apps"
+          args: "-ignore-missing-schemas -strict -summary apps"
+
+  # auto merge用
+  # auto megeはskipもsuccessとみなす
+  status-check:
+    runs-on: ubuntu-latest
+    needs: [lint]
+    if: failure()
+    steps:
+      - run: exit 1
