@@ -11,6 +11,12 @@ ingress:
   ingressClassName: nginx
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: 128G
+    nginx.ingress.kubernetes.io/ignore-invalid-headers: "off"
+    nginx.ingress.kubernetes.io/client-max-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-set-headers: 'Connection ""'
+
   hosts:
   - minio.walnuts.dev
 consoleIngress:
@@ -39,5 +45,4 @@ environment:
 metrics:
   serviceMonitor:
     enabled: true
-
 users: []
