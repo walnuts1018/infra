@@ -19,7 +19,7 @@
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'mucaron-backend',
-            image: 'ghcr.io/walnuts1018/mucaron-backend:d6be1e4266c1e34e7265cd7c46cdef25c192a5da-62',
+            image: 'ghcr.io/walnuts1018/mucaron-backend:0102bd810fea7e88a85bb3e03348c522dcfc0d94-65',
             ports: [
               {
                 containerPort: 8080,
@@ -83,7 +83,7 @@
               },
               {
                 name: 'MINIO_ACCESS_KEY',
-                value: 'oZzVGMWfbXtGtuzgPd3R',
+                value: '4SYRxLsspRxsvXvaddkz',
               },
               {
                 name: 'MINIO_SECRET_KEY',
