@@ -4,6 +4,6 @@
 
   chart: 'tempo',
   repoURL: 'https://grafana.github.io/helm-charts',
-  targetRevision: '1.12.0',
+  targetRevision: '1.13.0',
   values: (importstr 'values.yaml'),
 }
