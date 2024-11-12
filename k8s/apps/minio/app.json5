@@ -3,6 +3,6 @@
   namespace: "minio",
 
   proxy: {
-    name: "minio",
+    name: "minio-proxy",
   },
 }
