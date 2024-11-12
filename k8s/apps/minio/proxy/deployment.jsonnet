@@ -26,21 +26,21 @@
             image: 'nginx:1.27.2',
             ports: [
               {
-                containerPort: 9090,
+                containerPort: 9000,
               },
               {
-                containerPort: 9091,
+                containerPort: 9001,
               },
             ],
-            livenessProbe: {
-              httpGet: {
-                path: '/healthz',
-                port: 9090,
-              },
-              failureThreshold: 1,
-              initialDelaySeconds: 10,
-              periodSeconds: 10,
-            },
+            // livenessProbe: {
+            //   httpGet: {
+            //     path: '/healthz',
+            //     port: 9000,
+            //   },
+            //   failureThreshold: 1,
+            //   initialDelaySeconds: 10,
+            //   periodSeconds: 10,
+            // },
             volumeMounts: [
               {
                 mountPath: '/etc/nginx',
