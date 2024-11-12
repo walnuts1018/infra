@@ -32,15 +32,15 @@
                 containerPort: 9001,
               },
             ],
-            livenessProbe: {
-              httpGet: {
-                path: '/healthz',
-                port: 9090,
-              },
-              failureThreshold: 1,
-              initialDelaySeconds: 10,
-              periodSeconds: 10,
-            },
+            // livenessProbe: {
+            //   httpGet: {
+            //     path: '/healthz',
+            //     port: 9000,
+            //   },
+            //   failureThreshold: 1,
+            //   initialDelaySeconds: 10,
+            //   periodSeconds: 10,
+            // },
             volumeMounts: [
               {
                 mountPath: '/etc/nginx',
