@@ -6,24 +6,6 @@ persistence:
   size: 24Gi
   volumeName: minio
   accessMode: ReadWriteOnce
-ingress:
-  enabled: true
-  ingressClassName: nginx
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: 128G
-    nginx.ingress.kubernetes.io/ignore-invalid-headers: "off"
-    nginx.ingress.kubernetes.io/client-max-body-size: "0"
-    nginx.ingress.kubernetes.io/proxy-buffering: "off"
-    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
-    nginx.ingress.kubernetes.io/proxy-set-headers: 'Connection ""'
-
-  hosts:
-  - minio.walnuts.dev
-consoleIngress:
-  enabled: true
-  ingressClassName: nginx
-  hosts:
-  - minio-console.walnuts.dev
 resources:
   requests:
     memory: 500Mi

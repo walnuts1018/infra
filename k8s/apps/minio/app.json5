@@ -1,4 +1,8 @@
 {
   name: "minio",
   namespace: "minio",
+
+  proxy: {
+    name: "minio",
+  },
 }
