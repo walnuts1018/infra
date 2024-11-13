@@ -69,7 +69,7 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'mysqld',
-            image: 'ghcr.io/cybozu-go/moco/mysql:8.4.2',
+            image: 'ghcr.io/cybozu-go/moco/mysql:8.4.3',
             resources: {
               requests: {
                 memory: '400Mi',
