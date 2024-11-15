@@ -35,7 +35,7 @@
             resources: {
               limits: {
                 cpu: '500m',
-                memory: '200Mi',
+                memory: '512Mi',
               },
               requests: {
                 cpu: '10m',
