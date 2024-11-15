@@ -7,7 +7,7 @@
     fileMatch: ["k8s/.+\\.jsonnet$", "k8s/.+\\.yaml$"],
   },
   argocd: {
-    fileMatch: ["k8s/_argocd/applications/.+\\.yaml$"],
+    fileMatch: ["k8s/_argocd/.+\\.yaml$"],
   },
   customManagers: [
     {
