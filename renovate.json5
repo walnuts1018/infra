@@ -4,7 +4,12 @@
   dependencyDashboard: true,
   timezone: "Asia/Tokyo",
   kubernetes: {
-    fileMatch: ["k8s/.+\\.jsonnet$", "k8s/.+\\.yaml$"],
+    fileMatch: [
+      "k8s/.+\\.jsonnet$",
+      "k8s/.+\\.libsonnet$",
+      "k8s/.+\\.yaml$",
+      "k8s/.+\\.yml$",
+    ],
   },
   argocd: {
     fileMatch: ["k8s/_argocd/.+\\.yaml$"],
