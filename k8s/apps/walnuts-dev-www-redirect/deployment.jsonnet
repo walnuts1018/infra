@@ -31,8 +31,8 @@
             ],
             livenessProbe: {
               httpGet: {
-                path: '/',
-                port: 8080,
+                path: '/healthz',
+                port: 8081,
               },
               failureThreshold: 1,
               initialDelaySeconds: 10,
