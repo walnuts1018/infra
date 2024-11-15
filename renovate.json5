@@ -17,7 +17,12 @@
   customManagers: [
     {
       customType: "regex",
-      fileMatch: ["^k8s/.*/helm.jsonnet$"],
+      fileMatch: [
+        "^k8s/.*/helm.jsonnet$",
+        "^k8s/.*/helm.libsonnet$",
+        "^k8s/.*/helm.yaml$",
+        "^k8s/.*/helm.yml$",
+      ],
       matchStringsStrategy: "combination",
       matchStrings: [
         "chart:\\s+[\"']?(?<depName>[a-z0-9-]+)[\"']",
