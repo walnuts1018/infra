@@ -12,8 +12,8 @@ variable "jwt_profile_file_path" {
 }
 
 provider "zitadel" {
-  domain           = "localhost"
-  insecure         = "true"
-  port             = "8080"
+  domain           = "auth.walnuts.dev"
+  insecure         = "false"
+  port             = "443"
   jwt_profile_file = var.jwt_profile_file_path
 }
