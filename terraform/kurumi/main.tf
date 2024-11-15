@@ -1,33 +1,11 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.75.0"
-    }
-  }
-}
-
 variable "minio_secret_key" {
   type = string
-}
-
-provider "aws" {
-  access_key                  = "709v82RovqXjvJR2P9yt"
-  secret_key                  = var.minio_secret_key
-  region                      = "ap-northeast-1"
-  skip_credentials_validation = true
-  skip_requesting_account_id  = true
-  skip_metadata_api_check     = true
-  s3_use_path_style           = true
-
-  endpoints {
-    s3 = "https://minio.walnuts.dev"
-  }
 }
 
 module "minio" {
   source             = "../modules/minio"
   bucket_name_suffix = ""
+  minio_secret_key   = var.minio_secret_key
 }
 
 import {
@@ -63,4 +41,19 @@ import {
 import {
   id = "zalando-backup"
   to = module.minio.aws_s3_bucket.zalando-backup
+}
+
+module "zitadel" {
+  source = "../modules/zitadel"
+  jwt_profile_file_path = "zitadel.token"
+}
+
+import {
+  id = "237477062321897835"
+  to = module.zitadel.zitadel_org.ZITADEL
+}
+
+import {
+  id = "237477822715658605"
+  to = module.zitadel.zitadel_project.default
 }
