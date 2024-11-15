@@ -20,12 +20,14 @@ app-snapshot: build-infrautil
 helm-snapshot: build-infrautil
 	$(INFRAUTIL) helm-snapshot -d ./k8s/snapshots/apps -o ./k8s/snapshots/helm
 
-# SECRET_KEY := $(shell op item get minio-default-secret-key --field secret_key --reveal)
-# .PHONY: terraform
-# terraform: 
-# 	terraform -chdir=".\terraform\kurumi" init
-# 	terraform -chdir=".\terraform\kurumi" plan -var="minio_secret_key=$(SECRET_KEY)"
-# 	terraform -chdir=".\terraform\kurumi" apply -var="minio_secret_key=$(SECRET_KEY)" -auto-approve
+.PHONY: terraform
+terraform: 
+	$(eval SECRET_KEY := $(shell op item get minio-default-secret-key --field secret_key --reveal))
+	kubectl port-forward -n zitadel services/zitadel 8080:8080 &
+	kubectl port-forward -n minio services/minio 9000:9000 &
+	terraform -chdir=".\terraform\kurumi" init -upgrade
+	terraform -chdir=".\terraform\kurumi" plan -var="minio_secret_key=$(SECRET_KEY)"
+	terraform -chdir=".\terraform\kurumi" apply -var="minio_secret_key=$(SECRET_KEY)" -auto-approve
 
 .PHONY: aquq
 aquq:
