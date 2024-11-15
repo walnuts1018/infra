@@ -35,29 +35,17 @@
   ],
   packageRules: [
     {
-      matchUpdateTypes: ["patch"],
-      matchDatasources: ["helm"],
-      matchCurrentVersion: "!/^0/",
-      automerge: true,
-    },
-    {
       matchDatasources: ["helm"],
       minimumReleaseAge: "3 days",
     },
     {
       matchUpdateTypes: ["patch"],
-      matchDatasources: ["github-tags"],
+      matchDatasources: ["github-tags", "helm", "docker"],
       matchCurrentVersion: "!/^0/",
       automerge: true,
     },
     {
-      matchUpdateTypes: ["patch"],
-      matchDatasources: ["docker"],
-      matchCurrentVersion: "!/^0/",
-      automerge: true,
-    },
-    {
-      matchPackageNames: ["aquaproj/aqua-registry"],
+      matchPackageNames: ["aquaproj/aqua-registry", "terraform"],
       automerge: true,
     },
     {
