@@ -3,7 +3,7 @@ replicas: 1
 existingSecret: minio
 persistence:
   storageClass: longhorn
-  size: 24Gi
+  size: 32Gi
   volumeName: minio
   accessMode: ReadWriteOnce
 ingress:
