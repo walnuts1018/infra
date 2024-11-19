@@ -23,3 +23,11 @@ resource "aws_s3_bucket" "tempo" {
 resource "aws_s3_bucket" "zalando-backup" {
   bucket = format("zalando-backup%s", var.bucket_name_suffix)
 }
+
+resource "aws_s3_bucket" "mpeg-dash-encoder-source-upload" {
+  bucket = format("mpeg-dash-encoder-source-upload%s", var.bucket_name_suffix)
+}
+
+resource "aws_s3_bucket" "mpeg-dash-encoder-source-output" {
+  bucket = format("mpeg-dash-encoder-source-output%s", var.bucket_name_suffix)
+}
