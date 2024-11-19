@@ -131,6 +131,9 @@
             emptyDir: {},
           },
         ],
+        nodeSelector: {
+          'kubernetes.io/hostname': 'cake',
+        },
       },
     },
   },
