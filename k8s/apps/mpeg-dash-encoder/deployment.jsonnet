@@ -84,7 +84,7 @@
               },
               {
                 name: 'MINIO_USE_SSL',
-                value: 'true',
+                value: 'false',
               },
               {
                 name: 'FFMPEG_HW_ACCEL',
