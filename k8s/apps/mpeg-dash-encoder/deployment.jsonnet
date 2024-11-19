@@ -19,7 +19,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'mpeg-dash-encoder',
-            image: 'ghcr.io/walnuts1018/mpeg-dash-encoder:3742198c7c9381460a667bee7f94fbda3704da43-11',
+            image: 'ghcr.io/walnuts1018/mpeg-dash-encoder:52054e17d80858a0d2c515601db0a6f189352cf4-14',
             ports: [
               {
                 containerPort: 8080,
