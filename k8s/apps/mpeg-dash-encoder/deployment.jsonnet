@@ -63,7 +63,7 @@
               },
               {
                 name: 'MINIO_ACCESS_KEY',
-                value: '4SYRxLsspRxsvXvaddkz',
+                value: 'OXx9ohSJy0zqcqu2o98k',
               },
               {
                 name: 'MINIO_SECRET_KEY',
