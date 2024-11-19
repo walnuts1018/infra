@@ -21,6 +21,6 @@ provider "aws" {
   s3_use_path_style           = true
 
   endpoints {
-    s3 = "https://minio.walnuts.dev"
+    s3 = "http://localhost:9000"
   }
 }
