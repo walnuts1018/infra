@@ -30,7 +30,7 @@
             securityContext: {
               readOnlyRootFilesystem: true,
             },
-            image: 'cloudflare/cloudflared:2024.11.0',
+            image: 'cloudflare/cloudflared:2024.11.1',
             imagePullPolicy: 'IfNotPresent',
             args: [
               '--no-autoupdate',

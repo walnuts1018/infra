@@ -61,7 +61,7 @@ write:
     limits:
       memory: 1Gi
       cpu: 1
-  extraArgs: ["-config.expand-env=true"]
+  extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
       name: loki-minio
@@ -85,7 +85,7 @@ read:
     limits:
       memory: 1Gi
       cpu: 1
-  extraArgs: ["-config.expand-env=true"]
+  extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
       name: loki-minio
@@ -105,7 +105,7 @@ backend:
     limits:
       memory: 1Gi
       cpu: 100m
-  extraArgs: ["-config.expand-env=true"]
+  extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
       name: loki-minio

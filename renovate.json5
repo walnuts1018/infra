@@ -1,6 +1,6 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:recommended", "github>aquaproj/aqua-renovate-config#2.3.1"],
+  extends: ["config:recommended", "github>aquaproj/aqua-renovate-config#2.5.0"],
   dependencyDashboard: true,
   timezone: "Asia/Tokyo",
   kubernetes: {
@@ -17,7 +17,12 @@
   customManagers: [
     {
       customType: "regex",
-      fileMatch: ["^k8s/.*/helm.jsonnet$"],
+      fileMatch: [
+        "^k8s/.*/helm.jsonnet$",
+        "^k8s/.*/helm.libsonnet$",
+        "^k8s/.*/helm.yaml$",
+        "^k8s/.*/helm.yml$",
+      ],
       matchStringsStrategy: "combination",
       matchStrings: [
         "chart:\\s+[\"']?(?<depName>[a-z0-9-]+)[\"']",

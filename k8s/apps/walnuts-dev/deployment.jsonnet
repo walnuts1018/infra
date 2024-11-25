@@ -25,7 +25,7 @@
                 type: 'RuntimeDefault',
               },
             },
-            image: 'ghcr.io/walnuts1018/walnuts.dev:46e8420a07eb841cd4a6c71e5c86b2f8467bc187-285',
+            image: 'ghcr.io/walnuts1018/walnuts.dev:4ef9fca05c38a6cce0ce79ae2263abece9fad5cb-301',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
@@ -35,7 +35,7 @@
             resources: {
               limits: {
                 cpu: '500m',
-                memory: '200Mi',
+                memory: '512Mi',
               },
               requests: {
                 cpu: '10m',
