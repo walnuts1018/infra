@@ -32,5 +32,13 @@
         },
       },
     ],
+    tls: [
+      {
+        hosts: [
+          'blog.walnuts.dev',
+        ],
+        secretName: (import 'app.json5').name + '-tls',
+      },
+    ],
   },
 }
