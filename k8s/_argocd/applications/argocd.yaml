@@ -3,6 +3,9 @@ kind: Application
 metadata:
   name: argocd
   namespace: argocd
+  metadata:
+    annotations:
+      notifications.argoproj.io/subscribe.on-sync-succeeded.slack: walnuts-sysop
 spec:
   project: default
   destination:
