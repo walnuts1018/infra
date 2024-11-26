@@ -1,4 +1,4 @@
-{
+std.mergePatch(std.parseYaml(importstr 'argocd-notifications-cm.yaml'), {
   apiVersion: 'v1',
   kind: 'ConfigMap',
   metadata: {
@@ -8,4 +8,4 @@
   data: {
     'service.slack': 'token: $slack-token',
   },
-}
+})
