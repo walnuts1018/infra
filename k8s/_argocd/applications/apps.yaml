@@ -16,7 +16,9 @@ spec:
     metadata:
       name: '{{.name}}'
       annotations:
-        notifications.argoproj.io/subscribe.on-sync-succeeded.slack: walnuts-sysop
+        notifications.argoproj.io/subscribe.on-deleted.slack: walnuts-sysop
+        notifications.argoproj.io/subscribe.on-health-degraded.slack: walnuts-sysop
+        notifications.argoproj.io/subscribe.on-sync-failed.slack: walnuts-sysop
     spec:
       project: default
       destination:
