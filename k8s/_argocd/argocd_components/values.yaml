@@ -44,10 +44,16 @@ server:
     tls: false
 
 notifications:
+  argocdUrl: "https://argocd.walnuts.dev"
   context:
     cluster: "kurumi"
   secret:
     create: false
     name: "argocd-notifications-secret"
   cm:
-    create: false
+    create: true
+  notifiers:
+    service.slack: |
+      token: $slack-token
+      icon: ":argo:"
+      username: argocd
