@@ -12,6 +12,13 @@
   metadata: {
     name: $.name + '-helm',
     namespace: 'argocd',
+    annotations: {
+      local slackChannel = 'walnuts-sysop',
+      'notifications.argoproj.io/subscribe.on-deleted.slack': slackChannel,
+      'notifications.argoproj.io/subscribe.on-health-degraded.slack': slackChannel,
+      'notifications.argoproj.io/subscribe.on-sync-failed.slack': slackChannel,
+      'notifications.argoproj.io/subscribe.on-sync-succeeded.slack': slackChannel,
+    },
   },
   spec: {
     project: 'default',
