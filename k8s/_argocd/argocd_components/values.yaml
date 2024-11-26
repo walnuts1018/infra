@@ -42,3 +42,10 @@ server:
     controller: generic
     ingressClassName: "nginx"
     tls: false
+
+notifications:
+  context:
+    cluster: "kurumi"
+  secret:
+    create: false
+    name: "argocd-notifications-secret"
