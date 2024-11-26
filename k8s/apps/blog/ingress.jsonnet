@@ -5,7 +5,7 @@
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
-    anotations: {
+    annotations: {
       'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
     },
   },
