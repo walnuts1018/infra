@@ -20,6 +20,8 @@ ingressController:
   enabled: true
   loadbalancerMode: shared
   default: false
+  service:
+    loadBalancerIP: 192.168.0.129
 hubble:
   tls:
     enabled: true
