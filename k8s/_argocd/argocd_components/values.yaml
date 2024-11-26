@@ -49,3 +49,5 @@ notifications:
   secret:
     create: false
     name: "argocd-notifications-secret"
+  cm:
+    create: false
