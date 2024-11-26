@@ -6,6 +6,6 @@ std.mergePatch(std.parseYaml(importstr 'argocd-notifications-cm.yaml'), {
     namespace: (import 'app.json5').namespace,
   },
   data: {
-    'service.slack': 'token: $slack-token\nicon: ":argo:"\nusername: argocd',
+    'service.slack': 'token: $slack-token',
   },
 })
