@@ -29,5 +29,13 @@
         },
       },
     ],
+    tls: [
+      {
+        hosts: [
+          'blog.walnuts.dev',
+        ],
+        secretName: 'cloudflare-origin-cert',
+      },
+    ],
   },
 }
