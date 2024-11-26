@@ -3,7 +3,6 @@ std.mergePatch((import '_base.libsonnet'), {
     name: 'default',
   },
   spec: {
-    replicas: 1,
     mode: 'deployment',
     config: {
       connectors: {
