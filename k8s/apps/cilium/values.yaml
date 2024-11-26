@@ -19,7 +19,7 @@ clustermesh:
 ingressController:
   enabled: true
   loadbalancerMode: shared
-  default: falsess
+  default: false
 hubble:
   tls:
     enabled: true
