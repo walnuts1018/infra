@@ -20,8 +20,8 @@ clustermesh:
 ingressController:
   enabled: true
   loadbalancerMode: shared
-  default: false
-  enforceHttps: false
+  default: true
+  enforceHttps: true
   service:
     loadBalancerIP: 192.168.0.129
 nodePort:
