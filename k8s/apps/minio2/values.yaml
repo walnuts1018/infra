@@ -1,0 +1,16 @@
+mode: distributed
+replicas: 3
+existingSecret: minio
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ignore-invalid-headers: "off"
+  hosts:
+  - minio2.walnuts.dev
+consoleIngress:
+  enabled: true
+  ingressClassName: nginx
+  hosts:
+  - minio2-console.walnuts.dev
+
