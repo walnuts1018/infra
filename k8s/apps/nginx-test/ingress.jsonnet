@@ -7,7 +7,7 @@
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
-    ingressClassName: 'nginx',
+    ingressClassName: 'cilium',
     rules: [
       {
         host: 'nginxtest.walnuts.dev',
@@ -27,6 +27,14 @@
             },
           ],
         },
+      },
+    ],
+    tls: [
+      {
+        hosts: [
+          'nginxtest.walnuts.dev',
+        ],
+        secretName: (import 'app.json5').name + '-tls',
       },
     ],
   },
