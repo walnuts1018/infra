@@ -1,6 +1,6 @@
 mode: distributed
 replicas: 3
-existingSecret: minio
+existingSecret: minio2
 ingress:
   enabled: true
   ingressClassName: nginx
