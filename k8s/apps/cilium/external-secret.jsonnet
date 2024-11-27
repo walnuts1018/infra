@@ -1,4 +1,4 @@
-(import '../../components/external-secret.libsonnet') {
+std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: 'cloudflare-origin-cert',
   namespace: (import 'app.json5').namespace,
   use_suffix: false,
@@ -18,4 +18,12 @@
       },
     },
   ],
-}
+}, {
+  spec: {
+    target: {
+      template: {
+        type: 'kubernetes.io/tls',
+      },
+    },
+  },
+})
