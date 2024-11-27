@@ -26,6 +26,12 @@ ingressController:
     loadBalancerIP: 192.168.0.129
   defaultSecretName: cloudflare-origin-cert
   defaultSecretNamespace: cilium-system
+  secretsNamespace:
+    create: false
+    name: cilium-secrets
+    # -- Enable secret sync, which will make sure all TLS secrets used by Ingress are synced to secretsNamespace.name.
+    # If disabled, TLS secrets must be maintained externally.
+    sync: true
 nodePort:
   enabled: true
 hubble:
