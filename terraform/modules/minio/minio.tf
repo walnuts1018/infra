@@ -10,8 +10,6 @@ resource "aws_s3_bucket" "loki-ruler" {
   bucket = format("loki-ruler%s", var.bucket_name_suffix)
 }
 
-
-
 resource "aws_s3_bucket" "mucaron" {
   bucket = format("mucaron%s", var.bucket_name_suffix)
 }
