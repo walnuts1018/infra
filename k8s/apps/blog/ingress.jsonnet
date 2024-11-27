@@ -10,7 +10,7 @@
     },
   },
   spec: {
-    ingressClassName: 'cilium',
+    ingressClassName: 'nginx',
     rules: [
       {
         host: 'blog.walnuts.dev',
