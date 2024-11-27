@@ -3,7 +3,7 @@ replicas: 3
 existingSecret: minio
 persistence:
   storageClass: longhorn
-  size: 16Gi
+  size: 32Gi
   accessMode: ReadWriteOnce
 ingress:
   enabled: true
