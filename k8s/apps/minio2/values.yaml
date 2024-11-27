@@ -13,4 +13,7 @@ consoleIngress:
   ingressClassName: nginx
   hosts:
   - minio2-console.walnuts.dev
-
+persistence:
+  storageClass: longhorn
+  size: 8Gi
+  accessMode: ReadWriteOnce
