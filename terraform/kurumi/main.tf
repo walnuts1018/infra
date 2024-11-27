@@ -5,6 +5,7 @@ variable "minio_secret_key" {
 module "minio" {
   source             = "../modules/minio"
   bucket_name_suffix = ""
+  minio_access_key   = "F1QPgAWk6bhvSrNjYPMS"
   minio_secret_key   = var.minio_secret_key
 }
 
@@ -44,7 +45,7 @@ import {
 }
 
 # module "zitadel" {
-#   source = "../modules/zitadel"
+#   source                = "../modules/zitadel"
 #   jwt_profile_file_path = "zitadel.token"
 # }
 
