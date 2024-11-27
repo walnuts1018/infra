@@ -7,12 +7,16 @@ terraform {
   }
 }
 
+variable "minio_access_key" {
+  type = string
+}
+
 variable "minio_secret_key" {
   type = string
 }
 
 provider "aws" {
-  access_key                  = "709v82RovqXjvJR2P9yt"
+  access_key                  = var.minio_access_key
   secret_key                  = var.minio_secret_key
   region                      = "ap-northeast-1"
   skip_credentials_validation = true
