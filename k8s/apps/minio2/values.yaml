@@ -20,3 +20,7 @@ persistence:
 resources:
   requests:
     memory: 500Mi
+environment:
+  MINIO_IDENTITY_OPENID_REDIRECT_URI: "https://minio2-console.walnuts.dev/oauth_callback"
+  MINIO_SERVER_URL: "https://minio2.walnuts.dev"
+  MINIO_BROWSER_REDIRECT_URL: "https://minio2-console.walnuts.dev"
