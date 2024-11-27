@@ -24,6 +24,8 @@ ingressController:
   enforceHttps: true
   service:
     loadBalancerIP: 192.168.0.129
+  defaultSecretName: cloudflare-origin-cert
+  defaultSecretNamespace: cilium-system
 nodePort:
   enabled: true
 hubble:
