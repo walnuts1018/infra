@@ -110,8 +110,6 @@ func (b *helmSnapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) 
 						slog.String("repo_url", helmapp.Spec.Source.RepoURL),
 						slog.String("chart", helmapp.Spec.Source.Chart),
 						slog.String("target_revision", helmapp.Spec.Source.TargetRevision),
-						slog.String("values", helmapp.Spec.Source.Helm.Values),
-						slog.Any("values_object", helmapp.Spec.Source.Helm.ValuesObject),
 					)
 					return fmt.Errorf("failed to generate helm template : %w", err)
 				}
