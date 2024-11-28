@@ -8,8 +8,12 @@ require (
 	github.com/google/subcommands v1.2.0
 	github.com/phsym/console-slog v0.3.1
 	github.com/pkg/errors v0.9.1
+	github.com/sters/yaml-diff v1.3.2
 	github.com/yosuke-furukawa/json5 v0.1.1
 	golang.org/x/sync v0.9.0
+	gopkg.in/yaml.v3 v3.0.1
+	helm.sh/helm/v3 v3.16.3
+	sigs.k8s.io/yaml v1.4.0
 )
 
 require (
@@ -136,6 +140,7 @@ require (
 	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/evanphx/json-patch.v4 v4.12.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/api v0.31.1 // indirect
 	k8s.io/apiextensions-apiserver v0.31.1 // indirect
 	k8s.io/apimachinery v0.31.1 // indirect
@@ -152,12 +157,4 @@ require (
 	sigs.k8s.io/kustomize/api v0.17.2 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.17.1 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
-)
-
-require (
-	github.com/sters/yaml-diff v1.3.2
-	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1
-	helm.sh/helm/v3 v3.16.3
-	sigs.k8s.io/yaml v1.4.0
 )
