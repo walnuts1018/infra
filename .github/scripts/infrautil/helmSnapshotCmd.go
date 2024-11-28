@@ -61,11 +61,13 @@ func (b *helmSnapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) 
 
 		yamlFile, err := os.Open(path)
 		if err != nil {
+			slog.Error("failed to open file", slog.String("path", path), slog.Any("error", err))
 			return fmt.Errorf("failed to open file: %w", err)
 		}
 
 		helmapps, err := lib.ParseHelmApplications(yamlFile)
 		if err != nil {
+			slog.Error("failed to parse helm application", slog.String("path", path), slog.Any("error", err))
 			return fmt.Errorf("failed to parse helm application: %w", err)
 		}
 
@@ -80,12 +82,14 @@ func (b *helmSnapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) 
 
 			repoURL, err := url.Parse(helmapp.Spec.Source.RepoURL)
 			if err != nil {
+				slog.Error("failed to parse repo url", slog.String("repoURL", helmapp.Spec.Source.RepoURL), slog.Any("error", err))
 				return fmt.Errorf("failed to parse repo url: %w", err)
 			}
 
 			eg.Go(func() error {
 				hc, err := lib.NewHelmClient()
 				if err != nil {
+					slog.Error("failed to create helm client", slog.Any("error", err))
 					return fmt.Errorf("failed to create helm client: %w", err)
 				}
 
@@ -100,16 +104,19 @@ func (b *helmSnapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) 
 					helmapp.Spec.Source.Helm.ValuesObject,
 				)
 				if err != nil {
+					slog.Error("failed to generate helm template", slog.Any("error", err))
 					return fmt.Errorf("failed to generate helm template : %w", err)
 				}
 
 				file, err := os.Create(filepath.Join(b.outFileDir, helmapp.Metadata.Name+".yaml"))
 				if err != nil {
+					slog.Error("failed to create file", slog.String("path", path), slog.Any("error", err))
 					return fmt.Errorf("failed to create file: %w", err)
 				}
 				defer file.Close()
 
 				if _, err := io.Copy(file, gen); err != nil {
+					slog.Error("failed to copy file", slog.String("path", path), slog.Any("error", err))
 					return fmt.Errorf("failed to copy file: %w", err)
 				}
 				return nil
