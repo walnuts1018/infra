@@ -17,9 +17,10 @@
       },
       spec: {
         containers: [
-          std.mergePatch((import '../../components/container.libsonnet') {
+          (import '../../components/container.libsonnet') {
             name: 'ubuntu-debug',
             image: 'ghcr.io/cybozu/ubuntu-debug:24.04',
+            securityContext:: null,
             command: ['sleep', 'infinity'],
             resources: {
               limits: {
@@ -29,9 +30,7 @@
                 memory: '5Mi',
               },
             },
-          }, {
-            securityContext:: null,
-          }),
+          },
         ],
       },
     },
