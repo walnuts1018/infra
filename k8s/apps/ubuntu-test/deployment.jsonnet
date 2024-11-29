@@ -20,15 +20,7 @@
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'ubuntu-debug',
             image: 'ghcr.io/cybozu/ubuntu-debug:24.04',
-            livenessProbe: {
-              httpGet: {
-                path: '/healthz',
-                port: 8081,
-              },
-              failureThreshold: 1,
-              initialDelaySeconds: 10,
-              periodSeconds: 10,
-            },
+            command: ['sleep', 'infinity'],
             resources: {
               limits: {
                 memory: '100Mi',
