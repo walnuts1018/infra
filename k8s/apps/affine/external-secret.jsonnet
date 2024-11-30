@@ -16,6 +16,13 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
         property: 'affine',
       },
     },
+    {
+      secretKey: 'mailerpassword',
+      remoteRef: {
+        key: 'resend',
+        property: 'api-key',
+      },
+    },
   ],
 }, {
   spec: {
@@ -26,6 +33,7 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
         data: {
           'postgres-url': 'postgres://affine:{{ .dbpassword }}@postgresql-default.databases.svc.cluster.local/affine',
           redispassword: '{{ .redispassword }}',
+          'mailer-password': '{{ .mailerpassword }}',
         },
       },
     },

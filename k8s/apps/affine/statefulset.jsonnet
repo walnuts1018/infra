@@ -61,6 +61,27 @@
                 name: 'NODE_ENV',
                 value: 'production',
               },
+              {
+                name: 'MAILER_HOST',
+                value: 'smtp.resend.com',
+              },
+              {
+                name: 'MAILER_PORT',
+                value: '587',
+              },
+              {
+                name: 'MAILER_USER',
+                value: 'affine@resend.walnuts.dev',
+              },
+              {
+                name: 'MAILER_PASSWORD',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').metadata.name,
+                    key: 'mailer-password',
+                  },
+                },
+              },
             ],
             ports: [
               {
