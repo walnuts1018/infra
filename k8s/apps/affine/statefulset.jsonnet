@@ -41,7 +41,7 @@
               },
               {
                 name: 'AFFINE_CONFIG_PATH',
-                value: $.spec.containers[0].volumeMounts[1].mountPath,
+                value: $.spec.template.spec.containers[0].volumeMounts[1].mountPath,
               },
               {
                 name: 'REDIS_SERVER_HOST',
