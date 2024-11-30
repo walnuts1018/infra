@@ -58,7 +58,7 @@
           {
             name: 'DEPLOYMENT_TYPE',
             value: 'selfhosted',
-          }
+          },
           {
             name: 'MAILER_HOST',
             value: 'smtp.resend.com',
