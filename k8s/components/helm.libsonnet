@@ -30,6 +30,9 @@
         selfHeal: true,
         prune: true,
       },
+      syncOptions: [
+        'ServerSideApply=true',
+      ],
     },
     source: {
       chart: $.chart,
