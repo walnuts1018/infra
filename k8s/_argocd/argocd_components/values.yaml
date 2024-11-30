@@ -36,12 +36,46 @@ configs:
     server.insecure: true
     server.basehref: /
 
+controller:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+dex:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+redis:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
 server:
   ingress:
     enabled: true
     controller: generic
     ingressClassName: "nginx"
     tls: false
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+repoServer:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+applicationSet:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
 
 notifications:
   argocdUrl: "https://argocd.walnuts.dev"
@@ -306,3 +340,7 @@ notifications:
 
     defaultTriggers: |
       - on-sync-status-unknown
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
