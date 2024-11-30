@@ -111,6 +111,21 @@
                 name: 'tmp',
               },
             ],
+            livenessProbe: {
+              httpGet: {
+                path: '/info',
+                port: 'http',
+              },
+              failureThreshold: 1,
+              initialDelaySeconds: 10,
+              periodSeconds: 10,
+            },
+            readinessProbe: {
+              httpGet: {
+                path: '/info',
+                port: 'http',
+              },
+            },
           },
         ],
         volumes: [
