@@ -29,7 +29,7 @@
           {
             name: 'AFFINE_SERVER_EXTERNAL_URL',
             value: 'https://affine.walnuts.dev',
-          }
+          },
           {
             name: 'NODE_OPTIONS',
             value: '--import=./scripts/register.js',
