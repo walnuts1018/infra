@@ -80,6 +80,14 @@
                 mountPath: '/root/.affine/config',
                 name: 'affine-config',
               },
+              {
+                mountPath: '/usr/local/share/.cache',
+                name: 'usr-local-share-cache',
+              },
+              {
+                mountPath: '/tmp',
+                name: 'tmp',
+              },
             ],
           },
         ],
@@ -92,6 +100,14 @@
           },
           {
             name: 'affine-config',
+            emptyDir: {},
+          },
+          {
+            name: 'usr-local-share-cache',
+            emptyDir: {},
+          },
+          {
+            name: 'tmp',
             emptyDir: {},
           },
         ],
