@@ -116,7 +116,7 @@
             subPath: 'affine.js',
             readOnly: true,
             name: 'affine-config-affine-js',
-          }
+          },
           {
             mountPath: '/usr/local/share/.cache',
             name: 'usr-local-share-cache',
