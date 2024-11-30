@@ -30,7 +30,7 @@
               },
               {
                 name: 'AFFINE_SERVER_PORT',
-                value: $.spec.template.spec.containers[0].ports[0].containerPort,
+                value: std.toString($.spec.template.spec.containers[0].ports[0].containerPort),
               },
               {
                 name: 'AFFINE_SERVER_EXTERNAL_URL',
@@ -42,7 +42,7 @@
               },
               {
                 name: 'AFFINE_CONFIG_PATH',
-                value: std.toString($.spec.template.spec.containers[0].volumeMounts[1].mountPath),
+                value: $.spec.template.spec.containers[0].volumeMounts[1].mountPath,
               },
               {
                 name: 'REDIS_SERVER_HOST',
