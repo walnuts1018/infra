@@ -53,7 +53,7 @@
           },
           {
             name: 'NODE_ENV',
-            value: 'development',
+            value: 'production',
           },
           {
             name: 'DEPLOYMENT_TYPE',
@@ -154,21 +154,21 @@
                 name: 'prisma',
               },
             ],
-            // livenessProbe: {
-            //   httpGet: {
-            //     path: '/info',
-            //     port: 'http',
-            //   },
-            //   failureThreshold: 1,
-            //   initialDelaySeconds: 10,
-            //   periodSeconds: 10,
-            // },
-            // readinessProbe: {
-            //   httpGet: {
-            //     path: '/info',
-            //     port: 'http',
-            //   },
-            // },
+            livenessProbe: {
+              httpGet: {
+                path: '/info',
+                port: 'http',
+              },
+              failureThreshold: 1,
+              initialDelaySeconds: 10,
+              periodSeconds: 10,
+            },
+            readinessProbe: {
+              httpGet: {
+                path: '/info',
+                port: 'http',
+              },
+            },
           },
         ],
         volumes: [
