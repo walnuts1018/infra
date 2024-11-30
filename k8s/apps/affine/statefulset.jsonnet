@@ -64,6 +64,10 @@
             value: 'smtp.resend.com',
           },
           {
+            name: 'DEV_SERVER_URL',
+            value: 'https://affine.walnuts.dev',
+          },
+          {
             name: 'MAILER_PORT',
             value: '587',
           },
