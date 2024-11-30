@@ -30,7 +30,7 @@
               },
               {
                 name: 'AFFINE_SERVER_PORT',
-                value: $.spec.template.spec.containers[0].ports[0].port,
+                value: $.spec.template.spec.containers[0].ports[0].containerPort,
               },
               {
                 name: 'AFFINE_SERVER_EXTERNAL_URL',
