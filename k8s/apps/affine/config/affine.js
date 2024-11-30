@@ -1,7 +1,3 @@
-AFFiNE.use("redis", {
-  /* override options */
-});
-
 AFFiNE.use("oauth", {
   providers: {
     oidc: {
