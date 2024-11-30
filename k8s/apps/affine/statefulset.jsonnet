@@ -82,6 +82,10 @@
                   },
                 },
               },
+              {
+                name: 'MAILER_SENDER',
+                value: 'affine@resend.walnuts.dev',
+              },
             ],
             ports: [
               {
