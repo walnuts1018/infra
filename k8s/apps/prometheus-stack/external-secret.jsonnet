@@ -33,8 +33,8 @@
     {
       secretKey: 'smtp_password',
       remoteRef: {
-        key: 'gmail',
-        property: 'password',
+        key: 'resend',
+        property: 'api-key',
       },
     },
   ],
