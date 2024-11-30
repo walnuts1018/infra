@@ -35,7 +35,7 @@
             ],
             volumeMounts: [
               {
-                name: 'misskey-pv',
+                name: 'misskey-files',
                 mountPath: '/misskey/files',
               },
               {
