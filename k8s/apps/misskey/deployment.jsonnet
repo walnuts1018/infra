@@ -58,7 +58,7 @@
             ],
             volumeMounts: [
               {
-                name: 'misskey-pv',
+                name: 'misskey-files',
                 mountPath: '/misskey/files',
               },
               {
@@ -116,12 +116,6 @@
         ],
         volumes: [
           {
-            name: 'misskey-pv',
-            persistentVolumeClaim: {
-              claimName: (import 'pvc.jsonnet').metadata.name,
-            },
-          },
-          {
             name: 'misskey-config',
             secret: {
               secretName: (import 'external-secret.jsonnet').metadata.name,
@@ -129,6 +123,10 @@
           },
           {
             name: 'tmp',
+            emptyDir: {},
+          },
+          {
+            name: 'misskey-files',
             emptyDir: {},
           },
         ],
