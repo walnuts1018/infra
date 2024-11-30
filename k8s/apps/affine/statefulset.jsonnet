@@ -30,7 +30,7 @@
               },
               {
                 name: 'AFFINE_SERVER_PORT',
-                value: '443',
+                value: '3010',
               },
               {
                 name: 'AFFINE_SERVER_EXTERNAL_URL',
