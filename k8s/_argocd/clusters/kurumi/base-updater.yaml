@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: base
+  name: base-updater
   namespace: argocd
   annotations:
     notifications.argoproj.io/subscribe.on-deleted.slack: walnuts-sysop
@@ -13,10 +13,7 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   sources:
-  - path: k8s/_argocd/applications
-    repoURL: 'https://github.com/walnuts1018/infra'
-    targetRevision: main
-  - path: k8s/_argocd/clusters/kurumi/base-updater.yaml
+  - path: k8s/_argocd/clusters/kurumi/base.yaml
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
   syncPolicy:
