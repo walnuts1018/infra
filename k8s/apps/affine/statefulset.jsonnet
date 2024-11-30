@@ -86,6 +86,23 @@
                 name: 'MAILER_SENDER',
                 value: 'affine@resend.walnuts.dev',
               },
+              {
+                name: 'OAUTH_OIDC_ISSUER',
+                value: 'https://auth.walnuts.dev',
+              },
+              {
+                name: 'OAUTH_OIDC_CLIENT_ID',
+                value: '296071951179383022',
+              },
+              {
+                name: 'OAUTH_OIDC_CLIENT_SECRET',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').metadata.name,
+                    key: 'oidc-client-secret',
+                  },
+                },
+              },
             ],
             ports: [
               {
