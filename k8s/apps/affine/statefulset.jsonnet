@@ -71,7 +71,7 @@
               },
               {
                 name: 'MAILER_USER',
-                value: 'affine@resend.walnuts.dev',
+                value: 'resend',
               },
               {
                 name: 'MAILER_PASSWORD',
