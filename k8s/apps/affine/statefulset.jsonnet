@@ -112,6 +112,12 @@
             name: 'affine-config',
           },
           {
+            mountPath: '/root/.affine/config/affine.js',
+            subPath: 'affine.js',
+            readOnly: true,
+            name: 'affine-config-affine-js',
+          }
+          {
             mountPath: '/usr/local/share/.cache',
             name: 'usr-local-share-cache',
           },
@@ -166,6 +172,18 @@
           },
         ],
         volumes: [
+          {
+            name: 'affine-config-affine-js',
+            configMap: {
+              name: (import 'configmap.jsonnet').metadata.name,
+              items: [
+                {
+                  key: 'affine.js',
+                  path: 'affine.js',,
+                },
+              ],
+            },
+          },
           {
             name: 'affine-storage',
             persistentVolumeClaim: {
