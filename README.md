@@ -26,15 +26,13 @@ Walnuts 家の自宅サーバ全般のリポジトリです。
 - [README](./k8s/README.md)
 
 ### YAML
+
 このリポジトリではjsonnetを用いてマニフェスト管理を行っています。
 YAMLの生成結果は[snapshot](https://github.com/walnuts1018/infra/tree/snapshot)ブランチへと自動的にpushされるので、そちらを参照してください。
 
-## Actions
-
-- [k8s-badge](./.github/workflows/badge.yaml)
-- [CI](./.github/workflows/k8s.yaml)
-- [flux Manigests AutoGen](./.github/workflows/auto-gen.yaml)
 
 ## Renovate
 
 - [renovate.json](./renovate.json5)
+
+![Alt](https://repobeats.axiom.co/api/embed/dd585ab5402819b2c5e92a25cbd4dc2304035170.svg "Repobeats analytics image")
