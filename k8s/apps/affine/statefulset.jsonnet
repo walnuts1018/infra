@@ -179,7 +179,7 @@
               items: [
                 {
                   key: 'affine.js',
-                  path: 'affine.js',,
+                  path: 'affine.js',
                 },
               ],
             },
