@@ -76,6 +76,10 @@
                 mountPath: '/root/.affine/storage',
                 name: 'affine-storage',
               },
+              {
+                mountPath: '/root/.affine/config',
+                name: 'affine-config',
+              },
             ],
           },
         ],
@@ -85,6 +89,10 @@
             persistentVolumeClaim: {
               claimName: (import 'pvc.jsonnet').metadata.name,
             },
+          },
+          {
+            name: 'affine-config',
+            emptyDir: {},
           },
         ],
       },
