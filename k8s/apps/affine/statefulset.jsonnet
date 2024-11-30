@@ -22,6 +22,7 @@
             name: 'affine',
             image: 'ghcr.io/toeverything/affine-graphql:stable-1623f5d',
             command: ['sh', '-c', 'node ./scripts/self-host-predeploy && node ./dist/index.js'],
+            securityContext:: null,
             env: [
               {
                 name: 'AFFINE_SERVER_HOST',
