@@ -23,6 +23,13 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
         property: 'api-key',
       },
     },
+    {
+      secretKey: 'oidcclientsecret',
+      remoteRef: {
+        key: 'zitadel',
+        property: 'affine',
+      },
+    },
   ],
 }, {
   spec: {
@@ -34,6 +41,7 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
           'postgres-url': 'postgres://affine:{{ .dbpassword }}@postgresql-default.databases.svc.cluster.local/affine',
           redispassword: '{{ .redispassword }}',
           'mailer-password': '{{ .mailerpassword }}',
+          'oidc-client-secret': '{{ .oidcclientsecret }}',
         },
       },
     },
