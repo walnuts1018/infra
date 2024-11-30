@@ -13,4 +13,5 @@
   'ac-hacking',
   'y-2024',
   'mucaron',
+  'affine',
 ]
