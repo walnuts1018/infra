@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/subcommands"
 	"github.com/walnuts1018/infra/.github/scripts/infrautil/lib"
+	"golang.org/x/sync/errgroup"
 )
 
 type snapshotCmd struct {
@@ -34,6 +35,8 @@ func (b *snapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subc
 		return subcommands.ExitFailure
 	}
 
+	eg := new(errgroup.Group)
+
 	if err := filepath.Walk(b.appBaseDir, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -46,27 +49,34 @@ func (b *snapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subc
 		if filepath.Ext(path) != ".jsonnet" {
 			return nil
 		}
+		eg.Go(func() error {
+			yaml, err := lib.BuildYAML(path)
+			if err != nil {
+				return err
+			}
 
-		yaml, err := lib.BuildYAML(path)
-		if err != nil {
-			return err
-		}
+			relativePath, err := filepath.Rel(b.appBaseDir, path)
+			if err != nil {
+				return err
+			}
 
-		relativePath, err := filepath.Rel(b.appBaseDir, path)
-		if err != nil {
-			return err
-		}
+			if err := os.MkdirAll(filepath.Join(b.outFilePath, filepath.Dir(relativePath)), 0755); err != nil {
+				return err
+			}
 
-		if err := os.MkdirAll(filepath.Join(b.outFilePath, filepath.Dir(relativePath)), 0755); err != nil {
-			return err
-		}
-
-		if err := os.WriteFile(filepath.Join(b.outFilePath, changeExt(relativePath, ".yaml")), []byte(yaml), 0644); err != nil {
-			return err
-		}
+			if err := os.WriteFile(filepath.Join(b.outFilePath, changeExt(relativePath, ".yaml")), []byte(yaml), 0644); err != nil {
+				return err
+			}
+			return nil
+		})
 		return nil
 	}); err != nil {
 		slog.Error("failed to walk app directory", slog.String("appBaseDir", b.appBaseDir), slog.Any("error", err))
+		return subcommands.ExitFailure
+	}
+
+	if err := eg.Wait(); err != nil {
+		slog.Error("failed to wait errgroup")
 		return subcommands.ExitFailure
 	}
 
