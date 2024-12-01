@@ -15,8 +15,7 @@ terraform {
     key                         = "kurumi/terraform.tfstate"
     region                      = "us-east-1"
 
-    access_key = "F1QPgAWk6bhvSrNjYPMS"
-    # secret_key = "Vu9G6cKC7f41XrTIZURAoIhCpwkZwiBatluSPSZ4"
+    access_key = "L2thlqrcs0RnPD6YP61w"
 
     skip_credentials_validation = true
     skip_requesting_account_id  = true
