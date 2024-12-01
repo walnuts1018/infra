@@ -71,6 +71,7 @@ grafana:
       enabled: true
   plugins:
   - knightss27-weathermap-panel
+  - grafana-github-datasource
 prometheus-node-exporter:
   prometheus:
     monitor:
