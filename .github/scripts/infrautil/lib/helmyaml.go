@@ -45,31 +45,35 @@ func ParseHelmApplications(reader io.Reader) (iter.Seq2[HelmApplication, error],
 		for scanner.Scan() {
 			line := scanner.Text()
 			if isSeparator(line) {
-				var app HelmApplication
-				if err := yaml.Unmarshal([]byte(strings.Join(lines, "\n")), &app); err != nil {
-					if !yield(HelmApplication{}, fmt.Errorf("failed to unmarshal yaml: %w", err)) {
-						return
-					}
-				}
-				lines = []string{}
-
 				if err := scanner.Err(); err != nil {
 					if !yield(HelmApplication{}, fmt.Errorf("failed to read line: %w", err)) {
 						return
 					}
 				}
 
-				if err := validate.Struct(app); err != nil {
-					if !yield(HelmApplication{}, ErrNotHelmApplication) {
-						return
+				if !isEmpty(lines) {
+					var app HelmApplication
+					if err := yaml.Unmarshal([]byte(strings.Join(lines, "\n")), &app); err != nil {
+						if !yield(HelmApplication{}, fmt.Errorf("failed to unmarshal yaml: %w", err)) {
+							return
+						}
 					}
-				} else {
-					if !yield(app, nil) {
-						return
+
+					if err := validate.Struct(app); err != nil {
+						if !yield(HelmApplication{}, ErrNotHelmApplication) {
+							return
+						}
+					} else {
+						if !yield(app, nil) {
+							return
+						}
 					}
 				}
+
+				lines = []string{}
+			} else {
+				lines = append(lines, line)
 			}
-			lines = append(lines, line)
 		}
 
 		if err := scanner.Err(); err != nil {
@@ -78,22 +82,24 @@ func ParseHelmApplications(reader io.Reader) (iter.Seq2[HelmApplication, error],
 			}
 		}
 
-		if len(lines) > 0 {
-			var app HelmApplication
-			if err := yaml.Unmarshal([]byte(strings.Join(lines, "\n")), &app); err != nil {
-				if !yield(HelmApplication{}, fmt.Errorf("failed to unmarshal yaml: %w", err)) {
-					return
-				}
-			}
+		if isEmpty(lines) {
+			return
+		}
 
-			if err := validate.Struct(app); err != nil {
-				if !yield(HelmApplication{}, ErrNotHelmApplication) {
-					return
-				}
-			} else {
-				if !yield(app, nil) {
-					return
-				}
+		var app HelmApplication
+		if err := yaml.Unmarshal([]byte(strings.Join(lines, "\n")), &app); err != nil {
+			if !yield(HelmApplication{}, fmt.Errorf("failed to unmarshal yaml: %w", err)) {
+				return
+			}
+		}
+
+		if err := validate.Struct(app); err != nil {
+			if !yield(HelmApplication{}, ErrNotHelmApplication) {
+				return
+			}
+		} else {
+			if !yield(app, nil) {
+				return
 			}
 		}
 	}, nil
@@ -101,4 +107,12 @@ func ParseHelmApplications(reader io.Reader) (iter.Seq2[HelmApplication, error],
 
 func isSeparator(s string) bool {
 	return strings.HasPrefix(s, "---")
+}
+
+func isEmpty(lines []string) bool {
+	if len(lines) == 0 {
+		return true
+	}
+	trimed := strings.TrimSpace(lines[0])
+	return trimed == "" || strings.HasPrefix(trimed, "#") || isSeparator(trimed)
 }
