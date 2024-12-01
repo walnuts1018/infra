@@ -22,12 +22,28 @@ helm-snapshot:
 
 .PHONY: terraform
 terraform: 
-	$(eval SECRET_KEY := $(shell op item get minio-default-secret-key --field secret_key --reveal))
-	kubectl port-forward -n zitadel services/zitadel 8080:8080 &
+	make terraform-setup
+	make terraform-plan
+	make terraform-apply
+
+.PHONY: terraform-setup
+terraform-setup:
 	kubectl port-forward -n minio services/minio 9000:9000 &
-	terraform -chdir=".\terraform\kurumi" init -upgrade
-	terraform -chdir=".\terraform\kurumi" plan -var="minio_secret_key=$(SECRET_KEY)"
-	terraform -chdir=".\terraform\kurumi" apply -var="minio_secret_key=$(SECRET_KEY)" -auto-approve
+	
+	$(eval MINIO_SECRET_KEY := $(shell op item get minio-default-secret-key --field secret_key --reveal))
+	terraform -chdir=".\terraform\kurumi" init -upgrade -backend-config="secret_key=$(MINIO_SECRET_KEY)"
+
+.PHONY: terraform-plan
+terraform-plan:
+	$(eval MINIO_SECRET_KEY := $(shell op item get minio-default-secret-key --field secret_key --reveal))
+	$(eval CLOUDFLARE_API_TOKEN := $(shell op item get cloudflare --field terraform-api-token --reveal))
+	terraform -chdir=".\terraform\kurumi" plan -var="minio_secret_key=$(MINIO_SECRET_KEY)" -var="cloudflare_api_token=$(CLOUDFLARE_API_TOKEN)"
+
+.PHONY: terraform-apply
+terraform-apply:
+	$(eval MINIO_SECRET_KEY := $(shell op item get minio-default-secret-key --field secret_key --reveal))
+	$(eval CLOUDFLARE_API_TOKEN := $(shell op item get cloudflare --field terraform-api-token --reveal))
+	terraform -chdir=".\terraform\kurumi" apply -var="minio_secret_key=$(MINIO_SECRET_KEY)" -var="cloudflare_api_token=$(CLOUDFLARE_API_TOKEN)" -auto-approve
 
 .PHONY: aquq
 aquq:
