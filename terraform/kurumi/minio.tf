@@ -1,5 +1,5 @@
 locals {
-  minio_access_key   = "F1QPgAWk6bhvSrNjYPMS"
+  minio_access_key   = "L2thlqrcs0RnPD6YP61w"
 }
 
 module "minio" {
