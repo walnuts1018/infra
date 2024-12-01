@@ -10,7 +10,7 @@ serviceMonitor:
   - name: "blog"
     url: "https://blog.walnuts.dev/"
   - name: "grafana"
-    url: "https://grafana.walnuts.dev/"
+    url: "https://grafana.walnuts.dev/healthz"
   - name: "oekaki-dengon-game"
     url: "https://oekaki.walnuts.dev/public"
   - name: "misskey"
