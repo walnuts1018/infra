@@ -17,6 +17,10 @@ clustermesh:
       auto:
         enabled: true
         method: cronJob
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
 ingressController:
   enabled: true
   loadbalancerMode: shared
@@ -42,16 +46,12 @@ hubble:
       method: cronJob
   relay:
     enabled: true
-    image:
-      useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
+    prometheus:
+      enabled: true
+      serviceMonitor:
+        enabled: true
   ui:
     enabled: true
-    backend:
-      image:
-        useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
-    frontend:
-      image:
-        useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
   metrics:
     enableOpenMetrics: true
     enabled:
@@ -67,9 +67,17 @@ hubble:
     dashboards:
       enabled: true
 envoy:
-  image:
-    useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
 operator:
-  image:
-    useDigest: false # https://github.com/containers/image/blob/d372f0e440d35c6041de39023b0b6eb131fba54b/docker/docker_transport.go#L79-L81
   tolerations: []
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
