@@ -2,7 +2,7 @@ resource "cloudflare_ruleset" "terraform_managed_resource_304092e7f9904942998f39
   kind    = "zone"
   name    = "default"
   phase   = "http_config_settings"
-  zone_id = var.zone_id
+  zone_id = cloudflare_zone.walnuts_dev.id
   rules {
     action       = "set_config"
     description  = "disable Rocket Loader"
@@ -20,7 +20,7 @@ resource "cloudflare_ruleset" "terraform_managed_resource_d3a7c2d6242d41068be770
   kind    = "zone"
   name    = "default"
   phase   = "http_request_cache_settings"
-  zone_id = var.zone_id
+  zone_id = cloudflare_zone.walnuts_dev.id
 
   rules {
     action       = "set_cache_settings" 
