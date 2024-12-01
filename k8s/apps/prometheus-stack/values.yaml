@@ -87,6 +87,8 @@ prometheus:
       matchLabels: null #全てのServiceMonitorを監視対象にする
     podMonitorSelector:
       matchLabels: null #全てのPodMonitorを監視対象にする
+    probeSelector:
+      matchLabels: null #全てのProbeを監視対象にする
     storageSpec:
       volumeClaimTemplate:
         spec:
