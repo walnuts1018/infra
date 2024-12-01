@@ -29,7 +29,3 @@ resource "aws_s3_bucket" "mpeg-dash-encoder-source-upload" {
 resource "aws_s3_bucket" "mpeg-dash-encoder-output" {
   bucket = format("mpeg-dash-encoder-output%s", var.bucket_name_suffix)
 }
-
-resource "aws_s3_bucket" "misskey" {
-  bucket = format("misskey%s", var.bucket_name_suffix)
-}
