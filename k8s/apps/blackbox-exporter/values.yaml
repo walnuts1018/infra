@@ -1,0 +1,7 @@
+serviceMonitor:
+  selfMonitor:
+    enabled: true
+  enabled: true
+  targets:
+  - name: "walnuts-dev"
+    url: "https://walnuts.dev/healthz"
