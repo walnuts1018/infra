@@ -31,7 +31,7 @@ terraform-setup:
 	kubectl port-forward -n minio services/minio 9000:9000 &
 	
 	$(eval MINIO_SECRET_KEY := $(shell op item get minio-default-secret-key --field secret_key --reveal))
-	terraform -chdir=".\terraform\kurumi" init -upgrade -backend-config="secret_key=$(MINIO_SECRET_KEY)"
+	terraform -chdir=".\terraform\kurumi" init -upgrade -backend-config="secret_key=$(MINIO_SECRET_KEY)" -migrate-state
 
 .PHONY: terraform-plan
 terraform-plan:

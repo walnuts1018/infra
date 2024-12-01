@@ -14,10 +14,3 @@ variable "cloudflare_api_token" {
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
-
-variable "zone_id" {
-  type = string
-}
-variable "account_id" {
-  type = string
-}
