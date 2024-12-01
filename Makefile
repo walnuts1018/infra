@@ -8,16 +8,16 @@ namespace: build-infrautil
 	$(INFRAUTIL) namespace -d ./k8s/apps -o ./k8s/namespaces/namespaces.json5
 
 .PHONY: snapshot
-snapshot:
+snapshot: build-infrautil
 	make app-snapshot
 	make helm-snapshot
 
 .PHONY: app-snapshot
-app-snapshot: build-infrautil
+app-snapshot:
 	$(INFRAUTIL) snapshot -d ./k8s/apps -o ./k8s/snapshots/apps
 
 .PHONY: helm-snapshot
-helm-snapshot: build-infrautil
+helm-snapshot: 
 	$(INFRAUTIL) helm-snapshot -d ./k8s/snapshots/apps -o ./k8s/snapshots/helm
 
 .PHONY: terraform
