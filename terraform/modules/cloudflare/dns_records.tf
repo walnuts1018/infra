@@ -4,7 +4,7 @@ resource "cloudflare_record" "samba" {
   proxied = false
   ttl     = 1
   type    = "A"
-  zone_id = var.zone_id
+  zone_id = cloudflare_zone.walnuts_dev.id
 }
 
 resource "cloudflare_record" "resend_mx" {
@@ -14,7 +14,7 @@ resource "cloudflare_record" "resend_mx" {
   proxied  = false
   ttl      = 1
   type     = "MX"
-  zone_id = var.zone_id
+  zone_id = cloudflare_zone.walnuts_dev.id
 }
 
 resource "cloudflare_record" "terraform_managed_resource_3bcba7bd4b61fd21dbbf52d7164dd740" {
@@ -23,7 +23,7 @@ resource "cloudflare_record" "terraform_managed_resource_3bcba7bd4b61fd21dbbf52d
   proxied = false
   ttl     = 1
   type    = "TXT"
-  zone_id = var.zone_id
+  zone_id = cloudflare_zone.walnuts_dev.id
 }
 
 resource "cloudflare_record" "terraform_managed_resource_52809b82fc5e93f5d20192f93b74f884" {
@@ -32,7 +32,7 @@ resource "cloudflare_record" "terraform_managed_resource_52809b82fc5e93f5d20192f
   proxied = false
   ttl     = 1
   type    = "TXT"
-  zone_id = var.zone_id
+  zone_id = cloudflare_zone.walnuts_dev.id
 }
 
 resource "cloudflare_record" "terraform_managed_resource_7fcb19b7bea399e699d5f6af4fd265f7" {
@@ -41,7 +41,7 @@ resource "cloudflare_record" "terraform_managed_resource_7fcb19b7bea399e699d5f6a
   proxied = false
   ttl     = 1
   type    = "TXT"
-  zone_id = var.zone_id
+  zone_id = cloudflare_zone.walnuts_dev.id
 }
 
 resource "cloudflare_record" "terraform_managed_resource_b3aa52624d17e28a78c729cd51533e1b" {
@@ -50,7 +50,7 @@ resource "cloudflare_record" "terraform_managed_resource_b3aa52624d17e28a78c729c
   proxied = false
   ttl     = 1
   type    = "TXT"
-  zone_id = var.zone_id
+  zone_id = cloudflare_zone.walnuts_dev.id
 }
 
 resource "cloudflare_record" "terraform_managed_resource_cb6d40bd779430bc5c123e3c6120cacc" {
@@ -59,7 +59,7 @@ resource "cloudflare_record" "terraform_managed_resource_cb6d40bd779430bc5c123e3
   proxied = false
   ttl     = 1
   type    = "TXT"
-  zone_id = var.zone_id
+  zone_id = cloudflare_zone.walnuts_dev.id
 }
 
 resource "cloudflare_record" "terraform_managed_resource_a95a9a38f2f9db38790102b666d980b3" {
@@ -68,5 +68,5 @@ resource "cloudflare_record" "terraform_managed_resource_a95a9a38f2f9db38790102b
   proxied = false
   ttl     = 3600
   type    = "TXT"
-  zone_id = var.zone_id
+  zone_id = cloudflare_zone.walnuts_dev.id
 }
