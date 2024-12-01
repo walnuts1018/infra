@@ -8,6 +8,20 @@
 
 - [zsh&dotfile](https://github.com/walnuts1018/dotfiles)
 
+## ラズパイのみ
+
+```bash
+sudo su
+rpi-eeprom-update -a
+echo -n "dtoverlay=cma,cma-64
+dtoverlay=disable-bt
+dtoverlay=disable-wifi
+dtparam=watchdog=on
+" >> /boot/firmware/config.txt"
+
+exit
+```
+
 ## Timezone
 
 ```bash
