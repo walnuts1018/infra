@@ -37,4 +37,5 @@ environment:
 metrics:
   serviceMonitor:
     enabled: true
+    includeNode: true
 users: []
