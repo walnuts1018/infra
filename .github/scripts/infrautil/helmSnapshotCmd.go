@@ -74,7 +74,7 @@ func (b *helmSnapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) 
 		for helmapp, err := range helmapps {
 			if err != nil {
 				if errors.Is(err, lib.ErrNotHelmApplication) {
-					slog.Warn("not a helm application", slog.String("path", path), slog.Any("error", err))
+					slog.Info("not helm application", slog.String("path", path))
 					continue
 				}
 				return fmt.Errorf("failed to parse helm application: %w", err)
