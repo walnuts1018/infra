@@ -135,7 +135,7 @@ func (b *helmSnapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) 
 	}
 
 	if err := eg.Wait(); err != nil {
-		slog.Error("failed to wait errgroup", slog.Any("error", err))
+		slog.Error("failed to wait errgroup")
 		return subcommands.ExitFailure
 	}
 
