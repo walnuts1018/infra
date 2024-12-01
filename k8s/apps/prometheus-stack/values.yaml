@@ -83,6 +83,14 @@ prometheus-node-exporter:
         action: replace
 prometheus:
   prometheusSpec:
+    serviceMonitorSelector:
+      matchLabels: {} #全てのServiceMonitorを監視対象にする
+    podMonitorSelector:
+      matchLabels: {} #全てのPodMonitorを監視対象にする
+    probeSelector:
+      matchLabels: {} #全てのProbeを監視対象にする
+    probeNamespaceSelector:
+      matchLabels: {} #全てのNamespaceのProbeを監視対象にする
     storageSpec:
       volumeClaimTemplate:
         spec:
