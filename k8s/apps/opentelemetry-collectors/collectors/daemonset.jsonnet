@@ -196,11 +196,11 @@ std.mergePatch((import '_base.libsonnet'), {
         value: 'k8s.node.name=$(K8S_NODE_NAME),k8s.node.ip=$(K8S_NODE_IP)',
       },
     ],
-    tolerations: [
-      {
-        operator: 'Exists',
-      },
-    ],
+    // tolerations: [
+    //   {
+    //     operator: 'Exists',
+    //   },
+    // ],
     volumeMounts: [
       {
         name: 'varlogpods',
