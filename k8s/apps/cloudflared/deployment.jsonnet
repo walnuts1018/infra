@@ -70,7 +70,7 @@
               },
               limits: {
                 memory: '512Mi',
-                cpu: '100m',
+                cpu: '1000m',
               },
             },
           },
