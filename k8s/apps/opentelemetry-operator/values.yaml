@@ -6,6 +6,7 @@ manager:
   - --enable-nginx-instrumentation=true
   resources:
     limits:
+      cpu: 200m
       memory: 128Mi
     requests:
       cpu: 5m
