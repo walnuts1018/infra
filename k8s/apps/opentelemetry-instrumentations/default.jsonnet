@@ -39,6 +39,16 @@
           value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4318',
         },
       ],
+      resourceRequirements: {
+        limits: {
+          cpu: '500m',
+          memory: '256Mi',
+        },
+        requests: {
+          cpu: '50m',
+          memory: '32Mi',
+        },
+      },
     },
   },
 }
