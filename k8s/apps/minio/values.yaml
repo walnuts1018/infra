@@ -39,3 +39,7 @@ metrics:
     enabled: true
     includeNode: true
 users: []
+
+additionalAnnotations:
+  instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
+  instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/bin/minio'
