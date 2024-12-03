@@ -4,6 +4,6 @@
 
   chart: 'moco',
   repoURL: 'https://cybozu-go.github.io/moco/',
-  targetRevision: '0.15.0',
+  targetRevision: '0.15.1',
   values: (importstr 'values.yaml'),
 }
