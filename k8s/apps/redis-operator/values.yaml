@@ -3,8 +3,8 @@ resources:
     cpu: 500m
     memory: 500Mi
   requests:
-    cpu: 500m
-    memory: 500Mi
+    cpu: 30m
+    memory: 32Mi
 
 # redisOperator:
 #   extraArgs:
