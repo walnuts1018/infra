@@ -26,7 +26,6 @@ configs:
       - openid
       - email
       - profile
-      - urn:zitadel:iam:org:projects:roles
   params:
     otlp.address: 'default-collector.opentelemetry-collector.svc.cluster.local:4317'
     server.insecure: true
@@ -35,7 +34,7 @@ configs:
     create: true
     policy.csv: |
       g, argocd-admin, role:admin
-    scopes: '[urn:zitadel:iam:org:project:roles]'
+    scopes: '[my:zitadel:grants]'
 
 controller:
   metrics:
