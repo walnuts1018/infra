@@ -6,6 +6,6 @@ resources:
     cpu: 500m
     memory: 500Mi
 
-redisOperator:
-  extraArgs:
-  - "-zap-log-level=debug"
+# redisOperator:
+#   extraArgs:
+#   - "-zap-log-level=debug"
