@@ -36,6 +36,7 @@ configs:
     policy.csv: |
       g, 237477822715658605:argocd-admin, role:admin
     scopes: '[my:zitadel:grants]'
+    policy.default: ''
 
 controller:
   metrics:
