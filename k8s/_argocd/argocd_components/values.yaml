@@ -26,6 +26,7 @@ configs:
       - openid
       - email
       - profile
+    users.anonymous.enabled: false
   params:
     otlp.address: 'default-collector.opentelemetry-collector.svc.cluster.local:4317'
     server.insecure: true
