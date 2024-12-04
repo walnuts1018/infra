@@ -35,6 +35,11 @@ configs:
     otlp.address: 'default-collector.opentelemetry-collector.svc.cluster.local:4317'
     server.insecure: true
     server.basehref: /
+  rbac:
+    create: true
+    policy.csv: |
+      g, argocd-admin, role:admin
+    scopes: '[urn:zitadel:iam:org:project:roles]'
 
 controller:
   metrics:
