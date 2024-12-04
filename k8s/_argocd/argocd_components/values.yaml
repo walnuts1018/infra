@@ -34,7 +34,7 @@ configs:
   rbac:
     create: true
     policy.csv: |
-      g, argocd-admin, role:admin
+      g, 237477822715658605:argocd-admin, role:admin
     scopes: '[my:zitadel:grants]'
 
 controller:
