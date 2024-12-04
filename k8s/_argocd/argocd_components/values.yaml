@@ -27,6 +27,7 @@ configs:
       - email
       - profile
     users.anonymous.enabled: false
+    users.session.duration: "168h" # 7 days
   params:
     otlp.address: 'default-collector.opentelemetry-collector.svc.cluster.local:4317'
     server.insecure: true
