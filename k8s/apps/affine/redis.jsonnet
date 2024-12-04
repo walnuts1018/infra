@@ -9,6 +9,7 @@
 
   },
   spec: {
+    persistenceEnabled: false,
     kubernetesConfig: {
       image: 'quay.io/opstree/redis:v7.0.12',
       imagePullPolicy: 'IfNotPresent',
@@ -16,8 +17,6 @@
         name: (import 'external-secret.jsonnet').metadata.name,
         key: 'redispassword',
       },
-    },
-    storage: {
     },
     podSecurityContext: {
       fsGroup: 1000,
