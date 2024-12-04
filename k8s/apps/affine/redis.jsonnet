@@ -18,18 +18,6 @@
       },
     },
     storage: {
-      volumeClaimTemplate: {
-        spec: {
-          accessModes: [
-            'ReadWriteOnce',
-          ],
-          resources: {
-            requests: {
-              storage: '1Gi',
-            },
-          },
-        },
-      },
     },
     podSecurityContext: {
       fsGroup: 1000,
