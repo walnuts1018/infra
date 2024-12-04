@@ -17,20 +17,16 @@ configs:
         - CiliumIdentity
         clusters:
         - "*"
-    dex.config: |
-      connectors:
-      - type: oidc
-        id: walnuts-dev
-        name: walnuts-dev
-        config:
-          clientID: "296595833422414292"
-          clientSecret: $argocd-oidc:client-secret
-          issuer: https://auth.walnuts.dev
-          scopes:
-          - openid
-          - email
-          - profile
-          - urn:zitadel:iam:org:projects:roles
+    oidc.config: |
+      name: walnuts-dev
+      issuer: https://auth.walnuts.dev
+      clientID: "296595833422414292"
+      clientSecret: $argocd-oidc:client-secret
+      requestedScopes:
+      - openid
+      - email
+      - profile
+      - urn:zitadel:iam:org:projects:roles
   params:
     otlp.address: 'default-collector.opentelemetry-collector.svc.cluster.local:4317'
     server.insecure: true
