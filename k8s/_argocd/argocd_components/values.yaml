@@ -23,7 +23,7 @@ configs:
         id: walnuts-dev
         name: walnuts-dev
         config:
-          clientID: "291851981864108044"
+          clientID: "296595833422414292"
           clientSecret: $argocd-oidc:client-secret
           issuer: https://auth.walnuts.dev
           scopes:
