@@ -1,4 +1,0 @@
-installCRDs: true
-config:
-  featureGates:
-    ExperimentalGatewayAPISupport: true
