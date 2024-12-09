@@ -84,21 +84,7 @@ std.mergePatch((import '_base.libsonnet'), {
         pipelines: {
           metrics: {
             receivers: [
-              'otlp/internal',
               'k8s_cluster',
-            ],
-            processors: [
-              'memory_limiter',
-              'batch',
-              'k8sattributes',
-            ],
-            exporters: [
-              'otlp/default',
-            ],
-          },
-          traces: {
-            receivers: [
-              'otlp/internal',
             ],
             processors: [
               'memory_limiter',
