@@ -145,6 +145,7 @@ std.mergePatch((import '_base.libsonnet'), {
         pipelines: {
           metrics: {
             receivers: [
+              'otlp/internal',
               'hostmetrics',
               'kubeletstats',
             ],
@@ -166,6 +167,18 @@ std.mergePatch((import '_base.libsonnet'), {
               'memory_limiter',
               'batch',
               'k8sattributes',
+            ],
+            exporters: [
+              'otlp/default',
+            ],
+          },
+          traces: {
+            receivers: [
+              'filelog',
+            ],
+            processors: [
+              'memory_limiter',
+              'batch',
             ],
             exporters: [
               'otlp/default',
