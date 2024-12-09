@@ -71,12 +71,38 @@ server:
     enabled: true
     serviceMonitor:
       enabled: true
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 100
+    targetMemoryUtilizationPercentage: 100
+  resources:
+    limits:
+      cpu: 200m
+      memory: 512Mi
+    requests:
+      cpu: 10m
+      memory: 72Mi
 
 repoServer:
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 100
+    targetMemoryUtilizationPercentage: 100
+  resources:
+    limits:
+      cpu: 200m
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
 
 applicationSet:
   metrics:
