@@ -19,7 +19,7 @@
         containers: [
           {
             name: 'fitbit-manager',
-            image: 'ghcr.io/walnuts1018/fitbit-manager:0.8.4',
+            image: 'ghcr.io/walnuts1018/fitbit-manager:0.8.7',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
