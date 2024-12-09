@@ -29,13 +29,13 @@ configs:
     users.anonymous.enabled: false
     users.session.duration: "168h" # 7 days
     application.resourceTrackingMethod: "annotation"
-    controller.resource.health.persist: "false"
-    controller.diff.server.side: "true"
-
   params:
     otlp.address: 'default-collector.opentelemetry-collector.svc.cluster.local:4317'
     server.insecure: true
     server.basehref: /
+    controller.diff.server.side: "true"
+    controller.resource.health.persist: "false"
+
   rbac:
     create: true
     policy.csv: |
