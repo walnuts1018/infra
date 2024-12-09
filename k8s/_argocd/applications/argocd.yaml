@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: argocd
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/compare-options: IncludeMutationWebhook=true
 spec:
   project: default
   destination:
