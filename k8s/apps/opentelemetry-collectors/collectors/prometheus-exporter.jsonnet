@@ -51,7 +51,6 @@ std.mergePatch((import '_base.libsonnet'), {
           },
         },
       },
-      telemetry:: null,
     },
     resources: {
       requests: {

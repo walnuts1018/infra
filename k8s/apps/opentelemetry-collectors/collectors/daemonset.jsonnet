@@ -145,7 +145,6 @@ std.mergePatch((import '_base.libsonnet'), {
         pipelines: {
           metrics: {
             receivers: [
-              'otlp/internal',
               'hostmetrics',
               'kubeletstats',
             ],
