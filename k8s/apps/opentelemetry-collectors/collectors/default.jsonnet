@@ -143,6 +143,7 @@ std.mergePatch((import '_base.libsonnet'), {
         pipelines: {
           traces: {
             receivers: [
+              'otlp/internal',
               'otlp',
             ],
             processors: [
@@ -157,6 +158,7 @@ std.mergePatch((import '_base.libsonnet'), {
           },
           metrics: {
             receivers: [
+              'otlp/internal',
               'otlp',
               'spanmetrics',
             ],
@@ -171,6 +173,7 @@ std.mergePatch((import '_base.libsonnet'), {
           },
           logs: {
             receivers: [
+              'otlp/internal',
               'otlp',
             ],
             processors: [
