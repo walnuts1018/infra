@@ -22,9 +22,13 @@
             name: 'komga',
             image: 'gotson/komga:1.14.1',
             resources: {
-              limits: {},
+              limits: {
+                cpu: '500m',
+                memory: '2Gi',
+              },
               requests: {
-                memory: '600Mi',
+                cpu: '5m',
+                memory: '1Gi',
               },
             },
             securityContext:: null,
