@@ -41,4 +41,14 @@
   metrics: {
     enabled: true,
   },
+  resources: {
+    limits: {
+      cpu: '100m',
+      memory: '128Mi',
+    },
+    requests: {
+      cpu: '1m',
+      memory: '5Mi',
+    },
+  },
 }
