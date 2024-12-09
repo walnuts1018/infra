@@ -109,19 +109,6 @@ std.mergePatch((import '_base.libsonnet'), {
               'otlp/default',
             ],
           },
-          logs: {
-            receivers: [
-              'otlp/internal',
-            ],
-            processors: [
-              'memory_limiter',
-              'batch',
-              'k8sattributes',
-            ],
-            exporters: [
-              'otlp/default',
-            ],
-          },
         },
       },
     },

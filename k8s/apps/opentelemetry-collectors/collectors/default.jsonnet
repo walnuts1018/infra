@@ -173,7 +173,6 @@ std.mergePatch((import '_base.libsonnet'), {
           },
           logs: {
             receivers: [
-              'otlp/internal',
               'otlp',
             ],
             processors: [
