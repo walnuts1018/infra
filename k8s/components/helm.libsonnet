@@ -32,6 +32,7 @@
       },
       syncOptions: [
         'ServerSideApply=true',
+        'FailOnSharedResource=true',
       ],
     },
     source: {
