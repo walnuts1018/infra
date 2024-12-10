@@ -25,7 +25,7 @@
       },
     ],
     orphanedResources: {
-      warn: true,
+      warn: false,
     },
     sourceRepos: [
       '*',
