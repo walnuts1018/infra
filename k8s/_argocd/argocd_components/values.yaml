@@ -82,7 +82,7 @@ server:
       cpu: 500m
       memory: 512Mi
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 96Mi
 
 repoServer:
