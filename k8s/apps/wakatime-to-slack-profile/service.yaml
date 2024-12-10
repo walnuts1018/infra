@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+        app: wakatime-to-slack-profile
+        app.kubernetes.io/name: wakatime-to-slack-profile
+    name: wakatime-to-slack-profile
+    namespace: wakatime-to-slack-profile
+spec:
+    ports:
+        - name: http
+          port: 8080
+          targetPort: 8080
+    selector:
+        app: wakatime-to-slack-profile
+        app.kubernetes.io/name: wakatime-to-slack-profile
+    type: ClusterIP
+
+---
