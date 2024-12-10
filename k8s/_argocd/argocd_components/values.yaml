@@ -79,11 +79,11 @@ server:
     targetMemoryUtilizationPercentage: 100
   resources:
     limits:
-      cpu: 200m
+      cpu: 500m
       memory: 512Mi
     requests:
-      cpu: 10m
-      memory: 72Mi
+      cpu: 20m
+      memory: 96Mi
 
 repoServer:
   metrics:
@@ -98,10 +98,10 @@ repoServer:
     targetMemoryUtilizationPercentage: 100
   resources:
     limits:
-      cpu: 200m
+      cpu: 500m
       memory: 512Mi
     requests:
-      cpu: 72m
+      cpu: 128m
       memory: 128Mi
 
 applicationSet:
