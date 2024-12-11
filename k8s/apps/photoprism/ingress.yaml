@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: 4G
+    labels:
+        app: photoprism
+        app.kubernetes.io/name: photoprism
+    name: photoprism
+    namespace: photoprism
+spec:
+    ingressClassName: nginx
+    rules:
+        - host: photoprism.walnuts.dev
+          http:
+            paths:
+                - backend:
+                    service:
+                        name: photoprism
+                        port:
+                            name: http
+                  path: /
+                  pathType: Prefix
+
+---

@@ -1,4 +1,0 @@
-{
-  name: "blackbox-exporter",
-  namespace: "monitoring",
-}

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    labels:
+        app: walnuts-dev-www-redirect
+        app.kubernetes.io/name: walnuts-dev-www-redirect
+    name: walnuts-dev-www-redirect
+    namespace: walnuts-dev
+spec:
+    ingressClassName: nginx
+    rules:
+        - host: www.walnuts.dev
+          http:
+            paths:
+                - backend:
+                    service:
+                        name: walnuts-dev-www-redirect
+                        port:
+                            number: 8080
+                  path: /
+                  pathType: Prefix
+
+---
