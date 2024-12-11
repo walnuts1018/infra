@@ -4,11 +4,11 @@ resource "cloudflare_ruleset" "terraform_managed_resource_304092e7f9904942998f39
   phase   = "http_config_settings"
   zone_id = cloudflare_zone.walnuts_dev.id
   rules {
-    action       = "set_config"
-    description  = "disable Rocket Loader"
-    enabled      = true
-    expression   = "(http.host eq \"hedgedoc.walnuts.dev\")"
-    ref          = "9c1ef58603494a50af7855c3263e6bdf"
+    action      = "set_config"
+    description = "disable Rocket Loader"
+    enabled     = true
+    expression  = "(http.host eq \"hedgedoc.walnuts.dev\") or (http.host eq \"misskey.walnuts.dev\") or (http.host eq \"nextcloud.walnuts.dev\")"
+    ref         = "9c1ef58603494a50af7855c3263e6bdf"
 
     action_parameters {
       rocket_loader = false
@@ -23,37 +23,37 @@ resource "cloudflare_ruleset" "terraform_managed_resource_d3a7c2d6242d41068be770
   zone_id = cloudflare_zone.walnuts_dev.id
 
   rules {
-    action       = "set_cache_settings" 
-    description  = "walnuts.dev" 
-    enabled      = true 
-    expression   = "(http.host eq \"walnuts.dev\")" 
-    ref          = "02afb6686434455195ad5e1d630a099d" 
+    action      = "set_cache_settings"
+    description = "walnuts.dev"
+    enabled     = true
+    expression  = "(http.host eq \"walnuts.dev\")"
+    ref         = "02afb6686434455195ad5e1d630a099d"
 
     action_parameters {
-      cache = true 
+      cache = true
     }
   }
 
   rules {
-    action       = "set_cache_settings" 
-    description  = "misskey" 
-    enabled      = true 
-    expression   = "(http.host eq \"misskey.walnuts.dev\" and starts_with(http.request.uri, \"/api/\"))" 
-    ref          = "e6dbe87b1b2b483db3df88b5576deb03" 
+    action      = "set_cache_settings"
+    description = "misskey"
+    enabled     = true
+    expression  = "(http.host eq \"misskey.walnuts.dev\" and starts_with(http.request.uri, \"/api/\"))"
+    ref         = "e6dbe87b1b2b483db3df88b5576deb03"
 
     action_parameters {
-      cache = false 
+      cache = false
     }
   }
   rules {
-    action       = "set_cache_settings" 
-    description  = "minio" 
-    enabled      = true 
-    expression   = "(http.host wildcard \"minio.walnuts.dev\")" 
-    ref          = "9f4de8f107314fbe8058a07b62e1ffcd" 
+    action      = "set_cache_settings"
+    description = "minio"
+    enabled     = true
+    expression  = "(http.host wildcard \"minio.walnuts.dev\")"
+    ref         = "9f4de8f107314fbe8058a07b62e1ffcd"
 
     action_parameters {
-      cache = false 
+      cache = false
     }
   }
 
