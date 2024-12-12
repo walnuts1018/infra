@@ -28,7 +28,7 @@
                 type: 'RuntimeDefault',
               },
             },
-            image: 'docker.elastic.co/elasticsearch/elasticsearch:8.16.1',
+            image: 'docker.elastic.co/elasticsearch/elasticsearch:8.17.0',
             ports: [
               {
                 containerPort: 9200,
