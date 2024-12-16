@@ -20,7 +20,7 @@
                 name: 'fitbit-manager',
                 image: 'ghcr.io/walnuts1018/fitbit-manager:1.0.0',
                 command: [
-                  'fitbit-manager-job',
+                  '/app/fitbit-manager-job',
                 ],
                 imagePullPolicy: 'IfNotPresent',
                 ports: [
