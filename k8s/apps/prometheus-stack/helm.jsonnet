@@ -4,6 +4,6 @@
 
   chart: 'kube-prometheus-stack',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '66.7.0',
+  targetRevision: '66.7.1',
   values: (importstr 'values.yaml'),
 }
