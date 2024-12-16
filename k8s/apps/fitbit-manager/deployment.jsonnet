@@ -27,15 +27,17 @@
               },
             ],
             resources: {
-              limits: {},
+              limits: {
+                memory: '300Mi',
+              },
               requests: {
                 memory: '10Mi',
               },
             },
             env: [
               {
-                name: 'GIN_MODE',
-                value: 'release',
+                name: 'USER_ID',
+                value: 'B84M2S',
               },
               {
                 name: 'CLIENT_ID',
@@ -65,7 +67,7 @@
                 },
               },
               {
-                name: 'PSQL_ENDPOINT',
+                name: 'PSQL_HOST',
                 value: 'postgresql-default.databases.svc.cluster.local',
               },
               {
@@ -109,6 +111,14 @@
               {
                 name: 'INFLUXDB_BUCKET',
                 value: 'fitbit_manager',
+              },
+              {
+                name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
+                value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317',
+              },
+              {
+                name: 'OTEL_EXPORTER_OTLP_INSECURE',
+                value: 'true',
               },
             ],
           },
