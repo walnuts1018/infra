@@ -89,5 +89,9 @@
       name: 'OTEL_EXPORTER_OTLP_INSECURE',
       value: 'true',
     },
+    {
+      name: 'RECORD_START_DATETIME',
+      value: '2021-11-01T00:00:00Z',
+    },
   ],
 }
