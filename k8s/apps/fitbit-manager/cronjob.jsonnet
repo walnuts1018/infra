@@ -7,7 +7,7 @@
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
-    schedule: '0 */1 * * *',
+    schedule: '*/15 * * * *',
     concurrencyPolicy: 'Forbid',
     startingDeadlineSeconds: 12000,
     jobTemplate: {
