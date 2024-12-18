@@ -6,13 +6,13 @@
       name: 'renovate',
     },
     spec: {
-      storageClassName: 'longhorn-local',
+      storageClassName: 'longhorn',
       accessModes: [
         'ReadWriteOnce',
       ],
       resources: {
         requests: {
-          storage: '20Gi',
+          storage: '1Gi',
         },
       },
     },
