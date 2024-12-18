@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    <img srtc="https://argocd.walnuts.dev/api/badge?project=default&revision=true" alt="argocd project status" />
+    <img src="https://argocd.walnuts.dev/api/badge?project=default&revision=true" alt="argocd project status" />
     <img src="https://walnuts1018.github.io/infra/k8sStatus.svg" alt="k8s Status" />
     <img src="https://walnuts1018.github.io/infra/podStatus.svg" alt="Pod Status" />
     <img src="https://walnuts1018.github.io/infra/nodeStatus.svg" alt="Node Status" />
