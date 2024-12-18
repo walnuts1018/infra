@@ -41,7 +41,7 @@
                   },
                   {
                     name: 'RENOVATE_AUTODISCOVER_FILTER',
-                    value: 'walnuts1018/*',
+                    value: 'walnuts1018/infra',
                   },
                   {
                     name: 'RENOVATE_TOKEN',
