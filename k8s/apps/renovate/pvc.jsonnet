@@ -7,7 +7,6 @@
     },
     spec: {
       storageClassName: 'longhorn-local',
-      volumeName: 'renovate',
       accessModes: [
         'ReadWriteOnce',
       ],
