@@ -49,6 +49,20 @@
                     },
                   },
                 ],
+                volumeMounts: [
+                  {
+                    name: 'renovate',
+                    mountPath: '/tmp/renovate',
+                  },
+                ],
+              },
+            ],
+            volumes: [
+              {
+                name: 'renovate',
+                persistentVolumeClaim: {
+                  claimName: 'renovate',
+                },
               },
             ],
           },
