@@ -20,7 +20,7 @@
                 image: 'renovate/renovate:39.72.5',
                 resources: {
                   requests: {
-                    memory: '512Mi',
+                    memory: '256Mi',
                   },
                   limits: {
                     memory: '2Gi',
