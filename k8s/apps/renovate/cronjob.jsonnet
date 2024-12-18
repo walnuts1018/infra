@@ -20,10 +20,10 @@
                 image: 'renovate/renovate:39.72.5',
                 resources: {
                   requests: {
-                    memory: '100Mi',
+                    memory: '512Mi',
                   },
                   limits: {
-                    memory: '512Mi',
+                    memory: '2Gi',
                   },
                 },
                 env: [
