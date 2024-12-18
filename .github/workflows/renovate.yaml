@@ -7,9 +7,14 @@ on:
 jobs:
   renovate:
     runs-on: ubuntu-latest
-    container:
-      image: renovate/renovate:39.72.5
     steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "20"
+
+      - name: Setup renovate
+        run: npm install -g renovate@32.89.0
+
       - uses: actions/create-github-app-token@v1
         id: generate_token
         with:
