@@ -1,0 +1,26 @@
+name: renovate
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    container:
+      image: renovate/renovate:39.72.5
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: generate_token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Setup renovate
+        run: npm install -g renovate@32.89.0
+
+      - name: Run renovate
+        env:
+          RENOVATE_REPOSITORIES: walnuts1018/infra
+          RENOVATE_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: renovate
