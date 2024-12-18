@@ -13,6 +13,10 @@
       spec: {
         template: {
           spec: {
+            securityContext: {
+              fsGroup: 12021,
+              fsGroupChangePolicy: 'OnRootMismatch',
+            },
             restartPolicy: 'Never',
             containers: [
               {
