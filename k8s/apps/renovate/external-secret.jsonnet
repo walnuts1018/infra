@@ -2,7 +2,7 @@
   name: (import 'app.json5').name,
   data: [
     {
-      secretKey: 'GITHUB_COM_TOKEN',
+      secretKey: 'github-token',
       remoteRef: {
         key: 'renovate',
         property: 'github_token',
