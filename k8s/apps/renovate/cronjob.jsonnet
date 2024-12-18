@@ -36,6 +36,10 @@
                     value: 'true',
                   },
                   {
+                    name: 'RENOVATE_AUTODISCOVER_FILTER',
+                    value: 'walnuts1018/*',
+                  },
+                  {
                     name: 'RENOVATE_TOKEN',
                     valueFrom: {
                       secretKeyRef: {
