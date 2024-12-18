@@ -36,11 +36,11 @@
                     value: 'true',
                   },
                   {
-                    name: 'GITHUB_COM_TOKEN',
+                    name: 'RENOVATE_TOKEN',
                     valueFrom: {
                       secretKeyRef: {
                         name: (import 'external-secret.jsonnet').spec.target.name,
-                        key: 'GITHUB_COM_TOKEN',
+                        key: 'github-token',
                       },
                     },
                   },
