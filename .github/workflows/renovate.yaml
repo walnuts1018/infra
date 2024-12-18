@@ -16,9 +16,6 @@ jobs:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
 
-      - name: Setup renovate
-        run: npm install -g renovate@32.89.0
-
       - name: Run renovate
         env:
           RENOVATE_REPOSITORIES: walnuts1018/infra
