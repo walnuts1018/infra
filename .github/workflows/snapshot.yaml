@@ -31,8 +31,8 @@ jobs:
       - name: setup-go
         uses: actions/setup-go@v5
         with:
-          go-version-file: ".github/scripts/infrautil/go.mod"
-          cache-dependency-path: ".github/scripts/infrautil/go.sum"
+          go-version-file: "scripts/infrautil/go.mod"
+          cache-dependency-path: "scripts/infrautil/go.sum"
 
       - name: make snapshot
         run: |

@@ -1,4 +1,4 @@
-module github.com/walnuts1018/infra/.github/scripts/infrautil
+module github.com/walnuts1018/infra/scripts/infrautil
 
 go 1.23.2
 

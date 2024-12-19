@@ -1,7 +1,7 @@
-INFRAUTIL ?= .github/scripts/infrautil/infrautil
+INFRAUTIL ?= scripts/infrautil/infrautil
 
 build-infrautil:
-	cd .github/scripts/infrautil && go build -o infrautil .
+	cd scripts/infrautil && go build -o infrautil .
 
 .PHONY: namespace
 namespace: build-infrautil
