@@ -1,0 +1,82 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+    labels:
+        app: photoprism
+        app.kubernetes.io/name: photoprism
+    name: photoprism
+    namespace: photoprism
+spec:
+    concurrencyPolicy: Forbid
+    jobTemplate:
+        spec:
+            template:
+                spec:
+                    containers:
+                        - command:
+                            - photoprism
+                            - index
+                            - --cleanup
+                          env:
+                            - name: PHOTOPRISM_ORIGINALS_LIMIT
+                              value: "-1"
+                            - name: PHOTOPRISM_DETECT_NSFW
+                              value: "true"
+                            - name: PHOTOPRISM_DATABASE_DRIVER
+                              value: mysql
+                            - name: PHOTOPRISM_HTTP_HOST
+                              value: 0.0.0.0
+                            - name: PHOTOPRISM_HTTP_PORT
+                              value: "2342"
+                            - name: PHOTOPRISM_ADMIN_USER
+                              value: photoprism
+                          envFrom:
+                            - secretRef:
+                                name: photoprism-147a04
+                                optional: false
+                          image: photoprism/photoprism:240915
+                          name: photoprism
+                          ports:
+                            - containerPort: 2342
+                              name: http
+                          resources:
+                            limits:
+                                cpu: "2"
+                                memory: 4Gi
+                            requests:
+                                cpu: 10m
+                                memory: 2Gi
+                          volumeMounts:
+                            - mountPath: /photoprism/originals
+                              name: originals
+                            - mountPath: /photoprism/import
+                              name: import
+                            - mountPath: /photoprism/storage
+                              name: storage
+                            - mountPath: /photoprism/storage/cache
+                              name: cache
+                            - mountPath: /tmp
+                              name: tmp
+                    nodeSelector:
+                        kubernetes.io/hostname: cake
+                    restartPolicy: OnFailure
+                    volumes:
+                        - hostPath:
+                            path: /mnt/data/share/CameraRoll
+                            type: Directory
+                          name: originals
+                        - name: import
+                          persistentVolumeClaim:
+                            claimName: photoprism-import
+                        - name: cache
+                          persistentVolumeClaim:
+                            claimName: photoprism-cache
+                        - name: storage
+                          persistentVolumeClaim:
+                            claimName: photoprism-storage
+                        - emptyDir: {}
+                          name: tmp
+    schedule: '*/10 * * * *'
+    startingDeadlineSeconds: 12000
+
+---
