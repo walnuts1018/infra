@@ -3,6 +3,6 @@
   namespace: (import '../app.json5').namespace,
   chart: 'mariadb',
   repoURL: 'https://charts.bitnami.com/bitnami',
-  targetRevision: '20.0.0',
+  targetRevision: '20.2.1',
   values: (importstr 'values.yaml'),
 }
