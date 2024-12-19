@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/google/subcommands"
-	"github.com/walnuts1018/infra/.github/scripts/infrautil/lib"
+	"github.com/walnuts1018/infra/scripts/infrautil/lib"
 )
 
 type namespaceCmd struct {
