@@ -30,6 +30,7 @@
                     memory: '2Gi',
                   },
                 },
+                local branch_prefix = 'selfhosted-rennovate/',
                 env: [
                   {
                     name: 'LOG_LEVEL',
@@ -42,6 +43,14 @@
                   {
                     name: 'RENOVATE_AUTODISCOVER_FILTER',
                     value: 'walnuts1018/infra',
+                  },
+                  {
+                    name: 'RENOVATE_BRANCH_PREFIX',
+                    value: branch_prefix,
+                  },
+                  {
+                    name: 'RENOVATE_BRANCH_PREFIX_OLD',
+                    value: branch_prefix,
                   },
                   {
                     name: 'RENOVATE_TOKEN',
