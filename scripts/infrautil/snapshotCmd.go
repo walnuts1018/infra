@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/google/subcommands"
-	"github.com/walnuts1018/infra/.github/scripts/infrautil/lib"
+	"github.com/walnuts1018/infra/scripts/infrautil/lib"
 	"golang.org/x/sync/errgroup"
 )
 
