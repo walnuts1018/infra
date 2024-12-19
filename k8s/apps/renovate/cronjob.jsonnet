@@ -30,7 +30,7 @@
                     memory: '2Gi',
                   },
                 },
-                local branch_prefix = 'selfhosted-rennovate/',
+                local branch_prefix = 'rennovate/',
                 env: [
                   {
                     name: 'LOG_LEVEL',
