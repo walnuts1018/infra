@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    labels:
+        app: walnuts-dev
+        app.kubernetes.io/name: walnuts-dev
+    name: walnuts-dev
+    namespace: walnuts-dev
+spec:
+    ingressClassName: nginx
+    rules:
+        - host: walnuts.dev
+          http:
+            paths:
+                - backend:
+                    service:
+                        name: walnuts-dev
+                        port:
+                            number: 3000
+                  path: /
+                  pathType: Prefix
+
+---

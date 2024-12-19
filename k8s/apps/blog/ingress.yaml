@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+    labels:
+        app: blog
+        app.kubernetes.io/name: blog
+    name: blog
+    namespace: default
+spec:
+    ingressClassName: nginx
+    rules:
+        - host: blog.walnuts.dev
+          http:
+            paths:
+                - backend:
+                    service:
+                        name: blog
+                        port:
+                            number: 8080
+                  path: /
+                  pathType: Prefix
+    tls:
+        - hosts:
+            - blog.walnuts.dev
+          secretName: blog-tls
+
+---

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    labels:
+        app: external-dns
+        app.kubernetes.io/name: external-dns
+    name: external-dns
+    namespace: external-dns
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: external-dns
+            app.kubernetes.io/name: external-dns
+    template:
+        metadata:
+            labels:
+                app: external-dns
+                app.kubernetes.io/name: external-dns
+        spec:
+            containers:
+                - args:
+                    - --source=ingress
+                    - --domain-filter=walnuts.dev
+                    - --provider=cloudflare-tunnel
+                    - --annotation-filter=walnuts.dev/externaldns.skip notin (true)
+                  env:
+                    - name: CF_API_TOKEN
+                      valueFrom:
+                        secretKeyRef:
+                            key: cf-api-token
+                            name: external-dns-9eb41d
+                    - name: CF_ACCOUNT_ID
+                      value: 38b5eab012d216dfcc52dcd69e7764b5
+                    - name: CF_TUNNEL_ID
+                      value: 603f4f99-268a-4d2a-8c2a-66d29ef1f528
+                  image: ghcr.io/walnuts1018/external-dns:670a2816bbb5c344117eab45003d7a6ff2c86349-10
+                  name: external-dns
+                  resources:
+                    limits: {}
+                    requests:
+                        memory: 32Mi
+                  securityContext:
+                    capabilities:
+                        add:
+                            - NET_BIND_SERVICE
+                        drop:
+                            - all
+                    readOnlyRootFilesystem: true
+                    seccompProfile:
+                        type: RuntimeDefault
+            nodeSelector:
+                kubernetes.io/arch: amd64
+            serviceAccountName: external-dns
+
+---

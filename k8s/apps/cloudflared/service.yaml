@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+        app: cloudflared
+        app.kubernetes.io/name: cloudflared
+    name: cloudflared
+    namespace: network-exporter
+spec:
+    ports:
+        - port: 60123
+          protocol: TCP
+          targetPort: 60123
+    selector:
+        app: cloudflared
+        app.kubernetes.io/name: cloudflared
+    type: ClusterIP
+
+---
