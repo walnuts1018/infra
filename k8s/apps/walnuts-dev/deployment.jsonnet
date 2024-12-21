@@ -74,6 +74,27 @@
         ],
         priorityClassName: 'high',
         affinity: {
+          podAntiAffinity: {
+            preferredDuringSchedulingIgnoredDuringExecution: [
+              {
+                weight: 100,
+                podAffinityTerm: {
+                  labelSelector: {
+                    matchExpressions: [
+                      {
+                        key: 'app',
+                        operator: 'In',
+                        values: [
+                          (import 'app.json5').name,
+                        ],
+                      },
+                    ],
+                  },
+                  topologyKey: 'kubernetes.io/hostname',
+                },
+              },
+            ],
+          },
           nodeAffinity: {
             preferredDuringSchedulingIgnoredDuringExecution: [
               {
