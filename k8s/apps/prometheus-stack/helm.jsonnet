@@ -20,7 +20,7 @@
             },
           },
         },
-        retentionSize: std.format('%dGiB', storageSize * 0.8),
+        retentionSize: std.format('%dGiB', storageSize * 0.75),
       },
     },
   }),
