@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'postgres-operator',
   repoURL: 'https://opensource.zalando.com/postgres-operator/charts/postgres-operator',
-  targetRevision: '1.13.0',
+  targetRevision: '1.14.0',
   values: (importstr 'values.yaml'),
 }
