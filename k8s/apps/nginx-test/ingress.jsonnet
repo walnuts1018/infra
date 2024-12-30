@@ -7,6 +7,7 @@
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
     annotations: {
       'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+      'cf-tunnel-operator.walnuts.dev/cloudflare-tunnel': 'default/cloudflaretunnel-sample',
     },
   },
   spec: {
