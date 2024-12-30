@@ -17,6 +17,7 @@ deschedulerPolicy:
       args:
         nodeAffinityType:
         - requiredDuringSchedulingIgnoredDuringExecution
+        - preferredDuringSchedulingIgnoredDuringExecution
     - name: RemovePodsViolatingTopologySpreadConstraint
       args:
         constraints:
@@ -24,13 +25,13 @@ deschedulerPolicy:
     - name: LowNodeUtilization
       args:
         thresholds:
-          cpu: 30
-          memory: 50
-          pods: 30
+          cpu: 80
+          memory: 80
+          pods: 110
         targetThresholds:
           cpu: 50
-          memory: 60
-          pods: 50
+          memory: 70
+          pods: 60
     plugins:
       balance:
         enabled:
