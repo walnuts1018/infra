@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'ingress-nginx',
   repoURL: 'https://kubernetes.github.io/ingress-nginx',
-  targetRevision: '4.11.3',
+  targetRevision: '4.11.4',
   values: (importstr 'values.yaml'),
 }
