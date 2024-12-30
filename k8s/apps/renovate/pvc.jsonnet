@@ -12,7 +12,7 @@
       ],
       resources: {
         requests: {
-          storage: '1Gi',
+          storage: '3Gi',
         },
       },
     },
