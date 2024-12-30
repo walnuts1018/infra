@@ -357,17 +357,6 @@ sudo apt-get update
 sudo apt-get install helm
 ```
 
-## fluxcd
-
-```bash
-curl -s https://fluxcd.io/install.sh | sudo bash
-# echo "[[ /usr/bin/flux ]] && source <(flux completion zsh)" >> ~/.zshrc
-```
-
-```bash
-flux bootstrap github --owner=walnuts1018 --repository=infra --branch=deploy --path=./k8s/_flux/kurumi/ --components-extra=image-reflector-controller,image-automation-controller --reconcile --ssh-key-algorithm=ed25519 --read-write-key=true
-```
-
 ## labels
 
 ```bash
@@ -378,4 +367,16 @@ kubectl label nodes peach walnuts.dev/ondemand=true
 
 ```shell
 helm install onepassword-connect -n onepassword --create-namespace  1password/connect --set-literal connect.credentials="$(op read "op://kurumi/kurumi Credentials File/1password-credentials.json")" --set operator.create=true --set operator.token.value="$(op item get mhc7wnb4oe3kevaiubx3cxz7du --reveal --fields label=credential)"
+```
+
+## MaxPods
+
+```shell
+kubectl -n kube-system edit cm kubelet-config
+```
+
+下を追記
+
+```yaml
+maxPods: 250
 ```
