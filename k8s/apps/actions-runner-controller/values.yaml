@@ -1,0 +1,3 @@
+authSecret:
+  enabled: true
+  create: false
