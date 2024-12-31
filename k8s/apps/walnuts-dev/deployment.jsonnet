@@ -25,7 +25,7 @@
                 type: 'RuntimeDefault',
               },
             },
-            image: 'ghcr.io/walnuts1018/walnuts.dev:38f8551fb2eab7317855d1ec3500c6ce22bbb49b-354',
+            image: 'ghcr.io/walnuts1018/walnuts.dev:c0f77f41d74e78fb7bc76e2eba97cdbf174ee09c-355',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
