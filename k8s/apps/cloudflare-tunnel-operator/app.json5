@@ -1,0 +1,4 @@
+{
+  name: "cloudflare-tunnel-operator",
+  namespace: "cloudflare-tunnel-operator",
+}
