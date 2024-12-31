@@ -2,7 +2,7 @@
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
 
-  chart: 'code-server-operator',
+  chart: 'actions-runner-controller',
   repoURL: 'https://actions-runner-controller.github.io/actions-runner-controller',
   targetRevision: '0.23.7',
   valuesObject: std.mergePatch(std.parseYaml(importstr 'values.yaml'), {
