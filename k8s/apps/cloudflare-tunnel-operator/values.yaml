@@ -1,4 +1,3 @@
 cloudflareToken:
   cloudflareAccountID: "38b5eab012d216dfcc52dcd69e7764b5"
   cloudflareZoneID: "48b02398c8bc932f4d0b1dba83de196c"
-  cloudflareAPIToken: "dummy" #TODO
