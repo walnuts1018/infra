@@ -2,7 +2,7 @@
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
 
-  chart: 'actions-runner-controller',
+  chart: 'cloudflare-tunnel-operator',
   repoURL: 'https://walnuts1018.github.io/cloudflare-tunnel-operator/',
   targetRevision: '0.0.8',
   valuesObject: std.mergePatch(std.parseYaml, {
