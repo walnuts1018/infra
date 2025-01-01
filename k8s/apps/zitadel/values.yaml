@@ -11,7 +11,7 @@ zitadel:
 replicaCount: 2
 ingress:
   enabled: true
-  className: "nginx"
+  className: "cilium"
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
   hosts:
@@ -19,8 +19,8 @@ ingress:
     paths:
     - path: /
       pathType: Prefix
-env:
-#  - name: ZITADEL_LOG_LEVEL
+env: #  - name: ZITADEL_LOG_LEVEL
+
 #    value: "debug"
 metrics:
   enabled: true
@@ -48,5 +48,6 @@ affinity:
           operator: NotIn
           values:
           - donut
+
 # image:
 #   tag: v2.64.1 # {"$imagepolicy": "zitadel:zitadel:tag"}

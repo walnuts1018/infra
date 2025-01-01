@@ -9,7 +9,7 @@ grafana:
     enabled: true
     hosts:
     - grafana.walnuts.dev
-    ingressClassName: nginx
+    ingressClassName: cilium
   rbac:
     pspEnabled: false
   testFramework:
