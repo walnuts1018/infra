@@ -33,7 +33,7 @@ local usernames = (import 'users.libsonnet');
       wakatime_to_slack: 'wakatime',
     },
     postgresql: {
-      version: '16',
+      version: '17',
       parameters: {
         max_standby_archive_delay: '180s',
         max_standby_streaming_delay: '180s',
