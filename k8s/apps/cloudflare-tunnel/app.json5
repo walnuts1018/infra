@@ -1,4 +1,4 @@
 {
-  name: "cloudflared",
+  name: "cloudflare-tunnel",
   namespace: "network-exporter",
 }
