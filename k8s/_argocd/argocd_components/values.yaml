@@ -65,7 +65,7 @@ server:
   ingress:
     enabled: true
     controller: generic
-    ingressClassName: "nginx"
+    ingressClassName: "cilium"
     tls: false
   metrics:
     enabled: true
