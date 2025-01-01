@@ -34,7 +34,7 @@
           },
         ],
         domain: 'walnuts.dev',
-        ingressClassName: 'nginx',
+        ingressClassName: 'cilium',
         resources: {
           limits: {
             memory: '4Gi',
