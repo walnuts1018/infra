@@ -13,15 +13,19 @@ ingress:
   enabled: true
   className: "cilium"
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    cert-manager.io/cluster-issuer: 'letsencrypt-prod'
   hosts:
   - host: auth.walnuts.dev
     paths:
     - path: /
       pathType: Prefix
-env: #  - name: ZITADEL_LOG_LEVEL
-
-#    value: "debug"
+  tls:
+  - secretName: zitadel-tls
+    hosts:
+    - auth.walnuts.dev
+# env:
+# - name: ZITADEL_LOG_LEVEL
+#   value: "debug"
 metrics:
   enabled: true
   serviceMonitor:
