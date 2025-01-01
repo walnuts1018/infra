@@ -7,14 +7,14 @@ persistence:
   accessMode: ReadWriteOnce
 ingress:
   enabled: true
-  ingressClassName: nginx
+  ingressClassName: cilium
   annotations:
     nginx.ingress.kubernetes.io/ignore-invalid-headers: "off"
   hosts:
   - minio.walnuts.dev
 consoleIngress:
   enabled: true
-  ingressClassName: nginx
+  ingressClassName: cilium
   hosts:
   - minio-console.walnuts.dev
 resources:
