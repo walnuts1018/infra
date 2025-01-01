@@ -24,6 +24,7 @@ local gen = function(username) {
       name: $.metadata.name,
       template: {
         data: {
+          username: username,
           password: '{{ .password }}',
         },
         engineVersion: 'v2',
