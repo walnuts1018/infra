@@ -17,7 +17,7 @@
   },
   ingress: {
     enabled: true,
-    className: 'nginx',
+    className: 'cilium',
     path: '/',
     pathType: 'Prefix',
     hosts: [
