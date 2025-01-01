@@ -1,5 +1,5 @@
 [
-  // 'postgres',
+  'postgres',
   'juglans',
   'fitbit-manager',
   'grafana',
