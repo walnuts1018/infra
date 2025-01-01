@@ -7,7 +7,7 @@
     labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-back' },
   },
   spec: {
-    ingressClassName: 'nginx',
+    ingressClassName: 'cilium',
     rules: [
       {
         host: 'api-openchokin.walnuts.dev',
