@@ -33,13 +33,13 @@
         },
       },
     ],
-    tls: [
-      {
-        hosts: [
-          'nginxtest.walnuts.dev',
-        ],
-        secretName: (import 'app.json5').name + '-tls',
-      },
-    ],
+    // tls: [
+    //   {
+    //     hosts: [
+    //       'nginxtest.walnuts.dev',
+    //     ],
+    //     secretName: (import 'app.json5').name + '-tls',
+    //   },
+    // ],
   },
 }
