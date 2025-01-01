@@ -7,15 +7,15 @@ metadata:
   name: http-dump
   namespace: default
 spec:
-  ingressClassName: nginx
+  ingressClassName: cilium
   rules:
-    - host: httptest.walnuts.dev
-      http:
-        paths:
-          - backend:
-              service:
-                name: http-dump
-                port:
-                  number: 8080
-            path: /
-            pathType: Prefix
+  - host: httptest.walnuts.dev
+    http:
+      paths:
+      - backend:
+          service:
+            name: http-dump
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
