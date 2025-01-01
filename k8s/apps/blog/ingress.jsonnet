@@ -5,9 +5,9 @@
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
-    annotations: {
-      'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-    },
+    // annotations: {
+    //   'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+    // },
   },
   spec: {
     ingressClassName: 'nginx',
@@ -32,13 +32,13 @@
         },
       },
     ],
-    tls: [
-      {
-        hosts: [
-          'blog.walnuts.dev',
-        ],
-        secretName: (import 'app.json5').name + '-tls',
-      },
-    ],
+    // tls: [
+    //   {
+    //     hosts: [
+    //       'blog.walnuts.dev',
+    //     ],
+    //     secretName: (import 'app.json5').name + '-tls',
+    //   },
+    // ],
   },
 }
