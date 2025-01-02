@@ -26,7 +26,7 @@
       matchStringsStrategy: "combination",
       matchStrings: [
         "chart:\\s+[\"']?(?<depName>[a-z0-9-]+)[\"']",
-        "repoURL:\\s+[\"']?https:\\/\\/(?<registryUrl>\\S+)[\"']",
+        "repoURL:\\s+[\"']?(?<registryUrl>https:\\/\\/\\S+)[\"']",
         "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
       ],
       datasourceTemplate: "helm",
