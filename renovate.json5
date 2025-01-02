@@ -33,6 +33,23 @@
     },
     {
       customType: "regex",
+      fileMatch: [
+        "^k8s/.*/helm.jsonnet$",
+        "^k8s/.*/helm.libsonnet$",
+        "^k8s/.*/helm.yaml$",
+        "^k8s/.*/helm.yml$",
+      ],
+      matchStringsStrategy: "combination",
+      matchStrings: [
+        "chart:\\s+[\"']?(?<ociChart>[a-z0-9-]+)[\"']",
+        "repoURL:\\s+[\"'](?!https:\\/\\/)(?<ociRepo>\\S+)[\"']",
+        "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
+      ],
+      registryUrlTemplate: "oci://{{{ociRepo}}}/{{{ociChart}}}",
+      datasourceTemplate: "helm",
+    },
+    {
+      customType: "regex",
       fileMatch: "^k8s/apps/.*/kustomization.yaml$",
       matchStringsStrategy: "any",
       matchStrings: [
