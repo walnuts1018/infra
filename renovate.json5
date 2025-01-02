@@ -42,7 +42,7 @@
       matchStringsStrategy: "combination",
       matchStrings: [
         "chart:\\s+[\"']?(?<ociChart>[a-z0-9-]+)[\"']",
-        "repoURL:\\s+[\"']?(?<ociRepo>[^\\/\\s]+)[\"']",
+        "repoURL:\\s+[\"']?(?<ociRepo>[^:\\s]+)[\"']",
         "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
       ],
       packageNameTemplate: "oci://{{{ociRepo}}}/{{{ociChart}}}",
