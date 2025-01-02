@@ -2,7 +2,8 @@
   name:: error 'name is required',
   namespace:: error 'namespace is required',
   chart:: error 'chart is required',
-  repoURL:: error 'repoURL is required',
+  ociRepoURL:: '',
+  repoURL:: '',
   targetRevision:: error 'targetRevision is required',
   values:: '',
   valuesObject:: null,
@@ -31,7 +32,7 @@
     },
     source: {
       chart: $.chart,
-      repoURL: $.repoURL,
+      repoURL: if $.ociRepoURL != '' then $.ociRepoURL else $.repoURL,
       targetRevision: $.targetRevision,
       helm: {
         releaseName: $.name,
