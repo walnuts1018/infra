@@ -26,7 +26,7 @@
       matchStringsStrategy: "combination",
       matchStrings: [
         "chart:\\s+[\"']?(?<depName>[a-z0-9-]+)[\"']",
-        "repoURL:\\s+[\"']?(?<registryUrl>https:\\/\\/\\S+)[\"']",
+        "repoURL:\\s+[\"']?(?<registryUrl>\\S+)[\"']",
         "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
       ],
       datasourceTemplate: "helm",
@@ -41,11 +41,11 @@
       ],
       matchStringsStrategy: "combination",
       matchStrings: [
-        "chart:\\s+[\"']?(?<ociChart>[a-z0-9-]+)[\"']",
-        "repoURL:\\s+[\"']?(?<ociRepo>[^:\\s]+)[\"']",
+        "chart:\\s+[\"']?(?<depName>[a-z0-9-]+)[\"']",
+        "ociRepoURL:\\s+[\"']?(?<registryUrl>\\S+)[\"']",
         "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
       ],
-      packageNameTemplate: "{{#if (equals ociRepo '')}}''{{else}}{{{ociRepo}}}/{{{ociChart}}}{{/if}}",
+      packageNameTemplate: "{{{ociRepo}}}/{{{ociChart}}}",
       datasourceTemplate: "docker",
     },
     {
