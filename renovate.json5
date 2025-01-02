@@ -41,11 +41,9 @@
       ],
       matchStringsStrategy: "combination",
       matchStrings: [
-        "chart:\\s+[\"']?(?<ociChart>[a-z0-9-]+)[\"']",
-        "ociRepoURL:\\s+[\"']?(?<ociRepo>\\S+)[\"']",
+        "ociChartURL:\\s+[\"']?(?<packageName>\\S+)[\"']",
         "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
       ],
-      packageNameTemplate: "{{{ociRepo}}}/{{{ociChart}}}",
       datasourceTemplate: "docker",
     },
     {
