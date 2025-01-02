@@ -19,7 +19,7 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'http-dump',
-            image: 'ghcr.io/walnuts1018/http-dump:629824cedeccfb239b7d490f2f6dffb70f12a5f7-24',
+            image: 'ghcr.io/walnuts1018/http-dump:63f4ea0c62de57ddf3716b295f5edb8787444a21-27',
             ports: [
               {
                 name: 'http',
