@@ -46,7 +46,7 @@
         "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
       ],
       packageNameTemplate: "oci://{{{ociRepo}}}/{{{ociChart}}}",
-      datasourceTemplate: "helm",
+      datasourceTemplate: "docker",
     },
     {
       customType: "regex",
