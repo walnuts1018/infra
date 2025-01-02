@@ -31,8 +31,10 @@
       ],
     },
     source: {
+      local argoRepoURL = if $.ociRepoURL != '' then $.ociRepoURL else $.repoURL,
+      assert !std.isEmpty(argoRepoURL) : 'ociRepoURL or repoURL is required',
       chart: $.chart,
-      repoURL: if $.ociRepoURL != '' then $.ociRepoURL else $.repoURL,
+      repoURL: argoRepoURL,
       targetRevision: $.targetRevision,
       helm: {
         releaseName: $.name,
