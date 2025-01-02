@@ -45,7 +45,7 @@
         "repoURL:\\s+[\"'](?!https:\\/\\/)(?<ociRepo>\\S+)[\"']",
         "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
       ],
-      registryUrlTemplate: "oci://{{{ociRepo}}}/{{{ociChart}}}",
+      packageNameTemplate: "oci://{{{ociRepo}}}/{{{ociChart}}}",
       datasourceTemplate: "helm",
     },
     {
