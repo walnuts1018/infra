@@ -45,7 +45,7 @@
         "repoURL:\\s+[\"']?(?<ociRepo>[^:\\s]+)[\"']",
         "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
       ],
-      depNameTemplate: "oci://{{{ociRepo}}}/{{{ociChart}}}",
+      packageNameTemplate: "{{{ociRepo}}}/{{{ociChart}}}",
       datasourceTemplate: "docker",
     },
     {
