@@ -114,7 +114,13 @@ func (h *HelmClient) createRelease(
 		h.client.Namespace = namespace
 	}
 	h.client.Version = chartVersion
-	h.client.ChartPathOptions.RepoURL = repoURL.String()
+
+	if isHelmOciRepo(repoURL.String()) {
+		repoURL.Scheme = "oci"
+		chartName = repoURL.JoinPath(chartName).String()
+	} else {
+		h.client.ChartPathOptions.RepoURL = repoURL.String()
+	}
 
 	cp, err := h.client.ChartPathOptions.LocateChart(chartName, h.settings)
 	if err != nil {
@@ -226,4 +232,14 @@ func checkIfInstallable(ch *chart.Chart) error {
 		return nil
 	}
 	return errors.Errorf("%s charts are not installable", ch.Metadata.Type)
+}
+
+// From: https://github.com/argoproj/argo-cd/blob/db8d2f08d926c9f811a3d4f26d2883856e135e38/util/helm/client.go#L397-L404
+func isHelmOciRepo(repoURL string) bool {
+	if repoURL == "" {
+		return false
+	}
+	parsed, err := url.Parse(repoURL)
+	// the URL parser treat hostname as either path or opaque if scheme is not specified, so hostname must be empty
+	return err == nil && parsed.Host == ""
 }
