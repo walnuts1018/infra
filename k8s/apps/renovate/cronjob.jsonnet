@@ -21,7 +21,7 @@
             containers: [
               {
                 name: 'renovate',
-                image: 'renovate/renovate:39.90.2',
+                image: 'renovate/renovate:39.90.3',
                 resources: {
                   requests: {
                     memory: '256Mi',
