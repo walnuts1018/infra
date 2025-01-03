@@ -25,13 +25,13 @@ deschedulerPolicy:
     - name: LowNodeUtilization
       args:
         thresholds:
-          cpu: 70
-          memory: 70
+          cpu: 60
+          memory: 60
           pods: 60
         targetThresholds:
           cpu: 70
           memory: 70
-          pods: 60
+          pods: 70
     plugins:
       balance:
         enabled:
