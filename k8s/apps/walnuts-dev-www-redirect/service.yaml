@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+    labels:
+        app: walnuts-dev-www-redirect
+        app.kubernetes.io/name: walnuts-dev-www-redirect
+    name: walnuts-dev-www-redirect
+    namespace: walnuts-dev
+spec:
+    ports:
+        - port: 8080
+          protocol: TCP
+          targetPort: 8080
+    selector:
+        app: walnuts-dev-www-redirect
+        app.kubernetes.io/name: walnuts-dev-www-redirect
+    type: ClusterIP
+
+---

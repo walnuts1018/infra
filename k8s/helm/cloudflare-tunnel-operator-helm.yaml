@@ -1,0 +1,531 @@
+---
+# Source: cloudflare-tunnel-operator/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cloudflare-tunnel-operator-controller-manager
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    {}
+---
+# Source: cloudflare-tunnel-operator/templates/cloudflaretunnel-editor-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudflare-tunnel-operator-cloudflaretunnel-editor-role
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels/status
+  verbs:
+  - get
+---
+# Source: cloudflare-tunnel-operator/templates/cloudflaretunnel-viewer-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudflare-tunnel-operator-cloudflaretunnel-viewer-role
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels/status
+  verbs:
+  - get
+---
+# Source: cloudflare-tunnel-operator/templates/manager-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudflare-tunnel-operator-manager-role
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - servicemonitors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+---
+# Source: cloudflare-tunnel-operator/templates/metrics-auth-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudflare-tunnel-operator-metrics-auth-role
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+# Source: cloudflare-tunnel-operator/templates/metrics-reader-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudflare-tunnel-operator-metrics-reader
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+# Source: cloudflare-tunnel-operator/templates/manager-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cloudflare-tunnel-operator-manager-rolebinding
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'cloudflare-tunnel-operator-manager-role'
+subjects:
+- kind: ServiceAccount
+  name: 'cloudflare-tunnel-operator-controller-manager'
+  namespace: 'cloudflare-tunnel-operator'
+---
+# Source: cloudflare-tunnel-operator/templates/metrics-auth-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cloudflare-tunnel-operator-metrics-auth-rolebinding
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'cloudflare-tunnel-operator-metrics-auth-role'
+subjects:
+- kind: ServiceAccount
+  name: 'cloudflare-tunnel-operator-controller-manager'
+  namespace: 'cloudflare-tunnel-operator'
+---
+# Source: cloudflare-tunnel-operator/templates/leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cloudflare-tunnel-operator-leader-election-role
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+# Source: cloudflare-tunnel-operator/templates/leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cloudflare-tunnel-operator-leader-election-rolebinding
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: 'cloudflare-tunnel-operator-leader-election-role'
+subjects:
+- kind: ServiceAccount
+  name: 'cloudflare-tunnel-operator-controller-manager'
+  namespace: 'cloudflare-tunnel-operator'
+---
+# Source: cloudflare-tunnel-operator/templates/metrics-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudflare-tunnel-operator-controller-manager-metrics-service
+  labels:
+    control-plane: controller-manager
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+    control-plane: controller-manager
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+---
+# Source: cloudflare-tunnel-operator/templates/webhook-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudflare-tunnel-operator-webhook-service
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+    control-plane: controller-manager
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
+---
+# Source: cloudflare-tunnel-operator/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflare-tunnel-operator-controller-manager
+  labels:
+    control-plane: controller-manager
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+      app.kubernetes.io/name: cloudflare-tunnel-operator
+      app.kubernetes.io/instance: cloudflare-tunnel-operator
+  template:
+    metadata:
+      labels:
+        control-plane: controller-manager
+        app.kubernetes.io/name: cloudflare-tunnel-operator
+        app.kubernetes.io/instance: cloudflare-tunnel-operator
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+                - arm64
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                - linux
+      containers:
+      - args:
+        - --metrics-bind-address=:8443
+        - --leader-elect
+        - --health-probe-bind-address=:8081
+        command:
+        - /manager
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: "cluster.local"
+        - name: CLOUDFLARE_ACCOUNT_ID
+          value: 38b5eab012d216dfcc52dcd69e7764b5
+        - name: CLOUDFLARE_ZONE_ID
+          value: 48b02398c8bc932f4d0b1dba83de196c
+        - name: CLOUDFLARE_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-tunnel-operator
+              key: cloudflareAPIToken
+        image: ghcr.io/walnuts1018/cloudflare-tunnel-operator:1.0.2
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: manager
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+          readOnly: true
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: cloudflare-tunnel-operator-controller-manager
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: webhook-server-cert
+---
+# Source: cloudflare-tunnel-operator/templates/serving-cert.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cloudflare-tunnel-operator-serving-cert
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  dnsNames:
+  - 'cloudflare-tunnel-operator-webhook-service.cloudflare-tunnel-operator.svc'
+  - 'cloudflare-tunnel-operator-webhook-service.cloudflare-tunnel-operator.svc.cluster.local'
+  issuerRef:
+    kind: Issuer
+    name: 'cloudflare-tunnel-operator-selfsigned-issuer'
+  secretName: webhook-server-cert
+---
+# Source: cloudflare-tunnel-operator/templates/selfsigned-issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: cloudflare-tunnel-operator-selfsigned-issuer
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selfSigned: {}
+---
+# Source: cloudflare-tunnel-operator/templates/validating-webhook-configuration.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: cloudflare-tunnel-operator-validating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: cloudflare-tunnel-operator/cloudflare-tunnel-operator-serving-cert
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.0.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.0.2"
+    app.kubernetes.io/managed-by: Helm
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'cloudflare-tunnel-operator-webhook-service'
+      namespace: 'cloudflare-tunnel-operator'
+      path: /validate-cf-tunnel-operator-walnuts-dev-v1beta1-cloudflaretunnel
+  failurePolicy: Fail
+  name: vcloudflaretunnel-v1beta1.kb.io
+  rules:
+  - apiGroups:
+    - cf-tunnel-operator.walnuts.dev
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - cloudflaretunnels
+  sideEffects: None

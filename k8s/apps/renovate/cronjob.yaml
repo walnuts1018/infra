@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+    labels:
+        app: renovate
+        app.kubernetes.io/name: renovate
+    name: renovate
+    namespace: renovate
+spec:
+    concurrencyPolicy: Forbid
+    jobTemplate:
+        spec:
+            template:
+                spec:
+                    containers:
+                        - env:
+                            - name: LOG_LEVEL
+                              value: debug
+                            - name: RENOVATE_AUTODISCOVER
+                              value: "true"
+                            - name: RENOVATE_AUTODISCOVER_FILTER
+                              value: walnuts1018/infra
+                            - name: RENOVATE_BRANCH_PREFIX
+                              value: rennovate/
+                            - name: RENOVATE_BRANCH_PREFIX_OLD
+                              value: rennovate/
+                            - name: RENOVATE_TOKEN
+                              valueFrom:
+                                secretKeyRef:
+                                    key: github-token
+                                    name: renovate-e885e8
+                          image: renovate/renovate:39.90.3
+                          name: renovate
+                          resources:
+                            limits:
+                                memory: 2Gi
+                            requests:
+                                memory: 256Mi
+                          volumeMounts:
+                            - mountPath: /tmp/renovate
+                              name: renovate
+                    restartPolicy: Never
+                    securityContext:
+                        fsGroup: 12021
+                        fsGroupChangePolicy: OnRootMismatch
+                    volumes:
+                        - name: renovate
+                          persistentVolumeClaim:
+                            claimName: renovate
+    schedule: '*/10 * * * *'
+
+---

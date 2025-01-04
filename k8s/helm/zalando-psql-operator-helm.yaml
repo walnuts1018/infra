@@ -1,0 +1,529 @@
+---
+# Source: postgres-operator/templates/postgres-pod-priority-class.yaml
+apiVersion: scheduling.k8s.io/v1
+description: 'Use only for databases controlled by Postgres operator'
+kind: PriorityClass
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres-operator
+    helm.sh/chart: postgres-operator-1.14.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: zalando-psql-operator
+  name: zalando-psql-operator-postgres-operator-pod
+  namespace: databases
+preemptionPolicy: PreemptLowerPriority
+globalDefault: false
+value: 1e+06
+---
+# Source: postgres-operator/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: zalando-psql-operator-postgres-operator
+  namespace: databases
+  labels:
+    app.kubernetes.io/name: postgres-operator
+    helm.sh/chart: postgres-operator-1.14.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: zalando-psql-operator
+---
+# Source: postgres-operator/templates/clusterrole-postgres-pod.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: postgres-pod
+  labels:
+    app.kubernetes.io/name: postgres-operator
+    helm.sh/chart: postgres-operator-1.14.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: zalando-psql-operator
+rules:
+# Patroni needs to watch and manage config maps or endpoints
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+# Patroni needs to watch pods
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+# to let Patroni create a headless service
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+---
+# Source: postgres-operator/templates/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: zalando-psql-operator-postgres-operator
+  labels:
+    app.kubernetes.io/name: postgres-operator
+    helm.sh/chart: postgres-operator-1.14.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: zalando-psql-operator
+rules:
+# all verbs allowed for custom operator resources
+- apiGroups:
+  - acid.zalan.do
+  resources:
+  - postgresqls
+  - postgresqls/status
+  - operatorconfigurations
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+# operator only reads PostgresTeams
+- apiGroups:
+  - acid.zalan.do
+  resources:
+  - postgresteams
+  verbs:
+  - get
+  - list
+  - watch
+# all verbs allowed for event streams
+# to create or get/update CRDs when starting up
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+  - create
+  - patch
+  - update
+# to send events to the CRs
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - update
+  - watch
+# to manage endpoints/configmaps which are also used by Patroni
+# to read configuration from ConfigMaps
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+# to CRUD secrets for database access
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - patch
+  - update
+# to check nodes for node readiness label
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+# to read or delete existing PVCs. Creation via StatefulSet
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - delete
+  - get
+  - list
+  - patch
+  - update
+ # to read existing PVs. Creation should be done via dynamic provisioning
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumes
+  verbs:
+  - get
+  - list
+# to watch Spilo pods and do rolling updates. Creation via StatefulSet
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+# to resize the filesystem in Spilo pods when increasing volume size
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+# to CRUD services to point to Postgres cluster instances
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - patch
+  - update
+# to CRUD the StatefulSet which controls the Postgres cluster instances
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+# to CRUD cron jobs for logical backups
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+# to get namespaces operator resources can run in
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+# to define PDBs. Update happens via delete/create
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - create
+  - delete
+  - get
+# to create ServiceAccounts in each namespace the operator watches
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - get
+  - create
+# to create role bindings to the postgres-pod service account
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - rolebindings
+  verbs:
+  - get
+  - create
+---
+# Source: postgres-operator/templates/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: zalando-psql-operator-postgres-operator
+  labels:
+    app.kubernetes.io/name: postgres-operator
+    helm.sh/chart: postgres-operator-1.14.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: zalando-psql-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: zalando-psql-operator-postgres-operator
+subjects:
+- kind: ServiceAccount
+  name: zalando-psql-operator-postgres-operator
+  namespace: databases
+---
+# Source: postgres-operator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres-operator
+    helm.sh/chart: postgres-operator-1.14.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: zalando-psql-operator
+  name: zalando-psql-operator-postgres-operator
+  namespace: databases
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/instance: zalando-psql-operator
+    app.kubernetes.io/name: postgres-operator
+---
+# Source: postgres-operator/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: postgres-operator
+    helm.sh/chart: postgres-operator-1.14.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: zalando-psql-operator
+  name: zalando-psql-operator-postgres-operator
+  namespace: databases
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres-operator
+      app.kubernetes.io/instance: zalando-psql-operator
+  template:
+    metadata:
+      annotations:
+        checksum/config: 8ef0bc17b27d5dd89f8dfb90a47ee3f4d2aa109151ea757dacb4dee5b9d28796
+      labels:
+        app.kubernetes.io/name: postgres-operator
+        app.kubernetes.io/instance: zalando-psql-operator
+    spec:
+      serviceAccountName: zalando-psql-operator-postgres-operator
+      containers:
+      - name: postgres-operator
+        image: "ghcr.io/zalando/postgres-operator:v1.14.0"
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: POSTGRES_OPERATOR_CONFIGURATION_OBJECT
+          value: zalando-psql-operator-postgres-operator
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 10m
+            memory: 50Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      affinity:
+        {}
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      tolerations:
+        []
+---
+# Source: postgres-operator/templates/operatorconfiguration.yaml
+apiVersion: "acid.zalan.do/v1"
+kind: OperatorConfiguration
+metadata:
+  name: zalando-psql-operator-postgres-operator
+  namespace: databases
+  labels:
+    app.kubernetes.io/name: postgres-operator
+    helm.sh/chart: postgres-operator-1.14.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: zalando-psql-operator
+configuration:
+  crd_categories:
+  - all
+  docker_image: ghcr.io/zalando/spilo-17:4.0-p2
+  enable_crd_registration: true
+  enable_lazy_spilo_upgrade: false
+  enable_pgversion_env_var: true
+  enable_shm_volume: true
+  enable_spilo_wal_path_compat: false
+  enable_team_id_clustername_prefix: false
+  etcd_host: ""
+  max_instances: -1
+  min_instances: -1
+  repair_period: 5m
+  resync_period: 30m
+  workers: 8
+  users:
+    enable_password_rotation: false
+    password_rotation_interval: 90
+    password_rotation_user_retention: 180
+    replication_username: standby
+    super_username: postgres
+  major_version_upgrade:
+    major_version_upgrade_mode: manual
+    minimal_major_version: "13"
+    target_major_version: "17"
+  kubernetes:
+    pod_service_account_name: postgres-pod
+    oauth_token_secret_name: zalando-psql-operator-postgres-operator
+    cluster_domain: cluster.local
+    cluster_labels:
+      application: spilo
+    cluster_name_label: cluster-name
+    enable_cross_namespace_secret: true
+    enable_finalizers: false
+    enable_init_containers: true
+    enable_owner_references: false
+    enable_persistent_volume_claim_deletion: true
+    enable_pod_antiaffinity: true
+    enable_pod_disruption_budget: true
+    enable_readiness_probe: false
+    enable_secrets_deletion: true
+    enable_sidecars: true
+    pdb_master_label_selector: true
+    pdb_name_format: postgres-{cluster}-pdb
+    persistent_volume_claim_retention_policy:
+      when_deleted: retain
+      when_scaled: retain
+    pod_antiaffinity_preferred_during_scheduling: true
+    pod_antiaffinity_topology_key: kubernetes.io/hostname
+    pod_management_policy: ordered_ready
+    pod_role_label: spilo-role
+    pod_terminate_grace_period: 5m
+    secret_name_template: '{username}.{cluster}.credentials.{tprkind}.{tprgroup}'
+    share_pgsocket_with_sidecars: false
+    spilo_allow_privilege_escalation: true
+    spilo_privileged: false
+    storage_resize_mode: pvc
+    watched_namespace: '*'
+  postgres_pod_resources:
+    default_cpu_limit: "1"
+    default_cpu_request: 100m
+    default_memory_limit: 500Mi
+    default_memory_request: 100Mi
+    min_cpu_limit: 250m
+    min_memory_limit: 250Mi
+  timeouts:
+    patroni_api_check_interval: 1s
+    patroni_api_check_timeout: 5s
+    pod_deletion_wait_timeout: 10m
+    pod_label_wait_timeout: 10m
+    ready_wait_interval: 3s
+    ready_wait_timeout: 30s
+    resource_check_interval: 3s
+    resource_check_timeout: 10m
+  load_balancer:
+    db_hosted_zone: db.example.com
+    enable_master_load_balancer: false
+    enable_master_pooler_load_balancer: false
+    enable_replica_load_balancer: false
+    enable_replica_pooler_load_balancer: false
+    external_traffic_policy: Cluster
+    master_dns_name_format: '{cluster}.{namespace}.{hostedzone}'
+    master_legacy_dns_name_format: '{cluster}.{team}.{hostedzone}'
+    replica_dns_name_format: '{cluster}-repl.{namespace}.{hostedzone}'
+    replica_legacy_dns_name_format: '{cluster}-repl.{team}.{hostedzone}'
+  aws_or_gcp:
+    aws_region: eu-central-1
+    enable_ebs_gp3_migration: false
+  logical_backup:
+    logical_backup_cronjob_environment_secret: zalando-minio
+    logical_backup_docker_image: ghcr.io/zalando/postgres-operator/logical-backup:v1.13.0
+    logical_backup_job_prefix: logical-backup-
+    logical_backup_provider: s3
+    logical_backup_s3_access_key_id: ""
+    logical_backup_s3_bucket: zalando-backup
+    logical_backup_s3_bucket_prefix: spilo
+    logical_backup_s3_endpoint: https://minio.walnuts.dev/
+    logical_backup_s3_region: ap-northeast-1
+    logical_backup_s3_retention_time: 1 week
+    logical_backup_s3_secret_access_key: ""
+    logical_backup_s3_sse: ""
+    logical_backup_schedule: 0 18 * * *
+  debug:
+    debug_logging: false
+    enable_database_access: true
+  teams_api:
+    enable_admin_role_for_users: true
+    enable_postgres_team_crd: false
+    enable_postgres_team_crd_superusers: false
+    enable_team_member_deprecation: false
+    enable_team_superuser: false
+    enable_teams_api: false
+    pam_role_name: zalandos
+    postgres_superuser_teams:
+    - postgres_superusers
+    protected_role_names:
+    - admin
+    - cron_admin
+    role_deletion_suffix: _deleted
+    team_admin_role: admin
+    team_api_role_configuration:
+      log_statement: all
+  logging_rest_api:
+    api_port: 8080
+    cluster_history_entries: 1000
+    ring_log_lines: 100
+  connection_pooler:
+    connection_pooler_default_cpu_limit: "1"
+    connection_pooler_default_cpu_request: 500m
+    connection_pooler_default_memory_limit: 100Mi
+    connection_pooler_default_memory_request: 100Mi
+    connection_pooler_image: registry.opensource.zalan.do/acid/pgbouncer:master-32
+    connection_pooler_max_db_connections: 60
+    connection_pooler_mode: transaction
+    connection_pooler_number_of_instances: 2
+    connection_pooler_schema: pooler
+    connection_pooler_user: pooler
+  patroni:
+    enable_patroni_failsafe_mode: false

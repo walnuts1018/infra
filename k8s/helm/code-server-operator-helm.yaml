@@ -1,0 +1,619 @@
+---
+# Source: code-server-operator/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: code-server-operator-controller-manager
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    {}
+---
+# Source: code-server-operator/templates/manager-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: code-server-operator-manager-role
+  labels:
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserver
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserver/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserver/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserverdeployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserverdeployments/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserverdeployments/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeservers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeservers/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeservers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+# Source: code-server-operator/templates/metrics-reader-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: code-server-operator-metrics-reader
+  labels:
+    app.kubernetes.io/component: kube-rbac-proxy
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+# Source: code-server-operator/templates/proxy-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: code-server-operator-proxy-role
+  labels:
+    app.kubernetes.io/component: kube-rbac-proxy
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+# Source: code-server-operator/templates/manager-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: code-server-operator-manager-rolebinding
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'code-server-operator-manager-role'
+subjects:
+- kind: ServiceAccount
+  name: 'code-server-operator-controller-manager'
+  namespace: 'code-server'
+---
+# Source: code-server-operator/templates/proxy-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: code-server-operator-proxy-rolebinding
+  labels:
+    app.kubernetes.io/component: kube-rbac-proxy
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'code-server-operator-proxy-role'
+subjects:
+- kind: ServiceAccount
+  name: 'code-server-operator-controller-manager'
+  namespace: 'code-server'
+---
+# Source: code-server-operator/templates/leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: code-server-operator-leader-election-role
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+# Source: code-server-operator/templates/leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: code-server-operator-leader-election-rolebinding
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: 'code-server-operator-leader-election-role'
+subjects:
+- kind: ServiceAccount
+  name: 'code-server-operator-controller-manager'
+  namespace: 'code-server'
+---
+# Source: code-server-operator/templates/metrics-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: code-server-operator-controller-manager-metrics-service
+  labels:
+    app.kubernetes.io/component: kube-rbac-proxy
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    control-plane: controller-manager
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+    control-plane: controller-manager
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+---
+# Source: code-server-operator/templates/webhook-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: code-server-operator-webhook-service
+  labels:
+    app.kubernetes.io/component: webhook
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+    control-plane: controller-manager
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
+---
+# Source: code-server-operator/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-server-operator-controller-manager
+  labels:
+    app.kubernetes.io/component: manager
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    control-plane: controller-manager
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+      app.kubernetes.io/name: code-server-operator
+      app.kubernetes.io/instance: code-server-operator
+  template:
+    metadata:
+      labels:
+        control-plane: controller-manager
+        app.kubernetes.io/name: code-server-operator
+        app.kubernetes.io/instance: code-server-operator
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+    spec:
+      containers:
+      - args:
+        - --health-probe-bind-address=:8081
+        - --metrics-bind-address=127.0.0.1:8080
+        - --leader-elect
+        command:
+        - /manager
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: "cluster.local"
+        image: ghcr.io/walnuts1018/code-server-operator:0.5.12
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: manager
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+          readOnly: true
+      - args:
+        - --secure-listen-address=0.0.0.0:8443
+        - --upstream=http://127.0.0.1:8080/
+        - --logtostderr=true
+        - --v=0
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: "cluster.local"
+        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.15.0
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 5m
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: code-server-operator-controller-manager
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: webhook-server-cert
+---
+# Source: code-server-operator/templates/serving-cert.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: code-server-operator-serving-cert
+  labels:
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  dnsNames:
+  - 'code-server-operator-webhook-service.code-server.svc'
+  - 'code-server-operator-webhook-service.code-server.svc.cluster.local'
+  issuerRef:
+    kind: Issuer
+    name: 'code-server-operator-selfsigned-issuer'
+  secretName: webhook-server-cert
+---
+# Source: code-server-operator/templates/selfsigned-issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: code-server-operator-selfsigned-issuer
+  labels:
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selfSigned: {}
+---
+# Source: code-server-operator/templates/mutating-webhook-configuration.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: code-server-operator-mutating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: code-server/code-server-operator-serving-cert
+  labels:
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'code-server-operator-webhook-service'
+      namespace: 'code-server'
+      path: /mutate-cs-walnuts-dev-v1alpha2-codeserver
+  failurePolicy: Fail
+  name: mcodeserver.kb.io
+  rules:
+  - apiGroups:
+    - cs.walnuts.dev
+    apiVersions:
+    - v1alpha2
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - codeservers
+  sideEffects: None
+---
+# Source: code-server-operator/templates/validating-webhook-configuration.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: code-server-operator-validating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: code-server/code-server-operator-serving-cert
+  labels:
+    helm.sh/chart: code-server-operator-0.5.12
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.12"
+    app.kubernetes.io/managed-by: Helm
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'code-server-operator-webhook-service'
+      namespace: 'code-server'
+      path: /validate-cs-walnuts-dev-v1alpha2-codeserver
+  failurePolicy: Fail
+  name: vcodeserver.kb.io
+  rules:
+  - apiGroups:
+    - cs.walnuts.dev
+    apiVersions:
+    - v1alpha2
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - codeservers
+  sideEffects: None

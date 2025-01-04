@@ -1,4 +1,0 @@
-{
-  name: "cloudflare-tunnel",
-  namespace: "network-exporter",
-}

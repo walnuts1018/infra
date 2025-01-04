@@ -1,8 +1,0 @@
-installCRDs: true
-config:
-  featureGates:
-    ExperimentalGatewayAPISupport: true
-prometheus:
-  enabled: true
-  servicemonitor:
-    enabled: true
