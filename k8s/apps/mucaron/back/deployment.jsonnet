@@ -19,7 +19,7 @@
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'mucaron-backend',
-            image: 'ghcr.io/walnuts1018/mucaron-backend:e80b1c8599dcb479f95a0e284b628b556e277697-85',
+            image: 'ghcr.io/walnuts1018/mucaron-backend:c8d65c4a763fc9073216ece4c7384101737448c5-86',
             ports: [
               {
                 containerPort: 8080,
