@@ -84,6 +84,7 @@ prometheus-node-exporter:
         action: replace
 prometheus:
   prometheusSpec:
+    enableOTLPReceiver: true
     serviceMonitorSelector:
       matchLabels: {} #全てのServiceMonitorを監視対象にする
     podMonitorSelector:
