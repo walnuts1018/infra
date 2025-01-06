@@ -1,7 +1,6 @@
-local formatUsername(username) = (
-  std.join('_', std.split(username, '-'))
-);
 local usernames = (import 'users.libsonnet');
+local databases = (import 'databases.libsonnet');
+
 {
   apiVersion: 'acid.zalan.do/v1',
   kind: 'postgresql',
@@ -16,7 +15,7 @@ local usernames = (import 'users.libsonnet');
     },
     numberOfInstances: 3,
     users: {
-      [formatUsername(username)]: []
+      [username]: []
       for username in usernames
     } + {
       postgres: [
@@ -26,12 +25,8 @@ local usernames = (import 'users.libsonnet');
       test: [],
     },
     databases: {
-      [formatUsername(username)]: formatUsername(username)
-      for username in usernames
-    } + {
-      postgres:: null,
-      wakatime:: null,
-      wakatime_to_slack: 'wakatime',
+      [database.db_name]: database.user_name
+      for database in databases
     },
     postgresql: {
       version: '17',

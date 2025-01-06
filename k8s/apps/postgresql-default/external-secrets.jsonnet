@@ -3,7 +3,7 @@ local gen = function(username) {
   apiVersion: 'external-secrets.io/v1beta1',
   kind: 'ExternalSecret',
   metadata: {
-    name: '%s.default.credentials.postgresql.acid.zalan.do' % username,
+    name: (import 'functions.libsonnet').secretName(username),
   },
   spec: {
     data: [
