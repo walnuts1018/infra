@@ -114,3 +114,5 @@ prometheus:
     - otlp-write-receiver
     additionalConfig:
       enableOTLPReceiver: true
+      otlp:
+        translationStrategy: "NoUTF8EscapingWithSuffixes"
