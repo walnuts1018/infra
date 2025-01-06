@@ -1,18 +1,18 @@
 {
-  "apiVersion": "v1",
-  "kind": "PersistentVolumeClaim",
-  "metadata": {
-    "name": "komga-config"
+  apiVersion: 'v1',
+  kind: 'PersistentVolumeClaim',
+  metadata: {
+    name: 'komga-config',
   },
-  "spec": {
-    "storageClassName": "longhorn",
-    "accessModes": [
-      "ReadWriteOnce"
+  spec: {
+    storageClassName: 'longhorn',
+    accessModes: [
+      'ReadWriteOnce',
     ],
-    "resources": {
-      "requests": {
-        "storage": "2Gi"
-      }
-    }
-  }
+    resources: {
+      requests: {
+        storage: '2Gi',
+      },
+    },
+  },
 }
