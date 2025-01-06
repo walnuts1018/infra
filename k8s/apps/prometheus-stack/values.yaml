@@ -116,3 +116,5 @@ prometheus:
       enableOTLPReceiver: true
       otlp:
         translationStrategy: "NoUTF8EscapingWithSuffixes"
+      tsdb:
+        outOfOrderTimeWindow: 30m
