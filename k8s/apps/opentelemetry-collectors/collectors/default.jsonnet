@@ -78,6 +78,12 @@ std.mergePatch((import '_base.libsonnet'), {
             insecure: true,
           },
         },
+        'otlp/prometheus-exporter': {
+          endpoint: 'prometheus-exporter-collector.opentelemetry-collector.svc.cluster.local:4317',
+          tls: {
+            insecure: true,
+          },
+        },
         'otlp/tempo': {
           endpoint: 'tempo.monitoring.svc.cluster.local:4317',
           tls: {
@@ -119,6 +125,7 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
             exporters: [
               'otlphttp/prometheus',
+              'otlp/prometheus-exporter',
             ],
           },
           logs: {
