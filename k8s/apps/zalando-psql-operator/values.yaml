@@ -15,6 +15,9 @@ configKubernetes:
 nodeSelector:
   kubernetes.io/arch: amd64
 
+configUsers:
+  enable_password_rotation: false
+
 resources:
   limits:
     cpu: 500m
