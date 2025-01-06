@@ -84,7 +84,6 @@ prometheus-node-exporter:
         action: replace
 prometheus:
   prometheusSpec:
-    enableOTLPReceiver: true
     serviceMonitorSelector:
       matchLabels: {} #全てのServiceMonitorを監視対象にする
     podMonitorSelector:
@@ -110,8 +109,9 @@ prometheus:
     retentionSize: 30GiB
     replicas: 1
     enableRemoteWriteReceiver: true
-    enableFeatures:
-    - otlp-write-receiver
+    enableOTLPReceiver: true
+    otlp:
+      translationStrategy: "NoUTF8EscapingWithSuffixes"
     additionalConfig:
       enableOTLPReceiver: true
       otlp:
