@@ -23,6 +23,7 @@ local usernames = (import 'users.libsonnet');
         'superuser',
         'createdb',
       ],
+      test: [],
     },
     databases: {
       [formatUsername(username)]: formatUsername(username)
