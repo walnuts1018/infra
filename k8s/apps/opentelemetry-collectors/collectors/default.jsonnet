@@ -62,43 +62,6 @@ std.mergePatch((import '_base.libsonnet'), {
           send_batch_max_size: 5000,
           timeout: '10s',
         },
-        k8sattributes: {
-          auth_type: 'serviceAccount',
-          passthrough: true,
-          filter: {
-            node_from_env_var: 'K8S_NODE_NAME',
-          },
-          extract: {
-            metadata: [
-              'k8s.cluster.uid',
-            ],
-          },
-          pod_association: [
-            {
-              sources: [
-                {
-                  from: 'resource_attribute',
-                  name: 'k8s.pod.ip',
-                },
-              ],
-            },
-            {
-              sources: [
-                {
-                  from: 'resource_attribute',
-                  name: 'k8s.pod.uid',
-                },
-              ],
-            },
-            {
-              sources: [
-                {
-                  from: 'connection',
-                },
-              ],
-            },
-          ],
-        },
       },
       exporters: {
         'otlphttp/prometheus': {
@@ -109,25 +72,6 @@ std.mergePatch((import '_base.libsonnet'), {
         },
         'otlp/tempo': {
           endpoint: 'tempo.monitoring.svc.cluster.local:4317',
-          tls: {
-            insecure: true,
-          },
-        },
-        'otlp/prometheus-exporter': {
-          endpoint: 'prometheus-exporter-collector.opentelemetry-collector.svc.cluster.local:4317',
-          tls: {
-            insecure: true,
-          },
-        },
-        'otlphttp/vaxila': {
-          endpoint: 'https://otlp-vaxila.mackerelio.com',
-          headers: {
-            Accept: '*/*',
-            'Mackerel-Api-Key': '${env:VAXILA_APIKEY}',
-          },
-        },
-        'otlp/signoz': {
-          endpoint: 'signoz-otel-collector.signoz.svc.cluster.local:4317',
           tls: {
             insecure: true,
           },
@@ -166,7 +110,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'k8sattributes',
             ],
             exporters: [
-              'otlp/prometheus-exporter',
+              'otlphttp/prometheus',
             ],
           },
           logs: {
