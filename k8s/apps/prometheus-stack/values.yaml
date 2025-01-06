@@ -112,3 +112,5 @@ prometheus:
     enableRemoteWriteReceiver: true
     enableFeatures:
     - otlp-write-receiver
+    additionalConfig:
+      enableOTLPReceiver: true
