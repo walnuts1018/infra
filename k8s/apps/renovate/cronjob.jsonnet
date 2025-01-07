@@ -19,7 +19,7 @@
             },
             restartPolicy: 'Never',
             containers: [
-              {
+              (import '../../components/container.libsonnet') {
                 name: 'renovate',
                 image: 'renovate/renovate:39.92.0',
                 resources: {
