@@ -17,14 +17,8 @@
       },
       spec: {
         containers: [
-          (import '../../components/container.libsonnet') {
+          std.mergePatch((import '../../components/container.libsonnet') {
             name: 'walnuts-dev',
-            securityContext: {
-              readOnlyRootFilesystem: true,
-              seccompProfile: {
-                type: 'RuntimeDefault',
-              },
-            },
             image: 'ghcr.io/walnuts1018/walnuts.dev:75ef7965084bd41ceb8bd5781467b1497dcfcf45-361',
             imagePullPolicy: 'IfNotPresent',
             ports: [
@@ -70,7 +64,14 @@
                 mountPath: '/app/.next/cache',
               },
             ],
-          },
+          }, {
+            securityContext: {
+              runAsNonRoot: true,
+              allowPrivilegeEscalation: false,
+              runAsGroup: 10001,
+              runAsUser: 10001,
+            },
+          }),
         ],
         priorityClassName: 'high',
         affinity: {
