@@ -2,6 +2,7 @@ package lib
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/google/go-jsonnet"
 	yaml "gopkg.in/yaml.v3"
@@ -24,14 +25,15 @@ func BuildYAML(filepath string) (string, error) {
 		jsonResults = []interface{}{jsonResult}
 	}
 
-	var yamlResult string
+	var yamlResult strings.Builder
+	encoder := yaml.NewEncoder(&yamlResult)
+	encoder.SetIndent(2)
+	defer encoder.Close()
+
 	for _, result := range jsonResults {
-		yamlBytes, err := yaml.Marshal(result)
-		if err != nil {
+		if err := encoder.Encode(result); err != nil {
 			return "", err
 		}
-		yamlResult += string(yamlBytes)
-		yamlResult += "\n---\n"
 	}
-	return yamlResult, nil
+	return yamlResult.String(), nil
 }
