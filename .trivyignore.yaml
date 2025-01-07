@@ -8,7 +8,9 @@ misconfigurations:
   - "k8s/apps/samba/deployment.yaml"
   statement: accept hostpath
 - id: AVD-KSV-0109
-  statement: Disable “ConfigMap with secrets” as there are many false positives.
+  statement: Disable "ConfigMap with secrets" as there are many false positives.
+- id: AVD-KSV-01010
+  statement: Disable "ConfigMap with sensitive content" as there are many false positives.
 - id: KSV022
   paths:
   - "k8s/helm/cilium-helm.yaml"
