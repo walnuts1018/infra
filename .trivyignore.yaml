@@ -7,3 +7,5 @@ misconfigurations:
   paths:
   - "k8s/apps/samba/deployment.yaml"
   statement: accept hostpath
+- id: AVD-KSV-0109
+  statement: Disable “ConfigMap with secrets” as there are many false positives.
