@@ -2,11 +2,11 @@ misconfigurations:
 - id: KSV017
   paths:
   - "k8s/apps/machine-status-api/deployment.yaml"
-  statement: Accept Privileged
+  statement: 特定のコンテナはPrivilegedを許可する
 - id: KSV023
   paths:
   - "k8s/apps/samba/deployment.yaml"
-  statement: accept hostpath
+  statement: 特定のコンテナはホストマウントを許可する
 - id: AVD-KSV-0109
   statement: Disable "ConfigMap with secrets" as there are many false positives.
 - id: AVD-KSV-01010
