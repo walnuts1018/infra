@@ -15,3 +15,5 @@ misconfigurations:
   paths:
   - "k8s/helm/cilium-helm.yaml"
   statement: accept capabilities.add in cilium
+- id: AVD-KSV-0022
+  statement: "`NET_BIND_SERVICE` should be added to the capabilities.add list in the securityContext"
