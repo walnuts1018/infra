@@ -68,8 +68,6 @@
             securityContext: {
               runAsNonRoot: true,
               allowPrivilegeEscalation: false,
-              runAsGroup: 10001,
-              runAsUser: 10001,
             },
           }),
         ],
