@@ -9,3 +9,7 @@ misconfigurations:
   statement: accept hostpath
 - id: AVD-KSV-0109
   statement: Disable “ConfigMap with secrets” as there are many false positives.
+- id: KSV022
+  paths:
+  - "k8s/helm/cilium-helm.yaml"
+  statement: accept capabilities.add in cilium
