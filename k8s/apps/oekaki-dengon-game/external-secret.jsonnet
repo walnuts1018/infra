@@ -12,7 +12,7 @@
       secretKey: 'postgres-user-password',
       remoteRef: {
         key: 'postgres_passwords',
-        property: 'oekaki-dengon-game',
+        property: 'oekaki_dengon_game',
       },
     },
     {

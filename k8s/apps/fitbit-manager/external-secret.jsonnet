@@ -26,7 +26,7 @@
       secretKey: 'postgres_password',
       remoteRef: {
         key: 'postgres_passwords',
-        property: 'fitbit-manager',
+        property: 'fitbit_manager',
       },
     },
     {
