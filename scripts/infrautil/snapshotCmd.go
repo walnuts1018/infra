@@ -49,6 +49,7 @@ func (b *snapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subc
 		if filepath.Ext(path) != ".jsonnet" {
 			return nil
 		}
+
 		eg.Go(func() error {
 			yaml, err := lib.BuildYAML(path)
 			if err != nil {
