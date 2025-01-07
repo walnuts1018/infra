@@ -80,14 +80,13 @@ func (b *helmSnapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) 
 					}
 					return fmt.Errorf("failed to parse helm application: %w", err)
 				}
-
-				repoURL, err := url.Parse(helmapp.Spec.Source.RepoURL)
-				if err != nil {
-					slog.Error("failed to parse repo url", slog.String("repoURL", helmapp.Spec.Source.RepoURL), slog.Any("error", err))
-					return fmt.Errorf("failed to parse repo url: %w", err)
-				}
-
 				eg.Go(func() error {
+					repoURL, err := url.Parse(helmapp.Spec.Source.RepoURL)
+					if err != nil {
+						slog.Error("failed to parse repo url", slog.String("repoURL", helmapp.Spec.Source.RepoURL), slog.Any("error", err))
+						return fmt.Errorf("failed to parse repo url: %w", err)
+					}
+
 					hc, err := lib.NewHelmClient()
 					if err != nil {
 						slog.Error("failed to create helm client", slog.Any("error", err))
