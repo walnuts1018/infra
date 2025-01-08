@@ -11,6 +11,10 @@ local gen = function(githubConfigUrl)
         githubConfigSecret: (import 'external-secret.jsonnet').spec.target.name,
       },
       githubConfigUrl: githubConfigUrl,
+      controllerServiceAccount: {
+        namespace: (import '../gha-runner-controller/app.json5').namespace,
+        name: (import '../gha-runner-controller/app.json5').name + '-gha-rs-controller',
+      },
     },
   };
 
