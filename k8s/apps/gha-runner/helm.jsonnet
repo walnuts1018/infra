@@ -25,6 +25,23 @@ local gen = function(githubConfigUrl)
           },
         },
       },
+      template: {
+        spec: {
+          containers: [
+            {
+              name: 'runner',
+              image: 'ghcr.io/actions/actions-runner:latest',
+              command: ['/home/runner/run.sh'],
+              env: [
+                {
+                  name: 'ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER',
+                  value: 'false',
+                },
+              ],
+            },
+          ],
+        },
+      },
     },
   };
 
