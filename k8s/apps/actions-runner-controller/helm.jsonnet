@@ -2,12 +2,7 @@
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
 
-  chart: 'actions-runner-controller',
-  repoURL: 'https://actions-runner-controller.github.io/actions-runner-controller',
-  targetRevision: '0.23.7',
-  valuesObject: std.mergePatch(std.parseYaml(importstr 'values.yaml'), {
-    authSecret: {
-      name: (import 'external-secret.jsonnet').spec.target.name,
-    },
-  }),
+  ociChartURL: 'ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller',
+  targetRevision: '0.10.1',
+  values: (importstr 'values.yaml'),
 }
