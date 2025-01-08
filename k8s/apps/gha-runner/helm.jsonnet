@@ -1,7 +1,7 @@
 local urls = (import 'urls.libsonnet');
-local gen = function(githubConfigUrl) {
+local gen = function(githubConfigUrl)
   (import '../../components/helm.libsonnet') {
-    name: (import 'app.json5').name,
+    name: std.md5(githubConfigUrl),
     namespace: (import 'app.json5').namespace,
 
     ociChartURL: 'ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set',
@@ -12,7 +12,6 @@ local gen = function(githubConfigUrl) {
       },
       githubConfigUrl: githubConfigUrl,
     },
-  }
-};
+  };
 
 std.map(gen, urls)
