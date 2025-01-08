@@ -14,36 +14,7 @@ local gen = function(githubConfigUrl)
         name: (import '../gha-runner-controller/app.json5').name + '-gha-rs-controller',
       },
       containerMode: {
-        type: 'kubernetes',
-        kubernetesModeWorkVolumeClaim: {
-          accessModes: ['ReadWriteOnce'],
-          storageClassName: 'longhorn',
-          resources: {
-            requests: {
-              storage: '10Gi',
-            },
-          },
-        },
-      },
-      template: {
-        spec: {
-          securityContext: {
-            fsGroup: 123,
-          },
-          containers: [
-            {
-              name: 'runner',
-              image: 'ghcr.io/actions/actions-runner:latest',
-              command: ['/home/runner/run.sh'],
-              env: [
-                {
-                  name: 'ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER',
-                  value: 'false',
-                },
-              ],
-            },
-          ],
-        },
+        type: 'dind',
       },
     },
   };
