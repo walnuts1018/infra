@@ -1,0 +1,4 @@
+{
+  name: "gha-runner-controller",
+  namespace: "gha-runner-controller",
+}
