@@ -70,7 +70,7 @@
       automerge: true,
     },
     {
-      matchPackageNames: ["aquaproj/aqua-registry", "terraform"],
+      matchPackageNames: ["aquaproj/aqua-registry", "terraform", "renovate/renovate"],
       automerge: true,
     },
     {
