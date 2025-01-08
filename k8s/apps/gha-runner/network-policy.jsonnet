@@ -3,6 +3,7 @@
   kind: 'NetworkPolicy',
   metadata: {
     name: (import 'app.json5').name,
+    namespace: (import 'app.json5').namespace,
   },
   spec: {
     podSelector: {
