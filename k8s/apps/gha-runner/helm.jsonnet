@@ -27,6 +27,9 @@ local gen = function(githubConfigUrl)
       },
       template: {
         spec: {
+          securityContext: {
+            fsGroup: '1001',
+          },
           containers: [
             {
               name: 'runner',
