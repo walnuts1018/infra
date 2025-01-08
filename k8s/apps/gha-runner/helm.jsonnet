@@ -13,6 +13,18 @@ local gen = function(githubConfigUrl)
         namespace: (import '../gha-runner-controller/app.json5').namespace,
         name: (import '../gha-runner-controller/app.json5').name + '-gha-rs-controller',
       },
+      containerMode: {
+        type: 'kubernetes',
+        kubernetesModeWorkVolumeClaim: {
+          accessModes: ['ReadWriteOnce'],
+          storageClassName: 'longhorn',
+          resources: {
+            requests: {
+              storage: '10Gi',
+            },
+          },
+        },
+      },
     },
   };
 
