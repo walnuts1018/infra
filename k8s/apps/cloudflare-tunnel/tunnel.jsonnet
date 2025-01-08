@@ -6,6 +6,7 @@
     namespace: (import 'app.json5').namespace,
     labels: (import '../../components/labels.libsonnet') + {
       appname: (import 'app.json5').name,
+      'cf-tunnel-operator.walnuts.dev/default': 'true',
     },
   },
   spec: {
