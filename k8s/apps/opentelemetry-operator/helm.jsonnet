@@ -4,6 +4,6 @@
 
   chart: 'opentelemetry-operator',
   repoURL: 'https://open-telemetry.github.io/opentelemetry-helm-charts',
-  targetRevision: '0.78.0',
+  targetRevision: '0.78.1',
   values: (importstr 'values.yaml'),
 }
