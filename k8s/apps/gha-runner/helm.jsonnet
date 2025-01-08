@@ -7,9 +7,7 @@ local gen = function(githubConfigUrl)
     ociChartURL: 'ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set',
     targetRevision: '0.10.1',
     valuesObject: {
-      githubConfigSecret: {
-        githubConfigSecret: (import 'external-secret.jsonnet').spec.target.name,
-      },
+      githubConfigSecret: (import 'external-secret.jsonnet').spec.target.name,
       githubConfigUrl: githubConfigUrl,
       controllerServiceAccount: {
         namespace: (import '../gha-runner-controller/app.json5').namespace,
