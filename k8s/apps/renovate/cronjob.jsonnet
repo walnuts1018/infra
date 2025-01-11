@@ -21,7 +21,7 @@
             containers: [
               (import '../../components/container.libsonnet') {
                 name: 'renovate',
-                image: 'renovate/renovate:39.103.0',
+                image: 'renovate/renovate:39.104.1',
                 resources: {
                   requests: {
                     memory: '256Mi',
