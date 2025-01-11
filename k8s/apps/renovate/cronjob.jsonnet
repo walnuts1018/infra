@@ -24,9 +24,11 @@
                 image: 'renovate/renovate:39.96.0',
                 resources: {
                   requests: {
+                    cpu: '500m',
                     memory: '256Mi',
                   },
                   limits: {
+                    cpu: '500m',
                     memory: '2Gi',
                   },
                 },
