@@ -21,7 +21,7 @@
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'disk-cleaner',
-                image: 'busybox:1.36.1',
+                image: 'busybox:1.37.0',
                 command: [
                   'sh',
                   '-c',
