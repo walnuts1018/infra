@@ -17,15 +17,9 @@
       },
       spec: {
         containers: [
-          (import '../../components/container.libsonnet') {
+          std.mergePatch((import '../../components/container.libsonnet') {
             name: 'walnuts-dev',
-            securityContext: {
-              readOnlyRootFilesystem: true,
-              seccompProfile: {
-                type: 'RuntimeDefault',
-              },
-            },
-            image: 'ghcr.io/walnuts1018/walnuts.dev:3da46301abad841586608e9b6e77849400fa9bce-330',
+            image: 'ghcr.io/walnuts1018/walnuts.dev:94defab8916b03f43a2f746feba54602aa9ff01c-366',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
@@ -70,10 +64,36 @@
                 mountPath: '/app/.next/cache',
               },
             ],
-          },
+          }, {
+            securityContext: {
+              runAsNonRoot: true,
+              allowPrivilegeEscalation: false,
+            },
+          }),
         ],
         priorityClassName: 'high',
         affinity: {
+          podAntiAffinity: {
+            preferredDuringSchedulingIgnoredDuringExecution: [
+              {
+                weight: 100,
+                podAffinityTerm: {
+                  labelSelector: {
+                    matchExpressions: [
+                      {
+                        key: 'app',
+                        operator: 'In',
+                        values: [
+                          (import 'app.json5').name,
+                        ],
+                      },
+                    ],
+                  },
+                  topologyKey: 'kubernetes.io/hostname',
+                },
+              },
+            ],
+          },
           nodeAffinity: {
             preferredDuringSchedulingIgnoredDuringExecution: [
               {

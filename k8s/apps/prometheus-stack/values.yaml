@@ -9,7 +9,7 @@ grafana:
     enabled: true
     hosts:
     - grafana.walnuts.dev
-    ingressClassName: nginx
+    ingressClassName: cilium
   rbac:
     pspEnabled: false
   testFramework:
@@ -109,5 +109,12 @@ prometheus:
     retentionSize: 30GiB
     replicas: 1
     enableRemoteWriteReceiver: true
-    enableFeatures:
-    - otlp-write-receiver
+    enableOTLPReceiver: true
+    otlp:
+      translationStrategy: "NoUTF8EscapingWithSuffixes"
+    tsdb:
+      outOfOrderTimeWindow: 30m
+    additionalConfig:
+      enableOTLPReceiver: true
+      otlp:
+        translationStrategy: "NoUTF8EscapingWithSuffixes"

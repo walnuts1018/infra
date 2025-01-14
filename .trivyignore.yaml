@@ -2,8 +2,22 @@ misconfigurations:
 - id: KSV017
   paths:
   - "k8s/apps/machine-status-api/deployment.yaml"
-  statement: Accept Privileged
+  statement: 特定のコンテナはPrivilegedを許可する
 - id: KSV023
   paths:
   - "k8s/apps/samba/deployment.yaml"
-  statement: accept hostpath
+  statement: 特定のコンテナはホストマウントを許可する
+- id: AVD-KSV-0109
+  statement: Disable "ConfigMap with secrets" as there are many false positives.
+- id: AVD-KSV-01010
+  statement: Disable "ConfigMap with sensitive content" as there are many false positives.
+- id: KSV022
+  paths:
+  - "k8s/helm/cilium-helm.yaml"
+  statement: accept capabilities.add in cilium
+- id: AVD-KSV-0022
+  statement: "`NET_BIND_SERVICE` should be added to the capabilities.add list in the securityContext"
+- id: AVD-KSV-0020
+  statement: runAsUserのチェックは要らない
+- id: AVD-KSV-0021
+  statement: runAsGroupのチェックは要らない

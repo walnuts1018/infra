@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'redis-operator',
   repoURL: 'https://ot-container-kit.github.io/helm-charts/',
-  targetRevision: '0.18.5',
+  targetRevision: '0.19.1',
   values: (importstr 'values.yaml'),
 }

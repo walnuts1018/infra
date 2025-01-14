@@ -1,8 +1,9 @@
 {
   name:: error 'name is required',
   namespace:: error 'namespace is required',
-  chart:: error 'chart is required',
-  repoURL:: error 'repoURL is required',
+  ociChartURL:: '',
+  chart:: '',
+  repoURL:: '',
   targetRevision:: error 'targetRevision is required',
   values:: '',
   valuesObject:: null,
@@ -30,8 +31,16 @@
       ],
     },
     source: {
-      chart: $.chart,
-      repoURL: $.repoURL,
+      local useOCI = !std.isEmpty($.ociChartURL),
+      local splitedOCIChartURL = std.splitLimitR($.ociChartURL, '/', 1),
+      local argoChart = if useOCI then splitedOCIChartURL[1] else $.chart,
+      local argoRepoURL = if useOCI then splitedOCIChartURL[0] else $.repoURL,
+
+      assert !std.isEmpty(argoChart) : 'ociChartURL or chart is required',
+      assert !std.isEmpty(argoRepoURL) : 'ociChartURL or repoURL is required',
+
+      chart: argoChart,
+      repoURL: argoRepoURL,
       targetRevision: $.targetRevision,
       helm: {
         releaseName: $.name,

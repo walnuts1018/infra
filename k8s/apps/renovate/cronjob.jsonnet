@@ -7,7 +7,7 @@
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
-    schedule: '*/10 * * * *',
+    schedule: '*/5 * * * *',
     concurrencyPolicy: 'Forbid',
     jobTemplate: {
       spec: {
@@ -18,15 +18,34 @@
               fsGroupChangePolicy: 'OnRootMismatch',
             },
             restartPolicy: 'Never',
+            initContainers: [
+              (import '../../components/container.libsonnet') {
+                name: 'disk-cleaner',
+                image: 'debian:12.9-slim',
+                command: [
+                  'sh',
+                  '-c',
+                  'df --output=target,pcent | awk \'{if( $1 == "/tmp/renovate" && $2 > 75 ){ system("rm -rf /tmp/renovate/cache") }}\'',
+                ],
+                volumeMounts: [
+                  {
+                    name: 'renovate',
+                    mountPath: '/tmp/renovate',
+                  },
+                ],
+              },
+            ],
             containers: [
-              {
+              (import '../../components/container.libsonnet') {
                 name: 'renovate',
-                image: 'renovate/renovate:39.75.1',
+                image: 'renovate/renovate:39.107.0',
                 resources: {
                   requests: {
+                    cpu: '500m',
                     memory: '256Mi',
                   },
                   limits: {
+                    cpu: '500m',
                     memory: '2Gi',
                   },
                 },

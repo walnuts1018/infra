@@ -4,6 +4,6 @@
 
   chart: 'descheduler',
   repoURL: 'https://kubernetes-sigs.github.io/descheduler/',
-  targetRevision: '0.31.0',
+  targetRevision: '0.32.1',
   values: (importstr 'values.yaml'),
 }

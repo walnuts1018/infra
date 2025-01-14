@@ -33,6 +33,21 @@
     },
     {
       customType: "regex",
+      fileMatch: [
+        "^k8s/.*/helm.jsonnet$",
+        "^k8s/.*/helm.libsonnet$",
+        "^k8s/.*/helm.yaml$",
+        "^k8s/.*/helm.yml$",
+      ],
+      matchStringsStrategy: "combination",
+      matchStrings: [
+        "ociChartURL:\\s+[\"']?(?<packageName>\\S+)[\"']",
+        "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
+      ],
+      datasourceTemplate: "docker",
+    },
+    {
+      customType: "regex",
       fileMatch: "^k8s/apps/.*/kustomization.yaml$",
       matchStringsStrategy: "any",
       matchStrings: [
@@ -55,7 +70,7 @@
       automerge: true,
     },
     {
-      matchPackageNames: ["aquaproj/aqua-registry", "terraform"],
+      matchPackageNames: ["aquaproj/aqua-registry", "terraform", "renovate/renovate"],
       automerge: true,
     },
     {

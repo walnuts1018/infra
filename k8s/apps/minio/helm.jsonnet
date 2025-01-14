@@ -4,6 +4,6 @@
 
   chart: 'minio',
   repoURL: 'https://charts.min.io/',
-  targetRevision: '5.3.0',
+  targetRevision: '5.4.0',
   values: (importstr 'values.yaml'),
 }

@@ -1,11 +1,13 @@
 (import '../../components/external-secret.libsonnet') {
+  use_suffix: false,
   name: (import 'app.json5').name,
+  namespace: (import 'app.json5').namespace,
   data: [
     {
-      secretKey: 'cf-api-token',
+      secretKey: 'cloudflareAPIToken',
       remoteRef: {
         key: 'cloudflare',
-        property: 'apitoken',
+        property: 'cloudflare-tunnel-operator',
       },
     },
   ],
