@@ -43,6 +43,7 @@ func NewHelmClient() (*HelmClient, error) {
 	client.DryRunOption = "true"
 	client.Replace = true
 	client.ClientOnly = true
+	client.IncludeCRDs = true
 
 	return &HelmClient{
 		cfg:      cfg,
