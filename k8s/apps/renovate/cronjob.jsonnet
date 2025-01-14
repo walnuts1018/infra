@@ -18,10 +18,27 @@
               fsGroupChangePolicy: 'OnRootMismatch',
             },
             restartPolicy: 'Never',
+            initContainers: [
+              (import '../../components/container.libsonnet') {
+                name: 'disk-cleaner',
+                image: 'debian:12.9-slim',
+                command: [
+                  'sh',
+                  '-c',
+                  'df --output=target,pcent | awk \'{if( $1 == "/tmp/renovate" && $2 > 75 ){ system("rm -rf /tmp/renovate/cache") }}\'',
+                ],
+                volumeMounts: [
+                  {
+                    name: 'renovate',
+                    mountPath: '/tmp/renovate',
+                  },
+                ],
+              },
+            ],
             containers: [
               (import '../../components/container.libsonnet') {
                 name: 'renovate',
-                image: 'renovate/renovate:39.106.0',
+                image: 'renovate/renovate:39.107.0',
                 resources: {
                   requests: {
                     cpu: '500m',
