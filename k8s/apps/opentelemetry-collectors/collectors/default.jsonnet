@@ -103,6 +103,13 @@ std.mergePatch((import '_base.libsonnet'), {
             'Mackerel-Api-Key': '${env:MACKEREL_APIKEY}',
           },
         },
+        'otlp/mackerel': {
+          endpoint: 'otlp.mackerelio.com:4317',
+          compression: 'gzip',
+          headers: {
+            'Mackerel-Api-Key': '${env:MACKEREL_APIKEY}',
+          },
+        },
       },
       service: {
         pipelines: {
@@ -134,6 +141,7 @@ std.mergePatch((import '_base.libsonnet'), {
             exporters: [
               'otlphttp/prometheus',
               'otlp/prometheus-exporter',
+              'otlp/mackerel',
             ],
           },
           logs: {
