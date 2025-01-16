@@ -141,6 +141,8 @@ std.mergePatch((import '_base.libsonnet'), {
                 'merge_maps(cache, ParseJSON(body), "upsert") where IsMatch(body, "^\\\\{")',
                 'set(body, cache["msg"]) where cache["msg"] != nil',
                 'delete_key(cache, "msg")',
+                'truncate_all(cache, 1024)',
+                'limit(cache, 100, [])',
                 'merge_maps(attributes, cache, "insert")',
               ],
             },
