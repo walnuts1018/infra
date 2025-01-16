@@ -132,6 +132,22 @@ std.mergePatch((import '_base.libsonnet'), {
           timeout: '15s',
           override: false,
         },
+        transform: {
+          error_mode: 'ignore',
+          log_statements: [
+            {
+              context: 'log',
+              statements: [
+                'merge_maps(cache, ParseJSON(body), "upsert") where IsMatch(body, "^\\\\{")',
+                'set(body, cache["msg"]) where cache["msg"] != nil',
+                'delete_key(cache, "msg")',
+                'truncate_all(cache, 1024)',
+                'limit(cache, 100, [])',
+                'merge_maps(resource.attributes, cache, "insert")',
+              ],
+            },
+          ],
+        },
       },
       exporters: {
         'otlp/default': {
@@ -166,6 +182,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'memory_limiter',
               'batch',
               'k8sattributes',
+              'transform',
             ],
             exporters: [
               'otlp/default',
