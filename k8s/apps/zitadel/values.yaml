@@ -32,6 +32,7 @@ metrics:
     enabled: true
 resources:
   requests:
+    cpu: 10m
     memory: 100Mi
   limits:
     memory: 512Mi
