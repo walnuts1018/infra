@@ -102,9 +102,9 @@ prometheus:
               storage: 32Gi
     resources:
       requests:
-        memory: 1000Mi
+        memory: 2Gi
       limits:
-        memory: 4000Mi
+        memory: 4Gi
     retention: 14d
     retentionSize: 30GiB
     replicas: 1
