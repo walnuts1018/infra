@@ -108,7 +108,7 @@
             },
             resources: {
               requests: {
-                memory: '512Mi',
+                memory: '932Mi',
               },
               limits: {},
             },
