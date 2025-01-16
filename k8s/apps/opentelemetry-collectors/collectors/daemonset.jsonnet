@@ -132,6 +132,21 @@ std.mergePatch((import '_base.libsonnet'), {
           timeout: '15s',
           override: false,
         },
+        transform: {
+          error_mode: 'ignore',
+          log_statements: [
+            {
+              context: 'log',
+              conditions: [
+                "IsMatch(resource.attributes['k8s_namespace_name'], 'cloudflare-tunnel-operator')",
+              ],
+              statements: [
+                "merge_maps(cache, ParseJSON(body), 'upsert') where IsMatch(body, '^\\{')",
+                "set(attributes['controllerGroup'], cache['controllerGroup'])",
+              ],
+            },
+          ],
+        },
       },
       exporters: {
         'otlp/default': {
@@ -161,6 +176,7 @@ std.mergePatch((import '_base.libsonnet'), {
           logs: {
             receivers: [
               'filelog',
+              'transform',
             ],
             processors: [
               'memory_limiter',
