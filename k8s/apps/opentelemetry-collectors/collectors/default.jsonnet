@@ -96,6 +96,13 @@ std.mergePatch((import '_base.libsonnet'), {
             insecure: true,
           },
         },
+        'otlphttp/vaxila': {
+          endpoint: 'https://otlp-vaxila.mackerelio.com',
+          headers: {
+            Accept: '*/*',
+            'Mackerel-Api-Key': '${env:MACKEREL_APIKEY}',
+          },
+        },
       },
       service: {
         pipelines: {
@@ -111,6 +118,7 @@ std.mergePatch((import '_base.libsonnet'), {
             exporters: [
               'otlp/tempo',
               'spanmetrics',
+              'otlphttp/vaxila',
             ],
           },
           metrics: {
@@ -172,11 +180,11 @@ std.mergePatch((import '_base.libsonnet'), {
         },
       },
       {
-        name: 'VAXILA_APIKEY',
+        name: 'MACKEREL_APIKEY',
         valueFrom: {
           secretKeyRef: {
             name: (import '../external-secret.jsonnet').spec.target.name,
-            key: 'vaxila-api-key',
+            key: 'mackerel-api-key',
           },
         },
       },
