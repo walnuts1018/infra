@@ -17,7 +17,7 @@ consoleIngress:
   - minio-console.walnuts.dev
 resources:
   requests:
-    memory: 500Mi
+    memory: 1Gi
 oidc:
   enabled: true
   configUrl: "https://auth.walnuts.dev/.well-known/openid-configuration"
