@@ -71,7 +71,17 @@ write:
     dataVolumeParameters:
       emptyDir: {}
   affinity:
-    podAntiAffinity: {}
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app.kubernetes.io/component
+              operator: In
+              values:
+              - write
+          topologyKey: kubernetes.io/hostname
 
 read:
   replicas: 2
@@ -93,7 +103,17 @@ read:
   - secretRef:
       name: loki-minio
   affinity:
-    podAntiAffinity: {}
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app.kubernetes.io/component
+              operator: In
+              values:
+              - read
+          topologyKey: kubernetes.io/hostname
 
 backend:
   replicas: 2
@@ -119,7 +139,17 @@ backend:
     dataVolumeParameters:
       emptyDir: {}
   affinity:
-    podAntiAffinity: {}
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app.kubernetes.io/component
+              operator: In
+              values:
+              - backend
+          topologyKey: kubernetes.io/hostname
 
 gateway:
   replicas: 1
@@ -137,7 +167,17 @@ gateway:
       memory: 512Mi
       cpu: 10m
   affinity:
-    podAntiAffinity: {}
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: app.kubernetes.io/component
+              operator: In
+              values:
+              - gateway
+          topologyKey: kubernetes.io/hostname
 
 singleBinary:
   replicas: 0
