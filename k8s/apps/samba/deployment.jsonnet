@@ -80,7 +80,7 @@
                 cpu: '1000m',
               },
               requests: {
-                memory: '850Mi',
+                memory: '2Gi',
                 cpu: '10m',
               },
             },
