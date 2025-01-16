@@ -53,12 +53,15 @@ write:
     enabled: true
     minReplicas: 1
     maxReplicas: 6
+    targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
       memory: 300Mi
+      cpu: 100m
     limits:
       memory: 1Gi
+      cpu: 1
   extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
@@ -87,12 +90,15 @@ read:
     enabled: true
     minReplicas: 1
     maxReplicas: 6
+    targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
       memory: 160Mi
+      cpu: 10m
     limits:
       memory: 1Gi
+      cpu: 1
   extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
@@ -117,12 +123,15 @@ backend:
     enabled: true
     minReplicas: 2
     maxReplicas: 6
+    targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
       memory: 256Mi
+      cpu: 15m
     limits:
       memory: 1Gi
+      cpu: 100m
   extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
@@ -151,12 +160,15 @@ gateway:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
+    targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
       memory: 15Mi
+      cpu: 2m
     limits:
       memory: 512Mi
+      cpu: 10m
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution: []
