@@ -95,7 +95,7 @@ read:
   resources:
     requests:
       memory: 160Mi
-      cpu: 10m
+      cpu: 20m
     limits:
       memory: 1Gi
       cpu: 1
