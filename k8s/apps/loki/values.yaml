@@ -46,6 +46,7 @@ loki:
       enabled: true
       desired_rate: 104857600 # 10MiB
     reject_old_samples: false
+
 write:
   replicas: 2
   autoscaling:
@@ -69,6 +70,7 @@ write:
     volumeClaimsEnabled: false
     dataVolumeParameters:
       emptyDir: {}
+  affinity: {}
 
 read:
   replicas: 2
@@ -89,6 +91,7 @@ read:
   extraEnvFrom:
   - secretRef:
       name: loki-minio
+  affinity: {}
 
 backend:
   replicas: 2
@@ -113,6 +116,24 @@ backend:
     volumeClaimsEnabled: false
     dataVolumeParameters:
       emptyDir: {}
+  affinity: {}
+
+gateway:
+  replicas: 1
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 100
+    targetMemoryUtilizationPercentage: 100
+  resources:
+    requests:
+      memory: 15Mi
+      cpu: 2m
+    limits:
+      memory: 512Mi
+      cpu: 10m
+  affinity: {}
 
 singleBinary:
   replicas: 0
