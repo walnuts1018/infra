@@ -138,7 +138,7 @@ std.mergePatch((import '_base.libsonnet'), {
             {
               context: 'log',
               conditions: [
-                'IsMatch(attributes["k8s.namespace.name"], "cloudflare-tunnel-operator")',
+                'IsMatch(resource.attributes["k8s.namespace.name"], "cloudflare-tunnel-operator")',
               ],
               statements: [
                 'merge_maps(cache, ParseJSON(body), "upsert") where IsMatch(body, "^\\\\{")',
