@@ -138,7 +138,9 @@ std.mergePatch((import '_base.libsonnet'), {
             {
               context: 'log',
               statements: [
-                'merge_maps(attributes, ParseJSON(body), "insert") where IsMatch(body, "^\\\\{")',
+                'merge_maps(cache, ParseJSON(body), "upsert") where IsMatch(body, "^\\\\{")',
+                'set(body, cache["msg"])',
+                'merge_maps(attributes, cache, "insert")',
               ],
             },
           ],
