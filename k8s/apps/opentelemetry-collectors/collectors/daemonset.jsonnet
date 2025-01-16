@@ -176,12 +176,12 @@ std.mergePatch((import '_base.libsonnet'), {
           logs: {
             receivers: [
               'filelog',
-              'transform',
             ],
             processors: [
               'memory_limiter',
               'batch',
               'k8sattributes',
+              'transform',
             ],
             exporters: [
               'otlp/default',
