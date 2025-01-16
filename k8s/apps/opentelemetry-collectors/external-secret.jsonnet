@@ -8,12 +8,5 @@
         property: 'api-key',
       },
     },
-    {
-      secretKey: 'vaxila-api-key',
-      remoteRef: {
-        key: 'mackerel',
-        property: 'vaxila-api-key',
-      },
-    },
   ],
 }
