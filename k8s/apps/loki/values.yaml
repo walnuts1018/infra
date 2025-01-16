@@ -70,7 +70,8 @@ write:
     volumeClaimsEnabled: false
     dataVolumeParameters:
       emptyDir: {}
-  affinity: {}
+  affinity:
+    podAntiAffinity: {}
 
 read:
   replicas: 2
@@ -91,7 +92,8 @@ read:
   extraEnvFrom:
   - secretRef:
       name: loki-minio
-  affinity: {}
+  affinity:
+    podAntiAffinity: {}
 
 backend:
   replicas: 2
@@ -116,7 +118,8 @@ backend:
     volumeClaimsEnabled: false
     dataVolumeParameters:
       emptyDir: {}
-  affinity: {}
+  affinity:
+    podAntiAffinity: {}
 
 gateway:
   replicas: 1
@@ -133,7 +136,8 @@ gateway:
     limits:
       memory: 512Mi
       cpu: 10m
-  affinity: {}
+  affinity:
+    podAntiAffinity: {}
 
 singleBinary:
   replicas: 0
