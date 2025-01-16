@@ -52,8 +52,8 @@ write:
     enabled: true
     minReplicas: 1
     maxReplicas: 6
-    targetCPUUtilizationPercentage: 700
-    targetMemoryUtilizationPercentage: 200
+    targetCPUUtilizationPercentage: 100
+    targetMemoryUtilizationPercentage: 100
   resources:
     requests:
       memory: 300Mi
@@ -76,11 +76,11 @@ read:
     enabled: true
     minReplicas: 1
     maxReplicas: 6
-    targetCPUUtilizationPercentage: 500
-    targetMemoryUtilizationPercentage: 200
+    targetCPUUtilizationPercentage: 100
+    targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      memory: 200Mi
+      memory: 160Mi
       cpu: 10m
     limits:
       memory: 1Gi
@@ -96,8 +96,8 @@ backend:
     enabled: true
     minReplicas: 2
     maxReplicas: 6
-    targetCPUUtilizationPercentage: 800
-    targetMemoryUtilizationPercentage: 200
+    targetCPUUtilizationPercentage: 100
+    targetMemoryUtilizationPercentage: 100
   resources:
     requests:
       memory: 256Mi
@@ -123,14 +123,14 @@ sidecar:
       cpu: 100m
       memory: 100Mi
     requests:
-      cpu: 50m
-      memory: 50Mi
+      cpu: 1m
+      memory: 100Mi
 chunksCache:
   allocatedMemory: 8192
   resources:
     requests:
       cpu: 50m
-      memory: 300Mi
+      memory: 4Gi
     limits:
       memory: 9830Mi
 resultsCache:
@@ -138,6 +138,6 @@ resultsCache:
   resources:
     requests:
       cpu: 50m
-      memory: 50Mi
+      memory: 1Gi
     limits:
       memory: 1229Mi
