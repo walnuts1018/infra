@@ -32,7 +32,7 @@
               },
               requests: {
                 cpu: '10m',
-                memory: '20Mi',
+                memory: '100Mi',
               },
             },
             volumeMounts: [
