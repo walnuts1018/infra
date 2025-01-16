@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'cert-manager',
   repoURL: 'https://charts.jetstack.io',
-  targetRevision: 'v1.16.2',
+  targetRevision: 'v1.16.3',
   values: (importstr 'values.yaml'),
 }

@@ -132,6 +132,18 @@
       ],
     },
     {
+      apiGroups: [
+        'events.k8s.io',
+      ],
+      resources: [
+        'events',
+      ],
+      verbs: [
+        'list',
+        'watch',
+      ],
+    },
+    {
       nonResourceURLs: [
         '/metrics',
       ],

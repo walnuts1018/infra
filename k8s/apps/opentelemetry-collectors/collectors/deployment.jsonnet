@@ -27,6 +27,21 @@ std.mergePatch((import '_base.libsonnet'), {
             },
           },
         },
+        k8sobjects: {
+          auth_type: 'serviceAccount',
+          objects: [
+            {
+              name: 'pods',
+              mode: 'pull',
+              interval: '15m',
+            },
+            {
+              name: 'events',
+              mode: 'watch',
+              group: 'events.k8s.io',
+            },
+          ],
+        },
       },
       processors: {
         memory_limiter: {
@@ -85,6 +100,19 @@ std.mergePatch((import '_base.libsonnet'), {
           metrics: {
             receivers: [
               'k8s_cluster',
+            ],
+            processors: [
+              'memory_limiter',
+              'batch',
+              'k8sattributes',
+            ],
+            exporters: [
+              'otlp/default',
+            ],
+          },
+          logs: {
+            receivers: [
+              'k8sobjects',
             ],
             processors: [
               'memory_limiter',
