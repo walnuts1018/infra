@@ -26,6 +26,7 @@ resources:
     cpu: 10m
     memory: 50Mi
 configLogicalBackup:
+  logical_backup_docker_image: "ghcr.io/zalando/postgres-operator/logical-backup:v1.14.0" # TODO:https://github.com/walnuts1018/infra/issues/1315
   logical_backup_s3_bucket: "zalando-backup"
   logical_backup_s3_bucket_prefix: "spilo"
   logical_backup_s3_region: "ap-northeast-1"
