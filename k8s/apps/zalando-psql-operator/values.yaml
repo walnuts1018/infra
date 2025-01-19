@@ -12,8 +12,6 @@ configKubernetes:
   pod_antiaffinity_preferred_during_scheduling: true
   # override topology key for pod anti affinity
   pod_antiaffinity_topology_key: "kubernetes.io/hostname"
-nodeSelector:
-  kubernetes.io/arch: amd64
 
 configUsers:
   enable_password_rotation: false
