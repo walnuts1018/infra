@@ -69,6 +69,9 @@ envoy:
     enabled: true
     serviceMonitor:
       enabled: true
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
+    instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/usr/bin/cilium-envoy'
 operator:
   tolerations: []
   prometheus:
