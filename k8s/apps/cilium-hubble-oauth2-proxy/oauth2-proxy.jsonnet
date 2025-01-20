@@ -1,6 +1,6 @@
 (import '../../components/oauth2-proxy/oauth2-proxy.libsonnet')({
   app: {
-    name: (import 'app.json5').name,
+    name: 'hubble',
     namespace: (import 'app.json5').namespace,
   },
   domain: 'hubble.walnuts.dev',
