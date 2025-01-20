@@ -17,6 +17,9 @@ configs:
         - CiliumIdentity
         clusters:
         - "*"
+    resource.customizations.ignoreDifferences.apps_Deployment: |
+      jsonPointers:
+        - /spec/replicas
     oidc.config: |
       name: walnuts-dev
       issuer: https://auth.walnuts.dev
