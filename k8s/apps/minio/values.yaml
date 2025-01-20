@@ -38,9 +38,9 @@ metrics:
     includeNode: true
 users: []
 
-# podAnnotations:
-#   instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
-#   instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/usr/bin/minio'
+podAnnotations:
+  instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
+  instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/usr/bin/minio'
 
 containerSecurityContext:
   readOnlyRootFilesystem: true
