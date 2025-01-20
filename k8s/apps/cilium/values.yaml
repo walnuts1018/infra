@@ -80,3 +80,5 @@ prometheus:
   serviceMonitor:
     enabled: true
     trustCRDsExist: true
+envoyConfig:
+  enabled: true
