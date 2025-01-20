@@ -1,4 +1,4 @@
 {
-  name: "hubble",
+  name: "hubble-oauth2-proxy",
   namespace: "cilium-system",
 }
