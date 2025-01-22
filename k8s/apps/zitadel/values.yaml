@@ -12,20 +12,20 @@ replicaCount: 2
 ingress:
   enabled: true
   className: "cilium"
-  annotations:
-    cert-manager.io/cluster-issuer: 'letsencrypt-prod'
+  # annotations:
+  #   cert-manager.io/cluster-issuer: 'letsencrypt-prod'
   hosts:
   - host: auth.walnuts.dev
     paths:
     - path: /
       pathType: Prefix
-  tls:
-  - secretName: zitadel-tls
-    hosts:
-    - auth.walnuts.dev
-# env:
-# - name: ZITADEL_LOG_LEVEL
-#   value: "debug"
+  # tls:
+  # - secretName: zitadel-tls
+  #   hosts:
+  #   - auth.walnuts.dev
+  # env:
+  # - name: ZITADEL_LOG_LEVEL
+  #   value: "debug"
 metrics:
   enabled: true
   serviceMonitor:
