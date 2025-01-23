@@ -10,6 +10,10 @@
     kubernetesConfig: {
       image: 'quay.io/opstree/redis:v7.0.12',
       imagePullPolicy: 'IfNotPresent',
+      redisSecret: {
+        name: (import 'external-secret.jsonnet').metadata.name,
+        key: 'redispassword',
+      },
     },
     storage: {
       volumeClaimTemplate: {
