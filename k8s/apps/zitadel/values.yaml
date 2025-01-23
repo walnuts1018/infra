@@ -1,6 +1,6 @@
 zitadel:
   configmapConfig:
-    ExternalDomain: localhost:8080
+    ExternalDomain: localhost
     TLS:
       Enabled: false
     ExternalPort: 8080
