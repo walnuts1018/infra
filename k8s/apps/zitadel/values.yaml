@@ -1,5 +1,8 @@
 zitadel:
   configmapConfig:
+    Log:
+      Level: debug
+      Format: json
     Tracing:
       Type: otel
       Endpoint: default-collector.opentelemetry-collector.svc.cluster.local:4317
@@ -26,9 +29,6 @@ ingress:
   - secretName: zitadel-tls
     hosts:
     - auth.walnuts.dev
-# env:
-# - name: ZITADEL_LOG_LEVEL
-#   value: "debug"
 metrics:
   enabled: true
   serviceMonitor:
