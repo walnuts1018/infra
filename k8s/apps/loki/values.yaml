@@ -106,7 +106,7 @@ loki:
           writeback_buffer: {{ .writebackBuffer }}
           writeback_size_limit: {{ .writebackSizeLimit }}
         redis:
-          endpoint: "loki-redis"
+          endpoint: "loki-redis:6379"
           tls_enabled: false
           db: 0
     {{- end }}
@@ -144,7 +144,7 @@ loki:
             writeback_buffer: {{ .writebackBuffer }}
             writeback_size_limit: {{ .writebackSizeLimit }}
           redis:
-            endpoint: "loki-redis"
+            endpoint: "loki-redis:6379"
             tls_enabled: false
             db: 1
       {{- end }}
