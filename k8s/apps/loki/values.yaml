@@ -106,9 +106,8 @@ loki:
           writeback_buffer: {{ .writebackBuffer }}
           writeback_size_limit: {{ .writebackSizeLimit }}
         redis:
-          endpoint: "TODO"
-          tls_enabled: true
-          tls_insecure_skip_verify: true
+          endpoint: "loki-redis"
+          tls_enabled: false
           db: 0
     {{- end }}
 
@@ -145,9 +144,8 @@ loki:
             writeback_buffer: {{ .writebackBuffer }}
             writeback_size_limit: {{ .writebackSizeLimit }}
           redis:
-            endpoint: "TODO"
-            tls_enabled: true
-            tls_insecure_skip_verify: true
+            endpoint: "loki-redis"
+            tls_enabled: false
             db: 1
       {{- end }}
 
