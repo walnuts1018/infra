@@ -1,10 +1,10 @@
 zitadel:
-  configmapConfig:
-    ExternalDomain: auth.walnuts.dev
-    TLS:
-      Enabled: false
-    ExternalPort: 443
-    ExternalSecure: true
+  # configmapConfig:
+  #   ExternalDomain: auth.walnuts.dev
+  #   TLS:
+  #     Enabled: false
+  #   ExternalPort: 443
+  #   ExternalSecure: true
   masterkeySecretName: "zitadel"
   configSecretName: zitadel
   configSecretKey: "config.yaml"
