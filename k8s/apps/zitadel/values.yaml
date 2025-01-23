@@ -15,6 +15,8 @@ zitadel:
   masterkeySecretName: "zitadel"
   configSecretName: zitadel
   configSecretKey: "config.yaml"
+  debug:
+    enabled: true
 replicaCount: 2
 ingress:
   enabled: true
