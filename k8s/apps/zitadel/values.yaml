@@ -2,7 +2,8 @@ zitadel:
   configmapConfig:
     Log:
       Level: debug
-      Format: json
+      Formatter:
+        Format: json
     Tracing:
       Type: otel
       Endpoint: default-collector.opentelemetry-collector.svc.cluster.local:4317
