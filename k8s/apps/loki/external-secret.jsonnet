@@ -1,5 +1,5 @@
 (import '../../components/external-secret.libsonnet') {
-  name: (import 'app.json5').name + '-minio',
+  name: (import 'app.json5').name,
   use_suffix: false,
   data: [
     {
@@ -14,6 +14,13 @@
       remoteRef: {
         key: 'loki',
         property: 'minio-secret-key',
+      },
+    },
+    {
+      secretKey: 'redispassword',
+      remoteRef: {
+        key: 'redis',
+        property: 'password',
       },
     },
   ],
