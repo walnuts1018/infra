@@ -59,5 +59,3 @@ affinity:
           operator: NotIn
           values:
           - donut
-image:
-  tag: "v2.68.0"
