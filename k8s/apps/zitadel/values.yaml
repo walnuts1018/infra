@@ -1,6 +1,6 @@
 zitadel:
   configmapConfig:
-    ExternalDomain: auth.walnuts.dev
+    # ExternalDomain: auth.walnuts.dev
     TLS:
       Enabled: false
     # ExternalPort: 443
