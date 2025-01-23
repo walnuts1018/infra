@@ -12,8 +12,8 @@ replicaCount: 2
 ingress:
   enabled: true
   className: "cilium"
-  annotations:
-    cert-manager.io/cluster-issuer: 'letsencrypt-prod'
+  # annotations:
+  #   cert-manager.io/cluster-issuer: 'letsencrypt-prod'
   hosts:
   - host: auth.walnuts.dev
     paths:
