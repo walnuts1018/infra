@@ -5,13 +5,13 @@ resource "cloudflare_ruleset" "terraform_managed_resource_304092e7f9904942998f39
   zone_id = cloudflare_zone.walnuts_dev.id
   rules {
     action      = "set_config"
-    description = "disable Rocket Loader"
+    description = "enable Rocket Loader"
     enabled     = true
-    expression  = "(http.host eq \"hedgedoc.walnuts.dev\") or (http.host eq \"misskey.walnuts.dev\") or (http.host eq \"nextcloud.walnuts.dev\")"
+    expression  = "(http.host eq \"walnuts.dev\") or (http.host eq \"minio.walnuts.dev\")"
     ref         = "9c1ef58603494a50af7855c3263e6bdf"
 
     action_parameters {
-      rocket_loader = false
+      rocket_loader = true
     }
   }
 }
