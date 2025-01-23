@@ -46,166 +46,6 @@ loki:
       enabled: true
       desired_rate: 104857600 # 10MiB
     reject_old_samples: false
-  config: |
-    {{- if .Values.enterprise.enabled}}
-    {{- tpl .Values.enterprise.config . }}
-    {{- else }}
-    auth_enabled: {{ .Values.loki.auth_enabled }}
-    {{- end }}
-
-    {{- with .Values.loki.server }}
-    server:
-      {{- toYaml . | nindent 2}}
-    {{- end}}
-
-    pattern_ingester:
-      enabled: {{ .Values.loki.pattern_ingester.enabled }}
-
-    memberlist:
-    {{- if .Values.loki.memberlistConfig }}
-      {{- toYaml .Values.loki.memberlistConfig | nindent 2 }}
-    {{- else }}
-    {{- if .Values.loki.extraMemberlistConfig}}
-    {{- toYaml .Values.loki.extraMemberlistConfig | nindent 2}}
-    {{- end }}
-      join_members:
-        - {{ include "loki.memberlist" . }}
-        {{- with .Values.migrate.fromDistributed }}
-        {{- if .enabled }}
-        - {{ .memberlistService }}
-        {{- end }}
-        {{- end }}
-    {{- end }}
-
-    {{- with .Values.loki.ingester }}
-    ingester:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    {{- if .Values.loki.commonConfig}}
-    common:
-    {{- toYaml .Values.loki.commonConfig | nindent 2}}
-      storage:
-      {{- include "loki.commonStorageConfig" . | nindent 4}}
-    {{- end}}
-
-    {{- with .Values.loki.limits_config }}
-    limits_config:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    runtime_config:
-      file: /etc/loki/runtime-config/runtime-config.yaml
-
-    {{- with .Values.chunksCache }}
-    chunk_store_config:
-      chunk_cache_config:
-        default_validity: {{ .defaultValidity }}
-        background:
-          writeback_goroutines: {{ .writebackParallelism }}
-          writeback_buffer: {{ .writebackBuffer }}
-          writeback_size_limit: {{ .writebackSizeLimit }}
-        redis:
-          endpoint: "loki-redis:6379"
-          tls_enabled: false
-          db: 0
-    {{- end }}
-
-    {{- if .Values.loki.schemaConfig }}
-    schema_config:
-    {{- toYaml .Values.loki.schemaConfig | nindent 2}}
-    {{- end }}
-
-    {{- if .Values.loki.useTestSchema }}
-    schema_config:
-    {{- toYaml .Values.loki.testSchemaConfig | nindent 2}}
-    {{- end }}
-
-    {{ include "loki.rulerConfig" . }}
-
-    {{- if or .Values.tableManager.retention_deletes_enabled .Values.tableManager.retention_period }}
-    table_manager:
-      retention_deletes_enabled: {{ .Values.tableManager.retention_deletes_enabled }}
-      retention_period: {{ .Values.tableManager.retention_period }}
-    {{- end }}
-
-    query_range:
-      align_queries_with_step: true
-      {{- with .Values.loki.query_range }}
-      {{- tpl (. | toYaml) $ | nindent 2 }}
-      {{- end }}
-      {{- with .Values.resultsCache }}
-      cache_results: true
-      results_cache:
-        cache:
-          default_validity: {{ .defaultValidity }}
-          background:
-            writeback_goroutines: {{ .writebackParallelism }}
-            writeback_buffer: {{ .writebackBuffer }}
-            writeback_size_limit: {{ .writebackSizeLimit }}
-          redis:
-            endpoint: "loki-redis:6379"
-            tls_enabled: false
-            db: 1
-      {{- end }}
-
-    {{- with .Values.loki.storage_config }}
-    storage_config:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    {{- with .Values.loki.query_scheduler }}
-    query_scheduler:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    {{- with .Values.loki.compactor }}
-    compactor:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    {{- with .Values.loki.analytics }}
-    analytics:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    {{- with .Values.loki.querier }}
-    querier:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    {{- with .Values.loki.index_gateway }}
-    index_gateway:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    {{- with .Values.loki.frontend }}
-    frontend:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    {{- with .Values.loki.frontend_worker }}
-    frontend_worker:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    {{- with .Values.loki.distributor }}
-    distributor:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    tracing:
-      enabled: {{ .Values.loki.tracing.enabled }}
-
-    {{- with .Values.loki.bloom_build }}
-    bloom_build:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
-
-    {{- with .Values.loki.bloom_gateway }}
-    bloom_gateway:
-      {{- tpl (. | toYaml) $ | nindent 4 }}
-    {{- end }}
 
 write:
   replicas: 2
@@ -225,7 +65,7 @@ write:
   extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
-      name: loki
+      name: loki-minio
   persistence:
     volumeClaimsEnabled: false
     dataVolumeParameters:
@@ -262,7 +102,7 @@ read:
   extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
-      name: loki
+      name: loki-minio
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution: []
@@ -295,7 +135,7 @@ backend:
   extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
-      name: loki
+      name: loki-minio
   persistence:
     volumeClaimsEnabled: false
     dataVolumeParameters:
@@ -355,6 +195,18 @@ sidecar:
       cpu: 5m
       memory: 100Mi
 chunksCache:
-  enabled: false # Memcached Podをデプロイしない
+  allocatedMemory: 8192
+  resources:
+    requests:
+      cpu: 50m
+      memory: 4Gi
+    limits:
+      memory: 9830Mi
 resultsCache:
-  enabled: false # Memcached Podをデプロイしない
+  allocatedMemory: 1024
+  resources:
+    requests:
+      cpu: 50m
+      memory: 1Gi
+    limits:
+      memory: 1229Mi
