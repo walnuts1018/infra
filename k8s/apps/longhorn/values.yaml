@@ -1,8 +1,6 @@
 defaultSettings:
   allowNodeDrainWithLastHealthyReplica: true
   orphanAutoDeletion: true
-  backupTarget: "cifs://samba.walnuts.dev/share/longhorn"
-  backupTargetCredentialSecret: "cifs-secret"
   defaultReplicaCount: 2
 csi:
   attacherReplicaCount: 2
@@ -27,3 +25,7 @@ longhornRecoveryBackend:
 metrics:
   serviceMonitor:
     enabled: true
+
+defaultBackupStore:
+  backupTarget: "cifs://samba.walnuts.dev/share/longhorn"
+  backupTargetCredentialSecret: "cifs-secret"
