@@ -1,7 +1,7 @@
 zitadel:
   configmapConfig:
     Log:
-      Level: debug
+      # Level: debug
       Formatter:
         Format: json
     Tracing:
