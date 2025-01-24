@@ -81,7 +81,7 @@ prometheus:
     enabled: true
     trustCRDsExist: true
 envoyConfig:
-  enabled: false
+  enabled: true
   secretsNamespace:
     create: false
     name: cilium-secrets
