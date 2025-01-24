@@ -47,4 +47,8 @@
     db_name: 'affine',
     user_name: 'affine',
   },
+  {
+    db_name: 'openclarity',
+    user_name: 'openclarity',
+  },
 ]
