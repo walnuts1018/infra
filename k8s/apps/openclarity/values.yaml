@@ -82,4 +82,4 @@ crDiscoveryServer:
   resources:
     limits: {}
     requests: {}
-  env: {} #TODO: https://github.com/openclarity/openclarity/pull/980
+  env: false #TODO: https://github.com/openclarity/openclarity/pull/980
