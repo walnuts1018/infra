@@ -54,6 +54,7 @@ std.mergePatch((import '_base.libsonnet'), {
     },
     resources: {
       requests: {
+        cpu: '20m',
         memory: '200Mi',
       },
     },
