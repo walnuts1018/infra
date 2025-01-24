@@ -87,3 +87,7 @@ crDiscoveryServer:
     allowPrivilegeEscalation: true
     privileged: true
     readOnlyRootFilesystem: false
+  # TODO: rm
+  image:
+    registry: ghcr.io
+    repository: walnuts1018/openclarity-cr-discovery-server
