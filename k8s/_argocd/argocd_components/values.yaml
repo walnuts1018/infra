@@ -32,6 +32,7 @@ configs:
     users.anonymous.enabled: false
     users.session.duration: "168h" # 7 days
     application.resourceTrackingMethod: "annotation"
+    kustomize.buildOptions: --enable-helm
   params:
     otlp.address: 'default-collector.opentelemetry-collector.svc.cluster.local:4317'
     server.insecure: true
