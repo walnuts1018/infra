@@ -1,21 +1,14 @@
-(import '../../components/oauth2-proxy/oauth2-proxy.libsonnet')(
-  {
-    app: {
-      name: (import 'app.json5').name,
-      namespace: (import 'app.json5').namespace,
-    },
-    domain: 'openclarity.walnuts.dev',
-    upstream: 'http://openclarity-gateway.openclarity.svc.cluster.local:80',
-    oidc: {
-      secret: {
-        onepassword_item_name: 'openclarity-oauth2-proxy',
-      },
-      allowed_group: '237477822715658605:openclarity-admin',
-    },
+(import '../../components/oauth2-proxy/oauth2-proxy.libsonnet')({
+  app: {
+    name: (import 'app.json5').name,
+    namespace: (import 'app.json5').namespace,
   },
-  valuesObject={
-    extraArgs: {
-      'code-challenge-method': 'S256',
+  domain: 'openclarity.walnuts.dev',
+  upstream: 'http://openclarity-gateway.openclarity.svc.cluster.local:80',
+  oidc: {
+    secret: {
+      onepassword_item_name: 'openclarity-oauth2-proxy',
     },
+    allowed_group: '237477822715658605:openclarity-admin',
   },
-)
+},)
