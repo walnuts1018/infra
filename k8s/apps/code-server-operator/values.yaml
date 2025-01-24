@@ -5,4 +5,5 @@ controllerManager:
       cpu: 500m
       memory: 128Mi
     requests:
+      cpu: 1m
       memory: 32Mi
