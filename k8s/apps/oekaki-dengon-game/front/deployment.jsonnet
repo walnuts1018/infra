@@ -40,7 +40,7 @@
             resources: {
               limits: {},
               requests: {
-                memory: '160Mi',
+                memory: '80Mi',
               },
             },
           },
