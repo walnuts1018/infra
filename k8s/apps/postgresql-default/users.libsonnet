@@ -13,4 +13,5 @@
   'ac_hacking',
   'mucaron',
   'affine',
+  'openclarity',
 ]
