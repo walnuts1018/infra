@@ -36,7 +36,7 @@
             ],
             resources: {
               requests: {
-                cpu: '0',
+                cpu: '10m',
                 memory: '3000Mi',
               },
               limits: {
