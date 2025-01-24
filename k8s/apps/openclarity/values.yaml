@@ -87,7 +87,7 @@ crDiscoveryServer:
     allowPrivilegeEscalation: true
     privileged: true
     readOnlyRootFilesystem: false
-    capabilities: []
+    capabilities: {}
     runAsNonRoot: false
   # TODO: rm
   image:
