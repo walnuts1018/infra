@@ -20,6 +20,12 @@ configs:
     resource.customizations.ignoreDifferences.apps_Deployment: |
       jsonPointers:
       - /spec/replicas
+    resource.customizations.ignoreDifferences.apps_StatefulSet: |
+      jsonPointers:
+      - /spec/replicas
+    resource.customizations.ignoreDifferences.autoscaling_HorizontalPodAutoscaler: |
+      jsonPointers:
+      - /spec/metrics
     oidc.config: |
       name: walnuts-dev
       issuer: https://auth.walnuts.dev
