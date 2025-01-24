@@ -11,4 +11,9 @@
     },
     allowed_group: '237477822715658605:openclarity-admin',
   },
+  valuesObjectOverride: {
+    extraArgs: {
+      'code-challenge-method': 'S256',
+    },
+  },
 })
