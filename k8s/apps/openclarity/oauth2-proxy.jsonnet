@@ -5,7 +5,7 @@
       namespace: (import 'app.json5').namespace,
     },
     domain: 'openclarity.walnuts.dev',
-    upstream: 'http://prometheus-operated.monitoring.svc.cluster.local:9090',
+    upstream: 'http://openclarity-gateway.openclarity.svc.cluster.local:80',
     oidc: {
       secret: {
         onepassword_item_name: 'openclarity-oauth2-proxy',
