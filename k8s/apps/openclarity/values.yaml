@@ -78,7 +78,6 @@ yaraRuleServer:
     requests: {}
 
 crDiscoveryServer:
-  replicas: 1
   resources:
     limits: {}
     requests: {}
