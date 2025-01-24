@@ -21,7 +21,7 @@ resources:
     cpu: 500m
     memory: 500Mi
   requests:
-    cpu: 10m
+    cpu: 1m
     memory: 50Mi
 configLogicalBackup:
   logical_backup_docker_image: "ghcr.io/zalando/postgres-operator/logical-backup:v1.14.0" # TODO:https://github.com/walnuts1018/infra/issues/1315
