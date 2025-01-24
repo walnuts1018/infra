@@ -163,11 +163,33 @@ std.mergePatch((import '_base.libsonnet'), {
     autoscaler: {
       minReplicas: 1,
       maxReplicas: 5,
+      metrics: [
+        {
+          type: 'Resource',
+          resource: {
+            name: 'cpu',
+            target: {
+              type: 'Utilization',
+              averageUtilization: 100,
+            },
+          },
+        },
+        {
+          type: 'Resource',
+          resource: {
+            name: 'memory',
+            target: {
+              type: 'Utilization',
+              averageUtilization: 100,
+            },
+          },
+        },
+      ],
     },
     resources: {
       requests: {
         cpu: '20m',
-        memory: '200Mi',
+        memory: '100Mi',
       },
     },
     env: [

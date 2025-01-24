@@ -62,14 +62,22 @@ std.mergePatch((import '_base.libsonnet'), {
       maxReplicas: 5,
       metrics: [
         {
-          type: 'Pods',
-          pods: {
-            metric: {
-              name: 'memory',
-            },
+          type: 'Resource',
+          resource: {
+            name: 'cpu',
             target: {
-              type: 'AverageValue',
-              averageValue: '1Gi',
+              type: 'Utilization',
+              averageUtilization: 100,
+            },
+          },
+        },
+        {
+          type: 'Resource',
+          resource: {
+            name: 'memory',
+            target: {
+              type: 'Utilization',
+              averageUtilization: 100,
             },
           },
         },
