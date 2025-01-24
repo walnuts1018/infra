@@ -65,7 +65,7 @@ write:
   extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
-      name: loki-minio
+      name: loki
   persistence:
     volumeClaimsEnabled: false
     dataVolumeParameters:
@@ -102,7 +102,7 @@ read:
   extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
-      name: loki-minio
+      name: loki
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution: []
@@ -135,7 +135,7 @@ backend:
   extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
-      name: loki-minio
+      name: loki
   persistence:
     volumeClaimsEnabled: false
     dataVolumeParameters:
