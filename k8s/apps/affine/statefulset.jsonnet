@@ -138,6 +138,14 @@
             securityContext:: null,
             env: env,
             volumeMounts: volumeMounts,
+            resources: {
+              limits: {
+                memory: '512Mi',
+              },
+              requests: {
+                memory: '360Mi',
+              },
+            },
           },
         ],
         containers: [
@@ -158,6 +166,16 @@
                 name: 'prisma',
               },
             ],
+            resources: {
+              limits: {
+                cpu: '500m',
+                memory: '512Mi',
+              },
+              requests: {
+                cpu: '2m',
+                memory: '180Mi',
+              },
+            },
             livenessProbe: {
               httpGet: {
                 path: '/info',
