@@ -17,6 +17,8 @@ apiserver:
 orchestrator:
   replicas: 1
   provider: kubernetes
+  serviceAccount:
+    automountServiceAccountToken: true
   resources:
     limits: {}
     requests: {}
