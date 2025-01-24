@@ -9,7 +9,9 @@ zitadel:
       Endpoint: default-collector.opentelemetry-collector.svc.cluster.local:4317
     ExternalDomain: auth.walnuts.dev
     TLS:
-      Enabled: false
+      Enabled: true
+      KeyPath: /etc/ssl/certs/tls.key
+      CertPath: /etc/ssl/certs/tls.crt
     ExternalPort: 443
     ExternalSecure: true
   masterkeySecretName: "zitadel"
@@ -57,3 +59,13 @@ affinity:
           operator: NotIn
           values:
           - donut
+
+extraVolumes:
+- name: zitadel-tls
+  secret:
+    defaultMode: 420
+    secretName: zitadel-tls
+extraVolumeMounts:
+- name: zitadel-tls
+  mountPath: /etc/ssl/certs
+  readOnly: true
