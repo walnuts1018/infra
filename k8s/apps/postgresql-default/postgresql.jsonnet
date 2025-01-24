@@ -41,6 +41,7 @@ local databases = (import 'databases.libsonnet');
         memory: '600Mi',
       },
       limits: {
+        cpu: '2',
         memory: '2Gi',
       },
     },
