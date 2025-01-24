@@ -20,7 +20,7 @@
       server: 'https://kubernetes.default.svc',
     },
     source: {
-      path: 'k8s/apps/openclarity/kustomize',
+      path: 'k8s/apps/openclarity/_kustomize',
       repoURL: 'https://github.com/walnuts1018/infra',
       targetRevision: 'main',
     },
