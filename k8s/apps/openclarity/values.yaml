@@ -84,5 +84,6 @@ crDiscoveryServer:
   env: false #TODO: https://github.com/openclarity/openclarity/pull/980
   containerSecurityContext:
     enabled: true
+    allowPrivilegeEscalation: true
     privileged: true
     readOnlyRootFilesystem: false
