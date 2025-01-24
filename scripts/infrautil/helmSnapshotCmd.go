@@ -78,6 +78,7 @@ func (b *helmSnapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) 
 						slog.Info("not helm application", slog.String("path", path))
 						continue
 					}
+					slog.Error("failed to parse helm application", slog.String("path", path), slog.Any("error", err))
 					return fmt.Errorf("failed to parse helm application: %w", err)
 				}
 				eg.Go(func() error {
