@@ -85,8 +85,8 @@ server:
       cpu: 500m
       memory: 512Mi
     requests:
-      cpu: 50m
-      memory: 96Mi
+      cpu: 10m
+      memory: 128Mi
 
 repoServer:
   metrics:
@@ -104,7 +104,7 @@ repoServer:
       cpu: 500m
       memory: 512Mi
     requests:
-      cpu: 128m
+      cpu: 64m
       memory: 128Mi
 
 applicationSet:
