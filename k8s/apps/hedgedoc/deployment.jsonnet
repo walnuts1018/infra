@@ -30,7 +30,7 @@
             resources: {
               limits: {},
               requests: {
-                memory: '100Mi',
+                memory: '80Mi',
               },
             },
             env: [
