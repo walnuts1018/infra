@@ -14,6 +14,7 @@
     'redirect-url': 'https://%s/oauth2/callback' % $.domain,
     'oidc-issuer-url': 'https://auth.walnuts.dev',
     'skip-provider-button': true,
+    'code-challenge-method': 'S256',
   },
   ingress: {
     enabled: true,
