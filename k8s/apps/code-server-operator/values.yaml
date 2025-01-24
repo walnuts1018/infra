@@ -1,1 +1,8 @@
 fullnameOverride: code-server-operator
+controllerManager:
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      memory: 32Mi
