@@ -2,24 +2,25 @@
   apiVersion: 'acid.zalan.do/v1',
   kind: 'postgresql',
   metadata: {
-    name: 'test',
+    name: (import 'app.json5').name,
+    namespace: (import 'app.json5').namespace,
   },
   spec: {
     teamId: 'default',
     volume: {
-      size: '1Gi',
+      size: '5Gi',
       storageClass: 'longhorn',
     },
-    numberOfInstances: 1,
+    numberOfInstances: 2,
     users: {
       postgres: [
         'superuser',
         'createdb',
       ],
-      test: [],
+      misskey: [],
     },
     databases: {
-      test: 'test',
+      misskey: 'misskey',
     },
     postgresql: {
       version: '17',
@@ -44,6 +45,8 @@
         'host       all             all          10.0.0.0/8      md5',
       ],
     },
-    enableLogicalBackup: false,
+    enableLogicalBackup: true,
+    logicalBackupRetention: '1 week',
+    logicalBackupSchedule: '0 18 * * *',
   },
 }
