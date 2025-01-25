@@ -2,7 +2,7 @@
   apiVersion: 'acid.zalan.do/v1',
   kind: 'postgresql',
   metadata: {
-    name: 'default',
+    name: 'test',
   },
   spec: {
     teamId: 'default',
