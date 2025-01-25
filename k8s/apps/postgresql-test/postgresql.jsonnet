@@ -19,7 +19,7 @@
       test: [],
     },
     databases: {
-      [test]: test,
+      test: 'test',
     },
     postgresql: {
       version: '17',
