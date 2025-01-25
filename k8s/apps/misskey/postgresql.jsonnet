@@ -2,7 +2,7 @@
   apiVersion: 'acid.zalan.do/v1',
   kind: 'postgresql',
   metadata: {
-    name: (import 'app.json5').name,
+    name: (import 'app.json5').name + '-postgresql',
     namespace: (import 'app.json5').namespace,
   },
   spec: {
