@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'argo-cd',
   repoURL: 'https://argoproj.github.io/argo-helm',
-  targetRevision: '7.7.17',
+  targetRevision: '7.7.18',
   values: (importstr 'values.yaml'),
 }
