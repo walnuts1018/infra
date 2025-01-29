@@ -49,7 +49,7 @@
                     memory: '2Gi',
                   },
                 },
-                local branch_prefix = 'rennovate/',
+                local branch_prefix = 'renovate/',
                 env: [
                   {
                     name: 'LOG_LEVEL',
