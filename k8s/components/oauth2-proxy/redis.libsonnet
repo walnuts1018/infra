@@ -89,20 +89,6 @@
           fsGroup: 1000,
           runAsUser: 1000,
         },
-        storage: {
-          volumeClaimTemplate: {
-            spec: {
-              accessModes: [
-                'ReadWriteOnce',
-              ],
-              resources: {
-                requests: {
-                  storage: '1Gi',
-                },
-              },
-            },
-          },
-        },
       },
     },
   ],
