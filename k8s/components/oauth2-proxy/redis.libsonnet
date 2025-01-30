@@ -19,6 +19,16 @@
             key: 'redis-password',
           },
         },
+        resources: {
+          requests: {
+            cpu: '3m',
+            memory: '3Mi',
+          },
+          limits: {
+            cpu: '100m',
+            memory: '128Mi',
+          },
+        },
         storage: {
           volumeClaimTemplate: {
             spec: {
@@ -56,6 +66,16 @@
           parallelSyncs: '1',
           failoverTimeout: '180000',
           downAfterMilliseconds: '30000',
+        },
+        resources: {
+          requests: {
+            cpu: '3m',
+            memory: '3Mi',
+          },
+          limits: {
+            cpu: '100m',
+            memory: '128Mi',
+          },
         },
         kubernetesConfig: {
           image: 'quay.io/opstree/redis-sentinel:v7.0.12',
