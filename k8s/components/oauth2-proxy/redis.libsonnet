@@ -21,7 +21,7 @@
           resources: {
             requests: {
               cpu: '3m',
-              memory: '3Mi',
+              memory: '4Mi',
             },
             limits: {
               cpu: '100m',
@@ -77,7 +77,7 @@
           resources: {
             requests: {
               cpu: '3m',
-              memory: '3Mi',
+              memory: '4Mi',
             },
             limits: {
               cpu: '100m',
