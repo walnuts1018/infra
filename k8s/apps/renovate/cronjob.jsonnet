@@ -25,7 +25,7 @@
                 command: [
                   'sh',
                   '-c',
-                  'df --output=target,pcent | awk \'{if( $1 == "/tmp/renovate" && $2 > 75 ){ system("rm -rf /tmp/renovate/cache") }}\'',
+                  'df --output=target,pcent | awk \'{if( $1 == "/tmp/renovate" && $2 > 75 ){ system("sudo rm -rf /tmp/renovate/cache") }}\'',
                 ],
                 volumeMounts: [
                   {
@@ -38,7 +38,7 @@
             containers: [
               (import '../../components/container.libsonnet') {
                 name: 'renovate',
-                image: 'renovate/renovate:39.144.1',
+                image: 'renovate/renovate:39.145.1',
                 resources: {
                   requests: {
                     cpu: '500m',
