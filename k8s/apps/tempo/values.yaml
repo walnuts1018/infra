@@ -1,7 +1,8 @@
 tempo:
   resources:
     requests:
-      memory: 1Gi
+      cpu: 5m
+      memory: 256Mi
     limits:
       memory: 4Gi
   storage:
