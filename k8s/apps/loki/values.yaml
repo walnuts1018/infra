@@ -94,8 +94,8 @@ read:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      memory: 160Mi
-      cpu: 20m
+      memory: 240Mi
+      cpu: 30m
     limits:
       memory: 1Gi
       cpu: 1
