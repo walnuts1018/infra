@@ -7,7 +7,7 @@ resource "cloudflare_ruleset" "terraform_managed_resource_304092e7f9904942998f39
     action      = "set_config"
     description = "enable Rocket Loader"
     enabled     = true
-    expression  = "(http.host eq \"walnuts.dev\") or (http.host eq \"minio.walnuts.dev\")"
+    expression  = "(http.host eq \"walnuts.dev\") or (http.host eq \"minio.walnuts.dev\") or (http.host eq \"oekaki.walnuts.dev\")"
     ref         = "9c1ef58603494a50af7855c3263e6bdf"
 
     action_parameters {
@@ -26,7 +26,7 @@ resource "cloudflare_ruleset" "terraform_managed_resource_d3a7c2d6242d41068be770
     action      = "set_cache_settings"
     description = "walnuts.dev"
     enabled     = true
-    expression  = "(http.host eq \"walnuts.dev\")"
+    expression  = "(http.host eq \"walnuts.dev\")  or (http.host eq \"oekaki.walnuts.dev\")"
     ref         = "02afb6686434455195ad5e1d630a099d"
 
     action_parameters {
@@ -45,6 +45,7 @@ resource "cloudflare_ruleset" "terraform_managed_resource_d3a7c2d6242d41068be770
       cache = false
     }
   }
+
   rules {
     action      = "set_cache_settings"
     description = "minio"
@@ -56,5 +57,4 @@ resource "cloudflare_ruleset" "terraform_managed_resource_d3a7c2d6242d41068be770
       cache = false
     }
   }
-
 }
