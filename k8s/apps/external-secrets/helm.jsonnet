@@ -4,5 +4,5 @@
   chart: 'external-secrets',
   repoURL: 'https://charts.external-secrets.io',
   targetRevision: '0.13.0',
-  values: '',
+  values: (importstr 'values.yaml'),
 }
