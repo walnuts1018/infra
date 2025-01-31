@@ -118,7 +118,7 @@ repoServer:
       cpu: 500m
       memory: 512Mi
     requests:
-      cpu: 64m
+      cpu: 48m
       memory: 128Mi
 
 applicationSet:
