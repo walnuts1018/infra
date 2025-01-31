@@ -70,7 +70,7 @@
                 memory: '100Mi',
               },
               requests: {
-                memory: '5Mi',
+                memory: '10Mi',
               },
             },
           }, {
