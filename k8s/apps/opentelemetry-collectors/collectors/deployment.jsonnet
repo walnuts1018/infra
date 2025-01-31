@@ -98,6 +98,12 @@ std.mergePatch((import '_base.libsonnet'), {
         },
       },
     },
+    resources: {
+      requests: {
+        cpu: '6m',
+        memory: '90Mi',
+      },
+    },
     env: [
       {
         name: 'K8S_NODE_IP',
