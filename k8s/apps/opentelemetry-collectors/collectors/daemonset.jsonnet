@@ -213,6 +213,12 @@ std.mergePatch((import '_base.libsonnet'), {
         value: 'k8s.node.name=$(K8S_NODE_NAME),k8s.node.ip=$(K8S_NODE_IP)',
       },
     ],
+    resources: {
+      requests: {
+        cpu: '100m',
+        memory: '150Mi',
+      },
+    },
     // tolerations: [
     //   {
     //     operator: 'Exists',
