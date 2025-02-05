@@ -85,6 +85,7 @@ envoyConfig:
   secretsNamespace:
     create: false
     name: cilium-secrets
-readSecretsOnlyFromSecretsNamespace:
-  create: false
-  name: cilium-secrets
+tls:
+  secretsNamespace:
+    create: false
+    name: cilium-secrets
