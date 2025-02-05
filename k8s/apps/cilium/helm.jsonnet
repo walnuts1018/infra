@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'cilium',
   repoURL: 'https://helm.cilium.io/',
-  targetRevision: '1.16.6',
+  targetRevision: '1.17.0',
   values: (importstr 'values.yaml'),
 }
