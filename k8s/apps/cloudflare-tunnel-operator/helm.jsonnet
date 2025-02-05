@@ -4,7 +4,7 @@
 
   chart: 'cloudflare-tunnel-operator',
   repoURL: 'https://walnuts1018.github.io/cloudflare-tunnel-operator/',
-  targetRevision: '1.2.1',
+  targetRevision: '1.2.2',
   valuesObject: std.mergePatch(std.parseYaml(importstr 'values.yaml'), {
     cloudflareToken: {
       existingSecret: (import 'external-secret.jsonnet').spec.target.name,
