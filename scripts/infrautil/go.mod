@@ -10,7 +10,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/sters/yaml-diff v1.4.1
 	github.com/yosuke-furukawa/json5 v0.1.1
-	golang.org/x/sync v0.10.0
+	golang.org/x/sync v0.11.0
 	gopkg.in/yaml.v3 v3.0.1
 	helm.sh/helm/v3 v3.17.0
 	sigs.k8s.io/yaml v1.4.0
