@@ -3,6 +3,7 @@ package lib
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -10,7 +11,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/pkg/errors"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/chart/loader"
@@ -152,7 +152,7 @@ func (h *HelmClient) createRelease(
 		// As of Helm 2.4.0, this is treated as a stopping condition:
 		// https://github.com/helm/helm/issues/2209
 		if err := action.CheckDependencies(chartRequested, req); err != nil {
-			err = errors.Wrap(err, "An error occurred while checking for chart dependencies. You may need to run `helm dependency build` to fetch missing dependencies")
+			err = fmt.Errorf("An error occurred while checking for chart dependencies. You may need to run `helm dependency build` to fetch missing dependencies: %w", err)
 			if h.client.DependencyUpdate {
 				man := &downloader.Manager{
 					Out:              os.Stdout,
@@ -166,11 +166,11 @@ func (h *HelmClient) createRelease(
 					RegistryClient:   h.client.GetRegistryClient(),
 				}
 				if err := man.Update(); err != nil {
-					return nil, errors.Wrap(err, "failed to update chart dependencies")
+					return nil, fmt.Errorf("failed to update chart dependencies: %w", err)
 				}
 				// Reload the chart with the updated Chart.lock file.
 				if chartRequested, err = loader.Load(cp); err != nil {
-					return nil, errors.Wrap(err, "failed reloading chart after repo update")
+					return nil, fmt.Errorf("failed to reload chart after repo update: %w", err)
 				}
 			} else {
 				return nil, err
@@ -194,7 +194,7 @@ func createValues(valuesString string, valuesObject map[string]interface{}) (map
 	if valuesString != "" {
 		currentMap := map[string]interface{}{}
 		if err := yaml.Unmarshal([]byte(valuesString), &currentMap); err != nil {
-			return nil, errors.Wrap(err, "failed to parse values string")
+			return nil, fmt.Errorf("failed to parse values string: %w", err)
 		}
 		result = mergeMaps(result, currentMap)
 	}
@@ -232,7 +232,7 @@ func checkIfInstallable(ch *chart.Chart) error {
 	case "", "application":
 		return nil
 	}
-	return errors.Errorf("%s charts are not installable", ch.Metadata.Type)
+	return fmt.Errorf("%s charts are not installable", ch.Metadata.Type)
 }
 
 // From: https://github.com/argoproj/argo-cd/blob/db8d2f08d926c9f811a3d4f26d2883856e135e38/util/helm/client.go#L397-L404

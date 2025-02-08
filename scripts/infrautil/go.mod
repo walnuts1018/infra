@@ -7,7 +7,6 @@ require (
 	github.com/google/go-jsonnet v0.20.0
 	github.com/google/subcommands v1.2.0
 	github.com/phsym/console-slog v0.3.1
-	github.com/pkg/errors v0.9.1
 	github.com/sters/yaml-diff v1.4.1
 	github.com/yosuke-furukawa/json5 v0.1.1
 	golang.org/x/sync v0.11.0
@@ -105,6 +104,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.19.1 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.55.0 // indirect
