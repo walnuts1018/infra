@@ -38,3 +38,11 @@ spec:
         syncOptions:
         - ServerSideApply=true
         - FailOnSharedResource=true
+  templatePatch: |
+    {{- if .annotations }}
+    metadata:
+      annotations:
+        {{- range $key, $value := .annotations }}
+        {{ $key }}: {{ $value }}
+        {{- end }}
+    {{- end }}
