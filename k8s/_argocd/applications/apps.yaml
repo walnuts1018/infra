@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   goTemplate: true
-  goTemplateOptions: [ "missingkey=error" ]
+  # goTemplateOptions: [ "missingkey=error" ]
   generators:
   - git:
       repoURL: https://github.com/walnuts1018/infra
@@ -39,6 +39,10 @@ spec:
         - ServerSideApply=true
         - FailOnSharedResource=true
   templatePatch: |
+    {{- with  .annotations }}
     metadata:
       annotations:
-        {{.name}}: '{{.name}}'
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    {{- end }}
