@@ -32,8 +32,8 @@
                 memory: '512Mi',
               },
               requests: {
-                cpu: '5m',
-                memory: '100Mi',
+                cpu: '2m',
+                memory: '120Mi',
               },
             },
             env: [
