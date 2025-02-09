@@ -1,4 +1,7 @@
 {
   name: "walnuts-dev",
   namespace: "walnuts-dev",
+  annotations: {
+    "notifications.argoproj.io/subscribe.cloudflare-purge-cache.cloudflare-purge-cache": "",
+  },
 }
