@@ -402,6 +402,11 @@ notifications:
         - app-sync-succeeded
         - cloudflare-purge-cache
         when: app.status.operationState.phase in ['Succeeded']
+    trigger.cloudflare-purge-cache: |
+      - description: Purge Cloudflare cache
+        send:
+        - cloudflare-purge-cache
+        when: app.status.operationState.phase in ['Succeeded']
 
     defaultTriggers: |
       - on-sync-status-unknown
