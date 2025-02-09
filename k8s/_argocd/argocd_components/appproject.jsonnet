@@ -5,7 +5,7 @@
     name: 'default',
     namespace: (import 'app.json5').namespace,
     annotations: {
-      local slackChannel = 'sysop',
+      local slackChannel = 'argocd',
       'notifications.argoproj.io/subscribe.on-deleted.slack': slackChannel,
       'notifications.argoproj.io/subscribe.on-health-degraded.slack': slackChannel,
       'notifications.argoproj.io/subscribe.on-sync-failed.slack': slackChannel,
