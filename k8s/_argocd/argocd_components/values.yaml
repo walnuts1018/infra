@@ -119,7 +119,7 @@ repoServer:
       memory: 512Mi
     requests:
       cpu: 48m
-      memory: 128Mi
+      memory: 96Mi
 
 applicationSet:
   metrics:
