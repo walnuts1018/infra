@@ -10,5 +10,12 @@
         property: 'slack-token',
       },
     },
+    {
+      secretKey: 'cloudflare-api-token',
+      remoteRef: {
+        key: 'cloudflare',
+        property: 'argocd-webhook',
+      },
+    },
   ],
 }

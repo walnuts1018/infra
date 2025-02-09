@@ -136,6 +136,14 @@ notifications:
     name: "argocd-notifications-secret"
   cm:
     create: true
+    service.webhook.cloudflare-purge-cache: |
+      url: https://api.cloudflare.com/client/v4/zones/48b02398c8bc932f4d0b1dba83de196c/purge_cache
+      headers: #optional headers
+      - name: Content-Type
+        value: application/json
+      - name: Authorization
+        value: Bearer $cloudflare-api-token
+
   notifiers:
     service.slack: |
       token: $slack-token
@@ -355,6 +363,12 @@ notifications:
             {{end}}
             ]
           }]
+    template.cloudflare-purge-cache: |
+      webhook:
+        cloudflare-purge-cache:
+          method: POST
+          body: |
+            {"purge_everything": true}
   triggers:
     trigger.on-deployed: |
       - description: Application is synced and healthy. Triggered once per commit.
@@ -386,6 +400,7 @@ notifications:
       - description: Application syncing has succeeded
         send:
         - app-sync-succeeded
+        - cloudflare-purge-cache
         when: app.status.operationState.phase in ['Succeeded']
 
     defaultTriggers: |
