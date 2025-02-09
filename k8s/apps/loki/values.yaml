@@ -58,7 +58,7 @@ write:
   resources:
     requests:
       memory: 300Mi
-      cpu: 100m
+      cpu: 30m
     limits:
       memory: 1Gi
       cpu: 1
