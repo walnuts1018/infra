@@ -75,6 +75,10 @@
                     value: branch_prefix,
                   },
                   {
+                    name: 'RENOVATE_GIT_AUTHOR',
+                    value: 'renovate[bot] <renovate[bot]@users.noreply.github.com>',
+                  },
+                  {
                     name: 'RENOVATE_TOKEN',
                     valueFrom: {
                       secretKeyRef: {
