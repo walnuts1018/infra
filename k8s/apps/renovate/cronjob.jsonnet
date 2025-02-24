@@ -41,7 +41,7 @@
             containers: [
               (import '../../components/container.libsonnet') {
                 name: 'renovate',
-                image: 'ghcr.io/renovatebot/renovate:39.178.1',
+                image: 'ghcr.io/renovatebot/renovate:39.178.2',
                 resources: {
                   requests: {
                     cpu: '500m',
