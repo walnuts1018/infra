@@ -20,7 +20,7 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'photoprism',
-            image: 'photoprism/photoprism:250223',
+            image: 'photoprism/photoprism:250224',
             resources: {
               requests: {
                 cpu: '0',
