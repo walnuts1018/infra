@@ -36,7 +36,7 @@ local helmname = (import 'helm.jsonnet').spec.source.helm.releaseName;
           },
           {
             action: 'replace',
-            replcaement: helmname,
+            replacement: helmname,
             targetLabel: 'cluster',
           },
         ],
