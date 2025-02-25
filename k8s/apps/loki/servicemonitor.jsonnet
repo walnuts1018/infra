@@ -31,7 +31,7 @@ local helmname = (import 'helm.jsonnet').spec.source.helm.releaseName;
           {
             sourceLabels: ['job'],
             action: 'replace',
-            replacement: 'default/$1',
+            replacement: 'loki/$1',
             targetLabel: 'job',
           },
           {
