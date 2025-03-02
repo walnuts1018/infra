@@ -18,7 +18,7 @@
       },
       spec: {
         containers: [
-          (import '../../components/container.libsonnet') {
+          std.mergePatch((import '../../components/container.libsonnet') {
             name: 'photoprism',
             image: 'photoprism/photoprism:250228',
             resources: {
@@ -105,14 +105,6 @@
                 mountPath: '/photoprism/storage/cache',
                 name: 'cache',
               },
-              {
-                mountPath: '/tmp',
-                name: 'tmp',
-              },
-              {
-                mountPath: '/run',
-                name: 'run',
-              },
             ],
             readinessProbe: {
               httpGet: {
@@ -120,7 +112,11 @@
                 port: 'http',
               },
             },
-          },
+          }, {
+            securityContext: {
+              readOnlyRootFilesystem: false,
+            },
+          }),
         ],
         volumes: [
           {
@@ -147,14 +143,6 @@
             persistentVolumeClaim: {
               claimName: 'photoprism-storage',
             },
-          },
-          {
-            name: 'tmp',
-            emptyDir: {},
-          },
-          {
-            name: 'run',
-            emptyDir: {},
           },
         ],
         nodeSelector: {
