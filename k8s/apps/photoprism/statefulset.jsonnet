@@ -109,6 +109,10 @@
                 mountPath: '/tmp',
                 name: 'tmp',
               },
+              {
+                mountPath: '/run',
+                name: 'run',
+              },
             ],
             readinessProbe: {
               httpGet: {
@@ -146,6 +150,10 @@
           },
           {
             name: 'tmp',
+            emptyDir: {},
+          },
+          {
+            name: 'run',
             emptyDir: {},
           },
         ],
