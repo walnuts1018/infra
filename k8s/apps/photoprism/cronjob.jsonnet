@@ -91,14 +91,6 @@
                     mountPath: '/photoprism/storage/cache',
                     name: 'cache',
                   },
-                  {
-                    mountPath: '/tmp',
-                    name: 'tmp',
-                  },
-                  {
-                    mountPath: '/run',
-                    name: 'run',
-                  },
                 ],
               },
             ],
@@ -127,14 +119,6 @@
                 persistentVolumeClaim: {
                   claimName: 'photoprism-storage',
                 },
-              },
-              {
-                name: 'tmp',
-                emptyDir: {},
-              },
-              {
-                name: 'run',
-                emptyDir: {},
               },
             ],
             nodeSelector: {
