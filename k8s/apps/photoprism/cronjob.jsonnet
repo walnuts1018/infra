@@ -95,6 +95,10 @@
                     mountPath: '/tmp',
                     name: 'tmp',
                   },
+                  {
+                    mountPath: '/run',
+                    name: 'run',
+                  },
                 ],
               },
             ],
@@ -126,6 +130,10 @@
               },
               {
                 name: 'tmp',
+                emptyDir: {},
+              },
+              {
+                name: 'run',
                 emptyDir: {},
               },
             ],
