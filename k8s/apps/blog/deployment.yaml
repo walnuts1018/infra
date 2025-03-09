@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: blog
+    app.kubernetes.io/name: blog
+  name: blog
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blog
+      app.kubernetes.io/name: blog
+  template:
+    metadata:
+      labels:
+        app: blog
+        app.kubernetes.io/name: blog
+    spec:
+      containers:
+        - image: nginx:1.27.4
+          livenessProbe:
+            failureThreshold: 1
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          name: nginx
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: 100Mi
+            requests:
+              memory: 10Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            runAsUser: 101
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /etc/nginx
+              name: nginx-conf
+              readOnly: true
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /var/tmp
+              name: tmp
+            - mountPath: /var/log/nginx
+              name: log-nginx
+            - mountPath: /var/cache/nginx
+              name: cache-nginx
+            - mountPath: /var/run
+              name: var-run
+      securityContext:
+        fsGroup: 101
+        fsGroupChangePolicy: OnRootMismatch
+      volumes:
+        - configMap:
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+              - key: virtualhost.conf
+                path: virtualhost/virtualhost.conf
+            name: blog-611c2c
+          name: nginx-conf
+        - emptyDir: {}
+          name: tmp
+        - emptyDir: {}
+          name: log-nginx
+        - emptyDir: {}
+          name: cache-nginx
+        - emptyDir: {}
+          name: var-run

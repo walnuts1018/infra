@@ -1,0 +1,203 @@
+---
+# Source: descheduler/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: descheduler
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: descheduler
+    helm.sh/chart: descheduler-0.32.2
+    app.kubernetes.io/instance: descheduler
+    app.kubernetes.io/version: "0.32.2"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: descheduler/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: descheduler
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: descheduler
+    helm.sh/chart: descheduler-0.32.2
+    app.kubernetes.io/instance: descheduler
+    app.kubernetes.io/version: "0.32.2"
+    app.kubernetes.io/managed-by: Helm
+data:
+  policy.yaml: |
+    apiVersion: "descheduler/v1alpha2"
+    kind: "DeschedulerPolicy"
+    profiles:
+    - name: default
+      pluginConfig:
+      - args:
+          evictLocalStoragePods: true
+          ignorePvcPods: true
+        name: DefaultEvictor
+      - name: RemoveDuplicates
+      - args:
+          includingInitContainers: true
+          podRestartThreshold: 100
+        name: RemovePodsHavingTooManyRestarts
+      - name: RemovePodsViolatingNodeTaints
+      - name: RemovePodsViolatingInterPodAntiAffinity
+      - args:
+          nodeAffinityType:
+          - requiredDuringSchedulingIgnoredDuringExecution
+          - preferredDuringSchedulingIgnoredDuringExecution
+        name: RemovePodsViolatingNodeAffinity
+      - args:
+          constraints:
+          - ScheduleAnyway
+        name: RemovePodsViolatingTopologySpreadConstraint
+      - args:
+          targetThresholds:
+            cpu: 70
+            memory: 70
+            pods: 70
+          thresholds:
+            cpu: 60
+            memory: 60
+            pods: 60
+        name: LowNodeUtilization
+      plugins:
+        balance:
+          enabled:
+          - RemoveDuplicates
+          - RemovePodsViolatingNodeAffinity
+          - RemovePodsViolatingTopologySpreadConstraint
+          - LowNodeUtilization
+        deschedule:
+          enabled:
+          - RemovePodsHavingTooManyRestarts
+          - RemovePodsViolatingNodeTaints
+          - RemovePodsViolatingNodeAffinity
+          - RemovePodsViolatingInterPodAntiAffinity
+---
+# Source: descheduler/templates/clusterrole.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: descheduler
+  labels:
+    app.kubernetes.io/name: descheduler
+    helm.sh/chart: descheduler-0.32.2
+    app.kubernetes.io/instance: descheduler
+    app.kubernetes.io/version: "0.32.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups: ["events.k8s.io"]
+  resources: ["events"]
+  verbs: ["create", "update"]
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list", "delete"]
+- apiGroups: [""]
+  resources: ["pods/eviction"]
+  verbs: ["create"]
+- apiGroups: ["scheduling.k8s.io"]
+  resources: ["priorityclasses"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["policy"]
+  resources: ["poddisruptionbudgets"]
+  verbs: ["get", "watch", "list"]
+---
+# Source: descheduler/templates/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: descheduler
+  labels:
+    app.kubernetes.io/name: descheduler
+    helm.sh/chart: descheduler-0.32.2
+    app.kubernetes.io/instance: descheduler
+    app.kubernetes.io/version: "0.32.2"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: descheduler
+subjects:
+  - kind: ServiceAccount
+    name: descheduler
+    namespace: kube-system
+---
+# Source: descheduler/templates/cronjob.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: descheduler
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: descheduler
+    helm.sh/chart: descheduler-0.32.2
+    app.kubernetes.io/instance: descheduler
+    app.kubernetes.io/version: "0.32.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  schedule: "*/2 * * * *"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: descheduler
+          annotations:
+            checksum/config: 7530f79f9ad95698b0fc8c8534e5d7d4e0887707c7525e3618b097e6994fed35
+          labels:
+            app.kubernetes.io/name: descheduler
+            app.kubernetes.io/instance: descheduler
+        spec:
+          priorityClassName: system-cluster-critical
+          serviceAccountName: descheduler
+          restartPolicy: "Never"
+          containers:
+            - name: descheduler
+              image: "registry.k8s.io/descheduler/descheduler:v0.32.2"
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/descheduler
+              args:
+                - --policy-config-file=/policy-dir/policy.yaml
+                - --v=3
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /healthz
+                  port: 10258
+                  scheme: HTTPS
+                initialDelaySeconds: 3
+                periodSeconds: 10
+              ports:
+                - containerPort: 10258
+                  protocol: TCP
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 256Mi
+                requests:
+                  cpu: 500m
+                  memory: 256Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                  - ALL
+                privileged: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 1000
+              volumeMounts:
+                - mountPath: /policy-dir
+                  name: policy-volume
+          volumes:
+          - name: policy-volume
+            configMap:
+              name: descheduler

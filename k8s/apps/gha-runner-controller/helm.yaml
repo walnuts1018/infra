@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gha-runner-controller-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: gha-runner-controller
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: gha-runner-scale-set-controller
+    helm:
+      releaseName: gha-runner-controller
+    repoURL: ghcr.io/actions/actions-runner-controller-charts
+    targetRevision: 0.10.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true
