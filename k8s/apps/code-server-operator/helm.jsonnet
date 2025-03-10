@@ -4,6 +4,6 @@
 
   chart: 'code-server-operator',
   repoURL: 'https://walnuts1018.github.io/code-server-operator/',
-  targetRevision: '0.5.12',
+  targetRevision: '0.5.13',
   values: (importstr 'values.yaml'),
 }
