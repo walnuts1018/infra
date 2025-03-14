@@ -75,7 +75,7 @@ jobs:
           ref: snapshot
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@0.30.0
         with:
           scan-type: "config"
           format: "sarif"
