@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: oekaki-dengon-game-front
+    app.kubernetes.io/name: oekaki-dengon-game-front
+  name: oekaki-dengon-game-front
+  namespace: oekaki-dengon-game
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oekaki-dengon-game-front
+      app.kubernetes.io/name: oekaki-dengon-game-front
+  template:
+    metadata:
+      labels:
+        app: oekaki-dengon-game-front
+        app.kubernetes.io/name: oekaki-dengon-game-front
+    spec:
+      containers:
+        - env:
+            - name: API_URL
+              value: http://oekaki-dengon-game-back.oekaki-dengon-game.svc.cluster.local:8080/api
+          image: ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-10b57aae4bfe56124907ac1b03bc822a635e173f-95
+          imagePullPolicy: IfNotPresent
+          name: oekaki-dengon-game-front
+          ports:
+            - containerPort: 3000
+          resources:
+            limits: {}
+            requests:
+              memory: 80Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      nodeSelector:
+        kubernetes.io/arch: amd64
