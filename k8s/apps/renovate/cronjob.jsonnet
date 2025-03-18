@@ -21,7 +21,7 @@
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'disk-cleaner',
-                image: 'debian:12.9-slim',
+                image: 'debian:12.10-slim',
                 command: [
                   'sh',
                   '-c',
