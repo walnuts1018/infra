@@ -2,7 +2,7 @@ name: k8s badge build
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0/10 * * * *'
+    - cron: "0/10 * * * *"
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: setup tailscale
-        uses: tailscale/github-action@v3
+        uses: tailscale/github-action@93605f7b8f223bf5f44e83275e64fb28f3e49d9e # v3.1.0
         with:
           oauth-client-id: ${{secrets.TAILSCALE_CLIENT_ID}}
           oauth-secret: ${{secrets.TAILSCALE_SECRET}}
@@ -30,7 +30,7 @@ jobs:
           version: 1.66.4
 
       - name: gen svg
-        uses: walnuts1018/k8s-badge@v1
+        uses: walnuts1018/k8s-badge@110e1faf0dea3462cee43b345c7990fef8209275 # v1.1.4
         timeout-minutes: 5
         with:
           kubeconfig: ${{ secrets.Kubeconfig }}
