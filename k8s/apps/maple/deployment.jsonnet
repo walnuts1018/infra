@@ -24,7 +24,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'maple',
-            image: 'ghcr.io/walnuts1018/maple:v0.0.3',
+            image: 'ghcr.io/walnuts1018/maple:v0.0.12',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
