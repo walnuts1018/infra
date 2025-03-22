@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: maple
+    app.kubernetes.io/name: maple
+  name: maple
+  namespace: maple
+spec:
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: maple
+    app.kubernetes.io/name: maple
+  type: ClusterIP

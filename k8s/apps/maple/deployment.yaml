@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: maple
+    app.kubernetes.io/name: maple
+  name: maple
+  namespace: maple
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: maple
+      app.kubernetes.io/name: maple
+  template:
+    metadata:
+      labels:
+        app: maple
+        app.kubernetes.io/name: maple
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+              weight: 100
+            - preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values:
+                      - donut
+              weight: 10
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - maple
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      containers:
+        - image: ghcr.io/walnuts1018/maple:v0.0.12
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+          name: maple
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 5m
+              memory: 120Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /app/.next/cache
+              name: next-cache
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      priorityClassName: high
+      volumes:
+        - emptyDir: {}
+          name: next-cache
