@@ -43,13 +43,13 @@
             },
             livenessProbe: {
               httpGet: {
-                path: '/healthz',
+                path: '/',
                 port: 3000,
               },
             },
             readinessProbe: {
               httpGet: {
-                path: '/healthz',
+                path: '/',
                 port: 3000,
               },
             },
