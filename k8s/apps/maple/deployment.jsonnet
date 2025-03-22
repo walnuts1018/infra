@@ -16,6 +16,11 @@
         labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
       },
       spec: {
+        imagePullSecrets: [
+          {
+            name: 'ghcr-login-secret',
+          },
+        ],
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'maple',
