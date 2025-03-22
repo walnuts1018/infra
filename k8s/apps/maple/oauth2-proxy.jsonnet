@@ -9,6 +9,6 @@
     secret: {
       onepassword_item_name: 'maple-oauth2-proxy',
     },
-    allowed_group: '237477822715658605:hubble-admin',
+    allowed_group: '237477822715658605:maple-users',
   },
 })
