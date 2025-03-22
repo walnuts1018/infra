@@ -1,0 +1,7 @@
+{
+  name: "maple",
+  namespace: "maple",
+  annotations: {
+    "notifications.argoproj.io/subscribe.cloudflare-purge-cache.cloudflare-purge-cache": "",
+  },
+}
