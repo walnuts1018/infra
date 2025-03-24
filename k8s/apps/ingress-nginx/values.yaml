@@ -1,0 +1,34 @@
+controller:
+  config:
+    use-forwarded-headers: true
+    enable-opentelemetry: "true"
+    opentelemetry-trust-incoming-span: "true"
+    otlp-collector-host: "default-collector.opentelemetry-collector.svc.cluster.local"
+    otel-service-name: "ingress-nginx"
+    log-format-upstream: '{"time": "$time_iso8601", "remote_addr": "$proxy_protocol_addr", "x_forwarded_for": "$proxy_add_x_forwarded_for", "request_id": "$req_id",  "remote_user": "$remote_user", "bytes_sent": $bytes_sent, "request_time": $request_time, "status": $status, "vhost": "$host", "request_proto": "$server_protocol", "path": "$uri", "request_query": "$args", "request_length": $request_length, "duration": $request_time, "method": "$request_method", "http_referrer": "$http_referer", "http_user_agent": "$http_user_agent" }'
+    proxy-body-size: 0
+  service:
+    enabled: true
+    loadBalancerIP: "192.168.0.128"
+    loadBalancerSourceRanges: []
+    enableHttp: false
+    enableHttps: true
+    type: LoadBalancer
+  replicaCount: 3
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: kubernetes.io/arch
+            operator: In
+            values:
+            - amd64
+  opentelemetry:
+    enabled: true
+    name: opentelemetry
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
