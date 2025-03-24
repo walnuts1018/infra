@@ -24,11 +24,17 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'maple',
-            image: 'ghcr.io/walnuts1018/maple:v0.0.12',
+            image: 'ghcr.io/walnuts1018/maple:v0.0.27',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
                 containerPort: 3000,
+              },
+            ],
+            env: [
+              {
+                name: 'MEDIA_ENDPOINT',
+                value: 'http://localhost:8080/medias',
               },
             ],
             resources: {
@@ -65,6 +71,38 @@
               allowPrivilegeEscalation: false,
             },
           }),
+          {
+            name: 'nginx',
+            image: 'ghcr.io/walnuts1018/maple-nginx:v0.0.27',
+            imagePullPolicy: 'IfNotPresent',
+            ports: [
+              {
+                containerPort: 8080,
+              },
+            ],
+            resources: {
+              limits: {
+                cpu: '500m',
+                memory: '512Mi',
+              },
+              requests: {
+                cpu: '5m',
+                memory: '64Mi',
+              },
+            },
+            livenessProbe: {
+              httpGet: {
+                path: '/',
+                port: 3000,
+              },
+            },
+            readinessProbe: {
+              httpGet: {
+                path: '/',
+                port: 3000,
+              },
+            },
+          },
         ],
         priorityClassName: 'high',
         affinity: {
