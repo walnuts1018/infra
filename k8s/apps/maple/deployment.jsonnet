@@ -34,7 +34,7 @@
             env: [
               {
                 name: 'MEDIA_ENDPOINT',
-                value: 'http://localhost:8080/medias',
+                value: 'http://localhost:8080',
               },
               {
                 name: 'NEXTAUTH_URL',
