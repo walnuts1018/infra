@@ -37,6 +37,10 @@
                 value: 'http://localhost:8080/medias',
               },
               {
+                name: 'NEXTAUTH_URL',
+                value: 'https://maple.walnuts.dev',
+              },
+              {
                 name: 'AUTH_SECRET',
                 valueFrom: {
                   secretKeyRef: {
