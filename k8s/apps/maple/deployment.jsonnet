@@ -93,13 +93,13 @@
             livenessProbe: {
               httpGet: {
                 path: '/',
-                port: 3000,
+                port: 8080,
               },
             },
             readinessProbe: {
               httpGet: {
                 path: '/',
-                port: 3000,
+                port: 8080,
               },
             },
           },
