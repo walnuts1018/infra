@@ -1,6 +1,6 @@
 {
-  name: "maple",
-  namespace: "maple",
+  name: "teddy",
+  namespace: "teddy",
   annotations: {
     "notifications.argoproj.io/subscribe.cloudflare-purge-cache.cloudflare-purge-cache": "",
   },
