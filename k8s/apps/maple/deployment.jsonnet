@@ -69,8 +69,8 @@
                 memory: '512Mi',
               },
               requests: {
-                cpu: '50m',
-                memory: '120Mi',
+                cpu: '120m',
+                memory: '196Mi',
               },
             },
             livenessProbe: {
@@ -113,7 +113,7 @@
               },
               requests: {
                 cpu: '5m',
-                memory: '64Mi',
+                memory: '24Mi',
               },
             },
             livenessProbe: {
