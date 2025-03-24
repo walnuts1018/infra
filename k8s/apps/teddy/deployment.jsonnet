@@ -24,7 +24,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'teddy',
-            image: 'ghcr.io/walnuts1018/teddy:v0.0.40',
+            image: 'ghcr.io/walnuts1018/teddy:v0.0.47',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
@@ -99,7 +99,7 @@
           }),
           {
             name: 'nginx',
-            image: 'ghcr.io/walnuts1018/teddy-nginx:v0.0.40',
+            image: 'ghcr.io/walnuts1018/teddy-nginx:v0.0.47',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
