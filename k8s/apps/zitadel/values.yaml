@@ -20,7 +20,7 @@ zitadel:
 replicaCount: 2
 ingress:
   enabled: true
-  className: "cilium"
+  className: "nginx"
   annotations:
     cert-manager.io/cluster-issuer: 'letsencrypt-prod'
   hosts:
