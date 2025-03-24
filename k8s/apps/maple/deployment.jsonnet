@@ -36,6 +36,28 @@
                 name: 'MEDIA_ENDPOINT',
                 value: 'http://localhost:8080/medias',
               },
+              {
+                name: 'AUTH_SECRET',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 'AUTH_SECRET',
+                  },
+                },
+              },
+              {
+                name: 'AUTH_ZITADEL_ID',
+                value: '312272470495264948',
+              },
+              {
+                name: 'AUTH_ZITADEL_SECRET',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 'AUTH_ZITADEL_SECRET',
+                  },
+                },
+              },
             ],
             resources: {
               limits: {
