@@ -69,7 +69,7 @@
                 memory: '512Mi',
               },
               requests: {
-                cpu: '5m',
+                cpu: '50m',
                 memory: '120Mi',
               },
             },
