@@ -19,7 +19,7 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'wakatime-to-slack-profile',
-            image: 'ghcr.io/walnuts1018/wakatime-to-slack-profile:0.2.2',
+            image: 'ghcr.io/walnuts1018/wakatime-to-slack-profile:0.2.3',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
