@@ -62,6 +62,11 @@
       minimumReleaseAge: "3 days",
     },
     {
+      matchDatasources: ["docker"],
+      matchPackageNames: ["renovate/renovate"],
+      automerge: true,
+    },
+    {
       matchPackageNames: [
         "ghcr.io/walnuts1018/2024-ac-hacking",
         "ghcr.io/walnuts1018/2024-ac-hacking-front",
