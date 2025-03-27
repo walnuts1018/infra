@@ -5,7 +5,7 @@ std.mergePatch((import '_base.libsonnet'), {
   spec: {
     serviceAccount: (import '../sa.jsonnet').metadata.name,
     mode: 'daemonset',
-    image: 'otel/opentelemetry-collector-k8s:v0.122.0',
+    image: 'otel/opentelemetry-collector-k8s:0.122.1',
     config: {
       receivers: {
         filelog: {
