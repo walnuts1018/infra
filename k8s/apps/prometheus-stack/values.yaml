@@ -124,6 +124,6 @@ additionalPrometheusRulesMap:
     - name: k8s_resource_requests
       rules:
       - record: k8s_deployment:k8s_container_cpu_request_pressure:avg
-        expr: avg (avg by (container_id) (rate(container_cpu_time_seconds_total[30s])) / on(container_id) group_left avg by (container_id) (k8s_container_cpu_request)) by (k8s_namespace_name, k8s_deployment_name, k8s_container_name)
+        expr: avg (avg by (container_id, k8s_namespace_name, k8s_deployment_name, k8s_container_name) (rate(container_cpu_time_seconds_total[30s])) / on(container_id) group_left avg by (container_id) (k8s_container_cpu_request)) by (k8s_namespace_name, k8s_deployment_name, k8s_container_name)
       - record: k8s_deployment:k8s_container_memory_request_pressure:avg
-        expr: avg (avg by (container_id) (container_memory_usage_bytes) / on(container_id) group_left avg by (container_id) (k8s_container_memory_request_bytes)) by (k8s_namespace_name, k8s_deployment_name, k8s_container_name)
+        expr: avg (avg by (container_id, k8s_namespace_name, k8s_deployment_name, k8s_container_name) (container_memory_usage_bytes) / on(container_id) group_left avg by (container_id) (k8s_container_memory_request_bytes)) by (k8s_namespace_name, k8s_deployment_name, k8s_container_name)
