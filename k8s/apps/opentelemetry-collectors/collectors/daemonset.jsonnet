@@ -5,7 +5,7 @@ std.mergePatch((import '_base.libsonnet'), {
   spec: {
     serviceAccount: (import '../sa.jsonnet').metadata.name,
     mode: 'daemonset',
-    image: 'otel/opentelemetry-collector-k8s',
+    image: 'otel/opentelemetry-collector-k8s:v0.122.0',
     config: {
       receivers: {
         filelog: {
@@ -44,6 +44,13 @@ std.mergePatch((import '_base.libsonnet'), {
             disk: null,
             filesystem: null,
             network: null,
+            system: {
+              metrics: {
+                'system.uptime': {
+                  enabled: true,
+                },
+              },
+            },
           },
         },
         kubeletstats: {
