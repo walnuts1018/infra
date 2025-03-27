@@ -5,7 +5,7 @@ std.mergePatch((import '_base.libsonnet'), {
   spec: {
     replicas: 1,
     mode: 'deployment',
-    image: 'otel/opentelemetry-collector-k8s',
+    image: 'otel/opentelemetry-collector-k8s:v0.122.0',
     config: {
       receivers: {
         k8s_cluster: {
