@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: elasticsearch
+    app.kubernetes.io/name: elasticsearch
+  name: elasticsearch
+  namespace: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+      app.kubernetes.io/name: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+        app.kubernetes.io/name: elasticsearch
+    spec:
+      containers:
+        - env:
+            - name: discovery.type
+              value: single-node
+            - name: cluster.name
+              value: kurumi
+            - name: xpack.security.enabled
+              value: "false"
+          image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
+          name: elasticsearch
+          ports:
+            - containerPort: 9200
+          resources:
+            limits:
+              cpu: "1"
+              memory: 6000Mi
+            requests:
+              cpu: 10m
+              memory: 3000Mi
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /usr/share/elasticsearch/config/elasticsearch-plugins.yml
+              name: config
+              readOnly: true
+              subPath: elasticsearch-plugins.yml
+            - mountPath: /usr/share/elasticsearch/data
+              name: data
+            - mountPath: /tmp
+              name: tmp
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      volumes:
+        - configMap:
+            name: elasticsearch-3795d7
+          name: config
+        - name: data
+          persistentVolumeClaim:
+            claimName: elasticsearch
+        - emptyDir: {}
+          name: tmp
