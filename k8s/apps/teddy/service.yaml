@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: teddy
+    app.kubernetes.io/name: teddy
+  name: teddy
+  namespace: teddy
+spec:
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: teddy
+    app.kubernetes.io/name: teddy
+  type: ClusterIP
