@@ -124,25 +124,7 @@ std.mergePatch((import '_base.libsonnet'), {
               ],
               attributes: [
                 {
-                  key: 'k8s.cluster.uid',
-                },
-                {
                   key: 'k8s.namespace.name',
-                },
-                {
-                  key: 'k8s.deployment.name',
-                },
-                {
-                  key: 'k8s.pod.name',
-                },
-                {
-                  key: 'k8s.pod.uid',
-                },
-                {
-                  key: 'k8s.container.name',
-                },
-                {
-                  key: 'container.id',
                 },
               ],
             },
@@ -175,7 +157,6 @@ std.mergePatch((import '_base.libsonnet'), {
             exporters: [
               'otlp/default',
               'sum/logsize',
-              'debug',
             ],
           },
         },
@@ -212,11 +193,6 @@ std.mergePatch((import '_base.libsonnet'), {
         cpu: '300m',
       },
     },
-    // tolerations: [
-    //   {
-    //     operator: 'Exists',
-    //   },
-    // ],
     volumeMounts: [
       {
         name: 'varlogpods',
