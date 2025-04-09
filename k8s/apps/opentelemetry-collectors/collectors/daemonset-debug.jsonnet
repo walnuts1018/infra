@@ -169,8 +169,6 @@ std.mergePatch((import '_base.libsonnet'), {
               'filelog',
             ],
             processors: [
-              'memory_limiter',
-              'batch',
               'k8sattributes',
               'transform/logsize',
             ],
