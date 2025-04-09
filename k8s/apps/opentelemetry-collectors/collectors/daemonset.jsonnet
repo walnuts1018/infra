@@ -139,7 +139,7 @@ std.mergePatch((import '_base.libsonnet'), {
           timeout: '15s',
           override: false,
         },
-        transform: {
+        'transform/logsize': {
           error_mode: 'ignore',
           log_statements: [
             {
@@ -226,14 +226,6 @@ std.mergePatch((import '_base.libsonnet'), {
               'otlp/default',
             ],
           },
-          'metrics/debug': {
-            receivers: [
-              'sum/logsize',
-            ],
-            exporters: [
-              'debug',
-            ],
-          },
           logs: {
             receivers: [
               'filelog',
@@ -241,13 +233,11 @@ std.mergePatch((import '_base.libsonnet'), {
             processors: [
               'memory_limiter',
               'batch',
-              'k8sattributes',
-              'transform',
+              'transform/logsize',
             ],
             exporters: [
               'otlp/default',
               'sum/logsize',
-              'debug',
             ],
           },
         },
