@@ -165,7 +165,7 @@ std.mergePatch((import '_base.libsonnet'), {
         'transform/post-logsize': {
           error_mode: 'ignore',
           metric_statements: [
-            'delete_key(resource.attributes, "k8s.namespace.name")',
+            'delete_key(datapoint.attributes, "k8s.namespace.name")',
           ],
         },
       },
