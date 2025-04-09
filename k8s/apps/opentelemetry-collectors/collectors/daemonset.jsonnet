@@ -158,14 +158,14 @@ std.mergePatch((import '_base.libsonnet'), {
         'transform/logsize': {
           error_mode: 'ignore',
           log_statements: [
-            'set(attributes["body_size"], Len(log.body))',
-            'set(attributes["k8s.namespace.name"], resource.attributes["k8s.namespace.name"])',
+            'set(log.attributes["body_size"], Len(log.body))',
+            'set(log.attributes["k8s.namespace.name"], resource.attributes["k8s.namespace.name"])',
           ],
         },
         'transform/post-logsize': {
           error_mode: 'ignore',
           metric_statements: [
-            'delete_key(attributes, "k8s.namespace.name")',
+            'delete_key(metric.attributes, "k8s.namespace.name")',
           ],
         },
       },
