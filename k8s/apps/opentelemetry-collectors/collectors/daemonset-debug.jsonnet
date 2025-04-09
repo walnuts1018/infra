@@ -209,7 +209,7 @@ std.mergePatch((import '_base.libsonnet'), {
         memory: '150Mi',
       },
       limits: {
-        cpu: '500m',
+        cpu: '300m',
       },
     },
     // tolerations: [
