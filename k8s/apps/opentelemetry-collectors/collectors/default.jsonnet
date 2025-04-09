@@ -139,7 +139,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'k8sattributes',
             ],
             exporters: [
-              'otlphttp/prometheus',
+              // 'otlphttp/prometheus',
               'otlp/prometheus-exporter',
               'otlp/mackerel',
             ],
