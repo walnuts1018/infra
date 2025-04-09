@@ -162,7 +162,6 @@ std.mergePatch((import '_base.libsonnet'), {
               context: 'log',
               statements: [
                 'set(attributes["body_size"], Len(log.body))',
-                'set(attributes["k8s.namespace.name"], resource.attributes["k8s.namespace.name"])',
               ],
             },
           ],
@@ -186,7 +185,7 @@ std.mergePatch((import '_base.libsonnet'), {
               ],
               attributes: [
                 {
-                  key: 'k8s.namespace.name',
+                  key: 'resource.attributes["k8s.namespace.name"]',
                 },
               ],
             },
