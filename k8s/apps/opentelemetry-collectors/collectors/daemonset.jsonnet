@@ -162,6 +162,7 @@ std.mergePatch((import '_base.libsonnet'), {
               context: 'log',
               statements: [
                 'set(attributes["body_size"], Len(log.body))',
+                'set(attributes["k8s.namespace.name"], resource.attributes["k8s.namespace.name"])',
               ],
             },
           ],
@@ -178,12 +179,30 @@ std.mergePatch((import '_base.libsonnet'), {
           verbosity: 'detailed',
         },
       },
+      connectors: {
+        'sum/logsize': {
+          logs: {
+            'logs.size': {
+              source_attribute: 'body_size',
+              conditions: [
+                'attributes["body_size"] != "NULL"',
+              ],
+              attributes: [
+                {
+                  key: 'k8s.namespace.name',
+                },
+              ],
+            },
+          },
+        },
+      },
       service: {
         pipelines: {
           metrics: {
             receivers: [
               'hostmetrics',
               'kubeletstats',
+              'sum/logsize',
             ],
             processors: [
               'memory_limiter',
@@ -208,6 +227,7 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
             exporters: [
               'otlp/default',
+              'sum/logsize',
             ],
           },
         },
