@@ -175,9 +175,9 @@ std.mergePatch((import '_base.libsonnet'), {
           logs: {
             'logs.size.total': {
               source_attribute: 'body_size',
-              conditions: [
-                'attributes["body_size"] != "NULL"',
-              ],
+              // conditions: [
+              //   'attributes["body_size"] != "NULL"',
+              // ],
               attributes: [
                 {
                   key: 'k8s.cluster.uid',
