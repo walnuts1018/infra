@@ -169,6 +169,9 @@ std.mergePatch((import '_base.libsonnet'), {
             insecure: true,
           },
         },
+        debug: {
+          verbosity: 'detailed',
+        },
       },
       connectors: {
         sum: {
@@ -236,6 +239,14 @@ std.mergePatch((import '_base.libsonnet'), {
             exporters: [
               'otlp/default',
               'sum',
+            ],
+          },
+          'metrics/debug': {
+            receivers: [
+              'sum',
+            ],
+            exporters: [
+              'debug',
             ],
           },
         },
