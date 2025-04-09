@@ -175,9 +175,6 @@ std.mergePatch((import '_base.libsonnet'), {
             insecure: true,
           },
         },
-        debug: {
-          verbosity: 'detailed',
-        },
       },
       connectors: {
         'sum/logsize': {
@@ -212,7 +209,6 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
             exporters: [
               'otlp/default',
-              'debug',
             ],
           },
           logs: {
