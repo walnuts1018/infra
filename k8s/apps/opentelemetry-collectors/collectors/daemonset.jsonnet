@@ -215,7 +215,7 @@ std.mergePatch((import '_base.libsonnet'), {
             receivers: [
               'hostmetrics',
               'kubeletstats',
-              'sum/logsize',
+              // 'sum/logsize',
             ],
             processors: [
               'memory_limiter',
