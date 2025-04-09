@@ -174,13 +174,13 @@ std.mergePatch((import '_base.libsonnet'), {
         },
       },
       connectors: {
-        sum: {
+        'sum/logsize': {
           logs: {
-            'logs.size.total': {
+            'logs.size': {
               source_attribute: 'body_size',
-              // conditions: [
-              //   'attributes["body_size"] != "NULL"',
-              // ],
+              conditions: [
+                'attributes["body_size"] != "NULL"',
+              ],
               attributes: [
                 {
                   key: 'k8s.cluster.uid',
@@ -212,7 +212,7 @@ std.mergePatch((import '_base.libsonnet'), {
         pipelines: {
           metrics: {
             receivers: [
-              'sum',
+              'sum/logsize',
               'hostmetrics',
               'kubeletstats',
             ],
@@ -224,6 +224,14 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
             exporters: [
               'otlp/default',
+            ],
+          },
+          'metrics/debug': {
+            receivers: [
+              'sum/logsize',
+            ],
+            exporters: [
+              'debug',
             ],
           },
           logs: {
@@ -238,15 +246,7 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
             exporters: [
               'otlp/default',
-              'sum',
-            ],
-          },
-          'metrics/debug': {
-            receivers: [
-              'sum',
-            ],
-            exporters: [
-              'debug',
+              'sum/logsize',
             ],
           },
         },
