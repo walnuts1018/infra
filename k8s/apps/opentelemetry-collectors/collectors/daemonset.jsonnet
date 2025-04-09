@@ -247,6 +247,7 @@ std.mergePatch((import '_base.libsonnet'), {
             exporters: [
               'otlp/default',
               'sum/logsize',
+              'debug',
             ],
           },
         },
