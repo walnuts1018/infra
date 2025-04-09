@@ -233,6 +233,7 @@ std.mergePatch((import '_base.libsonnet'), {
             processors: [
               'memory_limiter',
               'batch',
+              'k8sattributes',
               'transform/logsize',
             ],
             exporters: [
