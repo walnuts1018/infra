@@ -162,6 +162,7 @@ std.mergePatch((import '_base.libsonnet'), {
               context: 'log',
               statements: [
                 'set(attributes["body_size"], Len(log.body))',
+                'set(attributes["k8s.namespace.name"], resource.attributes["k8s.namespace.name"])',
               ],
             },
           ],
@@ -174,6 +175,10 @@ std.mergePatch((import '_base.libsonnet'), {
             insecure: true,
           },
         },
+        file: {
+          path: '/tmp',
+          format: 'json',
+        },
       },
       connectors: {
         'sum/logsize': {
@@ -185,7 +190,7 @@ std.mergePatch((import '_base.libsonnet'), {
               ],
               attributes: [
                 {
-                  key: 'resource.attributes["k8s.namespace.name"]',
+                  key: 'k8s.namespace.name',
                 },
               ],
             },
@@ -224,6 +229,7 @@ std.mergePatch((import '_base.libsonnet'), {
             exporters: [
               'otlp/default',
               'sum/logsize',
+              'file',
             ],
           },
         },
