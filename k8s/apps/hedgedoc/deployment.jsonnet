@@ -19,7 +19,7 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'hedgedoc',
-            image: 'quay.io/hedgedoc/hedgedoc:1.10.2',
+            image: 'quay.io/hedgedoc/hedgedoc:1.10.3',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
