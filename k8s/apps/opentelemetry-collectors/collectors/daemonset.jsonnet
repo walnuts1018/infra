@@ -158,24 +158,14 @@ std.mergePatch((import '_base.libsonnet'), {
         'transform/logsize': {
           error_mode: 'ignore',
           log_statements: [
-            {
-              context: 'log',
-              statements: [
-                'set(attributes["body_size"], Len(log.body))',
-                'set(attributes["k8s.namespace.name"], resource.attributes["k8s.namespace.name"])',
-              ],
-            },
+            'set(attributes["body_size"], Len(log.body))',
+            'set(attributes["k8s.namespace.name"], resource.attributes["k8s.namespace.name"])',
           ],
         },
         'transform/post-logsize': {
           error_mode: 'ignore',
-          log_statements: [
-            {
-              context: 'log',
-              statements: [
-                'delete_key(attributes, "k8s.namespace.name")',
-              ],
-            },
+          metric_statements: [
+            'delete_key(attributes, "k8s.namespace.name")',
           ],
         },
       },
@@ -211,23 +201,6 @@ std.mergePatch((import '_base.libsonnet'), {
       },
       service: {
         pipelines: {
-          metrics: {
-            receivers: [
-              'hostmetrics',
-              'kubeletstats',
-              // 'sum/logsize',
-            ],
-            processors: [
-              'memory_limiter',
-              'batch',
-              'k8sattributes',
-              'resourcedetection',
-              'transform/post-logsize',
-            ],
-            exporters: [
-              'otlp/default',
-            ],
-          },
           logs: {
             receivers: [
               'filelog',
@@ -265,6 +238,36 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
             exporters: [
               'sum/logsize',
+            ],
+          },
+          metrics: {
+            receivers: [
+              'hostmetrics',
+              'kubeletstats',
+            ],
+            processors: [
+              'memory_limiter',
+              'batch',
+              'k8sattributes',
+              'resourcedetection',
+            ],
+            exporters: [
+              'otlp/default',
+            ],
+          },
+          'metrics/logsize': {
+            receivers: [
+              'sum/logsize',
+            ],
+            processors: [
+              'memory_limiter',
+              'batch',
+              'k8sattributes',
+              'resourcedetection',
+              'transform/post-logsize',
+            ],
+            exporters: [
+              'otlp/default',
             ],
           },
         },
