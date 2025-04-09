@@ -182,7 +182,7 @@ std.mergePatch((import '_base.libsonnet'), {
       connectors: {
         'sum/logsize': {
           logs: {
-            'logs.size': {
+            'logs.size.by_k8s_namespace': {
               source_attribute: 'body_size',
               conditions: [
                 'attributes["body_size"] != "NULL"',
