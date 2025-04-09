@@ -167,6 +167,17 @@ std.mergePatch((import '_base.libsonnet'), {
             },
           ],
         },
+        'transform/post-logsize': {
+          error_mode: 'ignore',
+          log_statements: [
+            {
+              context: 'log',
+              statements: [
+                'delete_key(attributes, "k8s.namespace.name")',
+              ],
+            },
+          ],
+        },
       },
       exporters: {
         'otlp/default': {
@@ -196,6 +207,7 @@ std.mergePatch((import '_base.libsonnet'), {
             },
           },
         },
+        forward: {},
       },
       service: {
         pipelines: {
@@ -210,6 +222,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'batch',
               'k8sattributes',
               'resourcedetection',
+              'transform/post-logsize',
             ],
             exporters: [
               'otlp/default',
@@ -222,12 +235,35 @@ std.mergePatch((import '_base.libsonnet'), {
             processors: [
               'memory_limiter',
               'batch',
+            ],
+            exporters: [
+              'forward',
+            ],
+          },
+          'logs/export': {
+            receivers: [
+              'forward',
+            ],
+            processors: [
+              'memory_limiter',
+              'batch',
               'k8sattributes',
               'transform/jsonparse',
-              'transform/logsize',
             ],
             exporters: [
               'otlp/default',
+            ],
+          },
+          'logs/logsize': {
+            receivers: [
+              'forward',
+            ],
+            processors: [
+              'memory_limiter',
+              'batch',
+              'transform/logsize',
+            ],
+            exporters: [
               'sum/logsize',
             ],
           },
