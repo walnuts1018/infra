@@ -271,6 +271,9 @@ std.mergePatch((import '_base.libsonnet'), {
         cpu: '100m',
         memory: '150Mi',
       },
+      limits: {
+        cpu: '500m',
+      },
     },
     // tolerations: [
     //   {
