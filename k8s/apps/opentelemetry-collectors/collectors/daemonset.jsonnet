@@ -156,7 +156,7 @@ std.mergePatch((import '_base.libsonnet'), {
             {
               context: 'log',
               statements: [
-                'set(attributes["body_size"], Len(log.body)])',
+                'set(attributes["body_size"], Len(log.body))',
               ],
             },
           ],
