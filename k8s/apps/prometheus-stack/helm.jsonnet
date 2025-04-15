@@ -4,7 +4,7 @@
 
   chart: 'kube-prometheus-stack',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '70.4.2',
+  targetRevision: '70.5.0',
   valuesObject: std.mergePatch(std.parseYaml(importstr 'values.yaml'), {
     prometheus: {
       prometheusSpec: {
