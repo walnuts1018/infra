@@ -40,7 +40,6 @@ configs:
     application.resourceTrackingMethod: "annotation"
     kustomize.buildOptions: --enable-helm
   params:
-    otlp.address: 'default-collector.opentelemetry-collector.svc.cluster.local:4317'
     server.insecure: true
     server.basehref: /
     controller.diff.server.side: "true"
