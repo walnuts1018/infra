@@ -18,7 +18,7 @@
             containers: [
               {
                 name: 'photoprism',
-                image: 'photoprism/photoprism:250321',
+                image: 'photoprism/photoprism:250426',
                 command: [
                   'photoprism',
                   'index',

@@ -20,7 +20,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'photoprism',
-            image: 'photoprism/photoprism:250321',
+            image: 'photoprism/photoprism:250426',
             resources: {
               requests: {
                 cpu: '0',
