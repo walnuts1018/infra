@@ -4,7 +4,7 @@ std.mergePatch((import '_base.libsonnet'), {
   },
   spec: {
     mode: 'deployment',
-    image: 'otel/opentelemetry-collector-contrib:0.122.1',
+    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib',
     config: {
       receivers: {
         otlp: {
