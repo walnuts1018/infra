@@ -5,7 +5,7 @@ std.mergePatch((import '_base.libsonnet'), {
   spec: {
     serviceAccount: (import '../sa.jsonnet').metadata.name,
     mode: 'daemonset',
-    image: 'otel/opentelemetry-collector-contrib:0.122.1',
+    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib',
     config: {
       receivers: {
         filelog: {
