@@ -4,7 +4,7 @@ go 1.24.1
 
 require (
 	github.com/go-playground/validator/v10 v10.26.0
-	github.com/google/go-jsonnet v0.20.0
+	github.com/google/go-jsonnet v0.21.0
 	github.com/google/subcommands v1.2.0
 	github.com/phsym/console-slog v0.3.1
 	github.com/sters/yaml-diff v1.4.1
