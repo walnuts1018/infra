@@ -221,6 +221,18 @@ std.mergePatch((import '_base.libsonnet'), {
               'forward',
             ],
           },
+          'logs/debug': {
+            receivers: [
+              'journald',
+            ],
+            processors: [
+              'memory_limiter',
+              'batch',
+            ],
+            exporters: [
+              'file',
+            ],
+          },
           'logs/export': {
             receivers: [
               'forward',
