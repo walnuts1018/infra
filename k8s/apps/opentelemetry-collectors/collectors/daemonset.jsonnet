@@ -340,6 +340,7 @@ std.mergePatch((import '_base.libsonnet'), {
         name: 'journalctl',
         hostPath: {
           path: '/usr/bin/journalctl',
+          type: 'File',
         },
       },
     ],
@@ -363,7 +364,6 @@ std.mergePatch((import '_base.libsonnet'), {
         name: 'journalctl',
         mountPath: '/usr/bin/journalctl',
         readOnly: true,
-        subPath: 'journalctl',
       },
     ],
     securityContext: {
