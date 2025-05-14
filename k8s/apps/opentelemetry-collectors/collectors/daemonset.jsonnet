@@ -337,16 +337,9 @@ std.mergePatch((import '_base.libsonnet'), {
         },
       },
       {
-        name: 'journalctl',
+        name: 'usr',
         hostPath: {
-          path: '/usr/bin/journalctl',
-          type: 'File',
-        },
-      },
-      {
-        name: 'usrlib',
-        hostPath: {
-          path: '/usr/lib',
+          path: '/usr',
           type: 'Directory',
         },
       },
@@ -375,13 +368,8 @@ std.mergePatch((import '_base.libsonnet'), {
         readOnly: true,
       },
       {
-        name: 'journalctl',
-        mountPath: '/bin/journalctl',
-        readOnly: true,
-      },
-      {
-        name: 'usrlib',
-        mountPath: '/usr/lib',
+        name: 'usr',
+        mountPath: '/usr',
         readOnly: true,
       },
       {
