@@ -233,6 +233,7 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
             exporters: [
               'debug',
+              'file',
             ],
           },
           'logs/export': {
