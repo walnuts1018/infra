@@ -71,6 +71,13 @@ std.mergePatch((import '_base.libsonnet'), {
             'volume',
           ],
         },
+        journald: {
+          directory: '/var/log/journal',
+          units: [
+            'kubelet.service',
+          ],
+          priority: 'info',
+        },
       },
       processors: {
         memory_limiter: {
@@ -204,6 +211,7 @@ std.mergePatch((import '_base.libsonnet'), {
           logs: {
             receivers: [
               'filelog',
+              'journald',
             ],
             processors: [
               'memory_limiter',
@@ -309,18 +317,6 @@ std.mergePatch((import '_base.libsonnet'), {
     //     operator: 'Exists',
     //   },
     // ],
-    volumeMounts: [
-      {
-        name: 'varlogpods',
-        mountPath: '/var/log/pods',
-        readOnly: true,
-      },
-      {
-        name: 'varlibdockercontainers',
-        mountPath: '/var/lib/docker/containers',
-        readOnly: true,
-      },
-    ],
     volumes: [
       {
         name: 'varlogpods',
@@ -333,6 +329,40 @@ std.mergePatch((import '_base.libsonnet'), {
         hostPath: {
           path: '/var/lib/docker/containers',
         },
+      },
+      {
+        name: 'varlogjournal',
+        hostPath: {
+          path: '/var/log/journal',
+        },
+      },
+      {
+        name: 'journalctl',
+        hostPath: {
+          path: '/usr/bin/journalctl',
+        },
+      },
+    ],
+    volumeMounts: [
+      {
+        name: 'varlogpods',
+        mountPath: '/var/log/pods',
+        readOnly: true,
+      },
+      {
+        name: 'varlibdockercontainers',
+        mountPath: '/var/lib/docker/containers',
+        readOnly: true,
+      },
+      {
+        name: 'varlogjournal',
+        mountPath: '/var/log/journal',
+        readOnly: true,
+      },
+      {
+        name: 'journalctl',
+        mountPath: '/usr/bin/journalctl',
+        readOnly: true,
       },
     ],
     securityContext: {
