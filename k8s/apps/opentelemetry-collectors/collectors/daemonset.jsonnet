@@ -187,6 +187,9 @@ std.mergePatch((import '_base.libsonnet'), {
           path: '/tmp',
           format: 'json',
         },
+        debug: {
+          verbosity: 'detailed',
+        },
       },
       connectors: {
         'sum/logsize': {
@@ -230,7 +233,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'batch',
             ],
             exporters: [
-              'file',
+              'debug',
             ],
           },
           'logs/export': {
