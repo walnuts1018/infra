@@ -211,7 +211,7 @@ std.mergePatch((import '_base.libsonnet'), {
           logs: {
             receivers: [
               'filelog',
-              'journald',
+              // 'journald',
             ],
             processors: [
               'memory_limiter',
@@ -362,7 +362,7 @@ std.mergePatch((import '_base.libsonnet'), {
       },
       {
         name: 'journalctl',
-        mountPath: '/opt/journalctl',
+        mountPath: '/usr/bin/journalctl',
         readOnly: true,
       },
     ],
