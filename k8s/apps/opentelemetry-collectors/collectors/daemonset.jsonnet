@@ -211,7 +211,7 @@ std.mergePatch((import '_base.libsonnet'), {
           logs: {
             receivers: [
               'filelog',
-              // 'journald',
+              'journald',
             ],
             processors: [
               'memory_limiter',
@@ -336,6 +336,20 @@ std.mergePatch((import '_base.libsonnet'), {
           path: '/var/log/journal',
         },
       },
+      {
+        name: 'journalctl',
+        hostPath: {
+          path: '/usr/bin/journalctl',
+          type: 'File',
+        },
+      },
+      {
+        name: 'systemd-libs',
+        hostPath: {
+          path: '/usr/lib/systemd',
+          type: 'Directory',
+        },
+      },
     ],
     volumeMounts: [
       {
@@ -351,6 +365,16 @@ std.mergePatch((import '_base.libsonnet'), {
       {
         name: 'varlogjournal',
         mountPath: '/var/log/journal',
+        readOnly: true,
+      },
+      {
+        name: 'journalctl',
+        mountPath: '/usr/bin/journalctl',
+        readOnly: true,
+      },
+      {
+        name: 'systemd-libs',
+        mountPath: '/usr/lib/systemd',
         readOnly: true,
       },
     ],
