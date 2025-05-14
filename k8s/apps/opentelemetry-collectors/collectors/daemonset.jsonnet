@@ -381,6 +381,7 @@ std.mergePatch((import '_base.libsonnet'), {
     securityContext: {
       runAsUser: 0,
       runAsGroup: 0,
+      privileged: true,
     },
   },
 })
