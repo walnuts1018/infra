@@ -344,9 +344,9 @@ std.mergePatch((import '_base.libsonnet'), {
         },
       },
       {
-        name: 'systemd-libs',
+        name: 'libs',
         hostPath: {
-          path: '/usr/lib/systemd',
+          path: '/usr/lib',
           type: 'Directory',
         },
       },
@@ -373,8 +373,8 @@ std.mergePatch((import '_base.libsonnet'), {
         readOnly: true,
       },
       {
-        name: 'systemd-libs',
-        mountPath: '/usr/lib/systemd',
+        name: 'libs',
+        mountPath: '/usr/lib',
         readOnly: true,
       },
     ],
