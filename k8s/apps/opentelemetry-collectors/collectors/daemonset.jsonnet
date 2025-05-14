@@ -211,7 +211,7 @@ std.mergePatch((import '_base.libsonnet'), {
           logs: {
             receivers: [
               'filelog',
-              // 'journald',
+              'journald',
             ],
             processors: [
               'memory_limiter',
