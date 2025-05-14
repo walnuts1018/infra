@@ -336,13 +336,6 @@ std.mergePatch((import '_base.libsonnet'), {
           path: '/var/log/journal',
         },
       },
-      {
-        name: 'journalctl',
-        hostPath: {
-          path: '/usr/bin/journalctl',
-          type: 'File',
-        },
-      },
     ],
     volumeMounts: [
       {
@@ -358,11 +351,6 @@ std.mergePatch((import '_base.libsonnet'), {
       {
         name: 'varlogjournal',
         mountPath: '/var/log/journal',
-        readOnly: true,
-      },
-      {
-        name: 'journalctl',
-        mountPath: '/usr/bin/journalctl',
         readOnly: true,
       },
     ],
