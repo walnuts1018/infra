@@ -344,9 +344,16 @@ std.mergePatch((import '_base.libsonnet'), {
         },
       },
       {
-        name: 'libs',
+        name: 'usrlib',
         hostPath: {
           path: '/usr/lib',
+          type: 'Directory',
+        },
+      },
+      {
+        name: 'lib',
+        hostPath: {
+          path: '/lib',
           type: 'Directory',
         },
       },
@@ -373,8 +380,13 @@ std.mergePatch((import '_base.libsonnet'), {
         readOnly: true,
       },
       {
-        name: 'libs',
+        name: 'usrlib',
         mountPath: '/usr/lib',
+        readOnly: true,
+      },
+      {
+        name: 'lib',
+        mountPath: '/lib',
         readOnly: true,
       },
     ],
