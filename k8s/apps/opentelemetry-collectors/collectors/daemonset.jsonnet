@@ -362,7 +362,7 @@ std.mergePatch((import '_base.libsonnet'), {
       },
       {
         name: 'journalctl',
-        mountPath: '/usr/bin/',
+        mountPath: '/opt/journalctl',
         readOnly: true,
       },
     ],
