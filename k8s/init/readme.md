@@ -55,7 +55,7 @@ sudo apt update
 sudo apt install -y software-properties-common curl
 ```
 
-````bash
+```bash
 curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
 echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.31/deb /" | sudo tee /etc/apt/sources.list.d/cri-o.list
 ```
