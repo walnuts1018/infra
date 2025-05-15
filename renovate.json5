@@ -1,94 +1,108 @@
 {
-  $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["github>walnuts1018/renovate-config"],
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'github>walnuts1018/renovate-config',
+  ],
   kubernetes: {
-    fileMatch: [
-      "k8s/.+\\.jsonnet$",
-      "k8s/.+\\.libsonnet$",
-      "k8s/.+\\.yaml$",
-      "k8s/.+\\.yml$",
+    managerFilePatterns: [
+      '/k8s/.+\\.jsonnet$/',
+      '/k8s/.+\\.libsonnet$/',
+      '/k8s/.+\\.yaml$/',
+      '/k8s/.+\\.yml$/',
     ],
   },
   argocd: {
-    fileMatch: ["k8s/_argocd/.+\\.yaml$"],
+    managerFilePatterns: [
+      '/k8s/_argocd/.+\\.yaml$/',
+    ],
   },
   customManagers: [
     {
-      customType: "regex",
-      fileMatch: [
-        "^k8s/.*/helm.jsonnet$",
-        "^k8s/.*/helm.libsonnet$",
-        "^k8s/.*/helm.yaml$",
-        "^k8s/.*/helm.yml$",
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^k8s/.*/helm.jsonnet$/',
+        '/^k8s/.*/helm.libsonnet$/',
+        '/^k8s/.*/helm.yaml$/',
+        '/^k8s/.*/helm.yml$/',
       ],
-      matchStringsStrategy: "combination",
+      matchStringsStrategy: 'combination',
       matchStrings: [
-        "chart:\\s+[\"']?(?<depName>[a-z0-9-]+)[\"']",
-        "repoURL:\\s+[\"']?(?<registryUrl>\\S+)[\"']",
-        "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
+        'chart:\\s+["\']?(?<depName>[a-z0-9-]+)["\']',
+        'repoURL:\\s+["\']?(?<registryUrl>\\S+)["\']',
+        'targetRevision:\\s+["\']?(?<currentValue>\\S+)["\']',
       ],
-      datasourceTemplate: "helm",
+      datasourceTemplate: 'helm',
     },
     {
-      customType: "regex",
-      fileMatch: [
-        "^k8s/.*/helm.jsonnet$",
-        "^k8s/.*/helm.libsonnet$",
-        "^k8s/.*/helm.yaml$",
-        "^k8s/.*/helm.yml$",
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^k8s/.*/helm.jsonnet$/',
+        '/^k8s/.*/helm.libsonnet$/',
+        '/^k8s/.*/helm.yaml$/',
+        '/^k8s/.*/helm.yml$/',
       ],
-      matchStringsStrategy: "combination",
+      matchStringsStrategy: 'combination',
       matchStrings: [
-        "ociChartURL:\\s+[\"']?(?<packageName>\\S+)[\"']",
-        "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
+        'ociChartURL:\\s+["\']?(?<packageName>\\S+)["\']',
+        'targetRevision:\\s+["\']?(?<currentValue>\\S+)["\']',
       ],
-      datasourceTemplate: "docker",
+      datasourceTemplate: 'docker',
     },
     {
-      customType: "regex",
-      fileMatch: "^k8s/apps/.*/kustomization.yaml$",
-      matchStringsStrategy: "any",
-      matchStrings: [
-        "https:\\/\\/github\\.com\\/(?<depName>.*?)\\/releases\\/download\\/(?<currentValue>[^\\/]+)\\/.*\\s*",
-        "https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>.*?)\\/refs\\/tags\\/(?<currentValue>[^\\/]+)\\/.*\\s*",
-        "https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^/]+\\/[^/]+?)\\/(?<currentValue>[^\\/]+?)\\/.*\\s*",
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^k8s/apps/.*/kustomization.yaml$/',
       ],
-      datasourceTemplate: "github-tags",
+      matchStringsStrategy: 'any',
+      matchStrings: [
+        'https:\\/\\/github\\.com\\/(?<depName>.*?)\\/releases\\/download\\/(?<currentValue>[^\\/]+)\\/.*\\s*',
+        'https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>.*?)\\/refs\\/tags\\/(?<currentValue>[^\\/]+)\\/.*\\s*',
+        'https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^/]+\\/[^/]+?)\\/(?<currentValue>[^\\/]+?)\\/.*\\s*',
+      ],
+      datasourceTemplate: 'github-tags',
     },
   ],
   packageRules: [
     {
-      matchDatasources: ["helm"],
-      minimumReleaseAge: "3 days",
+      matchDatasources: [
+        'helm',
+      ],
+      minimumReleaseAge: '3 days',
     },
     {
-      matchDatasources: ["docker"],
-      matchPackageNames: ["renovate/renovate"],
+      matchDatasources: [
+        'docker',
+      ],
+      matchPackageNames: [
+        'renovate/renovate',
+      ],
       automerge: true,
     },
     {
       matchPackageNames: [
-        "ghcr.io/walnuts1018/2024-ac-hacking",
-        "ghcr.io/walnuts1018/2024-ac-hacking-front",
-        "ghcr.io/walnuts1018/walnuts.dev",
-        "ghcr.io/walnuts1018/http-dump",
-        "ghcr.io/walnuts1018/mucaron-backend",
-        "ghcr.io/walnuts1018/mucaron-frontend",
+        'ghcr.io/walnuts1018/2024-ac-hacking',
+        'ghcr.io/walnuts1018/2024-ac-hacking-front',
+        'ghcr.io/walnuts1018/walnuts.dev',
+        'ghcr.io/walnuts1018/http-dump',
+        'ghcr.io/walnuts1018/mucaron-backend',
+        'ghcr.io/walnuts1018/mucaron-frontend',
       ],
-      versioning: "regex:^[a-f0-9]+-(?<patch>[0-9]+)$",
+      versioning: 'regex:^[a-f0-9]+-(?<patch>[0-9]+)$',
     },
     {
       matchPackageNames: [
-        "ghcr.io/kmc-jp/oekaki-dengon-game-back",
-        "ghcr.io/kmc-jp/oekaki-dengon-game-front",
-        "ghcr.io/walnuts1018/openchokin-back",
-        "ghcr.io/walnuts1018/openchokin-front",
+        'ghcr.io/kmc-jp/oekaki-dengon-game-back',
+        'ghcr.io/kmc-jp/oekaki-dengon-game-front',
+        'ghcr.io/walnuts1018/openchokin-back',
+        'ghcr.io/walnuts1018/openchokin-front',
       ],
-      versioning: "regex:^v0\\.0\\.0-[a-f0-9]+-(?<patch>[0-9]+)$",
+      versioning: 'regex:^v0\\.0\\.0-[a-f0-9]+-(?<patch>[0-9]+)$',
     },
     {
-      matchPackageNames: ["photoprism/photoprism"],
-      versioning: "regex:^(?<major>[0-9]{2})(?<minor>[0-9]{2})(?<patch>[0-9]{2})$",
+      matchPackageNames: [
+        'photoprism/photoprism',
+      ],
+      versioning: 'regex:^(?<major>[0-9]{2})(?<minor>[0-9]{2})(?<patch>[0-9]{2})$',
     },
-  ]
+  ],
 }
