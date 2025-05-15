@@ -239,12 +239,10 @@ std.mergePatch((import '_base.libsonnet'), {
             processors: [
               'memory_limiter',
               'batch',
-              'resourcedetection',
               'resource/journald',
             ],
             exporters: [
-              'debug',
-              'file',
+              'forward',
             ],
           },
           'logs/export': {
