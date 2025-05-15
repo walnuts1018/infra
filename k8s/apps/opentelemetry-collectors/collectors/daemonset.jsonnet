@@ -175,6 +175,15 @@ std.mergePatch((import '_base.libsonnet'), {
             'delete_key(datapoint.attributes, "k8s.namespace.name")',
           ],
         },
+        'attributes/journald': {
+          actions: [
+            {
+              key: 'service.name',
+              action: 'upsert',
+              value: 'journald',
+            },
+          ],
+        },
       },
       exporters: {
         'otlp/default': {
@@ -230,7 +239,8 @@ std.mergePatch((import '_base.libsonnet'), {
             processors: [
               'memory_limiter',
               'batch',
-              'k8sattributes',
+              'resourcedetection',
+              'attributes/journald',
             ],
             exporters: [
               'debug',
