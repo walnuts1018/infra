@@ -1,15 +1,15 @@
 module github.com/walnuts1018/infra/scripts/infrautil
 
-go 1.24.1
+go 1.24.3
 
 require (
 	github.com/go-playground/validator/v10 v10.26.0
-	github.com/google/go-jsonnet v0.20.0
+	github.com/google/go-jsonnet v0.21.0
 	github.com/google/subcommands v1.2.0
 	github.com/phsym/console-slog v0.3.1
 	github.com/sters/yaml-diff v1.4.1
 	github.com/yosuke-furukawa/json5 v0.1.1
-	golang.org/x/sync v0.13.0
+	golang.org/x/sync v0.14.0
 	gopkg.in/yaml.v3 v3.0.1
 	helm.sh/helm/v3 v3.17.3
 	sigs.k8s.io/yaml v1.4.0
