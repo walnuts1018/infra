@@ -9,14 +9,8 @@ configs:
     admin.enabled: true
     statusbadge.enabled: true
 
-    # https://docs.cilium.io/en/latest/configuration/argocd-issues/
-    resource.exclusions: |
-      - apiGroups:
-        - cilium.io
-        kinds:
-        - CiliumIdentity
-        clusters:
-        - "*"
+    # https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/2.14-3.0/#default-resourceexclusions-configurations
+    # resource.exclusions: |
     resource.customizations.ignoreDifferences.apps_Deployment: |
       jsonPointers:
       - /spec/replicas
