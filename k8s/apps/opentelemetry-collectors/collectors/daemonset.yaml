@@ -1,0 +1,270 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: k8s-daemonset
+spec:
+  config:
+    connectors:
+      forward: {}
+      sum/logsize:
+        logs:
+          logs.size.by_k8s_namespace:
+            attributes:
+              - key: k8s.namespace.name
+            conditions:
+              - attributes["body_size"] != "NULL"
+            source_attribute: body_size
+    exporters:
+      debug:
+        verbosity: detailed
+      file:
+        format: json
+        path: /tmp
+      otlp/default:
+        endpoint: default-collector.opentelemetry-collector.svc.cluster.local:4317
+        tls:
+          insecure: true
+    processors:
+      batch:
+        send_batch_size: 10000
+        timeout: 10s
+      k8sattributes:
+        auth_type: serviceAccount
+        extract:
+          metadata:
+            - k8s.namespace.name
+            - k8s.pod.name
+            - k8s.pod.start_time
+            - k8s.pod.uid
+            - k8s.deployment.name
+            - k8s.deployment.uid
+            - k8s.node.name
+            - k8s.cluster.uid
+            - k8s.cronjob.name
+            - k8s.job.name
+            - k8s.daemonset.name
+            - k8s.daemonset.uid
+            - k8s.statefulset.name
+            - k8s.statefulset.uid
+            - container.id
+        filter:
+          node_from_env_var: K8S_NODE_NAME
+        pod_association:
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.ip
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.uid
+          - sources:
+              - from: connection
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 2000
+        spike_limit_percentage: 15
+      resource/journald:
+        attributes:
+          - action: upsert
+            key: service.name
+            value: journald
+      resourcedetection:
+        detectors:
+          - env
+        override: false
+        timeout: 15s
+      transform/jsonparse:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            statements:
+              - merge_maps(cache, ParseJSON(body), "upsert") where IsMatch(body, "^\\{")
+              - set(body, cache["msg"]) where cache["msg"] != nil
+              - delete_key(cache, "msg")
+              - truncate_all(cache, 1024)
+              - limit(cache, 100, [])
+              - merge_maps(resource.attributes, cache, "insert")
+      transform/logsize:
+        error_mode: ignore
+        log_statements:
+          - set(log.attributes["body_size"], Len(log.body))
+          - set(log.attributes["k8s.namespace.name"], resource.attributes["k8s.namespace.name"])
+      transform/post-logsize:
+        error_mode: ignore
+        metric_statements:
+          - delete_key(datapoint.attributes, "k8s.namespace.name")
+    receivers:
+      filelog:
+        include:
+          - /var/log/pods/*/*/*.log
+        include_file_path: true
+        operators:
+          - id: container-parser
+            type: container
+      hostmetrics:
+        collection_interval: 10s
+        scrapers:
+          cpu:
+            metrics:
+              system.cpu.logical.count:
+                enabled: true
+          memory:
+            metrics:
+              system.linux.memory.available:
+                enabled: true
+              system.memory.limit:
+                enabled: true
+          system:
+            metrics:
+              system.uptime:
+                enabled: true
+      journald:
+        directory: /var/log/journal
+        priority: info
+        units:
+          - kubelet.service
+      kubeletstats:
+        auth_type: serviceAccount
+        collection_interval: 10s
+        endpoint: ${env:K8S_NODE_IP}:10250
+        extra_metadata_labels:
+          - k8s.volume.type
+        insecure_skip_verify: true
+        k8s_api_config:
+          auth_type: serviceAccount
+        metric_groups:
+          - node
+          - pod
+          - container
+          - volume
+    service:
+      pipelines:
+        logs:
+          exporters:
+            - forward
+          processors:
+            - memory_limiter
+            - batch
+          receivers:
+            - filelog
+        logs/debug:
+          exporters:
+            - forward
+          processors:
+            - memory_limiter
+            - batch
+            - resource/journald
+          receivers:
+            - journald
+        logs/export:
+          exporters:
+            - otlp/default
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+            - transform/jsonparse
+          receivers:
+            - forward
+        logs/logsize:
+          exporters:
+            - sum/logsize
+          processors:
+            - memory_limiter
+            - batch
+            - transform/logsize
+          receivers:
+            - forward
+        metrics:
+          exporters:
+            - otlp/default
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+            - resourcedetection
+          receivers:
+            - hostmetrics
+            - kubeletstats
+        metrics/logsize:
+          exporters:
+            - otlp/default
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+            - resourcedetection
+            - transform/post-logsize
+          receivers:
+            - sum/logsize
+  env:
+    - name: K8S_NODE_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
+    - name: K8S_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: k8s.node.name=$(K8S_NODE_NAME),k8s.node.ip=$(K8S_NODE_IP)
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib
+  managementState: managed
+  mode: daemonset
+  resources:
+    limits:
+      cpu: 500m
+    requests:
+      cpu: 100m
+      memory: 150Mi
+  securityContext:
+    runAsGroup: 0
+    runAsUser: 0
+  serviceAccount: opentelemetry-collectors
+  volumeMounts:
+    - mountPath: /var/log/pods
+      name: varlogpods
+      readOnly: true
+    - mountPath: /var/lib/docker/containers
+      name: varlibdockercontainers
+      readOnly: true
+    - mountPath: /var/log/journal
+      name: varlogjournal
+      readOnly: true
+    - mountPath: /usr/bin/journalctl
+      name: journalctl
+      readOnly: true
+    - mountPath: /usr/lib
+      name: usrlib
+      readOnly: true
+    - mountPath: /lib
+      name: lib
+      readOnly: true
+    - mountPath: /lib64
+      name: lib64
+      readOnly: true
+  volumes:
+    - hostPath:
+        path: /var/log/pods
+      name: varlogpods
+    - hostPath:
+        path: /var/lib/docker/containers
+      name: varlibdockercontainers
+    - hostPath:
+        path: /var/log/journal
+      name: varlogjournal
+    - hostPath:
+        path: /usr/bin/journalctl
+        type: File
+      name: journalctl
+    - hostPath:
+        path: /usr/lib
+        type: Directory
+      name: usrlib
+    - hostPath:
+        path: /lib
+        type: Directory
+      name: lib
+    - hostPath:
+        path: /lib64
+        type: Directory
+      name: lib64
