@@ -52,6 +52,12 @@ jobs:
         with:
           name: manifests
 
+      - name: install dyff
+        run: |
+          wget https://github.com/homeport/dyff/releases/download/v1.8.0/dyff_1.8.0_linux_amd64.tar.gz
+          tar -xvf dyff_1.8.0_linux_amd64.tar.gz
+          chmod +x dyff
+
       - name: Build markdown comment with manifest diff
         run: |
           echo "# Manifest (k8s/apps) diff
@@ -60,7 +66,7 @@ jobs:
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(for f in $(find snapshots-head/apps -type f); do dyff between -b $(echo $f | sed 's/head/main/') $f | sed 's/[ \t]*//'; done)
+          $(for f in $(find snapshots-head/apps -type f); do ./dyff between --output github $(echo $f | sed 's/head/main/') $f; done)
           \`\`\`
           </details>" | tee /tmp/diff.md
 
@@ -82,7 +88,7 @@ jobs:
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(for f in $(find snapshots-head/helm -type f); do dyff between --output github --exclude-regexp '.metadata.labels.app.kubernetes.io/version|.metadata.labels.chart|.metadata.labels.helm.sh/chart' $(echo $f | sed 's/head/main/') $f | sed 's/[ \t]*//'; done)
+          $(for f in $(find snapshots-head/helm -type f); do ./dyff between --output github --exclude-regexp '.metadata.labels.app.kubernetes.io/version|.metadata.labels.chart|.metadata.labels.helm.sh/chart' $(echo $f | sed 's/head/main/') $f; done)
           \`\`\`
           </details>" | tee /tmp/diff.md
 
