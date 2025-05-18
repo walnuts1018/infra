@@ -1,5 +1,5 @@
 {
-  apiVersion: 'external-secrets.io/v1beta1',
+  apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
     name: (import 'app.json5').name + '-' + std.md5(std.toString($.spec.data) + { spec: { target: { name: null } } })[0:6],
