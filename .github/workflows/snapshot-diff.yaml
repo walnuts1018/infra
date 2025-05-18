@@ -60,7 +60,7 @@ jobs:
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(for f in $(find snapshots-head/apps -type f); do diff -u10 $(echo $f | sed 's/head/main/') $f; done)
+          $(for f in $(find snapshots-head/apps -type f); do dyff between -b $(echo $f | sed 's/head/main/') $f | sed 's/[ \t]*//'; done)
           \`\`\`
           </details>" | tee /tmp/diff.md
 
@@ -82,7 +82,7 @@ jobs:
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(for f in $(find snapshots-head/helm -type f); do diff -u10 <(cat $(echo $f | sed 's/head/main/') | yq 'del(.. | .metadata?.labels? | (."app.kubernetes.io/version"?, .chart?, ."helm.sh/chart"?))') <(cat $f | yq 'del(.. | .metadata?.labels? | (."app.kubernetes.io/version"?, .chart?, ."helm.sh/chart"?))'); done)
+          $(for f in $(find snapshots-head/helm -type f); do dyff between --output github --exclude-regexp '.metadata.labels.app.kubernetes.io/version|.metadata.labels.chart|.metadata.labels.helm.sh/chart' $(echo $f | sed 's/head/main/') $f | sed 's/[ \t]*//'; done)
           \`\`\`
           </details>" | tee /tmp/diff.md
 
