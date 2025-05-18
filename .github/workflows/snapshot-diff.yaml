@@ -82,7 +82,7 @@ jobs:
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(for f in $(find snapshots-head/helm -type f); do diff -u $(echo $f | sed 's/head/main/') $f; done)
+          $(for f in $(find snapshots-head/helm -type f); do diff -u <(cat $(echo $f | sed 's/head/main/') | yq 'del(.metadata.labels."app.kubernetes.io/version",.metadata.labels.chart,.metadata.labels."helm.sh/chart")') <(cat $f | yq 'del(.metadata.labels."app.kubernetes.io/version",.metadata.labels.chart,.metadata.labels."helm.sh/chart")'); done)
           \`\`\`
           </details>" | tee /tmp/diff.md
 
