@@ -2,7 +2,7 @@
   name:: error 'name is required',
   onepassword_item_name:: error 'onepassword_item_name is required',
 
-  apiVersion: 'external-secrets.io/v1beta1',
+  apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
     name: $.name,

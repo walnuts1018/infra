@@ -1,6 +1,6 @@
 local usernames = (import 'users.libsonnet');
 local gen = function(username) {
-  apiVersion: 'external-secrets.io/v1beta1',
+  apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
     name: (import 'functions.libsonnet').secretName(username),
