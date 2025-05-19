@@ -17,7 +17,7 @@ echo -n "dtoverlay=cma,cma-64
 dtoverlay=disable-bt
 dtoverlay=disable-wifi
 dtparam=watchdog=on
-" >> /boot/firmware/config.txt"
+" >> /boot/firmware/config.txt
 
 exit
 ```
