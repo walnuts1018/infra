@@ -11,6 +11,11 @@
 ## ラズパイのみ
 
 ```bash
+sudo sed -i 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/g' /boot/cmdline.txt
+```
+再起動
+
+```bash
 sudo su
 rpi-eeprom-update -a
 echo -n "dtoverlay=cma,cma-64
