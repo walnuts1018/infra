@@ -12,7 +12,7 @@
       spec: {
         clusterSize: 2,
         kubernetesConfig: {
-          image: 'quay.io/opstree/redis:v7.0.12',
+          image: 'quay.io/opstree/redis:v7.2.7',
           imagePullPolicy: 'IfNotPresent',
           redisSecret: {
             name: $.secret_name,
