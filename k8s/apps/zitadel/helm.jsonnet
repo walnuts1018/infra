@@ -4,6 +4,6 @@
 
   chart: 'zitadel',
   repoURL: 'https://charts.zitadel.com',
-  targetRevision: '8.13.1',
+  targetRevision: '8.13.2',
   values: (importstr 'values.yaml'),
 }
