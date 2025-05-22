@@ -17,7 +17,7 @@
             containers: [
               std.mergePatch((import '../../components/container.libsonnet') {
                 name: 'samba-backup',
-                image: 'debian:12.10',
+                image: 'debian:12.11',
                 command: [
                   'sh',
                   '/backup.sh',
