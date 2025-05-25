@@ -29,3 +29,8 @@ metrics:
 defaultBackupStore:
   backupTarget: "cifs://samba.walnuts.dev/share/longhorn"
   backupTargetCredentialSecret: "cifs-secret"
+
+global:
+  tolerations:
+  - key: "node.walnuts.dev/low-performance"
+    operator: "Exists"
