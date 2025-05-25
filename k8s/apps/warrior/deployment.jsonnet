@@ -7,7 +7,7 @@
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
-    replicas: 3,
+    replicas: 1,
     selector: {
       matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
     },
