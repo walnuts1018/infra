@@ -85,12 +85,6 @@
                 port: 3000,
               },
             },
-            tolerations: [
-              {
-                key: 'node.walnuts.dev/low-performance',
-                operator: 'Exists',
-              },
-            ],
             volumeMounts: [
               {
                 name: 'next-cache',
@@ -192,6 +186,12 @@
             ],
           },
         },
+        tolerations: [
+          {
+            key: 'node.walnuts.dev/low-performance',
+            operator: 'Exists',
+          },
+        ],
         volumes: [
           {
             name: 'next-cache',
