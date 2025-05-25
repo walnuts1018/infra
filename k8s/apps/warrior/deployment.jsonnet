@@ -59,6 +59,9 @@
             },
           },
         ],
+        nodeSelector: {
+          'kubernetes.io/arch': 'amd64',
+        },
       },
     },
   },
