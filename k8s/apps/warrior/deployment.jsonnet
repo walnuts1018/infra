@@ -40,13 +40,22 @@
                 value: '6',
               },
             ],
+            livenessProbe: {
+              httpGet: {
+                path: '/info',
+                port: 8001,
+              },
+              failureThreshold: 1,
+              initialDelaySeconds: 10,
+              periodSeconds: 10,
+            },
             lifecycle: {
               preStop: {
                 exec: {
                   command: [
                     'sh',
                     '-c',
-                    'echo "Stopping Watchtower..."; sleep 100;',
+                    'echo "Stopping Warrior..."; sleep 100;',
                   ],
                 },
               },
