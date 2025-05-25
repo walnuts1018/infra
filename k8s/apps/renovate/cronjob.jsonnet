@@ -96,9 +96,12 @@
                 ],
               },
             ],
-            nodeSelector: {
-              'kubernetes.io/arch': 'amd64',
-            },
+            tolerations: [
+              {
+                key: 'node.walnuts.dev/low-performance',
+                operator: 'Exists',
+              },
+            ],
             volumes: [
               {
                 name: 'renovate',
