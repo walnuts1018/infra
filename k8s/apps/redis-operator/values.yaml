@@ -9,3 +9,7 @@ resources:
 # redisOperator:
 #   extraArgs:
 #   - "-zap-log-level=debug"
+
+tolerations:
+- key: "node.walnuts.dev/low-performance"
+  operator: "Exists"
