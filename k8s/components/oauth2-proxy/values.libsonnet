@@ -52,4 +52,10 @@
       memory: '5Mi',
     },
   },
+  tolerations: [
+    {
+      key: 'node.walnuts.dev/low-performance',
+      operator: 'Exists',
+    },
+  ],
 }
