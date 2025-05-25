@@ -96,6 +96,9 @@
                 ],
               },
             ],
+            nodeSelector: {
+              'kubernetes.io/arch': 'amd64',
+            },
             volumes: [
               {
                 name: 'renovate',
