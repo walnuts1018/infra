@@ -61,8 +61,8 @@ sudo apt install -y software-properties-common curl
 ```
 
 ```bash
-curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v1.32/deb /" | sudo tee /etc/apt/sources.list.d/cri-o.list
+curl -fsSL https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.33/deb/ /" | sudo tee /etc/apt/sources.list.d/cri-o.list
 ```
 
 ```bash
