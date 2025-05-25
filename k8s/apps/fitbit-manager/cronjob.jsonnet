@@ -39,6 +39,12 @@
                 env: (import 'env.libsonnet').env,
               },
             ],
+            tolerations: [
+              {
+                key: 'node.walnuts.dev/low-performance',
+                operator: 'Exists',
+              },
+            ],
           },
         },
       },
