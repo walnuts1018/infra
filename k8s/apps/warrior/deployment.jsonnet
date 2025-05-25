@@ -18,7 +18,7 @@
       spec: {
         containers: [
           {
-            name: 'watchtower',
+            name: 'warrior',
             image: 'atdr.meo.ws/archiveteam/warrior-dockerfile:latest',
             ports: [
               {
