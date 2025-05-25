@@ -14,3 +14,7 @@ certController:
     requests:
       cpu: 2m
       memory: 36Mi
+
+tolerations:
+- key: "node.walnuts.dev/low-performance"
+  operator: "Exists"
