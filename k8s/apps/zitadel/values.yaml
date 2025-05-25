@@ -38,8 +38,8 @@ metrics:
     enabled: true
 resources:
   requests:
-    cpu: 5m
-    memory: 100Mi
+    cpu: 10m
+    memory: 140Mi
   limits:
     memory: 512Mi
 affinity:
