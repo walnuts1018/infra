@@ -198,7 +198,7 @@ chunksCache:
   allocatedMemory: 8192
   resources:
     requests:
-      cpu: 50m
+      cpu: 10m
       memory: 4Gi
     limits:
       memory: 9830Mi
@@ -206,7 +206,7 @@ resultsCache:
   allocatedMemory: 1024
   resources:
     requests:
-      cpu: 50m
+      cpu: 10m
       memory: 1Gi
     limits:
       memory: 1229Mi
