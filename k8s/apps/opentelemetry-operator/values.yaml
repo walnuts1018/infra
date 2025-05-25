@@ -11,3 +11,7 @@ manager:
     requests:
       cpu: 5m
       memory: 50Mi
+
+tolerations:
+- key: "node.walnuts.dev/low-performance"
+  operator: "Exists"
