@@ -96,12 +96,6 @@
                 ],
               },
             ],
-            tolerations: [
-              {
-                key: 'node.walnuts.dev/low-performance',
-                operator: 'Exists',
-              },
-            ],
             volumes: [
               {
                 name: 'renovate',
