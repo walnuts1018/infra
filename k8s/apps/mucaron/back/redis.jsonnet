@@ -34,5 +34,8 @@
       fsGroup: 1000,
       runAsUser: 1000,
     },
+    nodeSelector: {
+      'kubernetes.io/arch': 'amd64',
+    },
   },
 }
