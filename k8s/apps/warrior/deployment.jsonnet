@@ -40,13 +40,15 @@
                 value: '6',
               },
             ],
-            preStop: {
-              exec: {
-                command: [
-                  'sh',
-                  '-c',
-                  'echo "Stopping Watchtower..."; sleep 100;',
-                ],
+            lifecycle: {
+              preStop: {
+                exec: {
+                  command: [
+                    'sh',
+                    '-c',
+                    'echo "Stopping Watchtower..."; sleep 100;',
+                  ],
+                },
               },
             },
             resources: {
