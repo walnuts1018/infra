@@ -164,7 +164,7 @@ gateway:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      memory: 12Mi
+      memory: 14Mi
       cpu: 5m
     limits:
       memory: 512Mi
@@ -182,6 +182,9 @@ gateway:
               values:
               - gateway
           topologyKey: kubernetes.io/hostname
+  tolerations:
+  - key: "node.walnuts.dev/low-performance"
+    operator: "Exists"
 
 singleBinary:
   replicas: 0
