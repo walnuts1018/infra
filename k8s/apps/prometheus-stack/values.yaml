@@ -118,6 +118,8 @@ prometheus:
       enableOTLPReceiver: true
       otlp:
         translationStrategy: "NoUTF8EscapingWithSuffixes"
+    enableFeatures:
+    - "promql-experimental-functions"
 additionalPrometheusRulesMap:
   opentelemetry:
     groups:
