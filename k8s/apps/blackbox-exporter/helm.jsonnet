@@ -4,6 +4,6 @@
 
   chart: 'prometheus-blackbox-exporter',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '9.7.0',
+  targetRevision: '9.8.0',
   values: (importstr 'values.yaml'),
 }
