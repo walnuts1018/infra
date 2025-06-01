@@ -2,6 +2,7 @@
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
     'github>walnuts1018/renovate-config',
+    'github>aquaproj/aqua-renovate-config#2.8.1',
   ],
   kubernetes: {
     managerFilePatterns: [
@@ -104,5 +105,13 @@
       ],
       versioning: 'regex:^(?<major>[0-9]{2})(?<minor>[0-9]{2})(?<patch>[0-9]{2})$',
     },
+    {
+      matchPackageNames: [
+        "aquaproj/aqua-registry"
+      ],
+      extends: [
+        "schedule:earlyMondays"
+      ],
+    }
   ],
 }
