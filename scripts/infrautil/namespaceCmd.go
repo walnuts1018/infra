@@ -25,7 +25,6 @@ func (*namespaceCmd) Usage() string {
 func (n *namespaceCmd) SetFlags(f *flag.FlagSet) {
 	f.StringVar(&n.appDir, "d", "k8s/apps", "app directory")
 	f.StringVar(&n.outFilePath, "o", "namespaces/namespaces.yaml", "output file path")
-
 }
 
 func (n *namespaceCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subcommands.ExitStatus {
