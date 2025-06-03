@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: namespaces
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+  source:
+    path: k8s/namespaces
+    repoURL: 'https://github.com/walnuts1018/infra-private'
+    targetRevision: main
+    directory:
+      jsonnet:
+        tlas:
+        - name: ''
+          value: ''
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - ServerSideApply=true
+    - FailOnSharedResource=true
