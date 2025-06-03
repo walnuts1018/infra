@@ -45,8 +45,8 @@ terraform-apply:
 	$(eval CLOUDFLARE_API_TOKEN := $(shell op item get cloudflare --field terraform-api-token --reveal))
 	terraform -chdir="./terraform/kurumi" apply -var="minio_secret_key=$(MINIO_SECRET_KEY)" -var="cloudflare_api_token=$(CLOUDFLARE_API_TOKEN)" -auto-approve
 
-.PHONY: aquq
-aquq:
+.PHONY: aqua
+aqua:
 	aqua i
 
 .PHONY: lint
