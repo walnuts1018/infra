@@ -23,7 +23,7 @@
               readOnlyRootFilesystem: true,
               runAsNonRoot: true,
             },
-            image: 'docker.elastic.co/kibana/kibana:9.0.1',
+            image: 'docker.elastic.co/kibana/kibana:9.0.2',
             ports: [
               {
                 name: 'http',
