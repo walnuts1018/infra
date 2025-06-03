@@ -1,0 +1,3 @@
+[submodule "k8s/apps-private"]
+	path = k8s/apps-private
+	url = https://github.com/walnuts1018/infra-private
