@@ -7,10 +7,10 @@ spec:
   goTemplate: true
   generators:
   - git:
-      repoURL: https://github.com/walnuts1018/infra
+      repoURL: https://github.com/walnuts1018/infra-private
       revision: main
       files:
-      - path: "k8s/apps-private/*/app.json5"
+      - path: "k8s/apps/*/app.json5"
   template:
     metadata:
       name: '{{.name}}'
@@ -20,7 +20,7 @@ spec:
         server: https://kubernetes.default.svc
         namespace: '{{.namespace}}'
       source:
-        repoURL: 'https://github.com/walnuts1018/infra'
+        repoURL: 'https://github.com/walnuts1018/infra-private'
         targetRevision: main
         path: '{{.path.path}}'
         directory:
