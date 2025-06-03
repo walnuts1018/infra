@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps-private
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+  - git:
+      repoURL: https://github.com/walnuts1018/infra
+      revision: main
+      files:
+      - path: "k8s/apps-private/*/app.json5"
+  template:
+    metadata:
+      name: '{{.name}}'
+    spec:
+      project: default
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.namespace}}'
+      source:
+        repoURL: 'https://github.com/walnuts1018/infra'
+        targetRevision: main
+        path: '{{.path.path}}'
+        directory:
+          recurse: true
+          exclude: '{config/*,_*/*}'
+          jsonnet:
+            tlas:
+            - name: ''
+              value: ''
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+        - ServerSideApply=true
+        - FailOnSharedResource=true
+  templatePatch: |
+    {{- with  .annotations }}
+    metadata:
+      annotations:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    {{- end }}
