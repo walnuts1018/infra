@@ -47,7 +47,7 @@
             env: [
               {
                 name: 'JAVA_TOOL_OPTIONS',
-                value: '',
+                value: '-XX:MaxPercentage=70 -XX:MaxMetaspaceSize=128m',
               },
             ],
             volumeMounts: [
