@@ -47,7 +47,7 @@
             env: [
               {
                 name: 'JAVA_TOOL_OPTIONS',
-                value: '-XX:MaxRAMPercentage=70 -XX:MaxMetaspaceSize=128m',
+                value: '-XX:MaxRAMPercentage=70 -XX:MaxMetaspaceSize=256m',
               },
             ],
             volumeMounts: [
