@@ -47,7 +47,7 @@
             env: [
               {
                 name: 'JAVA_TOOL_OPTIONS',
-                value: '-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dsun.zip.disableMemoryMapping=true',
+                value: '-XX:+UseCGroupMemoryLimitForHeap -Dsun.zip.disableMemoryMapping=true',
               },
             ],
             volumeMounts: [
