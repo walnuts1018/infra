@@ -28,7 +28,7 @@
               },
               requests: {
                 cpu: '5m',
-                memory: '1Gi',
+                memory: '2Gi',
               },
             },
             securityContext:: null,
