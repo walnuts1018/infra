@@ -1,0 +1,239 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: loki
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: loki
+    helm:
+      releaseName: loki
+      values: |
+        deploymentMode: SimpleScalable
+        loki:
+          auth_enabled: false
+          commonConfig:
+            replication_factor: 1
+          storage:
+            type: s3
+            bucketNames:
+              chunks: "loki-chunks"
+              ruler: "loki-ruler"
+              admin: "loki-admin"
+            s3:
+              endpoint: "http://minio.minio.svc.cluster.local:9000"
+              region: ap-northeast-1
+              secretAccessKey: "${secretAccessKey}"
+              accessKeyId: "${accessKeyId}"
+              s3ForcePathStyle: true
+              insecure: true
+              http_config:
+                insecure_skip_verify: true
+          server:
+            # "error": "HTTP 500 \"Internal Server Error\": rpc error: code = ResourceExhausted desc = grpc: received message larger than max (4840865 vs. 4194304)"
+            # https://grafana.com/docs/loki/latest/configure/
+            grpc_server_max_recv_msg_size: 104857600
+            grpc_server_max_send_msg_size: 104857600
+          schemaConfig:
+            configs:
+            - from: '2024-01-01'
+              store: tsdb
+              index:
+                prefix: loki_index_
+                period: 24h
+              object_store: s3
+              schema: v13
+          ingester:
+            chunk_encoding: snappy
+          tracing:
+            enabled: true
+          querier:
+            max_concurrent: 4
+          limits_config:
+            allow_structured_metadata: true
+            retention_period: 336h
+            ingestion_burst_size_mb: 100
+            shard_streams:
+              enabled: true
+              desired_rate: 104857600 # 10MiB
+            reject_old_samples: false
+
+        write:
+          replicas: 2
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 6
+            targetCPUUtilizationPercentage: 100
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              memory: 300Mi
+              cpu: 60m
+            limits:
+              memory: 1Gi
+              cpu: 1
+          extraArgs: [ "-config.expand-env=true" ]
+          extraEnvFrom:
+          - secretRef:
+              name: loki
+          persistence:
+            volumeClaimsEnabled: false
+            dataVolumeParameters:
+              emptyDir: {}
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app.kubernetes.io/component
+                      operator: In
+                      values:
+                      - write
+                  topologyKey: kubernetes.io/hostname
+
+        read:
+          replicas: 2
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 6
+            targetCPUUtilizationPercentage: 100
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              memory: 400Mi
+              cpu: 50m
+            limits:
+              memory: 1Gi
+              cpu: 1
+          extraArgs: [ "-config.expand-env=true" ]
+          extraEnvFrom:
+          - secretRef:
+              name: loki
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app.kubernetes.io/component
+                      operator: In
+                      values:
+                      - read
+                  topologyKey: kubernetes.io/hostname
+
+        backend:
+          replicas: 2
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 6
+            targetCPUUtilizationPercentage: 100
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 30m
+            limits:
+              memory: 1Gi
+              cpu: 100m
+          extraArgs: [ "-config.expand-env=true" ]
+          extraEnvFrom:
+          - secretRef:
+              name: loki
+          persistence:
+            volumeClaimsEnabled: false
+            dataVolumeParameters:
+              emptyDir: {}
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app.kubernetes.io/component
+                      operator: In
+                      values:
+                      - backend
+                  topologyKey: kubernetes.io/hostname
+
+        gateway:
+          replicas: 1
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 3
+            targetCPUUtilizationPercentage: 100
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              memory: 14Mi
+              cpu: 5m
+            limits:
+              memory: 512Mi
+              cpu: 100m
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app.kubernetes.io/component
+                      operator: In
+                      values:
+                      - gateway
+                  topologyKey: kubernetes.io/hostname
+          tolerations:
+          - key: "node.walnuts.dev/low-performance"
+            operator: "Exists"
+
+        singleBinary:
+          replicas: 0
+
+        sidecar:
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 5m
+              memory: 100Mi
+        chunksCache:
+          allocatedMemory: 8192
+          resources:
+            requests:
+              cpu: 10m
+              memory: 4Gi
+            limits:
+              memory: 9830Mi
+        resultsCache:
+          allocatedMemory: 1024
+          resources:
+            requests:
+              cpu: 10m
+              memory: 1Gi
+            limits:
+              memory: 1229Mi
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 6.30.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true
