@@ -19,7 +19,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'walnuts-dev',
-            image: 'ghcr.io/walnuts1018/walnuts.dev:dcdfac910d976123baf420c2908351a34d8463e0-546',
+            image: 'ghcr.io/walnuts1018/walnuts.dev:1939c10118e5f697cd5c9e3247e0bfc7e0418ca4-547',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
