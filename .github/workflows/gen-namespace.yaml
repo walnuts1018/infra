@@ -55,4 +55,4 @@ jobs:
         if: steps.check-diff.outputs.diff > 0
         run: |
           gh pr create --title "auto-gen-namespace" --body "auto-gen-namespace" --base main --head auto-gen-namespace
-          gh pr merge --merge
+          gh pr merge --merge --auto
