@@ -1,0 +1,13 @@
+agones:
+  metrics:
+    prometheusEnabled: true
+    prometheusServiceDiscovery: true
+    serviceMonitor:
+      enabled: true
+      interval: 30s
+
+gameservers:
+  namespaces:
+  - default
+  minPort: 7000
+  maxPort: 8000
