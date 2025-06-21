@@ -23,7 +23,7 @@
             image: 'gotson/komga:1.21.3',
             resources: {
               limits: {
-                cpu: '500m',
+                cpu: '1',
                 memory: '2Gi',
               },
               requests: {
