@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: wakatime-to-slack-profile
+    app.kubernetes.io/name: wakatime-to-slack-profile
+  name: wakatime-to-slack-profile
+  namespace: wakatime-to-slack-profile
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: wakatime-to-slack-profile
+      app.kubernetes.io/name: wakatime-to-slack-profile
+  template:
+    metadata:
+      labels:
+        app: wakatime-to-slack-profile
+        app.kubernetes.io/name: wakatime-to-slack-profile
+    spec:
+      containers:
+        - env:
+            - name: GIN_MODE
+              value: release
+            - name: WAKATIME_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  key: wakatime-app-id
+                  name: wakatime-to-slack-profile-389615
+            - name: WAKATIME_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: wakatime-client-secret
+                  name: wakatime-to-slack-profile-389615
+            - name: COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: cookie-secret
+                  name: wakatime-to-slack-profile-389615
+            - name: PSQL_ENDPOINT
+              value: postgresql-default.databases.svc.cluster.local
+            - name: PSQL_PORT
+              value: "5432"
+            - name: PSQL_DATABASE
+              value: wakatime_to_slack
+            - name: PSQL_USER
+              value: wakatime
+            - name: PSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgres-password
+                  name: wakatime-to-slack-profile-389615
+            - name: SLACK_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: slack-access-token
+                  name: wakatime-to-slack-profile-389615
+          image: ghcr.io/walnuts1018/wakatime-to-slack-profile:0.2.3
+          imagePullPolicy: IfNotPresent
+          name: wakatime-to-slack-profile
+          ports:
+            - containerPort: 8080
+          resources:
+            limits: {}
+            requests:
+              memory: 5Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /app/emoji.json
+              name: emoji-json
+              readOnly: true
+              subPath: emoji.json
+      priorityClassName: low
+      volumes:
+        - configMap:
+            items:
+              - key: emoji.json
+                path: emoji.json
+            name: wakatime-to-slack-profile-emojis-187ea1
+          name: emoji-json
