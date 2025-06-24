@@ -57,7 +57,7 @@ jobs:
           aqua_version: v2.53.2
 
       - run: |
-          echo "${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH" >> $GITHUB_PATH
+          echo ${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin >> $GITHUB_PATH
 
       - name: Build markdown comment with manifest diff
         run: |
