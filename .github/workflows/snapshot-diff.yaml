@@ -51,7 +51,10 @@ jobs:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: manifests
-
+          
+      - name: Check out
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+          
       - uses: aquaproj/aqua-installer@9ebf656952a20c45a5d66606f083ff34f58b8ce0 # v4.0.0
         with:
           aqua_version: v2.53.2
@@ -64,7 +67,7 @@ jobs:
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(for f in $(find snapshots-head/apps -type f); do ./dyff between --output github $(echo $f | sed 's/head/main/') $f | head -c -1; done)
+          $(for f in $(find snapshots-head/apps -type f); do dyff between --output github $(echo $f | sed 's/head/main/') $f | head -c -1; done)
           \`\`\`
           </details>" | tee /tmp/diff.md
 
@@ -86,7 +89,7 @@ jobs:
           <summary>Click to expand</summary>
 
           \`\`\`diff
-          $(for f in $(find snapshots-head/helm -type f); do ./dyff between --output github --exclude-regexp '.metadata.labels.app.kubernetes.io/version|.metadata.labels.chart|.metadata.labels.helm.sh/chart' $(echo $f | sed 's/head/main/') $f | head -c -1; done)
+          $(for f in $(find snapshots-head/helm -type f); do dyff between --output github --exclude-regexp '.metadata.labels.app.kubernetes.io/version|.metadata.labels.chart|.metadata.labels.helm.sh/chart' $(echo $f | sed 's/head/main/') $f | head -c -1; done)
           \`\`\`
           </details>" | tee /tmp/diff.md
 
