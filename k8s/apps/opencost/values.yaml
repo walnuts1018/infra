@@ -54,3 +54,7 @@ opencost:
 
   ui:
     enabled: false
+
+podAnnotations:
+  instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
+  instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/go/bin/app'
