@@ -42,7 +42,7 @@ opencost:
 
   metrics:
     serviceMonitor:
-      enabled: true
+      enabled: false
 
   prometheus:
     internal:
