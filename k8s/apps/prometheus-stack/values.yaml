@@ -85,7 +85,8 @@ prometheus-node-exporter:
 prometheus:
   prometheusSpec:
     serviceMonitorSelector:
-      matchLabels: {} #全てのServiceMonitorを監視対象にする
+      matchLabels:
+        walnuts.dev/scraped-by: prometheus # OpenTelemetry Collectorとの干渉を防ぐ
     podMonitorSelector:
       matchLabels: {} #全てのPodMonitorを監視対象にする
     probeSelector:
