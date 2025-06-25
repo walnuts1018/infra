@@ -1,0 +1,56 @@
+loglevel: info
+
+opencost:
+  exporter:
+    resources:
+      requests:
+        cpu: '10m'
+        memory: '55Mi'
+      limits:
+        memory: '1Gi'
+    # # Collector DataSource collects cluster data without a dependency on Prometheus
+    # # It is recommended that persistence is enabled alongside it to preserve the state
+    # # between pod restarts
+    # collectorDataSource:
+    #   enabled: false
+    #   # -- define the interval at which the collector scrapes for data points (10s, 15s, 1m)
+    #   scrapeInterval: 30s
+    #   # -- The port at which network pods are open to egress
+    #   networkPort: 3001
+    #   # -- The number of 10m intervals the Collector DataSource should maintain
+    #   retentionResolution10m: 36
+    #   # -- The number of 1h intervals the Collector DataSource should maintain
+    #   retentionResolution1h: 49
+    #   # -- The number of 1d intervals the Collector DataSource should maintain
+    #   retentionResolution1d: 15
+
+  customPricing:
+    enabled: true
+    provider: custom
+    # -- More information about these values here: https://www.opencost.io/docs/configuration/on-prem#custom-pricing-using-the-opencost-helm-chart
+    costModel:
+      description: Modified pricing configuration.
+      CPU: 1.25
+      spotCPU: 0.006655
+      RAM: 0.50
+      spotRAM: 0.000892
+      GPU: 0.95
+      storage: 0.25
+      zoneNetworkEgress: 0.01
+      regionNetworkEgress: 0.01
+      internetNetworkEgress: 0.12
+
+  metrics:
+    serviceMonitor:
+      enabled: true
+
+  prometheus:
+    internal:
+      enabled: true
+      serviceName: prometheus-operated
+      namespaceName: monitoring
+      port: 9090
+      scheme: http
+
+  ui:
+    enabled: false
