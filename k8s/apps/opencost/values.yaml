@@ -42,13 +42,13 @@ opencost:
 
   metrics:
     serviceMonitor:
-      enabled: false
+      enabled: true
 
   prometheus:
     internal:
       enabled: true
       serviceName: prometheus-operated
-      namespaceName: monitoring
+      namespaceName: dummy
       port: 9090
       scheme: http
 
