@@ -5,6 +5,9 @@
       name: (import 'storage-configuration.jsonnet').spec.target.name,
       existingSecret: true,
     },
+    certificate: {
+      requestAutoCert: false,
+    },
     pools: [
       {
         servers: 4,
