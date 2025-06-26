@@ -1,7 +1,6 @@
 std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: (import 'app.json5').name + '-storage-config',
   namespace: (import 'app.json5').namespace,
-  use_suffix: false,
   data: [
     {
       secretKey: 'rootUser',
