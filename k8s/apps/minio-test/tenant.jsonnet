@@ -14,30 +14,10 @@ local appname = 'test';
         name: 'storage-user',
       },
     ],
-    env: [
-      {
-        name: 'MINIO_ROOT_USER',
-        valueFrom: {
-          secretKeyRef: {
-            name: (import 'external-secret.jsonnet').spec.target.name,
-            key: 'rootUser',
-          },
-        },
-      },
-      {
-        name: 'MINIO_ROOT_PASSWORD',
-        valueFrom: {
-          secretKeyRef: {
-            name: (import 'external-secret.jsonnet').spec.target.name,
-            key: 'rootPassword',
-          },
-        },
-      },
-      {
-        name: 'MINIO_PROMETHEUS_AUTH_TYPE',
-        value: 'public',
-      },
-    ],
+    configuration: {
+      name: (import 'external-secret.jsonnet').spec.target.name,
+    },
+    env: [],
     pools: [
       {
         servers: 3,
