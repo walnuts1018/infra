@@ -1,0 +1,13 @@
+{
+  apiVersion: 'v1',
+  kind: 'Secret',
+  metadata: {
+    name: 'storage-user',
+    namespace: 'default',
+  },
+  data: {
+    CONSOLE_ACCESS_KEY: 'Y29uc29sZQ==',
+    CONSOLE_SECRET_KEY: 'Y29uc29sZTEyMw==',
+  },
+  type: 'Opaque',
+}

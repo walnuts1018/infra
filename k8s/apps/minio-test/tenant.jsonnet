@@ -9,12 +9,11 @@ local appname = 'test';
     labels: (import '../../components/labels.libsonnet') + { appname: appname },
   },
   spec: {
-    // users: [
-    //   {
-    //     name: 'storage-user',
-    //   },
-    // ],
-    certConfig: {},
+    users: [
+      {
+        name: 'storage-user',
+      },
+    ],
     env: [
       {
         name: 'MINIO_ROOT_USER',
