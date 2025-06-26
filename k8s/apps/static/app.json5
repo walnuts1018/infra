@@ -1,4 +1,4 @@
 {
   name: "static",
-  namespace: "static",
+  namespace: "static-web",
 }
