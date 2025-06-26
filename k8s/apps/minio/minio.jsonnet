@@ -1,0 +1,76 @@
+local appname = 'test';
+
+{
+  apiVersion: 'minio.min.io/v2',
+  kind: 'Tenant',
+  metadata: {
+    name: appname,
+    namespace: (import 'app.json5').namespace,
+    labels: (import '../../components/labels.libsonnet') + { appname: appname },
+  },
+  spec: {
+    features: {
+      bucketDNS: false,
+      domains: {},
+      enableSFTP: false,
+    },
+    // users: [
+    //   {
+    //     name: 'storage-user',
+    //   },
+    // ],
+    certConfig: {},
+    // configuration: {
+    //   name: 'storage-configuration',
+    // },
+    env: [],
+    externalCaCertSecret: [],
+    externalCertSecret: [],
+    externalClientCertSecrets: [],
+    pools: [
+      {
+        servers: 3,
+        name: appname + '-pool-0',
+        volumesPerServer: 1,
+        resources: {},
+        volumeClaimTemplate: {
+          apiVersion: 'v1',
+          kind: 'persistentvolumeclaims',
+          spec: {
+            accessModes: [
+              'ReadWriteOnce',
+            ],
+            resources: {
+              requests: {
+                storage: '10Gi',
+              },
+            },
+            storageClassName: 'longhorn',
+          },
+        },
+        securityContext: {
+          runAsUser: 1000,
+          runAsGroup: 1000,
+          runAsNonRoot: true,
+          fsGroup: 1000,
+          fsGroupChangePolicy: 'OnRootMismatch',
+        },
+        containerSecurityContext: {
+          runAsUser: 1000,
+          runAsGroup: 1000,
+          runAsNonRoot: true,
+          allowPrivilegeEscalation: false,
+          capabilities: {
+            drop: [
+              'ALL',
+            ],
+          },
+          seccompProfile: {
+            type: 'RuntimeDefault',
+          },
+        },
+      },
+    ],
+    requestAutoCert: true,
+  },
+}
