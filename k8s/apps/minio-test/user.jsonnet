@@ -3,7 +3,7 @@
   kind: 'Secret',
   metadata: {
     name: 'storage-user',
-    namespace: 'default',
+    namespace: (import 'app.json5').namespace,
   },
   data: {
     CONSOLE_ACCESS_KEY: 'Y29uc29sZQ==',
