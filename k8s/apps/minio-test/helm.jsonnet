@@ -5,5 +5,5 @@
   chart: 'tenant',
   repoURL: 'https://operator.min.io/',
   targetRevision: '7.1.1',
-  valuesObject: (import 'values.jsonnet'),
+  valuesObject: (import 'values.libsonnet'),
 }
