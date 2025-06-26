@@ -14,9 +14,6 @@ local appname = 'test';
         name: 'storage-user',
       },
     ],
-    configuration: {
-      name: 'storage-configuration',
-    },
     env: [
       {
         name: 'MINIO_ROOT_USER',
