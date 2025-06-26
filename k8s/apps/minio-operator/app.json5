@@ -1,4 +1,4 @@
 {
   name: "minio-operator",
-  namespace: "minio",
+  namespace: "minio-operator",
 }
