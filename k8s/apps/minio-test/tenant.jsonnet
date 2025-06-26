@@ -1,12 +1,10 @@
-local appname = 'test';
-
 {
   apiVersion: 'minio.min.io/v2',
   kind: 'Tenant',
   metadata: {
-    name: appname,
+    name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: appname },
+    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
     users: [
@@ -20,9 +18,9 @@ local appname = 'test';
     env: [],
     pools: [
       {
-        servers: 3,
-        name: appname + '-pool',
-        volumesPerServer: 2,
+        servers: 4,
+        name: (import 'app.json5').name + '-pool',
+        volumesPerServer: 1,
         resources: {},
         volumeClaimTemplate: {
           spec: {
