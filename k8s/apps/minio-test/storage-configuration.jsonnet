@@ -32,7 +32,7 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
         engineVersion: 'v2',
         type: 'Opaque',
         data: {
-          'config.env': (importstr 'storage-configuration.tmpl'),
+          'config.env': (importstr './config/storage-configuration.tmpl'),
         },
       },
     },
