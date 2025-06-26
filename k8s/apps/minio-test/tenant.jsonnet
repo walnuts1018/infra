@@ -22,7 +22,7 @@ local appname = 'test';
       {
         servers: 3,
         name: appname + '-pool-0',
-        volumesPerServer: 1,
+        volumesPerServer: 2,
         resources: {},
         volumeClaimTemplate: {
           spec: {
