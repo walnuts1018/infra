@@ -44,6 +44,7 @@
                 valueFrom: {
                   secretKeyRef: {
                     name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 'client-id',
                   },
                 },
               },
