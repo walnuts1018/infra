@@ -59,7 +59,7 @@
               },
               {
                 name: 'OIDC_REDIRECT_URL',
-                value: 'https://ipu.walnuts.dev/oauth2/callback',
+                value: 'https://ipu.walnuts.dev/auth/callback',
               },
               {
                 name: 'OIDC_ALLOWED_GROUPS',
