@@ -30,6 +30,22 @@
                 memory: '5Mi',
               },
             },
+            volumeMounts: [
+              {
+                name: 'local-ca-bundle',
+                mountPath: '/etc/ssl/certs/trust-bundle.pem',
+                subPath: 'trust-bundle.pem',
+                readOnly: true,
+              },
+            ],
+          },
+        ],
+        volumes: [
+          {
+            name: 'local-ca-bundle',
+            configMap: {
+              name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
+            },
           },
         ],
       },
