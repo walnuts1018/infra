@@ -29,7 +29,12 @@
             console: 'minio-test-console.walnuts.dev',
           },
         },
-        buckets: [],
+        buckets: [
+          {
+            name: 'test',
+            region: 'ap-northeast-1',
+          },
+        ],
         users: [],
         env: [],
       },
