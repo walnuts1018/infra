@@ -1,0 +1,4 @@
+{
+  name: "minio-operator",
+  namespace: "minio",
+}
