@@ -105,7 +105,7 @@
             volumeMounts: [
               {
                 name: 'local-ca-bundle',
-                mountPath: '/etc/ssl/certs/ca-bundle.crt',
+                mountPath: '/etc/ssl/certs/trust-bundle.pem',
                 subPath: 'trust-bundle.pem',
                 readOnly: true,
               },
