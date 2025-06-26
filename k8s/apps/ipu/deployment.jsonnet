@@ -49,7 +49,11 @@
               {
                 name: 'AWS_REGION',
                 value: 'ap-northeast-1',
-              }
+              },
+              {
+                name: 'AWS_IGNORE_CONFIGURED_ENDPOINT_URLS',
+                value: 'false',
+              },
               {
                 name: 'AWS_ROLE_ARN',
                 value: 'arn:aws:iam::dummy:role/test',
