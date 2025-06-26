@@ -30,7 +30,8 @@
                 name: 'SESSION_SECRET',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'app.json5').name + '-secret',
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 'session-secret',
                   },
                 },
               },
