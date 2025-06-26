@@ -15,7 +15,7 @@ local appname = 'test';
       },
     ],
     configuration: {
-      name: (import 'external-secret.jsonnet').spec.target.name,
+      name: (import 'storage-configuration.jsonnet').spec.target.name,
     },
     env: [],
     pools: [
