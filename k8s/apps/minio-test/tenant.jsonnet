@@ -21,7 +21,7 @@ local appname = 'test';
     pools: [
       {
         servers: 3,
-        name: appname + '-pool-0',
+        name: appname + '-pool',
         volumesPerServer: 2,
         resources: {},
         volumeClaimTemplate: {
