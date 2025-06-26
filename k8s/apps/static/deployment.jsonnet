@@ -68,11 +68,11 @@
               },
               {
                 name: 'STS_ENDPOINT',
-                value: 'https://sts.minio-operator.svc.cluster.local:4223',
+                value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/test',
               },
               {
                 name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-                value: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+                value: '/var/run/secrets/sts.min.io/serviceaccount/token',
               },
               {
                 name: 'JS_TRUSTED_CERT_PATH',
@@ -108,6 +108,11 @@
             },
             volumeMounts: [
               {
+                name: 'minio-sts-token',
+                mountPath: '/var/run/secrets/sts.min.io/serviceaccount',
+                readOnly: true,
+              },
+              {
                 name: 'local-ca-bundle',
                 mountPath: '/etc/ssl/certs/trust-bundle.pem',
                 subPath: 'trust-bundle.pem',
@@ -117,6 +122,19 @@
           },
         ],
         volumes: [
+          {
+            name: 'minio-sts-token',
+            projected: {
+              sources: [
+                {
+                  serviceAccountToken: {
+                    audience: 'sts.min.io',
+                    expirationSeconds: 86400,
+                  },
+                },
+              ],
+            },
+          },
           {
             name: 'local-ca-bundle',
             configMap: {
