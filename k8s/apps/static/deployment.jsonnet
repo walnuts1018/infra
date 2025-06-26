@@ -74,6 +74,10 @@
                 name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
                 value: '/var/run/secrets/kubernetes.io/serviceaccount/token',
               },
+              {
+                name: 'JS_TRUSTED_CERT_PATH',
+                value: '/etc/ssl/certs/trust-bundle.pem',
+              },
             ],
             ports: [
               {
