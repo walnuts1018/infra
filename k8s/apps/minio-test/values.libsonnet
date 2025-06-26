@@ -32,21 +32,21 @@
         env: [],
       },
     ],
-    ingress: {
-      api: {
-        enabled: true,
-        ingressClassName: 'cilium',
-        host: 'minio-test.walnuts.dev',
-        path: '/',
-        pathType: 'Prefix',
-      },
-      console: {
-        enabled: true,
-        ingressClassName: 'cilium',
-        host: 'minio-test-console.walnuts.dev',
-        path: '/',
-        pathType: 'Prefix',
-      },
+  },
+  ingress: {
+    api: {
+      enabled: true,
+      ingressClassName: 'cilium',
+      host: 'minio-test.walnuts.dev',
+      path: '/',
+      pathType: 'Prefix',
+    },
+    console: {
+      enabled: true,
+      ingressClassName: 'cilium',
+      host: 'minio-test-console.walnuts.dev',
+      path: '/',
+      pathType: 'Prefix',
     },
   },
 }
