@@ -25,6 +25,18 @@ local domain = 'static.walnuts.dev';
       ],
       extraPaths: [
         {
+          path: '/oauth2',
+          pathType: 'Prefix',
+          backend: {
+            service: {
+              name: 'static-private-oauth2-proxy',
+              port: {
+                number: 80,
+              },
+            },
+          },
+        },
+        {
           path: '/',
           pathType: 'Prefix',
           backend: {
