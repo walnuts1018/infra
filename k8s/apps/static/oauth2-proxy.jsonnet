@@ -6,7 +6,7 @@ local domain = 'static.walnuts.dev';
       namespace: (import 'app.json5').namespace,
     },
     domain: domain,
-    upstream: 'http://static.static.svc.cluster.local:8080',
+    upstream: 'http://' + (import '../../../utils/get-endpoint-from-service.libsonnet')(import './service.jsonnet') + ':8080',
     oidc: {
       secret: {
         onepassword_item_name: 'static-private-oauth2-proxy',
