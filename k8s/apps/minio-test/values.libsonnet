@@ -1,7 +1,7 @@
 {
   tenant: {
     name: 'test',
-    configuration: {
+    configSecret: {
       name: (import 'storage-configuration.jsonnet').spec.target.name,
     },
     existingSecret: true,
