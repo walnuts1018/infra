@@ -31,7 +31,7 @@
         },
         buckets: [
           {
-            name: 'test',
+            name: 'static',
             region: 'ap-northeast-1',
           },
         ],
