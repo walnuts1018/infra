@@ -24,7 +24,7 @@
         containers: [
           {
             name: 'nginx',
-            image: 'ghcr.io/nginxinc/nginx-s3-gateway/nginx-oss-s3-gateway:latest-20250331',
+            image: 'ghcr.io/nginxinc/nginx-s3-gateway/nginx-oss-s3-gateway:latest-20250331',  // TODO: renovate
             env: [
               {
                 name: 'S3_BUCKET_NAME',
