@@ -27,6 +27,10 @@
             image: 'ghcr.io/walnuts1018/s3-oauth2-proxy:0.0.7',
             env: [
               {
+                name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
+                value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317',
+              },
+              {
                 name: 'SESSION_SECRET',
                 valueFrom: {
                   secretKeyRef: {
