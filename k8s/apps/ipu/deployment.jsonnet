@@ -24,7 +24,7 @@
         containers: [
           {
             name: 'proxy',
-            image: 'ghcr.io/walnuts1018/s3-oauth2-proxy:0.0.6',
+            image: 'ghcr.io/walnuts1018/s3-oauth2-proxy:0.0.7',
             env: [
               {
                 name: 'SESSION_SECRET',
