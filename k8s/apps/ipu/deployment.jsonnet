@@ -39,6 +39,14 @@
                 value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/test',
               },
               {
+                name: 'AWS_STS_REGIONAL_ENDPOINTS',
+                value: 'global',
+              },
+              {
+                name: 'AWS_REGION',
+                value: 'ap-northeast-1',
+              }
+              {
                 name: 'AWS_ROLE_ARN',
                 value: 'arn:aws:iam::dummy:role/test',
               },
