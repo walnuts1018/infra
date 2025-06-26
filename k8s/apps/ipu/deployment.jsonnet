@@ -50,18 +50,18 @@
                 protocol: 'TCP',
               },
             ],
-            livenessProbe: {
-              httpGet: {
-                path: '/health',
-                port: 'http',
-              },
-            },
-            readinessProbe: {
-              httpGet: {
-                path: '/health',
-                port: 'http',
-              },
-            },
+            // livenessProbe: {
+            //   httpGet: {
+            //     path: '/health',
+            //     port: 'http',
+            //   },
+            // },
+            // readinessProbe: {
+            //   httpGet: {
+            //     path: '/health',
+            //     port: 'http',
+            //   },
+            // },
             resources: {
               limits: {
                 memory: '100Mi',
