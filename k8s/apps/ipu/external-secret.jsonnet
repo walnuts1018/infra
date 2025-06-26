@@ -16,17 +16,10 @@
       },
     },
     {
-      secretKey: 'cookie-secret',
+      secretKey: 'session-secret',
       remoteRef: {
         key: 'ipu-oauth2-proxy',
         property: 'cookie-secret',
-      },
-    },
-    {
-      secretKey: 'redis-password',
-      remoteRef: {
-        key: 'redis',
-        property: 'password',
       },
     },
   ],
