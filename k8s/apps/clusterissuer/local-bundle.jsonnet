@@ -2,7 +2,7 @@
   apiVersion: 'trust.cert-manager.io/v1alpha1',
   kind: 'Bundle',
   metadata: {
-    name: 'local',
+    name: 'local-ca-bundle',
     namespace: (import 'app.json5').namespace,
   },
   spec: {
