@@ -15,9 +15,6 @@ local appname = 'test';
     //   },
     // ],
     certConfig: {},
-    configuration: {
-      name: 'storage-configuration',
-    },
     env: [
       {
         name: 'MINIO_ROOT_USER',
