@@ -43,6 +43,14 @@
                 value: 'arn:aws:iam::dummy:role/test',
               },
             ],
+            args: [
+              '--name',
+              's3',
+              '--region',
+              'ap-northeast-1',
+              '--host',
+              'test-hl.minio-test.svc.cluster.local',
+            ],
             ports: [
               {
                 name: 'http',
