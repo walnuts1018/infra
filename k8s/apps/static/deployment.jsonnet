@@ -22,50 +22,74 @@
           fsGroupChangePolicy: 'OnRootMismatch',
         },
         containers: [
-          std.mergePatch((import '../../components/container.libsonnet') {
+          {
             name: 'nginx',
-            image: 'nginx:1.29.0',
+            image: 'ghcr.io/nginxinc/nginx-s3-gateway/nginx-oss-s3-gateway:latest-20250331',
+            env: [
+              {
+                name: 'S3_BUCKET_NAME',
+                value: 'static',
+              },
+              {
+                name: 'S3_SERVER',
+                value: 'test-hl.minio-test.svc.cluster.local',
+              },
+              {
+                name: 'S3_SERVER_PROTO',
+                value: 'http',
+              },
+              {
+                name: 'S3_SERVER_PORT',
+                value: '9000',
+              },
+              {
+                name: 'S3_STYLE',
+                value: 'path',
+              },
+              {
+                name: 'S3_REGION',
+                value: 'ap-northeast-1',
+              },
+              {
+                name: 'AWS_REGION',
+                value: 'ap-northeast-1',
+              },
+              {
+                name: 'AWS_SIGS_VERSION',
+                value: '4',
+              },
+              {
+                name: 'ALLOW_DIRECTORY_LIST',
+                value: 'false',
+              },
+              {
+                name: 'PROVIDE_INDEX_PAGE',
+                value: 'false',
+              },
+              {
+                name: 'STS_ENDPOINT',
+                value: 'https://sts.minio-operator.svc.cluster.local',
+              },
+            ],
             ports: [
               {
-                containerPort: 8080,
+                name: 'http',
+                containerPort: 80,
+                protocol: 'TCP',
               },
             ],
             livenessProbe: {
               httpGet: {
-                path: '/healthz',
-                port: 8081,
+                path: '/health',
+                port: 'http',
               },
-              failureThreshold: 1,
-              initialDelaySeconds: 10,
-              periodSeconds: 10,
             },
-            volumeMounts: [
-              {
-                mountPath: '/etc/nginx',
-                readOnly: true,
-                name: 'nginx-conf',
+            readinessProbe: {
+              httpGet: {
+                path: '/health',
+                port: 'http',
               },
-              {
-                mountPath: '/tmp',
-                name: 'tmp',
-              },
-              {
-                mountPath: '/var/tmp',
-                name: 'tmp',
-              },
-              {
-                mountPath: '/var/log/nginx',
-                name: 'log-nginx',
-              },
-              {
-                mountPath: '/var/cache/nginx',
-                name: 'cache-nginx',
-              },
-              {
-                mountPath: '/var/run',
-                name: 'var-run',
-              },
-            ],
+            },
             resources: {
               limits: {
                 memory: '100Mi',
@@ -74,44 +98,6 @@
                 memory: '10Mi',
               },
             },
-          }, {
-            securityContext: {
-              runAsUser: 101,
-            },
-          }),
-        ],
-        volumes: [
-          {
-            name: 'nginx-conf',
-            configMap: {
-              name: (import 'configmap.jsonnet').metadata.name,
-              items: [
-                {
-                  key: 'nginx.conf',
-                  path: 'nginx.conf',
-                },
-                {
-                  key: 'virtualhost.conf',
-                  path: 'virtualhost/virtualhost.conf',
-                },
-              ],
-            },
-          },
-          {
-            name: 'tmp',
-            emptyDir: {},
-          },
-          {
-            name: 'log-nginx',
-            emptyDir: {},
-          },
-          {
-            name: 'cache-nginx',
-            emptyDir: {},
-          },
-          {
-            name: 'var-run',
-            emptyDir: {},
           },
         ],
       },
