@@ -2,20 +2,20 @@
   apiVersion: 'cert-manager.io/v1',
   kind: 'Certificate',
   metadata: {
-    name: (import 'app.json5').name + '-ca-certificate',
+    name: 'local-ca-cert',
     namespace: (import 'app.json5').namespace,
   },
   spec: {
     isCA: true,
     commonName: 'operator',
-    secretName: (import 'app.json5').caSecretName,
+    secretName: 'local-ca-secret',
     duration: '70128h',
     privateKey: {
       algorithm: 'ECDSA',
       size: 256,
     },
     issuerRef: {
-      name: 'selfsigned',
+      name: (import 'selfsigned.jsonnet').metadata.name,
       kind: 'ClusterIssuer',
       group: 'cert-manager.io',
     },
