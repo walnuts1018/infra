@@ -14,10 +14,6 @@
     template: {
       metadata: {
         labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
-        annotations: {
-          'instrumentation.opentelemetry.io/inject-go': 'opentelemetry-collector/default',
-          'instrumentation.opentelemetry.io/otel-go-auto-target-exe': '/aws-sigv4-proxy',
-        },
       },
       spec: {
         serviceAccountName: (import 'sa.jsonnet').metadata.name,
@@ -27,9 +23,54 @@
         },
         containers: [
           {
-            name: 'sigv4-proxy',
-            image: 'public.ecr.aws/aws-observability/aws-sigv4-proxy:1.10',
+            name: 'proxy',
+            image: 'ghcr.io/walnuts1018/s3-oauth2-proxy:0.0.4',
             env: [
+              {
+                name: 'SESSION_SECRET',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'app.json5').name + '-secret',
+                  },
+                },
+              },
+              {
+                name: 'OIDC_ISSUER_URL',
+                value: 'https://auth.walnuts.dev',
+              },
+              {
+                name: 'OIDC_CLIENT_ID',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                  },
+                },
+              },
+              {
+                name: 'OIDC_CLIENT_SECRET',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 'client-secret',
+                  },
+                },
+              },
+              {
+                name: 'OIDC_REDIRECT_URL',
+                value: 'https://ipu.walnuts.dev/oauth2/callback',
+              },
+              {
+                name: 'OIDC_ALLOWED_GROUPS',
+                value: '326185042176901521:viewer',
+              },
+              {
+                name: 'OIDC_GROUP_CLAIM',
+                value: 'my:zitadel:grants',
+              },
+              {
+                name: 'S3_BUCKET',
+                value: 'test',
+              },
               {
                 name: 'AWS_CA_BUNDLE',
                 value: '/etc/ssl/certs/trust-bundle.pem',
@@ -51,21 +92,9 @@
                 value: 'ap-northeast-1',
               },
               {
-                name: 'AWS_IGNORE_CONFIGURED_ENDPOINT_URLS',
-                value: 'false',
-              },
-              {
                 name: 'AWS_ROLE_ARN',
                 value: 'arn:aws:iam::dummy:role/test',
               },
-            ],
-            args: [
-              '--name',
-              's3',
-              '--region',
-              'ap-northeast-1',
-              '--host',
-              'test-hl.minio-test.svc.cluster.local',
             ],
             ports: [
               {
