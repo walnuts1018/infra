@@ -16,6 +16,7 @@
         labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
       },
       spec: {
+        serviceAccountName: (import 'sa.jsonnet').metadata.name,
         securityContext: {
           fsGroup: 101,
           fsGroupChangePolicy: 'OnRootMismatch',
