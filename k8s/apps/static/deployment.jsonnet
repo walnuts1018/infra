@@ -68,7 +68,7 @@
               },
               {
                 name: 'STS_ENDPOINT',
-                value: 'https://sts.minio-operator.svc.cluster.local',
+                value: 'https://sts.minio-operator.svc.cluster.local:4223',
               },
               {
                 name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
