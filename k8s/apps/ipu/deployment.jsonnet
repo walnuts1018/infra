@@ -16,7 +16,7 @@
         labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
         annotations: {
           'instrumentation.opentelemetry.io/inject-go': 'opentelemetry-collector/default',
-          'instrumentation.opentelemetry.io/otel-go-auto-target-exe': '/aws-sigv4-proxy/aws-sigv4-proxy',
+          'instrumentation.opentelemetry.io/otel-go-auto-target-exe': '/aws-sigv4-proxy',
         },
       },
       spec: {
