@@ -1,0 +1,4 @@
+{
+  name: "minio-test",
+  namespace: "minio",
+}

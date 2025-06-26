@@ -9,24 +9,39 @@ local appname = 'test';
     labels: (import '../../components/labels.libsonnet') + { appname: appname },
   },
   spec: {
-    features: {
-      bucketDNS: false,
-      domains: {},
-      enableSFTP: false,
-    },
     // users: [
     //   {
     //     name: 'storage-user',
     //   },
     // ],
     certConfig: {},
-    // configuration: {
-    //   name: 'storage-configuration',
-    // },
-    env: [],
-    externalCaCertSecret: [],
-    externalCertSecret: [],
-    externalClientCertSecrets: [],
+    configuration: {
+      name: 'storage-configuration',
+    },
+    env: [
+      {
+        name: 'MINIO_ROOT_USER',
+        valueFrom: {
+          secretKeyRef: {
+            name: (import 'external-secret.jsonnet').spec.target.name,
+            key: 'rootUser',
+          },
+        },
+      },
+      {
+        name: 'MINIO_ROOT_PASSWORD',
+        valueFrom: {
+          secretKeyRef: {
+            name: (import 'external-secret.jsonnet').spec.target.name,
+            key: 'rootPassword',
+          },
+        },
+      },
+      {
+        name: 'MINIO_PROMETHEUS_AUTH_TYPE',
+        value: 'public',
+      },
+    ],
     pools: [
       {
         servers: 3,
@@ -34,8 +49,6 @@ local appname = 'test';
         volumesPerServer: 1,
         resources: {},
         volumeClaimTemplate: {
-          apiVersion: 'v1',
-          kind: 'persistentvolumeclaims',
           spec: {
             accessModes: [
               'ReadWriteOnce',
