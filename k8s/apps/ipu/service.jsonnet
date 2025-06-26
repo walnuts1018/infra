@@ -10,9 +10,10 @@
     selector: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
     ports: [
       {
+        name: 'http',
         protocol: 'TCP',
         port: 8080,
-        targetPort: (import 'deployment.jsonnet').spec.template.spec.containers[0].ports[0].containerPort,
+        targetPort: 'http',
       },
     ],
     type: 'ClusterIP',

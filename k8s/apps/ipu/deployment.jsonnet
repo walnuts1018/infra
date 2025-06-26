@@ -23,70 +23,30 @@
         },
         containers: [
           {
-            name: 'nginx',
-            image: 'ghcr.io/nginxinc/nginx-s3-gateway/nginx-oss-s3-gateway:latest-20250331',  // TODO: renovate
+            name: 'sigv4-proxy',
+            image: 'public.ecr.aws/aws-observability/aws-sigv4-proxy:1.10',
             env: [
               {
-                name: 'S3_BUCKET_NAME',
-                value: 'static',
-              },
-              {
-                name: 'S3_SERVER',
-                value: 'test-hl.minio-test.svc.cluster.local',
-              },
-              {
-                name: 'S3_SERVER_PROTO',
-                value: 'http',
-              },
-              {
-                name: 'S3_SERVER_PORT',
-                value: '9000',
-              },
-              {
-                name: 'S3_STYLE',
-                value: 'path',
-              },
-              {
-                name: 'S3_REGION',
-                value: 'ap-northeast-1',
-              },
-              {
-                name: 'AWS_REGION',
-                value: 'ap-northeast-1',
-              },
-              {
-                name: 'AWS_SIGS_VERSION',
-                value: '4',
-              },
-              {
-                name: 'ALLOW_DIRECTORY_LIST',
-                value: 'false',
-              },
-              {
-                name: 'PROVIDE_INDEX_PAGE',
-                value: 'false',
-              },
-              {
-                name: 'STS_ENDPOINT',
-                value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/test',
+                name: 'AWS_CA_BUNDLE',
+                value: '/etc/ssl/certs/trust-bundle.pem',
               },
               {
                 name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
                 value: '/var/run/secrets/sts.min.io/serviceaccount/token',
               },
               {
-                name: 'JS_TRUSTED_CERT_PATH',
-                value: '/etc/ssl/certs/trust-bundle.pem',
+                name: 'AWS_ENDPOINT_URL_STS',
+                value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/test',
               },
               {
-                name: 'DEBUG',
-                value: 'true',
+                name: 'AWS_ROLE_ARN',
+                value: 'arn:aws:iam::dummy:role/test',
               },
             ],
             ports: [
               {
                 name: 'http',
-                containerPort: 80,
+                containerPort: 8080,
                 protocol: 'TCP',
               },
             ],
