@@ -3,7 +3,7 @@
   kind: 'Secret',
   metadata: {
     name: 'storage-configuration',
-    namespace: 'minio-tenant',
+    namespace: (import 'app.json5').namespace,
   },
   type: 'Opaque',
   stringData: {
