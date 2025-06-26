@@ -13,7 +13,7 @@
     ],
     secretName: 'sts-tls',
     issuerRef: {
-      name: (import 'ca-issuer.jsonnet').metadata.name,
+      name: (import 'ca.jsonnet').metadata.name,
     },
   },
 }
