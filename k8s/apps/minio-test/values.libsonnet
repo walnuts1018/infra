@@ -3,8 +3,8 @@
     name: 'test',
     configSecret: {
       name: (import 'storage-configuration.jsonnet').spec.target.name,
+      existingSecret: true,
     },
-    existingSecret: true,
     pools: [
       {
         servers: 4,
