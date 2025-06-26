@@ -102,6 +102,22 @@
                 memory: '10Mi',
               },
             },
+            volumeMounts: [
+              {
+                name: 'local-ca-bundle',
+                mountPath: '/etc/ssl/certs/ca-bundle.crt',
+                subPath: 'trust-bundle.pem',
+                readOnly: true,
+              },
+            ],
+          },
+        ],
+        volumes: [
+          {
+            name: 'local-ca-bundle',
+            configMap: {
+              name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
+            },
           },
         ],
       },
