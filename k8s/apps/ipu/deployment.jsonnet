@@ -39,8 +39,8 @@
                 value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/test',
               },
               {
-                name: 'AWS_STS_REGIONAL_ENDPOINTS',
-                value: 'global',
+                name: 'AWS_ENDPOINT_URL_S3',
+                value: 'https://s3.minio-operator.svc.cluster.local:9000',
               },
               {
                 name: 'AWS_REGION',
