@@ -39,6 +39,7 @@ func (b *snapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subc
 
 	if err := filepath.Walk(b.appBaseDir, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
+			slog.Error("failed to walk app directory", slog.String("appBaseDir", b.appBaseDir), slog.Any("error", err))
 			return err
 		}
 
@@ -53,19 +54,23 @@ func (b *snapshotCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...any) subc
 		eg.Go(func() error {
 			yaml, err := lib.BuildYAML(path)
 			if err != nil {
+				slog.Error("failed to build YAML from jsonnet", slog.String("path", path), slog.Any("error", err))
 				return err
 			}
 
 			relativePath, err := filepath.Rel(b.appBaseDir, path)
 			if err != nil {
+				slog.Error("failed to get relative path", slog.String("path", path), slog.Any("error", err))
 				return err
 			}
 
 			if err := os.MkdirAll(filepath.Join(b.outFilePath, filepath.Dir(relativePath)), 0755); err != nil {
+				slog.Error("failed to create output directory", slog.String("outFilePath", b.outFilePath), slog.Any("error", err))
 				return err
 			}
 
 			if err := os.WriteFile(filepath.Join(b.outFilePath, changeExt(relativePath, ".yaml")), []byte(yaml), 0644); err != nil {
+				slog.Error("failed to write YAML file", slog.String("path", path), slog.Any("error", err))
 				return err
 			}
 			return nil
