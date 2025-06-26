@@ -70,6 +70,10 @@
                 name: 'STS_ENDPOINT',
                 value: 'https://sts.minio-operator.svc.cluster.local',
               },
+              {
+                name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
+                value: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+              },
             ],
             ports: [
               {
