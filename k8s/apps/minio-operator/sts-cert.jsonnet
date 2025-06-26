@@ -13,6 +13,7 @@
     ],
     secretName: 'sts-tls',
     issuerRef: {
+      kind: 'ClusterIssuer',
       name: (import '../clusterissuer/local-issuer.jsonnet').metadata.name,
     },
   },
