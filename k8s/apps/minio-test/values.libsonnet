@@ -31,7 +31,6 @@
         },
         buckets: [],
         users: [],
-        prometheusOperator: true,
         env: [],
       },
     ],
