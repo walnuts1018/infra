@@ -1,4 +1,4 @@
 {
   name: "trust-manager",
-  namespace: "trust-manager",
+  namespace: "cert-manager",
 }
