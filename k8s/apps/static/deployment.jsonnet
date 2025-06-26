@@ -78,6 +78,10 @@
                 name: 'JS_TRUSTED_CERT_PATH',
                 value: '/etc/ssl/certs/trust-bundle.pem',
               },
+              {
+                name: 'DEBUG',
+                value: 'true',
+              },
             ],
             ports: [
               {
