@@ -91,7 +91,7 @@
               },
               {
                 name: 'AWS_ENDPOINT_URL_S3',
-                value: 'https://minio.minio-test.svc.cluster.local:9000',
+                value: 'http://minio.minio-test.svc.cluster.local',
               },
               {
                 name: 'AWS_REGION',
