@@ -15,30 +15,30 @@
         volumesPerServer: 1,
         size: '10Gi',
         resources: {},
-        metrics: {
-          enabled: true,
-          port: 9000,
-          protocol: 'http',
-        },
-        features: {
-          bucketDNS: true,
-          domains: {
-            minio: [
-              'minio-test.walnuts.dev',
-            ],
-            console: 'minio-test-console.walnuts.dev',
-          },
-        },
-        buckets: [
-          {
-            name: 'static',
-            region: 'ap-northeast-1',
-          },
-        ],
-        users: [],
-        env: [],
       },
     ],
+    metrics: {
+      enabled: true,
+      port: 9000,
+      protocol: 'http',
+    },
+    features: {
+      bucketDNS: true,
+      domains: {
+        minio: [
+          'minio-test.walnuts.dev',
+        ],
+        console: 'minio-test-console.walnuts.dev',
+      },
+    },
+    buckets: [
+      {
+        name: 'ipu',
+        region: 'ap-northeast-1',
+      },
+    ],
+    users: [],
+    env: [],
   },
   ingress: {
     api: {
