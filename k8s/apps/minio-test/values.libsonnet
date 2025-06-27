@@ -32,9 +32,10 @@
       },
     },
     buckets: [
+      local region = 'ap-northeast-1';
       {
         name: 'ipu',
-        region: 'ap-northeast-1',
+        region: region,
       },
     ],
     users: [],
