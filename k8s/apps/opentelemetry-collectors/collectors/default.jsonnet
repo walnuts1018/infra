@@ -141,7 +141,7 @@ std.mergePatch((import '_base.libsonnet'), {
             exporters: [
               // 'otlphttp/prometheus',
               'otlp/prometheus-exporter',
-              'otlp/mackerel',
+              // 'otlp/mackerel',
             ],
           },
           logs: {
