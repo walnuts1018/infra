@@ -75,7 +75,7 @@
               },
               {
                 name: 'S3_BUCKET',
-                value: 'test',
+                value: 'ipu',
               },
               {
                 name: 'AWS_CA_BUNDLE',
