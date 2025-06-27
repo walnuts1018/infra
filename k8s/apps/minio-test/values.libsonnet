@@ -12,7 +12,7 @@
       {
         servers: 4,
         name: 'pool',
-        volumesPerServer: 4,
+        volumesPerServer: 1,
         size: '10Gi',
         resources: {},
         metrics: {
