@@ -87,7 +87,7 @@
               },
               {
                 name: 'AWS_ENDPOINT_URL_STS',
-                value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/test',
+                value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/minio-test',
               },
               {
                 name: 'AWS_ENDPOINT_URL_S3',
@@ -99,7 +99,7 @@
               },
               {
                 name: 'AWS_ROLE_ARN',
-                value: 'arn:aws:iam::dummy:role/test',
+                value: 'arn:aws:iam::dummy:role/ipu',
               },
             ],
             ports: [
