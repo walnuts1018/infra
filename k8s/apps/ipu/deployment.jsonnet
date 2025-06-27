@@ -123,9 +123,10 @@
             },
             resources: {
               limits: {
-                memory: '100Mi',
+                memory: '300Mi',
               },
               requests: {
+                cpu: '10m',
                 memory: '10Mi',
               },
             },
