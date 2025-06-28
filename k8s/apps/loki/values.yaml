@@ -180,6 +180,7 @@ loki:
       http_server_read_timeout: 600s
       http_server_write_timeout: 600s
     storage_config:
+      use_thanos_objstore: true
       bloom_shipper:
         working_directory: /var/loki/data/bloomshipper
       boltdb_shipper:
