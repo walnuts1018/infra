@@ -11,7 +11,9 @@ tempo:
       s3:
         bucket: tempo
         endpoint: "minio.minio.svc.cluster.local"
+        region: ap-northeast-1
         insecure: true
+        tls_ca_path: /etc/ssl/certs/trust-bundle.pem
   extraArgs:
     "-config.expand-env": true
   extraEnv:
@@ -19,10 +21,6 @@ tempo:
     value: /var/run/secrets/sts.min.io/serviceaccount/token
   - name: AWS_ENDPOINT_URL_STS
     value: https://sts.minio-operator.svc.cluster.local:4223/sts/minio
-  - name: AWS_ENDPOINT_URL_S3
-    value: http://minio.minio.svc.cluster.local
-  - name: AWS_REGION
-    value: ap-northeast-1
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::dummy:role/tempo-minio-role
   extraVolumeMounts:
