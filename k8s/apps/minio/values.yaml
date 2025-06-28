@@ -43,10 +43,10 @@ tenant:
     port: 9000
     protocol: http
   users: []
-  poolsMetadata:
-    annotations:
-      instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
-      instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/usr/bin/minio'
+  # poolsMetadata:
+  #   annotations:
+  #     instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
+  #     instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/usr/bin/minio'
 ingress:
   api:
     enabled: true
