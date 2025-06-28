@@ -5,6 +5,36 @@ std.mergePatch((import '_base.libsonnet'), {
   spec: {
     mode: 'deployment',
     config: {
+      receivers: {
+        otlp: {
+          protocols: {
+            grpc: {
+              max_recv_msg_size_mib: 100,
+            },
+            http: {},
+          },
+        },
+      },
+      processors: {
+        memory_limiter: {
+          check_interval: '5s',
+          limit_mib: 2000,
+          spike_limit_percentage: 15,
+        },
+        k8sattributes: {
+          auth_type: 'serviceAccount',
+          extract: {
+            metadata: [
+              'k8s.cluster.uid',
+            ],
+          },
+        },
+        batch: {
+          send_batch_size: 5000,
+          send_batch_max_size: 5000,
+          timeout: '10s',
+        },
+      },
       connectors: {
         spanmetrics: {
           histogram: {
@@ -41,76 +71,6 @@ std.mergePatch((import '_base.libsonnet'), {
           metrics_flush_interval: '15s',
         },
       },
-      receivers: {
-        otlp: {
-          protocols: {
-            grpc: {
-              max_recv_msg_size_mib: 100,
-            },
-            http: {},
-          },
-        },
-      },
-      processors: {
-        memory_limiter: {
-          check_interval: '5s',
-          limit_mib: 2000,
-          spike_limit_percentage: 15,
-        },
-        k8sattributes: {
-          auth_type: 'serviceAccount',
-          extract: {
-            metadata: [
-              'k8s.cluster.uid',
-            ],
-          },
-        },
-        batch: {
-          send_batch_size: 5000,
-          send_batch_max_size: 5000,
-          timeout: '10s',
-        },
-      },
-      exporters: {
-        'otlphttp/prometheus': {
-          endpoint: 'http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/otlp',
-          tls: {
-            insecure: true,
-          },
-        },
-        'otlp/prometheus-exporter': {
-          endpoint: 'prometheus-exporter-collector.opentelemetry-collector.svc.cluster.local:4317',
-          tls: {
-            insecure: true,
-          },
-        },
-        'otlp/tempo': {
-          endpoint: 'tempo.monitoring.svc.cluster.local:4317',
-          tls: {
-            insecure: true,
-          },
-        },
-        'otlphttp/loki': {
-          endpoint: 'http://loki-gateway.loki.svc.cluster.local/otlp',
-          tls: {
-            insecure: true,
-          },
-        },
-        'otlphttp/vaxila': {
-          endpoint: 'https://otlp-vaxila.mackerelio.com',
-          headers: {
-            Accept: '*/*',
-            'Mackerel-Api-Key': '${env:MACKEREL_APIKEY}',
-          },
-        },
-        'otlp/mackerel': {
-          endpoint: 'otlp.mackerelio.com:4317',
-          compression: 'gzip',
-          headers: {
-            'Mackerel-Api-Key': '${env:MACKEREL_APIKEY}',
-          },
-        },
-      },
       service: {
         pipelines: {
           traces: {
@@ -140,7 +100,7 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
             exporters: [
               // 'otlphttp/prometheus',
-              'otlp/prometheus-exporter',
+              'prometheusremotewrite',
               // 'otlp/mackerel',
             ],
           },
@@ -162,7 +122,7 @@ std.mergePatch((import '_base.libsonnet'), {
     },
     autoscaler: {
       minReplicas: 1,
-      maxReplicas: 5,
+      maxReplicas: 10,
       targetCPUUtilization: 100,
       targetMemoryUtilization: 100,
     },
