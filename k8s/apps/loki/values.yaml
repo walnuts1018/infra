@@ -57,8 +57,8 @@ global:
     value: http://minio.minio.svc.cluster.local
   - name: AWS_REGION
     value: ap-northeast-1
-  - name: AWS_ROLE_ARN
-    value: arn:aws:iam::dummy:role/loki-minio-role
+  # - name: AWS_ROLE_ARN
+  #   value: arn:aws:iam::dummy:role/loki-minio-role
   extraVolumes:
   - name: minio-sts-token
     projected:
