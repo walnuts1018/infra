@@ -11,7 +11,7 @@
     pools: [
       {
         servers: 4,
-        name: 'pool',
+        name: 'pool-0',
         volumesPerServer: 1,
         size: '10Gi',
         resources: {},
