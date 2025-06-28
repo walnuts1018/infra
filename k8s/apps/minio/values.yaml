@@ -3,7 +3,7 @@ tenant:
   pools:
   - name: pool-0
     resources: {}
-    servers: 3
+    servers: 4
     size: 32Gi
     volumesPerServer: 1
   certificate:
