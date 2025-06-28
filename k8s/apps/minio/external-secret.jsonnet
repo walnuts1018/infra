@@ -3,20 +3,6 @@
   use_suffix: false,
   data: [
     {
-      secretKey: 'rootUser',
-      remoteRef: {
-        key: 'minio',
-        property: 'rootUser',
-      },
-    },
-    {
-      secretKey: 'rootPassword',
-      remoteRef: {
-        key: 'minio',
-        property: 'rootPassword',
-      },
-    },
-    {
       secretKey: 'client-secret',
       remoteRef: {
         key: 'minio',
