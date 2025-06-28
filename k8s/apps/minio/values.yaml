@@ -19,11 +19,6 @@ tenant:
     value: https://auth.walnuts.dev/.well-known/openid-configuration
   - name: MINIO_IDENTITY_OPENID_CLIENT_ID
     value: 241002618523026212@walnuts.dev
-  - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
-    valueFrom:
-      secretKeyRef:
-        name: minio-default
-        key: client-secret
   - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
     value: minio-policy
   - name: MINIO_IDENTITY_OPENID_SCOPES
