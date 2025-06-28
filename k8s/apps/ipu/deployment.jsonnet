@@ -87,11 +87,11 @@
               },
               {
                 name: 'AWS_ENDPOINT_URL_STS',
-                value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/minio-test',
+                value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/default',
               },
               {
                 name: 'AWS_ENDPOINT_URL_S3',
-                value: 'http://minio.minio-test.svc.cluster.local',
+                value: 'http://minio.minio.svc.cluster.local',
               },
               {
                 name: 'AWS_REGION',
