@@ -17,7 +17,7 @@ loki:
         region: ap-northeast-1
         storage_class: REDUCED_REDUNDANCY
         insecure: true
-        http_config:
+        http:
           tls_ca_path: /etc/ssl/certs/trust-bundle.pem
           insecure_skip_verify: true
         sts_endpoint: "https://sts.minio-operator.svc.cluster.local:4223/sts/minio"
