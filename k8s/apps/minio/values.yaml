@@ -22,7 +22,7 @@ tenant:
   - name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
     valueFrom:
       secretKeyRef:
-        name: minio
+        name: minio-default
         key: client-secret
   - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
     value: minio-policy
