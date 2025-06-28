@@ -1,8 +1,17 @@
 local bindings = [
   {
-    sa: (import '../ipu/sa.jsonnet'),
+    sa: (import '../ipu/sa.jsonnet').metadata,
     policies: [
       'readonly',
+    ],
+  },
+  {
+    sa: {
+      name: 'loki',
+      namespace: (import '../loki/app.json5').namespace,
+    },
+    policies: [
+      'readwrite',
     ],
   },
 ];
@@ -13,13 +22,13 @@ local bindings = [
     apiVersion: 'sts.min.io/v1alpha1',
     kind: 'PolicyBinding',
     metadata: {
-      name: binding.sa.metadata.name,
+      name: binding.sa.name,
       namespace: (import 'app.json5').namespace,
     },
     spec: {
       application: {
-        namespace: binding.sa.metadata.namespace,
-        serviceaccount: binding.sa.metadata.name,
+        namespace: binding.sa.namespace,
+        serviceaccount: binding.sa.name,
       },
       policies: binding.policies,
     },

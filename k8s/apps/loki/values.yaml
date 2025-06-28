@@ -12,8 +12,6 @@ loki:
     s3:
       endpoint: "http://minio.minio.svc.cluster.local:9000"
       region: ap-northeast-1
-      secretAccessKey: "${secretAccessKey}"
-      accessKeyId: "${accessKeyId}"
       s3ForcePathStyle: true
       insecure: true
       http_config:
@@ -46,6 +44,40 @@ loki:
       enabled: true
       desired_rate: 104857600 # 10MiB
     reject_old_samples: false
+
+global:
+  extraEnv:
+  - name: AWS_CA_BUNDLE
+    value: /etc/ssl/certs/trust-bundle.pem
+  - name: AWS_WEB_IDENTITY_TOKEN_FILE
+    value: /var/run/secrets/sts.min.io/serviceaccount/token
+  - name: AWS_ENDPOINT_URL_STS
+    value: https://sts.minio-operator.svc.cluster.local:4223/sts/minio
+  - name: AWS_ENDPOINT_URL_S3
+    value: http://minio.minio.svc.cluster.local
+  - name: AWS_REGION
+    value: ap-northeast-1
+  - name: AWS_ROLE_ARN
+    value: arn:aws:iam::dummy:role/loki-minio-role
+  extraVolumes:
+  - name: minio-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.min.io
+          expirationSeconds: 3600
+          path: token
+  - name: local-ca-bundle
+    configMap:
+      name: local-ca-bundle
+  extraVolumeMounts:
+  - name: minio-sts-token
+    mountPath: /var/run/secrets/sts.min.io/serviceaccount
+    readOnly: true
+  - name: local-ca-bundle
+    mountPath: /etc/ssl/certs/trust-bundle.pem
+    subPath: trust-bundle.pem
+    readOnly: true
 
 write:
   replicas: 2
