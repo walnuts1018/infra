@@ -1,6 +1,6 @@
 std.mergePatch((import '_base.libsonnet'), {
   metadata: {
-    name: 'k8s-daemonset',
+    name: 'daemonset',
   },
   spec: {
     mode: 'daemonset',
