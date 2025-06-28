@@ -1,4 +1,4 @@
 {
-  name: "minio",
+  name: "minio-default",
   namespace: "minio",
 }
