@@ -160,19 +160,6 @@ std.mergePatch((import '_base.libsonnet'), {
             },
           ],
         },
-        'transform/logsize': {
-          error_mode: 'ignore',
-          log_statements: [
-            'set(log.attributes["body_size"], Len(log.body))',
-            'set(log.attributes["k8s.namespace.name"], resource.attributes["k8s.namespace.name"])',
-          ],
-        },
-        'transform/post-logsize': {
-          error_mode: 'ignore',
-          metric_statements: [
-            'delete_key(datapoint.attributes, "k8s.namespace.name")',
-          ],
-        },
         'resource/journald': {
           attributes: [
             {
@@ -183,24 +170,6 @@ std.mergePatch((import '_base.libsonnet'), {
           ],
         },
       },
-      connectors: {
-        'sum/logsize': {
-          logs: {
-            'logs.size.by_k8s_namespace': {
-              source_attribute: 'body_size',
-              conditions: [
-                'attributes["body_size"] != "NULL"',
-              ],
-              attributes: [
-                {
-                  key: 'k8s.namespace.name',
-                },
-              ],
-            },
-          },
-        },
-        'forward/log': {},
-      },
       service: {
         pipelines: {
           logs: {
@@ -210,9 +179,10 @@ std.mergePatch((import '_base.libsonnet'), {
             processors: [
               'memory_limiter',
               'batch',
+              'k8sattributes',
             ],
             exporters: [
-              'forward/log',
+              'otlphttp/loki',
             ],
           },
           'logs/journald': {
@@ -222,37 +192,11 @@ std.mergePatch((import '_base.libsonnet'), {
             processors: [
               'memory_limiter',
               'batch',
+              'k8sattributes',
               'resource/journald',
             ],
             exporters: [
-              'forward/log',
-            ],
-          },
-          'logs/export': {
-            receivers: [
-              'forward/log',
-            ],
-            processors: [
-              'memory_limiter',
-              'batch',
-              'k8sattributes',
-              'transform/jsonparse',
-            ],
-            exporters: [
               'otlphttp/loki',
-            ],
-          },
-          'logs/logsize': {
-            receivers: [
-              'forward/log',
-            ],
-            processors: [
-              'memory_limiter',
-              'batch',
-              'transform/logsize',
-            ],
-            exporters: [
-              'sum/logsize',
             ],
           },
           metrics: {
@@ -265,21 +209,6 @@ std.mergePatch((import '_base.libsonnet'), {
               'batch',
               'k8sattributes',
               'resourcedetection',
-            ],
-            exporters: [
-              'prometheusremotewrite',
-            ],
-          },
-          'metrics/logsize': {
-            receivers: [
-              'sum/logsize',
-            ],
-            processors: [
-              'memory_limiter',
-              'batch',
-              'k8sattributes',
-              'resourcedetection',
-              'transform/post-logsize',
             ],
             exporters: [
               'prometheusremotewrite',
