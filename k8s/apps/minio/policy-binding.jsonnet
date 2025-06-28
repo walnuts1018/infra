@@ -14,6 +14,15 @@ local bindings = [
       'readwrite',
     ],
   },
+  {
+    sa: {
+      name: 'tempo',
+      namespace: (import '../tempo/app.json5').namespace,
+    },
+    policies: [
+      'readwrite',
+    ],
+  },
 ];
 
 // template for PolicyBinding
