@@ -7,7 +7,7 @@ tenant:
     size: 32Gi
     volumesPerServer: 1
   certificate:
-    requestAutoCert: true
+    requestAutoCert: false
   configSecret:
     existingSecret: true
   env:
