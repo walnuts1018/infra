@@ -13,7 +13,7 @@ loki:
     object_store:
       type: s3
       s3:
-        endpoint: "http://minio.minio.svc.cluster.local"
+        endpoint: "minio.minio.svc.cluster.local"
         region: ap-northeast-1
         storage_class: REDUCED_REDUNDANCY
         insecure: true
@@ -83,7 +83,7 @@ loki:
       storage:
         object_store:
           s3:
-            endpoint: "http://minio.minio.svc.cluster.local"
+            endpoint: "minio.minio.svc.cluster.local"
             region: ap-northeast-1
             bucket_name: loki-chunks
             storage_class: REDUCED_REDUNDANCY
@@ -150,7 +150,7 @@ loki:
     ruler_storage:
       backend: s3
       s3:
-        endpoint: "http://minio.minio.svc.cluster.local"
+        endpoint: "minio.minio.svc.cluster.local"
         region: ap-northeast-1
         bucket_name: loki-ruler
         storage_class: REDUCED_REDUNDANCY
