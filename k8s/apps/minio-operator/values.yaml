@@ -6,6 +6,5 @@ operator:
     value: "on"
   resources:
     requests:
-      cpu: 200m
-      memory: 256Mi
-      ephemeral-storage: 500Mi
+      cpu: 5m
+      memory: 50Mi
