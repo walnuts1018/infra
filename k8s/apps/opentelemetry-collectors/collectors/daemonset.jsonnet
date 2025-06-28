@@ -3,9 +3,7 @@ std.mergePatch((import '_base.libsonnet'), {
     name: 'k8s-daemonset',
   },
   spec: {
-    serviceAccount: (import '../sa.jsonnet').metadata.name,
     mode: 'daemonset',
-    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib',
     config: {
       receivers: {
         filelog: {
@@ -185,21 +183,6 @@ std.mergePatch((import '_base.libsonnet'), {
           ],
         },
       },
-      exporters: {
-        'otlp/default': {
-          endpoint: 'default-collector.opentelemetry-collector.svc.cluster.local:4317',
-          tls: {
-            insecure: true,
-          },
-        },
-        file: {
-          path: '/tmp',
-          format: 'json',
-        },
-        debug: {
-          verbosity: 'detailed',
-        },
-      },
       connectors: {
         'sum/logsize': {
           logs: {
@@ -216,7 +199,7 @@ std.mergePatch((import '_base.libsonnet'), {
             },
           },
         },
-        forward: {},
+        'forward/log': {},
       },
       service: {
         pipelines: {
@@ -229,10 +212,10 @@ std.mergePatch((import '_base.libsonnet'), {
               'batch',
             ],
             exporters: [
-              'forward',
+              'forward/log',
             ],
           },
-          'logs/debug': {
+          'logs/journald': {
             receivers: [
               'journald',
             ],
@@ -242,12 +225,12 @@ std.mergePatch((import '_base.libsonnet'), {
               'resource/journald',
             ],
             exporters: [
-              'forward',
+              'forward/log',
             ],
           },
           'logs/export': {
             receivers: [
-              'forward',
+              'forward/log',
             ],
             processors: [
               'memory_limiter',
@@ -256,12 +239,12 @@ std.mergePatch((import '_base.libsonnet'), {
               'transform/jsonparse',
             ],
             exporters: [
-              'otlp/default',
+              'otlphttp/loki',
             ],
           },
           'logs/logsize': {
             receivers: [
-              'forward',
+              'forward/log',
             ],
             processors: [
               'memory_limiter',
@@ -284,7 +267,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'resourcedetection',
             ],
             exporters: [
-              'otlp/default',
+              'prometheusremotewrite',
             ],
           },
           'metrics/logsize': {
@@ -299,7 +282,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'transform/post-logsize',
             ],
             exporters: [
-              'otlp/default',
+              'prometheusremotewrite',
             ],
           },
         },
@@ -319,6 +302,15 @@ std.mergePatch((import '_base.libsonnet'), {
         valueFrom: {
           fieldRef: {
             fieldPath: 'spec.nodeName',
+          },
+        },
+      },
+      {
+        name: 'MACKEREL_APIKEY',
+        valueFrom: {
+          secretKeyRef: {
+            name: (import '../external-secret.jsonnet').spec.target.name,
+            key: 'mackerel-api-key',
           },
         },
       },

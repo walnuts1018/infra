@@ -1,10 +1,28 @@
 std.mergePatch((import '_base.libsonnet'), {
   metadata: {
-    name: 'k8s-deployment',
+    name: 'atomic',
   },
   spec: {
     replicas: 1,
-    mode: 'deployment',
+    mode: 'statefulset',
+    targetAllocator: {
+      enabled: true,
+      serviceAccount: (import '../sa.jsonnet').metadata.name,
+      prometheusCR: {
+        enabled: true,
+        serviceMonitorSelector: {
+          matchExpressions: [
+            {
+              key: 'walnuts.dev/scraped-by',
+              operator: 'NotIn',
+              values: [
+                'prometheus',
+              ],
+            },
+          ],
+        },
+      },
+    },
     config: {
       receivers: {
         k8s_cluster: {
@@ -24,6 +42,23 @@ std.mergePatch((import '_base.libsonnet'), {
             'k8s.deployment.name': {
               enabled: true,
             },
+          },
+        },
+        prometheus: {
+          config: {
+            scrape_configs: [
+              {
+                job_name: 'otel-collector',
+                scrape_interval: '30s',
+                static_configs: [
+                  {
+                    targets: [
+                      '0.0.0.0:8888',
+                    ],
+                  },
+                ],
+              },
+            ],
           },
         },
       },
@@ -71,19 +106,12 @@ std.mergePatch((import '_base.libsonnet'), {
           ],
         },
       },
-      exporters: {
-        'otlp/default': {
-          endpoint: 'default-collector.opentelemetry-collector.svc.cluster.local:4317',
-          tls: {
-            insecure: true,
-          },
-        },
-      },
       service: {
         pipelines: {
           metrics: {
             receivers: [
               'k8s_cluster',
+              'prometheus',
             ],
             processors: [
               'memory_limiter',
@@ -91,7 +119,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'k8sattributes',
             ],
             exporters: [
-              'otlp/default',
+              'prometheusremotewrite',
             ],
           },
         },
