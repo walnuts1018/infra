@@ -8,7 +8,7 @@ db:
   pass: "{{ .dbPassword }}"
 dbReplications: true
 dbSlaves:
-- host: misskey-postgresql-ro
+- host: misskey-postgresql-r
   port: 5432
   db: misskey
   user: misskey
