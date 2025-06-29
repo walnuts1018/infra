@@ -5,9 +5,6 @@
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
-    annotations: {
-      'nginx.ingress.kubernetes.io/proxy-body-size': '1G',
-    },
   },
   spec: {
     ingressClassName: 'cilium',
