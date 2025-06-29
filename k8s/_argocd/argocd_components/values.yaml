@@ -20,6 +20,12 @@ configs:
     resource.customizations.ignoreDifferences.autoscaling_HorizontalPodAutoscaler: |
       jsonPointers:
       - /spec/metrics
+    resource.customizations.ignoreDifferences.argoproj.io_ApplicationSet: |
+      jsonPointers:
+      - /spec/template/spec/syncPolicy/automated/selfHeal
+    resource.customizations.ignoreDifferences.argoproj.io_Application: |
+      jsonPointers:
+      - /spec/syncPolicy/automated/selfHeal
     oidc.config: |
       name: walnuts-dev
       issuer: https://auth.walnuts.dev
