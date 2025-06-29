@@ -7,7 +7,7 @@
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
-    replicas: 1,
+    replicas: 0,
     selector: {
       matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
     },
@@ -84,8 +84,8 @@
                 name: 'POSTGRES_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').metadata.name,
-                    key: 'misskeydbpassword',
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 'dbPassword',
                   },
                 },
               },
@@ -119,7 +119,7 @@
           {
             name: 'misskey-config',
             secret: {
-              secretName: (import 'external-secret.jsonnet').metadata.name,
+              secretName: (import 'external-secret.jsonnet').spec.target.name,
             },
           },
           {
