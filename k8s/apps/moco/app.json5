@@ -1,4 +1,4 @@
 {
   name: "moco",
-  namespace: "databases",
+  namespace: "moco-system",
 }
