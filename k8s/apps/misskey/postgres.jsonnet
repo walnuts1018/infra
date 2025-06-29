@@ -7,7 +7,7 @@
   spec: {
     instances: 3,
     storage: {
-      size: '12Gi',
+      size: '16Gi',
       storageClass: 'longhorn-local',
     },
     superuserSecret: {
