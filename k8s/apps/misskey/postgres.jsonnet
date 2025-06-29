@@ -5,10 +5,11 @@
     name: (import 'app.json5').name + '-postgresql',
   },
   spec: {
-    instances: 3,
+    instances: 2,
     storage: {
-      size: '16Gi',
-      storageClass: 'longhorn-local',
+      size: '10Gi',
+      storageClass: 'longhorn',
+      resizeInUseVolumes: false,
     },
     superuserSecret: {
       name: 'superuser-secret',
