@@ -6,13 +6,13 @@ db:
   db: misskey
   user: misskey
   pass: "{{ .dbPassword }}"
-dbReplications: true
-dbSlaves:
-- host: misskey-postgresql-r
-  port: 5432
-  db: misskey
-  user: misskey
-  pass: "{{ .dbPassword }}"
+dbReplications: false
+# dbSlaves:
+# - host: misskey-postgresql-r
+#   port: 5432
+#   db: misskey
+#   user: misskey
+#   pass: "{{ .dbPassword }}"
 redis:
   host: misskey-redis
   port: 6379
