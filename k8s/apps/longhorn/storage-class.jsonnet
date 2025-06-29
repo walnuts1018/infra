@@ -9,8 +9,8 @@
   parameters: {
     numberOfReplicas: '1',
     dataLocality: 'best-effort',
-    reclaimPolicy: 'Retain',
     staleReplicaTimeout: '30',
     fromBackup: '',
   },
+  reclaimPolicy: 'Retain',
 }
