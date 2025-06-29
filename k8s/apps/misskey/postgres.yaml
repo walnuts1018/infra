@@ -1,0 +1,21 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: misskey-postgresql
+spec:
+  bootstrap:
+    initdb:
+      database: misskey
+      owner: misskey
+      secret:
+        name: misskey-db-password-5e4bd8
+  instances: 2
+  resources:
+    requests:
+      cpu: 20m
+      memory: 150Mi
+  storage:
+    size: 16Gi
+    storageClass: longhorn
+  superuserSecret:
+    name: superuser-secret
