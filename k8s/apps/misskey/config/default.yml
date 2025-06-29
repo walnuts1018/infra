@@ -1,16 +1,16 @@
 url: https://misskey.walnuts.dev
 port: 3000
 db:
-  host: postgresql-default.databases.svc.cluster.local
+  host: misskey-postgresql-rw
   port: 5432
   db: misskey
   user: misskey
-  pass: "{{ .misskeydbpassword }}"
+  pass: "{{ .dbPassword }}"
 dbReplications: false
 redis:
   host: misskey-redis
   port: 6379
-  pass: "{{ .redispassword }}"
+  pass: "{{ .redisPassword }}"
 id: 'aidx'
 proxyBypassHosts:
 - api.deepl.com
