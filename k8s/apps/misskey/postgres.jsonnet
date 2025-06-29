@@ -22,5 +22,11 @@
         },
       },
     },
+    resources: {
+      requests: {
+        cpu: '20m',
+        memory: '150Mi',
+      },
+    },
   },
 }
