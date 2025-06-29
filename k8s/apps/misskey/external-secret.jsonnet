@@ -1,23 +1,31 @@
-{
-  apiVersion: 'external-secrets.io/v1',
-  kind: 'ExternalSecret',
-  metadata: {
-    name: (import 'app.json5').name,
-  },
-  spec: {
-    secretStoreRef: {
-      name: 'onepassword',
-      kind: 'ClusterSecretStore',
+std.mergePatch((import '../../components/external-secret.libsonnet') {
+  use_suffix: false,
+  name: (import 'app.json5').name + '-' + std.md5(std.toString($.data) + std.toString((import 'configmap.jsonnet').data))[0:6],
+  data: [
+    {
+      secretKey: 'dbPassword',
+      remoteRef: {
+        key: 'misskey',
+        property: 'dbpassword',
+      },
     },
-    refreshInterval: '1m',
+    {
+      secretKey: 'redisPassword',
+      remoteRef: {
+        key: 'redis',
+        property: 'password',
+      },
+    },
+  ],
+}, {
+  spec: {
     target: {
-      name: $.metadata.name,
       template: {
         engineVersion: 'v2',
         type: 'Opaque',
         data: {
-          misskeydbpassword: '{{ .misskeydbpassword }}',
-          redispassword: '{{ .redispassword }}',
+          dbPassword: '{{ .dbPassword }}',
+          redisPassword: '{{ .redisPassword }}',
         },
         templateFrom: [
           {
@@ -35,21 +43,5 @@
         ],
       },
     },
-    data: [
-      {
-        secretKey: 'misskeydbpassword',
-        remoteRef: {
-          key: 'postgres_passwords',
-          property: 'misskey',
-        },
-      },
-      {
-        secretKey: 'redispassword',
-        remoteRef: {
-          key: 'redis',
-          property: 'password',
-        },
-      },
-    ],
   },
-}
+})
