@@ -72,7 +72,7 @@ grafana:
   plugins:
   - knightss27-weathermap-panel
   - grafana-github-datasource
-  - netsage-sankey-panel
+  - volkovlabs-echarts-panel
 prometheus-node-exporter:
   prometheus:
     monitor:
