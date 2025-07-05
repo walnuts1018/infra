@@ -14,4 +14,5 @@
   'mucaron',
   'affine',
   'openclarity',
+  'n8n',
 ]
