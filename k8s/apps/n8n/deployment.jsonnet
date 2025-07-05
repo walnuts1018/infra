@@ -86,6 +86,10 @@
                 mountPath: '/home/node/.n8n',
                 name: 'data',
               },
+              {
+                mountPath: '/home/node/.cache',
+                name: 'cache',
+              },
             ],
           }, {
           }),
@@ -96,6 +100,10 @@
             persistentVolumeClaim: {
               claimName: (import 'pvc.jsonnet').metadata.name,
             },
+          },
+          {
+            name: 'cache',
+            emptyDir: {},
           },
         ],
       },
