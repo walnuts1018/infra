@@ -51,4 +51,8 @@
     db_name: 'openclarity',
     user_name: 'openclarity',
   },
+  {
+    db_name: 'n8n',
+    user_name: 'n8n',
+  },
 ]
