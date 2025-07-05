@@ -12,7 +12,7 @@
         name: 'http',
         port: 5678,
         protocol: 'TCP',
-        targetPort: '5678',
+        targetPort: 5678,
       },
     ],
     selector: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
