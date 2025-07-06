@@ -1,0 +1,4 @@
+{
+  name: "cloudnative-pg-backup",
+  namespace: "cloudnative-pg",
+}
