@@ -16,8 +16,7 @@
       repoURL: 'https://github.com/walnuts1018/infra',
       targetRevision: 'main',
       kustomize: {
-        patches: [
-        ],
+        patches: [],
       },
     },
     syncPolicy: {
