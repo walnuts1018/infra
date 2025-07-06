@@ -37,5 +37,49 @@
         },
       },
     ],
+    env: [
+      {
+        name: 'AWS_CA_BUNDLE',
+        value: '/projected/certificate/trust-bundle.pem',
+      },
+      {
+        name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
+        value: '/projected/sts.min.io/serviceaccount/token',
+      },
+      {
+        name: 'AWS_ENDPOINT_URL_STS',
+        value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/minio',
+      },
+      {
+        name: 'AWS_REGION',
+        value: 'ap-northeast-1',
+      },
+      {
+        name: 'AWS_ROLE_ARN',
+        value: 'arn:aws:iam::dummy:role/ipu',
+      },
+    ],
+    projectedVolumeTemplate: {
+      sources: [
+        {
+          serviceAccountToken: {
+            audience: 'sts.min.io',
+            expirationSeconds: 86400,
+            path: 'token',
+          },
+        },
+        {
+          configMap: {
+            name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
+            items: [
+              {
+                key: 'trust-bundle.pem',
+                path: 'certificate/trust-bundle.pem',
+              },
+            ],
+          },
+        },
+      ],
+    },
   },
 }

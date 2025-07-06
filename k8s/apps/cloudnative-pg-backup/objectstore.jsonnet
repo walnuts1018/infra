@@ -9,7 +9,7 @@
       destinationPath: 's3://cloudnative-pg-backup/',
       endpointURL: 'http://minio.minio.svc.cluster.local:9000',
       s3Credentials: {
-
+        inheritFromIAMRole: true,
       },
       wal: {
         compression: 'gzip',
