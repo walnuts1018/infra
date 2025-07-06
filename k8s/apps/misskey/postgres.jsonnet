@@ -39,7 +39,7 @@
         name: 'barman-cloud.cloudnative-pg.io',
         isWALArchiver: true,
         parameters: {
-          barmanObjectName: (import '../cloudnative-pg-backup/objectstore.jsonnet').metadata.name,
+          barmanObjectName: (import 'postgres-backup-objectstore.jsonnet').metadata.name,
         },
       },
     ],
