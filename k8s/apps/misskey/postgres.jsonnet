@@ -28,5 +28,14 @@
         memory: '150Mi',
       },
     },
+    plugins: [
+      {
+        name: 'barman-cloud.cloudnative-pg.io',
+        isWALArchiver: true,
+        parameters: {
+          barmanObjectName: (import '../cloudnative-pg-backup/objectstore.jsonnet').metadata.name,
+        },
+      },
+    ],
   },
 }
