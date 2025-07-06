@@ -3,10 +3,11 @@
   kind: 'ObjectStore',
   metadata: {
     name: 'minio-store',
+    namespace: (import 'app.json5').namespace,
   },
   spec: {
     configuration: {
-      destinationPath: 's3://cloudnative-pg-backup/',
+      destinationPath: 's3://cloudnative-pg-backup/' + (import 'postgres.jsonnet').metadata.name + '/',
       endpointURL: 'http://minio.minio.svc.cluster.local:9000',
       s3Credentials: {
         inheritFromIAMRole: true,
