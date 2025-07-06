@@ -8,7 +8,7 @@
   spec: {
     configuration: {
       destinationPath: 's3://cloudnative-pg-backup/' + (import 'postgres.jsonnet').metadata.name + '/',
-      endpointURL: 'http://minio.minio.svc.cluster.local:9000',
+      endpointURL: 'http://minio.minio.svc.cluster.local',
       s3Credentials: {
         inheritFromIAMRole: true,
       },
@@ -17,5 +17,29 @@
       },
     },
     retentionPolicy: '14d',
+    instanceSidecarConfiguration: {
+      env: [
+        {
+          name: 'AWS_CA_BUNDLE',
+          value: '/projected/certificate/trust-bundle.pem',
+        },
+        {
+          name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
+          value: '/projected/sts.min.io/serviceaccount/token',
+        },
+        {
+          name: 'AWS_ENDPOINT_URL_STS',
+          value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/minio',
+        },
+        {
+          name: 'AWS_REGION',
+          value: 'ap-northeast-1',
+        },
+        {
+          name: 'AWS_ROLE_ARN',
+          value: 'arn:aws:iam::dummy:role/ipu',
+        },
+      ],
+    },
   },
 }
