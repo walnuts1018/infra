@@ -7,7 +7,7 @@
   },
   spec: {
     configuration: {
-      destinationPath: 's3://cloudnative-pg-backup/' + (import 'postgres.jsonnet').metadata.name + '/',
+      destinationPath: 's3://cloudnative-pg-backup/',
       endpointURL: 'http://minio.minio.svc.cluster.local',
       s3Credentials: {
         inheritFromIAMRole: true,
