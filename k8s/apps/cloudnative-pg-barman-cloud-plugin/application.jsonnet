@@ -3,7 +3,7 @@
   kind: 'Application',
   metadata: {
     name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
+    namespace: 'argocd',
   },
   spec: {
     project: 'default',
