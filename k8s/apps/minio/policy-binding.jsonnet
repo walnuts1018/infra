@@ -23,6 +23,12 @@ local bindings = [
       'readwrite',
     ],
   },
+  {
+    sa: (import '../misskey/postgres.jsonnet').spec.serviceAccountTemplate.metadata,
+    policies: [
+      'readwrite',
+    ],
+  },
 ];
 
 // template for PolicyBinding
