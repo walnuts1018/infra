@@ -2,7 +2,7 @@
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'Application',
   metadata: {
-    name: (import 'app.json5').name,
+    name: (import 'app.json5').name + '-kustomize',
     namespace: 'argocd',
   },
   spec: {
