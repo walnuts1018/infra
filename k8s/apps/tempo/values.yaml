@@ -10,7 +10,7 @@ tempo:
       backend: s3
       s3:
         bucket: tempo
-        endpoint: "minio.minio.svc.cluster.local:9000"
+        endpoint: "minio.minio.svc.cluster.local"
         access_key: '${MINIO_ACCESS_KEY}'
         secret_key: '${MINIO_SECRET_KEY}'
         insecure: true
