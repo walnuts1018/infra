@@ -13,4 +13,4 @@ metrics:
   adjusted_polling_rate: false
 
 prometheus:
-  enable: false
+  enable: true
