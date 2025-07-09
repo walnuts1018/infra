@@ -9,7 +9,7 @@ require (
 	github.com/phsym/console-slog v0.3.1
 	github.com/sters/yaml-diff v1.4.1
 	github.com/yosuke-furukawa/json5 v0.1.1
-	golang.org/x/sync v0.14.0
+	golang.org/x/sync v0.16.0
 	gopkg.in/yaml.v3 v3.0.1
 	helm.sh/helm/v3 v3.18.1
 	sigs.k8s.io/yaml v1.4.0
