@@ -13,7 +13,7 @@
       imagePullPolicy: 'IfNotPresent',
       redisSecret: {
         name: (import 'external-secret.jsonnet').spec.target.name,
-        key: 'redispassword',
+        key: 'redisPassword',
       },
     },
     storage: {
