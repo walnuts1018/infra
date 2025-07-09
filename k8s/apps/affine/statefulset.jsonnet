@@ -46,7 +46,7 @@
             name: 'DATABASE_URL',
             valueFrom: {
               secretKeyRef: {
-                name: (import 'external-secret.jsonnet').metadata.name,
+                name: (import 'external-secret.jsonnet').spec.target.name,
                 key: 'postgres-url',
               },
             },
@@ -79,7 +79,7 @@
             name: 'MAILER_PASSWORD',
             valueFrom: {
               secretKeyRef: {
-                name: (import 'external-secret.jsonnet').metadata.name,
+                name: (import 'external-secret.jsonnet').spec.target.name,
                 key: 'mailer-password',
               },
             },
@@ -100,7 +100,7 @@
             name: 'OAUTH_OIDC_CLIENT_SECRET',
             valueFrom: {
               secretKeyRef: {
-                name: (import 'external-secret.jsonnet').metadata.name,
+                name: (import 'external-secret.jsonnet').spec.target.name,
                 key: 'oidc-client-secret',
               },
             },
