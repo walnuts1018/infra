@@ -38,7 +38,7 @@
                 name: 'TS_AUTH_KEY',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').metadata.name,
+                    name: (import 'external-secret.jsonnet').spec.target.name,
                     key: 'TS_AUTH_KEY',
                     optional: true,
                   },

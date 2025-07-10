@@ -11,37 +11,19 @@ tempo:
       s3:
         bucket: tempo
         endpoint: "minio.minio.svc.cluster.local"
-        region: ap-northeast-1
+        access_key: '${MINIO_ACCESS_KEY}'
+        secret_key: '${MINIO_SECRET_KEY}'
         insecure: true
-        tls_ca_path: /etc/ssl/certs/trust-bundle.pem
-  server:
-    log_level: debug
+  extraEnv:
+  - name: MINIO_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: tempo-credentials
+        key: MINIO_ACCESS_KEY
+  - name: MINIO_SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: tempo-credentials
+        key: MINIO_SECRET_KEY
   extraArgs:
     "-config.expand-env": true
-  extraEnv:
-  - name: MC_WEB_IDENTITY_TOKEN
-    value: /var/run/secrets/sts.min.io/serviceaccount/token
-  - name: MC_STS_ENDPOINT
-    value: https://sts.minio-operator.svc.cluster.local:4223/sts/minio
-  - name: AWS_ROLE_ARN
-    value: arn:aws:iam::dummy:role/tempo-minio-role
-  extraVolumeMounts:
-  - name: minio-sts-token
-    mountPath: /var/run/secrets/sts.min.io/serviceaccount
-    readOnly: true
-  - name: local-ca-bundle
-    mountPath: /etc/ssl/certs/trust-bundle.pem
-    subPath: trust-bundle.pem
-    readOnly: true
-
-extraVolumes:
-- name: minio-sts-token
-  projected:
-    sources:
-    - serviceAccountToken:
-        audience: sts.min.io
-        expirationSeconds: 3600
-        path: token
-- name: local-ca-bundle
-  configMap:
-    name: local-ca-bundle

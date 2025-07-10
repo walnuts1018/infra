@@ -12,8 +12,8 @@
       image: 'quay.io/opstree/redis:v7.2.7',
       imagePullPolicy: 'IfNotPresent',
       redisSecret: {
-        name: (import 'external-secret.jsonnet').metadata.name,
-        key: 'redispassword',
+        name: (import 'external-secret.jsonnet').spec.target.name,
+        key: 'redisPassword',
       },
     },
     storage: {
