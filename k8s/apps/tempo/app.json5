@@ -1,4 +1,4 @@
 {
   name: "tempo",
-  namespace: "monitoring",
+  namespace: "tempo",
 }

@@ -20,7 +20,7 @@
           },
         },
         'otlp/tempo': {
-          endpoint: 'tempo.monitoring.svc.cluster.local:4317',
+          endpoint: 'tempo.tempo.svc.cluster.local:4317',
           tls: {
             insecure: true,
           },
