@@ -1,0 +1,4 @@
+{
+  name: "ephemeral-storage-metrics",
+  namespace: "monitoring",
+}
