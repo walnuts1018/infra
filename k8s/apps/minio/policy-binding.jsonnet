@@ -24,7 +24,10 @@ local bindings = [
     ],
   },
   {
-    sa: (import '../misskey/postgres.jsonnet').spec.serviceAccountTemplate.metadata,
+    sa: {
+      name: (import '../misskey/postgres.jsonnet').spec.serviceAccountTemplate.metadata.name,
+      namespace: (import '../misskey/app.json5').namespace,
+    },
     policies: [
       'readwrite',
     ],

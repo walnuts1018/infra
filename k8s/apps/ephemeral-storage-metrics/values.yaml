@@ -1,0 +1,16 @@
+serviceMonitor:
+  enable: true
+
+metrics:
+  ephemeral_storage_container_limit_percentage: true
+  ephemeral_storage_container_volume_usage: true
+  ephemeral_storage_container_volume_limit_percentage: true
+  ephemeral_storage_pod_usage: true
+  ephemeral_storage_inodes: true
+  ephemeral_storage_node_available: true
+  ephemeral_storage_node_capacity: true
+  ephemeral_storage_node_percentage: true
+  adjusted_polling_rate: false
+
+prometheus:
+  enable: true
