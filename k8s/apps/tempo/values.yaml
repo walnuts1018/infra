@@ -27,3 +27,5 @@ tempo:
         key: MINIO_SECRET_KEY
   extraArgs:
     "-config.expand-env": true
+serviceMonitor:
+  enabled: true
