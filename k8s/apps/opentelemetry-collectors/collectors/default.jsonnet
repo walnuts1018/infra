@@ -85,7 +85,7 @@ std.mergePatch((import '_base.libsonnet'), {
             exporters: [
               'otlp/tempo',
               'spanmetrics',
-              // 'otlphttp/vaxila',
+              'otlphttp/vaxila',
             ],
           },
           metrics: {
