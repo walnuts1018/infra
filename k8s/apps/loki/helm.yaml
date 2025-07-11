@@ -1,0 +1,414 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: loki
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: loki
+    helm:
+      releaseName: loki
+      values: |
+        deploymentMode: SimpleScalable
+        loki:
+          auth_enabled: false
+          commonConfig:
+            replication_factor: 1
+          storage:
+            type: s3
+            bucketNames:
+              chunks: "loki-chunks"
+              ruler: "loki-ruler"
+              admin: "loki-admin"
+            use_thanos_objstore: true
+            object_store:
+              type: s3
+              s3:
+                endpoint: "minio.minio.svc.cluster.local"
+                region: ap-northeast-1
+                storage_class: REDUCED_REDUNDANCY
+                insecure: true
+                http:
+                  tls_ca_path: /etc/ssl/certs/trust-bundle.pem
+                  insecure_skip_verify: true
+                sts_endpoint: "https://sts.minio-operator.svc.cluster.local:4223/sts/minio"
+                bucket_lookup_type: path
+          server:
+            # "error": "HTTP 500 \"Internal Server Error\": rpc error: code = ResourceExhausted desc = grpc: received message larger than max (4840865 vs. 4194304)"
+            # https://grafana.com/docs/loki/latest/configure/
+            grpc_server_max_recv_msg_size: 104857600
+            grpc_server_max_send_msg_size: 104857600
+          schemaConfig:
+            configs:
+            - from: '2024-01-01'
+              store: tsdb
+              index:
+                prefix: loki_index_
+                period: 24h
+              object_store: s3
+              schema: v13
+          ingester:
+            chunk_encoding: snappy
+          tracing:
+            enabled: true
+          querier:
+            max_concurrent: 4
+          limits_config:
+            allow_structured_metadata: true
+            retention_period: 336h
+            ingestion_burst_size_mb: 100
+            shard_streams:
+              enabled: true
+              desired_rate: 104857600 # 10MiB
+            reject_old_samples: false
+          # TODO: rm https://github.com/grafana/loki/pull/17597
+          config: |
+            auth_enabled: false
+            bloom_build:
+              builder:
+                planner_address: loki-backend-headless.loki.svc.cluster.local:9095
+              enabled: false
+            bloom_gateway:
+              client:
+                addresses: dnssrvnoa+_grpc._tcp.loki-backend-headless.loki.svc.cluster.local
+              enabled: false
+            chunk_store_config:
+              chunk_cache_config:
+                background:
+                  writeback_buffer: 500000
+                  writeback_goroutines: 1
+                  writeback_size_limit: 500MB
+                default_validity: 0s
+                memcached:
+                  batch_size: 4
+                  parallelism: 5
+                memcached_client:
+                  addresses: dnssrvnoa+_memcached-client._tcp.loki-chunks-cache.loki.svc
+                  consistent_hash: true
+                  max_idle_conns: 72
+                  timeout: 2000ms
+            common:
+              compactor_address: 'http://loki-backend:3100'
+              path_prefix: /var/loki
+              replication_factor: 1
+              storage:
+                object_store:
+                  s3:
+                    endpoint: "minio.minio.svc.cluster.local"
+                    region: ap-northeast-1
+                    bucket_name: loki-chunks
+                    storage_class: REDUCED_REDUNDANCY
+                    insecure: true
+                    http:
+                      tls_ca_path: /etc/ssl/certs/trust-bundle.pem
+                      insecure_skip_verify: true
+                    sts_endpoint: "https://sts.minio-operator.svc.cluster.local:4223/sts/minio"
+                    bucket_lookup_type: path
+                  storage_prefix: null
+            frontend:
+              scheduler_address: ""
+              tail_proxy_url: ""
+            frontend_worker:
+              scheduler_address: ""
+            index_gateway:
+              mode: simple
+            ingester:
+              chunk_encoding: snappy
+            limits_config:
+              allow_structured_metadata: true
+              ingestion_burst_size_mb: 100
+              max_cache_freshness_per_query: 10m
+              query_timeout: 300s
+              reject_old_samples: false
+              reject_old_samples_max_age: 168h
+              retention_period: 336h
+              shard_streams:
+                desired_rate: 104857600
+                enabled: true
+              split_queries_by_interval: 15m
+              volume_enabled: true
+            memberlist:
+              join_members:
+              - loki-memberlist
+            pattern_ingester:
+              enabled: false
+            querier:
+              max_concurrent: 4
+            query_range:
+              align_queries_with_step: true
+              cache_results: true
+              results_cache:
+                cache:
+                  background:
+                    writeback_buffer: 500000
+                    writeback_goroutines: 1
+                    writeback_size_limit: 500MB
+                  default_validity: 12h
+                  memcached_client:
+                    addresses: dnssrvnoa+_memcached-client._tcp.loki-results-cache.loki.svc
+                    consistent_hash: true
+                    timeout: 500ms
+                    update_interval: 1m
+            ruler:
+              storage:
+                s3:
+                  bucketnames: loki-ruler
+                  insecure: false
+                  s3forcepathstyle: false
+                type: s3
+              wal:
+                dir: /var/loki/ruler-wal
+            ruler_storage:
+              backend: s3
+              s3:
+                endpoint: "minio.minio.svc.cluster.local"
+                region: ap-northeast-1
+                bucket_name: loki-ruler
+                storage_class: REDUCED_REDUNDANCY
+                insecure: true
+                http:
+                  tls_ca_path: /etc/ssl/certs/trust-bundle.pem
+                  insecure_skip_verify: true
+                sts_endpoint: "https://sts.minio-operator.svc.cluster.local:4223/sts/minio"
+                bucket_lookup_type: path
+              storage_prefix: null
+            runtime_config:
+              file: /etc/loki/runtime-config/runtime-config.yaml
+            schema_config:
+              configs:
+              - from: "2024-01-01"
+                index:
+                  period: 24h
+                  prefix: loki_index_
+                object_store: s3
+                schema: v13
+                store: tsdb
+            server:
+              grpc_listen_port: 9095
+              grpc_server_max_recv_msg_size: 104857600
+              grpc_server_max_send_msg_size: 104857600
+              http_listen_port: 3100
+              http_server_read_timeout: 600s
+              http_server_write_timeout: 600s
+            storage_config:
+              use_thanos_objstore: true
+              bloom_shipper:
+                working_directory: /var/loki/data/bloomshipper
+              boltdb_shipper:
+                index_gateway_client:
+                  server_address: dns+loki-backend-headless.loki.svc.cluster.local:9095
+              hedging:
+                at: 250ms
+                max_per_second: 20
+                up_to: 3
+              tsdb_shipper:
+                index_gateway_client:
+                  server_address: dns+loki-backend-headless.loki.svc.cluster.local:9095
+            tracing:
+              enabled: true
+
+        global:
+          extraEnv:
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.min.io/serviceaccount/token
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::dummy:role/loki-minio-role
+          extraVolumes:
+          - name: minio-sts-token
+            projected:
+              sources:
+              - serviceAccountToken:
+                  audience: sts.min.io
+                  expirationSeconds: 3600
+                  path: token
+          - name: local-ca-bundle
+            configMap:
+              name: local-ca-bundle
+          extraVolumeMounts:
+          - name: minio-sts-token
+            mountPath: /var/run/secrets/sts.min.io/serviceaccount
+            readOnly: true
+          - name: local-ca-bundle
+            mountPath: /etc/ssl/certs/trust-bundle.pem
+            subPath: trust-bundle.pem
+            readOnly: true
+
+        write:
+          replicas: 2
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 6
+            targetCPUUtilizationPercentage: 100
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              memory: 300Mi
+              cpu: 60m
+            limits:
+              memory: 1Gi
+              cpu: 1
+          extraArgs: [ "-config.expand-env=true" ]
+          extraEnvFrom:
+          - secretRef:
+              name: loki
+          persistence:
+            volumeClaimsEnabled: false
+            dataVolumeParameters:
+              emptyDir: {}
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app.kubernetes.io/component
+                      operator: In
+                      values:
+                      - write
+                  topologyKey: kubernetes.io/hostname
+
+        read:
+          replicas: 2
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 6
+            targetCPUUtilizationPercentage: 100
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              memory: 400Mi
+              cpu: 50m
+            limits:
+              memory: 1Gi
+              cpu: 1
+          extraArgs: [ "-config.expand-env=true" ]
+          extraEnvFrom:
+          - secretRef:
+              name: loki
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app.kubernetes.io/component
+                      operator: In
+                      values:
+                      - read
+                  topologyKey: kubernetes.io/hostname
+
+        backend:
+          replicas: 2
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 6
+            targetCPUUtilizationPercentage: 100
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 30m
+            limits:
+              memory: 1Gi
+              cpu: 100m
+          extraArgs: [ "-config.expand-env=true" ]
+          extraEnvFrom:
+          - secretRef:
+              name: loki
+          persistence:
+            volumeClaimsEnabled: false
+            dataVolumeParameters:
+              emptyDir: {}
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app.kubernetes.io/component
+                      operator: In
+                      values:
+                      - backend
+                  topologyKey: kubernetes.io/hostname
+
+        gateway:
+          replicas: 1
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 3
+            targetCPUUtilizationPercentage: 100
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              memory: 14Mi
+              cpu: 5m
+            limits:
+              memory: 512Mi
+              cpu: 100m
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app.kubernetes.io/component
+                      operator: In
+                      values:
+                      - gateway
+                  topologyKey: kubernetes.io/hostname
+          tolerations:
+          - key: "node.walnuts.dev/low-performance"
+            operator: "Exists"
+
+        singleBinary:
+          replicas: 0
+
+        sidecar:
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 5m
+              memory: 100Mi
+        chunksCache:
+          allocatedMemory: 8192
+          resources:
+            requests:
+              cpu: 10m
+              memory: 4Gi
+            limits:
+              memory: 9830Mi
+        resultsCache:
+          allocatedMemory: 1024
+          resources:
+            requests:
+              cpu: 10m
+              memory: 1Gi
+            limits:
+              memory: 1229Mi
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 6.31.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

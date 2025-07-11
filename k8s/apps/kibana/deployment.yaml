@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kibana
+    app.kubernetes.io/name: kibana
+  name: kibana
+  namespace: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+      app.kubernetes.io/name: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+        app.kubernetes.io/name: kibana
+    spec:
+      containers:
+        - env:
+            - name: ELASTICSEARCH_HOSTS
+              value: http://elasticsearch.elasticsearch.svc.cluster.local:9200
+          image: docker.elastic.co/kibana/kibana:9.0.3
+          name: kibana
+          ports:
+            - containerPort: 5601
+              name: http
+          resources:
+            limits: {}
+            requests:
+              memory: 500Mi
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+          volumeMounts:
+            - mountPath: /usr/share/kibana/data
+              name: kibana-data
+      volumes:
+        - emptyDir: {}
+          name: kibana-data
