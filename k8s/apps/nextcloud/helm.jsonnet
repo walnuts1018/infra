@@ -4,6 +4,6 @@
 
   chart: 'nextcloud',
   repoURL: 'https://nextcloud.github.io/helm/',
-  targetRevision: '6.6.10',
+  targetRevision: '7.0.0',
   values: (importstr 'values.yaml'),
 }
