@@ -1,6 +1,6 @@
 manager:
   collectorImage:
-    repository: "ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.129.1"
+    repository: "ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib"
   extraArgs:
   - --enable-go-instrumentation=true
   - --enable-nginx-instrumentation=true
