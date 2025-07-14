@@ -22,6 +22,8 @@ loki:
           insecure_skip_verify: true
         sts_endpoint: "https://sts.minio-operator.svc.cluster.local:4223/sts/minio"
         bucket_lookup_type: path
+  storage_config:
+    use_thanos_objstore: true
   server:
     # "error": "HTTP 500 \"Internal Server Error\": rpc error: code = ResourceExhausted desc = grpc: received message larger than max (4840865 vs. 4194304)"
     # https://grafana.com/docs/loki/latest/configure/
