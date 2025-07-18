@@ -71,7 +71,7 @@
           downAfterMilliseconds: '30000',
         },
         kubernetesConfig: {
-          image: 'quay.io/opstree/redis-sentinel:v7.2.9',
+          image: 'quay.io/opstree/redis-sentinel:v8.0.3',
           imagePullPolicy: 'IfNotPresent',
           redisSecret: {
             name: $.secret_name,
