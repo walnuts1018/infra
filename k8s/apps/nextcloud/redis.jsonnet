@@ -9,7 +9,7 @@
   },
   spec: {
     kubernetesConfig: {
-      image: 'quay.io/opstree/redis:v7.2.7',
+      image: 'quay.io/opstree/redis:v7.4.5',
       imagePullPolicy: 'IfNotPresent',
       redisSecret: {
         name: (import 'external-secret.jsonnet').name,
