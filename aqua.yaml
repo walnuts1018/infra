@@ -15,7 +15,7 @@
 
 registries:
 - type: standard
-  ref: v4.394.0 # renovate: depName=aquaproj/aqua-registry
+  ref: v4.395.0 # renovate: depName=aquaproj/aqua-registry
 
 packages:
 - name: yannh/kubeconform@v0.7.0
