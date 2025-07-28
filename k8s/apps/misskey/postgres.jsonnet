@@ -43,11 +43,6 @@
         memory: '150Mi',
       },
     },
-    serviceAccountTemplate: {
-      metadata: {
-        name: (import 'app.json5').name + '-postgresql',
-      },
-    },
     plugins: [
       {
         name: 'barman-cloud.cloudnative-pg.io',

@@ -25,7 +25,7 @@ local bindings = [
   },
   {
     sa: {
-      name: (import '../misskey/postgres.jsonnet').spec.serviceAccountTemplate.metadata.name,
+      name: (import '../misskey/postgres.jsonnet').metadata.name,
       namespace: (import '../misskey/app.json5').namespace,
     },
     policies: [
