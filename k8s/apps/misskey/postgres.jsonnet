@@ -22,28 +22,6 @@
         },
       },
     },
-    externalClusters: [
-      {
-        name: 'recover-cluster',
-        connectionParameters: {
-          host: 'misskey-postgresql-recover-rw',
-          user: 'streaming_replica',
-          sslmode: 'verify-full',
-        },
-        sslKey: {
-          name: 'misskey-postgresql-recover-replication',
-          key: 'tls.key',
-        },
-        sslCert: {
-          name: 'misskey-postgresql-recover-replication',
-          key: 'tls.crt',
-        },
-        sslRootCert: {
-          name: 'misskey-postgresql-recover-ca',
-          key: 'ca.crt',
-        },
-      },
-    ],
     resources: {
       requests: {
         cpu: '20m',
