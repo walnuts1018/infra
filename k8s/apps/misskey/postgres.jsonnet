@@ -2,38 +2,45 @@
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'Cluster',
   metadata: {
-    name: (import 'app.json5').name + '-postgresql' + '-recover',
+    name: (import 'app.json5').name + '-postgresql',
   },
   spec: {
     instances: 2,
     storage: {
       size: '10Gi',
-      storageClass: 'longhorn',
+      storageClass: 'local-path',
     },
     superuserSecret: {
       name: 'superuser-secret',
     },
     bootstrap: {
-      // initdb: {
-      //   database: 'misskey',
-      //   owner: 'misskey',
-      //   secret: {
-      //     name: (import 'postgres-password.jsonnet').spec.target.name,
-      //   },
-      // },
-      recovery: {
-        source: 'minio-backup',
+      initdb: {
+        database: 'misskey',
+        owner: 'misskey',
+        secret: {
+          name: (import 'postgres-password.jsonnet').spec.target.name,
+        },
       },
     },
     externalClusters: [
       {
-        name: 'minio-backup',
-        plugin: {
-          name: 'barman-cloud.cloudnative-pg.io',
-          parameters: {
-            barmanObjectName: 'minio-store',
-            serverName: (import 'app.json5').name + '-postgresql',
-          },
+        name: 'recover-cluster',
+        connectionParameters: {
+          host: 'misskey-postgresql-recover-rw',
+          user: 'streaming_replica',
+          sslmode: 'verify-full',
+        },
+        sslKey: {
+          name: 'misskey-postgresql-recover-replication',
+          key: 'tls.key',
+        },
+        sslCert: {
+          name: 'misskey-postgresql-recover-replication',
+          key: 'tls.crt',
+        },
+        sslRootCert: {
+          name: 'misskey-postgresql-recover-ca',
+          key: 'ca.crt',
         },
       },
     ],
