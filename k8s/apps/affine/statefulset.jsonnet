@@ -182,7 +182,7 @@
                 port: 'http',
               },
               failureThreshold: 1,
-              initialDelaySeconds: 10,
+              initialDelaySeconds: 30,
               periodSeconds: 10,
             },
             readinessProbe: {
@@ -190,6 +190,9 @@
                 path: '/info',
                 port: 'http',
               },
+              failureThreshold: 1,
+              initialDelaySeconds: 30,
+              periodSeconds: 10,
             },
           },
         ],
