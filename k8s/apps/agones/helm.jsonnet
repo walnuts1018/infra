@@ -4,6 +4,6 @@
 
   chart: 'agones',
   repoURL: 'https://agones.dev/chart/stable',
-  targetRevision: '1.50.0',
+  targetRevision: '1.51.0',
   values: (importstr 'values.yaml'),
 }
