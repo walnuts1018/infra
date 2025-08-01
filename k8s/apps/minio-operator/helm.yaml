@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio-operator-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: minio-operator
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: operator
+    helm:
+      releaseName: minio-operator
+      values: |
+        operator:
+          env:
+          - name: OPERATOR_STS_AUTO_TLS_ENABLED
+            value: "off"
+          - name: OPERATOR_STS_ENABLED
+            value: "on"
+          replicaCount: 1
+          resources:
+            requests:
+              cpu: 5m
+              memory: 50Mi
+    repoURL: https://operator.min.io/
+    targetRevision: 7.1.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

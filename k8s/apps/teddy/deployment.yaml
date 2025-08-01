@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: teddy
+    app.kubernetes.io/name: teddy
+  name: teddy
+  namespace: teddy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: teddy
+      app.kubernetes.io/name: teddy
+  template:
+    metadata:
+      labels:
+        app: teddy
+        app.kubernetes.io/name: teddy
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+              weight: 100
+            - preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values:
+                      - donut
+              weight: 10
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - teddy
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      containers:
+        - env:
+            - name: MEDIA_ENDPOINT
+              value: http://localhost:8080
+            - name: NEXTAUTH_URL
+              value: https://teddy.walnuts.dev
+            - name: AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: AUTH_SECRET
+                  name: teddy-bccea4
+            - name: AUTH_ZITADEL_ID
+              value: "312272470495264948"
+            - name: AUTH_ZITADEL_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: AUTH_ZITADEL_SECRET
+                  name: teddy-bccea4
+          image: ghcr.io/walnuts1018/teddy:v0.0.63
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+          name: teddy
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 120m
+              memory: 196Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /app/.next/cache
+              name: next-cache
+        - image: ghcr.io/walnuts1018/teddy-nginx:v0.0.63
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          name: nginx
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 5m
+              memory: 24Mi
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      priorityClassName: high
+      tolerations:
+        - key: node.walnuts.dev/low-performance
+          operator: Exists
+      volumes:
+        - emptyDir: {}
+          name: next-cache
