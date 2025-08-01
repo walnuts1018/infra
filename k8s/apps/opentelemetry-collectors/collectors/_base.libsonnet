@@ -4,7 +4,7 @@
   spec: {
     managementState: 'managed',
     serviceAccount: (import '../sa.jsonnet').metadata.name,
-    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.131.0',
+    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.131.1',
     config: {
       exporters: {
         'otlphttp/prometheus': {
