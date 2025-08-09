@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: teddy
+    app.kubernetes.io/name: teddy
+  name: teddy
+  namespace: teddy
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: teddy.walnuts.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: teddy
+                port:
+                  number: 3000
+            path: /
+            pathType: Prefix

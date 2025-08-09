@@ -1,0 +1,84 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: samba-backup
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - command:
+                - sh
+                - /backup.sh
+              env:
+                - name: SAMBA_USER
+                  valueFrom:
+                    secretKeyRef:
+                      key: user
+                      name: samba-backup-8517f5
+                - name: SAMBA_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: password
+                      name: samba-backup-8517f5
+              image: debian:12.11
+              name: samba-backup
+              readinessProbe:
+                exec:
+                  command:
+                    - cat
+                    - /tmp/healthy
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: 10Gi
+                requests:
+                  cpu: 10m
+                  memory: 217Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                privileged: true
+                readOnlyRootFilesystem: false
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /backup.sh
+                  name: samba-backup-script
+                  readOnly: true
+                  subPath: backup.sh
+                - mountPath: /samba-share
+                  name: samba-local-dir
+                - mountPath: /samba-backup
+                  name: samba-backup
+                - mountPath: /root/.ssh/id_ed25519
+                  name: samba-id-ed25519
+                  subPath: id_ed25519
+          nodeSelector:
+            kubernetes.io/hostname: cake
+          restartPolicy: OnFailure
+          volumes:
+            - configMap:
+                items:
+                  - key: backup.sh
+                    path: backup.sh
+                name: samba-backup-script-608491
+              name: samba-backup-script
+            - hostPath:
+                path: /mnt/data/share
+                type: Directory
+              name: samba-local-dir
+            - emptyDir: {}
+              name: samba-backup
+            - name: samba-id-ed25519
+              secret:
+                defaultMode: 384
+                secretName: samba-backup-8517f5
+  schedule: 0 3 * * *
+  startingDeadlineSeconds: 120
+  timeZone: Asia/Tokyo

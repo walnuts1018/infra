@@ -1,0 +1,124 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: atomic
+spec:
+  config:
+    exporters:
+      debug:
+        verbosity: detailed
+      file:
+        format: json
+        path: /tmp
+      otlp/mackerel:
+        compression: gzip
+        endpoint: otlp.mackerelio.com:4317
+        headers:
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+      otlp/tempo:
+        endpoint: tempo.tempo.svc.cluster.local:4317
+        tls:
+          insecure: true
+      otlphttp/loki:
+        endpoint: http://loki-gateway.loki.svc.cluster.local/otlp
+        tls:
+          insecure: true
+      otlphttp/prometheus:
+        endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/otlp
+        tls:
+          insecure: true
+      otlphttp/vaxila:
+        endpoint: https://otlp-vaxila.mackerelio.com
+        headers:
+          Accept: '*/*'
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+      prometheusremotewrite:
+        endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/write
+        resource_to_telemetry_conversion:
+          enabled: true
+    processors:
+      batch:
+        send_batch_size: 10000
+        timeout: 10s
+      k8sattributes:
+        auth_type: serviceAccount
+        extract:
+          metadata:
+            - k8s.cluster.uid
+        pod_association:
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.ip
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.uid
+          - sources:
+              - from: connection
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 2000
+        spike_limit_percentage: 15
+    receivers:
+      k8s_cluster:
+        allocatable_types_to_report:
+          - cpu
+          - memory
+        auth_type: serviceAccount
+        node_conditions_to_report:
+          - Ready
+          - MemoryPressure
+        resource_attributes:
+          k8s.container.status.last_terminated_reason:
+            enabled: true
+          k8s.deployment.name:
+            enabled: true
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: otel-collector
+              scrape_interval: 30s
+              static_configs:
+                - targets:
+                    - 0.0.0.0:8888
+    service:
+      pipelines:
+        metrics:
+          exporters:
+            - prometheusremotewrite
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+          receivers:
+            - k8s_cluster
+            - prometheus
+      telemetry:
+        logs:
+          development: true
+          encoding: json
+          level: DEBUG
+  env:
+    - name: K8S_NODE_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.131.1
+  managementState: managed
+  mode: statefulset
+  replicas: 1
+  resources:
+    requests:
+      cpu: 6m
+      memory: 90Mi
+  serviceAccount: opentelemetry-collectors
+  targetAllocator:
+    enabled: true
+    prometheusCR:
+      enabled: true
+      serviceMonitorSelector:
+        matchExpressions:
+          - key: walnuts.dev/scraped-by
+            operator: NotIn
+            values:
+              - prometheus
+    serviceAccount: opentelemetry-collectors
