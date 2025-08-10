@@ -69,3 +69,7 @@ affinity:
 # - name: zitadel-tls
 #   mountPath: /etc/ssl/certs
 #   readOnly: true
+
+# https://zitadel.com/docs/self-hosting/manage/login-client
+login:
+  enabled: false # 一旦使うつもりはないのでいいかな
