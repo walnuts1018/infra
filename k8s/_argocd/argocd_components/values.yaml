@@ -148,7 +148,6 @@ notifications:
     name: "argocd-notifications-secret"
   cm:
     create: true
-
   notifiers:
     service.slack: |
       token: $slack-token
@@ -426,3 +425,10 @@ notifications:
     enabled: true
     serviceMonitor:
       enabled: true
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 2m
+      memory: 74Mi
