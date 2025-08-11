@@ -37,7 +37,7 @@
     },
     {
       name: 'PSQL_HOST',
-      value: 'postgresql-default.databases.svc.cluster.local',
+      value: ' postgresql-default-rw.databases.svc.cluster.local',
     },
     {
       name: 'PSQL_PORT',
