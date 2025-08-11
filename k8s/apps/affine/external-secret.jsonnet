@@ -38,7 +38,7 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
         engineVersion: 'v2',
         type: 'Opaque',
         data: {
-          'postgres-url': 'postgres://affine:{{ .dbpassword }}@ postgresql-default-rw.databases.svc.cluster.local/affine',
+          'postgres-url': 'postgres://affine:{{ .dbpassword }}@ postgresql-default.databases.svc.cluster.local/affine',
           redispassword: '{{ .redispassword }}',
           'mailer-password': '{{ .mailerpassword }}',
           'oidc-client-secret': '{{ .oidcclientsecret }}',
