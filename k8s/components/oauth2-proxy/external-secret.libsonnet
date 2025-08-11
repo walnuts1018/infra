@@ -20,19 +20,22 @@
       {
         secretKey: 'client-id',
         remoteRef: {
-          key: $.onepassword_item_name + '/client-id',
+          key: $.onepassword_item_name,
+          property: 'client-id',
         },
       },
       {
         secretKey: 'client-secret',
         remoteRef: {
-          key: $.onepassword_item_name + '/client-secret',
+          key: $.onepassword_item_name,
+          property: 'client-secret',
         },
       },
       {
         secretKey: 'cookie-secret',
         remoteRef: {
-          key: $.onepassword_item_name + '/cookie-secret',
+          key: $.onepassword_item_name,
+          property: 'cookie-secret',
         },
       },
       {
