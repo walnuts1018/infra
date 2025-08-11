@@ -77,10 +77,10 @@
         connectionParameters: {
           host: 'postgresql-default.databases.svc.cluster.local',
           user: 'postgres',
-          password: {
-            name: 'postgres.default.credentials.postgresql.acid.zalan.do',
-            key: 'password',
-          },
+        },
+        password: {
+          name: 'postgres.default.credentials.postgresql.acid.zalan.do',
+          key: 'password',
         },
       },
     ],
