@@ -11,6 +11,8 @@ local gen = function(database) {
     cluster: {
       name: (import 'postgres.jsonnet').metadata.name,
     },
+    localeCollate: 'ja_JP.UTF-8',
+    localeCType: 'ja_JP.UTF-8',
   },
 };
 
