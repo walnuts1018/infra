@@ -4,19 +4,22 @@
     {
       secretKey: 'client-id',
       remoteRef: {
-        key: 'ipu-oauth2-proxy/client-id',
+        key: 'ipu-oauth2-proxy',
+        property: 'client-id',
       },
     },
     {
       secretKey: 'client-secret',
       remoteRef: {
-        key: 'ipu-oauth2-proxy/client-secret',
+        key: 'ipu-oauth2-proxy',
+        property: 'client-secret',
       },
     },
     {
       secretKey: 'session-secret',
       remoteRef: {
-        key: 'ipu-oauth2-proxy/cookie-secret',
+        key: 'ipu-oauth2-proxy',
+        property: 'cookie-secret',
       },
     },
   ],

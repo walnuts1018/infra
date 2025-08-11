@@ -4,7 +4,8 @@
     {
       secretKey: 'github-token',
       remoteRef: {
-        key: 'github_token/github-readme-stats',
+        key: 'github_token',
+        property: 'github-readme-stats',
       },
     },
   ],

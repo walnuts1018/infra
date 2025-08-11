@@ -41,19 +41,22 @@
       {
         secretKey: 'masterkey',
         remoteRef: {
-          key: 'zitadel/masterkey',
+          key: 'zitadel',
+          property: 'masterkey',
         },
       },
       {
         secretKey: 'postgresdbpassword',
         remoteRef: {
-          key: 'postgres_passwords/postgres',
+          key: 'postgres_passwords',
+          property: 'postgres',
         },
       },
       {
         secretKey: 'zitadeldbpassword',
         remoteRef: {
-          key: 'postgres_passwords/zitadel',
+          key: 'postgres_passwords',
+          property: 'zitadel',
         },
       },
     ],

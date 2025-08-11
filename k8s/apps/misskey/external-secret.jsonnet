@@ -5,13 +5,15 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
     {
       secretKey: 'dbPassword',
       remoteRef: {
-        key: 'misskey/dbpassword',
+        key: 'misskey',
+        property: 'dbpassword',
       },
     },
     {
       secretKey: 'redisPassword',
       remoteRef: {
-        key: 'redis/password',
+        key: 'redis',
+        property: 'password',
       },
     },
   ],

@@ -4,7 +4,8 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
     {
       secretKey: 'clientsecret',
       remoteRef: {
-        key: 'komga/client-secret',
+        key: 'komga',
+        property: 'client-secret',
       },
     },
   ],

@@ -17,13 +17,15 @@
       {
         secretKey: 'CIFS_PASSWORD',
         remoteRef: {
-          key: 'samba/password',
+          key: 'samba',
+          property: 'password',
         },
       },
       {
         secretKey: 'CIFS_USERNAME',
         remoteRef: {
-          key: 'samba/username',
+          key: 'samba',
+          property: 'username',
         },
       },
     ],

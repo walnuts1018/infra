@@ -4,31 +4,36 @@
     {
       secretKey: 'client_id',
       remoteRef: {
-        key: 'fitbit_manager/client_id',
+        key: 'fitbit_manager',
+        property: 'client_id',
       },
     },
     {
       secretKey: 'client_secret',
       remoteRef: {
-        key: 'fitbit_manager/client_secret',
+        key: 'fitbit_manager',
+        property: 'client_secret',
       },
     },
     {
       secretKey: 'cookie_secret',
       remoteRef: {
-        key: 'fitbit_manager/cookie_secret',
+        key: 'fitbit_manager',
+        property: 'cookie_secret',
       },
     },
     {
       secretKey: 'postgres_password',
       remoteRef: {
-        key: 'postgres_passwords/fitbit_manager',
+        key: 'postgres_passwords',
+        property: 'fitbit_manager',
       },
     },
     {
       secretKey: 'influxdb_auth_token',
       remoteRef: {
-        key: 'influxdb/fitbit-manager-auth-token',
+        key: 'influxdb',
+        property: 'fitbit-manager-auth-token',
       },
     },
   ],

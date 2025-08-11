@@ -6,7 +6,8 @@
     {
       secretKey: 'cloudflareAPIToken',
       remoteRef: {
-        key: 'cloudflare/cloudflare-tunnel-operator',
+        key: 'cloudflare',
+        property: 'cloudflare-tunnel-operator',
       },
     },
   ],
