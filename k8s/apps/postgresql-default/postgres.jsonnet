@@ -13,6 +13,7 @@
     // superuserSecret: {
     //   name: 'superuser-secret',
     // },
+    enableSuperuserAccess: true,
     bootstrap: {
       initdb: {
         database: 'app',
