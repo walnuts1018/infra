@@ -2,7 +2,7 @@
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'Cluster',
   metadata: {
-    name: (import 'app.json5').name + '-postgresql',
+    name: (import 'app.json5').name,
   },
   spec: {
     instances: 3,
