@@ -5,6 +5,26 @@ agones:
     serviceMonitor:
       enabled: true
       interval: 30s
+  controller:
+    resources:
+      requests:
+        cpu: 1
+        memory: 20Mi
+  extensions:
+    resources:
+      requests:
+        cpu: 1m
+        memory: 20Mi
+  ping:
+    resources:
+      requests:
+        cpu: 1m
+        memory: 5Mi
+  allocator:
+    resources:
+      requests:
+        cpu: 1m
+        memory: 20Mi
 
 gameservers:
   namespaces:
