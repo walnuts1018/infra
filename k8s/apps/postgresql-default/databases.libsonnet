@@ -12,10 +12,6 @@
     user_name: 'hedgedoc',
   },
   {
-    db_name: 'misskey',
-    user_name: 'misskey',
-  },
-  {
     db_name: 'nextcloud',
     user_name: 'nextcloud',
   },
