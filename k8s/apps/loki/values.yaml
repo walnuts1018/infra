@@ -89,7 +89,7 @@ write:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      memory: 300Mi
+      memory: 400Mi
       cpu: 60m
     limits:
       memory: 1Gi
