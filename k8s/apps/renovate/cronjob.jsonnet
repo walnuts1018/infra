@@ -96,6 +96,12 @@
                 ],
               },
             ],
+            tolerations: [
+              {
+                key: 'walnuts.dev/untrusted',
+                operator: 'Exists',
+              },
+            ],
             volumes: [
               {
                 name: 'renovate',
