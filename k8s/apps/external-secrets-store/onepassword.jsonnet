@@ -11,6 +11,7 @@
         auth: {
           serviceAccountSecretRef: {
             name: 'onepassword-connect-token-kurumi',
+            namespace: 'external-secrets',
             key: 'token',
           },
         },
