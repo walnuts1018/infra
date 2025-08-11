@@ -32,7 +32,7 @@
                 memory: '512Mi',
               },
               requests: {
-                cpu: '5m',
+                cpu: '8m',
                 memory: '120Mi',
               },
             },
