@@ -5,36 +5,31 @@
     {
       secretKey: 'admin-password',
       remoteRef: {
-        key: 'grafana',
-        property: 'admin-password',
+        key: 'grafana/admin-password',
       },
     },
     {
       secretKey: 'admin-username',
       remoteRef: {
-        key: 'grafana',
-        property: 'admin-username',
+        key: 'grafana/admin-username',
       },
     },
     {
       secretKey: 'client_secret',
       remoteRef: {
-        key: 'grafana',
-        property: 'client_secret',
+        key: 'grafana/client_secret',
       },
     },
     {
       secretKey: 'postgres_password',
       remoteRef: {
-        key: 'postgres_passwords',
-        property: 'grafana',
+        key: 'postgres_passwords/grafana',
       },
     },
     {
       secretKey: 'smtp_password',
       remoteRef: {
-        key: 'resend',
-        property: 'api-key',
+        key: 'resend/api-key',
       },
     },
   ],

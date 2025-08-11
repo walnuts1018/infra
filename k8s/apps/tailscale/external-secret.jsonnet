@@ -17,8 +17,7 @@
       {
         secretKey: 'TS_AUTH_KEY',
         remoteRef: {
-          key: 'tailscale',
-          property: 'auth-key',
+          key: 'tailscale/auth-key',
         },
       },
     ],

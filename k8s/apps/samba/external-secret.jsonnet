@@ -4,8 +4,7 @@
     {
       secretKey: 'account-samba',
       remoteRef: {
-        key: 'samba',
-        property: 'password',
+        key: 'samba/password',
       },
     },
   ],

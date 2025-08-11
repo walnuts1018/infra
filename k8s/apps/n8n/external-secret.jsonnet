@@ -4,8 +4,7 @@
     {
       secretKey: 'postgres-password',
       remoteRef: {
-        key: 'postgres_passwords',
-        property: 'n8n',
+        key: 'postgres_passwords/n8n',
       },
     },
   ],

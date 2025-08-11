@@ -5,15 +5,13 @@
     {
       secretKey: 'admin-password',
       remoteRef: {
-        key: 'influxdb',
-        property: 'admin-password',
+        key: 'influxdb/admin-password',
       },
     },
     {
       secretKey: 'admin-token',
       remoteRef: {
-        key: 'influxdb',
-        property: 'admin-token',
+        key: 'influxdb/admin-token',
       },
     },
   ],

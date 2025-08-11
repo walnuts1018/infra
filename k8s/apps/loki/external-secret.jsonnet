@@ -5,8 +5,7 @@
     {
       secretKey: 'redispassword',
       remoteRef: {
-        key: 'redis',
-        property: 'password',
+        key: 'redis/password',
       },
     },
   ],

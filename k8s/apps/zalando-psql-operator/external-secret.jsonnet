@@ -17,15 +17,13 @@
       {
         secretKey: 'AWS_ACCESS_KEY_ID',
         remoteRef: {
-          key: 'zalando-minio',
-          property: 'access_key',
+          key: 'zalando-minio/access_key',
         },
       },
       {
         secretKey: 'AWS_SECRET_ACCESS_KEY',
         remoteRef: {
-          key: 'zalando-minio',
-          property: 'secret_key',
+          key: 'zalando-minio/secret_key',
         },
       },
     ],

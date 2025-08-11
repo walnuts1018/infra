@@ -6,22 +6,19 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
     {
       secretKey: 'rootUser',
       remoteRef: {
-        key: 'minio',
-        property: 'rootUser',
+        key: 'minio/rootUser',
       },
     },
     {
       secretKey: 'rootPassword',
       remoteRef: {
-        key: 'minio',
-        property: 'rootPassword',
+        key: 'minio/rootPassword',
       },
     },
     {
       secretKey: 'clientSecret',
       remoteRef: {
-        key: 'minio',
-        property: 'client-secret',
+        key: 'minio/client-secret',
       },
     },
   ],

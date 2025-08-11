@@ -4,15 +4,13 @@
     {
       secretKey: 'AUTH_SECRET',
       remoteRef: {
-        key: 'teddy',
-        property: 'AUTH_SECRET',
+        key: 'teddy/AUTH_SECRET',
       },
     },
     {
       secretKey: 'AUTH_ZITADEL_SECRET',
       remoteRef: {
-        key: 'teddy',
-        property: 'AUTH_ZITADEL_SECRET',
+        key: 'teddy/AUTH_ZITADEL_SECRET',
       },
     },
   ],

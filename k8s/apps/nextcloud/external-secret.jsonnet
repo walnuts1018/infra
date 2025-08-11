@@ -5,43 +5,37 @@
     {
       secretKey: 'admin-password',
       remoteRef: {
-        key: 'nextcloud',
-        property: 'admin_password',
+        key: 'nextcloud/admin_password',
       },
     },
     {
       secretKey: 'admin-username',
       remoteRef: {
-        key: 'nextcloud',
-        property: 'admin_username',
+        key: 'nextcloud/admin_username',
       },
     },
     {
       secretKey: 'postgres-password',
       remoteRef: {
-        key: 'postgres_passwords',
-        property: 'nextcloud',
+        key: 'postgres_passwords/nextcloud',
       },
     },
     {
       secretKey: 'postgres-username',
       remoteRef: {
-        key: 'nextcloud',
-        property: 'postgres_username',
+        key: 'nextcloud/postgres_username',
       },
     },
     {
       secretKey: 'redis-password',
       remoteRef: {
-        key: 'redis',
-        property: 'password',
+        key: 'redis/password',
       },
     },
     {
       secretKey: 'smtp-password',
       remoteRef: {
-        key: 'gmail',
-        property: 'password',
+        key: 'gmail/password',
       },
     },
   ],

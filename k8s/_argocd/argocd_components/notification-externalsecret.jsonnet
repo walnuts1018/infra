@@ -6,15 +6,13 @@
     {
       secretKey: 'slack-token',
       remoteRef: {
-        key: 'argocd',
-        property: 'slack-token',
+        key: 'argocd/slack-token',
       },
     },
     {
       secretKey: 'cloudflare-api-token',
       remoteRef: {
-        key: 'cloudflare',
-        property: 'argocd-webhook',
+        key: 'cloudflare/argocd-webhook',
       },
     },
   ],

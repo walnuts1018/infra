@@ -4,50 +4,43 @@
     {
       secretKey: 'zitade-client-id',
       remoteRef: {
-        key: 'openchokin',
-        property: 'ZITADEL_CLIENT_ID',
+        key: 'openchokin/ZITADEL_CLIENT_ID',
       },
     },
     {
       secretKey: 'zitadel-client-secret',
       remoteRef: {
-        key: 'openchokin',
-        property: 'ZITADEL_CLIENT_SECRET',
+        key: 'openchokin/ZITADEL_CLIENT_SECRET',
       },
     },
     {
       secretKey: 'nextauth-secret',
       remoteRef: {
-        key: 'openchokin',
-        property: 'NEXTAUTH_SECRET',
+        key: 'openchokin/NEXTAUTH_SECRET',
       },
     },
     {
       secretKey: 'postgres-admin-password',
       remoteRef: {
-        key: 'postgres_passwords',
-        property: 'postgres',
+        key: 'postgres_passwords/postgres',
       },
     },
     {
       secretKey: 'postgres-user-password',
       remoteRef: {
-        key: 'postgres_passwords',
-        property: 'openchokin',
+        key: 'postgres_passwords/openchokin',
       },
     },
     {
       secretKey: 'redis-password',
       remoteRef: {
-        key: 'redis',
-        property: 'password',
+        key: 'redis/password',
       },
     },
     {
       secretKey: 'cache-password',
       remoteRef: {
-        key: 'openchokin',
-        property: 'CACHE_PASSWORD',
+        key: 'openchokin/CACHE_PASSWORD',
       },
     },
   ],
