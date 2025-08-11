@@ -118,13 +118,13 @@ std.mergePatch((import '_base.libsonnet'), {
         },
       },
       service: {
-        telemetry: {
-          logs: {
-            level: 'DEBUG',
-            development: true,
-            encoding: 'json',
-          },
-        },
+        // telemetry: {
+        //   logs: {
+        //     level: 'DEBUG',
+        //     development: true,
+        //     encoding: 'json',
+        //   },
+        // },
         pipelines: {
           metrics: {
             receivers: [
