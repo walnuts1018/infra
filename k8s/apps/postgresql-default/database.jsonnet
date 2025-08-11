@@ -3,7 +3,7 @@ local gen = function(database) {
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'Database',
   metadata: {
-    name: database.db_name,
+    name: std.strReplace(database.db_name + '-db-password', '_', '-'),
   },
   spec: {
     name: database.db_name,
