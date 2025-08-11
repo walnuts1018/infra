@@ -133,7 +133,7 @@
         ],
         tolerations: [
           {
-            key: 'walnuts.dev/untrusted',
+            key: 'node.walnuts.dev/untrusted',
             operator: 'Exists',
           },
         ],
