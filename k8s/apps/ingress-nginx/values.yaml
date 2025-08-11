@@ -34,3 +34,10 @@ controller:
       enabled: true
   # extraArgs:
   #   enable-ssl-passthrough: "true"
+  resources:
+    requests:
+      cpu: 4m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 256Mi
