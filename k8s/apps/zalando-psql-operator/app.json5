@@ -1,4 +1,0 @@
-{
-  name: "zalando-psql-operator",
-  namespace: "databases",
-}
