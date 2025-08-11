@@ -149,6 +149,12 @@ std.mergePatch((import '_base.libsonnet'), {
         memory: '700Mi',
       },
     },
+    tolerations: [
+      {
+        key: 'node.walnuts.dev/untrusted',
+        operator: 'Exists',
+      },
+    ],
     env: [
       {
         name: 'K8S_NODE_IP',
