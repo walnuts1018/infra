@@ -173,7 +173,7 @@
               },
               requests: {
                 cpu: '2m',
-                memory: '180Mi',
+                memory: '120Mi',
               },
             },
             livenessProbe: {
