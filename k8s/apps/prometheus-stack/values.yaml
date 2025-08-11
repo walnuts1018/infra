@@ -4,7 +4,8 @@ grafana:
     limits:
       memory: 800Mi
     requests:
-      memory: 340Mi
+      cpu: 10m
+      memory: 300Mi
   ingress:
     enabled: true
     hosts:
