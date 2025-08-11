@@ -41,7 +41,7 @@ resources:
     cpu: 10m
     memory: 320Mi
   limits:
-    memory: 512Mi
+    memory: 768Mi
 affinity:
   nodeAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
