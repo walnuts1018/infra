@@ -70,7 +70,13 @@ dex:
     enabled: true
     serviceMonitor:
       enabled: true
-
+  resources:
+    limits:
+      cpu: 50m
+      memory: 64Mi
+    requests:
+      cpu: 1m
+      memory: 20Mi
 redis:
   metrics:
     enabled: true
