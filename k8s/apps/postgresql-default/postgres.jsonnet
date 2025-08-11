@@ -10,6 +10,9 @@
       size: '10Gi',
       storageClass: 'local-path',
     },
+    superuserSecret: {
+      name: (import 'postgres-superuser-password.jsonnet').spec.target.name,
+    },
     enableSuperuserAccess: true,
     bootstrap: {
       initdb: {
