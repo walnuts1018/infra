@@ -9,7 +9,8 @@ local gen = function(username) {
     data: [
       {
         remoteRef: {
-          key: 'postgres_passwords/' + username,
+          key: 'postgres_passwords',
+          property: username,
         },
         secretKey: 'password',
       },
