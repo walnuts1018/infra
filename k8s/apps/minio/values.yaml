@@ -2,7 +2,13 @@ tenant:
   name: default
   pools:
   - name: pool-0
-    resources: {}
+    resources:
+      requests:
+        cpu: 5m
+        memory: 300Mi
+      limits:
+        cpu: 200m
+        memory: 1Gi
     servers: 4
     size: 32Gi
     volumesPerServer: 1
