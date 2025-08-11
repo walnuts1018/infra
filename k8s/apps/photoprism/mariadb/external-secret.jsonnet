@@ -5,22 +5,19 @@
     {
       secretKey: 'mariadb-root-password',
       remoteRef: {
-        key: 'photoprism',
-        property: 'mariadb-root-password',
+        key: 'photoprism/mariadb-root-password',
       },
     },
     {
       secretKey: 'mariadb-replication-password',
       remoteRef: {
-        key: 'photoprism',
-        property: 'mariadb-replication-password',
+        key: 'photoprism/mariadb-replication-password',
       },
     },
     {
       secretKey: 'mariadb-password',
       remoteRef: {
-        key: 'photoprism',
-        property: 'mariadb-photoprism-password',
+        key: 'photoprism/mariadb-photoprism-password',
       },
     },
   ],

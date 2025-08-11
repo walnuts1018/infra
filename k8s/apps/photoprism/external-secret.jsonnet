@@ -27,15 +27,13 @@
       {
         secretKey: 'adminpassword',
         remoteRef: {
-          key: 'photoprism',
-          property: 'admin-password',
+          key: 'photoprism/admin-password',
         },
       },
       {
         secretKey: 'dbpassword',
         remoteRef: {
-          key: 'photoprism',
-          property: 'mariadb-photoprism-password',
+          key: 'photoprism/mariadb-photoprism-password',
         },
       },
     ],

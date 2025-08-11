@@ -4,8 +4,7 @@
     {
       secretKey: 'github-token',
       remoteRef: {
-        key: 'renovate',
-        property: 'github_token',
+        key: 'renovate/github_token',
       },
     },
   ],

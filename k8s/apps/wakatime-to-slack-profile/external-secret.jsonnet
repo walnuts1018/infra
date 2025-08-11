@@ -4,36 +4,31 @@
     {
       secretKey: 'cookie-secret',
       remoteRef: {
-        key: 'wakatime-to-slack-profile',
-        property: 'cookie-secret',
+        key: 'wakatime-to-slack-profile/cookie-secret',
       },
     },
     {
       secretKey: 'postgres-password',
       remoteRef: {
-        key: 'postgres_passwords',
-        property: 'wakatime',
+        key: 'postgres_passwords/wakatime',
       },
     },
     {
       secretKey: 'slack-access-token',
       remoteRef: {
-        key: 'wakatime-to-slack-profile',
-        property: 'slack-access-token',
+        key: 'wakatime-to-slack-profile/slack-access-token',
       },
     },
     {
       secretKey: 'wakatime-app-id',
       remoteRef: {
-        key: 'wakatime-to-slack-profile',
-        property: 'wakatime-app-id',
+        key: 'wakatime-to-slack-profile/wakatime-app-id',
       },
     },
     {
       secretKey: 'wakatime-client-secret',
       remoteRef: {
-        key: 'wakatime-to-slack-profile',
-        property: 'wakatime-client-secret',
+        key: 'wakatime-to-slack-profile/wakatime-client-secret',
       },
     },
   ],

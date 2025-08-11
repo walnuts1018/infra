@@ -4,22 +4,19 @@
     {
       secretKey: 'id_ed25519',
       remoteRef: {
-        key: 'samba-backup',
-        property: 'private_key',
+        key: 'samba-backup/private_key',
       },
     },
     {
       secretKey: 'user',
       remoteRef: {
-        key: 'samba-backup',
-        property: 'user',
+        key: 'samba-backup/user',
       },
     },
     {
       secretKey: 'password',
       remoteRef: {
-        key: 'samba-backup',
-        property: 'password',
+        key: 'samba-backup/password',
       },
     },
   ],
