@@ -39,7 +39,7 @@ metrics:
 resources:
   requests:
     cpu: 10m
-    memory: 120Mi
+    memory: 180Mi
   limits:
     memory: 512Mi
 affinity:
