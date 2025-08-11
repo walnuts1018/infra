@@ -17,16 +17,6 @@
       initdb: {
         database: 'app',
         owner: 'app',
-        'import': {
-          type: 'monolith',
-          databases: [
-            database.db_name
-            for database in (import 'databases.libsonnet')
-          ],
-          source: {
-            externalCluster: 'source-db',
-          },
-        },
       },
     },
     managed: {
@@ -78,19 +68,5 @@
         },
       ],
     },
-    externalClusters: [
-      {
-        name: 'source-db',
-        connectionParameters: {
-          host: 'postgresql-default.databases.svc.cluster.local',
-          user: 'postgres',
-          dbname: 'postgres',
-        },
-        password: {
-          name: 'postgres.default.credentials.postgresql.acid.zalan.do',
-          key: 'password',
-        },
-      },
-    ],
   },
 }
