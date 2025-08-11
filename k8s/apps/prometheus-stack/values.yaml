@@ -11,9 +11,6 @@ grafana:
     hosts:
     - grafana.walnuts.dev
     ingressClassName: cilium
-  tolerations:
-  - key: 'node.walnuts.dev/untrusted'
-    operator: 'Exists'
   rbac:
     pspEnabled: false
   testFramework:
