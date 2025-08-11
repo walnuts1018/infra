@@ -30,10 +30,11 @@
             ],
             resources: {
               requests: {
-                memory: '10Mi',
+                cpu: '1m',
+                memory: '5Mi',
               },
               limits: {
-                memory: '100Mi',
+                memory: '64Mi',
               },
             },
             env: [
