@@ -82,6 +82,13 @@ redis:
     enabled: true
     serviceMonitor:
       enabled: true
+  resources:
+    limits:
+      cpu: 200m
+      memory: 128Mi
+    requests:
+      cpu: 5m
+      memory: 16Mi
 
 server:
   ingress:
