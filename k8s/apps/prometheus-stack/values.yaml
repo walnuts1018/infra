@@ -104,8 +104,10 @@ prometheus:
               storage: 32Gi
     resources:
       requests:
+        cpu: 500m
         memory: 2Gi
       limits:
+        cpu: "1"
         memory: 4Gi
     retention: 14d
     retentionSize: 30GiB
