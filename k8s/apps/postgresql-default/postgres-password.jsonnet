@@ -1,7 +1,7 @@
 local databases = (import 'databases.libsonnet');
 local gen = function(database) std.mergePatch((import '../../components/external-secret.libsonnet') {
   use_suffix:: false,
-  name: database.user_name + '-db-password',
+  name: std.strReplace(database.user_name + '-db-password', '_', '-'),
   data: [
     {
       secretKey: 'password',
