@@ -131,6 +131,12 @@
             emptyDir: {},
           },
         ],
+        tolerations: [
+          {
+            key: 'walnuts.dev/untrusted',
+            operator: 'Exists',
+          },
+        ],
       },
     },
   },

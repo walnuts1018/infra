@@ -11,6 +11,9 @@ grafana:
     hosts:
     - grafana.walnuts.dev
     ingressClassName: cilium
+  tolerations:
+  - key: 'walnuts.dev/untrusted'
+    operator: 'Exists'
   rbac:
     pspEnabled: false
   testFramework:
@@ -110,6 +113,9 @@ prometheus:
       limits:
         cpu: "1"
         memory: 4Gi
+    tolerations:
+    - key: 'walnuts.dev/untrusted'
+      operator: 'Exists'
     retention: 14d
     retentionSize: 30GiB
     replicas: 1
