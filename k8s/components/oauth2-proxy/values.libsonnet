@@ -57,5 +57,9 @@
       key: 'node.walnuts.dev/low-performance',
       operator: 'Exists',
     },
+    {
+      key: 'node.walnuts.dev/untrusted',
+      operator: 'Exists',
+    },
   ],
 }
