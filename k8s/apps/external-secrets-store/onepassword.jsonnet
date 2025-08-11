@@ -6,13 +6,18 @@
   },
   spec: {
     provider: {
-      onepasswordSDK: {
-        vault: 'kurumi',
+      onepassword: {
+        connectHost: 'http://onepassword-connect.onepassword.svc.cluster.local:8080',
+        vaults: {
+          kurumi: 1,
+        },
         auth: {
-          serviceAccountSecretRef: {
-            name: 'onepassword-connect-token-kurumi',
-            namespace: 'external-secrets',
-            key: 'token',
+          secretRef: {
+            connectTokenSecretRef: {
+              namespace: 'onepassword',
+              name: 'onepassword-token',
+              key: 'token',
+            },
           },
         },
       },
