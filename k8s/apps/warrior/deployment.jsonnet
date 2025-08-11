@@ -63,12 +63,12 @@
             },
             resources: {
               limits: {
-                cpu: '1',
-                memory: '1Gi',
+                cpu: '100m',
+                memory: '768Mi',
               },
               requests: {
-                cpu: '20m',
-                memory: '175Mi',
+                cpu: '50m',
+                memory: '300Mi',
               },
             },
           },
