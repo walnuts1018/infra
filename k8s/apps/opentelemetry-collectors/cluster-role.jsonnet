@@ -151,5 +151,18 @@
         'get',
       ],
     },
+    {
+      apiGroups: [
+        'monitoring.coreos.com',
+      ],
+      resources: [
+        'probes',
+        'scrapeconfigs',
+      ],
+      verbs: [
+        'list',
+        'watch',
+      ],
+    },
   ],
 }
