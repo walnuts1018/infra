@@ -44,7 +44,7 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
         engineVersion: 'v2',
         type: 'Opaque',
         data: {
-          'db-url': 'postgres://hedgedoc:{{ .dbpassword }}@postgresql-default.databases.svc.cluster.local/hedgedoc',
+          'db-url': 'postgres://hedgedoc:{{ .dbpassword }}@postgresql-default-rw.databases.svc.cluster.local/hedgedoc',
           'client-secret': '{{ .clientsecret }}',
           'minio-access-key': '{{ .minioaccesskey }}',
           'minio-secret-key': '{{ .miniosecretkey }}',
