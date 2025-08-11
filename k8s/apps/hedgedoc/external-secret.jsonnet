@@ -4,31 +4,36 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
     {
       secretKey: 'dbpassword',
       remoteRef: {
-        key: 'postgres_passwords/hedgedoc',
+        key: 'postgres_passwords',
+        property: 'hedgedoc',
       },
     },
     {
       secretKey: 'clientsecret',
       remoteRef: {
-        key: 'hedgedoc/client-secret',
+        key: 'hedgedoc',
+        property: 'client-secret',
       },
     },
     {
       secretKey: 'minioaccesskey',
       remoteRef: {
-        key: 'hedgedoc/minio-access-key',
+        key: 'hedgedoc',
+        property: 'minio-access-key',
       },
     },
     {
       secretKey: 'miniosecretkey',
       remoteRef: {
-        key: 'hedgedoc/minio-secret-key',
+        key: 'hedgedoc',
+        property: 'minio-secret-key',
       },
     },
     {
       secretKey: 'sessionsecret',
       remoteRef: {
-        key: 'hedgedoc/session-secret',
+        key: 'hedgedoc',
+        property: 'session-secret',
       },
     },
   ],

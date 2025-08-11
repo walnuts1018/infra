@@ -4,7 +4,8 @@
     {
       secretKey: 'postgres_password',
       remoteRef: {
-        key: 'postgres_passwords/ac_hacking',
+        key: 'postgres_passwords',
+        property: 'ac_hacking',
       },
     },
   ],

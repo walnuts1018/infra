@@ -4,25 +4,29 @@
     {
       secretKey: 'postgres_password',
       remoteRef: {
-        key: 'postgres_passwords/mucaron',
+        key: 'postgres_passwords',
+        property: 'mucaron',
       },
     },
     {
       secretKey: 'redis_password',
       remoteRef: {
-        key: 'redis/password',
+        key: 'redis',
+        property: 'password',
       },
     },
     {
       secretKey: 'session_secret',
       remoteRef: {
-        key: 'mucaron/session_secret',
+        key: 'mucaron',
+        property: 'session_secret',
       },
     },
     {
       secretKey: 'minio_secret_key',
       remoteRef: {
-        key: 'mucaron/minio_secret_key',
+        key: 'mucaron',
+        property: 'minio_secret_key',
       },
     },
   ],

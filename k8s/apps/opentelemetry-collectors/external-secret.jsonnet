@@ -4,7 +4,8 @@
     {
       secretKey: 'mackerel-api-key',
       remoteRef: {
-        key: 'mackerel/api-key',
+        key: 'mackerel',
+        property: 'api-key',
       },
     },
   ],

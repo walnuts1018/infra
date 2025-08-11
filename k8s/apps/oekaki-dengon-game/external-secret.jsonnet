@@ -4,25 +4,29 @@
     {
       secretKey: 'postgres-admin-password',
       remoteRef: {
-        key: 'postgres_passwords/postgres',
+        key: 'postgres_passwords',
+        property: 'postgres',
       },
     },
     {
       secretKey: 'postgres-user-password',
       remoteRef: {
-        key: 'postgres_passwords/oekaki_dengon_game',
+        key: 'postgres_passwords',
+        property: 'oekaki_dengon_game',
       },
     },
     {
       secretKey: 'minio-access-key',
       remoteRef: {
-        key: 'oekaki-dengon-game/minio-access-key',
+        key: 'oekaki-dengon-game',
+        property: 'minio-access-key',
       },
     },
     {
       secretKey: 'minio-secret-key',
       remoteRef: {
-        key: 'oekaki-dengon-game/minio-secret-key',
+        key: 'oekaki-dengon-game',
+        property: 'minio-secret-key',
       },
     },
   ],

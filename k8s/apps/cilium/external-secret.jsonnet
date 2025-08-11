@@ -6,13 +6,15 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
     {
       secretKey: 'tls.crt',
       remoteRef: {
-        key: 'cloudflare-origin-cert/tls.crt',
+        key: 'cloudflare-origin-cert',
+        property: 'tls.crt',
       },
     },
     {
       secretKey: 'tls.key',
       remoteRef: {
-        key: 'cloudflare-origin-cert/tls.key',
+        key: 'cloudflare-origin-cert',
+        property: 'tls.key',
       },
     },
   ],

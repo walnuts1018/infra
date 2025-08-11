@@ -4,7 +4,8 @@
     {
       secretKey: 'api-token',
       remoteRef: {
-        key: 'cloudflare/zone-api-token',
+        key: 'cloudflare',
+        property: 'zone-api-token',
       },
     },
   ],

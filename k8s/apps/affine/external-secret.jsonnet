@@ -5,25 +5,29 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
     {
       secretKey: 'redispassword',
       remoteRef: {
-        key: 'redis/password',
+        key: 'redis',
+        property: 'password',
       },
     },
     {
       secretKey: 'dbpassword',
       remoteRef: {
-        key: 'postgres_passwords/affine',
+        key: 'postgres_passwords',
+        property: 'affine',
       },
     },
     {
       secretKey: 'mailerpassword',
       remoteRef: {
-        key: 'resend/api-key',
+        key: 'resend',
+        property: 'api-key',
       },
     },
     {
       secretKey: 'oidcclientsecret',
       remoteRef: {
-        key: 'zitadel/affine',
+        key: 'zitadel',
+        property: 'affine',
       },
     },
   ],

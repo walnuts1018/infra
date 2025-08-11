@@ -5,13 +5,15 @@
     {
       secretKey: 'MINIO_ACCESS_KEY',
       remoteRef: {
-        key: 'tempo/minio_access_key',
+        key: 'tempo',
+        property: 'minio_access_key',
       },
     },
     {
       secretKey: 'MINIO_SECRET_KEY',
       remoteRef: {
-        key: 'tempo/minio_secret_key',
+        key: 'tempo',
+        property: 'minio_secret_key',
       },
     },
   ],

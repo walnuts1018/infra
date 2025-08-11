@@ -34,7 +34,8 @@
         {
           secretKey: '.dockerconfigjson',
           remoteRef: {
-            key: 'github/.dockerconfigjson',
+            key: 'github',
+            property: '.dockerconfigjson',
           },
         },
       ],

@@ -21,7 +21,8 @@
       {
         secretKey: 'client-secret',
         remoteRef: {
-          key: 'argocd-oidc/client-secret',
+          key: 'argocd-oidc',
+          property: 'client-secret',
         },
       },
     ],
