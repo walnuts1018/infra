@@ -28,6 +28,7 @@
         'endpoints',
         'persistentvolumes',
         'persistentvolumeclaims',
+        'secrets',
       ],
       verbs: [
         'get',
