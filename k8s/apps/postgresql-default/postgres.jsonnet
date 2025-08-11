@@ -10,9 +10,6 @@
       size: '10Gi',
       storageClass: 'local-path',
     },
-    // superuserSecret: {
-    //   name: 'superuser-secret',
-    // },
     enableSuperuserAccess: true,
     bootstrap: {
       initdb: {
