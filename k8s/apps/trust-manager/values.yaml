@@ -1,8 +1,8 @@
 resources:
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
   requests:
+    cpu: 2m
+    memory: 27Mi
+  limits:
     cpu: 100m
     memory: 128Mi
 app:
