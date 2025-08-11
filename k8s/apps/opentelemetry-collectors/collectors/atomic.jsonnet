@@ -145,8 +145,8 @@ std.mergePatch((import '_base.libsonnet'), {
     },
     resources: {
       requests: {
-        cpu: '6m',
-        memory: '90Mi',
+        cpu: '300m',
+        memory: '700Mi',
       },
     },
     env: [
