@@ -25,7 +25,7 @@
         superuser: false,
         inRoles: ['pg_monitor', 'pg_signal_backend'],
         passwordSecret: {
-          name: database.user_name + '-db-password',
+          name: std.strReplace(database.user_name + '-db-password', '_', '-'),
         },
       } for database in (import 'databases.libsonnet')],
     },
