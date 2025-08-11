@@ -21,6 +21,17 @@ std.mergePatch((import '_base.libsonnet'), {
             },
           ],
         },
+        podMonitorSelector: {
+          matchExpressions: [
+            {
+              key: 'walnuts.dev/scraped-by',
+              operator: 'NotIn',
+              values: [
+                'prometheus',
+              ],
+            },
+          ],
+        },
       },
     },
     config: {
