@@ -7,7 +7,7 @@
     labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
-    minReplicas: 1,
+    minReplicas: 2,
     maxReplicas: 4,
     metrics: [
       {
