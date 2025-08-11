@@ -7,7 +7,7 @@
   spec: {
     provider: {
       onepasswordSDK: {
-        vaults: 'kurumi',
+        vault: 'kurumi',
         auth: {
           serviceAccountSecretRef: {
             name: 'onepassword-connect-token-kurumi',
