@@ -127,10 +127,11 @@
             },
             resources: {
               limits: {
+                cpu: '100m',
                 memory: '300Mi',
               },
               requests: {
-                cpu: '10m',
+                cpu: '1m',
                 memory: '10Mi',
               },
             },
