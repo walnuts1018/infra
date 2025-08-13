@@ -20,4 +20,4 @@ registries:
 packages:
 - name: yannh/kubeconform@v0.7.0
 - name: hashicorp/terraform@v1.12.2
-- name: homeport/dyff@v1.10.1
+- name: homeport/dyff@v1.10.2
