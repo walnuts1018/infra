@@ -14,7 +14,7 @@
     source: {
       path: 'deploy',
       repoURL: 'https://github.com/rancher/local-path-provisioner',
-      targetRevision: 'v0.0.30',
+      targetRevision: 'v0.0.32',
       kustomize: {
         patches: [
           {
