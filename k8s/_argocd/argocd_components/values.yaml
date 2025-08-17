@@ -104,7 +104,7 @@ server:
     enabled: true
     minReplicas: 1
     maxReplicas: 5
-    targetCPUUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: null
     targetMemoryUtilizationPercentage: 100
   resources:
     limits:
@@ -123,7 +123,7 @@ repoServer:
     enabled: true
     minReplicas: 1
     maxReplicas: 5
-    targetCPUUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: null
     targetMemoryUtilizationPercentage: 100
   resources:
     limits:
