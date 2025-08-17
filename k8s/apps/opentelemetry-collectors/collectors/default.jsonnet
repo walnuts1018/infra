@@ -123,7 +123,6 @@ std.mergePatch((import '_base.libsonnet'), {
     autoscaler: {
       minReplicas: 1,
       maxReplicas: 10,
-      targetCPUUtilization: 100,
       targetMemoryUtilization: 100,
     },
     resources: {
