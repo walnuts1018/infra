@@ -59,10 +59,10 @@ controller:
       enabled: true
   resources:
     limits:
-      cpu: 1
+      cpu: 800m
       memory: 2Gi
     requests:
-      cpu: 800m
+      cpu: 500m
       memory: 512Mi
 
 dex:
