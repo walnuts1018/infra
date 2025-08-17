@@ -15,7 +15,7 @@ spec:
     metadata:
       name: '{{.name}}'
       annotations:
-        argocd.argoproj.io/manifest-generate-paths: .
+        argocd.argoproj.io/manifest-generate-paths: .;../components
     spec:
       project: default
       destination:
