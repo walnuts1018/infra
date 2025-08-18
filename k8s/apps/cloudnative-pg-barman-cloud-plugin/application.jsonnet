@@ -15,9 +15,9 @@
       path: 'k8s/apps/cloudnative-pg-barman-cloud-plugin/_kustomize',
       repoURL: 'https://github.com/walnuts1018/infra',
       targetRevision: 'main',
-      kustomize: {
-        patches: [],
-      },
+      // kustomize: {
+      //   patches: [],
+      // },
     },
     syncPolicy: {
       automated: {
