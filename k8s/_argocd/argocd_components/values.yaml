@@ -62,8 +62,8 @@ controller:
       cpu: 800m
       memory: 2Gi
     requests:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 300m
+      memory: 640Mi
 
 dex:
   metrics:
