@@ -30,7 +30,7 @@ jobs:
         run: |
           echo "diff=$(git diff --name-only | wc -l)" >> $GITHUB_OUTPUT
 
-      - uses: actions/create-github-app-token@0f859bf9e69e887678d5bbfbee594437cb440ffe # v2.1.0
+      - uses: actions/create-github-app-token@a8d616148505b5069dccd32f177bb87d7f39123b # v2.1.1
         id: generate_token
         if: steps.check-diff.outputs.diff > 0
         with:
