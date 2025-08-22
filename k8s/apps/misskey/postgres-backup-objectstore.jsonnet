@@ -16,7 +16,7 @@
         compression: 'gzip',
       },
     },
-    retentionPolicy: '14d',
+    retentionPolicy: '3d',
     instanceSidecarConfiguration: {
       env: [
         {
