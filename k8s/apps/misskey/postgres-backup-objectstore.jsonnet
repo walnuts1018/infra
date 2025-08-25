@@ -12,6 +12,9 @@
       s3Credentials: {
         inheritFromIAMRole: true,
       },
+      data: {
+        compression: 'bzip2',
+      },
       wal: {
         compression: 'xz',
       },
