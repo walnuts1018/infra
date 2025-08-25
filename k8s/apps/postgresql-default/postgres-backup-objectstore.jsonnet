@@ -13,7 +13,7 @@
         inheritFromIAMRole: true,
       },
       wal: {
-        compression: 'gzip',
+        compression: 'xz',
       },
     },
     retentionPolicy: '7d',
