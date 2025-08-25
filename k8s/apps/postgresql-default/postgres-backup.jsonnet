@@ -8,7 +8,7 @@
     cluster: {
       name: (import 'postgres.jsonnet').metadata.name,
     },
-    schedule: '0 0 19 * * *',
+    schedule: '0 0 19 */7 * *',
     backupOwnerReference: 'self',
     method: 'plugin',
     pluginConfiguration: {
