@@ -9,7 +9,6 @@
     },
     spec: {
       storageClassName: 'longhorn',
-      volumeName: 'nextcloud',
       accessModes: [
         'ReadWriteOnce',
       ],
@@ -33,7 +32,6 @@
     },
     spec: {
       storageClassName: 'longhorn',
-      volumeName: 'nextcloud-data',
       accessModes: [
         'ReadWriteOnce',
       ],
