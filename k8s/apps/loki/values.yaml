@@ -1,5 +1,28 @@
 deploymentMode: SimpleScalable
 loki:
+  structuredConfig:
+    chunk_store_config:
+      chunk_cache_config:
+        memcached: null
+        memcached_client: null
+        redis:
+          endpoint: "loki-redis.loki.svc.cluster.local:6379"
+          tls_enabled: false
+          tls_insecure_skip_verify: true
+          db: 0
+          expiration: 3600
+    query_range:
+      cache_results: true
+      results_cache:
+        cache:
+          memcached: null
+          memcached_client: null
+          redis:
+            endpoint: "loki-redis.loki.svc.cluster.local:6379"
+            tls_enabled: true
+            tls_insecure_skip_verify: true
+            db: 1
+            expiration: 3600
   auth_enabled: false
   commonConfig:
     replication_factor: 1
@@ -230,18 +253,6 @@ sidecar:
       cpu: 5m
       memory: 100Mi
 chunksCache:
-  allocatedMemory: 8192
-  resources:
-    requests:
-      cpu: 10m
-      memory: 4Gi
-    limits:
-      memory: 9830Mi
+  enabled: false
 resultsCache:
-  allocatedMemory: 1024
-  resources:
-    requests:
-      cpu: 10m
-      memory: 1Gi
-    limits:
-      memory: 1229Mi
+  enabled: false
