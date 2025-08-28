@@ -245,7 +245,7 @@ gateway:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      memory: 14Mi
+      memory: 20Mi
       cpu: 5m
     limits:
       memory: 512Mi
