@@ -11,6 +11,10 @@ loki:
           tls_insecure_skip_verify: true
           db: 0
           expiration: 3600
+          timeout: 500ms
+          pool_size: 10
+          idle_timeout: 90s
+          max_connection_age: 10m
     query_range:
       cache_results: true
       results_cache:
@@ -23,6 +27,10 @@ loki:
             tls_insecure_skip_verify: true
             db: 1
             expiration: 3600
+            timeout: 500ms
+            pool_size: 10
+            idle_timeout: 90s
+            max_connection_age: 10m
   auth_enabled: false
   commonConfig:
     replication_factor: 1
@@ -95,6 +103,11 @@ global:
     value: /var/run/secrets/sts.min.io/serviceaccount/token
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::dummy:role/loki-minio-role
+  # - name: REDIS_PASSWORD
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: loki
+  #       key: redispassword
   extraVolumes:
   - name: minio-sts-token
     projected:
