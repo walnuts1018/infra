@@ -6,7 +6,7 @@ loki:
         memcached: null
         memcached_client: null
         redis:
-          endpoint: "loki-redis-leader.loki.svc.cluster.local:6379"
+          endpoint: "loki-redis-leader.loki.svc.cluster.local:6379,loki-redis-leader.loki.svc.cluster.local:6379"
           tls_enabled: false
           tls_insecure_skip_verify: true
           db: 0
@@ -22,7 +22,7 @@ loki:
           memcached: null
           memcached_client: null
           redis:
-            endpoint: "loki-redis-leader.loki.svc.cluster.local:6379"
+            endpoint: "loki-redis-leader.loki.svc.cluster.local:6379,loki-redis-leader.loki.svc.cluster.local:6379"
             tls_enabled: true
             tls_insecure_skip_verify: true
             db: 1
