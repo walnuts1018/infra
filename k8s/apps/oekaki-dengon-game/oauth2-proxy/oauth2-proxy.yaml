@@ -1,0 +1,181 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: oekaki-oauth2-proxy-920e10
+spec:
+  data:
+    - remoteRef:
+        key: oekaki-oauth2-proxy
+        property: client-id
+      secretKey: client-id
+    - remoteRef:
+        key: oekaki-oauth2-proxy
+        property: client-secret
+      secretKey: client-secret
+    - remoteRef:
+        key: oekaki-oauth2-proxy
+        property: cookie-secret
+      secretKey: cookie-secret
+    - remoteRef:
+        key: redis
+        property: password
+      secretKey: redis-password
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: oekaki-oauth2-proxy-920e10
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: oekaki-oauth2-proxy-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: oekaki-dengon-game
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: oauth2-proxy
+    helm:
+      releaseName: oekaki-oauth2-proxy
+      valuesObject:
+        config:
+          configFile: |-
+            email_domains = [ "*" ]
+            upstreams = [ "http://oekaki-dengon-game-front.oekaki-dengon-game.svc.cluster.local:3000/" ]
+            pass_access_token = true
+            user_id_claim = "sub"
+            oidc_groups_claim="my:zitadel:grants"
+            allowed_groups = ["237477822715658605:oekaki-admin"]
+            skip_auth_routes = ["/public","GET=/api","/_next", "/texture.png", "/favicon.ico", "site.webmanifest"]
+            custom_templates_dir = "/etc/oauth2-proxy/templates"
+          existingSecret: oekaki-oauth2-proxy-920e10
+        extraArgs:
+          code-challenge-method: S256
+          oidc-issuer-url: https://auth.walnuts.dev
+          provider: oidc
+          redirect-url: https://oekaki.walnuts.dev/oauth2/callback
+          skip-provider-button: true
+        extraVolumeMounts:
+          - mountPath: /etc/oauth2-proxy/templates
+            name: custom-templates
+            readOnly: true
+        extraVolumes:
+          - configMap:
+              items:
+                - key: robots.txt
+                  path: robots.txt
+              name: oekaki-dengon-game-oauth2-proxy-6181a5
+            name: custom-templates
+        ingress:
+          className: cilium
+          enabled: true
+          hosts:
+            - oekaki.walnuts.dev
+          path: /
+          pathType: Prefix
+        metrics:
+          enabled: true
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 1m
+            memory: 5Mi
+        sessionStorage:
+          redis:
+            clientType: sentinel
+            existingSecret: oekaki-oauth2-proxy-920e10
+            passwordKey: redis-password
+            sentinel:
+              connectionUrls: redis://oekaki-oauth2-proxy-redis:6379,redis://oekaki-oauth2-proxy-redis-sentinel:26379
+              existingSecret: oekaki-oauth2-proxy-920e10
+              masterName: mymaster
+              passwordKey: redis-password
+          type: redis
+        tolerations:
+          - key: node.walnuts.dev/low-performance
+            operator: Exists
+    repoURL: https://oauth2-proxy.github.io/manifests
+    targetRevision: 8.2.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true
+---
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: RedisReplication
+metadata:
+  labels:
+    app: oekaki-oauth2-proxy-redis
+    app.kubernetes.io/name: oekaki-oauth2-proxy-redis
+  name: oekaki-oauth2-proxy-redis
+spec:
+  clusterSize: 2
+  kubernetesConfig:
+    image: quay.io/opstree/redis:v7.2.7
+    imagePullPolicy: IfNotPresent
+    redisSecret:
+      key: redis-password
+      name: oekaki-oauth2-proxy-920e10
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 4m
+        memory: 4Mi
+  nodeSelector:
+    kubernetes.io/arch: amd64
+  podSecurityContext:
+    fsGroup: 1000
+    runAsUser: 1000
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: RedisSentinel
+metadata:
+  labels:
+    app: oekaki-oauth2-proxy-redis
+    app.kubernetes.io/name: oekaki-oauth2-proxy-redis
+  name: oekaki-oauth2-proxy-redis
+spec:
+  clusterSize: 3
+  kubernetesConfig:
+    image: quay.io/opstree/redis-sentinel:v7.2.9
+    imagePullPolicy: IfNotPresent
+    redisSecret:
+      key: redis-password
+      name: oekaki-oauth2-proxy-920e10
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 4m
+        memory: 4Mi
+  podSecurityContext:
+    fsGroup: 1000
+    runAsUser: 1000
+  redisSentinelConfig:
+    downAfterMilliseconds: "30000"
+    failoverTimeout: "180000"
+    masterGroupName: mymaster
+    parallelSyncs: "1"
+    quorum: "2"
+    redisPort: "6379"
+    redisReplicationName: oekaki-oauth2-proxy-redis
