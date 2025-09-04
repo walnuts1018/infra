@@ -6,7 +6,7 @@
     namespace: 'longhorn-system',
   },
   spec: {
-    backupTargetURL: 's3://walnuts-longhorn-backup-8fvzu3@us-west-004',
+    backupTargetURL: 's3://walnuts-longhorn-backup-8fvzu3@us-west-004/',
     credentialSecret: (import 'b2-external-secret.jsonnet').spec.target.name,
     pollInterval: '5m0s',
   },
