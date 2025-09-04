@@ -1,6 +1,12 @@
+local template = {
+  AWS_ACCESS_KEY_ID: '004ab15b5942e2c0000000002',
+  AWS_SECRET_ACCESS_KEY: '{{ .application_key }}',
+  AWS_ENDPOINTS: 'https://s3.us-west-004.backblazeb2.com',
+};
+
 std.mergePatch((import '../../components/external-secret.libsonnet') {
   use_suffix: false,
-  name: 'b2-secret-' + std.md5(std.toString($.data) + std.toString($.spec.target.template.data))[0:6],
+  name: 'b2-secret-' + std.md5(std.toString($.data) + std.toString(template))[0:6],
   data: [
     {
       secretKey: 'application_key',
@@ -16,11 +22,7 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
       template: {
         engineVersion: 'v2',
         type: 'Opaque',
-        data: {
-          AWS_ACCESS_KEY_ID: '004ab15b5942e2c0000000002',
-          AWS_SECRET_ACCESS_KEY: '{{ .application_key }}',
-          AWS_ENDPOINTS: 'https://s3.us-west-004.backblazeb2.com',
-        },
+        data: template,
       },
     },
   },
