@@ -7,6 +7,6 @@
   },
   spec: {
     backupTargetURL: 's3://walnuts-longhorn-backup-8fvzu3@us-west-004',
-    credentialSecret: 'b2-secret',
+    credentialSecret: (import 'b2-external-secret.jsonnet').spec.target.name,
   },
 }

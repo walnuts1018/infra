@@ -1,5 +1,6 @@
 std.mergePatch((import '../../components/external-secret.libsonnet') {
-  name: 'b2-secret',
+  use_suffix: false,
+  name: 'b2-secret-' + std.md5(std.toString($.data) + std.toString($.spec.target.template.data))[0:6],
   data: [
     {
       secretKey: 'application_key',
