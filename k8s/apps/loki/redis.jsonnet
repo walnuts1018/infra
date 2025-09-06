@@ -10,7 +10,7 @@
     clusterVersion: 'v7',
     persistenceEnabled: true,
     kubernetesConfig: {
-      image: 'quay.io/opstree/redis:v7.2.7',
+      image: 'quay.io/opstree/redis:v7.4.5',
       imagePullPolicy: 'IfNotPresent',
     },
     storage: {
