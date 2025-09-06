@@ -1,0 +1,2 @@
+#!ipxe
+exit --uri (hd0,gpt1)/EFI/Microsoft/Boot/bootmgfw.efi
