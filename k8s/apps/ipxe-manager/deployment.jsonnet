@@ -16,13 +16,13 @@
         labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
       },
       spec: {
-        securityContext: {
-          fsGroup: 101,
-          fsGroupChangePolicy: 'OnRootMismatch',
-        },
+        // securityContext: {
+        //   fsGroup: 101,
+        //   fsGroupChangePolicy: 'OnRootMismatch',
+        // },
         containers: [
           {
-            name: 'proxy',
+            name: 'ipxe-manager',
             image: 'ghcr.io/walnuts1018/ipxe-manager:latest',
             env: [
               {
