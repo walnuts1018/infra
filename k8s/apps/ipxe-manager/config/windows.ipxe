@@ -1,2 +1,2 @@
 #!ipxe
-sanboot --drive 0 --filename \EFI\Microsoft\Boot\bootmgfw.efi
+sanboot --drive 0x81 --filename \EFI\Microsoft\Boot\bootmgfw.efi
