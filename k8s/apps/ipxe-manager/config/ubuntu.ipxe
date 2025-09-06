@@ -1,2 +1,2 @@
 #!ipxe
-sanboot --drive 0 --filename \EFI\ubuntu\grubx64.efi
+sanboot --drive 0x80 --filename \EFI\ubuntu\grubx64.efi
