@@ -12,7 +12,7 @@
       {
         name: 'http',
         protocol: 'TCP',
-        port: 8080,
+        port: 80,
         targetPort: 'http',
       },
     ],
