@@ -21,7 +21,7 @@
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'disk-cleaner',
-                image: 'debian:13.0-slim',
+                image: 'debian:13.1-slim',
                 command: [
                   'sh',
                   '-c',
@@ -41,7 +41,7 @@
             containers: [
               (import '../../components/container.libsonnet') {
                 name: 'renovate',
-                image: 'ghcr.io/renovatebot/renovate:41.97.11',
+                image: 'ghcr.io/renovatebot/renovate:41.99.11',
                 resources: {
                   requests: {
                     cpu: '500m',
