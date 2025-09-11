@@ -39,9 +39,9 @@ metrics:
 resources:
   requests:
     cpu: 10m
-    memory: 320Mi
+    memory: 350Mi
   limits:
-    memory: 768Mi
+    memory: 1Gi
 affinity:
   nodeAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
