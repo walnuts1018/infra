@@ -1,0 +1,240 @@
+---
+# Source: oauth2-proxy/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: oauth2-proxy    
+    helm.sh/chart: oauth2-proxy-8.2.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: authentication-proxy
+    app.kubernetes.io/part-of: oauth2-proxy
+    app.kubernetes.io/name: oauth2-proxy
+    app.kubernetes.io/instance: warrior-oauth2-proxy
+    app.kubernetes.io/version: "7.12.0"
+  name: warrior-oauth2-proxy
+  namespace: warrior
+automountServiceAccountToken: true
+---
+# Source: oauth2-proxy/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: oauth2-proxy    
+    helm.sh/chart: oauth2-proxy-8.2.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: authentication-proxy
+    app.kubernetes.io/part-of: oauth2-proxy
+    app.kubernetes.io/name: oauth2-proxy
+    app.kubernetes.io/instance: warrior-oauth2-proxy
+    app.kubernetes.io/version: "7.12.0"
+  name: warrior-oauth2-proxy
+  namespace: warrior
+data:
+  oauth2_proxy.cfg: "email_domains = [ \"*\" ]\nupstreams = [ \"http://warrior.warrior.svc.cluster.local:8001\" ]\npass_access_token = true\nuser_id_claim = \"sub\"\noidc_groups_claim=\"my:zitadel:grants\"\nallowed_groups = [\"237477822715658605:warrior\"]"
+---
+# Source: oauth2-proxy/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: oauth2-proxy    
+    helm.sh/chart: oauth2-proxy-8.2.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: authentication-proxy
+    app.kubernetes.io/part-of: oauth2-proxy
+    app.kubernetes.io/name: oauth2-proxy
+    app.kubernetes.io/instance: warrior-oauth2-proxy
+    app.kubernetes.io/version: "7.12.0"
+  name: warrior-oauth2-proxy
+  namespace: warrior
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      appProtocol: http
+      name: http
+    - port: 44180
+      protocol: TCP
+      appProtocol: http
+      targetPort: metrics
+      name: metrics
+  selector:    
+    app.kubernetes.io/name: oauth2-proxy
+    app.kubernetes.io/instance: warrior-oauth2-proxy
+---
+# Source: oauth2-proxy/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: oauth2-proxy    
+    helm.sh/chart: oauth2-proxy-8.2.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: authentication-proxy
+    app.kubernetes.io/part-of: oauth2-proxy
+    app.kubernetes.io/name: oauth2-proxy
+    app.kubernetes.io/instance: warrior-oauth2-proxy
+    app.kubernetes.io/version: "7.12.0"
+  name: warrior-oauth2-proxy
+  namespace: warrior
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:      
+      app.kubernetes.io/name: oauth2-proxy
+      app.kubernetes.io/instance: warrior-oauth2-proxy
+  template:
+    metadata:
+      annotations:
+        checksum/config: 72e06132374cce6e37a305ca489a6aa708fa9811d521cf1d69a656139d79bf2b
+        checksum/secret: 8fa6fdae65861caa2986544b8860a5205be1937328c8ec2bad6bad076b9e2425
+        checksum/google-secret: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        checksum/redis-secret: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+      labels:
+        app: oauth2-proxy        
+        helm.sh/chart: oauth2-proxy-8.2.0
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: authentication-proxy
+        app.kubernetes.io/part-of: oauth2-proxy
+        app.kubernetes.io/name: oauth2-proxy
+        app.kubernetes.io/instance: warrior-oauth2-proxy
+        app.kubernetes.io/version: "7.12.0"
+    spec:
+      serviceAccountName: warrior-oauth2-proxy
+      enableServiceLinks: true
+      automountServiceAccountToken: true
+      containers:
+      - name: oauth2-proxy
+        image: "quay.io/oauth2-proxy/oauth2-proxy:v7.12.0"
+        imagePullPolicy: IfNotPresent
+        args:
+          - --http-address=0.0.0.0:4180
+          - --https-address=0.0.0.0:4443
+          - --metrics-address=0.0.0.0:44180
+          - --code-challenge-method=S256
+          - --oidc-issuer-url=https://auth.walnuts.dev
+          - --provider=oidc
+          - --redirect-url=https://warrior.walnuts.dev/oauth2/callback
+          - --skip-provider-button=true
+          - --config=/etc/oauth2_proxy/oauth2_proxy.cfg
+        env:
+        - name: OAUTH2_PROXY_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name:  warrior-oauth2-proxy-d9ce50
+              key: client-id
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name:  warrior-oauth2-proxy-d9ce50
+              key: client-secret
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name:  warrior-oauth2-proxy-d9ce50
+              key: cookie-secret
+        - name: OAUTH2_PROXY_SESSION_STORE_TYPE
+          value: "redis"
+        - name: OAUTH2_PROXY_REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: warrior-oauth2-proxy-d9ce50
+              key: redis-password
+        - name: OAUTH2_PROXY_REDIS_USE_SENTINEL
+          value: "true"
+        - name: OAUTH2_PROXY_REDIS_SENTINEL_MASTER_NAME
+          value: mymaster
+        - name: OAUTH2_PROXY_REDIS_SENTINEL_CONNECTION_URLS
+          value: redis://warrior-oauth2-proxy-redis:6379,redis://warrior-oauth2-proxy-redis-sentinel:26379
+        - name: OAUTH2_PROXY_REDIS_SENTINEL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: warrior-oauth2-proxy-d9ce50
+              key: redis-password
+        ports:
+          - containerPort: 4180
+            name: http
+            protocol: TCP
+          - containerPort: 44180
+            protocol: TCP
+            name: metrics
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 0
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 0
+          timeoutSeconds: 5
+          successThreshold: 1
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 1m
+            memory: 5Mi
+        volumeMounts:
+        - mountPath: /etc/oauth2_proxy/oauth2_proxy.cfg
+          name: configmain
+          subPath: oauth2_proxy.cfg
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 2000
+          runAsNonRoot: true
+          runAsUser: 2000
+          seccompProfile:
+            type: RuntimeDefault
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: warrior-oauth2-proxy
+        name: configmain
+      tolerations:
+        - key: node.walnuts.dev/low-performance
+          operator: Exists
+---
+# Source: oauth2-proxy/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: oauth2-proxy    
+    helm.sh/chart: oauth2-proxy-8.2.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: authentication-proxy
+    app.kubernetes.io/part-of: oauth2-proxy
+    app.kubernetes.io/name: oauth2-proxy
+    app.kubernetes.io/instance: warrior-oauth2-proxy
+    app.kubernetes.io/version: "7.12.0"
+  name: warrior-oauth2-proxy
+  namespace: warrior
+spec:
+  ingressClassName: "cilium"
+  rules:
+    - host: "warrior.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: warrior-oauth2-proxy
+                port:
+                  number: 80
