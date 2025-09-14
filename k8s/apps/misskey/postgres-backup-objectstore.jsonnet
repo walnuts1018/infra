@@ -10,15 +10,7 @@
       destinationPath: 's3://cloudnative-pg-backup/',
       endpointURL: 'http://minio.minio.svc.cluster.local',
       s3Credentials: {
-        // inheritFromIAMRole: true,
-        accessKeyId: {
-          name: 'minio-store-tmp',
-          key: 'ACCESS_KEY_ID',
-        },
-        secretAccessKey: {
-          name: 'minio-store-tmp',
-          key: 'ACCESS_SECRET_KEY',
-        },
+        inheritFromIAMRole: true,
       },
       data: {
         compression: 'bzip2',

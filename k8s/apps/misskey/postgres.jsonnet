@@ -31,7 +31,7 @@
         plugin: {
           name: 'barman-cloud.cloudnative-pg.io',
           parameters: {
-            barmanObjectName: (import 'postgres-backup-objectstore.jsonnet').metadata.name,
+            barmanObjectName: 'minio-store',
             serverName: (import 'app.json5').name + '-postgresql',
           },
         },
