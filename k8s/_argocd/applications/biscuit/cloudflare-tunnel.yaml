@@ -24,6 +24,9 @@ spec:
         - name: 'replicas'
           value: "2"
           code: true
+        - name: 'enableServiceMonitor'
+          value: 'false'
+          code: true
   syncPolicy:
     automated:
       selfHeal: true
