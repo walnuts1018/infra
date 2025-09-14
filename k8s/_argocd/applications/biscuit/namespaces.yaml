@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   destination:
-    server: https://192.168.0.13:6443
+    server: https://kubernetes.default.svc
   source:
     path: k8s/namespaces
     repoURL: 'https://github.com/walnuts1018/infra'
