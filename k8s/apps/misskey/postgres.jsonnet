@@ -14,29 +14,29 @@
       name: 'superuser-secret',
     },
     bootstrap: {
-      // initdb: {
-      //   database: 'misskey',
-      //   owner: 'misskey',
-      //   secret: {
-      //     name: (import 'postgres-password.jsonnet').spec.target.name,
-      //   },
-      // },
-      recovery: {
-        source: 'minio-backup',
-      },
-    },
-    externalClusters: [
-      {
-        name: 'minio-backup',
-        plugin: {
-          name: 'barman-cloud.cloudnative-pg.io',
-          parameters: {
-            barmanObjectName: 'minio-store',
-            serverName: (import 'app.json5').name + '-postgresql-backup2',
-          },
+      initdb: {
+        database: 'misskey',
+        owner: 'misskey',
+        secret: {
+          name: (import 'postgres-password.jsonnet').spec.target.name,
         },
       },
-    ],
+      // recovery: {
+      //   source: 'minio-backup',
+      // },
+    },
+    // externalClusters: [
+    //   {
+    //     name: 'minio-backup',
+    //     plugin: {
+    //       name: 'barman-cloud.cloudnative-pg.io',
+    //       parameters: {
+    //         barmanObjectName: 'minio-store',
+    //         serverName: (import 'app.json5').name + '-postgresql-backup2',
+    //       },
+    //     },
+    //   },
+    // ],
     resources: {
       requests: {
         cpu: '20m',
