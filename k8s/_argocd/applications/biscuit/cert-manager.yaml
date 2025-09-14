@@ -19,8 +19,8 @@ spec:
       exclude: '{config/*,_*/*}'
       jsonnet:
         tlas:
-        - name: ''
-          value: ''
+        - name: 'enableServiceMonitor'
+          value: 'false'
   syncPolicy:
     automated:
       selfHeal: true
