@@ -16,8 +16,8 @@ spec:
       recurse: true
       jsonnet:
         tlas:
-        - name: ''
-          value: ''
+        - name: 'domain'
+          value: 'argocd.walnuts.dev'
   syncPolicy:
     automated:
       selfHeal: true
