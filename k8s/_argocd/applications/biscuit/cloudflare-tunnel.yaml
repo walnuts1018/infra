@@ -22,7 +22,7 @@ spec:
         - name: 'nameOverride'
           value: 'cloudflare-tunnel-biscuit'
         - name: 'replicas'
-          value: 2
+          value: '2'
   syncPolicy:
     automated:
       selfHeal: true
