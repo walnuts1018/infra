@@ -1,26 +1,36 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager-biscuit
+  name: argocd
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/manifest-generate-paths: .;../components
 spec:
   project: default
   destination:
+    namespace: argocd
     server: https://kubernetes.default.svc
-    namespace: 'cert-manager'
   source:
+    path: k8s/_argocd/argocd_components
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
-    path: k8s/apps/cert-manager
     directory:
       recurse: true
-      exclude: '{config/*,_*/*}'
       jsonnet:
         tlas:
         - name: ''
           value: ''
+    kustomize:
+      patches:
+      - target:
+          apiVersion: 'argoproj.io/v1alpha1'
+          kind: Application
+          name: argocd-helm
+        patch: |-
+          - op: replace
+            path: /global/domain
+            value: 'argocd-biscuit.walnuts.dev'
+          - op: replace
+            path: /notifications/argocdUrl
+            value: 'https://argocd-biscuit.walnuts.dev'
   syncPolicy:
     automated:
       selfHeal: true

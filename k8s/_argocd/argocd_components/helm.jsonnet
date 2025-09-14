@@ -4,5 +4,5 @@
   chart: 'argo-cd',
   repoURL: 'https://argoproj.github.io/argo-helm',
   targetRevision: '8.3.7',
-  values: (importstr 'values.yaml'),
+  valuesObject: std.parseYaml(importstr 'values.yaml'),
 }
