@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: namespaces-private
+  name: namespaces
   namespace: argocd
 spec:
   project: default
@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   source:
     path: k8s/namespaces
-    repoURL: 'https://github.com/walnuts1018/infra-private'
+    repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
     directory:
       jsonnet:
