@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudflare-tunnel-operator
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .;../components
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: 'cloudflare-tunnel-operator'
+  source:
+    repoURL: 'https://github.com/walnuts1018/infra'
+    targetRevision: main
+    path: k8s/apps/cloudflare-tunnel-operator
+    directory:
+      recurse: true
+      exclude: '{config/*,_*/*}'
+      jsonnet:
+        tlas:
+        - name: ''
+          value: ''
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - ServerSideApply=true
+    - FailOnSharedResource=true
