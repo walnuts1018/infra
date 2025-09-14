@@ -13,9 +13,7 @@ spec:
     targetRevision: main
     directory:
       jsonnet:
-        tlas:
-        - name: ''
-          value: ''
+        tlas: []
   syncPolicy:
     automated:
       selfHeal: true
