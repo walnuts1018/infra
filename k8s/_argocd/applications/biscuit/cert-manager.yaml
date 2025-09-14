@@ -21,6 +21,7 @@ spec:
         tlas:
         - name: 'enableServiceMonitor'
           value: 'false'
+          code: true
   syncPolicy:
     automated:
       selfHeal: true
