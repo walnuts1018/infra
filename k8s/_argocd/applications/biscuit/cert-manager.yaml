@@ -1,17 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: namespaces-private
+  name: cert-manager
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .;../components
 spec:
   project: default
   destination:
-    server: https://kubernetes.default.svc
+    server: https://192.168.0.13:6443
+    namespace: 'cert-manager'
   source:
-    path: k8s/namespaces
-    repoURL: 'https://github.com/walnuts1018/infra-private'
+    repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
+    path: k8s/apps/cert-manager
     directory:
+      recurse: true
+      exclude: '{config/*,_*/*}'
       jsonnet:
         tlas:
         - name: ''

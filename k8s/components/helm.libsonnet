@@ -22,8 +22,8 @@
     },
     syncPolicy: {
       automated: {
-        selfHeal: false,
-        prune: false,
+        selfHeal: true,
+        prune: true,
       },
       syncOptions: [
         'ServerSideApply=true',

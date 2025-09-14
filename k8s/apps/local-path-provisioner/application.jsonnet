@@ -25,8 +25,8 @@
     },
     syncPolicy: {
       automated: {
-        selfHeal: false,
-        prune: false,
+        selfHeal: true,
+        prune: true,
       },
     },
   },
