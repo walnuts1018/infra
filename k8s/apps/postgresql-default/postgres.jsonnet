@@ -15,26 +15,26 @@
     },
     enableSuperuserAccess: true,
     bootstrap: {
-      // initdb: {
-      //   database: 'app',
-      //   owner: 'app',
+      initdb: {
+        database: 'app',
+        owner: 'app',
+      },
+      // recovery: {
+      //   source: 'minio-backup',
       // },
-      recovery: {
-        source: 'minio-backup',
-      },
     },
-    externalClusters: [
-      {
-        name: 'minio-backup',
-        plugin: {
-          name: 'barman-cloud.cloudnative-pg.io',
-          parameters: {
-            barmanObjectName: 'minio-store',
-            serverName: 'postgresql-default2',
-          },
-        },
-      },
-    ],
+    // externalClusters: [
+    //   {
+    //     name: 'minio-backup',
+    //     plugin: {
+    //       name: 'barman-cloud.cloudnative-pg.io',
+    //       parameters: {
+    //         barmanObjectName: 'minio-store',
+    //         serverName: 'postgresql-default2',
+    //       },
+    //     },
+    //   },
+    // ],
     managed: {
       roles: [{
         name: database.user_name,
