@@ -22,13 +22,13 @@ argocd login --insecure --port-forward --port-forward-namespace argocd --plainte
 
 ```bash
 op item get kma3l3fsrsfccw4c62h2f5rqfe --reveal --fields label=admin
-argocd account update-password
+argocd account update-password --insecure --port-forward --port-forward-namespace argocd --plaintext
 ```
 
 ## クラスタ追加
 
 ```bash
-argocd cluster add kurumi -y
+argocd cluster add kurumi --insecure --port-forward --port-forward-namespace argocd -y
 ```
 
 ## Init
