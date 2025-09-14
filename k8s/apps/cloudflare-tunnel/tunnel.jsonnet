@@ -1,4 +1,4 @@
-function(nameOverride='', replicas=3) {
+function(nameOverride='', replicas=3, enableServiceMonitor=true) {
   apiVersion: 'cf-tunnel-operator.walnuts.dev/v1beta1',
   kind: 'CloudflareTunnel',
   metadata: {
@@ -11,7 +11,7 @@ function(nameOverride='', replicas=3) {
   spec: {
     replicas: replicas,
     default: true,
-    enableServiceMonitor: true,
+    enableServiceMonitor: enableServiceMonitor,
     settings: {
       nameOverride: nameOverride,
     },
