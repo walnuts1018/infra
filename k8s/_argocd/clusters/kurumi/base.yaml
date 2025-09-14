@@ -9,7 +9,7 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   sources:
-  - path: k8s/_argocd/applications
+  - path: k8s/_argocd/applications/kurumi
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
   - path: k8s/_argocd/clusters/kurumi
