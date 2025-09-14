@@ -32,7 +32,7 @@
           name: 'barman-cloud.cloudnative-pg.io',
           parameters: {
             barmanObjectName: 'minio-store',
-            serverName: (import 'app.json5').name + '-postgresql',
+            serverName: (import 'app.json5').name + '-postgresql-backup2',
           },
         },
       },
