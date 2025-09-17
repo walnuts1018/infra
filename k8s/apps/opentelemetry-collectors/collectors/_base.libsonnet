@@ -54,5 +54,17 @@
         },
       },
     },
+    volumes: [
+      {
+        name: 'tmp',
+        emptyDir: {},
+      },
+    ],
+    volumeMounts: [
+      {
+        name: 'tmp',
+        mountPath: '/tmp',
+      },
+    ],
   },
 }
