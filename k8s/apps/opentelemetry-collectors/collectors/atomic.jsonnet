@@ -120,6 +120,15 @@ std.mergePatch((import '_base.libsonnet'), {
             },
           ],
         },
+        'resource/k8s-events-receiver': {
+          attributes: [
+            {
+              action: 'upsert',
+              key: 'service.name',
+              value: 'k8s-events-receiver',
+            },
+          ],
+        },
       },
       service: {
         // telemetry: {
@@ -152,6 +161,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'memory_limiter',
               'batch',
               'k8sattributes',
+              'resource/k8s-events-receiver',
             ],
             exporters: [
               'otlphttp/loki',
