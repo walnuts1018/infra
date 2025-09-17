@@ -72,6 +72,7 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
           },
         },
+        k8s_events: {},
       },
       processors: {
         memory_limiter: {
@@ -138,6 +139,19 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
             exporters: [
               'prometheusremotewrite',
+            ],
+          },
+          logs: {
+            receivers: [
+              'k8s_events',
+            ],
+            processors: [
+              'memory_limiter',
+              'batch',
+              'k8sattributes',
+            ],
+            exporters: [
+              'otlphttp/loki',
             ],
           },
         },
