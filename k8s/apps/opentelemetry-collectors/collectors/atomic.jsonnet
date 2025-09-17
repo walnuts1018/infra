@@ -72,7 +72,10 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
           },
         },
-        k8s_events: {},
+        k8s_events: {
+          auth_type: 'serviceAccount',
+          namespaces: [],  // watch all namespaces
+        },
       },
       processors: {
         memory_limiter: {
