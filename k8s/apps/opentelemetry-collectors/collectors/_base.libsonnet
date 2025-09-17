@@ -46,7 +46,7 @@
           },
         },
         file: {
-          path: '/tmp',
+          path: '/tmp/debug.json',
           format: 'json',
         },
         debug: {
