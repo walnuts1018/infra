@@ -165,7 +165,6 @@ std.mergePatch((import '_base.libsonnet'), {
             ],
             exporters: [
               'otlphttp/loki',
-              'file',
             ],
           },
         },
