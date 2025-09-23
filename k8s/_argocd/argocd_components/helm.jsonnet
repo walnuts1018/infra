@@ -3,7 +3,7 @@ function(domain) (import '../../components/helm.libsonnet') {
   namespace: (import 'app.json5').namespace,
   chart: 'argo-cd',
   repoURL: 'https://argoproj.github.io/argo-helm',
-  targetRevision: '8.5.4',
+  targetRevision: '8.5.5',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'),
     {
