@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'external-secrets',
   repoURL: 'https://charts.external-secrets.io',
-  targetRevision: '0.19.2',
+  targetRevision: '0.20.1',
   values: (importstr 'values.yaml'),
 }
