@@ -1,0 +1,138 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: envoy-gateway-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: envoy-gateway-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: gateway-helm
+    helm:
+      releaseName: envoy-gateway
+      valuesObject:
+        certgen:
+          job:
+            affinity: {}
+            annotations: {}
+            args: []
+            nodeSelector: {}
+            pod:
+              annotations: {}
+              labels: {}
+            resources: {}
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsGroup: 65532
+              runAsNonRoot: true
+              runAsUser: 65532
+              seccompProfile:
+                type: RuntimeDefault
+            tolerations: []
+            ttlSecondsAfterFinished: 30
+          rbac:
+            annotations: {}
+            labels: {}
+        config:
+          envoyGateway:
+            extensionApis: {}
+            gateway:
+              controllerName: gateway.envoyproxy.io/gatewayclass-controller
+            logging:
+              level:
+                default: info
+            provider:
+              type: Kubernetes
+        createNamespace: false
+        deployment:
+          annotations: {}
+          envoyGateway:
+            image:
+              repository: ""
+              tag: ""
+            imagePullPolicy: ""
+            imagePullSecrets: []
+            resources:
+              limits:
+                memory: 1024Mi
+              requests:
+                cpu: 100m
+                memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              privileged: false
+              runAsGroup: 65532
+              runAsNonRoot: true
+              runAsUser: 65532
+              seccompProfile:
+                type: RuntimeDefault
+          pod:
+            affinity: {}
+            annotations:
+              prometheus.io/port: "19001"
+              prometheus.io/scrape: "true"
+            labels: {}
+            nodeSelector: {}
+            tolerations: []
+            topologySpreadConstraints: []
+          ports:
+            - name: grpc
+              port: 18000
+              targetPort: 18000
+            - name: ratelimit
+              port: 18001
+              targetPort: 18001
+            - name: wasm
+              port: 18002
+              targetPort: 18002
+            - name: metrics
+              port: 19001
+              targetPort: 19001
+          priorityClassName: null
+          replicas: 1
+        global:
+          imagePullSecrets: []
+          imageRegistry: ""
+          images:
+            envoyGateway:
+              image: docker.io/envoyproxy/gateway:v1.5.1
+              pullPolicy: IfNotPresent
+              pullSecrets: []
+            ratelimit:
+              image: docker.io/envoyproxy/ratelimit:e74a664a
+              pullPolicy: IfNotPresent
+              pullSecrets: []
+        hpa:
+          behavior: {}
+          enabled: false
+          maxReplicas: 1
+          metrics: []
+          minReplicas: 1
+        kubernetesClusterDomain: cluster.local
+        podDisruptionBudget:
+          minAvailable: 0
+        service:
+          annotations: {}
+          trafficDistribution: ""
+        topologyInjector:
+          annotations: {}
+          enabled: true
+    repoURL: docker.io/envoyproxy
+    targetRevision: 1.5.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true
