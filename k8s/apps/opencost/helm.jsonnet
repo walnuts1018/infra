@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'opencost',
   repoURL: 'https://opencost.github.io/opencost-helm-chart',
-  targetRevision: '2.2.8',
+  targetRevision: '2.2.9',
   values: (importstr 'values.yaml'),
 }
