@@ -45,5 +45,10 @@ function(loadBalancerIP='192.168.0.138') {
         },
       },
     },
+    logging: {
+      level: {
+        default: 'debug',
+      },
+    },
   },
 }
