@@ -14,6 +14,10 @@
             memory: '1Gi',
           },
         },
+        securityContext: {
+          fsGroup: 0,
+          fsGroupChangePolicy: 'OnRootMismatch',
+        },
         servers: 1,
         size: '32Gi',
         storageClassName: (import 'persistent-volume.jsonnet').spec.storageClassName,
