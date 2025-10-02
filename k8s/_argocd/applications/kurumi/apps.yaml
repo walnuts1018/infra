@@ -11,6 +11,9 @@ spec:
       revision: main
       files:
       - path: "k8s/apps/*/app.json5"
+      # TODO: rm
+      - path: "k8s/apps/minio-biscuit/app.json5"
+        exclude: true
   template:
     metadata:
       name: '{{.name}}'
