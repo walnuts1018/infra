@@ -91,14 +91,14 @@
     api: {
       enabled: true,
       host: 'minio-biscuit.walnuts.dev',
-      ingressClassName: 'traefik',
+      ingressClassName: 'cilium',
       path: '/',
       pathType: 'Prefix',
     },
     console: {
       enabled: true,
       host: 'minio-biscuit-console.walnuts.dev',
-      ingressClassName: 'traefik',
+      ingressClassName: 'cilium',
       path: '/',
       pathType: 'Prefix',
     },
