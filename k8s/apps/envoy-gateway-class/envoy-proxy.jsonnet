@@ -39,6 +39,17 @@
             },
           ],
         },
+        envoyService: {
+          ports: [
+            {
+              name: 'http-8080',
+              port: 8080,
+              protocol: 'TCP',
+              targetPort: 10080,
+            },
+          ],
+          type: 'LoadBalancer',
+        },
       },
     },
   },
