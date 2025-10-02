@@ -18,7 +18,9 @@ spec:
       recurse: true
       exclude: '{config/*,_*/*}'
       jsonnet:
-        tlas: []
+        tlas:
+        - name: 'loadBalancerIP'
+          value: "192.168.0.158"
   syncPolicy:
     automated:
       selfHeal: true
