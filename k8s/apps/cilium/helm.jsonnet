@@ -1,4 +1,4 @@
-function(k8sServiceHost='192.168.0.17', k8sServicePort=16443, loadBalancerIP='192.168.0.129', enableServiceMonitor=true, operatorReplicas=2) (import '../../components/helm.libsonnet') {
+function(k8sServiceHost='192.168.0.17', k8sServicePort=16443, loadBalancerIP='192.168.0.129', enableServiceMonitor=true, operatorReplicas=2, usek3s=false) (import '../../components/helm.libsonnet') {
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
   chart: 'cilium',
@@ -54,6 +54,11 @@ function(k8sServiceHost='192.168.0.17', k8sServicePort=16443, loadBalancerIP='19
       prometheus: {
         serviceMonitor: {
           enabled: enableServiceMonitor,
+        },
+      },
+      [if usek3s then 'ipam']: {
+        operator: {
+          clusterPoolIPv4PodCIDRList: '10.42.0.0/16',
         },
       },
     }
