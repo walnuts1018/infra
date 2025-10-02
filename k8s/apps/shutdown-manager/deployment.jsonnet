@@ -19,7 +19,7 @@
         containers: [
           {
             name: 'proxy',
-            image: 'ghcr.io/walnuts1018/shutdown-manager:0.0.1',
+            image: 'ghcr.io/walnuts1018/shutdown-manager:0.0.3',
             env: [
               {
                 name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
