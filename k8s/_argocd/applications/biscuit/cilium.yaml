@@ -32,6 +32,9 @@ spec:
         - name: "operatorReplicas"
           value: "1"
           code: true
+        - name: 'usek3s'
+          value: 'true'
+          code: true
   syncPolicy:
     automated:
       selfHeal: true
