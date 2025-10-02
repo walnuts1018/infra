@@ -29,6 +29,9 @@ spec:
         - name: 'enableServiceMonitor'
           value: 'false'
           code: true
+        - name: "operatorReplicas"
+          value: "2"
+          code: true
   syncPolicy:
     automated:
       selfHeal: true
