@@ -9,6 +9,7 @@
     parentRefs: [
       {
         name: (import '../envoy-gateway-class/gateway.jsonnet').metadata.name,
+        namespace: (import '../envoy-gateway-class/gateway.jsonnet').metadata.namespace,
       },
     ],
     hostnames: [
