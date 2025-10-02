@@ -18,6 +18,13 @@ sudo timedatectl set-timezone Asia/Tokyo
 
 インストールの時にやる
 
+## mount
+
+```bash
+sudo mkdir -p /mnt/HDD-1TB
+sudo vim /etc/fstab
+```
+
 ## k3s
 
 ```bash
