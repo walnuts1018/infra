@@ -24,7 +24,7 @@ tenant:
   - name: MINIO_IDENTITY_OPENID_CONFIG_URL
     value: https://auth.walnuts.dev/.well-known/openid-configuration
   - name: MINIO_IDENTITY_OPENID_CLIENT_ID
-    value: 340410953382297860
+    value: "340410953382297860"
   - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
     value: minio-policy
   - name: MINIO_IDENTITY_OPENID_SCOPES
