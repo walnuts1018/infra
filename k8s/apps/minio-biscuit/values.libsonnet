@@ -24,24 +24,6 @@
         volumesPerServer: 1,
       },
     ],
-    initContainers: [
-      {
-        name: 'init-chmod-data',
-        image: 'busybox',
-        command: ['sh', '-c', 'sleep infinity'],
-        volumeMounts: [
-          {
-            name: 'data0',
-            mountPath: '/data',
-          },
-        ],
-        securityContext: {
-          runAsUser: 1000,
-          runAsGroup: 1000,
-          privileged: true,
-        },
-      },
-    ],
     certificate: {
       requestAutoCert: false,
     },
