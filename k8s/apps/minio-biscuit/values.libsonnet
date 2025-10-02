@@ -24,6 +24,26 @@
         volumesPerServer: 1,
       },
     ],
+    initContainers: [
+      {
+        name: 'init-chmod-data',
+        image: 'busybox',
+        command: ['sh', '-c', 'chown -R 1000:1000 /data && chmod u+rxw /data'],
+        volumeMounts: [
+          {
+            name: 'data0',
+            mountPath: '/data',
+          },
+        ],
+        securityContext: {
+          runAsUser: 1000,
+          runAsGroup: 1000,
+          runAsNonRoot: true,
+          privileged: true,
+          allowPrivilegeEscalation: true,
+        },
+      },
+    ],
     certificate: {
       requestAutoCert: false,
     },
@@ -86,6 +106,7 @@
     },
     users: [],
   },
+
   ingress: {
     api: {
       enabled: true,
