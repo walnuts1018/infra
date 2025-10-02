@@ -65,3 +65,17 @@ cd ~/ghq/github.com/walnuts1018/infra/k8s/_argocd/clusters
 helm repo add argo https://argoproj.github.io/argo-helm
 helm install argocd -n argocd --create-namespace argo/argo-cd --values ./values.yaml
 ```
+
+```bash
+argocd admin initial-password -n argocd
+argocd login --insecure --port-forward --port-forward-namespace argocd --plaintext --username admin localhost:8080
+```
+
+```bash
+argocd account update-password --insecure --port-forward --port-forward-namespace argocd --plaintext
+```
+
+```bash
+cd ../clusters/biscuit
+kubectl apply -f base.yaml
+```
