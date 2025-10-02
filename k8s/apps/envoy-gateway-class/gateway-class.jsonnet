@@ -9,8 +9,8 @@
     parametersRef: {
       group: 'gateway.envoyproxy.io',
       kind: 'EnvoyProxy',
-      name: (import 'envoy-proxy.jsonnet').metadata.name,
-      namespace: (import 'envoy-proxy.jsonnet').metadata.namespace,
+      name: (import 'envoy-proxy.jsonnet')().metadata.name,
+      namespace: (import 'envoy-proxy.jsonnet')().metadata.namespace,
     },
   },
 }
