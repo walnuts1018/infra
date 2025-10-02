@@ -1,4 +1,4 @@
-function(domain) (import '../../components/helm.libsonnet') {
+function(domain, ingressClassName='cilium') (import '../../components/helm.libsonnet') {
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
   chart: 'argo-cd',
@@ -12,6 +12,11 @@ function(domain) (import '../../components/helm.libsonnet') {
       },
       notifications: {
         argocdUrl: 'https://' + domain,
+      },
+      server: {
+        ingress: {
+          ingressClassName: ingressClassName,
+        },
       },
     }
   ),

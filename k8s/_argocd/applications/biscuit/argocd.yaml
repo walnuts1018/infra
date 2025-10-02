@@ -18,6 +18,8 @@ spec:
         tlas:
         - name: 'domain'
           value: 'argocd-biscuit.walnuts.dev'
+        - name: "ingressClassName"
+          value: 'traefik'
   syncPolicy:
     automated:
       selfHeal: true
