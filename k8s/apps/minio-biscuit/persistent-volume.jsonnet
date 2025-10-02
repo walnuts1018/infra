@@ -2,7 +2,8 @@
   apiVersion: 'v1',
   kind: 'PersistentVolume',
   metadata: {
-    name: 'my-pv-hostpath',
+    name: (import 'app.json5').name + '-pv',
+    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
     storageClassName: 'manual-minio-hostpath',
