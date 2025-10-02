@@ -15,7 +15,7 @@
           },
         },
         securityContext: {
-          fsGroup: 0,
+          fsGroup: 1000,
           fsGroupChangePolicy: 'OnRootMismatch',
         },
         servers: 1,
