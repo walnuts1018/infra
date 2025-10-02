@@ -30,7 +30,7 @@ spec:
           value: 'false'
           code: true
         - name: "operatorReplicas"
-          value: "2"
+          value: "1"
           code: true
   syncPolicy:
     automated:
