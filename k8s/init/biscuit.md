@@ -25,6 +25,15 @@ sudo mkdir -p /mnt/HDD-1TB
 sudo vim /etc/fstab
 ```
 
+```bash
+sudo mount -a
+```
+
+```bash
+sudo mkdir -p /mnt/HDD-1TB/minio
+sudo chown -R 1000:1000 /mnt/HDD-1TB/minio && sudo chmod u+rxw /mnt/HDD-1TB/minio
+```
+
 ## k3s
 
 ```bash
