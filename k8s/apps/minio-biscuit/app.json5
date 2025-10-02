@@ -1,0 +1,8 @@
+{
+  name: "minio-biscuit",
+  namespace: "minio",
+  clusters: {
+    kurumi: {},
+    biscuit: {}
+  }
+}
