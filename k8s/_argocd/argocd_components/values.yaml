@@ -44,6 +44,7 @@ configs:
     server.basehref: /
     controller.diff.server.side: "true"
     controller.resource.health.persist: "false"
+    applicationsetcontroller.enable.new.git.file.globbing: "true"
 
   rbac:
     create: true
