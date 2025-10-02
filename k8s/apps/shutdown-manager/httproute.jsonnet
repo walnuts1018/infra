@@ -20,7 +20,7 @@
           {
             kind: 'Service',
             name: (import 'app.json5').name,
-            port: 8000,
+            port: 8080,
             weight: 1,
           },
         ],
