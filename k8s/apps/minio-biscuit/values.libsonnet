@@ -51,7 +51,7 @@
       },
       {
         name: 'MINIO_IDENTITY_OPENID_CLIENT_ID',
-        value: '340410953382297860',
+        value: '340410953382297837',
       },
       {
         name: 'MINIO_IDENTITY_OPENID_CLAIM_NAME',
