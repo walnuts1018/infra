@@ -60,8 +60,12 @@ cd ~/ghq/github.com/walnuts1018/infra/k8s/apps/cilium
 ```
 
 ```bash
+jsonnet helm.jsonnet --tla-str k8sServiceHost="192.168.0.15" --tla-code k8sServicePort=6443 --tla-str loadBalancerIP="192.168.0.159" --tla-code enableServiceMonitor=false --tla-code operatorReplicas=1 --tla-code usek3s=true | jq .spec.source.helm.valuesObject > values.json
+```
+
+```bash
 helm repo add cilium https://helm.cilium.io/
-helm install cilium cilium/cilium --version 1.16.6 --namespace cilium-system --create-namespace
+helm install cilium cilium/cilium --version 1.16.6 --namespace cilium-system --create-namespace --values values.json
 ```
 
 ## 1Password
@@ -85,7 +89,7 @@ helm install onepassword-connect -n onepassword --create-namespace  1password/co
 ## ArgoCD
 
 ```bash
-cd ~/ghq/github.com/walnuts1018/infra/k8s/argocd_components
+cd ~/ghq/github.com/walnuts1018/infra/k8s/_argocd/argocd_components
 ```
 
 ```bash
