@@ -26,6 +26,9 @@ spec:
           code: true
         - name: 'loadBalancerIP'
           value: "192.168.0.157"
+        - name: 'enableServiceMonitor'
+          value: 'false'
+          code: true
   syncPolicy:
     automated:
       selfHeal: true
