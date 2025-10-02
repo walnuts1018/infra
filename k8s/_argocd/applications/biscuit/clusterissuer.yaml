@@ -9,7 +9,7 @@ spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: 'clusterissuer'
+    namespace: 'cert-manager'
   source:
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
