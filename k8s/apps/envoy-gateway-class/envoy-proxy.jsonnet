@@ -39,13 +39,7 @@
             },
           ],
         },
-        envoyService: {
-          type: 'ClusterIP',
-        },
       },
     },
-    backendTLS: {
-      
-    }
   },
 }
