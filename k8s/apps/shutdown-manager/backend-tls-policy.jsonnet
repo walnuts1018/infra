@@ -16,6 +16,7 @@
     validation: {
       caCertificateRefs: [
         {
+          group: '',
           kind: 'ConfigMap',
           name: (import 'configmap-ca.jsonnet').metadata.name,
         },
