@@ -50,5 +50,14 @@ function(loadBalancerIP='192.168.0.138') {
         default: 'debug',
       },
     },
+    telemetry: {
+      tracing: {
+        samplingRate: 100,
+        provider: {
+          host: 'default-collector.opentelemetry-collector.svc.cluster.local',
+          port: 4317,
+        },
+      },
+    },
   },
 }
