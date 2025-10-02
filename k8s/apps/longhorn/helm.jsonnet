@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'longhorn',
   repoURL: 'https://charts.longhorn.io',
-  targetRevision: '1.9.2',
+  targetRevision: '1.10.0',
   values: (importstr 'values.yaml'),
 }
