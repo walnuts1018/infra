@@ -1,0 +1,4 @@
+{
+  name: "api-server-service-account-issuer-discovery",
+  namespace: "kube-system",
+}
