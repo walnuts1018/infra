@@ -3,6 +3,7 @@
   kind: 'BackendTLSPolicy',
   metadata: {
     name: 'kurumi-api-server',
+    namespace: (import 'app.json5').namespace,
   },
   spec: {
     targetRefs: [
@@ -10,7 +11,7 @@
         group: 'gateway.envoyproxy.io',
         kind: 'Backend',
         name: (import 'backend.jsonnet').metadata.name,
-        sectionName: '443',
+        sectionName: '16443',
       },
     ],
     validation: {
