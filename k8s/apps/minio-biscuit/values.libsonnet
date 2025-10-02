@@ -28,7 +28,7 @@
       {
         name: 'init-chmod-data',
         image: 'busybox',
-        command: ['sh', '-c', 'chown -R 1000:1000 /data && chmod u+rxw /data'],
+        command: ['sh', '-c', 'sleep infinity'],
         volumeMounts: [
           {
             name: 'data0',
