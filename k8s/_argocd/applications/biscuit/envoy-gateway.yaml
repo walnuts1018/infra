@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: envoy-gateway
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .;../components
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: 'envoy-gateway-system'
+  source:
+    repoURL: 'https://github.com/walnuts1018/infra'
+    targetRevision: main
+    path: k8s/apps/envoy-gateway
+    directory:
+      recurse: true
+      exclude: '{config/*,_*/*}'
+      jsonnet:
+        tlas:
+        - name: 'enableServiceMonitor'
+          value: 'false'
+          code: true
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - ServerSideApply=true
+    - FailOnSharedResource=true
