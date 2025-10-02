@@ -50,6 +50,10 @@
             jwt: {
               provider: 'kurumi-k8s',
               claims: [
+                {
+                  name: 'sub',
+                  values: ['system:serviceaccount:' + (import '../biscuit-manager/sa.jsonnet').metadata.namespace + ':' + (import '../biscuit-manager/sa.jsonnet').metadata.name],
+                },
               ],
             },
           },
