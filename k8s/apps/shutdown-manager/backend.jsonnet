@@ -3,6 +3,7 @@
   kind: 'Backend',
   metadata: {
     name: 'kurumi-api-server',
+    namespace: (import 'app.json5').namespace,
   },
   spec: {
     endpoints: [
