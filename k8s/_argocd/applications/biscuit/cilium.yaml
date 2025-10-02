@@ -25,7 +25,7 @@ spec:
           value: "6443"
           code: true
         - name: 'loadBalancerIP'
-          value: "192.168.0.157"
+          value: "192.168.0.159"
         - name: 'enableServiceMonitor'
           value: 'false'
           code: true
