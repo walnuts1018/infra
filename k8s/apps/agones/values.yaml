@@ -8,7 +8,7 @@ agones:
   controller:
     resources:
       requests:
-        cpu: 1
+        cpu: 1m
         memory: 20Mi
   extensions:
     resources:
