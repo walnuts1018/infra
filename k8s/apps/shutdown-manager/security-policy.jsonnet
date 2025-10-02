@@ -50,14 +50,6 @@
             jwt: {
               provider: 'kurumi-k8s',
               claims: [
-                {
-                  name: 'kubernetes.io.serviceaccount.name',
-                  values: [(import '../biscuit-manager/sa.jsonnet').metadata.name],
-                },
-                {
-                  name: 'kubernetes.io.namespace',
-                  values: [(import '../biscuit-manager/sa.jsonnet').metadata.namespace],
-                },
               ],
             },
           },
