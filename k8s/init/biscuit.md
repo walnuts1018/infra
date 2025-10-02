@@ -53,6 +53,17 @@ sudo cp -i /etc/rancher/k3s/k3s.yaml $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
+## Cilium
+
+```bash
+cd ~/ghq/github.com/walnuts1018/infra/k8s/apps/cilium
+```
+
+```bash
+helm repo add cilium https://helm.cilium.io/
+helm install cilium cilium/cilium --version 1.16.6 --namespace cilium-system --create-namespace
+```
+
 ## 1Password
 
 ```shell
@@ -74,7 +85,7 @@ helm install onepassword-connect -n onepassword --create-namespace  1password/co
 ## ArgoCD
 
 ```bash
-cd ~/ghq/github.com/walnuts1018/infra/k8s/_argocd/clusters
+cd ~/ghq/github.com/walnuts1018/infra/k8s/argocd_components
 ```
 
 ```bash
