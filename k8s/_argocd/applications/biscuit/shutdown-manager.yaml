@@ -18,10 +18,7 @@ spec:
       recurse: true
       exclude: '{config/*,_*/*}'
       jsonnet:
-        tlas:
-        - name: 'enableServiceMonitor'
-          value: 'false'
-          code: true
+        tlas: []
   syncPolicy:
     automated:
       selfHeal: true
