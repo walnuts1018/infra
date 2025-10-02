@@ -40,14 +40,6 @@ function(loadBalancerIP='192.168.0.138') {
           ],
         },
         envoyService: {
-          ports: [
-            {
-              name: 'http-8080',
-              port: 8080,
-              protocol: 'TCP',
-              targetPort: 10080,
-            },
-          ],
           loadBalancerIP: loadBalancerIP,
           type: 'LoadBalancer',
         },
