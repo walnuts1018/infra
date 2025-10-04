@@ -11,7 +11,7 @@
         group: 'gateway.envoyproxy.io',
         kind: 'Backend',
         name: (import 'backend.jsonnet').metadata.name,
-        sectionName: '443',
+        sectionName: '16443',
       },
     ],
     validation: {
