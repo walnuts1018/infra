@@ -22,7 +22,7 @@
           name: (import 'configmap-ca.jsonnet').metadata.name,
         },
       ],
-      hostname: 'kube-apiserver',
+      hostname: 'kubernetes.default.svc.cluster.local',
     },
   },
 }
