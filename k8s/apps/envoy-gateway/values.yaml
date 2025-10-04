@@ -5,3 +5,7 @@ deployment:
       memory: 51Mi
     limits:
       memory: 1Gi
+config:
+  envoyGateway:
+    extensionApis:
+      enableBackend: true
