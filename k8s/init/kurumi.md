@@ -13,6 +13,7 @@
 ```bash
 sudo sed -i 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/g' /boot/firmware/cmdline.txt
 ```
+
 再起動
 
 ```bash
@@ -62,7 +63,7 @@ sudo apt install -y software-properties-common curl
 
 ```bash
 curl -fsSL https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.33/deb/ /" | sudo tee /etc/apt/sources.list.d/cri-o.list
+echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.34/deb/ /" | sudo tee /etc/apt/sources.list.d/cri-o.list
 ```
 
 ```bash
@@ -77,7 +78,7 @@ sudo systemctl start crio
 
 ```bash
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.34/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 sudo apt update
 sudo apt install -y kubelet kubeadm kubectl
@@ -285,6 +286,18 @@ echo "apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
 clusterName: kurumi
 controlPlaneEndpoint: 192.168.0.17:16443
+apiServer:
+  extraArgs:
+  - name: feature-gates
+    value: "ImageVolume=true"
+controllerManager:
+  extraArgs:
+  - name: feature-gates
+    value: "ImageVolume=true"
+scheduler:
+  extraArgs:
+  - name: feature-gates
+    value: "ImageVolume=true"
 ---
 apiVersion: kubeadm.k8s.io/v1beta4
 kind: InitConfiguration
@@ -295,7 +308,7 @@ apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 failSwapOn: false
 featureGates:
-  NodeSwap: true
+  ImageVolume: true
 memorySwap:
   swapBehavior: LimitedSwap" > kubeadm-config.yaml
 
