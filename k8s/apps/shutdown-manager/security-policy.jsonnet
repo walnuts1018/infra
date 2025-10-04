@@ -17,17 +17,17 @@
           name: 'kurumi-k8s',
           audiences: ['shutdown-manager.local.walnuts.dev'],
           issuer: 'https://kubernetes.default.svc.cluster.local',
-          // remoteJWKS: {
-          //   uri: 'https://192.168.0.17:16443/openid/v1/jwks',
-          //   backendRefs: [
-          //     {
-          //       group: 'gateway.envoyproxy.io',
-          //       kind: 'Backend',
-          //       name: (import 'backend.jsonnet').metadata.name,
-          //       port: 16443,
-          //     },
-          //   ],
-          // },
+          remoteJWKS: {
+            uri: 'https://192.168.0.17:16443/openid/v1/jwks',
+            backendRefs: [
+              {
+                group: 'gateway.envoyproxy.io',
+                kind: 'Backend',
+                name: (import 'backend.jsonnet').metadata.name,
+                port: 16443,
+              },
+            ],
+          },
           localJWKS: {
             type: 'ValueRef',
             valueRef: {
