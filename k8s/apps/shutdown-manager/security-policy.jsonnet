@@ -35,9 +35,9 @@
                     baseInterval: '1s',
                     maxInterval: '5s',
                   },
-                  retryOn: {
-                    triggers: ['5xx', 'gateway-error', 'reset'],
-                  },
+                },
+                retryOn: {
+                  triggers: ['5xx', 'gateway-error', 'reset'],
                 },
               },
             },
