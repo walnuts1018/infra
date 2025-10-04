@@ -14,8 +14,5 @@
         },
       },
     ],
-    tls: {
-      insecureSkipVerify: true,
-    },
   },
 }
