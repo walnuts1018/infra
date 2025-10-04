@@ -18,7 +18,7 @@
           audiences: ['shutdown-manager.local.walnuts.dev'],
           issuer: 'https://kubernetes.default.svc.cluster.local',
           remoteJWKS: {
-            uri: 'https://auth.walnuts.dev/oauth/v2/keys',
+            uri: 'https://kubernetes.default.svc.cluster.local:16443/openid/v1/jwks',
             backendRefs: [
               {
                 group: 'gateway.envoyproxy.io',
