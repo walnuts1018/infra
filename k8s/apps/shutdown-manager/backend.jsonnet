@@ -8,9 +8,10 @@
   spec: {
     endpoints: [
       {
+        hostname: 'kubernetes.default.svc.cluster.local',
         fqdn: {
-          hostname: 'auth.walnuts.dev',
-          port: 443,
+          hostname: '192.168.0.17',
+          port: 16443,
         },
       },
     ],
