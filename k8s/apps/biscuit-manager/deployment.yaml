@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: biscuit-manager
+    app.kubernetes.io/name: biscuit-manager
+  name: biscuit-manager
+  namespace: biscuit-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: biscuit-manager
+      app.kubernetes.io/name: biscuit-manager
+  template:
+    metadata:
+      labels:
+        app: biscuit-manager
+        app.kubernetes.io/name: biscuit-manager
+    spec:
+      containers:
+        - command:
+            - sleep
+            - infinity
+          image: ghcr.io/cybozu/ubuntu-debug:24.04
+          name: ubuntu-debug
+          volumeMounts:
+            - mountPath: /var/run/secrets/shutdown-manager.local.walnuts.dev/serviceaccount
+              name: shutdown-manager-token
+              readOnly: true
+      serviceAccountName: biscuit-manager
+      volumes:
+        - name: shutdown-manager-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: shutdown-manager.local.walnuts.dev
+                  expirationSeconds: 86400
+                  path: token

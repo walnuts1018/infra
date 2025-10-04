@@ -1,0 +1,114 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: cilium-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: cilium
+    helm:
+      releaseName: cilium
+      valuesObject:
+        bgpControlPlane:
+          enabled: true
+        clustermesh:
+          apiserver:
+            metrics:
+              enabled: true
+              serviceMonitor:
+                enabled: true
+            tls:
+              auto:
+                enabled: true
+                method: cronJob
+        envoy:
+          prometheus:
+            enabled: true
+            serviceMonitor:
+              enabled: true
+        envoyConfig:
+          enabled: true
+          secretsNamespace:
+            create: false
+            name: cilium-secrets
+        hubble:
+          metrics:
+            dashboards:
+              enabled: true
+            enableOpenMetrics: true
+            enabled:
+              - dns
+              - drop
+              - tcp
+              - flow
+              - port-distribution
+              - icmp
+              - httpV2:exemplars=true
+            serviceMonitor:
+              enabled: true
+          relay:
+            enabled: true
+            prometheus:
+              enabled: true
+              serviceMonitor:
+                enabled: true
+          tls:
+            auto:
+              enabled: true
+              method: cronJob
+            enabled: true
+          ui:
+            enabled: true
+        ingressController:
+          default: true
+          defaultSecretName: cloudflare-origin-cert
+          defaultSecretNamespace: cilium-system
+          enabled: true
+          enforceHttps: true
+          loadbalancerMode: shared
+          secretsNamespace:
+            create: false
+            name: cilium-secrets
+            sync: true
+          service:
+            loadBalancerIP: 192.168.0.129
+        k8sClientRateLimit:
+          burst: 20
+          qps: 10
+        k8sServiceHost: 192.168.0.17
+        k8sServicePort: 16443
+        kubeProxyReplacement: true
+        l2announcements:
+          enabled: true
+        l7Proxy: true
+        nodePort:
+          enabled: true
+        operator:
+          prometheus:
+            enabled: true
+            serviceMonitor:
+              enabled: true
+          replicas: 2
+          tolerations: []
+        prometheus:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+            trustCRDsExist: true
+        tls:
+          secretsNamespace:
+            create: false
+            name: cilium-secrets
+    repoURL: https://helm.cilium.io/
+    targetRevision: 1.16.6
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: agones-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: agones
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: agones
+    helm:
+      releaseName: agones
+      values: |
+        agones:
+          metrics:
+            prometheusEnabled: true
+            prometheusServiceDiscovery: true
+            serviceMonitor:
+              enabled: true
+              interval: 30s
+          controller:
+            resources:
+              requests:
+                cpu: 1m
+                memory: 20Mi
+          extensions:
+            resources:
+              requests:
+                cpu: 1m
+                memory: 20Mi
+          ping:
+            resources:
+              requests:
+                cpu: 1m
+                memory: 5Mi
+          allocator:
+            resources:
+              requests:
+                cpu: 1m
+                memory: 20Mi
+
+        gameservers:
+          namespaces:
+          - default
+          minPort: 7000
+          maxPort: 8000
+    repoURL: https://agones.dev/chart/stable
+    targetRevision: 1.52.2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true
