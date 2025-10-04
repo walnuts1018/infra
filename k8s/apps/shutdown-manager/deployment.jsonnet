@@ -17,7 +17,7 @@
       },
       spec: {
         containers: [
-          {
+          std.mergePatch((import '../../components/container.libsonnet'), {
             name: 'proxy',
             image: 'ghcr.io/walnuts1018/shutdown-manager:0.0.3',
             env: [
@@ -45,6 +45,15 @@
                 port: 'http',
               },
             },
+            securityContext: {
+              privileged: true,
+              capabilities: {
+                add: [
+                  'NET_BIND_SERVICE',
+                  'SYS_ADMIN',
+                ],
+              },
+            },
             resources: {
               limits: {
                 cpu: '100m',
@@ -65,7 +74,7 @@
                 mountPath: '/var/run/dbus',
               },
             ],
-          },
+          }),
         ],
         volumes: [
           {
