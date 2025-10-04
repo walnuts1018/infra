@@ -28,6 +28,10 @@ dtparam=watchdog=on
 exit
 ```
 
+### Raspberry Pi OS カスタムビルド
+
+\#\# TODO
+
 ## Timezone
 
 ```bash
