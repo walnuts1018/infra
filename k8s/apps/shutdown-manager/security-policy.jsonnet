@@ -24,6 +24,7 @@
                 group: 'gateway.envoyproxy.io',
                 kind: 'Backend',
                 name: 'remote-jwks',
+                namespace: 'default',
                 port: 443,
               },
             ],
