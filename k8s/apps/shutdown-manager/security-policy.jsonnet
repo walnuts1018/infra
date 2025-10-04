@@ -28,14 +28,6 @@
               },
             ],
           },
-          localJWKS: {
-            type: 'ValueRef',
-            valueRef: {
-              group: '',
-              kind: 'ConfigMap',
-              name: (import 'configmap-jwks.jsonnet').metadata.name,
-            },
-          },
           claimToHeaders: [
             {
               claim: 'kubernetes.io/serviceaccount.name',
