@@ -18,14 +18,13 @@
           audiences: ['shutdown-manager.local.walnuts.dev'],
           issuer: 'https://kubernetes.default.svc.cluster.local',
           remoteJWKS: {
-            uri: 'https://foo.bar.com/jwks.json',
+            uri: 'https://192.168.0.17:16443/openid/v1/jwks',
             backendRefs: [
               {
                 group: 'gateway.envoyproxy.io',
                 kind: 'Backend',
-                name: 'remote-jwks',
-                namespace: 'default',
-                port: 443,
+                name: (import 'backend.jsonnet').metadata.name,
+                port: 16443,
               },
             ],
             backendSettings: {
