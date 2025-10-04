@@ -23,8 +23,8 @@
               {
                 group: 'gateway.envoyproxy.io',
                 kind: 'Backend',
-                name: (import 'backend.jsonnet').metadata.name,
-                port: 16443,
+                name: 'remote-jwks',
+                port: 443,
               },
             ],
             backendSettings: {
