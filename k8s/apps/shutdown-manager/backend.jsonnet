@@ -9,7 +9,7 @@
     endpoints: [
       {
         fqdn: {
-          hostname: 'https://auth.walnuts.dev/oauth/v2/keys',
+          hostname: 'auth.walnuts.dev',
           port: 443,
         },
       },
