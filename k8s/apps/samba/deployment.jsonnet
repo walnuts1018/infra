@@ -105,7 +105,7 @@
           {
             name: 'books',
             persistentVolumeClaim: {
-              claimName: (import 'pvc.jsonnet').metadata.name,
+              claimName: (import 'pvc-books.jsonnet').metadata.name,
             },
           },
         ],
