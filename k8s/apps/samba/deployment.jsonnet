@@ -78,8 +78,8 @@
                 mountPath: '/samba-share/books',
               },
               {
-                name: 'CameraRoll',
-                mountPath: '/samba-share/camera-roll',
+                name: 'camera-roll',
+                mountPath: '/samba-share/CameraRoll',
               },
             ],
             resources: {
