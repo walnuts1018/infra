@@ -53,6 +53,7 @@
                   'CAP_SYS_BOOT',
                 ],
               },
+              privileged: true,
             },
             resources: {
               limits: {
