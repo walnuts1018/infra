@@ -27,5 +27,4 @@ metrics:
     enabled: true
 
 defaultBackupStore:
-  backupTarget: "cifs://samba.walnuts.dev/share/longhorn"
-  backupTargetCredentialSecret: "cifs-secret"
+  backupTarget: "s3://longhorn-backup@ap-northeast-1/"

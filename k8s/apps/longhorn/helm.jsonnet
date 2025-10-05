@@ -4,5 +4,12 @@
   chart: 'longhorn',
   repoURL: 'https://charts.longhorn.io',
   targetRevision: '1.9.2',
-  values: (importstr 'values.yaml'),
+  valuesObject: std.mergePatch(
+    std.parseYaml(importstr 'values.yaml'),
+    {
+      defaultBackupStore: {
+        backupTargetCredentialSecret: (import 'external-secret.jsonnet').spec.target.name,
+      },
+    }
+  ),
 }
