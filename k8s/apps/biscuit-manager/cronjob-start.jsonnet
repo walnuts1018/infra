@@ -2,7 +2,7 @@
   apiVersion: 'batch/v1',
   kind: 'CronJob',
   metadata: {
-    name: (import 'app.json5').name,
+    name: (import 'app.json5').name + '-start',
   },
   spec: {
     schedule: '0 2 * * *',  // AM 2:00
