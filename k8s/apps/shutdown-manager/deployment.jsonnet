@@ -49,6 +49,7 @@
               capabilities: {
                 add: [
                   'NET_BIND_SERVICE',
+                  'SYS_ADMIN',
                   'CAP_SYS_BOOT',
                 ],
               },
