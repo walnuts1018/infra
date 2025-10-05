@@ -40,7 +40,7 @@
                     },
                     limits: {
                       cpu: '1',
-                      memory: '100Mi',
+                      memory: '512Mi',
                     },
                   },
                   securityContext:: null,
