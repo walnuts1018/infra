@@ -77,6 +77,10 @@
                 name: 'books',
                 mountPath: '/samba-share/books',
               },
+              {
+                name: 'CameraRoll',
+                mountPath: '/samba-share/camera-roll',
+              },
             ],
             resources: {
               limits: {
@@ -106,6 +110,12 @@
             name: 'books',
             persistentVolumeClaim: {
               claimName: (import 'pvc-books.jsonnet').metadata.name,
+            },
+          },
+          {
+            name: 'camera-roll',
+            persistentVolumeClaim: {
+              claimName: (import 'pvc-camera-roll.jsonnet').metadata.name,
             },
           },
         ],
