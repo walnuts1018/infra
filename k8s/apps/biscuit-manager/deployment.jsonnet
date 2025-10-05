@@ -17,6 +17,7 @@
       },
       spec: {
         serviceAccountName: (import 'sa.jsonnet').metadata.name,
+        hostNetwork: true,
         containers: [
           {
             name: 'ubuntu-debug',
