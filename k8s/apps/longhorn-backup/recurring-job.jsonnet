@@ -7,7 +7,7 @@
   },
   spec: {
     concurrency: 1,
-    cron: '0 19 * * ?',
+    cron: '10 17 * * ?',  // AM 2:10
     groups: [
       'default',
     ],
