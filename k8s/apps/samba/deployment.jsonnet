@@ -73,6 +73,10 @@
                 name: 'samba-local-dir',
                 mountPath: '/samba-share',
               },
+              {
+                name: 'books',
+                mountPath: '/samba-share/books',
+              },
             ],
             resources: {
               limits: {
@@ -96,6 +100,12 @@
             hostPath: {
               path: '/mnt/data/share',
               type: 'Directory',
+            },
+          },
+          {
+            name: 'books',
+            persistentVolumeClaim: {
+              claimName: (import 'pvc.jsonnet').metadata.name,
             },
           },
         ],
