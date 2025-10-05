@@ -42,7 +42,11 @@
                     subPath: 'start.sh',
                   },
                 ],
-              }, {}),
+              }, {
+                securityContext: {
+                  readOnlyRootFilesystem: false,
+                },
+              }),
             ],
             volumes: [
               {
