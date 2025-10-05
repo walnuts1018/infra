@@ -17,51 +17,52 @@
             hostNetwork: true,
             restartPolicy: 'OnFailure',
             containers: [
-              std.mergePatch((import '../../components/container.libsonnet') {
-                name: 'biscuit-manager',
-                image: 'debian:13.1-slim',
-                command: [
-                  'bash',
-                  '/shutdown.sh',
-                ],
-                readinessProbe: {
-                  exec: {
-                    command: [
-                      'cat',
-                      '/tmp/healthy',
-                    ],
+              std.mergePatch(
+                (import '../../components/container.libsonnet') {
+                  name: 'biscuit-manager',
+                  image: 'debian:13.1-slim',
+                  command: [
+                    'bash',
+                    '/shutdown.sh',
+                  ],
+                  readinessProbe: {
+                    exec: {
+                      command: [
+                        'cat',
+                        '/tmp/healthy',
+                      ],
+                    },
                   },
-                },
-                resources: {
-                  requests: {
-                    cpu: '10m',
-                    memory: '10Mi',
+                  resources: {
+                    requests: {
+                      cpu: '10m',
+                      memory: '10Mi',
+                    },
+                    limits: {
+                      cpu: '1',
+                      memory: '100Mi',
+                    },
                   },
-                  limits: {
-                    cpu: '1',
-                    memory: '100Mi',
-                  },
-                },
-                volumeMounts: [
-                  {
-                    name: 'shutdown-script',
-                    mountPath: '/shutdown.sh',
-                    readOnly: true,
-                    subPath: 'shutdown.sh',
-                  },
-                  {
-                    name: 'shutdown-manager-token',
-                    mountPath: '/var/run/secrets/shutdown-manager.local.walnuts.dev/serviceaccount',
-                    readOnly: true,
-                  },
-                  {
-                    name: 'tmp',
-                    mountPath: '/tmp',
-                  },
-                ],
-              }, {
-                securityContext:: null,
-              }),
+                  securityContext:: null,
+                  volumeMounts: [
+                    {
+                      name: 'shutdown-script',
+                      mountPath: '/shutdown.sh',
+                      readOnly: true,
+                      subPath: 'shutdown.sh',
+                    },
+                    {
+                      name: 'shutdown-manager-token',
+                      mountPath: '/var/run/secrets/shutdown-manager.local.walnuts.dev/serviceaccount',
+                      readOnly: true,
+                    },
+                    {
+                      name: 'tmp',
+                      mountPath: '/tmp',
+                    },
+                  ],
+                }, {}
+              ),
             ],
             volumes: [
               {

@@ -17,34 +17,35 @@
             hostNetwork: true,
             restartPolicy: 'OnFailure',
             containers: [
-              std.mergePatch((import '../../components/container.libsonnet') {
-                name: 'biscuit-manager',
-                image: 'debian:13.1-slim',
-                command: [
-                  'bash',
-                  '/start.sh',
-                ],
-                resources: {
-                  requests: {
-                    cpu: '10m',
-                    memory: '10Mi',
+              std.mergePatch(
+                (import '../../components/container.libsonnet') {
+                  name: 'biscuit-manager',
+                  image: 'debian:13.1-slim',
+                  command: [
+                    'bash',
+                    '/start.sh',
+                  ],
+                  securityContext:: null,
+                  resources: {
+                    requests: {
+                      cpu: '10m',
+                      memory: '10Mi',
+                    },
+                    limits: {
+                      cpu: '1',
+                      memory: '100Mi',
+                    },
                   },
-                  limits: {
-                    cpu: '1',
-                    memory: '100Mi',
-                  },
-                },
-                volumeMounts: [
-                  {
-                    name: 'start-script',
-                    mountPath: '/start.sh',
-                    readOnly: true,
-                    subPath: 'start.sh',
-                  },
-                ],
-              }, {
-                securityContext:: null,
-              }),
+                  volumeMounts: [
+                    {
+                      name: 'start-script',
+                      mountPath: '/start.sh',
+                      readOnly: true,
+                      subPath: 'start.sh',
+                    },
+                  ],
+                }, {}
+              ),
             ],
             volumes: [
               {
