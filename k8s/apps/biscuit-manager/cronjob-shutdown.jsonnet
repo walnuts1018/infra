@@ -60,9 +60,7 @@
                   },
                 ],
               }, {
-                securityContext: {
-                  readOnlyRootFilesystem: false,
-                },
+                securityContext:: null,
               }),
             ],
             volumes: [
