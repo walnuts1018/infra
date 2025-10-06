@@ -15,6 +15,16 @@
           name: (import '../external-secret.jsonnet').spec.target.name,
           key: 'redis-password',
         },
+        resources: {
+          requests: {
+            cpu: '4m',
+            memory: '4Mi',
+          },
+          limits: {
+            cpu: '100m',
+            memory: '128Mi',
+          },
+        },
       },
       storage: {
         volumeClaimTemplate: {
@@ -63,6 +73,16 @@
         redisSecret: {
           name: (import '../external-secret.jsonnet').spec.target.name,
           key: 'redis-password',
+        },
+        resources: {
+          requests: {
+            cpu: '4m',
+            memory: '4Mi',
+          },
+          limits: {
+            cpu: '100m',
+            memory: '128Mi',
+          },
         },
       },
       podSecurityContext: {
