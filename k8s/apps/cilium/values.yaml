@@ -54,8 +54,28 @@ hubble:
       enabled: true
       serviceMonitor:
         enabled: true
+    resources:
+      requests:
+        cpu: 1m
+        memory: 80Mi
+      limits:
+        memory: 512Mi
   ui:
     enabled: true
+    backend:
+      resources:
+        requests:
+          cpu: 1m
+          memory: 60Mi
+        limits:
+          memory: 256Mi
+    frontend:
+      resources:
+        requests:
+          cpu: 1m
+          memory: 10Mi
+        limits:
+          memory: 256Mi
   metrics:
     enableOpenMetrics: true
     enabled:
@@ -75,12 +95,22 @@ envoy:
     enabled: true
     serviceMonitor:
       enabled: true
+  resources:
+    requests:
+      cpu: 10m
+      memory: 51Mi
 operator:
   tolerations: []
   prometheus:
     enabled: true
     serviceMonitor:
       enabled: true
+  resources:
+    requests:
+      cpu: 2m
+      memory: 51Mi
+    limits:
+      memory: 512Mi
 prometheus:
   enabled: true
   serviceMonitor:
