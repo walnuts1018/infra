@@ -21,3 +21,10 @@ serviceMonitor:
     url: "https://nextcloud.walnuts.dev/status.php"
   - name: "zitadel"
     url: "https://auth.walnuts.dev/healthz"
+
+resources:
+  requests:
+    cpu: 2m
+    memory: 39Mi
+  limits:
+    memory: 300Mi
