@@ -21,6 +21,7 @@ function(nameOverride='', replicas=3, enableServiceMonitor=true) {
         memory: '50Mi',
       },
       limits: {
+        cpu: '1',
         memory: '1Gi',
       },
     },
