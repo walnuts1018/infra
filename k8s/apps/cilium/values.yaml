@@ -9,6 +9,12 @@ bgpControlPlane:
 k8sClientRateLimit:
   qps: 10
   burst: 20
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    memory: 2Gi
 clustermesh:
   apiserver:
     tls:
