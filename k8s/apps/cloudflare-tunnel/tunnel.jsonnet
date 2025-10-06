@@ -25,5 +25,8 @@ function(nameOverride='', replicas=3, enableServiceMonitor=true) {
     //     memory: '1Gi',
     //   },
     // },
+    securityContext: {
+      privileged: true,
+    },
   },
 }
