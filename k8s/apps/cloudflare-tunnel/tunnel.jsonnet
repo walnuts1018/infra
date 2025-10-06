@@ -15,15 +15,15 @@ function(nameOverride='', replicas=3, enableServiceMonitor=true) {
     settings: {
       nameOverride: nameOverride,
     },
-    resources: {
-      requests: {
-        cpu: '5m',
-        memory: '50Mi',
-      },
-      limits: {
-        cpu: '1',
-        memory: '1Gi',
-      },
-    },
+    // resources: {
+    //   requests: {
+    //     cpu: '100m',
+    //     memory: '50Mi',
+    //   },
+    //   limits: {
+    //     cpu: '1',
+    //     memory: '1Gi',
+    //   },
+    // },
   },
 }
