@@ -81,6 +81,10 @@
                 name: 'camera-roll',
                 mountPath: '/samba-share/CameraRoll',
               },
+              {
+                name: 'mega',
+                mountPath: '/samba-share/mega',
+              },
             ],
             resources: {
               limits: {
@@ -116,6 +120,12 @@
             name: 'camera-roll',
             persistentVolumeClaim: {
               claimName: (import 'pvc-camera-roll.jsonnet').metadata.name,
+            },
+          },
+          {
+            name: 'mega',
+            persistentVolumeClaim: {
+              claimName: (import 'pvc-mega.jsonnet').metadata.name,
             },
           },
         ],
