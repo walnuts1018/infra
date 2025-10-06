@@ -12,6 +12,18 @@ tenant:
     servers: 4
     size: 32Gi
     volumesPerServer: 1
+  - name: pool-localdisk
+    resources:
+      requests:
+        cpu: 5m
+        memory: 300Mi
+      limits:
+        cpu: 200m
+        memory: 1Gi
+    storageClassName: local-path
+    servers: 4
+    size: 32Gi
+    volumesPerServer: 1
   certificate:
     requestAutoCert: false
   configSecret:
