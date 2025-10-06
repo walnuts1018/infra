@@ -1,7 +1,7 @@
 defaultSettings:
   allowNodeDrainWithLastHealthyReplica: true
   orphanAutoDeletion: true
-  defaultReplicaCount: 2
+  defaultReplicaCount: '2'
 csi:
   attacherReplicaCount: 2
   provisionerReplicaCount: 2
