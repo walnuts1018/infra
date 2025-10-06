@@ -84,6 +84,12 @@ prometheus-node-exporter:
         targetLabel: node
         replacement: $1
         action: replace
+  resources:
+    requests:
+      cpu: 1m
+      memory: 20Mi
+    limits:
+      memory: 256Mi
 prometheus:
   prometheusSpec:
     serviceMonitorSelector:
