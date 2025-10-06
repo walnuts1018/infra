@@ -2,19 +2,19 @@
   apiVersion: 'longhorn.io/v1beta2',
   kind: 'RecurringJob',
   metadata: {
-    name: 'cifs-backup',
+    name: 'minio-biscuit-backup',
     namespace: (import 'app.json5').namespace,
   },
   spec: {
     concurrency: 1,
-    cron: '0 19 * * ?',
+    cron: '10 17 * * ?',  // AM 2:10
     groups: [
       'default',
     ],
     labels: {
       automated: 'true',
     },
-    name: 'cifs-backup',
+    name: 'minio-biscuit-backup',
     retain: 5,
     task: 'backup',
   },
