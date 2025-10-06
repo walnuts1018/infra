@@ -267,6 +267,14 @@ gateway:
   - key: "node.walnuts.dev/low-performance"
     operator: "Exists"
 
+lokiCanary:
+  resources:
+    requests:
+      cpu: 2m
+      memory: 30Mi
+    limits:
+      memory: 100Mi
+
 singleBinary:
   replicas: 0
 
