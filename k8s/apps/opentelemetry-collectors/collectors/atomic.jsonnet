@@ -33,6 +33,15 @@ std.mergePatch((import '_base.libsonnet'), {
           ],
         },
       },
+      resources: {
+        requests: {
+          cpu: '5m',
+          memory: '128Mi',
+        },
+        limits: {
+          memory: '1Gi',
+        },
+      },
     },
     config: {
       receivers: {
