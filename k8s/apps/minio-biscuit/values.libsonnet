@@ -6,12 +6,12 @@
         name: 'pool-0',
         resources: {
           requests: {
-            cpu: '5m',
-            memory: '300Mi',
+            cpu: '100m',
+            memory: '1Gi',
           },
           limits: {
-            cpu: '200m',
-            memory: '1Gi',
+            cpu: '1',
+            memory: '4Gi',
           },
         },
         securityContext: {
