@@ -23,7 +23,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'nginx',
-            image: 'nginx:1.29.1',
+            image: 'nginx:1.29.2',
             ports: [
               {
                 containerPort: 8080,
