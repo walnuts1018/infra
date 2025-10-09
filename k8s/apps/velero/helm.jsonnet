@@ -23,6 +23,20 @@
             },
           },
         ],
+        volumeSnapshotLocation: [
+          {
+            name: 'minio-biscuit',
+            provider: 'aws',
+            config: {
+              s3Url: 'http://minio-biscuit.walnuts.dev',
+              region: 'ap-northeast-1',
+            },
+            credential: {
+              name: (import 'external-secret.jsonnet').spec.target.name,
+              key: 'credentials',
+            },
+          },
+        ],
       },
     }
   ),
