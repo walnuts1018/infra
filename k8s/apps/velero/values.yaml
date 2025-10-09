@@ -33,7 +33,7 @@ metrics:
 configuration:
   features:
   - EnableCSI
-  logLevel: debug
+  # logLevel: debug
 
 schedules:
   minio-biscuit:
