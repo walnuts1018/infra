@@ -7,7 +7,7 @@
   spec: {
     storageClassName: 'longhorn',
     accessModes: [
-      'ReadWriteMany',
+      'ReadWriteOnce',
     ],
     resources: {
       requests: {
