@@ -33,8 +33,8 @@ grafana:
     server:
       domain: grafana.walnuts.dev
       root_url: https://grafana.walnuts.dev/
-    log:
-      level: debug
+    # log:
+    #   level: debug
     auth:
       disable_login_form: true
       oauth_auto_login: true
