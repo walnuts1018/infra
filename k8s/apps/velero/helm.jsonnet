@@ -15,6 +15,7 @@
             bucket: 'velero-backup',
             config: {
               s3Url: 'https://minio-biscuit.walnuts.dev',
+              publicUrl: 'https://minio-biscuit.walnuts.dev',
               region: 'ap-northeast-1',
               s3ForcePathStyle: 'true',
             },
@@ -30,6 +31,7 @@
             provider: 'aws',
             config: {
               s3Url: 'https://minio-biscuit.walnuts.dev',
+              publicUrl: 'https://minio-biscuit.walnuts.dev',
               region: 'ap-northeast-1',
               s3ForcePathStyle: 'true',
             },
