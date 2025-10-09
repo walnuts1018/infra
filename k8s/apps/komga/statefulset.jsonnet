@@ -87,9 +87,8 @@
           },
           {
             name: 'book-dir',
-            hostPath: {
-              path: '/mnt/data/share/Books',
-              type: 'Directory',
+            persistentVolumeClaim: {
+              claimName: (import '../samba/pvc-books.jsonnet').metadata.name,
             },
           },
           {
