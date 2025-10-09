@@ -85,6 +85,14 @@
                 name: 'mega',
                 mountPath: '/samba-share/mega',
               },
+              {
+                name: 'movies',
+                mountPath: '/samba-share/movies',
+              },
+              {
+                name: 'musics',
+                mountPath: '/samba-share/musics',
+              },
             ],
             resources: {
               limits: {
@@ -126,6 +134,18 @@
             name: 'mega',
             persistentVolumeClaim: {
               claimName: (import 'pvc-mega.jsonnet').metadata.name,
+            },
+          },
+          {
+            name: 'movies',
+            persistentVolumeClaim: {
+              claimName: (import 'pvc-movies.jsonnet').metadata.name,
+            },
+          },
+          {
+            name: 'musics',
+            persistentVolumeClaim: {
+              claimName: (import 'pvc-musics.jsonnet').metadata.name,
             },
           },
         ],
