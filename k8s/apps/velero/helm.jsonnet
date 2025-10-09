@@ -17,6 +17,7 @@
               s3Url: 'https://minio-biscuit.walnuts.dev',
               region: 'ap-northeast-1',
               s3ForcePathStyle: 'true',
+              checksumAlgorithm: '',
             },
             credential: {
               name: (import 'external-secret.jsonnet').spec.target.name,
@@ -32,6 +33,7 @@
               s3Url: 'https://minio-biscuit.walnuts.dev',
               region: 'ap-northeast-1',
               s3ForcePathStyle: 'true',
+              checksumAlgorithm: '',
             },
             credential: {
               name: (import 'external-secret.jsonnet').spec.target.name,
