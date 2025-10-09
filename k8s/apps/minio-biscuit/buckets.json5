@@ -1,4 +1,5 @@
 [
     "longhorn-backup",
     "minio-backup",
+    "velero-backup",
 ]
