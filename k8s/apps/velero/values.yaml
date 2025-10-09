@@ -8,8 +8,8 @@ resources:
 
 kubectl:
   image:
-    repository: registry.k8s.io/kubectl
-    tag: v1.34.1
+    repository: docker.io/bitnamilegacy/kubectl
+    tag: 1.33.4
 
 hostAliases:
 - ip: "192.168.0.159"
