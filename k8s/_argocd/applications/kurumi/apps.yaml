@@ -16,6 +16,9 @@ spec:
         exclude: true
       - path: "k8s/apps/shutdown-manager/app.json5"
         exclude: true
+  ignoreApplicationDifferences:
+  - jsonPointers:
+    - /spec/syncPolicy
   template:
     metadata:
       name: '{{.name}}'

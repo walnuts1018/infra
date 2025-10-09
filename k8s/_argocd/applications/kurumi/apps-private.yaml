@@ -3,6 +3,7 @@ kind: ApplicationSet
 metadata:
   name: apps-private
   namespace: argocd
+
 spec:
   goTemplate: true
   generators:
@@ -11,6 +12,9 @@ spec:
       revision: main
       files:
       - path: "k8s/apps/*/app.json5"
+  ignoreApplicationDifferences:
+  - jsonPointers:
+    - /spec/syncPolicy
   template:
     metadata:
       name: '{{.name}}'
