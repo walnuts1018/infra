@@ -12,6 +12,8 @@ spec:
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
     directory:
+      recurse: true
+      exclude: '{config/*,_*/*}'
       jsonnet:
         tlas: []
   syncPolicy:
