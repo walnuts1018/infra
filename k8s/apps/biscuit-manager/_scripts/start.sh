@@ -22,4 +22,4 @@ while [ "$(date +%s)" -lt "$end" ]; do
     sleep $interval 
 done
 
-echo "biscuit manager started"
+echo "biscuit started"
