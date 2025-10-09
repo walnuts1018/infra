@@ -6,4 +6,7 @@
   },
   driver: 'driver.longhorn.io',
   deletionPolicy: 'Delete',
+  parameters: {
+    type: 'bak',
+  },
 }
