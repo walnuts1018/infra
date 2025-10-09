@@ -2,7 +2,8 @@ grafana:
   replicas: 2
   resources:
     limits:
-      memory: 800Mi
+      cpu: "1"
+      memory: 2Gi
     requests:
       cpu: 10m
       memory: 300Mi
