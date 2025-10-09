@@ -1,0 +1,43 @@
+resources:
+  requests:
+    cpu: 10m
+    memory: 128Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+
+hostAliases:
+- ip: "192.168.0.159"
+  hostnames:
+  - "minio-biscuit.walnuts.dev"
+
+initContainers:
+- name: velero-plugin-for-aws
+  image: velero/velero-plugin-for-aws:v1.12.0
+  volumeMounts:
+  - mountPath: /target
+    name: plugins
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    autodetect: false
+    enabled: true
+  nodeAgentPodMonitor:
+    autodetect: false
+    enabled: true
+  prometheusRule:
+    autodetect: false
+    enabled: false
+
+configuration:
+  features:
+  - EnableCSI
+
+schedules:
+  minio-biscuit:
+    schedule: "10 17 * * *"
+    template:
+      storageLocation: minio-biscuit
+      excludedNamespaceScopedResources:
+      - secret
