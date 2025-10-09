@@ -11,11 +11,6 @@ kubectl:
     repository: docker.io/bitnamilegacy/kubectl
     tag: 1.33.4
 
-hostAliases:
-- ip: "192.168.0.159"
-  hostnames:
-  - "minio-biscuit.walnuts.dev"
-
 initContainers:
 - name: velero-plugin-for-aws
   image: velero/velero-plugin-for-aws:v1.12.0

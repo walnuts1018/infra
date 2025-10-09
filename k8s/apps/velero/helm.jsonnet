@@ -14,7 +14,7 @@
             provider: 'aws',
             bucket: 'velero-backup',
             config: {
-              s3Url: 'http://minio-biscuit.walnuts.dev',
+              s3Url: 'https://minio-biscuit.walnuts.dev',
               region: 'ap-northeast-1',
             },
             credential: {
@@ -28,7 +28,7 @@
             name: 'minio-biscuit',
             provider: 'aws',
             config: {
-              s3Url: 'http://minio-biscuit.walnuts.dev',
+              s3Url: 'https://minio-biscuit.walnuts.dev',
               region: 'ap-northeast-1',
             },
             credential: {
