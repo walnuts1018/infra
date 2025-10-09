@@ -1,0 +1,4 @@
+{
+  name: "velero",
+  namespace: "velero",
+}

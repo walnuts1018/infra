@@ -1,0 +1,53 @@
+resources:
+  requests:
+    cpu: 10m
+    memory: 128Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+
+hostAliases:
+- ip: "192.168.0.15"
+  hostnames:
+  - "foo.local"
+  - "bar.local"
+
+initContainers:
+- name: velero-plugin-for-aws
+  image: velero/velero-plugin-for-aws:v1.12.0
+  volumeMounts:
+  - mountPath: /target
+    name: plugins
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    autodetect: false
+    enabled: true
+  nodeAgentPodMonitor:
+    autodetect: false
+    enabled: true
+  prometheusRule:
+    autodetect: false
+    enabled: false
+
+configuration:
+  backupStorageLocation:
+  - name: minio-biscuit
+    default: true
+    provider: aws
+    bucket: velero-backup
+    caCert:
+    config:
+      s3Url: http://minio-biscuit.walnuts.dev
+      region: ap-northeast-1
+  features:
+  - EnableCSI
+
+schedules:
+  minio-biscuit:
+    schedule: "48 3 * * *"
+    template:
+      storageLocation: minio-biscuit
+      excludedNamespaceScopedResources:
+      - secret
