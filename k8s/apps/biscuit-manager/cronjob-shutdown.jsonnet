@@ -25,14 +25,6 @@
                     'bash',
                     '/shutdown.sh',
                   ],
-                  readinessProbe: {
-                    exec: {
-                      command: [
-                        'cat',
-                        '/tmp/healthy',
-                      ],
-                    },
-                  },
                   resources: {
                     requests: {
                       cpu: '10m',
