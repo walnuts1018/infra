@@ -1,0 +1,26 @@
+.:53 {
+    errors
+    log
+    loop
+    loadbalance
+    reload
+    health {
+        lameduck 5s
+    }
+    ready
+    prometheus :9153
+    acl { 
+        allow net 192.168.0.0/16 172.16.0.0/12 10.0.0.0/8 192.0.0.0/24
+        block
+    }
+    hosts hosts local.walnuts.dev {
+        fallthrough
+    }
+    forward . 8.8.8.8 8.8.4.4
+    cache {
+        success 4096
+        denial  1024
+        prefetch 512
+    }
+
+}
