@@ -96,6 +96,7 @@
       pathType: 'Prefix',
       annotations: {
         'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+        'cf-tunnel-operator.walnuts.dev/ignore': 'true',
       },
       tls: [
         {
@@ -114,6 +115,7 @@
       pathType: 'Prefix',
       annotations: {
         'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+        'cf-tunnel-operator.walnuts.dev/ignore': 'true',
       },
       tls: [
         {
