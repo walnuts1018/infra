@@ -42,3 +42,4 @@ schedules:
       storageLocation: minio-biscuit
       excludedNamespaceScopedResources:
       - secret
+      snapshotVolumes: true
