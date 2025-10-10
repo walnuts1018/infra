@@ -39,11 +39,11 @@
     env: [
       {
         name: 'MINIO_SERVER_URL',
-        value: 'https://minio-biscuit.walnuts.dev',
+        value: 'https://minio-biscuit.local.walnuts.dev',
       },
       {
         name: 'MINIO_BROWSER_REDIRECT_URL',
-        value: 'https://minio-biscuit-console.walnuts.dev',
+        value: 'https://minio-biscuit-console.local.walnuts.dev',
       },
       {
         name: 'MINIO_IDENTITY_OPENID_CONFIG_URL',
@@ -63,7 +63,7 @@
       },
       {
         name: 'MINIO_IDENTITY_OPENID_REDIRECT_URI',
-        value: 'https://minio-biscuit-console.walnuts.dev/oauth_callback',
+        value: 'https://minio-biscuit-console.local.walnuts.dev/oauth_callback',
       },
       {
         name: 'MINIO_IDENTITY_OPENID_DISPLAY_NAME',
@@ -73,9 +73,9 @@
     features: {
       bucketDNS: true,
       domains: {
-        console: 'minio-biscuit-console.walnuts.dev',
+        console: 'minio-biscuit-console.local.walnuts.dev',
         minio: [
-          'minio-biscuit.walnuts.dev',
+          'minio-biscuit.local.walnuts.dev',
         ],
       },
     },
@@ -90,17 +90,39 @@
   ingress: {
     api: {
       enabled: true,
-      host: 'minio-biscuit.walnuts.dev',
+      host: 'minio-biscuit.local.walnuts.dev',
       ingressClassName: 'cilium',
       path: '/',
       pathType: 'Prefix',
+      annotations: {
+        'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+      },
+      tls: [
+        {
+          hosts: [
+            'minio-biscuit.local.walnuts.dev',
+          ],
+          secretName: 'minio-biscuit-tls',
+        },
+      ],
     },
     console: {
       enabled: true,
-      host: 'minio-biscuit-console.walnuts.dev',
+      host: 'minio-biscuit-console.local.walnuts.dev',
       ingressClassName: 'cilium',
       path: '/',
       pathType: 'Prefix',
+      annotations: {
+        'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+      },
+      tls: [
+        {
+          hosts: [
+            'minio-biscuit-console.local.walnuts.dev',
+          ],
+          secretName: 'minio-biscuit-console-tls',
+        },
+      ],
     },
   },
 }
