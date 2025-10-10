@@ -208,7 +208,7 @@ backend:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      memory: 256Mi
+      memory: 196Mi
       cpu: 30m
     limits:
       memory: 1Gi
