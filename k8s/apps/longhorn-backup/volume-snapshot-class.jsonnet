@@ -3,6 +3,9 @@
   kind: 'VolumeSnapshotClass',
   metadata: {
     name: 'longhorn',
+    annotations: {
+      'snapshot.storage.kubernetes.io/is-default-class': 'true', // TODO: 複数Classができたらどうにかしたくなるだろう
+    },
   },
   driver: 'driver.longhorn.io',
   deletionPolicy: 'Delete',
