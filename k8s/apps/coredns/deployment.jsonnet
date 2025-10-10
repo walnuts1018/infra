@@ -79,11 +79,11 @@
             resources: {
               requests: {
                 cpu: '1m',
-                memory: '10Mi',
+                memory: '20Mi',
               },
               limits: {
                 cpu: '500m',
-                memory: '1Gi',
+                memory: '512Mi',
               },
             },
             volumeMounts: [

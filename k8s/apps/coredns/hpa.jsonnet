@@ -8,7 +8,7 @@
   },
   spec: {
     minReplicas: 2,
-    maxReplicas: 5,
+    maxReplicas: 4,
     metrics: [
       {
         resource: {
