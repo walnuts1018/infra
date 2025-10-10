@@ -175,7 +175,7 @@ read:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      memory: 400Mi
+      memory: 350Mi
       cpu: 30m
     limits:
       memory: 1Gi
