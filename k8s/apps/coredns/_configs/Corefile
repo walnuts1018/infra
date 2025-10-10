@@ -16,7 +16,7 @@
     hosts hosts local.walnuts.dev {
         fallthrough
     }
-    forward . 8.8.8.8 8.8.4.4
+    forward . 1.1.1.1 1.0.0.1
     cache {
         success 4096
         denial  1024
