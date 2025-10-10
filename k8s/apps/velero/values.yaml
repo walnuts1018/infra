@@ -42,3 +42,4 @@ schedules:
       excludedNamespaceScopedResources:
       - secret
       snapshotVolumes: true
+      csiSnapshotTimeout: 6h
