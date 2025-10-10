@@ -1,22 +1,23 @@
-.:53 {
+(base) {
     errors
     log
     loop
     loadbalance
     reload
+    ready
+    cache
+}
+
+. {
+    import base
     health {
         lameduck 5s
     }
-    ready
     prometheus :9153
-    hosts hosts local.walnuts.dev {
-        fallthrough
-    }
     forward . 1.1.1.1 1.0.0.1
-    cache {
-        success 4096
-        denial  1024
-        prefetch 512
-    }
+}
 
+local.walnuts.dev {
+    import base
+    hosts /etc/coredns/local.walnuts.dev
 }
