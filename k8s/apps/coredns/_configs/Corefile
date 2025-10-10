@@ -14,8 +14,22 @@
         lameduck 5s
     }
     prometheus :9153
-    forward . 1.1.1.1 1.0.0.1
+    forward . 1.1.1.1 1.0.0.1 {
+        tls_servername cloudflare-dns.com
+        force_tcp
+    }
 }
+
+# http://.:443 {
+#     tls /etc/coredns/tls/tls.crt /etc/coredns/tls/tls.key
+#     forward . 127.0.0.1:53
+# }
+
+# tls://.:853 {
+#     tls /etc/coredns/tls/tls.crt /etc/coredns/tls/tls.key
+#     forward . 127.0.0.1:53
+# }
+
 
 local.walnuts.dev {
     import base
