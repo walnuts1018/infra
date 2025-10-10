@@ -31,8 +31,7 @@ metrics:
     enabled: false
 
 configuration:
-  features:
-  - EnableCSI
+  features: EnableCSI
   # logLevel: debug
 
 schedules:
