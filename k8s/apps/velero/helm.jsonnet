@@ -15,7 +15,6 @@
             bucket: 'velero-backup',
             config: {
               s3Url: 'https://minio-biscuit.local.walnuts.dev',
-              publicUrl: 'https://minio-biscuit.local.walnuts.dev',
               region: 'ap-northeast-1',
               s3ForcePathStyle: 'true',
             },
@@ -25,7 +24,21 @@
             },
           },
         ],
-        volumeSnapshotLocation: [],
+        volumeSnapshotLocation: [
+          {
+            name: 'minio-biscuit',
+            provider: 'aws',
+            config: {
+              s3Url: 'https://minio-biscuit.local.walnuts.dev',
+              region: 'ap-northeast-1',
+              s3ForcePathStyle: 'true',
+            },
+            credential: {
+              name: (import 'external-secret.jsonnet').spec.target.name,
+              key: 'credentials',
+            },
+          },
+        ],
       },
     }
   ),
