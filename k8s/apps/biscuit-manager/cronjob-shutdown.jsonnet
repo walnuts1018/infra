@@ -5,7 +5,7 @@
     name: (import 'app.json5').name + '-shutdown',
   },
   spec: {
-    schedule: '0 5 * * *',  // AM 5:00
+    schedule: '0 6 * * *',  // AM 6:00
     timeZone: 'Asia/Tokyo',
     concurrencyPolicy: 'Forbid',
     startingDeadlineSeconds: 120,
