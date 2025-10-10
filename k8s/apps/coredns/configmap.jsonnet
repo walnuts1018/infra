@@ -4,6 +4,6 @@
   labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   data: {
     Corefile: (importstr './_configs/Corefile'),
-    hosts: (importstr './_configs/hosts'),
+    'local.walnuts.dev': (importstr './_configs/local.walnuts.dev'),
   },
 }
