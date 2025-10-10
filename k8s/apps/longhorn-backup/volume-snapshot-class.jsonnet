@@ -4,11 +4,11 @@
   metadata: {
     name: 'longhorn',
     annotations: {
-      'snapshot.storage.kubernetes.io/is-default-class': 'true', // TODO: 複数Classができたらどうにかしたくなるだろう
+      'snapshot.storage.kubernetes.io/is-default-class': 'true',  // TODO: 複数Classができたらどうにかしたくなるだろう
     },
   },
   driver: 'driver.longhorn.io',
-  deletionPolicy: 'Delete',
+  deletionPolicy: 'Retain',
   parameters: {
     type: 'bak',
   },
