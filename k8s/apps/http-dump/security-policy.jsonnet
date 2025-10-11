@@ -4,7 +4,7 @@
   redirect_url: 'https://httptest.walnuts.dev/oauth2/callback',
   logout_path: '/logout',
   client_id: '341715627427299826',
-  client_secret: {
+  client_secret_ref: {
     name: (import './external-secret-oidc.jsonnet').spec.target.name,
     key: 'client-secret',
   },
