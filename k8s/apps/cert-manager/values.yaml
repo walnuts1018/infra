@@ -15,14 +15,14 @@ resources:
 webhook:
   resources:
     requests:
-      cpu: 2m
+      cpu: 1m
       memory: 64Mi
 
 cainjector:
   resources:
     requests:
       cpu: 1m
-      memory: 134Mi
+      memory: 112Mi
 
 tolerations:
 - key: "node.walnuts.dev/low-performance"
