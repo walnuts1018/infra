@@ -20,8 +20,8 @@
         operation: {
           op: 'add',
           jsonPath: "..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*%s')].typed_config.config" % (import './security-policy-suffix.libsonnet'),
-          path: 'forward_bearer_token',
-          value: true,
+          path: 'preserve_authorization_header',
+          value: false,
         },
       },
       {
@@ -30,8 +30,8 @@
         operation: {
           op: 'add',
           jsonPath: "..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*%s')].typed_config.config" % (import './security-policy-suffix.libsonnet'),
-          path: 'preserve_authorization_header',
-          value: false,
+          path: 'forward_bearer_token',
+          value: true,
         },
       },
     ],
