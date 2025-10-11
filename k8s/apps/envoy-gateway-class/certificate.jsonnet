@@ -7,6 +7,7 @@
   },
   spec: {
     dnsNames: [
+      '*.local.walnuts.dev',
       '*.walnuts.dev',
       'walnuts.dev',
     ],
