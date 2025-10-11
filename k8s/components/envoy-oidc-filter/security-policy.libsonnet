@@ -4,10 +4,7 @@
   redirect_url:: error 'redirect_url is required',
   logout_path:: null,
   client_id:: error 'client_id is required',
-  client_secret_ref:: {
-    name: error 'client_secret.name is required',
-    key: error 'client_secret.key is required',
-  },
+  client_secret_secret_name:: error 'client_secret_secret_name is required',
   targetRef:: error 'targetRef is required',
 
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
@@ -24,8 +21,7 @@
       },
       clientID: $.client_id,
       clientSecret: {
-        name: $.client_secret_ref.name,
-        key: $.client_secret_ref.key,
+        name: $.client_secret_secret_name,
       },
       redirectURL: $.redirect_url,
       logoutPath: $.logout_path,
