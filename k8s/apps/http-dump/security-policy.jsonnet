@@ -1,4 +1,4 @@
-(import '../../components/envoy-oidc-filter/security-policy.libsonnet')({
+(import '../../components/envoy-oidc-filter/security-policy.libsonnet') {
   name: (import 'app.json5').name + '-oidc',
   namespace: (import 'app.json5').namespace,
   redirect_url: 'https://httptest.walnuts.dev/oauth2/callback',
@@ -13,4 +13,4 @@
     kind: 'HTTPRoute',
     name: (import 'httproute.jsonnet').metadata.name,
   },
-})
+}
