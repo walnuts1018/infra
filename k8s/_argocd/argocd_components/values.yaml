@@ -124,12 +124,12 @@ repoServer:
     targetCPUUtilizationPercentage: null
     targetMemoryUtilizationPercentage: 100
   resources:
+    requests:
+      cpu: 48m
+      memory: 120Mi
     limits:
       cpu: 500m
       memory: 512Mi
-    requests:
-      cpu: 48m
-      memory: 96Mi
 
 applicationSet:
   metrics:
