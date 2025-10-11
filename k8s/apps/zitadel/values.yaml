@@ -17,7 +17,7 @@ zitadel:
   masterkeySecretName: "zitadel"
   configSecretName: zitadel
   configSecretKey: "config.yaml"
-replicaCount: 2
+replicaCount: 1
 ingress:
   enabled: true
   className: "nginx"
