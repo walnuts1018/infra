@@ -3,8 +3,7 @@ kind: Application
 metadata:
   name: envoy-gateway
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/manifest-generate-paths: .;../components
+
 spec:
   project: default
   destination:

@@ -3,8 +3,7 @@ kind: Application
 metadata:
   name: cloudflare-tunnel
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/manifest-generate-paths: .;../components
+
 spec:
   project: default
   destination:

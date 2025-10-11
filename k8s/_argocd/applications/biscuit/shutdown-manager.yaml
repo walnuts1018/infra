@@ -3,8 +3,7 @@ kind: Application
 metadata:
   name: shutdown-manager
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/manifest-generate-paths: .;../components
+
 spec:
   project: default
   destination:
