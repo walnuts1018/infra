@@ -6,6 +6,10 @@
     reload
     ready
     cache
+    forward . 1.1.1.1 1.0.0.1 {
+        tls_servername cloudflare-dns.com
+        force_tcp
+    }
 }
 
 . {
@@ -14,10 +18,6 @@
         lameduck 5s
     }
     prometheus :9153
-    forward . 1.1.1.1 1.0.0.1 {
-        tls_servername cloudflare-dns.com
-        force_tcp
-    }
 }
 
 # http://.:443 {
