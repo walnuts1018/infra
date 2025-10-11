@@ -4,10 +4,7 @@
   redirect_url: 'https://httptest.walnuts.dev/oauth2/callback',
   logout_path: '/logout',
   client_id: '341715627427299826',
-  client_secret_ref: {
-    name: (import './external-secret-oidc.jsonnet').spec.target.name,
-    key: 'client-secret',
-  },
+  client_secret_secret_name: (import './external-secret-oidc.jsonnet').spec.target.name,
   targetRef: {
     group: 'gateway.networking.k8s.io',
     kind: 'HTTPRoute',
