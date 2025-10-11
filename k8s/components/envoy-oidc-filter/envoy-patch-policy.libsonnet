@@ -34,6 +34,36 @@
           value: true,
         },
       },
+      {
+        type: 'type.googleapis.com/envoy.config.listener.v3.Listener',
+        name: 'envoy-gateway-system/envoy-gateway/%s' % listener.name,
+        operation: {
+          op: 'add',
+          jsonPath: "..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*%s')].typed_config.config" % (import './security-policy-suffix.libsonnet'),
+          path: 'disable_id_token_set_cookie',
+          value: true,
+        },
+      },
+      {
+        type: 'type.googleapis.com/envoy.config.listener.v3.Listener',
+        name: 'envoy-gateway-system/envoy-gateway/%s' % listener.name,
+        operation: {
+          op: 'add',
+          jsonPath: "..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*%s')].typed_config.config" % (import './security-policy-suffix.libsonnet'),
+          path: 'disable_access_token_set_cookie',
+          value: true,
+        },
+      },
+      {
+        type: 'type.googleapis.com/envoy.config.listener.v3.Listener',
+        name: 'envoy-gateway-system/envoy-gateway/%s' % listener.name,
+        operation: {
+          op: 'add',
+          jsonPath: "..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*%s')].typed_config.config" % (import './security-policy-suffix.libsonnet'),
+          path: 'disable_refresh_token_set_cookie',
+          value: true,
+        },
+      },
     ], (import '../../apps/envoy-gateway-class/gateway.jsonnet').spec.listeners),
   },
 }
