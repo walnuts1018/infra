@@ -1,7 +1,7 @@
 (import '../../components/envoy-oidc-filter/security-policy.libsonnet') {
   name: (import 'app.json5').name + '-oidc',
   namespace: (import 'app.json5').namespace,
-  redirect_url: 'https://httptest.local.walnuts.dev/oauth2/callback',
+  redirect_url: 'https://httptest-envoy.walnuts.dev/oauth2/callback',
   logout_path: '/logout',
   client_id: '341715627427299826',
   client_secret_secret_name: (import './external-secret-oidc.jsonnet').spec.target.name,
