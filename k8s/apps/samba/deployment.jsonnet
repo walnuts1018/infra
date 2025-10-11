@@ -74,6 +74,10 @@
                 mountPath: '/samba-share',
               },
               {
+                name: 'root',
+                mountPath: '/samba-share/target',
+              },
+              {
                 name: 'books',
                 mountPath: '/samba-share/books',
               },
@@ -116,6 +120,12 @@
             hostPath: {
               path: '/mnt/data/share',
               type: 'Directory',
+            },
+          },
+          {
+            name: 'root',
+            persistentVolumeClaim: {
+              claimName: (import 'pvc-root.jsonnet').metadata.name,
             },
           },
           {
