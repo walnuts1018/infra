@@ -7,8 +7,8 @@ tenant:
         cpu: 5m
         memory: 300Mi
       limits:
-        cpu: 200m
-        memory: 1Gi
+        cpu: 500m
+        memory: 2Gi
     storageClassName: local-path
     servers: 4
     size: 32Gi
