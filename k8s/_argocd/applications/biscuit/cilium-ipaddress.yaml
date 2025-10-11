@@ -3,8 +3,7 @@ kind: Application
 metadata:
   name: cilium-ipaddress
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/manifest-generate-paths: .;../components
+
 spec:
   project: default
   destination:
