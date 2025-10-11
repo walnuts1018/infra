@@ -10,7 +10,7 @@
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'SecurityPolicy',
   metadata: {
-    name: $.name,
+    name: $.name + (import 'security-policy-suffix.libsonnet'),
     namespace: $.namespace,
   },
   spec: {
