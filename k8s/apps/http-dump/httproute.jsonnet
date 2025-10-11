@@ -13,7 +13,7 @@
       },
     ],
     hostnames: [
-      'httptest-envoy.walnuts.dev',
+      'httptest.local.walnuts.dev',
     ],
     rules: [
       {
