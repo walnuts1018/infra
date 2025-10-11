@@ -14,7 +14,7 @@
     issuerRef: {
       group: 'cert-manager.io',
       kind: 'ClusterIssuer',
-      name: (import '../clusterissuer/letsencrypt-stg.jsonnet').metadata.name,
+      name: (import '../clusterissuer/letsencrypt-prod.jsonnet').metadata.name,
     },
     secretName: 'envoy-gateway-cert',
   },
