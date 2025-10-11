@@ -18,6 +18,21 @@
           },
         },
       },
+      {
+        name: 'https',
+        protocol: 'HTTPS',
+        port: 443,
+        tls: {
+          mode: 'Terminate',
+          certificateRefs: [
+            {
+              kind: 'Secret',
+              name: (import './certificate.jsonnet').spec.secretName,
+              group: '',
+            },
+          ],
+        },
+      },
     ],
   },
 }
