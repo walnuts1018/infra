@@ -1,18 +1,16 @@
 {
   name:: error 'name is required',
-  namespace:: error 'namespace is required',
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'EnvoyPatchPolicy',
   metadata: {
     name: $.name + '-oidc-patch',
-    namespace: $.namespace,
+    namespace: (import '../../apps/envoy-gateway-class/gateway.jsonnet').metadata.namespace,
   },
   spec: {
     targetRef: {
       group: 'gateway.networking.k8s.io',
       kind: 'Gateway',
       name: (import '../../apps/envoy-gateway-class/gateway.jsonnet').metadata.name,
-      namespace: (import '../../apps/envoy-gateway-class/gateway.jsonnet').metadata.namespace,
     },
     type: 'JSONPatch',
     jsonPatches: [
