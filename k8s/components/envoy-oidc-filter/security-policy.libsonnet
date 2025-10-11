@@ -25,6 +25,9 @@
       },
       redirectURL: $.redirect_url,
       logoutPath: $.logout_path,
+      cookieNames: {
+        idToken: 'IdToken',
+      },
     },
   },
 }
