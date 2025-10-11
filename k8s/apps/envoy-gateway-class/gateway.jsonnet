@@ -32,6 +32,11 @@
             },
           ],
         },
+        allowedRoutes: {
+          namespaces: {
+            from: 'All',
+          },
+        },
       },
     ],
   },
