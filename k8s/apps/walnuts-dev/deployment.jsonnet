@@ -27,13 +27,13 @@
               },
             ],
             resources: {
+              requests: {
+                cpu: '8m',
+                memory: '160Mi',
+              },
               limits: {
                 cpu: '500m',
                 memory: '512Mi',
-              },
-              requests: {
-                cpu: '8m',
-                memory: '120Mi',
               },
             },
             env: [
