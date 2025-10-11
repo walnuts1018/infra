@@ -70,12 +70,8 @@
             ],
             volumeMounts: [
               {
-                name: 'samba-local-dir',
-                mountPath: '/samba-share',
-              },
-              {
                 name: 'root',
-                mountPath: '/samba-share/target',
+                mountPath: '/samba-share',
               },
               {
                 name: 'books',
