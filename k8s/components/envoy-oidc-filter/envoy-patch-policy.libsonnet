@@ -14,26 +14,28 @@
     },
     type: 'JSONPatch',
     jsonPatches: [
-      {
-        type: 'type.googleapis.com/envoy.config.listener.v3.Listener',
-        name: 'envoy-gateway-system/envoy-gateway/http',
-        operation: {
-          op: 'add',
-          jsonPath: "..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*%s')].typed_config.config" % (import './security-policy-suffix.libsonnet'),
-          path: 'preserve_authorization_header',
-          value: false,
+      std.flatMap(function(listener) [
+        {
+          type: 'type.googleapis.com/envoy.config.listener.v3.Listener',
+          name: 'envoy-gateway-system/envoy-gateway/%s' % listener.name,
+          operation: {
+            op: 'add',
+            jsonPath: "..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*%s')].typed_config.config" % (import './security-policy-suffix.libsonnet'),
+            path: 'preserve_authorization_header',
+            value: false,
+          },
         },
-      },
-      {
-        type: 'type.googleapis.com/envoy.config.listener.v3.Listener',
-        name: 'envoy-gateway-system/envoy-gateway/http',
-        operation: {
-          op: 'add',
-          jsonPath: "..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*%s')].typed_config.config" % (import './security-policy-suffix.libsonnet'),
-          path: 'forward_bearer_token',
-          value: true,
+        {
+          type: 'type.googleapis.com/envoy.config.listener.v3.Listener',
+          name: 'envoy-gateway-system/envoy-gateway/%s' % listener.name,
+          operation: {
+            op: 'add',
+            jsonPath: "..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*%s')].typed_config.config" % (import './security-policy-suffix.libsonnet'),
+            path: 'forward_bearer_token',
+            value: true,
+          },
         },
-      },
+      ], (import '../../apps/envoy-gateway-class/gateway.jsonnet').spec.listeners),
     ],
   },
 }
