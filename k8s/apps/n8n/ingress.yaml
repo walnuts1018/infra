@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: n8n
+    app.kubernetes.io/name: n8n
+  name: n8n
+  namespace: n8n
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: n8n.walnuts.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: n8n
+                port:
+                  name: http
+            path: /
+            pathType: Prefix

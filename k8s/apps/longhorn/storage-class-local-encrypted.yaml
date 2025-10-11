@@ -1,0 +1,21 @@
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-local-encrypted
+parameters:
+  csi.storage.k8s.io/node-expand-secret-name: ${pvc.name}
+  csi.storage.k8s.io/node-expand-secret-namespace: ${pvc.namespace}
+  csi.storage.k8s.io/node-publish-secret-name: ${pvc.name}
+  csi.storage.k8s.io/node-publish-secret-namespace: ${pvc.namespace}
+  csi.storage.k8s.io/node-stage-secret-name: ${pvc.name}
+  csi.storage.k8s.io/node-stage-secret-namespace: ${pvc.namespace}
+  csi.storage.k8s.io/provisioner-secret-name: ${pvc.name}
+  csi.storage.k8s.io/provisioner-secret-namespace: ${pvc.namespace}
+  dataLocality: best-effort
+  encrypted: "true"
+  fromBackup: ""
+  numberOfReplicas: "1"
+  staleReplicaTimeout: "30"
+provisioner: driver.longhorn.io
+reclaimPolicy: Retain

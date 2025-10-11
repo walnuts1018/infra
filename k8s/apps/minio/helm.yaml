@@ -1,0 +1,110 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio-default-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: minio
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: tenant
+    helm:
+      releaseName: minio-default
+      valuesObject:
+        ingress:
+          api:
+            enabled: true
+            host: minio.walnuts.dev
+            ingressClassName: cilium
+            path: /
+            pathType: Prefix
+          console:
+            enabled: true
+            host: minio-console.walnuts.dev
+            ingressClassName: cilium
+            path: /
+            pathType: Prefix
+        tenant:
+          buckets:
+            - name: loki-admin
+              region: ap-northeast-1
+            - name: loki-chunks
+              region: ap-northeast-1
+            - name: loki-ruler
+              region: ap-northeast-1
+            - name: misskey
+              region: ap-northeast-1
+            - name: mpeg-dash-encoder-output
+              region: ap-northeast-1
+            - name: mpeg-dash-encoder-source-upload
+              region: ap-northeast-1
+            - name: mucaron
+              region: ap-northeast-1
+            - name: oekaki-dengon-game
+              region: ap-northeast-1
+            - name: ipu
+              region: ap-northeast-1
+            - name: tempo
+              region: ap-northeast-1
+            - name: tf-state
+              region: ap-northeast-1
+            - name: zalando-backup
+              region: ap-northeast-1
+          certificate:
+            requestAutoCert: false
+          configSecret:
+            existingSecret: true
+            name: minio-default-storage-config-3b8673
+          env:
+            - name: MINIO_SERVER_URL
+              value: https://minio.walnuts.dev
+            - name: MINIO_BROWSER_REDIRECT_URL
+              value: https://minio-console.walnuts.dev
+            - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+              value: https://auth.walnuts.dev/.well-known/openid-configuration
+            - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+              value: 241002618523026212@walnuts.dev
+            - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
+              value: minio-policy
+            - name: MINIO_IDENTITY_OPENID_SCOPES
+              value: openid,profile,email
+            - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
+              value: https://minio-console.walnuts.dev/oauth_callback
+            - name: MINIO_IDENTITY_OPENID_DISPLAY_NAME
+              value: Walnuts.dev
+          features:
+            bucketDNS: true
+            domains:
+              console: minio-console.walnuts.dev
+              minio:
+                - minio.walnuts.dev
+          metrics:
+            enabled: true
+            port: 9000
+            protocol: http
+          name: default
+          pools:
+            - name: pool-localdisk
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 2Gi
+                requests:
+                  cpu: 5m
+                  memory: 300Mi
+              servers: 4
+              size: 32Gi
+              storageClassName: local-path
+              volumesPerServer: 1
+          users: []
+    repoURL: https://operator.min.io/
+    targetRevision: 7.1.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: openchokin-front
+    app.kubernetes.io/name: openchokin-front
+  name: openchokin-front
+  namespace: openchokin
+spec:
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: openchokin-front
+    app.kubernetes.io/name: openchokin-front
+  type: ClusterIP

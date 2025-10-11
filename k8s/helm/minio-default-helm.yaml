@@ -1,0 +1,154 @@
+---
+# Source: tenant/templates/api-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: default
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: minio.walnuts.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port:
+                  name: http-minio
+    - host: "*.minio.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port:
+                  name: http-minio
+---
+# Source: tenant/templates/console-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: default-console
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: minio-console.walnuts.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: default-console
+                port:
+                  name: http-console
+---
+# Source: tenant/templates/checks.yaml
+# If an existing secret is used, do not set access-key and secret-key explicitly
+# (note that we allow the default settings in values.yaml)
+
+# If configuration.name is set and not the same as configSecret.name,
+# then we should raise an error and abort
+---
+# Source: tenant/templates/tenant.yaml
+apiVersion: minio.min.io/v2
+kind: Tenant
+metadata:
+  name: default
+  ## Optionally pass labels to be applied to the statefulset pods
+  labels:
+    app: minio
+  ## Annotations for MinIO Tenant Pods
+  annotations:
+    prometheus.io/path: /minio/v2/metrics/cluster
+    prometheus.io/port: "9000"
+    prometheus.io/scrape: "true"
+    prometheus.io/scheme: "http"
+spec:
+  image: "quay.io/minio/minio:RELEASE.2025-04-08T15-41-24Z"
+  imagePullPolicy: IfNotPresent
+  ## Secret with default environment variable configurations
+  configuration:
+    name: minio-default-storage-config-3b8673
+  poolsMetadata:
+    annotations: {}
+    labels: {}
+  pools:
+    - servers: 4
+      name: pool-localdisk
+      volumesPerServer: 1
+      volumeClaimTemplate:
+        metadata:
+          name: data
+        spec:
+          storageClassName: local-path
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 32Gi
+      resources:
+        limits:
+          cpu: 500m
+          memory: 2Gi
+        requests:
+          cpu: 5m
+          memory: 300Mi
+  mountPath: /export
+  subPath: /data
+  requestAutoCert: false
+  features:
+    bucketDNS: true
+    domains:
+      console: minio-console.walnuts.dev
+      minio:
+      - minio.walnuts.dev
+    enableSFTP: false
+  buckets:
+    - name: loki-admin
+      region: ap-northeast-1
+    - name: loki-chunks
+      region: ap-northeast-1
+    - name: loki-ruler
+      region: ap-northeast-1
+    - name: misskey
+      region: ap-northeast-1
+    - name: mpeg-dash-encoder-output
+      region: ap-northeast-1
+    - name: mpeg-dash-encoder-source-upload
+      region: ap-northeast-1
+    - name: mucaron
+      region: ap-northeast-1
+    - name: oekaki-dengon-game
+      region: ap-northeast-1
+    - name: ipu
+      region: ap-northeast-1
+    - name: tempo
+      region: ap-northeast-1
+    - name: tf-state
+      region: ap-northeast-1
+    - name: zalando-backup
+      region: ap-northeast-1
+  podManagementPolicy: Parallel
+  prometheusOperator: false
+  env:
+    - name: MINIO_SERVER_URL
+      value: https://minio.walnuts.dev
+    - name: MINIO_BROWSER_REDIRECT_URL
+      value: https://minio-console.walnuts.dev
+    - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+      value: https://auth.walnuts.dev/.well-known/openid-configuration
+    - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+      value: 241002618523026212@walnuts.dev
+    - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
+      value: minio-policy
+    - name: MINIO_IDENTITY_OPENID_SCOPES
+      value: openid,profile,email
+    - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
+      value: https://minio-console.walnuts.dev/oauth_callback
+    - name: MINIO_IDENTITY_OPENID_DISPLAY_NAME
+      value: Walnuts.dev
