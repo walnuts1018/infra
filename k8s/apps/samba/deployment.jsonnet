@@ -107,9 +107,6 @@
             securityContext:: null,
           },
         ],
-        nodeSelector: {
-          'kubernetes.io/hostname': 'cake',
-        },
         volumes: [
           {
             name: 'samba-local-dir',
