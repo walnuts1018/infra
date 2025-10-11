@@ -24,8 +24,8 @@
       },
       clientID: $.client_id,
       clientSecret: {
-        name: $.client_secret.name,
-        key: $.client_secret.key,
+        name: $.client_secret_ref.name,
+        key: $.client_secret_ref.key,
       },
       redirectURL: $.redirect_url,
       logoutPath: $.logout_path,
