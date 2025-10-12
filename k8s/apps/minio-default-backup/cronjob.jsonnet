@@ -22,7 +22,7 @@
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'rclone',
-                  image: 'ghcr.io/rclone/rclone:1.71.1',
+                  image: 'public.ecr.aws/aws-cli/aws-cli:2.31.13',
                   command: [
                     // '/bin/ash',
                     // '/scripts/backup.sh',
@@ -78,11 +78,6 @@
                     {
                       name: 'tmp',
                       mountPath: '/tmp',
-                    },
-                    {
-                      name: 'aws-cli',
-                      mountPath: '/aws-cli',
-                      readOnly: true,
                     },
                   ],
                 }, {
@@ -164,12 +159,6 @@
               {
                 name: 'tmp',
                 emptyDir: {},
-              },
-              {
-                name: 'aws-cli',
-                image: {
-                  reference: 'public.ecr.aws/aws-cli/aws-cli:2.31.13',
-                },
               },
             ],
           },
