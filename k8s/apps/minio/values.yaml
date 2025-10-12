@@ -18,9 +18,9 @@ tenant:
     #   fsGroupChangePolicy: OnRootMismatch
     #   runAsGroup: 1000
     #   runAsUser: 1000
-    # annotations:
-    #   instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
-    #   instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/usr/bin/minio'
+    annotations:
+      instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
+      instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/usr/bin/minio'
   certificate:
     requestAutoCert: false
   configSecret:
