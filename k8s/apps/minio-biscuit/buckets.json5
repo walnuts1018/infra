@@ -1,5 +1,5 @@
 [
     "longhorn-backup",
-    "minio-backup",
+    "minio-default-backup",
     "velero-backup",
 ]
