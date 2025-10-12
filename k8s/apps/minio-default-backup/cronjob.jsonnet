@@ -43,7 +43,7 @@
                     {
                       name: 'rclone',
                       mountPath: '/usr/bin/rclone',
-                      subPath: '/usr/bin/rclone',
+                      subPath: 'usr/bin/rclone',
                     },
                     {
                       name: 'minio-default-sts-token',
