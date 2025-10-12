@@ -6,4 +6,11 @@ aws sts assume-role-with-web-identity \
   --web-identity-token file:///var/run/secrets/sts.min.io/serviceaccount/token \
   --endpoint-url https://sts.minio-operator.svc.cluster.local:4223/sts/minio \
   --ca-bundle /etc/ssl/certs/trust-bundle.pem \
-  --region ap-northeast-1
+  --region ap-northeast-1 | \
+  jq '{
+    Version: 1,
+    AccessKeyId: .Credentials.AccessKeyId,
+    SecretAccessKey: .Credentials.SecretAccessKey,
+    SessionToken: .Credentials.SessionToken,
+    Expiration: .Credentials.Expiration
+  }'
