@@ -3,7 +3,6 @@ region = ap-northeast-1
 role_arn = arn:aws:iam::dummy:role/minio-default-backup
 web_identity_token_file = /var/run/secrets/sts.min.io/serviceaccount/token
 ca_bundle = /etc/ssl/certs/trust-bundle.pem
-endpoint_url = http://minio.minio.svc.cluster.local
 sts_regional_endpoints = legacy
 sts =
   endpoint_url = https://sts.minio-operator.svc.cluster.local:4223/sts/minio
