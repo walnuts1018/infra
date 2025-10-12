@@ -52,6 +52,10 @@
                       name: 'AWS_ENDPOINT_URL_STS',
                       value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/minio',
                     },
+                    {
+                      name: 'AWS_ROLE_ARN',
+                      value: 'arn:aws:iam::dummy:role/ipu',
+                    },
                   ],
                   volumeMounts: [
                     {
