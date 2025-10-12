@@ -22,7 +22,7 @@
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'rclone',
-                  image: 'ghcr.io/rclone/rclone:1.71.1',
+                  image: 'public.ecr.aws/aws-cli/aws-cli:2.31.13',
                   command: [
                     // '/bin/ash',
                     // '/scripts/backup.sh',
@@ -58,6 +58,10 @@
                     },
                   ],
                   volumeMounts: [
+                    {
+                      name: 'rclone',
+                      mountPath: '/usr/bin/rclone',
+                    },
                     {
                       name: 'minio-default-sts-token',
                       mountPath: '/var/run/secrets/sts.min.io/serviceaccount',
@@ -106,6 +110,12 @@
               ),
             ],
             volumes: [
+              {
+                name: 'rclone',
+                image: {
+                  reference: 'ghcr.io/rclone/rclone:1.71.1',
+                },
+              },
               {
                 name: 'minio-default-sts-token',
                 projected: {
