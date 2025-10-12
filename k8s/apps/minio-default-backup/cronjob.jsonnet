@@ -168,7 +168,7 @@
               {
                 name: 'aws-cli',
                 image: {
-                  name: 'public.ecr.aws/aws-cli/aws-cli:2.31.13',
+                  reference: 'public.ecr.aws/aws-cli/aws-cli:2.31.13',
                 },
               },
             ],
