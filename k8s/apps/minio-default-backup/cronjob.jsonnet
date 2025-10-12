@@ -42,7 +42,7 @@
                   volumeMounts: [
                     {
                       name: 'rclone',
-                      mountPath: '/usr/bin/rclone',
+                      mountPath: '/rclone',
                       subPath: 'usr/local/bin/rclone',
                     },
                     {
