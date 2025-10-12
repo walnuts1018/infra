@@ -129,7 +129,7 @@
               {
                 name: 'aws-credentials',
                 secret: {
-                  name: (import 'external-secret-aws.jsonnet').spec.target.name,
+                  secretName: (import 'external-secret-aws.jsonnet').spec.target.name,
                   items: [
                     {
                       key: 'credentials',
