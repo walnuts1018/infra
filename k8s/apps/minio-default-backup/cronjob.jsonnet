@@ -79,6 +79,11 @@
                       name: 'tmp',
                       mountPath: '/tmp',
                     },
+                    {
+                      name: 'aws-cli',
+                      mountPath: '/aws-cli',
+                      readOnly: true,
+                    },
                   ],
                 }, {
                   securityContext: {
@@ -159,6 +164,12 @@
               {
                 name: 'tmp',
                 emptyDir: {},
+              },
+              {
+                name: 'aws-cli',
+                image: {
+                  name: 'public.ecr.aws/aws-cli/aws-cli:2.31.13',
+                },
               },
             ],
           },
