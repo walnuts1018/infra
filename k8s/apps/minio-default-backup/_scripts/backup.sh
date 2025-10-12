@@ -19,8 +19,7 @@ log() {
 log "info" "Starting backup process"
 
 for BUCKET in $(rclone lsf minio-default: --dirs-only --config=/config/rclone.conf | sed 's/\///g'); do
-    aws s3api get-bucket-tagging --profile minio-default --bucket "${BUCKET}" 2>/dev/null | jq -e '.TagSet[] | select(.Key == "skip-backup")' > /dev/null
-    if [[ $? -eq 0 ]]; then
+    if aws s3api get-bucket-tagging --profile minio-default --bucket "${BUCKET}" 2>/dev/null | jq -e '.TagSet[] | select(.Key == "skip-backup")' > /dev/null 2>&1; then
         log "info" "Skipping bucket due to skip-backup tag" bucket="${BUCKET}"
         continue
     fi
