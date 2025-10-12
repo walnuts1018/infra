@@ -39,24 +39,6 @@
                       memory: '2Gi',
                     },
                   },
-                  env: [
-                    {
-                      name: 'AWS_CA_BUNDLE',
-                      value: '/etc/ssl/certs/trust-bundle.pem',
-                    },
-                    {
-                      name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-                      value: '/var/run/secrets/sts.min.io/serviceaccount/token',
-                    },
-                    {
-                      name: 'AWS_ENDPOINT_URL_STS',
-                      value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/minio',
-                    },
-                    {
-                      name: 'AWS_ROLE_ARN',
-                      value: 'arn:aws:iam::dummy:role/ipu',
-                    },
-                  ],
                   volumeMounts: [
                     {
                       name: 'rclone',
