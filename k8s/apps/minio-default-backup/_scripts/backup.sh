@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/ash
+# shellcheck shell=dash
 
 log() {
     local level="$1"
@@ -7,9 +8,9 @@ log() {
     timestamp=$(date '+%Y-%m-%dT%H:%M:%S%z')
     
     shift 2
-    local json="{\"level\":\"$level\",\"ts\":$timestamp,\"msg\":\"$msg\""
-    while [[ $# -gt 0 ]]; do
-        json+=",\"$1\":\"$2\""
+    local json="{\"level\":\"$level\",\"time\":$timestamp,\"msg\":\"$msg\""
+    while [ $# -gt 0 ]; do
+        json="$json,\"$1\":\"$2\""
         shift 2
     done
     echo "$json}"
@@ -23,7 +24,7 @@ for BUCKET in $(rclone lsf minio-default: --dirs-only --config=/config/rclone.co
     DEST_PATH="minio-biscuit:minio-default-backup/${BUCKET}"
     log "info" "Sync started" source="${SOURCE_PATH}" dest="${DEST_PATH}"
     rclone sync --config=/config/rclone.conf -v "${SOURCE_PATH}" "${DEST_PATH}"
-    if [[ $? -eq 0 ]]; then
+    if [ $? -eq 0 ]; then
         log "info" "Sync completed successfully" source="${SOURCE_PATH}" dest="${DEST_PATH}"
     else
         log "error" "Sync failed" source="${SOURCE_PATH}" dest="${DEST_PATH}"

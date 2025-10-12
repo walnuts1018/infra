@@ -22,7 +22,7 @@
                   name: 'rclone',
                   image: 'ghcr.io/rclone/rclone:1.71.1',
                   command: [
-                    // '/bin/bash',
+                    // '/bin/ash',
                     // '/scripts/backup.sh',
                     'sleep',
                     'infinity',
