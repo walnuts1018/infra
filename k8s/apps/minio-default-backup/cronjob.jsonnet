@@ -75,9 +75,8 @@
                     },
                     {
                       name: 'backup-script',
-                      mountPath: '/scripts/backup.sh',
+                      mountPath: '/scripts',
                       readOnly: true,
-                      subPath: 'backup.sh',
                     },
                     {
                       name: 'tmp',
@@ -158,12 +157,6 @@
                 name: 'backup-script',
                 configMap: {
                   name: (import 'configmap-script.jsonnet').metadata.name,
-                  items: [
-                    {
-                      key: 'backup.sh',
-                      path: 'backup.sh',
-                    },
-                  ],
                 },
               },
               {
