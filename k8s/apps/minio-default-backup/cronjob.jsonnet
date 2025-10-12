@@ -80,7 +80,11 @@
                       mountPath: '/tmp',
                     },
                   ],
-                }, {}
+                }, {
+                  securityContext: {
+                    readOnlyRootFilesystem: false,
+                  },
+                }
               ),
             ],
             volumes: [
