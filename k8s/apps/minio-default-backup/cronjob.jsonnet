@@ -12,6 +12,13 @@
     jobTemplate: {
       spec: {
         template: {
+          metadata: {
+            labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+            annotations: {
+              'instrumentation.opentelemetry.io/inject-go': 'opentelemetry-collector/default',
+              'instrumentation.opentelemetry.io/otel-go-auto-target-exe': '/usr/local/bin/rclone',
+            },
+          },
           spec: {
             serviceAccountName: (import 'sa.jsonnet').metadata.name,
             restartPolicy: 'OnFailure',
