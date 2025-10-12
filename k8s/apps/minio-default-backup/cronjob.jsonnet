@@ -14,7 +14,6 @@
         template: {
           spec: {
             serviceAccountName: (import 'sa.jsonnet').metadata.name,
-            hostNetwork: true,
             restartPolicy: 'OnFailure',
             containers: [
               std.mergePatch(
