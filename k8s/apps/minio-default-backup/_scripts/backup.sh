@@ -18,6 +18,8 @@ log() {
 
 log "info" "Starting backup process"
 
+HAS_ERROR=0
+
 for BUCKET in $(rclone lsf minio-default: --dirs-only --config=/config/rclone.conf | sed 's/\///g'); do
     if aws s3api get-bucket-tagging --profile minio-default --bucket "${BUCKET}" 2>/dev/null | jq -e '.TagSet[] | select(.Key == "skip-backup")' > /dev/null; then
         log "info" "Skipping bucket due to skip-backup tag" bucket "${BUCKET}"
@@ -32,7 +34,13 @@ for BUCKET in $(rclone lsf minio-default: --dirs-only --config=/config/rclone.co
         log "info" "Sync completed successfully" source "${SOURCE_PATH}" dest "${DEST_PATH}"
     else
         log "error" "Sync failed" source "${SOURCE_PATH}" dest "${DEST_PATH}"
+        HAS_ERROR=1
     fi
 done
 
-log "info" "Backup process completed"
+if [[ ${HAS_ERROR} -eq 1 ]]; then
+    log "error" "Backup process completed with errors"
+    exit 1
+else
+    log "info" "Backup process completed successfully"
+fi
