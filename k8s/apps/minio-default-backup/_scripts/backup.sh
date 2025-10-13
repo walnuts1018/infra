@@ -19,8 +19,8 @@ log() {
 log "info" "Starting backup process"
 
 for BUCKET in $(rclone lsf minio-default: --dirs-only --config=/config/rclone.conf | sed 's/\///g'); do
-    if aws s3api get-bucket-tagging --profile minio-default --bucket "${BUCKET}" 2>/dev/null | jq -e '.TagSet[] | select(.Key == "skip-backup")' > /dev/null 2>&1; then
-        log "info" "Skipping bucket due to skip-backup tag" bucket="${BUCKET}"
+    if aws s3api get-bucket-tagging --profile minio-default --bucket "${BUCKET}" 2>/dev/null | jq -e '.TagSet[] | select(.Key == "skip-backup")' > /dev/null; then
+        log "info" "Skipping bucket due to skip-backup tag" bucket "${BUCKET}"
         continue
     fi
 
@@ -29,9 +29,9 @@ for BUCKET in $(rclone lsf minio-default: --dirs-only --config=/config/rclone.co
     log "info" "Sync started" source="${SOURCE_PATH}" dest="${DEST_PATH}"
     rclone sync --config=/config/rclone.conf -v "${SOURCE_PATH}" "${DEST_PATH}"
     if [[ $? -eq 0 ]]; then
-        log "info" "Sync completed successfully" source="${SOURCE_PATH}" dest="${DEST_PATH}"
+        log "info" "Sync completed successfully" source "${SOURCE_PATH}" dest "${DEST_PATH}"
     else
-        log "error" "Sync failed" source="${SOURCE_PATH}" dest="${DEST_PATH}"
+        log "error" "Sync failed" source "${SOURCE_PATH}" dest "${DEST_PATH}"
     fi
 done
 
