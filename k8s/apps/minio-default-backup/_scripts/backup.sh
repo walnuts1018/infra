@@ -26,7 +26,7 @@ for BUCKET in $(rclone lsf minio-default: --dirs-only --config=/config/rclone.co
 
     SOURCE_PATH="minio-default:${BUCKET}"
     DEST_PATH="minio-biscuit:minio-default-backup/${BUCKET}"
-    log "info" "Sync started" source="${SOURCE_PATH}" dest="${DEST_PATH}"
+    log "info" "Sync started" source "${SOURCE_PATH}" dest "${DEST_PATH}"
     rclone sync --config=/config/rclone.conf -v "${SOURCE_PATH}" "${DEST_PATH}"
     if [[ $? -eq 0 ]]; then
         log "info" "Sync completed successfully" source "${SOURCE_PATH}" dest "${DEST_PATH}"
