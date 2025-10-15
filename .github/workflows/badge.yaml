@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: setup tailscale
-        uses: tailscale/github-action@6cae46e2d796f265265cfcf628b72a32b4d7cade # v3.3.0
+        uses: tailscale/github-action@aa604318b61e5b25107287e0d07db6a08b3e72c0 # v4.0.2
         with:
           oauth-client-id: ${{secrets.TAILSCALE_CLIENT_ID}}
           oauth-secret: ${{secrets.TAILSCALE_SECRET}}
