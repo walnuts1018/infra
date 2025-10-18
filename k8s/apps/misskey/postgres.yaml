@@ -1,0 +1,37 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: misskey-postgresql
+spec:
+  bootstrap:
+    initdb:
+      database: misskey
+      owner: misskey
+      secret:
+        name: misskey-db-password-5e4bd8
+  instances: 2
+  plugins:
+    - isWALArchiver: true
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: minio-store
+  projectedVolumeTemplate:
+    sources:
+      - serviceAccountToken:
+          audience: sts.min.io
+          expirationSeconds: 86400
+          path: sts.min.io/serviceaccount/token
+      - configMap:
+          items:
+            - key: trust-bundle.pem
+              path: certificate/trust-bundle.pem
+          name: local-ca-bundle
+  resources:
+    requests:
+      cpu: 20m
+      memory: 150Mi
+  storage:
+    size: 10Gi
+    storageClass: local-path
+  superuserSecret:
+    name: superuser-secret

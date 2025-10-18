@@ -1,0 +1,11 @@
+apiVersion: sts.min.io/v1alpha1
+kind: PolicyBinding
+metadata:
+  name: minio-default-backup
+  namespace: minio
+spec:
+  application:
+    namespace: minio
+    serviceaccount: minio-default-backup
+  policies:
+    - readwrite

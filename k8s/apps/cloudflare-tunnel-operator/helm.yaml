@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudflare-tunnel-operator-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: cloudflare-tunnel-operator
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: cloudflare-tunnel-operator
+    helm:
+      releaseName: cloudflare-tunnel-operator
+      valuesObject:
+        cloudflareToken:
+          cloudflareAccountID: 38b5eab012d216dfcc52dcd69e7764b5
+          cloudflareZoneID: 48b02398c8bc932f4d0b1dba83de196c
+          existingSecret: cloudflare-tunnel-operator
+        controllerManager:
+          manager:
+            resources:
+              limits:
+                cpu: 500m
+                memory: 128Mi
+              requests:
+                cpu: 1m
+                memory: 32Mi
+    repoURL: https://walnuts1018.github.io/cloudflare-tunnel-operator/
+    targetRevision: 1.6.2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

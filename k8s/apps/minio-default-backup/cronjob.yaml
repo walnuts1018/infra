@@ -1,0 +1,108 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: minio-default-backup
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: minio-default-backup
+            app.kubernetes.io/name: minio-default-backup
+        spec:
+          containers:
+            - args:
+                - export PATH=$PATH:/rclone && bash /scripts/backup.sh
+              command:
+                - /usr/bin/bash
+                - -c
+              image: public.ecr.aws/aws-cli/aws-cli:2.31.18
+              name: rclone
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: 2Gi
+                requests:
+                  cpu: 10m
+                  memory: 10Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: false
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /rclone
+                  name: rclone
+                  subPath: usr/local/bin
+                - mountPath: /var/run/secrets/sts.min.io/serviceaccount
+                  name: minio-default-sts-token
+                  readOnly: true
+                - mountPath: /etc/ssl/certs/trust-bundle.pem
+                  name: local-ca-bundle
+                  readOnly: true
+                  subPath: trust-bundle.pem
+                - mountPath: /root/.aws/config
+                  name: aws-config
+                  readOnly: true
+                  subPath: config
+                - mountPath: /root/.aws/credentials
+                  name: aws-credentials
+                  readOnly: true
+                  subPath: credentials
+                - mountPath: /config/rclone.conf
+                  name: rclone-config
+                  readOnly: true
+                  subPath: rclone.conf
+                - mountPath: /scripts
+                  name: backup-script
+                  readOnly: true
+                - mountPath: /tmp
+                  name: tmp
+          restartPolicy: OnFailure
+          serviceAccountName: minio-default-backup
+          volumes:
+            - image:
+                reference: ghcr.io/rclone/rclone:1.71.1
+              name: rclone
+            - name: minio-default-sts-token
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      audience: sts.min.io
+                      expirationSeconds: 86400
+                      path: token
+            - configMap:
+                name: local-ca-bundle
+              name: local-ca-bundle
+            - configMap:
+                items:
+                  - key: rclone.conf
+                    path: rclone.conf
+                name: minio-default-backup-rclone-424fa6
+              name: rclone-config
+            - configMap:
+                items:
+                  - key: config
+                    path: config
+                name: minio-default-backup-aws-d06b0d
+              name: aws-config
+            - name: aws-credentials
+              secret:
+                items:
+                  - key: credentials
+                    path: credentials
+                secretName: minio-default-backup-aws-bf1fa7
+            - configMap:
+                name: minio-default-backup-script-4cbd00
+              name: backup-script
+            - emptyDir: {}
+              name: tmp
+  schedule: 10 3 * * *
+  startingDeadlineSeconds: 120
+  timeZone: Asia/Tokyo

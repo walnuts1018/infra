@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: ipxe-manager
+    app.kubernetes.io/name: ipxe-manager
+  name: ipxe-manager
+  namespace: ipxe-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ipxe-manager
+      app.kubernetes.io/name: ipxe-manager
+  serviceName: ipxe-manager
+  template:
+    metadata:
+      labels:
+        app: ipxe-manager
+        app.kubernetes.io/name: ipxe-manager
+    spec:
+      containers:
+        - env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: CLIENT_ID
+              value: "336650899348783299"
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: client-secret
+                  name: ipxe-manager-8b232b
+            - name: INTROSPECTION_ENDPOINT
+              value: https://auth.walnuts.dev/oauth/v2/introspect
+            - name: ALLOWED_AUDIENCE
+              value: "336650775264493758"
+            - name: IPXE_SCRIPT_DIR
+              value: /etc/ipxe
+          image: ghcr.io/walnuts1018/ipxe-manager:0.0.12
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: http
+          name: ipxe-manager
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 1m
+              memory: 10Mi
+          volumeMounts:
+            - mountPath: /etc/ipxe
+              name: ipxe-scripts
+              readOnly: true
+            - mountPath: /var/lib/ipxe-manager
+              name: db
+      volumes:
+        - configMap:
+            name: ipxe-manager
+          name: ipxe-scripts
+        - name: db
+          persistentVolumeClaim:
+            claimName: ipxe-manager

@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: smartctl-exporter-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: prometheus-smartctl-exporter
+    helm:
+      releaseName: smartctl-exporter
+      values: |
+        image:
+          repository: ghcr.io/joryirving/smartctl_exporter
+          tag: "0.14.0"
+        podAnnotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "9666"
+          prometheus.io/path: "/metrics"
+        serviceMonitor:
+          enabled: true
+          relabelings:
+          - sourceLabels: [ __meta_kubernetes_pod_node_name ]
+            separator: ;
+            regex: ^(.*)$
+            targetLabel: node
+            replacement: $1
+            action: replace
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 0.16.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true
