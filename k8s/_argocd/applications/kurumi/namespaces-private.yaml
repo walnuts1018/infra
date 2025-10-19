@@ -14,8 +14,7 @@ spec:
     directory:
       recurse: true
       exclude: '{config/*,_*/*}'
-      jsonnet:
-        tlas: []
+      jsonnet: {}
   syncPolicy:
     automated:
       selfHeal: true
