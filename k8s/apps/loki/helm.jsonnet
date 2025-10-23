@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'loki',
   repoURL: 'https://grafana.github.io/helm-charts',
-  targetRevision: '6.43.0',
+  targetRevision: '6.44.0',
   values: (importstr 'values.yaml'),
 }
