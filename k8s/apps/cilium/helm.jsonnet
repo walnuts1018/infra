@@ -3,7 +3,7 @@ function(k8sServiceHost='192.168.0.17', k8sServicePort=16443, loadBalancerIP='19
   namespace: (import 'app.json5').namespace,
   chart: 'cilium',
   repoURL: 'https://helm.cilium.io/',
-  targetRevision: '1.16.6',
+  targetRevision: '1.18.3',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'), {
       k8sServiceHost: k8sServiceHost,
