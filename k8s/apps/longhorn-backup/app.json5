@@ -1,4 +1,0 @@
-{
-  name: "longhorn-backup",
-  namespace: "longhorn-system",
-}

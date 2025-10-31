@@ -1,0 +1,20 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: http-dump-oidc-u348djs2
+  namespace: default
+spec:
+  oidc:
+    clientID: "341715627427299826"
+    clientSecret:
+      name: http-dump-oidc-secret-d0b3c1
+    cookieNames:
+      idToken: IdToken
+    logoutPath: /logout
+    provider:
+      issuer: https://auth.walnuts.dev
+    redirectURL: https://httptest.local.walnuts.dev/oauth2/callback
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: http-dump
