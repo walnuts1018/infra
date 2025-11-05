@@ -3,10 +3,13 @@
   namespace:: '',
   use_suffix:: true,
   data:: error 'data is required',
+  template_data:: null,
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
-    name: $.name + if $.use_suffix then '-' + std.md5(std.toString($.data) + { spec: { target: { name: null } } })[0:6] else '',
+    name: $.name + if $.use_suffix then '-' + std.md5(
+      std.toString($.data) + std.toString($.template_data),
+    )[0:6] else '',
     [if !($.namespace == '') then 'namespace']: $.namespace,
   },
   spec: {
@@ -17,6 +20,11 @@
     refreshInterval: '1m',
     target: {
       name: $.metadata.name,
+      template: if $.template_data != null then {
+        engineVersion: 'v2',
+        type: 'Opaque',
+        data: $.template_data,
+      } else null,
     },
     data: $.data,
   },

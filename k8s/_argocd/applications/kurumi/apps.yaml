@@ -14,6 +14,8 @@ spec:
       # TODO: rm
       - path: "k8s/apps/minio-biscuit/app.json5"
         exclude: true
+      - path: "k8s/apps/minio-biscuit-backup/app.json5"
+        exclude: true
       - path: "k8s/apps/shutdown-manager/app.json5"
         exclude: true
   ignoreApplicationDifferences:

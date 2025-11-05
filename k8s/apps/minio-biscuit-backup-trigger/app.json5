@@ -1,0 +1,4 @@
+{
+  name: "minio-biscuit-backup-trigger",
+  namespace: "minio",
+}

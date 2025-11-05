@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.100.0"
+      version = "~> 6.19.0"
     }
   }
 }
@@ -25,6 +25,6 @@ provider "aws" {
   s3_use_path_style           = true
 
   endpoints {
-    s3 = "http://localhost:9000"
+    s3 = "https://minio.walnuts.dev/"
   }
 }
