@@ -7,3 +7,7 @@ module "b2" {
 locals {
   b2_application_key_id = "004ab15b5942e2c0000000004"
 }
+
+output "application_key" {
+  value = module.b2.application_key
+}
