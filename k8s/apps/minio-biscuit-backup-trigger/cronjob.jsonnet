@@ -20,8 +20,7 @@
             restartPolicy: 'OnFailure',
             initContainers: [
               std.mergePatch(
-                (import '../../components/container.libsonnet'),
-                {
+                (import '../../components/container.libsonnet') {
                   name: 'wait-minio-default-backup',
                   image: 'registry.k8s.io/kubectl:v1.34.1',
                   command: [
