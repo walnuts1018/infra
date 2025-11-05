@@ -31,7 +31,10 @@ START_TIME=$(date +%s)
 
 JOB_NAME="$CRONJOB_NAME-manual-$START_TIME"
 
-kubectl create job --from=cronjob/$CRONJOB_NAME "$JOB_NAME" -n $NAMESPACE
+kubectl create job --from=cronjob/$CRONJOB_NAME "$JOB_NAME" -n $NAMESPACE || {
+  log "error" "Failed to create Job from CronJob" "cronjob" "$CRONJOB_NAME"
+  exit 1
+}
 
 log "info" "Waiting..." "job" "$JOB_NAME"
 
