@@ -8,7 +8,7 @@
   subjects: [
     {
       kind: 'User',
-      name: 'system:serviceaccount:minio:minio-biscuit-backup-trigger',
+      name: 'https://192.168.0.17:16443#system:serviceaccount:minio:minio-biscuit-backup-trigger',
       apiGroup: 'rbac.authorization.k8s.io',
     },
   ],
