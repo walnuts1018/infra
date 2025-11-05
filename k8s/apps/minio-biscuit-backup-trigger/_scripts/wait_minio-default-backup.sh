@@ -19,7 +19,7 @@ log() {
 }
 
 LATEST_JOB_NAME=$(kubectl get jobs -n "$NAMESPACE" \
-  -l "cronjob.kubernetes.io/instance=$CRONJOB_NAME" \
+  -l "app.kubernetes.io/name=$CRONJOB_NAME" \
   --sort-by=.metadata.creationTimestamp \
   -o jsonpath='{.items[-1].metadata.name}')
 
