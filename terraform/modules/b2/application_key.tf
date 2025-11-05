@@ -21,10 +21,6 @@ resource "b2_application_key" "minio_biscuit_backup" {
   ]
 }
 
-data "b2_application_key" "minio_biscuit_backup" {
-  key_name = b2_application_key.minio_biscuit_backup.key_name
-}
-
 output "application_key" {
-  value = data.b2_application_key.minio_biscuit_backup
+  value = b2_application_key.minio_biscuit_backup
 }

@@ -9,5 +9,6 @@ locals {
 }
 
 output "application_key" {
-  value = module.b2.application_key
+  sensitive = true
+  value     = module.b2.application_key
 }
