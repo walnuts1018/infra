@@ -114,6 +114,15 @@ kubectl apply -f base.yaml
 ## OIDC login by kurumi
 
 ```bash
+scp cake:/etc/kubernetes/pki/ca.crt biscuit:/usr/local/share/ca-certificates/kurumi.crt
+```
+
+```bash
+# on biscuit
+sudo update-ca-certificates
+```
+
+```bash
 vim /etc/rancher/k3s/config.yaml
 ```
 
@@ -153,5 +162,5 @@ ExecStart=/usr/local/bin/k3s \
         '--disable=servicelb,traefik' \
 +       '--kube-apiserver-arg oidc-issuer-url=https://192.168.0.17:16443' \
 +       '--kube-apiserver-arg oidc-client-id=kurumi.k8s.walnuts.dev' \
-+       '--kube-apiserver-arg oidc-username-claim=sub'
++       '--kube-apiserver-arg oidc-username-claim=sub' \
 ```
