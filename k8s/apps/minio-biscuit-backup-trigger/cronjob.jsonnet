@@ -22,13 +22,13 @@
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'wait-minio-default-backup',
-                  image: 'registry.k8s.io/kubectl:v1.34.1',
+                  image: 'debian:13.1-slim',
                   command: [
                     '/usr/bin/bash',
                     '-c',
                   ],
                   args: [
-                    'bash /scripts/wait_minio-default-backup.sh',
+                    'PATH=$PATH:/kubectl bash /scripts/wait_minio-default-backup.sh',
                   ],
                   resources: {
                     requests: {
@@ -41,6 +41,11 @@
                     },
                   },
                   volumeMounts: [
+                    {
+                      name: 'kubectl',
+                      mountPath: '/kubectl',
+                      subPath: 'bin',
+                    },
                     {
                       name: 'scripts',
                       mountPath: '/scripts',
@@ -63,13 +68,13 @@
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'trigger-and-wait-minio-biscuit-backup',
-                  image: 'registry.k8s.io/kubectl:v1.34.1',
+                  image: 'debian:13.1-slim',
                   command: [
                     '/usr/bin/bash',
                     '-c',
                   ],
                   args: [
-                    'bash /scripts/trigger_and_wait_minio-biscuit-backup.sh',
+                    'PATH=$PATH:/kubectl bash /scripts/trigger_and_wait_minio-biscuit-backup.sh',
                   ],
                   resources: {
                     requests: {
@@ -82,6 +87,11 @@
                     },
                   },
                   volumeMounts: [
+                    {
+                      name: 'kubectl',
+                      mountPath: '/kubectl',
+                      subPath: 'bin',
+                    },
                     {
                       name: 'scripts',
                       mountPath: '/scripts',
@@ -127,6 +137,12 @@
                       },
                     },
                   ],
+                },
+              },
+              {
+                name: 'kubectl',
+                image: {
+                  reference: 'registry.k8s.io/kubectl:v1.34.1',
                 },
               },
             ],
