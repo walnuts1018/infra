@@ -1,5 +1,5 @@
 # module "zitadel" {
-#   source                = "../modules/zitadel"
+#   source                = "./modules/zitadel"
 #   jwt_profile_file_path = "zitadel.token"
 # }
 
