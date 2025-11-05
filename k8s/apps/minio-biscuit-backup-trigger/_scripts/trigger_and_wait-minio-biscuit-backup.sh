@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 
-CRONJOB_NAME="minio-default-backup"
+CRONJOB_NAME="minio-biscuit-backup"
 NAMESPACE="minio"
 
 log() {
@@ -21,7 +21,7 @@ log() {
 
 kubectl() {
   command kubectl \
-    --server=http://192.168.0.15:6443 \
+    --server=https://192.168.0.15:6443 \
     --token="$(cat /var/run/secrets/kurumi.k8s.walnuts.dev/serviceaccount/token)" \
     --insecure-skip-tls-verify=true \
     "$@"

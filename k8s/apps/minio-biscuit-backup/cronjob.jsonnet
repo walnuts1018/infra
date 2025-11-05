@@ -90,8 +90,8 @@
               },
               {
                 name: 'rclone-config',
-                configMap: {
-                  name: (import 'configmap-rclone.jsonnet').metadata.name,
+                secret: {
+                  serviceAccountTokename: (import 'external-secret-rclone.jsonnet').metadata.name,
                   items: [
                     {
                       key: 'rclone.conf',
