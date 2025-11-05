@@ -91,7 +91,7 @@
               {
                 name: 'rclone-config',
                 secret: {
-                  serviceAccountTokename: (import 'external-secret-rclone.jsonnet').metadata.name,
+                  secretName: (import 'external-secret-rclone.jsonnet').metadata.name,
                   items: [
                     {
                       key: 'rclone.conf',
