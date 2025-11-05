@@ -160,7 +160,7 @@ ExecStart=/usr/local/bin/k3s \
         '--flannel-backend=none' \
         '--disable-network-policy' \
         '--disable=servicelb,traefik' \
-+       '--kube-apiserver-arg oidc-issuer-url=https://192.168.0.17:16443' \
-+       '--kube-apiserver-arg oidc-client-id=kurumi.k8s.walnuts.dev' \
-+       '--kube-apiserver-arg oidc-username-claim=sub' \
++       '--kube-apiserver-arg=oidc-issuer-url=https://192.168.0.17:16443' \
++       '--kube-apiserver-arg=oidc-client-id=kurumi.k8s.walnuts.dev' \
++       '--kube-apiserver-arg=oidc-username-claim=sub' \
 ```
