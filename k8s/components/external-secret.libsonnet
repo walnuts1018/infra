@@ -20,11 +20,11 @@
     refreshInterval: '1m',
     target: {
       name: $.metadata.name,
-      template: if $.template_data != null then {
+      [if $.template_data != null then 'template']: {
         engineVersion: 'v2',
         type: 'Opaque',
         data: $.template_data,
-      } else null,
+      },
     },
     data: $.data,
   },
