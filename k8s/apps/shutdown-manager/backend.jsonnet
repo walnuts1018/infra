@@ -8,7 +8,7 @@
   spec: {
     endpoints: [
       {
-        hostname: 'kubernetes.default.svc.cluster.local',
+        hostname: '192.168.0.17',
         fqdn: {
           hostname: '192.168.0.17',
           port: 16443,

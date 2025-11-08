@@ -22,7 +22,7 @@
           name: (import 'configmap-ca.jsonnet').metadata.name,
         },
       ],
-      hostname: 'kubernetes.default.svc.cluster.local',
+      hostname: '192.168.0.17',
     },
   },
 }
