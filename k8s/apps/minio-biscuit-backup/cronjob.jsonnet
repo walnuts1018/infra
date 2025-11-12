@@ -23,7 +23,7 @@
                 name: 'copy-rclone',
                 image: 'ghcr.io/rclone/rclone:1.71.1',
                 command: [
-                  '/usr/bin/bash',
+                  '/bin/sh',
                   '-c',
                 ],
                 args: [
