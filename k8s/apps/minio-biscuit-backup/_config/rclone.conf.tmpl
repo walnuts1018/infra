@@ -11,3 +11,11 @@ type = b2
 account = 004ab15b5942e2c000000000e
 key = {{ .b2_application_key }}
 hard_delete = true
+
+[b2-crypted]
+type = crypt
+remote = b2:walnuts-minio-biscuit-backup-81f18e5
+filename_encryption = off
+directory_name_encryption = false
+password = {{ .b2_crypted_password }}
+password2 = {{ .b2_crypted_salt }}
