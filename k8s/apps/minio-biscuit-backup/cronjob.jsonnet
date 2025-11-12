@@ -18,10 +18,39 @@
           spec: {
             serviceAccountName: (import 'sa.jsonnet').metadata.name,
             restartPolicy: 'OnFailure',
+            initContainers: [
+              (import '../../components/container.libsonnet') {
+                name: 'copy-rclone',
+                image: 'debian:13.1-slim',
+                command: [
+                  '/usr/bin/bash',
+                  '-c',
+                ],
+                args: [
+                  'cp /usr/local/bin/rclone /rclone',
+                ],
+                resources: {
+                  requests: {
+                    cpu: '1m',
+                    memory: '10Mi',
+                  },
+                  limits: {
+                    cpu: '100m',
+                    memory: '128Mi',
+                  },
+                },
+                volumeMounts: [
+                  {
+                    name: 'rclone',
+                    mountPath: '/rclone',
+                  },
+                ],
+              },
+            ],
             containers: [
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
-                  name: 'rclone',
+                  name: 'backuper',
                   image: 'public.ecr.aws/aws-cli/aws-cli:2.31.34',
                   command: [
                     '/usr/bin/bash',
@@ -44,7 +73,6 @@
                     {
                       name: 'rclone',
                       mountPath: '/rclone',
-                      subPath: 'usr/local/bin',
                     },
                     {
                       name: 'aws-config',
@@ -84,9 +112,7 @@
             volumes: [
               {
                 name: 'rclone',
-                image: {
-                  reference: 'ghcr.io/rclone/rclone:1.71.1',
-                },
+                emptyDir: {},
               },
               {
                 name: 'rclone-config',
