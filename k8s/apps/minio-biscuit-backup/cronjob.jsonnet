@@ -27,7 +27,7 @@
                   '-c',
                 ],
                 args: [
-                  'cp /usr/local/bin/rclone /rclone',
+                  'cp /usr/local/bin/rclone /rclone/rclone',
                 ],
                 resources: {
                   requests: {
