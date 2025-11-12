@@ -3,6 +3,7 @@ resource "b2_application_key" "minio_biscuit_backup" {
   bucket_id = b2_bucket.minio_biscuit_backup.id
   capabilities = [
     "deleteFiles",
+    "listAllBucketNames",
     "listBuckets",
     "listFiles",
     "readBucketEncryption",
