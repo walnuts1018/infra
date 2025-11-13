@@ -1,0 +1,4 @@
+{
+  name: "mcs-api",
+  namespace: "kube-system",
+}
