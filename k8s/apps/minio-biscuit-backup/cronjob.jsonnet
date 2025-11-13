@@ -46,6 +46,50 @@
                   },
                 ],
               },
+              (import '../../components/container.libsonnet') {
+                name: 'inject-secret-to-config',
+                image: 'ghcr.io/rclone/rclone:1.71.2',
+                command: [
+                  '/bin/sh',
+                  '-c',
+                ],
+                args: [
+                  'bash /scripts/inject-secret-to-config.sh /template/rclone.conf.template /config/rclone.conf',
+                ],
+                envFrom: [
+                  {
+                    secretRef: {
+                      name: (import 'external-secret-b2.jsonnet').spec.target.name,
+                    },
+                  },
+                ],
+                resources: {
+                  requests: {
+                    cpu: '1m',
+                    memory: '10Mi',
+                  },
+                  limits: {
+                    cpu: '100m',
+                    memory: '128Mi',
+                  },
+                },
+                volumeMounts: [
+                  {
+                    name: 'rclone-config-template',
+                    mountPath: '/template',
+                    readOnly: true,
+                  },
+                  {
+                    name: 'rclone-config',
+                    mountPath: '/config',
+                  },
+                  {
+                    name: 'scripts',
+                    mountPath: '/scripts',
+                    readOnly: true,
+                  },
+                ],
+              },
             ],
             containers: [
               std.mergePatch(
@@ -88,12 +132,11 @@
                     },
                     {
                       name: 'rclone-config',
-                      mountPath: '/config/rclone.conf',
+                      mountPath: '/config',
                       readOnly: true,
-                      subPath: 'rclone.conf',
                     },
                     {
-                      name: 'backup-script',
+                      name: 'scripts',
                       mountPath: '/scripts',
                       readOnly: true,
                     },
@@ -116,12 +159,16 @@
               },
               {
                 name: 'rclone-config',
-                secret: {
-                  secretName: (import 'external-secret-rclone.jsonnet').metadata.name,
+                emptyDir: {},
+              },
+              {
+                name: 'rclone-config-template',
+                configMap: {
+                  name: (import 'configmap-rclone.jsonnet').metadata.name,
                   items: [
                     {
-                      key: 'rclone.conf',
-                      path: 'rclone.conf',
+                      key: 'rclone.conf.template',
+                      path: 'rclone.conf.template',
                     },
                   ],
                 },
@@ -151,7 +198,7 @@
                 },
               },
               {
-                name: 'backup-script',
+                name: 'scripts',
                 configMap: {
                   name: (import 'configmap-script.jsonnet').metadata.name,
                 },

@@ -3,28 +3,25 @@
   namespace: (import 'app.json5').namespace,
   data: [
     {
-      secretKey: 'b2_application_key',
+      secretKey: 'B2_APPLICATION_KEY',
       remoteRef: {
         key: 'b2',
         property: 'application_key',
       },
     },
     {
-      secretKey: 'b2_crypted_password',
+      secretKey: 'B2_ENCRYPTED_PASSWORD',
       remoteRef: {
         key: 'rclone',
         property: 'b2_crypt_password',
       },
     },
     {
-      secretKey: 'b2_crypted_salt',
+      secretKey: 'B2_ENCRYPTED_SALT',
       remoteRef: {
         key: 'rclone',
         property: 'b2_crypt_salt',
       },
     },
   ],
-  template_data: {
-    'rclone.conf': (importstr './_config/rclone.conf.tmpl'),
-  },
 }
