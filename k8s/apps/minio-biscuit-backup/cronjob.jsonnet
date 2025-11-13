@@ -54,7 +54,7 @@
                   '-c',
                 ],
                 args: [
-                  'export PATH=$PATH:/rclone && bash /scripts/inject-secret-to-config.sh /template/rclone.conf.template /config/rclone.conf',
+                  'export PATH=$PATH:/rclone && ash /scripts/inject-secret-to-config.sh /template/rclone.conf.template /config/rclone.conf',
                 ],
                 envFrom: [
                   {
