@@ -38,6 +38,7 @@ schedules:
   minio-biscuit:
     schedule: "10 17 * * *"
     template:
+      ttl: "336h" # 14 days
       storageLocation: minio-biscuit
       excludedNamespaceScopedResources:
       - secret
