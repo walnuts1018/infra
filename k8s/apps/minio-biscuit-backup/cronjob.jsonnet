@@ -83,6 +83,11 @@
                     name: 'rclone-config',
                     mountPath: '/config',
                   },
+                  {
+                    name: 'scripts',
+                    mountPath: '/scripts',
+                    readOnly: true,
+                  },
                 ],
               },
             ],
@@ -131,7 +136,7 @@
                       readOnly: true,
                     },
                     {
-                      name: 'backup-script',
+                      name: 'scripts',
                       mountPath: '/scripts',
                       readOnly: true,
                     },
@@ -193,7 +198,7 @@
                 },
               },
               {
-                name: 'backup-script',
+                name: 'scripts',
                 configMap: {
                   name: (import 'configmap-script.jsonnet').metadata.name,
                 },
