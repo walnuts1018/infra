@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   data: {
-    jwks: (importstr './_configs/kurumi-jwks.json'),
+    jwks: (importstr './_configs/kurumi-jwks.json'),  // TODO: 手動コピー
   },
 }
