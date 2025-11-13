@@ -19,50 +19,43 @@
             serviceAccountName: (import 'sa.jsonnet').metadata.name,
             restartPolicy: 'OnFailure',
             initContainers: [
-              std.mergePatch(
-                (import '../../components/container.libsonnet') {
-                  name: 'wait-minio-default-backup',
-                  image: 'debian:13.1-slim',
-                  command: [
-                    '/usr/bin/bash',
-                    '-c',
-                  ],
-                  args: [
-                    'PATH=$PATH:/kubectl bash /scripts/wait_minio-default-backup.sh',
-                  ],
-                  resources: {
-                    requests: {
-                      cpu: '1m',
-                      memory: '10Mi',
-                    },
-                    limits: {
-                      cpu: '100m',
-                      memory: '128Mi',
-                    },
+              (import '../../components/container.libsonnet') {
+                name: 'wait-minio-default-backup',
+                image: 'debian:13.1-slim',
+                command: [
+                  '/usr/bin/bash',
+                  '-c',
+                ],
+                args: [
+                  'PATH=$PATH:/kubectl bash /scripts/wait_minio-default-backup.sh',
+                ],
+                resources: {
+                  requests: {
+                    cpu: '1m',
+                    memory: '10Mi',
                   },
-                  volumeMounts: [
-                    {
-                      name: 'kubectl',
-                      mountPath: '/kubectl',
-                      subPath: 'bin',
-                    },
-                    {
-                      name: 'scripts',
-                      mountPath: '/scripts',
-                      readOnly: true,
-                    },
-                    {
-                      name: 'tmp',
-                      mountPath: '/tmp',
-                    },
-                  ],
+                  limits: {
+                    cpu: '100m',
+                    memory: '128Mi',
+                  },
                 },
-                {
-                  securityContext: {
-                    readOnlyRootFilesystem: false,
+                volumeMounts: [
+                  {
+                    name: 'kubectl',
+                    mountPath: '/kubectl',
+                    subPath: 'bin',
                   },
-                }
-              ),
+                  {
+                    name: 'scripts',
+                    mountPath: '/scripts',
+                    readOnly: true,
+                  },
+                  {
+                    name: 'tmp',
+                    mountPath: '/tmp',
+                  },
+                ],
+              },
             ],
             containers: [
               std.mergePatch(
