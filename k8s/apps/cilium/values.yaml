@@ -16,11 +16,78 @@ resources:
   limits:
     memory: 2Gi
 clustermesh:
+  useAPIServer: true
+  maxConnectedClusters: 255
+  enableEndpointSliceSynchronization: false
+  enableMCSAPISupport: false
+  config:
+    enabled: true
+    # -- List of clusters to be peered in the mesh.
+    clusters: []
+    # clusters:
+    # # -- Name of the cluster
+    # - name: cluster1
+    # # -- Address of the cluster, use this if you created DNS records for
+    # # the cluster Clustermesh API server.
+    #   address: cluster1.mesh.cilium.io
+    # # -- Port of the cluster Clustermesh API server.
+    #   port: 2379
+    # # -- IPs of the cluster Clustermesh API server, use multiple ones when
+    # # you have multiple IPs to access the Clustermesh API server.
+    #   ips:
+    #   - 172.18.255.201
+    # # -- base64 encoded PEM values for the cluster client certificate, private key and certificate authority.
+    # # These fields can (and should) be omitted in case the CA is shared across clusters. In that case, the
+    # # "remote" private key and certificate available in the local cluster are automatically used instead.
+    #   tls:
+    #     cert: ""
+    #     key: ""
+    #     caCert: ""
   apiserver:
+    etcd:
+      resources:
+        requests:
+          cpu: 200m
+          memory: 256Mi
+        limits:
+          cpu: 1000m
+          memory: 256Mi
+      init:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+    kvstoremesh:
+      enabled: true
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
+        limits:
+          cpu: 1000m
+          memory: 1024M
+    service:
+      type: LoadBalancer
+    replicas: 1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+      limits:
+        cpu: 1000m
+        memory: 1024M
+    # TODO
     tls:
       auto:
         enabled: true
-        method: cronJob
+        method: certmanager
+        certManagerIssuerRef:
+          group: cert-manager.io
+          kind: ClusterIssuer
+          name: local
     metrics:
       enabled: true
       serviceMonitor:

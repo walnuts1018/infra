@@ -28,8 +28,10 @@ spec:
         - name: 'k8sServicePort'
           value: "6443"
           code: true
-        - name: 'loadBalancerIP'
+        - name: 'ingressLoadBalancerIP'
           value: "192.168.0.159"
+        - name: 'clusterMeshLoadBalancerIP'
+          value: "192.168.0.160"
         - name: 'enableServiceMonitor'
           value: 'false'
           code: true

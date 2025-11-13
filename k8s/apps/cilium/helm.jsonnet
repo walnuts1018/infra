@@ -3,7 +3,8 @@ function(
   clusterName='kurumi',
   k8sServiceHost='192.168.0.17',
   k8sServicePort=16443,
-  loadBalancerIP='192.168.0.129',
+  ingressLoadBalancerIP='192.168.0.129',
+  clusterMeshLoadBalancerIP='192.168.0.139',
   enableServiceMonitor=true,
   operatorReplicas=2,
   usek3s=false
@@ -19,7 +20,7 @@ function(
       k8sServicePort: k8sServicePort,
       ingressController: {
         service: {
-          loadBalancerIP: loadBalancerIP,
+          loadBalancerIP: ingressLoadBalancerIP,
         },
       },
       cluster: {
@@ -28,6 +29,9 @@ function(
       },
       clustermesh: {
         apiserver: {
+          service: {
+            loadBalancerIP: clusterMeshLoadBalancerIP,
+          },
           metrics: {
             serviceMonitor: {
               enabled: enableServiceMonitor,
