@@ -15,6 +15,14 @@ function(nameOverride='', replicas=3, enableServiceMonitor=true) {
     settings: {
       nameOverride: nameOverride,
     },
+    argsOverride: [
+      '--no-autoupdate',
+      '--protocol',
+      'http2',
+      '--metrics=0.0.0.0:60123',
+      'tunnel',
+      'run',
+    ],
     // resources: {
     //   requests: {
     //     cpu: '100m',
