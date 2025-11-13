@@ -16,7 +16,7 @@ log() {
 }
 
 
-log "info" "Starting rclone congig generation"
+log "info" "Starting rclone config generation"
 
 TEMPLATE_FILE="$1"
 OUTPUT_FILE="$2"
