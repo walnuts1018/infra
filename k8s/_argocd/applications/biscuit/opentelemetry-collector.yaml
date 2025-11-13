@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opentelemetry-collectors
+  namespace: argocd
+
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: 'opentelemetry-collector'
+  source:
+    repoURL: 'https://github.com/walnuts1018/infra'
+    targetRevision: main
+    path: k8s/apps/opentelemetry-collectors
+    directory:
+      recurse: true
+      exclude: '{config/*,_*/*}'
+      jsonnet:
+        tlas:
+        - name: 'clusterName'
+          value: 'biscuit'
+        - name: "prometheusEndpoint"
+          value: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090"
+        - name: "lokiEndpoint"
+          value: "http://loki-gateway.loki.svc.cluster.local"
+        - name: "tempoEndpoint"
+          value: "http://tempo.tempo.svc.cluster.local:4317"
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - ServerSideApply=true
+    - FailOnSharedResource=true

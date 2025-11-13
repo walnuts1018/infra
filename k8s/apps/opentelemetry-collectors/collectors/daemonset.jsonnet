@@ -1,4 +1,14 @@
-std.mergePatch((import '_base.libsonnet'), {
+function(
+  clusterName='kurumi',
+  prometheusEndpoint='http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090',
+  lokiEndpoint='http://loki-gateway.loki.svc.cluster.local',
+  tempoEndpoint='tempo.tempo.svc.cluster.local:4317',
+) std.mergePatch((import '_base.libsonnet')(
+  clusterName,
+  prometheusEndpoint,
+  lokiEndpoint,
+  tempoEndpoint,
+), {
   metadata: {
     name: 'daemonset',
   },
@@ -180,6 +190,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'memory_limiter',
               'batch',
               'k8sattributes',
+              'resource/cluster_name',
             ],
             exporters: [
               'otlphttp/loki',
@@ -194,6 +205,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'batch',
               'k8sattributes',
               'resource/journald',
+              'resource/cluster_name',
             ],
             exporters: [
               'otlphttp/loki',
@@ -209,6 +221,7 @@ std.mergePatch((import '_base.libsonnet'), {
               'batch',
               'k8sattributes',
               'resourcedetection',
+              'resource/cluster_name',
             ],
             exporters: [
               'prometheusremotewrite',

@@ -1,4 +1,9 @@
-{
+function(
+  clusterName='kurumi',
+  prometheusEndpoint='http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090',
+  lokiEndpoint='http://loki-gateway.loki.svc.cluster.local',
+  tempoEndpoint='tempo.tempo.svc.cluster.local:4317',
+) {
   apiVersion: 'opentelemetry.io/v1beta1',
   kind: 'OpenTelemetryCollector',
   spec: {
@@ -6,27 +11,38 @@
     serviceAccount: (import '../sa.jsonnet').metadata.name,
     image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.139.0',
     config: {
+      processors: {
+        'resource/cluster_name': {
+          attributes: [
+            {
+              key: 'k8s.cluster.name',
+              action: 'upsert',
+              value: clusterName,
+            },
+          ],
+        },
+      },
       exporters: {
         'otlphttp/prometheus': {
-          endpoint: 'http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/otlp',
+          endpoint: prometheusEndpoint + '/api/v1/otlp',
           tls: {
             insecure: true,
           },
         },
         prometheusremotewrite: {
-          endpoint: 'http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/write',
+          endpoint: prometheusEndpoint + '/api/v1/write',
           resource_to_telemetry_conversion: {
             enabled: true,
           },
         },
         'otlp/tempo': {
-          endpoint: 'tempo.tempo.svc.cluster.local:4317',
+          endpoint: tempoEndpoint,
           tls: {
             insecure: true,
           },
         },
         'otlphttp/loki': {
-          endpoint: 'http://loki-gateway.loki.svc.cluster.local/otlp',
+          endpoint: lokiEndpoint + '/otlp',
           tls: {
             insecure: true,
           },
