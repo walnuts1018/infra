@@ -38,7 +38,6 @@ function(
           clusters: [
             {
               name: peer.name,
-              address: peer.name + '.mesh.cilium.io',
               port: 2379,
               ips: [
                 peer.ip,
