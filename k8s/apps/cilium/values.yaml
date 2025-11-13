@@ -146,7 +146,6 @@ envoy:
       cpu: 10m
       memory: 51Mi
 operator:
-  tolerations: []
   prometheus:
     enabled: true
     serviceMonitor:
