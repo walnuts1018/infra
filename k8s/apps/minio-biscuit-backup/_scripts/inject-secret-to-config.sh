@@ -15,7 +15,7 @@ log() {
     echo "$json}"
 }
 
-sudo apt-get update && sudo apt-get install -y gettext-base || {
+apt-get update && apt-get install -y gettext-base || {
     log "error" "Failed to install gettext-base"
     exit 1
 }
