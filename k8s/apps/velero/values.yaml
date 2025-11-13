@@ -36,7 +36,7 @@ configuration:
 
 schedules:
   minio-biscuit:
-    schedule: "10 17 * * *"
+    schedule: "10 17 * * *" # 2:10 JST
     template:
       ttl: "336h" # 14 days
       storageLocation: minio-biscuit
