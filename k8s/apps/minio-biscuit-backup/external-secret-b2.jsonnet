@@ -10,21 +10,18 @@
       },
     },
     {
-      secretKey: 'b2_crypted_password',
+      secretKey: 'b2_encrypted_password',
       remoteRef: {
         key: 'rclone',
         property: 'b2_crypt_password',
       },
     },
     {
-      secretKey: 'b2_crypted_salt',
+      secretKey: 'b2_encrypted_salt',
       remoteRef: {
         key: 'rclone',
         property: 'b2_crypt_salt',
       },
     },
   ],
-  template_data: {
-    'rclone.conf': (importstr './_config/rclone.conf.tmpl'),
-  },
 }

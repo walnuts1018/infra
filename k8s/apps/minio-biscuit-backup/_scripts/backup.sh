@@ -27,7 +27,7 @@ for BUCKET in $(rclone lsf minio-biscuit: --dirs-only --config=/config/rclone.co
     fi
 
     SOURCE_PATH="minio-biscuit:${BUCKET}"
-    DEST_PATH="b2-crypted:${BUCKET}"
+    DEST_PATH="b2-encrypted:${BUCKET}"
     log "info" "Sync started" source "${SOURCE_PATH}" dest "${DEST_PATH}"
     rclone sync --config=/config/rclone.conf -v --fast-list "${SOURCE_PATH}" "${DEST_PATH}"
     if [[ $? -eq 0 ]]; then
