@@ -3,6 +3,8 @@
   kind: 'CronJob',
   metadata: {
     name: (import 'app.json5').name,
+    namespace: (import 'app.json5').namespace,
+    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   },
   spec: {
     schedule: '10 3 * * *',  // AM 3:10
@@ -40,6 +42,12 @@
                       memory: '2Gi',
                     },
                   },
+                  ports: [
+                    {
+                      name: 'metrics',
+                      containerPort: 9250,
+                    },
+                  ],
                   volumeMounts: [
                     {
                       name: 'rclone',
