@@ -70,7 +70,7 @@
                   },
                   limits: {
                     cpu: '100m',
-                    memory: '128Mi',
+                    memory: '256Mi',
                   },
                 },
                 volumeMounts: [
@@ -96,6 +96,7 @@
                 ],
               },{
                 securityContext: {
+                  capabilities: null,
                   readOnlyRootFilesystem: false,
                 },
               })
