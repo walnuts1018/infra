@@ -1,5 +1,5 @@
 function(
-  clusterID='1',
+  clusterID=1,
   clusterName='kurumi',
   k8sServiceHost='192.168.0.17',
   k8sServicePort=16443,
