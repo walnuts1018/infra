@@ -46,7 +46,7 @@
                   },
                 ],
               },
-              (import '../../components/container.libsonnet') {
+              std.mergePatch((import '../../components/container.libsonnet') {
                 name: 'inject-secret-to-config',
                   image: 'debian:13.1-slim',
                 command: [
@@ -94,7 +94,11 @@
                     readOnly: true,
                   },
                 ],
-              },
+              },{
+                securityContext: {
+                  readOnlyRootFilesystem: false,
+                },
+              })
             ],
             containers: [
               std.mergePatch(
