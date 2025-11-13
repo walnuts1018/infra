@@ -48,7 +48,7 @@
               },
               (import '../../components/container.libsonnet') {
                 name: 'inject-secret-to-config',
-                image: 'ghcr.io/rclone/rclone:1.71.2',
+                  image: 'debian:13.1-slim',
                 command: [
                   '/bin/sh',
                   '-c',
@@ -74,6 +74,11 @@
                   },
                 },
                 volumeMounts: [
+                  {
+                    name: 'rclone',
+                    mountPath: '/rclone',
+                    readOnly: true,
+                  },
                   {
                     name: 'rclone-config-template',
                     mountPath: '/template',
@@ -117,6 +122,7 @@
                     {
                       name: 'rclone',
                       mountPath: '/rclone',
+                      readOnly: true,
                     },
                     {
                       name: 'aws-config',
