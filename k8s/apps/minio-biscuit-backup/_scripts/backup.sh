@@ -18,29 +18,29 @@ log() {
 
 log "info" "Starting backup process"
 
-HAS_ERROR=0
-
+EXCLUDE_ARGS=()
 for BUCKET in $(rclone lsf minio-biscuit: --dirs-only --config=/config/rclone.conf | sed 's/\///g'); do
     if aws s3api get-bucket-tagging --profile minio-biscuit --bucket "${BUCKET}" 2>/dev/null | jq -e '.TagSet[] | select(.Key == "skip-backup")' > /dev/null; then
         log "info" "Skipping bucket due to skip-backup tag" bucket "${BUCKET}"
-        continue
-    fi
-
-    SOURCE_PATH="minio-biscuit:${BUCKET}"
-    DEST_PATH="b2-encrypted:${BUCKET}"
-    log "info" "Sync started" source "${SOURCE_PATH}" dest "${DEST_PATH}"
-    rclone sync --metrics-addr=:9250 --config=/config/rclone.conf -v "${SOURCE_PATH}" "${DEST_PATH}"
-    if [[ $? -eq 0 ]]; then
-        log "info" "Sync completed successfully" source "${SOURCE_PATH}" dest "${DEST_PATH}"
+        EXCLUDE_ARGS+=("--exclude" "/${BUCKET}/**")
     else
-        log "error" "Sync failed" source "${SOURCE_PATH}" dest "${DEST_PATH}"
-        HAS_ERROR=1
+        log "info" "Including bucket in sync" bucket "${BUCKET}"
     fi
 done
 
-if [[ ${HAS_ERROR} -eq 1 ]]; then
+SOURCE_PATH="minio-biscuit:"
+DEST_PATH="b2-encrypted:"
+
+log "info" "Sync started" source "${SOURCE_PATH}" dest "${DEST_PATH}"
+
+rclone sync --metrics-addr=:9250 --config=/config/rclone.conf --fast-list -v \
+    "${SOURCE_PATH}" "${DEST_PATH}" "${EXCLUDE_ARGS[@]}"
+
+if [[ $? -eq 0 ]]; then
+    log "info" "Sync completed successfully" source "${SOURCE_PATH}" dest "${DEST_PATH}"
+    log "info" "Backup process completed successfully"
+else
+    log "error" "Sync failed" source "${SOURCE_PATH}" dest "${DEST_PATH}"
     log "error" "Backup process completed with errors"
     exit 1
-else
-    log "info" "Backup process completed successfully"
 fi
