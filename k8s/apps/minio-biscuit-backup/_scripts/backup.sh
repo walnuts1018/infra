@@ -29,7 +29,7 @@ for BUCKET in $(rclone lsf minio-biscuit: --dirs-only --config=/config/rclone.co
     SOURCE_PATH="minio-biscuit:${BUCKET}"
     DEST_PATH="b2-encrypted:${BUCKET}"
     log "info" "Sync started" source "${SOURCE_PATH}" dest "${DEST_PATH}"
-    rclone sync --config=/config/rclone.conf -v --fast-list "${SOURCE_PATH}" "${DEST_PATH}"
+    rclone sync --metrics-addr=:9250 --config=/config/rclone.conf -v --fast-list "${SOURCE_PATH}" "${DEST_PATH}"
     if [[ $? -eq 0 ]]; then
         log "info" "Sync completed successfully" source "${SOURCE_PATH}" dest "${DEST_PATH}"
     else
