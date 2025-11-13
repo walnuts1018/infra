@@ -1,4 +1,12 @@
-function(k8sServiceHost='192.168.0.17', k8sServicePort=16443, loadBalancerIP='192.168.0.129', enableServiceMonitor=true, operatorReplicas=2, usek3s=false) (import '../../components/helm.libsonnet') {
+function(
+  clusterName='kurumi',
+  k8sServiceHost='192.168.0.17',
+  k8sServicePort=16443,
+  loadBalancerIP='192.168.0.129',
+  enableServiceMonitor=true,
+  operatorReplicas=2,
+  usek3s=false
+) (import '../../components/helm.libsonnet') {
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
   chart: 'cilium',
@@ -12,6 +20,9 @@ function(k8sServiceHost='192.168.0.17', k8sServicePort=16443, loadBalancerIP='19
         service: {
           loadBalancerIP: loadBalancerIP,
         },
+      },
+      cluster: {
+        name: clusterName,
       },
       clustermesh: {
         apiserver: {

@@ -18,6 +18,8 @@ spec:
       exclude: '{config/*,_*/*}'
       jsonnet:
         tlas:
+        - name: 'clusterName'
+          value: "biscuit"
         - name: 'k8sServiceHost'
           value: "192.168.0.15"
         - name: 'k8sServicePort'
