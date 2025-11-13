@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/ash
 
 log() {
     local level="$1"
@@ -8,8 +8,8 @@ log() {
     
     shift 2
     local json="{\"level\":\"$level\",\"time\":\"$timestamp\",\"msg\":\"$msg\""
-    while [[ $# -gt 0 ]]; do
-        json+=",\"$1\":\"$2\""
+    while [ $# -gt 0 ]; do
+        json="$json,\"$1\":\"$2\""
         shift 2
     done
     echo "$json}"

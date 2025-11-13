@@ -48,7 +48,7 @@
               },
               std.mergePatch((import '../../components/container.libsonnet') {
                 name: 'inject-secret-to-config',
-                  image: 'ghcr.io/hairyhenderson/gomplate:v4.3.3',
+                  image: 'ghcr.io/hairyhenderson/gomplate:v4.3.3-alpine',
                 command: [
                   '/bin/sh',
                   '-c',
