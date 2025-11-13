@@ -18,6 +18,9 @@ spec:
       exclude: '{config/*,_*/*}'
       jsonnet:
         tlas:
+        - name: 'clusterID'
+          value: "1"
+          code: true
         - name: 'clusterName'
           value: "biscuit"
         - name: 'k8sServiceHost'
