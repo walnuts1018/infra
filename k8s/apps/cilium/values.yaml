@@ -65,8 +65,8 @@ clustermesh:
         method: certmanager
         certManagerIssuerRef:
           group: cert-manager.io
-          kind: ClusterIssuer
-          name: local
+          kind: Issuer
+          name: cilium-cluster-mesh
     metrics:
       enabled: true
       serviceMonitor:
