@@ -7,7 +7,13 @@ function(
   clusterMeshLoadBalancerIP='192.168.0.139',
   enableServiceMonitor=true,
   operatorReplicas=2,
-  usek3s=false
+  usek3s=false,
+  clusterMeshPeers=[
+    {
+      name: 'biscuit',
+      ip: '192.168.0.160',
+    },
+  ],
 ) (import '../../components/helm.libsonnet') {
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
@@ -28,6 +34,29 @@ function(
         name: clusterName,
       },
       clustermesh: {
+        config: {
+          clusters: [
+            {
+              name: peer.name,
+              address: peer.name + '.mesh.cilium.io',
+              port: 2379,
+              ips: [
+                peer.ip,
+              ],
+              // TODO: cilium-caの手動sync
+              // -- base64 encoded PEM values for the cluster client certificate, private key and certificate authority.
+              // These fields can (and should) be omitted in case the CA is shared across clusters. In that case, the
+              // "remote" private key and certificate available in the local cluster are automatically used instead.
+              // tls: {
+              //   cert: '',
+              //   key: '',
+              //   caCert: '',
+              // },
+            }
+            for peer in clusterMeshPeers
+          ],
+
+        },
         apiserver: {
           service: {
             loadBalancerIP: clusterMeshLoadBalancerIP,
