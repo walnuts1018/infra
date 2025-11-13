@@ -1,7 +1,6 @@
 std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: 'cilium-cluster-mesh',
   namespace: (import 'app.json5').namespace,
-  use_suffix: false,
   data: [
     {
       secretKey: 'ca.crt',
