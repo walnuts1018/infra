@@ -3,6 +3,7 @@
   kind: 'Issuer',
   metadata: {
     name: 'cilium-cluster-mesh',
+    namespace: (import 'app.json5').namespace,
   },
   spec: {
     ca: {

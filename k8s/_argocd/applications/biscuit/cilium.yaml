@@ -8,7 +8,7 @@ spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: 'cilium'
+    namespace: 'cilium-system'
   source:
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main
