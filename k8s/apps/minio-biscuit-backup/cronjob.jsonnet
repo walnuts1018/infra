@@ -48,13 +48,13 @@
               },
               std.mergePatch((import '../../components/container.libsonnet') {
                 name: 'inject-secret-to-config',
-                  image: 'debian:13.1-slim',
+                  image: 'ghcr.io/hairyhenderson/gomplate:v4.3.3',
                 command: [
                   '/bin/sh',
                   '-c',
                 ],
                 args: [
-                  'export PATH=$PATH:/rclone &&bash /scripts/inject-secret-to-config.sh /template/rclone.conf.template /config/rclone.conf',
+                  'export PATH=$PATH:/rclone && bash /scripts/inject-secret-to-config.sh /template/rclone.conf.template /config/rclone.conf',
                 ],
                 envFrom: [
                   {

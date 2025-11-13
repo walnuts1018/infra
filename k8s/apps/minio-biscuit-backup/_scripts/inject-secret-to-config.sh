@@ -15,11 +15,6 @@ log() {
     echo "$json}"
 }
 
-apt-get update && apt-get install -y gettext-base || {
-    log "error" "Failed to install gettext-base"
-    exit 1
-}
-
 
 log "info" "Starting rclone config generation"
 
@@ -32,4 +27,9 @@ export B2_ENCRYPTED_PASSWORD_OBSCURED
 B2_ENCRYPTED_SALT_OBSCURED=$(rclone obscure "$B2_ENCRYPTED_SALT")
 export B2_ENCRYPTED_SALT_OBSCURED
 
-envsubst < "${TEMPLATE_FILE}" > "${OUTPUT_FILE}"
+gomplate -f "${TEMPLATE_FILE}" -o "${OUTPUT_FILE}" || {
+    log "error" "Failed to generate config" "template" "${TEMPLATE_FILE}" "output" "${OUTPUT_FILE}"
+    exit 1
+}
+
+log "info" "Successfully generated rclone config" "output" "${OUTPUT_FILE}"
