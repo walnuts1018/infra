@@ -42,15 +42,6 @@ function(
               ips: [
                 peer.ip,
               ],
-              // TODO: cilium-caの手動sync
-              // -- base64 encoded PEM values for the cluster client certificate, private key and certificate authority.
-              // These fields can (and should) be omitted in case the CA is shared across clusters. In that case, the
-              // "remote" private key and certificate available in the local cluster are automatically used instead.
-              // tls: {
-              //   cert: '',
-              //   key: '',
-              //   caCert: '',
-              // },
             }
             for peer in clusterMeshPeers
           ],
