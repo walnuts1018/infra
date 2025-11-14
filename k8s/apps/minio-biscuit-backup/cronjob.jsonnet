@@ -48,7 +48,7 @@
               },
               std.mergePatch((import '../../components/container.libsonnet') {
                 name: 'inject-secret-to-config',
-                  image: 'ghcr.io/hairyhenderson/gomplate:v4.3.3-alpine',
+                image: 'ghcr.io/hairyhenderson/gomplate:v4.3.3-alpine',
                 command: [
                   '/bin/sh',
                   '-c',
@@ -94,12 +94,12 @@
                     readOnly: true,
                   },
                 ],
-              },{
+              }, {
                 securityContext: {
                   capabilities: null,
                   readOnlyRootFilesystem: false,
                 },
-              })
+              }),
             ],
             containers: [
               std.mergePatch(
@@ -123,6 +123,12 @@
                       memory: '2Gi',
                     },
                   },
+                  ports: [
+                    {
+                      name: 'metrics',
+                      containerPort: 9250,
+                    },
+                  ],
                   volumeMounts: [
                     {
                       name: 'rclone',
