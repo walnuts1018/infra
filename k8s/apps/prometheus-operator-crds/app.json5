@@ -1,0 +1,4 @@
+{
+  name: "prometheus-operator-crds",
+  namespace: "monitoring",
+}

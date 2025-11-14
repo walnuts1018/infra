@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-operator-crds
+  namespace: argocd
+
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: 'monitoring'
+  source:
+    repoURL: 'https://github.com/walnuts1018/infra'
+    targetRevision: main
+    path: k8s/apps/prometheus-operator-crds
+    directory:
+      recurse: true
+      exclude: '{config/*,_*/*}'
+      jsonnet:
+        tlas: []
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - ServerSideApply=true
+    - FailOnSharedResource=true

@@ -16,6 +16,8 @@ spec:
         exclude: true
       - path: "k8s/apps/minio-biscuit-backup/app.json5"
         exclude: true
+      - path: "k8s/apps/prometheus-operator-crds/app.json5"
+        exclude: true
       - path: "k8s/apps/shutdown-manager/app.json5"
         exclude: true
   ignoreApplicationDifferences:
