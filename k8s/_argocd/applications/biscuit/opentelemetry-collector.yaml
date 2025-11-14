@@ -20,12 +20,6 @@ spec:
         tlas:
         - name: 'clusterName'
           value: 'biscuit'
-        - name: "prometheusEndpoint"
-          value: "http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090"
-        - name: "lokiEndpoint"
-          value: "http://loki-gateway.loki.svc.cluster.local"
-        - name: "tempoEndpoint"
-          value: "http://tempo.tempo.svc.cluster.local:4317"
   syncPolicy:
     automated:
       selfHeal: true

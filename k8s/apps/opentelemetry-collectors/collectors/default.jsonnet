@@ -1,13 +1,7 @@
 function(
   clusterName='kurumi',
-  prometheusEndpoint='http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090',
-  lokiEndpoint='http://loki-gateway.loki.svc.cluster.local',
-  tempoEndpoint='tempo.tempo.svc.cluster.local:4317',
 ) std.mergePatch((import '_base.libsonnet')(
   clusterName,
-  prometheusEndpoint,
-  lokiEndpoint,
-  tempoEndpoint,
 ), {
   metadata: {
     name: 'default',
