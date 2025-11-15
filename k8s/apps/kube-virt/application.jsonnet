@@ -15,13 +15,9 @@
       path: 'k8s/apps/kube-virt/_kustomize',
       repoURL: 'https://github.com/walnuts1018/infra',
       targetRevision: 'main',
-      kustomize: {
-        patches: [
-          {
-            patch: '$patch: delete\napiVersion: v1\nkind: Namespace\nmetadata:\n  name: kube-virt',
-          },
-        ],
-      },
+      // kustomize: {
+      //   patches: [],
+      // },
     },
     syncPolicy: {
       automated: {
