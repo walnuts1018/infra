@@ -123,7 +123,6 @@
                   {
                     name: 'manifests',
                     mountPath: '/var/lib/rancher/k3s/server/manifests',
-                    readOnly: true,
                   },
                 ],
                 securityContext: {
