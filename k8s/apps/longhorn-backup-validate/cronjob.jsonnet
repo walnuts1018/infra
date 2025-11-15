@@ -25,7 +25,11 @@
                   'kustomize',
                 ],
                 args: [
-                  'build --enable-helm /src -o /manifests/manifest.yaml',
+                  'build',
+                  '--enable-helm',
+                  '/src',
+                  '-o',
+                  '/manifests/manifest.yaml',
                 ],
                 resources: {
                   requests: {
