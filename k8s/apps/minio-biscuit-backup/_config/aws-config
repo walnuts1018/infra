@@ -1,7 +1,7 @@
 [profile minio-biscuit]
 region = ap-northeast-1
-endpoint_url = http://minio.minio-biscuit.svc.cluster.local
+endpoint_url = http://minio-biscuit.local.walnuts.dev
 credential_process = bash /scripts/assumerole.sh
 s3 =
-  endpoint_url = http://minio.minio-biscuit.svc.cluster.local
+  endpoint_url = http://minio-biscuit.local.walnuts.dev
   s3_force_path_style = true
