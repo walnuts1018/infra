@@ -1,5 +1,5 @@
 {
-  apiVersion: 'cluster.x-k8s.io/v1beta1',
+  apiVersion: 'cluster.x-k8s.io/v1beta2',
   kind: 'Cluster',
   metadata: {
     name: (import 'app.json5').name,
