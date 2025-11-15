@@ -3,6 +3,7 @@
 aws sts assume-role-with-web-identity \
   --role-arn arn:aws:iam::dummy:role/minio-biscuit-backup \
   --role-session-name "minio-biscuit-backup-session-$(date +%s)" \
+  --duration-seconds 86400 \
   --web-identity-token file:///var/run/secrets/sts.min.io/serviceaccount/token \
   --endpoint-url https://sts.minio-operator.svc.cluster.local:4223/sts/minio-biscuit \
   --ca-bundle /etc/ssl/certs/trust-bundle.pem \
