@@ -26,6 +26,7 @@
     },
   ],
   template_data: {
+    'kustomization.yaml': (importstr './_manifest_template/kustomization.yaml'),
     'longhorn-secret.yaml': (importstr './_manifest_template/longhorn-secret.yaml.tmpl'),
     'velero-secret.yaml': (importstr './_manifest_template/velero-secret.yaml.tmpl'),
   },

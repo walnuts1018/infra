@@ -46,7 +46,7 @@
                   },
                   {
                     name: 'src-manifest-credentials',
-                    mountPath: '/src',
+                    mountPath: '/src/credentials',
                     readOnly: true,
                   },
                   {
