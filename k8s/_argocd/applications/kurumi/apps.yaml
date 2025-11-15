@@ -12,6 +12,8 @@ spec:
       files:
       - path: "k8s/apps/*/app.json5"
       # TODO: rm
+      - path: "k8s/apps/longhorn-backup-validate/app.json5"
+        exclude: true
       - path: "k8s/apps/minio-biscuit/app.json5"
         exclude: true
       - path: "k8s/apps/minio-biscuit-backup/app.json5"
