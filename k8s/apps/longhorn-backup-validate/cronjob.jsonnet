@@ -19,7 +19,7 @@
             restartPolicy: 'OnFailure',
             initContainers: [
               (import '../../components/container.libsonnet') {
-                name: 'copy-rclone',
+                name: 'copy-helm',
                 image: 'alpine/helm:3.19.0',
                 command: [
                   '/bin/sh',
