@@ -26,6 +26,11 @@
     ],
     certificate: {
       requestAutoCert: false,
+      externalCertSecret: [
+        {
+          name: (import 'cert.jsonnet').spec.secretName,
+        },
+      ],
     },
     local region = 'ap-northeast-1',
     buckets: [
