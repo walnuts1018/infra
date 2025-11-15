@@ -101,6 +101,7 @@
                   name: 'k3s',
                   image: 'rancher/k3s:v1.34.1-k3s1',
                   command: [
+                    '/bin/k3s',
                     'server',
                   ],
                   resources: {
