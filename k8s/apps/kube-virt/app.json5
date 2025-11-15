@@ -1,0 +1,4 @@
+{
+  name: "kube-virt",
+  namespace: "kube-virt",
+}
