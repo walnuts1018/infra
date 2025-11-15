@@ -32,9 +32,6 @@ spec:
           value: "192.168.0.159"
         - name: 'clusterMeshLoadBalancerIP'
           value: "192.168.0.160"
-        - name: 'enableServiceMonitor'
-          value: 'false'
-          code: true
         - name: "operatorReplicas"
           value: "1"
           code: true
