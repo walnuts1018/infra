@@ -8,7 +8,7 @@ spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
-    namespace: 'minio'
+    namespace: 'minio-biscuit'
   source:
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: main

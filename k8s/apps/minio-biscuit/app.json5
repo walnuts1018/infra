@@ -1,4 +1,4 @@
 {
   name: "minio-biscuit",
-  namespace: "minio",
+  namespace: "minio-biscuit",
 }
