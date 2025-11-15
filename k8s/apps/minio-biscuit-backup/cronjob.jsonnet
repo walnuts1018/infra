@@ -214,7 +214,6 @@
                     {
                       serviceAccountToken: {
                         audience: 'sts.min.io',
-                        expirationSeconds: 86400,
                         path: 'token',
                       },
                     },
