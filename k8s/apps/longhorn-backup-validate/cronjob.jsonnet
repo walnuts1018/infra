@@ -22,11 +22,10 @@
                 name: 'build-manifest',
                 image: 'registry.k8s.io/kustomize/kustomize:v5.8.0',
                 command: [
-                  '/bin/sh',
-                  '-c',
+                  'kustomize',
                 ],
                 args: [
-                  'kustomize build /src -o /manifests/manifest.yaml',
+                  'build --enable-helm /src -o /manifests/manifest.yaml',
                 ],
                 resources: {
                   requests: {
@@ -63,8 +62,6 @@
                   image: 'rancher/k3s:v1.34.1-k3s1',
                   command: [
                     'server',
-                  ],
-                  args: [
                   ],
                   resources: {
                     requests: {
