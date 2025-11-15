@@ -14,7 +14,7 @@
             provider: 'aws',
             bucket: 'velero-backup',
             config: {
-              s3Url: 'http://minio.minio-biscuit.svc.clusterset.local',
+              s3Url: 'https://minio.minio-biscuit.svc.clusterset.local:9000',
               region: 'ap-northeast-1',
               s3ForcePathStyle: 'true',
             },
@@ -29,7 +29,7 @@
             name: 'minio-biscuit',
             provider: 'aws',
             config: {
-              s3Url: 'http://minio.minio-biscuit.svc.clusterset.local',
+              s3Url: 'https://minio.minio-biscuit.svc.clusterset.local:9000',
               region: 'ap-northeast-1',
               s3ForcePathStyle: 'true',
             },
