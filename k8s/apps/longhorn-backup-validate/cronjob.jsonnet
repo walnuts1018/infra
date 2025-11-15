@@ -56,6 +56,10 @@
                     name: 'manifests',
                     mountPath: '/manifests',
                   },
+                  {
+                    name: 'tmp',
+                    mountPath: '/tmp',
+                  },
                 ],
               },
             ],
@@ -112,6 +116,10 @@
               },
               {
                 name: 'manifests',
+                emptyDir: {},
+              },
+              {
+                name: 'tmp',
                 emptyDir: {},
               },
             ],
