@@ -88,6 +88,10 @@
                     name: 'tmp',
                     mountPath: '/tmp',
                   },
+                  {
+                    name: 'charts',
+                    mountPath: '/src/charts',
+                  },
                 ],
               },
             ],
@@ -152,6 +156,10 @@
               },
               {
                 name: 'tmp',
+                emptyDir: {},
+              },
+              {
+                name: 'charts',
                 emptyDir: {},
               },
             ],
