@@ -17,6 +17,7 @@
           },
           spec: {
             restartPolicy: 'OnFailure',
+            dnsPolicy: 'Default',
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'copy-helm',
