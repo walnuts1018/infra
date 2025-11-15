@@ -19,17 +19,41 @@
             restartPolicy: 'OnFailure',
             initContainers: [
               (import '../../components/container.libsonnet') {
+                name: 'copy-rclone',
+                image: 'alpine/helm:3.19.0',
+                command: [
+                  '/bin/sh',
+                  '-c',
+                ],
+                args: [
+                  'cp /usr/bin/helm /helm/helm',
+                ],
+                resources: {
+                  requests: {
+                    cpu: '1m',
+                    memory: '10Mi',
+                  },
+                  limits: {
+                    cpu: '100m',
+                    memory: '128Mi',
+                  },
+                },
+                volumeMounts: [
+                  {
+                    name: 'helm',
+                    mountPath: '/helm',
+                  },
+                ],
+              },
+              (import '../../components/container.libsonnet') {
                 name: 'build-manifest',
                 image: 'registry.k8s.io/kustomize/kustomize:v5.8.0',
                 command: [
-                  'kustomize',
+                  '/bin/sh',
+                  '-c',
                 ],
                 args: [
-                  'build',
-                  '--enable-helm',
-                  '/src',
-                  '-o',
-                  '/manifests/manifest.yaml',
+                  'export PATH=$PATH:/helm && kustomize build --enable-helm /src -o /manifests/manifest.yaml',
                 ],
                 resources: {
                   requests: {
@@ -55,6 +79,10 @@
                   {
                     name: 'manifests',
                     mountPath: '/manifests',
+                  },
+                  {
+                    name: 'helm',
+                    mountPath: '/helm',
                   },
                   {
                     name: 'tmp',
@@ -116,6 +144,10 @@
               },
               {
                 name: 'manifests',
+                emptyDir: {},
+              },
+              {
+                name: 'helm',
                 emptyDir: {},
               },
               {
