@@ -92,44 +92,44 @@
     users: [],
   },
 
-  ingress: {
-    api: {
-      enabled: true,
-      host: 'minio-biscuit.local.walnuts.dev',
-      ingressClassName: 'cilium',
-      path: '/',
-      pathType: 'Prefix',
-      annotations: {
-        'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-        'cf-tunnel-operator.walnuts.dev/ignore': 'true',
-      },
-      tls: [
-        {
-          hosts: [
-            'minio-biscuit.local.walnuts.dev',
-          ],
-          secretName: 'minio-biscuit-tls',
-        },
-      ],
-    },
-    console: {
-      enabled: true,
-      host: 'minio-biscuit-console.local.walnuts.dev',
-      ingressClassName: 'cilium',
-      path: '/',
-      pathType: 'Prefix',
-      annotations: {
-        'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
-        'cf-tunnel-operator.walnuts.dev/ignore': 'true',
-      },
-      tls: [
-        {
-          hosts: [
-            'minio-biscuit-console.local.walnuts.dev',
-          ],
-          secretName: 'minio-biscuit-console-tls',
-        },
-      ],
-    },
-  },
+  // ingress: {
+  //   api: {
+  //     enabled: true,
+  //     host: 'minio-biscuit.local.walnuts.dev',
+  //     ingressClassName: 'cilium',
+  //     path: '/',
+  //     pathType: 'Prefix',
+  //     annotations: {
+  //       'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+  //       'cf-tunnel-operator.walnuts.dev/ignore': 'true',
+  //     },
+  //     tls: [
+  //       {
+  //         hosts: [
+  //           'minio-biscuit.local.walnuts.dev',
+  //         ],
+  //         secretName: 'minio-biscuit-tls',
+  //       },
+  //     ],
+  //   },
+  //   console: {
+  //     enabled: true,
+  //     host: 'minio-biscuit-console.local.walnuts.dev',
+  //     ingressClassName: 'cilium',
+  //     path: '/',
+  //     pathType: 'Prefix',
+  //     annotations: {
+  //       'cert-manager.io/cluster-issuer': 'letsencrypt-prod',
+  //       'cf-tunnel-operator.walnuts.dev/ignore': 'true',
+  //     },
+  //     tls: [
+  //       {
+  //         hosts: [
+  //           'minio-biscuit-console.local.walnuts.dev',
+  //         ],
+  //         secretName: 'minio-biscuit-console-tls',
+  //       },
+  //     ],
+  //   },
+  // },
 }
