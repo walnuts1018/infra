@@ -57,7 +57,7 @@
                   {
                     name: 'helm',
                     mountPath: '/helm',
-                    subPath: 'usr/bin/helm',
+                    subPath: 'usr/bin',
                   },
                   {
                     name: 'tmp',
