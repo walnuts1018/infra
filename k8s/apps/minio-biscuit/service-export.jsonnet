@@ -1,0 +1,8 @@
+{
+  apiVersion: 'multicluster.x-k8s.io/v1alpha1',
+  kind: 'ServiceExport',
+  metadata: {
+    name: 'minio',
+    namespace: (import 'app.json5').namespace,
+  },
+}
