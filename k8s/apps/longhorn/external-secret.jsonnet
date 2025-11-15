@@ -18,7 +18,7 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
         data: {
           AWS_ACCESS_KEY_ID: 'abaQ84KgJMyEtxZzW3RW',
           AWS_SECRET_ACCESS_KEY: '{{ .AWS_SECRET_ACCESS_KEY }}',
-          AWS_ENDPOINTS: 'https://minio-biscuit.local.walnuts.dev/',
+          AWS_ENDPOINTS: 'http://minio.minio-biscuit.svc.clusterset.local/',
         },
       },
     },
