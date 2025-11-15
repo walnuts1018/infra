@@ -96,43 +96,40 @@
               },
             ],
             containers: [
-              std.mergePatch(
-                (import '../../components/container.libsonnet') {
-                  name: 'k3s',
-                  image: 'rancher/k3s:v1.34.1-k3s1',
-                  command: [
-                    '/bin/k3s',
-                    'server',
-                  ],
-                  resources: {
-                    requests: {
-                      cpu: '10m',
-                      memory: '10Mi',
-                    },
-                    limits: {
-                      cpu: '1',
-                      memory: '4Gi',
-                    },
+              (import '../../components/container.libsonnet') {
+                name: 'k3s',
+                image: 'rancher/k3s:v1.34.1-k3s1',
+                command: [
+                  '/bin/k3s',
+                  'server',
+                ],
+                resources: {
+                  requests: {
+                    cpu: '10m',
+                    memory: '10Mi',
                   },
-                  ports: [
-                    {
-                      name: 'metrics',
-                      containerPort: 9250,
-                    },
-                  ],
-                  volumeMounts: [
-                    {
-                      name: 'manifests',
-                      mountPath: '/var/lib/rancher/k3s/server/manifests',
-                      readOnly: true,
-                    },
-                  ],
-                }, {
-                  securityContext: {
-                    readOnlyRootFilesystem: false,
+                  limits: {
+                    cpu: '1',
+                    memory: '4Gi',
                   },
-                }
-              ),
+                },
+                ports: [
+                  {
+                    name: 'metrics',
+                    containerPort: 9250,
+                  },
+                ],
+                volumeMounts: [
+                  {
+                    name: 'manifests',
+                    mountPath: '/var/lib/rancher/k3s/server/manifests',
+                    readOnly: true,
+                  },
+                ],
+                securityContext: {
+                  privileged: true,
+                },
+              },
             ],
             volumes: [
               {
