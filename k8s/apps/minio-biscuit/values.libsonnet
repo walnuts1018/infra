@@ -28,8 +28,7 @@
       requestAutoCert: false,
       externalCertSecret: [
         {
-          name: (import 'cert.jsonnet').metadata.name,
-          type: 'cert-manager.io/v1',
+          name: (import 'cert.jsonnet').spec.secretName,
         },
       ],
     },
