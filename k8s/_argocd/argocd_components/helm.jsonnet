@@ -1,4 +1,4 @@
-function(domain, ingressClassName='cilium') (import '../../components/helm.libsonnet') {
+function(domain, ingressClassName='cilium', enableHPA=true) (import '../../components/helm.libsonnet') {
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
   chart: 'argo-cd',
@@ -16,6 +16,14 @@ function(domain, ingressClassName='cilium') (import '../../components/helm.libso
       server: {
         ingress: {
           ingressClassName: ingressClassName,
+        },
+        autoscaling: {
+          enabled: enableHPA,
+        },
+      },
+      repoServer: {
+        autoscaling: {
+          enabled: enableHPA,
         },
       },
     }

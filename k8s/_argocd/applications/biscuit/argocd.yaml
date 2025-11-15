@@ -18,6 +18,9 @@ spec:
         tlas:
         - name: 'domain'
           value: 'argocd-biscuit.walnuts.dev'
+        - name: "enableHPA"
+          value: "false"
+          code: true
   syncPolicy:
     automated:
       selfHeal: true
