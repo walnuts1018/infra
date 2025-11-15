@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+
+aws sts assume-role-with-web-identity \
+  --role-arn arn:aws:iam::dummy:role/minio-biscuit-backup \
+  --role-session-name "minio-biscuit-backup-session-$(date +%s)" \
+  --web-identity-token file:///var/run/secrets/sts.min.io/serviceaccount/token \
+  --endpoint-url https://sts.minio-operator.svc.cluster.local:4223/sts/minio-biscuit \
+  --ca-bundle /etc/ssl/certs/trust-bundle.pem \
+  --region ap-northeast-1 | \
+  jq '{
+    Version: 1,
+    AccessKeyId: .Credentials.AccessKeyId,
+    SecretAccessKey: .Credentials.SecretAccessKey,
+    SessionToken: .Credentials.SessionToken,
+    Expiration: .Credentials.Expiration
+  }'

@@ -142,12 +142,6 @@
                       subPath: 'config',
                     },
                     {
-                      name: 'aws-credentials',
-                      mountPath: '/root/.aws/credentials',
-                      readOnly: true,
-                      subPath: 'credentials',
-                    },
-                    {
                       name: 'rclone-config',
                       mountPath: '/config',
                       readOnly: true,
@@ -160,6 +154,17 @@
                     {
                       name: 'tmp',
                       mountPath: '/tmp',
+                    },
+                    {
+                      name: 'minio-biscuit-sts-token',
+                      mountPath: '/var/run/secrets/sts.min.io/serviceaccount',
+                      readOnly: true,
+                    },
+                    {
+                      name: 'local-ca-bundle',
+                      mountPath: '/etc/ssl/certs/trust-bundle.pem',
+                      subPath: 'trust-bundle.pem',
+                      readOnly: true,
                     },
                   ],
                 }, {
@@ -203,15 +208,23 @@
                 },
               },
               {
-                name: 'aws-credentials',
-                secret: {
-                  secretName: (import 'external-secret-aws.jsonnet').spec.target.name,
-                  items: [
+                name: 'minio-biscuit-sts-token',
+                projected: {
+                  sources: [
                     {
-                      key: 'credentials',
-                      path: 'credentials',
+                      serviceAccountToken: {
+                        audience: 'sts.min.io',
+                        expirationSeconds: 86400,
+                        path: 'token',
+                      },
                     },
                   ],
+                },
+              },
+              {
+                name: 'local-ca-bundle',
+                configMap: {
+                  name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
                 },
               },
               {
