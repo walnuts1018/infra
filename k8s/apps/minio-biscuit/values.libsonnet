@@ -29,7 +29,7 @@
       externalCertSecret: [
         {
           name: (import 'cert.jsonnet').spec.secretName,  // CertificateではなくSecretの名前を書く
-          type: 'cert-manager.io/v1',  // https://github.com/minio/operator/issues/1839#issuecomment-2970485324
+          type: 'cert-manager.io/v1',
         },
       ],
     },
