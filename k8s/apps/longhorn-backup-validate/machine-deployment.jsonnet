@@ -28,16 +28,15 @@
         version: 'v1.34.1',  // TODO: auto update
         bootstrap: {
           configRef: {
-            apiVersion: 'bootstrap.cluster.x-k8s.io/v1alpha3',
+            apiGroup: 'bootstrap.cluster.x-k8s.io',
             kind: 'TalosConfigTemplate',
             name: (import 'talos-config-template.jsonnet').metadata.name,
           },
         },
         infrastructureRef: {
-          apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha1',
+          apiGroup: 'infrastructure.cluster.x-k8s.io',
           kind: 'KubevirtMachineTemplate',
           name: (import 'kubevirt-machine-template-worker.jsonnet').metadata.name,
-          namespace: (import 'kubevirt-machine-template-worker.jsonnet').metadata.namespace,
         },
       },
     },
