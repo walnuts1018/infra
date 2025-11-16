@@ -7,7 +7,6 @@
   },
   spec: {
     clusterName: (import 'app.json5').name,
-    nodeStartupTimeoutSeconds: 600,
     selector: {
       matchLabels: {
         'cluster.x-k8s.io/deployment-name': (import 'app.json5').name + '-worker',
