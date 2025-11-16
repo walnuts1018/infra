@@ -20,13 +20,13 @@
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'cluster-deploy',
-                image: 'registry.k8s.io/kubectl:v1.34.1',
+                image: 'debian:13.1-slim',
                 command: [
                   '/usr/bin/bash',
                   '-c',
                 ],
                 args: [
-                  'PATH=$PATH:/kustomize kustomize build /manifests | kubectl apply -f -',
+                  'PATH=$PATH:/kustomize:/kubectl kustomize build /manifests | kubectl apply -f -',
                 ],
                 resources: {
                   requests: {
@@ -42,6 +42,11 @@
                   {
                     name: 'manifests',
                     mountPath: '/manifests',
+                  },
+                  {
+                    name: 'kubectl',
+                    mountPath: '/kubectl',
+                    subPath: 'app',
                   },
                   {
                     name: 'kustomize',
@@ -64,7 +69,7 @@
                   '-c',
                 ],
                 args: [
-                  'PATH=$PATH:/kustomize:/kubectl bash /scripts/test.sh',
+                  'PATH=$PATH:/kustomize:/kubectl bash /scripts/validate-longhorn-backup.sh',
                 ],
                 resources: {
                   requests: {
