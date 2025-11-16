@@ -64,7 +64,7 @@
                   '-c',
                 ],
                 args: [
-                  'PATH=$PATH:/kubectl bash /scripts/test.sh',
+                  'PATH=$PATH:/kustomize:/kubectl bash /scripts/test.sh',
                 ],
                 resources: {
                   requests: {
@@ -76,21 +76,58 @@
                     memory: '512Mi',
                   },
                 },
+                lifecycle: {
+                  preStop: {
+                    exec: {
+                      command: [
+                        '/usr/bin/bash',
+                        '-c',
+                        'PATH=$PATH:/kustomize:/kubectl  kustomize build /manifests | kubectl delete -f -',
+                      ],
+                    },
+                  },
+                },
+                volumeMounts: [
+                  {
+                    name: 'scripts',
+                    mountPath: '/scripts',
+                  },
+                  {
+                    name: 'manifests',
+                    mountPath: '/manifests',
+                  },
+                  {
+                    name: 'kubectl',
+                    mountPath: '/kubectl',
+                    subPath: 'app',
+                  },
+                  {
+                    name: 'kustomize',
+                    mountPath: '/kustomize',
+                    subPath: 'app',
+                  },
+                  {
+                    name: 'tmp',
+                    mountPath: '/tmp',
+                  },
+                ],
               },
             ],
             volumes: [
               {
+                name: 'scripts',
+                configMap: {
+                  name: (import 'configmap-scripts.jsonnet').metadata.name,
+                },
+              },
+              {
                 name: 'manifests',
                 configMap: {
-                  name: (import 'configmap.jsonnet').metadata.name,
+                  name: (import 'configmap-manifests.jsonnet').metadata.name,
                 },
               },
               {
                 name: 'tmp',
-                emptyDir: {},
-              },
-              {
-                name: 'charts',
                 emptyDir: {},
               },
               {
