@@ -9,7 +9,7 @@
     clusterName: (import 'app.json5').name,
     selector: {
       matchLabels: {
-        'cluster.x-k8s.io/deployment-name': (import 'app.json5').name + '-worker',
+        'cluster.x-k8s.io/cluster-name': (import 'app.json5').name,
       },
     },
   },
