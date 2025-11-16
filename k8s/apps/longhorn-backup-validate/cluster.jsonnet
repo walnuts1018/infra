@@ -15,12 +15,12 @@
       },
     },
     infrastructureRef: {
-      apiGroup: 'infrastructure.cluster.x-k8s.io/v1alpha1',
+      apiGroup: 'infrastructure.cluster.x-k8s.io',
       kind: 'KubevirtCluster',
       name: (import 'kubevirt-cluster.jsonnet').metadata.name,
     },
     controlPlaneRef: {
-      apiGroup: 'controlplane.cluster.x-k8s.io/v1alpha3',
+      apiGroup: 'controlplane.cluster.x-k8s.io',
       kind: 'TalosControlPlane',
       name: (import 'talos-control-plane.jsonnet').metadata.name,
     },
