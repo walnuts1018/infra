@@ -2,8 +2,8 @@
   apiVersion: 'cluster.x-k8s.io/v1beta2',
   kind: 'Cluster',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
+    name: (import '../app.json5').name,
+    namespace: (import '../app.json5').namespace,
   },
   spec: {
     clusterNetwork: {
