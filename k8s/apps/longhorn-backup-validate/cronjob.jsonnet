@@ -32,7 +32,7 @@
                 resources: {
                   requests: {
                     cpu: '1m',
-                    memory: '1Mi',
+                    memory: '10Mi',
                   },
                   limits: {
                     cpu: '100m',
