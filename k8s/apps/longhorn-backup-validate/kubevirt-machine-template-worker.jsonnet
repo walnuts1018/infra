@@ -45,7 +45,8 @@
                   },
                   source: {
                     pvc: {
-                      name: 'talos-1-8-2-openstack.img',
+                      name: (import 'pvc-base.jsonnet').metadata.name,
+                      namespace: (import 'pvc-base.jsonnet').metadata.namespace,
                     },
                   },
                 },
