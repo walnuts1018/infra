@@ -4,3 +4,5 @@ namespace: kube-virt
 resources:
 - https://github.com/kubevirt/kubevirt/releases/download/v1.6.3/kubevirt-operator.yaml
 - https://github.com/kubevirt/kubevirt/releases/download/v1.6.3/kubevirt-cr.yaml
+- https://github.com/kubevirt/containerized-data-importer/releases/download/v1.63.1/cdi-operator.yaml
+- https://github.com/kubevirt/containerized-data-importer/releases/download/v1.63.1/cdi-cr.yaml
