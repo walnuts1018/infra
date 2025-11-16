@@ -57,7 +57,7 @@
             ],
             containers: [
               (import '../../components/container.libsonnet') {
-                name: 'cluster-deploy',
+                name: 'backup-validate',
                 image: 'debian:13.1-slim',
                 command: [
                   '/usr/bin/bash',
