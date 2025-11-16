@@ -26,12 +26,12 @@
                   '-c',
                 ],
                 args: [
-                  'kubectl apply -f /manifests',
+                  'PATH=$PATH:/kustomize kustomize build /manifests | kubectl apply -f -',
                 ],
                 resources: {
                   requests: {
                     cpu: '1m',
-                    memory: '10Mi',
+                    memory: '1Mi',
                   },
                   limits: {
                     cpu: '100m',
@@ -42,6 +42,11 @@
                   {
                     name: 'manifests',
                     mountPath: '/manifests',
+                  },
+                  {
+                    name: 'kustomize',
+                    mountPath: '/kustomize',
+                    subPath: 'app',
                   },
                   {
                     name: 'tmp',
@@ -59,7 +64,7 @@
                   '-c',
                 ],
                 args: [
-                  'PATH=$PATH:/kubectl bash /scripts/wait_k3s-control-plane.sh',
+                  'PATH=$PATH:/kubectl bash /scripts/test.sh',
                 ],
                 resources: {
                   requests: {
@@ -68,23 +73,8 @@
                   },
                   limits: {
                     cpu: '1',
-                    memory: '4Gi',
+                    memory: '512Mi',
                   },
-                },
-                ports: [
-                  {
-                    name: 'metrics',
-                    containerPort: 9250,
-                  },
-                ],
-                volumeMounts: [
-                  {
-                    name: 'manifests',
-                    mountPath: '/var/lib/rancher/k3s/server/manifests',
-                  },
-                ],
-                securityContext: {
-                  privileged: true,
                 },
               },
             ],
@@ -107,6 +97,12 @@
                 name: 'kubectl',
                 image: {
                   reference: 'registry.k8s.io/kubectl:v1.34.1',
+                },
+              },
+              {
+                name: 'kustomize',
+                image: {
+                  reference: 'registry.k8s.io/kustomize/kustomize:v5.8.0',
                 },
               },
             ],
