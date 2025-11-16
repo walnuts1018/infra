@@ -13,9 +13,6 @@
       resources: [
         'clusterresourcesets',
         'helmchartproxies',
-        'machinedeployments',
-        'machinehealthchecks',
-
       ],
       verbs: [
         'get',
@@ -33,6 +30,8 @@
       ],
       resources: [
         'clusters',
+        'machinedeployments',
+        'machinehealthchecks',
       ],
       verbs: [
         'get',
