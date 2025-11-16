@@ -60,6 +60,42 @@
                   },
                 ],
               },
+              (import '../../components/container.libsonnet') {
+                name: 'wait-for-cluster',
+                image: 'debian:13.1-slim',
+                command: [
+                  '/usr/bin/bash',
+                  '-c',
+                ],
+                args: [
+                  'export PATH=$PATH:/kubectl && bash /scripts/wait-for-cluster.sh',
+                ],
+                resources: {
+                  requests: {
+                    cpu: '1m',
+                    memory: '10Mi',
+                  },
+                  limits: {
+                    cpu: '100m',
+                    memory: '512Mi',
+                  },
+                },
+                volumeMounts: [
+                  {
+                    name: 'scripts',
+                    mountPath: '/scripts',
+                  },
+                  {
+                    name: 'kubectl',
+                    mountPath: '/kubectl',
+                    subPath: 'bin',
+                  },
+                  {
+                    name: 'tmp',
+                    mountPath: '/tmp',
+                  },
+                ],
+              },
             ],
             containers: [
               (import '../../components/container.libsonnet') {
