@@ -7,7 +7,7 @@
   spec: {
     clusterSelector: {
       matchLabels: {
-        'cluster.x-k8s.io/cluster-name': (import '../longhorn-backup-validate/_manifests/cluster.jsonnet').metadata.name,
+        'cluster.x-k8s.io/cluster-name': (import 'cluster.jsonnet').metadata.name,
       },
     },
     repoURL: 'https://vmware-tanzu.github.io/helm-charts',

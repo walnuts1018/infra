@@ -1,6 +1,6 @@
-(import '../../components/external-secret.libsonnet') {
-  name: (import 'app.json5').name + '-manifest-credentials',
-  namespace: (import 'app.json5').namespace,
+(import '../../../components/external-secret.libsonnet') {
+  name: (import '../app.json5').name + '-manifest-credentials',
+  namespace: (import '../app.json5').namespace,
   use_suffix: false,
   data: [
     {

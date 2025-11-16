@@ -1,7 +1,11 @@
 apiVersion: 'kustomize.config.k8s.io/v1beta1'
 kind: Kustomization
 resources:
+- cluster-resource-set.json
 - cluster.json
+- external-secret.json
+- helm-chart-proxy-longhorn.json
+- helm-chart-proxy-velero.json
 - kubevirt-cluster.json
 - machine-deployment.json
 - machine-health-check.json
