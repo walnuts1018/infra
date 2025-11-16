@@ -46,7 +46,7 @@
                   {
                     name: 'kubectl',
                     mountPath: '/kubectl',
-                    subPath: 'app',
+                    subPath: 'bin',
                   },
                   {
                     name: 'kustomize',
@@ -104,7 +104,7 @@
                   {
                     name: 'kubectl',
                     mountPath: '/kubectl',
-                    subPath: 'app',
+                    subPath: 'bin',
                   },
                   {
                     name: 'kustomize',
