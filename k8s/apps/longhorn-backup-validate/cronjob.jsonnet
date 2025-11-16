@@ -27,7 +27,7 @@
                   '-c',
                 ],
                 args: [
-                  'export PATH=$PATH:/kustomize:/kubectl && kustomize build /manifests | kubectl apply -f -',
+                  'export PATH=$PATH:/kustomize:/kubectl && kustomize build /manifests > /tmp/manifests.yaml && kubectl apply -f /tmp/manifests.yaml',
                 ],
                 resources: {
                   requests: {
