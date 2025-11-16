@@ -7,7 +7,6 @@
   },
   spec: {
     clusterName: (import 'app.json5').name,
-    maxUnhealthy: '100%',
     nodeStartupTimeout: '10m',
     selector: {
       matchLabels: {
