@@ -30,13 +30,13 @@
           configRef: {
             apiGroup: 'bootstrap.cluster.x-k8s.io',
             kind: 'TalosConfigTemplate',
-            name: (import 'talos-config-template.jsonnet').metadata.name,
+            name: (import '../longhorn-backup-validate-template/talos-config-template.jsonnet').metadata.name,
           },
         },
         infrastructureRef: {
           apiGroup: 'infrastructure.cluster.x-k8s.io',
           kind: 'KubevirtMachineTemplate',
-          name: (import 'kubevirt-machine-template-worker.jsonnet').metadata.name,
+          name: (import '../longhorn-backup-validate-template/kubevirt-machine-template-worker.jsonnet').metadata.name,
         },
       },
     },
