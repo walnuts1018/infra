@@ -188,7 +188,7 @@
                 secret: {
                   secretName: (import '_manifests/cluster.jsonnet').metadata.name + '-kubeconfig',
                 },
-              }
+              },
               {
                 name: 'kustomize',
                 image: {
