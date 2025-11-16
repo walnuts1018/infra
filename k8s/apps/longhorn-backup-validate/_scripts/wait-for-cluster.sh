@@ -34,9 +34,9 @@ while [ "$(date +%s)" -lt $END_TIME ]; do
     exit 1
   fi
 
-  log info "Cluster is still being created... Checking again in 30 seconds." "cluster" "$CLUSTER_NAME"
+  log info "Cluster is not ready yet... Checking again in 30 seconds." "cluster" "$CLUSTER_NAME"
   sleep 30
 done
 
-log error "Timed out waiting for Cluster '$CLUSTER_NAME' to become ready."
+log error "Timed out waiting for cluster to be ready." "cluster" "$CLUSTER_NAME"
 exit 1
