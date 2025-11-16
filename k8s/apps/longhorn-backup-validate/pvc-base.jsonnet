@@ -14,7 +14,7 @@
     ],
     resources: {
       requests: {
-        storage: '4Gi',
+        storage: '6Gi',
       },
     },
   },

@@ -13,7 +13,7 @@
         'cluster.x-k8s.io/deployment-name': (import 'app.json5').name + '-worker',
       },
     },
-    unhealthyConditions: [
+    unhealthyNodeConditions: [
       {
         type: 'Ready',
         status: 'Unknown',
