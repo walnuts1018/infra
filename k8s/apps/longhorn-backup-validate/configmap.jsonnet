@@ -6,6 +6,7 @@
     'kustomization.yaml': (importstr './_manifests/kustomization.yaml'),
     'cluster.json': std.toString((import './_manifests/cluster.jsonnet')),
     'kubevirt-cluster.json': std.toString((import './_manifests/kubevirt-cluster.jsonnet')),
+    'machine-health-check.json': std.toString((import './_manifests/machine-health-check.jsonnet')),
     'machine-deployment.json': std.toString((import './_manifests/machine-deployment.jsonnet')),
     'talos-control-plane.json': std.toString((import './_manifests/talos-control-plane.jsonnet')),
   },

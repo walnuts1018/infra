@@ -4,4 +4,5 @@ resources:
 - cluster.json
 - kubevirt-cluster.json
 - machine-deployment.json
+- machine-health-check.json
 - talos-control-plane.json
