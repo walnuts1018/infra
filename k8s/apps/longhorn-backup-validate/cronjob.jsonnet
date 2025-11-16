@@ -97,6 +97,7 @@
                 ],
               },
               (import '../../components/container.libsonnet') {
+                // InitContainerでClusterを作っていてsecretを先にマウントすることができないのでこうする
                 name: 'copy-kubeconfig',
                 image: 'debian:13.1-slim',
                 command: [
