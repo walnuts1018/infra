@@ -4,5 +4,6 @@
   labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
   data: {
     'validate-longhorn-backup.sh': (importstr './_scripts/validate-longhorn-backup.sh'),
+    'wait-for-cluster.sh': (importstr './_scripts/wait-for-cluster.sh'),
   },
 }
