@@ -64,29 +64,26 @@
                     ],
                   },
                 },
-                nodeSelector: {
-                  'kubernetes.io/hostname': 'cake',
+                affinity: {
+                  nodeAffinity: {
+                    preferredDuringSchedulingIgnoredDuringExecution: [
+                      {
+                        weight: 100,
+                        preference: {
+                          matchExpressions: [
+                            {
+                              key: 'kubernetes.io/hostname',
+                              operator: 'In',
+                              values: [
+                                'cake',
+                              ],
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
                 },
-                // affinity: {
-                //   nodeAffinity: {
-                //     preferredDuringSchedulingIgnoredDuringExecution: [
-                //       {
-                //         weight: 100,
-                //         preference: {
-                //           matchExpressions: [
-                //             {
-                //               key: 'kubernetes.io/hostname',
-                //               operator: 'In',
-                //               values: [
-                //                 'cake',
-                //               ],
-                //             },
-                //           ],
-                //         },
-                //       },
-                //     ],
-                //   },
-                // },
                 evictionStrategy: 'External',
                 volumes: [
                   {
