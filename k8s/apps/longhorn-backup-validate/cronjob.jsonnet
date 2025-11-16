@@ -106,7 +106,7 @@
                   '-c',
                 ],
                 args: [
-                  'export PATH=$PATH:/kustomize:/kubectl && bash /scripts/validate-longhorn-backup.sh',
+                  'export PATH=$PATH:/kubectl && bash /scripts/validate-longhorn-backup.sh',
                 ],
                 resources: {
                   requests: {
@@ -152,6 +152,11 @@
                     name: 'tmp',
                     mountPath: '/tmp',
                   },
+                  {
+                    name: 'kubeconfig',
+                    mountPath: '/root/.kube/config',
+                    subPath: 'kubeconfig',
+                  },
                 ],
               },
             ],
@@ -178,6 +183,12 @@
                   reference: 'registry.k8s.io/kubectl:v1.34.1',
                 },
               },
+              {
+                name: 'kubeconfig',
+                secret: {
+                  secretName: (import '_manifests/cluster.jsonnet').metadata.name + '-kubeconfig',
+                },
+              }
               {
                 name: 'kustomize',
                 image: {
