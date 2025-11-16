@@ -20,7 +20,7 @@
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'cluster-deploy',
-                image: 'registry.k8s.io/kubectl:v1.34.1',
+                image: 'registry.k8s.io/kubectl:v1.34.2',
                 command: [
                   '/usr/bin/bash',
                   '-c',
