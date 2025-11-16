@@ -1,0 +1,99 @@
+{
+  apiVersion: 'rbac.authorization.k8s.io/v1',
+  kind: 'Role',
+  metadata: {
+    name: (import 'app.json5').name,
+    namespace: (import 'app.json5').namespace,
+  },
+  rules: [
+    {
+      apiGroups: [
+        'addons.cluster.x-k8s.io',
+      ],
+      resources: [
+        'clusterresourcesets',
+        'helmchartproxies',
+        'machinedeployments',
+        'machinehealthchecks',
+
+      ],
+      verbs: [
+        'get',
+        'list',
+        'watch',
+        'create',
+        'patch',
+        'update',
+        'delete',
+      ],
+    },
+    {
+      apiGroups: [
+        'cluster.x-k8s.io',
+      ],
+      resources: [
+        'clusters',
+      ],
+      verbs: [
+        'get',
+        'list',
+        'watch',
+        'create',
+        'patch',
+        'update',
+        'delete',
+      ],
+    },
+    {
+      apiGroups: [
+        'external-secrets.io',
+      ],
+      resources: [
+        'externalsecrets',
+      ],
+      verbs: [
+        'get',
+        'list',
+        'watch',
+        'create',
+        'patch',
+        'update',
+        'delete',
+      ],
+    },
+    {
+      apiGroups: [
+        'infrastructure.cluster.x-k8s.io',
+      ],
+      resources: [
+        'kubevirtclusters',
+      ],
+      verbs: [
+        'get',
+        'list',
+        'watch',
+        'create',
+        'patch',
+        'update',
+        'delete',
+      ],
+    },
+    {
+      apiGroups: [
+        'controlplane.cluster.x-k8s.io',
+      ],
+      resources: [
+        'taloscontrolplanes',
+      ],
+      verbs: [
+        'get',
+        'list',
+        'watch',
+        'create',
+        'patch',
+        'update',
+        'delete',
+      ],
+    },
+  ],
+}

@@ -17,6 +17,7 @@
           spec: {
             restartPolicy: 'OnFailure',
             dnsPolicy: 'Default',
+            serviceAccountName: (import 'sa.jsonnet').metadata.name,
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'cluster-deploy',
