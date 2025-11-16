@@ -34,7 +34,6 @@
                 },
                 spec: {
                   pvc: {
-                    volumeMode: 'Block',
                     accessModes: ['ReadWriteOnce'],
                     resources: {
                       requests: {
