@@ -1,4 +1,4 @@
 {
   name: "kube-virt",
-  namespace: "kube-virt",
+  namespace: "argocd",
 }
