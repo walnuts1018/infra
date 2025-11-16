@@ -1,0 +1,55 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtMachineTemplate
+metadata:
+  name: longhorn-backup-validate-worker
+  namespace: longhorn-backup-validate
+spec:
+  template:
+    spec:
+      virtualMachineBootstrapCheck:
+        checkStrategy: none
+      virtualMachineTemplate:
+        metadata:
+          labels:
+            app: longhorn-backup-validate-worker
+          namespace: longhorn-backup-validate
+        spec:
+          dataVolumeTemplates:
+            - metadata:
+                name: boot-volume
+              spec:
+                pvc:
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 64Gi
+                  storageClassName: local-path
+                  volumeMode: Block
+                source:
+                  pvc:
+                    name: talos-1-8-2-openstack.img
+          instancetype:
+            kind: VirtualMachineClusterInstancetype
+            name: o1.large
+          preference:
+            kind: VirtualMachineClusterPreference
+            name: ubuntu
+          runStrategy: Once
+          template:
+            metadata:
+              labels:
+                app: longhorn-backup-validate-worker
+            spec:
+              domain:
+                devices:
+                  disks:
+                    - disk:
+                        bus: virtio
+                      name: dv-volume
+                  networkInterfaceMultiqueue: true
+              evictionStrategy: External
+              volumes:
+                - dataVolume:
+                    name: boot-volume
+                  name: dv-volume

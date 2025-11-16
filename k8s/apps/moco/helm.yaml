@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: moco-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: moco-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: moco
+    helm:
+      releaseName: moco
+      values: |
+        priorityClassName: "high"
+        affinity:
+          nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                - key: kubernetes.io/arch
+                  operator: In
+                  values:
+                  - amd64
+        resources:
+          requests:
+            cpu: 1m
+            memory: 40Mi
+    repoURL: https://cybozu-go.github.io/moco/
+    targetRevision: 0.20.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

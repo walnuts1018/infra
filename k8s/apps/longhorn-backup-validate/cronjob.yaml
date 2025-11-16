@@ -1,0 +1,96 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: longhorn-backup-validate
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: longhorn-backup-validate
+            app.kubernetes.io/name: longhorn-backup-validate
+        spec:
+          containers:
+            - command:
+                - /bin/k3s
+                - server
+              image: rancher/k3s:v1.34.1-k3s1
+              name: k3s
+              ports:
+                - containerPort: 9250
+                  name: metrics
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: 4Gi
+                requests:
+                  cpu: 10m
+                  memory: 10Mi
+              securityContext:
+                privileged: true
+              volumeMounts:
+                - mountPath: /var/lib/rancher/k3s/server/manifests
+                  name: manifests
+          dnsPolicy: Default
+          initContainers:
+            - args:
+                - export PATH=$PATH:/helm && kustomize build --enable-helm /src -o /manifests/manifest.yaml
+              command:
+                - /bin/sh
+                - -c
+              image: registry.k8s.io/kustomize/kustomize:v5.8.0
+              name: build-manifest
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 128Mi
+                requests:
+                  cpu: 1m
+                  memory: 10Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /src
+                  name: src-manifest
+                  readOnly: true
+                - mountPath: /src/credentials
+                  name: src-manifest-credentials
+                  readOnly: true
+                - mountPath: /manifests
+                  name: manifests
+                - mountPath: /helm
+                  name: helm
+                  subPath: usr/bin
+                - mountPath: /tmp
+                  name: tmp
+                - mountPath: /src/charts
+                  name: charts
+          restartPolicy: OnFailure
+          volumes:
+            - configMap:
+                name: longhorn-backup-validate-manifests-0a2c56
+              name: src-manifest
+            - name: src-manifest-credentials
+              secret:
+                secretName: longhorn-backup-validate-manifest-credentials
+            - emptyDir: {}
+              name: manifests
+            - image:
+                reference: alpine/helm:3.19.0
+              name: helm
+            - emptyDir: {}
+              name: tmp
+            - emptyDir: {}
+              name: charts
+  schedule: 20 4 */7 * *
+  startingDeadlineSeconds: 120
+  suspend: true
