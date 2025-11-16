@@ -161,7 +161,7 @@
                       command: [
                         '/usr/bin/bash',
                         '-c',
-                        'export PATH=$PATH:/kustomize:/kubectl && kustomize build /manifests | kubectl delete -f -',
+                        'export PATH=$PATH:/kustomize:/kubectl && export KUBECONFIG=/kubeconfig/config kustomize build /manifests | kubectl delete -f -',
                       ],
                     },
                   },
@@ -191,7 +191,7 @@
                   },
                   {
                     name: 'kubeconfig',
-                    mountPath: '/root/.kube',
+                    mountPath: '/kubeconfig',
                   },
                 ],
               },
