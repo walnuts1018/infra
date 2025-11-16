@@ -7,7 +7,7 @@
   spec: {
     clusterSelector: {
       matchLabels: {
-        'cluster.x-k8s.io/cluster-name': (import '../longhorn-backup-validate/cluster.jsonnet').metadata.name,
+        'cluster.x-k8s.io/cluster-name': (import '../longhorn-backup-validate/_manifests/cluster.jsonnet').metadata.name,
       },
     },
     repoURL: 'https://charts.longhorn.io',

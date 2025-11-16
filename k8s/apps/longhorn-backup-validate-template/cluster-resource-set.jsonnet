@@ -2,14 +2,14 @@
   apiVersion: 'addons.cluster.x-k8s.io/v1beta2',
   kind: 'ClusterResourceSet',
   metadata: {
-    name: 'csi-proxmox',
-    namespace: 'kaas',
+    name: (import 'app.json5').name + '-resourceset',
+    namespace: (import 'app.json5').namespace,
   },
   spec: {
     strategy: 'Reconcile',
     clusterSelector: {
       matchLabels: {
-        'cluster.x-k8s.io/cluster-name': (import '../longhorn-backup-validate/cluster.jsonnet').metadata.name,
+        'cluster.x-k8s.io/cluster-name': (import '../longhorn-backup-validate/_manifests/cluster.jsonnet').metadata.name,
       },
     },
     resources: [
