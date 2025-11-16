@@ -12,17 +12,5 @@
         'cluster.x-k8s.io/deployment-name': (import 'app.json5').name + '-worker',
       },
     },
-    unhealthyNodeConditions: [
-      {
-        type: 'Ready',
-        status: 'Unknown',
-        timeout: '300s',
-      },
-      {
-        type: 'Ready',
-        status: 'False',
-        timeout: '300s',
-      },
-    ],
   },
 }
