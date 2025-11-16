@@ -8,7 +8,7 @@
   spec: {
     project: 'default',
     destination: {
-      namespace: 'kubevirt',
+      namespace: (import 'app.json5').namespace,
       server: 'https://kubernetes.default.svc',
     },
     source: {

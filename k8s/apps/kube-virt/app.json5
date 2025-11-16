@@ -1,4 +1,4 @@
 {
   name: "kube-virt",
-  namespace: "argocd", // TODO: skip Namespace generation
+  namespace: "kube-virt", // TODO: skip Namespace generation
 }
