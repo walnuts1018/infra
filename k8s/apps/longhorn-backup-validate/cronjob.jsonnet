@@ -96,6 +96,42 @@
                   },
                 ],
               },
+              (import '../../components/container.libsonnet') {
+                name: 'copy-kubeconfig',
+                image: 'debian:13.1-slim',
+                command: [
+                  '/usr/bin/bash',
+                  '-c',
+                ],
+                args: [
+                  'export PATH=$PATH:/kubectl && kubectl get secrets -n longhorn-backup-validate longhorn-backup-validate-kubeconfig -o jsonpath="{.data.value}" | base64 -d > /kubeconfig/config',
+                ],
+                resources: {
+                  requests: {
+                    cpu: '1m',
+                    memory: '10Mi',
+                  },
+                  limits: {
+                    cpu: '100m',
+                    memory: '512Mi',
+                  },
+                },
+                volumeMounts: [
+                  {
+                    name: 'kubectl',
+                    mountPath: '/kubectl',
+                    subPath: 'bin',
+                  },
+                  {
+                    name: 'kubeconfig',
+                    mountPath: '/kubeconfig',
+                  },
+                  {
+                    name: 'tmp',
+                    mountPath: '/tmp',
+                  },
+                ],
+              },
             ],
             containers: [
               (import '../../components/container.libsonnet') {
@@ -154,8 +190,7 @@
                   },
                   {
                     name: 'kubeconfig',
-                    mountPath: '/root/.kube/config',
-                    subPath: 'kubeconfig',
+                    mountPath: '/root/.kube',
                   },
                 ],
               },
@@ -185,10 +220,14 @@
               },
               {
                 name: 'kubeconfig',
-                secret: {
-                  secretName: (import '_manifests/cluster.jsonnet').metadata.name + '-kubeconfig',
-                },
+                emptyDir: {},
               },
+              // {
+              //   name: 'kubeconfig',
+              //   secret: {
+              //     secretName: (import '_manifests/cluster.jsonnet').metadata.name + '-kubeconfig',
+              //   },
+              // },
               {
                 name: 'kustomize',
                 image: {
