@@ -48,7 +48,7 @@
                 },
               },
             ],
-            runStrategy: 'Once',
+            runStrategy: 'Always',
             template: {
               spec: {
                 domain: {

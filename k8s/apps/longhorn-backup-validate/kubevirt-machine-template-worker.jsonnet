@@ -51,7 +51,7 @@
                 },
               },
             ],
-            runStrategy: 'Once',
+            runStrategy: 'Always',
             template: {
               metadata: {
                 labels: {
