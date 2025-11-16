@@ -17,12 +17,12 @@
     infrastructureRef: {
       apiGroup: 'infrastructure.cluster.x-k8s.io',
       kind: 'KubevirtCluster',
-      name: (import '../longhorn-backup-validate-template/kubevirt-cluster.jsonnet').metadata.name,
+      name: (import 'kubevirt-cluster.jsonnet').metadata.name,
     },
     controlPlaneRef: {
       apiGroup: 'controlplane.cluster.x-k8s.io',
       kind: 'TalosControlPlane',
-      name: (import '../longhorn-backup-validate-template/talos-control-plane.jsonnet').metadata.name,
+      name: (import 'talos-control-plane.jsonnet').metadata.name,
     },
   },
 }

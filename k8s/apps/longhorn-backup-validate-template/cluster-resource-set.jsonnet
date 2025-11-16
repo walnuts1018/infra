@@ -9,7 +9,7 @@
     strategy: 'Reconcile',
     clusterSelector: {
       matchLabels: {
-        'cluster.x-k8s.io/cluster-name': (import 'app.json5').name,
+        'cluster.x-k8s.io/cluster-name': (import '../longhorn-backup-validate/cluster.jsonnet').metadata.name,
       },
     },
     resources: [
