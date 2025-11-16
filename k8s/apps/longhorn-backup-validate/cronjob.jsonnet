@@ -26,7 +26,7 @@
                   '-c',
                 ],
                 args: [
-                  'PATH=$PATH:/kustomize:/kubectl kustomize build /manifests | kubectl apply -f -',
+                  'export PATH=$PATH:/kustomize:/kubectl && kustomize build /manifests | kubectl apply -f -',
                 ],
                 resources: {
                   requests: {
@@ -69,7 +69,7 @@
                   '-c',
                 ],
                 args: [
-                  'PATH=$PATH:/kustomize:/kubectl bash /scripts/validate-longhorn-backup.sh',
+                  'export PATH=$PATH:/kustomize:/kubectl && bash /scripts/validate-longhorn-backup.sh',
                 ],
                 resources: {
                   requests: {
@@ -87,7 +87,7 @@
                       command: [
                         '/usr/bin/bash',
                         '-c',
-                        'PATH=$PATH:/kustomize:/kubectl  kustomize build /manifests | kubectl delete -f -',
+                        'export PATH=$PATH:/kustomize:/kubectl && kustomize build /manifests | kubectl delete -f -',
                       ],
                     },
                   },
