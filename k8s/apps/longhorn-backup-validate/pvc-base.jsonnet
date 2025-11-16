@@ -8,7 +8,7 @@
     },
   },
   spec: {
-    storageClassName: 'longhorn',
+    storageClassName: 'longhorn-local',
     accessModes: [
       'ReadWriteOnce',
     ],
