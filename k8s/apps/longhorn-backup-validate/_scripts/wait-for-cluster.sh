@@ -21,7 +21,7 @@ log() {
 log info "Waiting for cluster to be ready" "cluster" "$CLUSTER_NAME"
 
 START_TIME=$(date +%s)
-END_TIME=$((START_TIME + 86400)) # Timeout: 24 hours
+END_TIME=$((START_TIME + 3600)) # Timeout: 1 hours
 
 while [ "$(date +%s)" -lt $END_TIME ]; do
   if [ "$(kubectl get clusters.cluster.x-k8s.io -n "$NAMESPACE" "$CLUSTER_NAME" -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')" == "True" ]; then
