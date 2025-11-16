@@ -91,12 +91,8 @@
             volumes: [
               {
                 name: 'manifests',
-                emptyDir: {},
-              },
-              {
-                name: 'helm',
-                image: {
-                  reference: 'alpine/helm:3.19.0',
+                configMap: {
+                  name: (import 'configmap.jsonnet').metadata.name,
                 },
               },
               {
