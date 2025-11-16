@@ -18,7 +18,7 @@ log() {
     echo "$json}"
 }
 
-log info "Waiting for cluster creation to complete" "cluster" "$CLUSTER_NAME"
+log info "Waiting for cluster to be ready" "cluster" "$CLUSTER_NAME"
 
 START_TIME=$(date +%s)
 END_TIME=$((START_TIME + 86400)) # Timeout: 24 hours
