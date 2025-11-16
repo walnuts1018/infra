@@ -18,7 +18,7 @@
           spec: {
             instancetype: {
               kind: 'VirtualMachineClusterInstancetype',
-              name: 'o1.large',
+              name: 'u1.large',
             },
             preference: {
               kind: 'VirtualMachineClusterPreference',
