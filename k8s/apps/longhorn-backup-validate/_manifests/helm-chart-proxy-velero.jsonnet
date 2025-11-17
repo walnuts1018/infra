@@ -19,9 +19,9 @@
       atomic: true,
       wait: true,
       timeout: '5m',
-      install: {
-        includeCRDs: true,
-      },
+      // install: {
+      //   includeCRDs: true,
+      // },
     },
     valuesTemplate: (importstr 'velero-values.yaml'),
   },
