@@ -41,7 +41,7 @@
                         storage: '16Gi',
                       },
                     },
-                    storageClassName: 'longhorn-local',
+                    storageClassName: 'longhorn-local-temporary',
                     dataSource: {
                       apiGroup: '',
                       kind: 'PersistentVolumeClaim',
