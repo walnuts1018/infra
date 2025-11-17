@@ -5,7 +5,7 @@ resources:
 - cluster.json
 - external-secret.json
 - helm-chart-proxy-longhorn.json
-# - helm-chart-proxy-velero.json
+- helm-chart-proxy-velero.json
 - kubevirt-cluster.json
 - machine-deployment.json
 - machine-health-check.json
