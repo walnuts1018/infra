@@ -3,6 +3,7 @@
   kind: 'HelmChartProxy',
   metadata: {
     name: 'longhorn',
+    namespace: (import '../app.json5').namespace,
   },
   spec: {
     clusterSelector: {

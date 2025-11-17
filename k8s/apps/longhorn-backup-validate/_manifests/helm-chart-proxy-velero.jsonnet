@@ -3,6 +3,7 @@
   kind: 'HelmChartProxy',
   metadata: {
     name: 'velero',
+    namespace: (import '../app.json5').namespace,
   },
   spec: {
     clusterSelector: {
