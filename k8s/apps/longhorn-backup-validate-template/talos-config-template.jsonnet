@@ -9,6 +9,22 @@
       spec: {
         generateType: 'join',
         talosVersion: 'v1.11.5',  // TODO: auto update
+        configPatches: [
+          {
+            op: 'add',
+            path: '/machine/disks',
+            value: [
+              {
+                device: '/dev/vdb',
+                partitions: [
+                  {
+                    mountpoint: '/var/lib/longhorn',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       },
     },
   },
