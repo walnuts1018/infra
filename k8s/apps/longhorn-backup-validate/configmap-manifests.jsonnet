@@ -8,7 +8,6 @@
     'cluster.json': std.toString((import './_manifests/cluster.jsonnet')),
     'external-secret.json': std.toString((import './_manifests/external-secret.jsonnet')),
     'helm-chart-proxy-longhorn.json': std.toString((import './_manifests/helm-chart-proxy-longhorn.jsonnet')),
-    'helm-chart-proxy-snapshot-controller-crds.json': std.toString((import './_manifests/helm-chart-proxy-snapshot-controller-crds.jsonnet')),
     'helm-chart-proxy-snapshot-controller.json': std.toString((import './_manifests/helm-chart-proxy-snapshot-controller.jsonnet')),
     'helm-chart-proxy-velero.json': std.toString((import './_manifests/helm-chart-proxy-velero.jsonnet')),
     'kubevirt-cluster.json': std.toString((import './_manifests/kubevirt-cluster.jsonnet')),
