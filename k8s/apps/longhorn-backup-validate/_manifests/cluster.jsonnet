@@ -4,6 +4,9 @@
   metadata: {
     name: (import '../app.json5').name,
     namespace: (import '../app.json5').namespace,
+    labels: {
+      'cluster.x-k8s.io/cluster-name': (import '../app.json5').name,
+    },
   },
   spec: {
     clusterNetwork: {

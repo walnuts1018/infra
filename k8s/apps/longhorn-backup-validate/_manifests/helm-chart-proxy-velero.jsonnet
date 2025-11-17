@@ -6,9 +6,7 @@
   },
   spec: {
     clusterSelector: {
-      matchLabels: {
-        'cluster.x-k8s.io/cluster-name': (import 'cluster.jsonnet').metadata.name,
-      },
+      matchLabels: (import 'cluster.jsonnet').metadata.labels,
     },
     repoURL: 'https://vmware-tanzu.github.io/helm-charts',
     chartName: 'velero',

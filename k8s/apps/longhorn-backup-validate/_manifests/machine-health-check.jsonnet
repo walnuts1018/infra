@@ -8,9 +8,7 @@
   spec: {
     clusterName: (import 'cluster.jsonnet').metadata.name,
     selector: {
-      matchLabels: {
-        'cluster.x-k8s.io/cluster-name': (import 'cluster.jsonnet').metadata.name,
-      },
+      matchLabels: (import 'cluster.jsonnet').metadata.labels,
     },
   },
 }
