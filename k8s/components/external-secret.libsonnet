@@ -21,10 +21,10 @@
     refreshInterval: '1m',
     target: {
       name: $.metadata.name,
-      [if $.template_data != null then 'template']: {
+      template: {
         engineVersion: 'v2',
         type: $.type,
-        data: $.template_data,
+        [if $.template_data != null then 'data']: $.template_data,
       },
     },
     data: $.data,
