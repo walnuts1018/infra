@@ -1,5 +1,6 @@
 defaultSettings:
   defaultReplicaCount: '1'
+  defaultDataPath: "/var/lib/longhorn/"
 csi:
   attacherReplicaCount: 1
   provisionerReplicaCount: 1
