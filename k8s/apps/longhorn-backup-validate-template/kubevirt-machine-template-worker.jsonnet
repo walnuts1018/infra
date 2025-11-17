@@ -34,6 +34,7 @@
                 },
                 spec: {
                   pvc: {
+                    volumeMode: 'Block',
                     accessModes: ['ReadWriteOnce'],
                     resources: {
                       requests: {
@@ -45,6 +46,22 @@
                       kind: 'PersistentVolumeClaim',
                       name: (import 'pvc-base.jsonnet').metadata.name,
                     },
+                  },
+                },
+              },
+              {
+                metadata: {
+                  name: 'application-data-volume',
+                },
+                spec: {
+                  pvc: {
+                    accessModes: ['ReadWriteOnce'],
+                    resources: {
+                      requests: {
+                        storage: '128Gi',
+                      },
+                    },
+                    storageClassName: 'local-path',
                   },
                 },
               },
@@ -66,6 +83,18 @@
                           bus: 'virtio',
                         },
                         name: 'dv-volume',
+                      },
+                      {
+                        disk: {
+                          bus: 'virtio',
+                        },
+                        name: 'cloudinitdisk',
+                      },
+                      {
+                        disk: {
+                          bus: 'virtio',
+                        },
+                        name: 'longhorn-volume',
                       },
                     ],
                   },
@@ -97,6 +126,23 @@
                       name: 'boot-volume',
                     },
                     name: 'dv-volume',
+                  },
+                  {
+                    name: 'cloudinitdisk',
+                    cloudInitNoCloud: {
+                      userData: '#cloud-config\n' + std.manifestYamlDoc({
+                        bootcmd: [
+                          'sudo mkdir -p /var/lib/longhorn/',
+                          'sudo mount /dev/vdb /var/lib/longhorn/',
+                        ],
+                      }) + '\n',
+                    },
+                  },
+                  {
+                    dataVolume: {
+                      name: 'lapplication-data-volume',
+                    },
+                    name: 'longhorn-volume',
                   },
                 ],
               },
