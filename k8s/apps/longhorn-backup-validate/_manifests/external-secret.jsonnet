@@ -1,7 +1,6 @@
 (import '../../../components/external-secret.libsonnet') {
   name: (import '../app.json5').name + '-manifest-credentials',
   namespace: (import '../app.json5').namespace,
-  use_suffix: false,
   data: [
     {
       secretKey: 'minio_biscuit_secret_key',
@@ -29,4 +28,5 @@
     'longhorn-secret.yaml': (importstr './_manifests/longhorn-secret.yaml.tmpl'),
     'velero-secret.yaml': (importstr './_manifests/velero-secret.yaml.tmpl'),
   },
+  type: 'addons.cluster.x-k8s.io/resource-set',
 }

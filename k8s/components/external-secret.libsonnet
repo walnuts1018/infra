@@ -4,6 +4,7 @@
   use_suffix:: true,
   data:: error 'data is required',
   template_data:: null,
+  type:: 'Opaque',
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
@@ -22,7 +23,7 @@
       name: $.metadata.name,
       [if $.template_data != null then 'template']: {
         engineVersion: 'v2',
-        type: 'Opaque',
+        type: $.type,
         data: $.template_data,
       },
     },
