@@ -37,15 +37,13 @@
                     accessModes: ['ReadWriteOnce'],
                     resources: {
                       requests: {
-                        storage: '64Gi',
+                        storage: '16Gi',
                       },
                     },
-                    storageClassName: 'local-path',
-                  },
-                  source: {
-                    pvc: {
+                    storageClassName: 'longhorn-local',
+                    dataSource: {
+                      kind: 'PersistentVolumeClaim',
                       name: (import 'pvc-base.jsonnet').metadata.name,
-                      namespace: (import 'pvc-base.jsonnet').metadata.namespace,
                     },
                   },
                 },

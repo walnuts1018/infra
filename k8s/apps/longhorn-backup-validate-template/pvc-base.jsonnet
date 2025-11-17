@@ -15,12 +15,13 @@
   },
   spec: {
     storageClassName: 'longhorn-local',
+    volumeMode: 'Block',
     accessModes: [
       'ReadWriteOnce',
     ],
     resources: {
       requests: {
-        storage: '6Gi',
+        storage: '16Gi',
       },
     },
   },
