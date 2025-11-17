@@ -43,6 +43,7 @@
                     },
                     storageClassName: 'longhorn-local',
                     dataSource: {
+                      apiGroup: '',
                       kind: 'PersistentVolumeClaim',
                       name: (import 'pvc-base.jsonnet').metadata.name,
                     },
