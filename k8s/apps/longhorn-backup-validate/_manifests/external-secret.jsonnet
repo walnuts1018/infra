@@ -1,6 +1,7 @@
 (import '../../../components/external-secret.libsonnet') {
   name: (import '../app.json5').name + '-manifest-credentials',
   namespace: (import '../app.json5').namespace,
+  use_suffix: false,  // ArgoCDを使っていないので古いSecretが残り続けちゃう
   data: [
     {
       secretKey: 'minio_biscuit_secret_key',
