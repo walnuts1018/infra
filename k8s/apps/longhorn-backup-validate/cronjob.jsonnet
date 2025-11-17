@@ -161,7 +161,7 @@
                       command: [
                         '/usr/bin/bash',
                         '-c',
-                        'export PATH=$PATH:/kustomize:/kubectl kustomize build /manifests | kubectl delete -f -',
+                        'export PATH=$PATH:/kustomize:/kubectl && kustomize build /manifests | kubectl delete -f -',
                       ],
                     },
                   },
