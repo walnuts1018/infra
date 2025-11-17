@@ -62,6 +62,19 @@
     },
     {
       apiGroups: [
+        '',
+      ],
+      resources: [
+        'secrets',
+      ],
+      verbs: [
+        'get',
+        'list',
+        'watch',
+      ],
+    },
+    {
+      apiGroups: [
         'infrastructure.cluster.x-k8s.io',
       ],
       resources: [
