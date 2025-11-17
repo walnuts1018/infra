@@ -28,6 +28,7 @@
   template_data: {
     'longhorn-secret.yaml': (importstr './_manifests/longhorn-secret.yaml.tmpl'),
     'velero-secret.yaml': (importstr './_manifests/velero-secret.yaml.tmpl'),
+    'namespaces.yaml': (importstr './_manifests/namespaces.yaml'),
   },
   type: 'addons.cluster.x-k8s.io/resource-set',
 }

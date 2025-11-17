@@ -19,7 +19,6 @@
       wait: true,
       timeout: '5m',
       install: {
-        createNamespace: true,
         includeCRDs: true,
       },
     },
