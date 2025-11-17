@@ -69,17 +69,17 @@
                         },
                         name: 'dv-volume',
                       },
-                      // {
-                      //   disk: {
-                      //     bus: 'virtio',
-                      //   },
-                      //   name: 'cloudinitdisk',
-                      // },
                       {
                         disk: {
                           bus: 'virtio',
                         },
                         name: 'longhorn-volume',
+                      },
+                      {
+                        disk: {
+                          bus: 'virtio',
+                        },
+                        name: 'cloudinitdisk',
                       },
                     ],
                   },
@@ -112,22 +112,23 @@
                     },
                     name: 'dv-volume',
                   },
-                  // {
-                  //   name: 'cloudinitdisk',
-                  //   cloudInitNoCloud: {
-                  //     userData: '#cloud-config\n' + std.manifestYamlDoc({
-                  //       bootcmd: [
-                  //         'sudo mkdir -p /var/lib/longhorn/',
-                  //         'sudo mount /dev/vdb /var/lib/longhorn/',
-                  //       ],
-                  //     }) + '\n',
-                  //   },
-                  // },
                   {
                     emptyDisk: {
                       capacity: '128Gi',
                     },
                     name: 'longhorn-volume',
+                  },
+                  {
+                    name: 'cloudinitdisk',
+                    cloudInitNoCloud: {
+                      userData: '#cloud-config\n' + std.manifestYamlDoc({
+                        bootcmd: [
+                          'sudo mkdir -p /var/lib/longhorn/',
+                          'mkfs.ext4 /dev/vdb',
+                          'sudo mount /dev/vdb /var/lib/longhorn/',
+                        ],
+                      }) + '\n',
+                    },
                   },
                 ],
               },
