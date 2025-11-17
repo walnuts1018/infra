@@ -140,7 +140,7 @@
                   },
                   {
                     dataVolume: {
-                      name: 'lapplication-data-volume',
+                      name: 'application-data-volume',
                     },
                     name: 'longhorn-volume',
                   },
