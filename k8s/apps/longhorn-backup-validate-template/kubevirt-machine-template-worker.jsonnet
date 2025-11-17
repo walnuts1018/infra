@@ -50,22 +50,6 @@
                   },
                 },
               },
-              {
-                metadata: {
-                  name: 'application-data-volume',
-                },
-                spec: {
-                  pvc: {
-                    accessModes: ['ReadWriteOnce'],
-                    resources: {
-                      requests: {
-                        storage: '128Gi',
-                      },
-                    },
-                    storageClassName: 'local-path',
-                  },
-                },
-              },
             ],
             runStrategy: 'Always',
             template: {
@@ -140,8 +124,8 @@
                     },
                   },
                   {
-                    dataVolume: {
-                      name: 'application-data-volume',
+                    emptyDisk: {
+                      capacity: '128Gi',
                     },
                     name: 'longhorn-volume',
                   },
