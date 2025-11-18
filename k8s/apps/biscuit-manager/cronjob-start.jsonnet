@@ -20,7 +20,7 @@
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'biscuit-manager',
-                  image: 'debian:13.1-slim',
+                  image: 'debian:13.2-slim',
                   command: [
                     'bash',
                     '/start.sh',

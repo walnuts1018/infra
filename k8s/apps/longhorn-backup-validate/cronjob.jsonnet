@@ -21,7 +21,7 @@
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'cluster-deploy',
-                image: 'debian:13.1-slim',
+                image: 'debian:13.2-slim',
                 command: [
                   '/usr/bin/bash',
                   '-c',
@@ -62,7 +62,7 @@
               },
               (import '../../components/container.libsonnet') {
                 name: 'wait-for-cluster',
-                image: 'debian:13.1-slim',
+                image: 'debian:13.2-slim',
                 command: [
                   '/usr/bin/bash',
                   '-c',
@@ -99,7 +99,7 @@
               (import '../../components/container.libsonnet') {
                 // InitContainerでClusterを作っていてsecretを先にマウントすることができないのでこうする
                 name: 'copy-kubeconfig',
-                image: 'debian:13.1-slim',
+                image: 'debian:13.2-slim',
                 command: [
                   '/usr/bin/bash',
                   '-c',
@@ -137,7 +137,7 @@
             containers: [
               (import '../../components/container.libsonnet') {
                 name: 'backup-validate',
-                image: 'debian:13.1-slim',
+                image: 'debian:13.2-slim',
                 command: [
                   '/usr/bin/bash',
                   '-c',
