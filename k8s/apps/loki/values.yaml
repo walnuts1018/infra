@@ -97,6 +97,9 @@ loki:
       desired_rate: 104857600 # 10MiB
     reject_old_samples: false
 
+  pattern_ingester:
+    enabled: true
+
 global:
   extraEnv:
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
