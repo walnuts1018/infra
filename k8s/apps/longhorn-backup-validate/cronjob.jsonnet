@@ -193,6 +193,15 @@
                     name: 'kubeconfig',
                     mountPath: '/kubeconfig',
                   },
+                  {
+                    name: 'velero',
+                    mountPath: '/velero',
+                  },
+                  {
+                    name: 'longhorn-cli',
+                    mountPath: '/longhorn-cli',
+                    subPath: 'usr/local/bin',
+                  },
                 ],
               },
             ],
@@ -233,6 +242,18 @@
                 name: 'kustomize',
                 image: {
                   reference: 'registry.k8s.io/kustomize/kustomize:v5.8.0',
+                },
+              },
+              {
+                name: 'velero',
+                image: {
+                  reference: 'velero/velero:v1.17.0',
+                },
+              },
+              {
+                name: 'longhorn-cli',
+                image: {
+                  reference: 'longhornio/longhorn-cli:v1.10.1',
                 },
               },
             ],
