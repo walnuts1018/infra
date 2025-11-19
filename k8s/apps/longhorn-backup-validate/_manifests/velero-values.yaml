@@ -21,7 +21,7 @@ configuration:
       region: ap-northeast-1
       s3ForcePathStyle: "true"
     credential:
-      name: velero-minio-biscuit-credential
+      name: velero-credential
       key: credentials
   volumeSnapshotLocation:
   - name: minio-biscuit
@@ -31,5 +31,5 @@ configuration:
       region: ap-northeast-1
       s3ForcePathStyle: "true"
     credential:
-      name: velero-minio-biscuit-credential
+      name: velero-credential
       key: credentials
