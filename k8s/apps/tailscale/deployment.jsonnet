@@ -24,7 +24,7 @@
           (import '../../components/container.libsonnet') {
             name: 'tailscale',
             imagePullPolicy: 'IfNotPresent',
-            image: 'ghcr.io/tailscale/tailscale:v1.90.6',
+            image: 'ghcr.io/tailscale/tailscale:v1.90.8',
             env: [
               {
                 name: 'TS_KUBE_SECRET',
