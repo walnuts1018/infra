@@ -3,7 +3,7 @@ module github.com/walnuts1018/infra/scripts/infrautil
 go 1.25.1
 
 require (
-	github.com/go-playground/validator/v10 v10.27.0
+	github.com/go-playground/validator/v10 v10.28.0
 	github.com/google/go-jsonnet v0.21.0
 	github.com/google/subcommands v1.2.0
 	github.com/phsym/console-slog v0.3.1
