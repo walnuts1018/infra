@@ -1,4 +1,0 @@
-{
-  name: "kube-virt",
-  namespace: "kube-virt", // TODO: skip Namespace generation
-}

@@ -1,4 +1,0 @@
-{
-  name: "postgresql-default",
-  namespace: "databases",
-}

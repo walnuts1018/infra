@@ -1,0 +1,1729 @@
+---
+# Source: cloudflare-tunnel-operator/crds/cloudflaretunnel-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: cloudflare-tunnel-operator-system/cloudflare-tunnel-operator-serving-cert
+    controller-gen.kubebuilder.io/version: v0.19.0
+  name: cloudflaretunnels.cf-tunnel-operator.walnuts.dev
+spec:
+  group: cf-tunnel-operator.walnuts.dev
+  names:
+    kind: CloudflareTunnel
+    listKind: CloudflareTunnelList
+    plural: cloudflaretunnels
+    singular: cloudflaretunnel
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: Default Tunnel
+      jsonPath: .spec.default
+      name: DEFAULT
+      type: boolean
+    - description: Replica Count
+      jsonPath: .spec.replicas
+      name: REPLICAS
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: CloudflareTunnel is the Schema for the cloudflaretunnels API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CloudflareTunnelSpec defines the desired state of CloudflareTunnel.
+            properties:
+              affinity:
+                description: Specifies the affinity for scheduling.
+                properties:
+                  nodeAffinity:
+                    description: |-
+                      NodeAffinityApplyConfiguration represents a declarative configuration of the NodeAffinity type for use
+                      with apply.
+                    properties:
+                      preferredDuringSchedulingIgnoredDuringExecution:
+                        items:
+                          description: |-
+                            PreferredSchedulingTermApplyConfiguration represents a declarative configuration of the PreferredSchedulingTerm type for use
+                            with apply.
+                          properties:
+                            preference:
+                              description: |-
+                                NodeSelectorTermApplyConfiguration represents a declarative configuration of the NodeSelectorTerm type for use
+                                with apply.
+                              properties:
+                                matchExpressions:
+                                  items:
+                                    description: |-
+                                      NodeSelectorRequirementApplyConfiguration represents a declarative configuration of the NodeSelectorRequirement type for use
+                                      with apply.
+                                    properties:
+                                      key:
+                                        type: string
+                                      operator:
+                                        description: |-
+                                          A node selector operator is the set of operators that can be used in
+                                          a node selector requirement.
+                                        type: string
+                                      values:
+                                        items:
+                                          type: string
+                                        type: array
+                                    type: object
+                                  type: array
+                                matchFields:
+                                  items:
+                                    description: |-
+                                      NodeSelectorRequirementApplyConfiguration represents a declarative configuration of the NodeSelectorRequirement type for use
+                                      with apply.
+                                    properties:
+                                      key:
+                                        type: string
+                                      operator:
+                                        description: |-
+                                          A node selector operator is the set of operators that can be used in
+                                          a node selector requirement.
+                                        type: string
+                                      values:
+                                        items:
+                                          type: string
+                                        type: array
+                                    type: object
+                                  type: array
+                              type: object
+                            weight:
+                              format: int32
+                              type: integer
+                          type: object
+                        type: array
+                      requiredDuringSchedulingIgnoredDuringExecution:
+                        description: |-
+                          NodeSelectorApplyConfiguration represents a declarative configuration of the NodeSelector type for use
+                          with apply.
+                        properties:
+                          nodeSelectorTerms:
+                            items:
+                              description: |-
+                                NodeSelectorTermApplyConfiguration represents a declarative configuration of the NodeSelectorTerm type for use
+                                with apply.
+                              properties:
+                                matchExpressions:
+                                  items:
+                                    description: |-
+                                      NodeSelectorRequirementApplyConfiguration represents a declarative configuration of the NodeSelectorRequirement type for use
+                                      with apply.
+                                    properties:
+                                      key:
+                                        type: string
+                                      operator:
+                                        description: |-
+                                          A node selector operator is the set of operators that can be used in
+                                          a node selector requirement.
+                                        type: string
+                                      values:
+                                        items:
+                                          type: string
+                                        type: array
+                                    type: object
+                                  type: array
+                                matchFields:
+                                  items:
+                                    description: |-
+                                      NodeSelectorRequirementApplyConfiguration represents a declarative configuration of the NodeSelectorRequirement type for use
+                                      with apply.
+                                    properties:
+                                      key:
+                                        type: string
+                                      operator:
+                                        description: |-
+                                          A node selector operator is the set of operators that can be used in
+                                          a node selector requirement.
+                                        type: string
+                                      values:
+                                        items:
+                                          type: string
+                                        type: array
+                                    type: object
+                                  type: array
+                              type: object
+                            type: array
+                        type: object
+                    type: object
+                  podAffinity:
+                    description: |-
+                      PodAffinityApplyConfiguration represents a declarative configuration of the PodAffinity type for use
+                      with apply.
+                    properties:
+                      preferredDuringSchedulingIgnoredDuringExecution:
+                        items:
+                          description: |-
+                            WeightedPodAffinityTermApplyConfiguration represents a declarative configuration of the WeightedPodAffinityTerm type for use
+                            with apply.
+                          properties:
+                            podAffinityTerm:
+                              description: |-
+                                PodAffinityTermApplyConfiguration represents a declarative configuration of the PodAffinityTerm type for use
+                                with apply.
+                              properties:
+                                labelSelector:
+                                  description: |-
+                                    LabelSelectorApplyConfiguration represents a declarative configuration of the LabelSelector type for use
+                                    with apply.
+                                  properties:
+                                    matchExpressions:
+                                      items:
+                                        description: |-
+                                          LabelSelectorRequirementApplyConfiguration represents a declarative configuration of the LabelSelectorRequirement type for use
+                                          with apply.
+                                        properties:
+                                          key:
+                                            type: string
+                                          operator:
+                                            description: A label selector operator
+                                              is the set of operators that can be
+                                              used in a selector requirement.
+                                            type: string
+                                          values:
+                                            items:
+                                              type: string
+                                            type: array
+                                        type: object
+                                      type: array
+                                    matchLabels:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
+                                  type: object
+                                matchLabelKeys:
+                                  items:
+                                    type: string
+                                  type: array
+                                mismatchLabelKeys:
+                                  items:
+                                    type: string
+                                  type: array
+                                namespaceSelector:
+                                  description: |-
+                                    LabelSelectorApplyConfiguration represents a declarative configuration of the LabelSelector type for use
+                                    with apply.
+                                  properties:
+                                    matchExpressions:
+                                      items:
+                                        description: |-
+                                          LabelSelectorRequirementApplyConfiguration represents a declarative configuration of the LabelSelectorRequirement type for use
+                                          with apply.
+                                        properties:
+                                          key:
+                                            type: string
+                                          operator:
+                                            description: A label selector operator
+                                              is the set of operators that can be
+                                              used in a selector requirement.
+                                            type: string
+                                          values:
+                                            items:
+                                              type: string
+                                            type: array
+                                        type: object
+                                      type: array
+                                    matchLabels:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
+                                  type: object
+                                namespaces:
+                                  items:
+                                    type: string
+                                  type: array
+                                topologyKey:
+                                  type: string
+                              type: object
+                            weight:
+                              format: int32
+                              type: integer
+                          type: object
+                        type: array
+                      requiredDuringSchedulingIgnoredDuringExecution:
+                        items:
+                          description: |-
+                            PodAffinityTermApplyConfiguration represents a declarative configuration of the PodAffinityTerm type for use
+                            with apply.
+                          properties:
+                            labelSelector:
+                              description: |-
+                                LabelSelectorApplyConfiguration represents a declarative configuration of the LabelSelector type for use
+                                with apply.
+                              properties:
+                                matchExpressions:
+                                  items:
+                                    description: |-
+                                      LabelSelectorRequirementApplyConfiguration represents a declarative configuration of the LabelSelectorRequirement type for use
+                                      with apply.
+                                    properties:
+                                      key:
+                                        type: string
+                                      operator:
+                                        description: A label selector operator is
+                                          the set of operators that can be used in
+                                          a selector requirement.
+                                        type: string
+                                      values:
+                                        items:
+                                          type: string
+                                        type: array
+                                    type: object
+                                  type: array
+                                matchLabels:
+                                  additionalProperties:
+                                    type: string
+                                  type: object
+                              type: object
+                            matchLabelKeys:
+                              items:
+                                type: string
+                              type: array
+                            mismatchLabelKeys:
+                              items:
+                                type: string
+                              type: array
+                            namespaceSelector:
+                              description: |-
+                                LabelSelectorApplyConfiguration represents a declarative configuration of the LabelSelector type for use
+                                with apply.
+                              properties:
+                                matchExpressions:
+                                  items:
+                                    description: |-
+                                      LabelSelectorRequirementApplyConfiguration represents a declarative configuration of the LabelSelectorRequirement type for use
+                                      with apply.
+                                    properties:
+                                      key:
+                                        type: string
+                                      operator:
+                                        description: A label selector operator is
+                                          the set of operators that can be used in
+                                          a selector requirement.
+                                        type: string
+                                      values:
+                                        items:
+                                          type: string
+                                        type: array
+                                    type: object
+                                  type: array
+                                matchLabels:
+                                  additionalProperties:
+                                    type: string
+                                  type: object
+                              type: object
+                            namespaces:
+                              items:
+                                type: string
+                              type: array
+                            topologyKey:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                  podAntiAffinity:
+                    description: |-
+                      PodAntiAffinityApplyConfiguration represents a declarative configuration of the PodAntiAffinity type for use
+                      with apply.
+                    properties:
+                      preferredDuringSchedulingIgnoredDuringExecution:
+                        items:
+                          description: |-
+                            WeightedPodAffinityTermApplyConfiguration represents a declarative configuration of the WeightedPodAffinityTerm type for use
+                            with apply.
+                          properties:
+                            podAffinityTerm:
+                              description: |-
+                                PodAffinityTermApplyConfiguration represents a declarative configuration of the PodAffinityTerm type for use
+                                with apply.
+                              properties:
+                                labelSelector:
+                                  description: |-
+                                    LabelSelectorApplyConfiguration represents a declarative configuration of the LabelSelector type for use
+                                    with apply.
+                                  properties:
+                                    matchExpressions:
+                                      items:
+                                        description: |-
+                                          LabelSelectorRequirementApplyConfiguration represents a declarative configuration of the LabelSelectorRequirement type for use
+                                          with apply.
+                                        properties:
+                                          key:
+                                            type: string
+                                          operator:
+                                            description: A label selector operator
+                                              is the set of operators that can be
+                                              used in a selector requirement.
+                                            type: string
+                                          values:
+                                            items:
+                                              type: string
+                                            type: array
+                                        type: object
+                                      type: array
+                                    matchLabels:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
+                                  type: object
+                                matchLabelKeys:
+                                  items:
+                                    type: string
+                                  type: array
+                                mismatchLabelKeys:
+                                  items:
+                                    type: string
+                                  type: array
+                                namespaceSelector:
+                                  description: |-
+                                    LabelSelectorApplyConfiguration represents a declarative configuration of the LabelSelector type for use
+                                    with apply.
+                                  properties:
+                                    matchExpressions:
+                                      items:
+                                        description: |-
+                                          LabelSelectorRequirementApplyConfiguration represents a declarative configuration of the LabelSelectorRequirement type for use
+                                          with apply.
+                                        properties:
+                                          key:
+                                            type: string
+                                          operator:
+                                            description: A label selector operator
+                                              is the set of operators that can be
+                                              used in a selector requirement.
+                                            type: string
+                                          values:
+                                            items:
+                                              type: string
+                                            type: array
+                                        type: object
+                                      type: array
+                                    matchLabels:
+                                      additionalProperties:
+                                        type: string
+                                      type: object
+                                  type: object
+                                namespaces:
+                                  items:
+                                    type: string
+                                  type: array
+                                topologyKey:
+                                  type: string
+                              type: object
+                            weight:
+                              format: int32
+                              type: integer
+                          type: object
+                        type: array
+                      requiredDuringSchedulingIgnoredDuringExecution:
+                        items:
+                          description: |-
+                            PodAffinityTermApplyConfiguration represents a declarative configuration of the PodAffinityTerm type for use
+                            with apply.
+                          properties:
+                            labelSelector:
+                              description: |-
+                                LabelSelectorApplyConfiguration represents a declarative configuration of the LabelSelector type for use
+                                with apply.
+                              properties:
+                                matchExpressions:
+                                  items:
+                                    description: |-
+                                      LabelSelectorRequirementApplyConfiguration represents a declarative configuration of the LabelSelectorRequirement type for use
+                                      with apply.
+                                    properties:
+                                      key:
+                                        type: string
+                                      operator:
+                                        description: A label selector operator is
+                                          the set of operators that can be used in
+                                          a selector requirement.
+                                        type: string
+                                      values:
+                                        items:
+                                          type: string
+                                        type: array
+                                    type: object
+                                  type: array
+                                matchLabels:
+                                  additionalProperties:
+                                    type: string
+                                  type: object
+                              type: object
+                            matchLabelKeys:
+                              items:
+                                type: string
+                              type: array
+                            mismatchLabelKeys:
+                              items:
+                                type: string
+                              type: array
+                            namespaceSelector:
+                              description: |-
+                                LabelSelectorApplyConfiguration represents a declarative configuration of the LabelSelector type for use
+                                with apply.
+                              properties:
+                                matchExpressions:
+                                  items:
+                                    description: |-
+                                      LabelSelectorRequirementApplyConfiguration represents a declarative configuration of the LabelSelectorRequirement type for use
+                                      with apply.
+                                    properties:
+                                      key:
+                                        type: string
+                                      operator:
+                                        description: A label selector operator is
+                                          the set of operators that can be used in
+                                          a selector requirement.
+                                        type: string
+                                      values:
+                                        items:
+                                          type: string
+                                        type: array
+                                    type: object
+                                  type: array
+                                matchLabels:
+                                  additionalProperties:
+                                    type: string
+                                  type: object
+                              type: object
+                            namespaces:
+                              items:
+                                type: string
+                              type: array
+                            topologyKey:
+                              type: string
+                          type: object
+                        type: array
+                    type: object
+                type: object
+              argsOverride:
+                description: Specifies the image pull policy for the cloudflared pod.
+                items:
+                  type: string
+                type: array
+              default:
+                default: false
+                description: Default specifies whether this tunnel should be the default
+                  tunnel in the cluster.
+                type: boolean
+              enableServiceMonitor:
+                default: true
+                description: Specifies the service account name.
+                type: boolean
+              extraEnv:
+                description: Specifies the image pull policy for the cloudflared pod.
+                items:
+                  description: |-
+                    EnvVarApplyConfiguration represents a declarative configuration of the EnvVar type for use
+                    with apply.
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: string
+                    valueFrom:
+                      description: |-
+                        EnvVarSourceApplyConfiguration represents a declarative configuration of the EnvVarSource type for use
+                        with apply.
+                      properties:
+                        configMapKeyRef:
+                          description: |-
+                            ConfigMapKeySelectorApplyConfiguration represents a declarative configuration of the ConfigMapKeySelector type for use
+                            with apply.
+                          properties:
+                            key:
+                              type: string
+                            name:
+                              type: string
+                            optional:
+                              type: boolean
+                          type: object
+                        fieldRef:
+                          description: |-
+                            ObjectFieldSelectorApplyConfiguration represents a declarative configuration of the ObjectFieldSelector type for use
+                            with apply.
+                          properties:
+                            apiVersion:
+                              type: string
+                            fieldPath:
+                              type: string
+                          type: object
+                        fileKeyRef:
+                          description: |-
+                            FileKeySelectorApplyConfiguration represents a declarative configuration of the FileKeySelector type for use
+                            with apply.
+                          properties:
+                            key:
+                              type: string
+                            optional:
+                              type: boolean
+                            path:
+                              type: string
+                            volumeName:
+                              type: string
+                          type: object
+                        resourceFieldRef:
+                          description: |-
+                            ResourceFieldSelectorApplyConfiguration represents a declarative configuration of the ResourceFieldSelector type for use
+                            with apply.
+                          properties:
+                            containerName:
+                              type: string
+                            divisor:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            resource:
+                              type: string
+                          type: object
+                        secretKeyRef:
+                          description: |-
+                            SecretKeySelectorApplyConfiguration represents a declarative configuration of the SecretKeySelector type for use
+                            with apply.
+                          properties:
+                            key:
+                              type: string
+                            name:
+                              type: string
+                            optional:
+                              type: boolean
+                          type: object
+                      type: object
+                  type: object
+                type: array
+              image:
+                description: Specifies the image to use for the cloudflared pod.
+                type: string
+              imagePullSecrets:
+                description: ImagePullSecrets is an optional list of references to
+                  secrets in the same namespace to use for pulling any of the images
+                  used by this PodSpec.
+                items:
+                  description: |-
+                    LocalObjectReference contains enough information to let you locate the
+                    referenced object inside the same namespace.
+                  properties:
+                    name:
+                      default: ""
+                      description: |-
+                        Name of the referent.
+                        This field is effectively required, but due to backwards compatibility is
+                        allowed to be empty. Instances of this type with an empty value here are
+                        almost certainly wrong.
+                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      type: string
+                  type: object
+                  x-kubernetes-map-type: atomic
+                type: array
+              nodeSelector:
+                additionalProperties:
+                  type: string
+                description: Specifies the node selector for scheduling.
+                type: object
+              podDisruptionBudget:
+                properties:
+                  maxUnavailable:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    description: MaxUnavailable is the maximum number of pods that
+                      can be unavailable at any given time.
+                    x-kubernetes-int-or-string: true
+                  minAvailable:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    description: MinAvailable is the minimum number of pods that must
+                      be available at any given time.
+                    x-kubernetes-int-or-string: true
+                type: object
+              podSecurityContext:
+                description: |-
+                  PodSecurityContextApplyConfiguration represents a declarative configuration of the PodSecurityContext type for use
+                  with apply.
+                properties:
+                  appArmorProfile:
+                    description: |-
+                      AppArmorProfileApplyConfiguration represents a declarative configuration of the AppArmorProfile type for use
+                      with apply.
+                    properties:
+                      localhostProfile:
+                        type: string
+                      type:
+                        type: string
+                    type: object
+                  fsGroup:
+                    format: int64
+                    type: integer
+                  fsGroupChangePolicy:
+                    description: |-
+                      PodFSGroupChangePolicy holds policies that will be used for applying fsGroup to a volume
+                      when volume is mounted.
+                    type: string
+                  runAsGroup:
+                    format: int64
+                    type: integer
+                  runAsNonRoot:
+                    type: boolean
+                  runAsUser:
+                    format: int64
+                    type: integer
+                  seLinuxChangePolicy:
+                    description: PodSELinuxChangePolicy defines how the container's
+                      SELinux label is applied to all volumes used by the Pod.
+                    type: string
+                  seLinuxOptions:
+                    description: |-
+                      SELinuxOptionsApplyConfiguration represents a declarative configuration of the SELinuxOptions type for use
+                      with apply.
+                    properties:
+                      level:
+                        type: string
+                      role:
+                        type: string
+                      type:
+                        type: string
+                      user:
+                        type: string
+                    type: object
+                  seccompProfile:
+                    description: |-
+                      SeccompProfileApplyConfiguration represents a declarative configuration of the SeccompProfile type for use
+                      with apply.
+                    properties:
+                      localhostProfile:
+                        type: string
+                      type:
+                        description: SeccompProfileType defines the supported seccomp
+                          profile types.
+                        type: string
+                    type: object
+                  supplementalGroups:
+                    items:
+                      format: int64
+                      type: integer
+                    type: array
+                  supplementalGroupsPolicy:
+                    description: |-
+                      SupplementalGroupsPolicy defines how supplemental groups
+                      of the first container processes are calculated.
+                    type: string
+                  sysctls:
+                    items:
+                      description: |-
+                        SysctlApplyConfiguration represents a declarative configuration of the Sysctl type for use
+                        with apply.
+                      properties:
+                        name:
+                          type: string
+                        value:
+                          type: string
+                      type: object
+                    type: array
+                  windowsOptions:
+                    description: |-
+                      WindowsSecurityContextOptionsApplyConfiguration represents a declarative configuration of the WindowsSecurityContextOptions type for use
+                      with apply.
+                    properties:
+                      gmsaCredentialSpec:
+                        type: string
+                      gmsaCredentialSpecName:
+                        type: string
+                      hostProcess:
+                        type: boolean
+                      runAsUserName:
+                        type: string
+                    type: object
+                type: object
+              replicas:
+                default: 1
+                description: Replicas is the number of cloudflared pods.
+                format: int32
+                type: integer
+              resources:
+                description: Specifies the resource requirements for code server pod.
+                properties:
+                  claims:
+                    description: |-
+                      Claims lists the names of resources, defined in spec.resourceClaims,
+                      that are used by this container.
+
+                      This field depends on the
+                      DynamicResourceAllocation feature gate.
+
+                      This field is immutable. It can only be set for containers.
+                    items:
+                      description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                      properties:
+                        name:
+                          description: |-
+                            Name must match the name of one entry in pod.spec.resourceClaims of
+                            the Pod where this field is used. It makes that resource available
+                            inside a container.
+                          type: string
+                        request:
+                          description: |-
+                            Request is the name chosen for a request in the referenced claim.
+                            If empty, everything from the claim is made available, otherwise
+                            only the result of this request.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
+                  limits:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Limits describes the maximum amount of compute resources allowed.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                  requests:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Requests describes the minimum amount of compute resources required.
+                      If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                      otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                type: object
+              securityContext:
+                description: |-
+                  SecurityContextApplyConfiguration represents a declarative configuration of the SecurityContext type for use
+                  with apply.
+                properties:
+                  allowPrivilegeEscalation:
+                    type: boolean
+                  appArmorProfile:
+                    description: |-
+                      AppArmorProfileApplyConfiguration represents a declarative configuration of the AppArmorProfile type for use
+                      with apply.
+                    properties:
+                      localhostProfile:
+                        type: string
+                      type:
+                        type: string
+                    type: object
+                  capabilities:
+                    description: |-
+                      CapabilitiesApplyConfiguration represents a declarative configuration of the Capabilities type for use
+                      with apply.
+                    properties:
+                      add:
+                        items:
+                          description: Capability represent POSIX capabilities type
+                          type: string
+                        type: array
+                      drop:
+                        items:
+                          description: Capability represent POSIX capabilities type
+                          type: string
+                        type: array
+                    type: object
+                  privileged:
+                    type: boolean
+                  procMount:
+                    type: string
+                  readOnlyRootFilesystem:
+                    type: boolean
+                  runAsGroup:
+                    format: int64
+                    type: integer
+                  runAsNonRoot:
+                    type: boolean
+                  runAsUser:
+                    format: int64
+                    type: integer
+                  seLinuxOptions:
+                    description: |-
+                      SELinuxOptionsApplyConfiguration represents a declarative configuration of the SELinuxOptions type for use
+                      with apply.
+                    properties:
+                      level:
+                        type: string
+                      role:
+                        type: string
+                      type:
+                        type: string
+                      user:
+                        type: string
+                    type: object
+                  seccompProfile:
+                    description: |-
+                      SeccompProfileApplyConfiguration represents a declarative configuration of the SeccompProfile type for use
+                      with apply.
+                    properties:
+                      localhostProfile:
+                        type: string
+                      type:
+                        description: SeccompProfileType defines the supported seccomp
+                          profile types.
+                        type: string
+                    type: object
+                  windowsOptions:
+                    description: |-
+                      WindowsSecurityContextOptionsApplyConfiguration represents a declarative configuration of the WindowsSecurityContextOptions type for use
+                      with apply.
+                    properties:
+                      gmsaCredentialSpec:
+                        type: string
+                      gmsaCredentialSpecName:
+                        type: string
+                      hostProcess:
+                        type: boolean
+                      runAsUserName:
+                        type: string
+                    type: object
+                type: object
+              settings:
+                properties:
+                  caPool:
+                    description: Path to the certificate authority (CA) for the certificate
+                      of your origin. This option should be used only if your certificate
+                      is not signed by Cloudflare.
+                    type: string
+                  catchAllRule:
+                    default: http_status:404
+                    type: string
+                  connectTimeoutSeconds:
+                    default: 30
+                    description: Timeout for establishing a new TCP connection to
+                      your origin server. This excludes the time taken to establish
+                      TLS, which is controlled by tlsTimeout.
+                    format: int32
+                    type: integer
+                  disableChunkedEncoding:
+                    default: false
+                    description: Disables chunked transfer encoding. Useful if you
+                      are running a WSGI server.
+                    type: boolean
+                  http2Origin:
+                    default: false
+                    description: Attempt to connect to origin using HTTP2. Origin
+                      must be configured as https.
+                    type: boolean
+                  keepAliveConnections:
+                    default: 100
+                    description: Maximum number of idle keepalive connections between
+                      Tunnel and your origin. This does not restrict the total number
+                      of concurrent connections.
+                    format: int32
+                    type: integer
+                  keepAliveTimeoutSeconds:
+                    default: 90
+                    description: Timeout after which an idle keepalive connection
+                      can be discarded.
+                    format: int32
+                    type: integer
+                  nameOverride:
+                    type: string
+                  noHappyEyeballs:
+                    default: false
+                    description: Disable the “happy eyeballs” algorithm for IPv4/IPv6
+                      fallback if your local network has misconfigured one of the
+                      protocols.
+                    type: boolean
+                  noTLSVerify:
+                    default: false
+                    description: Disables TLS verification of the certificate presented
+                      by your origin. Will allow any certificate from the origin to
+                      be accepted.
+                    type: boolean
+                  proxyType:
+                    description: 'cloudflared starts a proxy server to translate HTTP
+                      traffic into TCP when proxying, for example, SSH or RDP. This
+                      configures what type of proxy will be started. Valid options
+                      are: "" for the regular proxy and "socks" for a SOCKS5 proxy.'
+                    type: string
+                  tlsTimeoutSeconds:
+                    default: 10
+                    description: Timeout for completing a TLS handshake to your origin
+                      server, if you have chosen to connect Tunnel to an HTTPS server.
+                    format: int32
+                    type: integer
+                type: object
+              tolerations:
+                description: Specifies the tolerations for scheduling.
+                items:
+                  description: |-
+                    TolerationApplyConfiguration represents a declarative configuration of the Toleration type for use
+                    with apply.
+                  properties:
+                    effect:
+                      type: string
+                    key:
+                      type: string
+                    operator:
+                      description: A toleration operator is the set of operators that
+                        can be used in a toleration.
+                      type: string
+                    tolerationSeconds:
+                      format: int64
+                      type: integer
+                    value:
+                      type: string
+                  type: object
+                type: array
+              topologySpreadConstraints:
+                description: Specifies the topology spread constraints for scheduling.
+                items:
+                  description: |-
+                    TopologySpreadConstraintApplyConfiguration represents a declarative configuration of the TopologySpreadConstraint type for use
+                    with apply.
+                  properties:
+                    labelSelector:
+                      description: |-
+                        LabelSelectorApplyConfiguration represents a declarative configuration of the LabelSelector type for use
+                        with apply.
+                      properties:
+                        matchExpressions:
+                          items:
+                            description: |-
+                              LabelSelectorRequirementApplyConfiguration represents a declarative configuration of the LabelSelectorRequirement type for use
+                              with apply.
+                            properties:
+                              key:
+                                type: string
+                              operator:
+                                description: A label selector operator is the set
+                                  of operators that can be used in a selector requirement.
+                                type: string
+                              values:
+                                items:
+                                  type: string
+                                type: array
+                            type: object
+                          type: array
+                        matchLabels:
+                          additionalProperties:
+                            type: string
+                          type: object
+                      type: object
+                    matchLabelKeys:
+                      items:
+                        type: string
+                      type: array
+                    maxSkew:
+                      format: int32
+                      type: integer
+                    minDomains:
+                      format: int32
+                      type: integer
+                    nodeAffinityPolicy:
+                      description: NodeInclusionPolicy defines the type of node inclusion
+                        policy
+                      type: string
+                    nodeTaintsPolicy:
+                      description: NodeInclusionPolicy defines the type of node inclusion
+                        policy
+                      type: string
+                    topologyKey:
+                      type: string
+                    whenUnsatisfiable:
+                      type: string
+                  type: object
+                type: array
+            type: object
+          status:
+            description: CloudflareTunnelStatus defines the observed state of CloudflareTunnel.
+            properties:
+              conditions:
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              replicas:
+                description: Replicas is copied from the underlying Deployment's status.replicas.
+                format: int32
+                type: integer
+              tunnelID:
+                type: string
+              tunnelName:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+
+
+---
+# Source: cloudflare-tunnel-operator/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cloudflare-tunnel-operator-controller-manager
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    {}
+---
+# Source: cloudflare-tunnel-operator/templates/cloudflaretunnel-editor-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudflare-tunnel-operator-cloudflaretunnel-editor-role
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels/status
+  verbs:
+  - get
+---
+# Source: cloudflare-tunnel-operator/templates/cloudflaretunnel-viewer-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudflare-tunnel-operator-cloudflaretunnel-viewer-role
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels/status
+  verbs:
+  - get
+---
+# Source: cloudflare-tunnel-operator/templates/manager-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudflare-tunnel-operator-manager-role
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - cf-tunnel-operator.walnuts.dev
+  resources:
+  - cloudflaretunnels/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - servicemonitors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+# Source: cloudflare-tunnel-operator/templates/metrics-auth-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudflare-tunnel-operator-metrics-auth-role
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+# Source: cloudflare-tunnel-operator/templates/metrics-reader-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudflare-tunnel-operator-metrics-reader
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+# Source: cloudflare-tunnel-operator/templates/manager-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cloudflare-tunnel-operator-manager-rolebinding
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'cloudflare-tunnel-operator-manager-role'
+subjects:
+- kind: ServiceAccount
+  name: 'cloudflare-tunnel-operator-controller-manager'
+  namespace: 'cloudflare-tunnel-operator'
+---
+# Source: cloudflare-tunnel-operator/templates/metrics-auth-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cloudflare-tunnel-operator-metrics-auth-rolebinding
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'cloudflare-tunnel-operator-metrics-auth-role'
+subjects:
+- kind: ServiceAccount
+  name: 'cloudflare-tunnel-operator-controller-manager'
+  namespace: 'cloudflare-tunnel-operator'
+---
+# Source: cloudflare-tunnel-operator/templates/leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cloudflare-tunnel-operator-leader-election-role
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+# Source: cloudflare-tunnel-operator/templates/leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cloudflare-tunnel-operator-leader-election-rolebinding
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: 'cloudflare-tunnel-operator-leader-election-role'
+subjects:
+- kind: ServiceAccount
+  name: 'cloudflare-tunnel-operator-controller-manager'
+  namespace: 'cloudflare-tunnel-operator'
+---
+# Source: cloudflare-tunnel-operator/templates/metrics-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudflare-tunnel-operator-controller-manager-metrics-service
+  labels:
+    control-plane: controller-manager
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+    control-plane: controller-manager
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: 8443
+---
+# Source: cloudflare-tunnel-operator/templates/webhook-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudflare-tunnel-operator-webhook-service
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+    control-plane: controller-manager
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
+---
+# Source: cloudflare-tunnel-operator/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflare-tunnel-operator-controller-manager
+  labels:
+    control-plane: controller-manager
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+      app.kubernetes.io/name: cloudflare-tunnel-operator
+      app.kubernetes.io/instance: cloudflare-tunnel-operator
+  template:
+    metadata:
+      labels:
+        control-plane: controller-manager
+        app.kubernetes.io/name: cloudflare-tunnel-operator
+        app.kubernetes.io/instance: cloudflare-tunnel-operator
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+                - arm64
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                - linux
+      containers:
+      - args:
+        - --metrics-bind-address=:8443
+        - --leader-elect
+        - --health-probe-bind-address=:8081
+        command:
+        - /manager
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: "cluster.local"
+        - name: CLOUDFLARE_ACCOUNT_ID
+          value: 38b5eab012d216dfcc52dcd69e7764b5
+        - name: CLOUDFLARE_ZONE_ID
+          value: 48b02398c8bc932f4d0b1dba83de196c
+        - name: CLOUDFLARE_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-tunnel-operator
+              key: cloudflareAPIToken
+        image: ghcr.io/walnuts1018/cloudflare-tunnel-operator:1.6.2
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: manager
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 1m
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+          readOnly: true
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: cloudflare-tunnel-operator-controller-manager
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: webhook-server-cert
+---
+# Source: cloudflare-tunnel-operator/templates/serving-cert.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cloudflare-tunnel-operator-serving-cert
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  dnsNames:
+  - 'cloudflare-tunnel-operator-webhook-service.cloudflare-tunnel-operator.svc'
+  - 'cloudflare-tunnel-operator-webhook-service.cloudflare-tunnel-operator.svc.cluster.local'
+  issuerRef:
+    kind: Issuer
+    name: 'cloudflare-tunnel-operator-selfsigned-issuer'
+  secretName: webhook-server-cert
+---
+# Source: cloudflare-tunnel-operator/templates/selfsigned-issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: cloudflare-tunnel-operator-selfsigned-issuer
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selfSigned: {}
+---
+# Source: cloudflare-tunnel-operator/templates/mutating-webhook-configuration.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: cloudflare-tunnel-operator-mutating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: cloudflare-tunnel-operator/cloudflare-tunnel-operator-serving-cert
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'cloudflare-tunnel-operator-webhook-service'
+      namespace: 'cloudflare-tunnel-operator'
+      path: /mutate-cf-tunnel-operator-walnuts-dev-v1beta1-cloudflaretunnel
+  failurePolicy: Fail
+  name: vcloudflaretunnel-v1beta1.kb.io
+  rules:
+  - apiGroups:
+    - cf-tunnel-operator.walnuts.dev
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - cloudflaretunnels
+  sideEffects: None
+---
+# Source: cloudflare-tunnel-operator/templates/validating-webhook-configuration.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: cloudflare-tunnel-operator-validating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: cloudflare-tunnel-operator/cloudflare-tunnel-operator-serving-cert
+  labels:
+    helm.sh/chart: cloudflare-tunnel-operator-1.6.2
+    app.kubernetes.io/name: cloudflare-tunnel-operator
+    app.kubernetes.io/instance: cloudflare-tunnel-operator
+    app.kubernetes.io/version: "1.6.2"
+    app.kubernetes.io/managed-by: Helm
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'cloudflare-tunnel-operator-webhook-service'
+      namespace: 'cloudflare-tunnel-operator'
+      path: /validate-cf-tunnel-operator-walnuts-dev-v1beta1-cloudflaretunnel
+  failurePolicy: Fail
+  name: vcloudflaretunnel-v1beta1.kb.io
+  rules:
+  - apiGroups:
+    - cf-tunnel-operator.walnuts.dev
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - cloudflaretunnels
+  sideEffects: None
