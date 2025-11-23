@@ -24,7 +24,7 @@
         containers: [
           {
             name: 'ipxe-manager',
-            image: 'ghcr.io/walnuts1018/ipxe-manager:0.0.13',
+            image: 'ghcr.io/walnuts1018/ipxe-manager:0.0.15',
             env: [
               {
                 name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
