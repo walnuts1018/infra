@@ -19,5 +19,5 @@ registries:
 
 packages:
 - name: yannh/kubeconform@v0.7.0
-- name: hashicorp/terraform@v1.13.4
+- name: hashicorp/terraform@v1.14.0
 - name: homeport/dyff@v1.10.2
