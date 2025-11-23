@@ -21,7 +21,7 @@
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'wait-minio-default-backup',
-                image: 'debian:13.1-slim',
+                image: 'debian:13.2-slim',
                 command: [
                   '/usr/bin/bash',
                   '-c',
@@ -61,7 +61,7 @@
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'trigger-and-wait-minio-biscuit-backup',
-                  image: 'debian:13.1-slim',
+                  image: 'debian:13.2-slim',
                   command: [
                     '/usr/bin/bash',
                     '-c',
