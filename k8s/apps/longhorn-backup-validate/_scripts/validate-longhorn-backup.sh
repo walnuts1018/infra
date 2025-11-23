@@ -18,4 +18,6 @@ log() {
 
 log "info" "Starting Longhorn backup validation process"
 
+KUBECONFIG=/kubeconfig/config
+
 sleep infinity # TODO

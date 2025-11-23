@@ -143,7 +143,7 @@
                   '-c',
                 ],
                 args: [
-                  'export PATH=$PATH:/kubectl && KUBECONFIG=/kubeconfig/config bash /scripts/validate-longhorn-backup.sh',
+                  'export PATH=$PATH:/kubectl:/velero:/longhorn-cli && bash /scripts/validate-longhorn-backup.sh',
                 ],
                 resources: {
                   requests: {
