@@ -32,12 +32,12 @@ Kubernetes クラスタに適用される Manifest 群です。
 
 ## クラスタ構成
 
-| HostName | Model                        | CPU                             | Memory    | Disk                                     | OS                             | ControlPlane |
-| :------- | :--------------------------- | :------------------------------ | :-------- | :--------------------------------------- | :----------------------------- | :----------- |
-| cake     | HP ProDesk 400 G4 DM (Japan) | Intel i5-8500T (6 cores)        | 64GB      | KIOXIA-EXCERIA G2 SSD 1TB                | Ubuntu 24.04.3 LTS             | ○            |
-| cheese   | Raspberry Pi 4B              | BCM2835 (4 cores)               | 4GB       | CSSD-S6O240NCG1Q 240GB                   | Debian GNU/Linux 12 (bookworm) | ○            |
-| donut    | Raspberry Pi 4B              | BCM2835 (4 cores)               | 2GB       | Apacer AS340 120GB                       | Debian GNU/Linux 12 (bookworm) |              |
-| hotate   | QEMU VM                      | Host(Intel i5-12400f) (4 cores) | 2GB / 8GB | Virtual Disk 128GB (Crucial P5 Plus 1TB) | Ubuntu 24.04.3 LTS             | ○            |
+| HostName | Model                        | CPU                                     | Memory    | Disk                                              | OS                             | ControlPlane |
+| :------- | :--------------------------- | :-------------------------------------- | :-------- | :-------------------------------------------------| :----------------------------- | :----------- |
+| cake     | HP ProDesk 400 G4 DM (Japan) | Intel Core i5-8500T Processor (6 cores) | 64GB      | KIOXIA-EXCERIA G2 (1TB), CT1000MX500SSD1/JP (1TB) | Ubuntu 24.04.3 LTS             | ○            |
+| hotate   | TRIGKEY Key-N100             | Intel Processor N100 (4 cores)          | 16GB      | KIOXIA-EXCERIA G3 (1TB)                           | Ubuntu 24.04.3 LTS             | ○            |
+| cheese   | Raspberry Pi 4B              | BCM2835 (4 cores)                       | 4GB       | CSSD-S6O240NCG1Q (240GB)                          | Debian GNU/Linux 12            | ○            |
+| donut    | Raspberry Pi 4B              | BCM2835 (4 cores)                       | 2GB       | Apacer AS340 (120GB)                              | Debian GNU/Linux 12            |              |
 
 ## 稼働サービス
 
