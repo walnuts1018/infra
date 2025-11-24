@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -35,7 +36,7 @@ func GetAppJSON(basedir string) ([]AppJSON, error) {
 
 		var appJSON AppJSON
 		if err := json5.NewDecoder(appJSONFile).Decode(&appJSON); err != nil {
-			return []AppJSON{}, err
+			return []AppJSON{}, fmt.Errorf("failed to decode app json5 %s: %w", appdir.Name(), err)
 		}
 
 		appJSONs = append(appJSONs, appJSON)
