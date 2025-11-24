@@ -26,8 +26,8 @@ clustermesh:
     etcd:
       resources:
         requests:
-          cpu: 200m
-          memory: 256Mi
+          cpu: 7m
+          memory: 64Mi
         limits:
           cpu: 1000m
           memory: 256Mi
@@ -43,8 +43,8 @@ clustermesh:
       enabled: true
       resources:
         requests:
-          cpu: 100m
-          memory: 64Mi
+          cpu: 2m
+          memory: 36Mi
         limits:
           cpu: 1000m
           memory: 1024M
@@ -53,8 +53,8 @@ clustermesh:
     replicas: 1
     resources:
       requests:
-        cpu: 100m
-        memory: 64Mi
+        cpu: 5m
+        memory: 49Mi
       limits:
         cpu: 1000m
         memory: 1024M
