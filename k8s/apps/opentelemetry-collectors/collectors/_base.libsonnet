@@ -6,7 +6,7 @@ function(
   spec: {
     managementState: 'managed',
     serviceAccount: (import '../sa.jsonnet').metadata.name,
-    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.139.0',
+    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.140.1',
     config: {
       processors: {
         'resource/cluster_name': {
