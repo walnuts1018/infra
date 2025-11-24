@@ -5,7 +5,7 @@ tenant:
     resources:
       requests:
         cpu: 5m
-        memory: 300Mi
+        memory: 512Mi
       limits:
         cpu: 500m
         memory: 2Gi
