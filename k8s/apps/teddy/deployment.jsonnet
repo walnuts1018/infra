@@ -64,13 +64,13 @@
               },
             ],
             resources: {
+              requests: {
+                cpu: '5m',
+                memory: '136Mi',
+              },
               limits: {
                 cpu: '500m',
                 memory: '512Mi',
-              },
-              requests: {
-                cpu: '120m',
-                memory: '196Mi',
               },
             },
             livenessProbe: {
