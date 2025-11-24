@@ -105,7 +105,7 @@
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'backuper',
-                  image: 'public.ecr.aws/aws-cli/aws-cli:2.32.3',
+                  image: 'public.ecr.aws/aws-cli/aws-cli:2.32.4',
                   command: [
                     '/usr/bin/bash',
                     '-c',
