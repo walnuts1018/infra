@@ -6,9 +6,6 @@
 
 <p align="center">
     <img src="https://argocd.walnuts.dev/api/badge?project=default&revision=true" alt="argocd project status" />
-    <img src="https://walnuts1018.github.io/infra/k8sStatus.svg" alt="k8s Status" />
-    <img src="https://walnuts1018.github.io/infra/podStatus.svg" alt="Pod Status" />
-    <img src="https://walnuts1018.github.io/infra/nodeStatus.svg" alt="Node Status" />
     <img src="https://github.com/walnuts1018/infra/actions/workflows/snapshot.yaml/badge.svg" alt="k8s CI" />
     <a href="https://walnuts.dev" alt="Walnuts.dev">
         <img alt="Walnuts.dev Status" src="https://img.shields.io/website?url=https%3A%2F%2Fwalnuts.dev&label=Walnuts.dev">
