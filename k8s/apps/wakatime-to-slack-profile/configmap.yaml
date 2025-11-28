@@ -1,0 +1,16 @@
+apiVersion: v1
+data:
+  emoji.json: |
+    {
+      "Go": "gopher",
+      "YAML": "k8s",
+      "SQL": "postgresql",
+      "Ezhil": "excel"
+    }
+kind: ConfigMap
+metadata:
+  labels:
+    app: wakatime-to-slack-profile
+    app.kubernetes.io/name: wakatime-to-slack-profile
+  name: wakatime-to-slack-profile-emojis-187ea1
+  namespace: wakatime-to-slack-profile
