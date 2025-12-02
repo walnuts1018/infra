@@ -10,7 +10,19 @@ patches:
   target:
     kind: KubeVirt
     name: kubevirt
-- path: kubevirt-operator-patch.yaml
-  target:
+- target:
     kind: Deployment
     name: kubevirt-operator
+    namespace: kubevirt
+  patch: |-
+    - op: "replace"
+      path: "/spec/template/spec/containers/0/resources"
+      value: {"requests": {"cpu": "10m", "memory": "280Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}
+- target:
+    kind: Deployment
+    name: cdi-operator
+    namespace: cdi
+  patch: |-
+    - op: "replace"
+      path: "/spec/template/spec/containers/0/resources"
+      value: {"requests": {"cpu": "8m", "memory": "183Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}
