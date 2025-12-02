@@ -10,3 +10,7 @@ patches:
   target:
     kind: KubeVirt
     name: kubevirt
+- path: kubevirt-operator-patch.yaml
+  target:
+    kind: Deployment
+    name: kubevirt-operator
