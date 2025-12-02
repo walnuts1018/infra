@@ -27,13 +27,13 @@ deschedulerPolicy:
       args:
         useDeviationThresholds: true
         thresholds:
-          cpu: 0
-          memory: 0
-          pods: 0
+          cpu: 60
+          memory: 60
+          pods: 60
         targetThresholds:
-          cpu: 10
-          memory: 10
-          pods: 10
+          cpu: 85
+          memory: 85
+          pods: 85
     - name: RemovePodsViolatingInterPodAntiAffinity
     - name: RemovePodsViolatingNodeAffinity
       args:
