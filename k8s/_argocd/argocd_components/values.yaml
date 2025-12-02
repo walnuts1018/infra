@@ -56,13 +56,12 @@ controller:
     serviceMonitor:
       enabled: true
   resources:
+    requests:
+      cpu: 488m
+      memory: 1268Mi
     limits:
       cpu: 800m
       memory: 2Gi
-    requests:
-      cpu: 300m
-      memory: 640Mi
-
 dex:
   metrics:
     enabled: true
