@@ -12,5 +12,5 @@ spec:
       type: json
     - resourceType: Deployment
       resourceName: virt-controller
-      patch: '[{"op": "replace", "path": "/spec/template/spec/containers/0/resources", "value": {"requests": {"cpu": "3m", "memory": "128Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}}]'
+      patch: '[{"op": "replace", "path": "/spec/template/spec/containers/0/resources", "value": {"requests": {"cpu": "5m", "memory": "128Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}}]'
       type: json
