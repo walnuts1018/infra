@@ -23,16 +23,16 @@ function(nameOverride='', replicas=3, enableServiceMonitor=true) {
       'tunnel',
       'run',
     ],
-    // resources: {
-    //   requests: {
-    //     cpu: '100m',
-    //     memory: '50Mi',
-    //   },
-    //   limits: {
-    //     cpu: '1',
-    //     memory: '1Gi',
-    //   },
-    // },
+    resources: {
+      requests: {
+        cpu: '10m',
+        memory: '30Mi',
+      },
+      limits: {
+        cpu: '1',
+        memory: '1Gi',
+      },
+    },
     securityContext: {
       privileged: true,
     },
