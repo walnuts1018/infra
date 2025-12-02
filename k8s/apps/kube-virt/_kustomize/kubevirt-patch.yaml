@@ -14,3 +14,7 @@ spec:
       resourceName: virt-controller
       patch: '[{"op": "replace", "path": "/spec/template/spec/containers/0/resources", "value": {"requests": {"cpu": "5m", "memory": "128Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}}]'
       type: json
+    - resourceType: DaemonSet
+      resourceName: virt-handler
+      patch: '[{"op": "replace", "path": "/spec/template/spec/containers/0/resources", "value": {"requests": {"cpu": "8m", "memory": "100Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}}]'
+      type: json
