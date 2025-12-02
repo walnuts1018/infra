@@ -12,6 +12,16 @@
     kubernetesConfig: {
       image: 'quay.io/opstree/redis:v7.2.7',
       imagePullPolicy: 'IfNotPresent',
+      resources: {
+        requests: {
+          cpu: '5m',
+          memory: '5Mi',
+        },
+        limits: {
+          cpu: '1',
+          memory: '1Gi',
+        },
+      },
     },
     storage: {
       volumeClaimTemplate: {
