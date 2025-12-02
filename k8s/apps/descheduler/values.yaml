@@ -1,23 +1,24 @@
 deschedulerPolicy:
   profiles:
   - name: default
+    plugins:
+      balance:
+        enabled:
+        - RemoveDuplicates
+        - RemovePodsViolatingTopologySpreadConstraint
+        - LowNodeUtilization
+      deschedule:
+        enabled:
+        - RemovePodsViolatingInterPodAntiAffinity
+        - RemovePodsViolatingNodeAffinity
+        - RemovePodsViolatingNodeTaints
+        - RemovePodsHavingTooManyRestarts
     pluginConfig:
     - name: DefaultEvictor
       args:
         ignorePvcPods: true
         evictLocalStoragePods: true
     - name: RemoveDuplicates
-    - name: RemovePodsHavingTooManyRestarts
-      args:
-        podRestartThreshold: 100
-        includingInitContainers: true
-    - name: RemovePodsViolatingNodeTaints
-    - name: RemovePodsViolatingInterPodAntiAffinity
-    - name: RemovePodsViolatingNodeAffinity
-      args:
-        nodeAffinityType:
-        - requiredDuringSchedulingIgnoredDuringExecution
-        - preferredDuringSchedulingIgnoredDuringExecution
     - name: RemovePodsViolatingTopologySpreadConstraint
       args:
         constraints:
@@ -33,16 +34,14 @@ deschedulerPolicy:
           cpu: 10
           memory: 10
           pods: 10
-    plugins:
-      balance:
-        enabled:
-        - RemoveDuplicates
-        - RemovePodsViolatingNodeAffinity
-        - RemovePodsViolatingTopologySpreadConstraint
-        - LowNodeUtilization
-      deschedule:
-        enabled:
-        - RemovePodsHavingTooManyRestarts
-        - RemovePodsViolatingNodeTaints
-        - RemovePodsViolatingNodeAffinity
-        - RemovePodsViolatingInterPodAntiAffinity
+    - name: RemovePodsViolatingInterPodAntiAffinity
+    - name: RemovePodsViolatingNodeAffinity
+      args:
+        nodeAffinityType:
+        - requiredDuringSchedulingIgnoredDuringExecution
+        - preferredDuringSchedulingIgnoredDuringExecution
+    - name: RemovePodsViolatingNodeTaints
+    - name: RemovePodsHavingTooManyRestarts
+      args:
+        podRestartThreshold: 100
+        includingInitContainers: true
