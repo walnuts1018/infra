@@ -44,8 +44,8 @@
                 image: 'ghcr.io/renovatebot/renovate:42.29.4',
                 resources: {
                   requests: {
-                    cpu: '500m',
-                    memory: '256Mi',
+                    cpu: '400m',
+                    memory: '441Mi',
                   },
                   limits: {
                     cpu: '500m',
