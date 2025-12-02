@@ -21,13 +21,7 @@
           ],
           resources: {
             requests: {
-              cpu: '5m',
-              memory: '5Mi',
               storage: '1Gi',
-            },
-            limits: {
-              cpu: '1',
-              memory: '1Gi',
             },
           },
         },
