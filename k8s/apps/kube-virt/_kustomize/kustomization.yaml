@@ -5,3 +5,8 @@ resources:
 - https://github.com/kubevirt/kubevirt/releases/download/v1.7.0/kubevirt-cr.yaml
 - https://github.com/kubevirt/containerized-data-importer/releases/download/v1.63.1/cdi-operator.yaml
 - https://github.com/kubevirt/containerized-data-importer/releases/download/v1.63.1/cdi-cr.yaml
+patches:
+- path: kubevirt-patch.yaml
+  target:
+    kind: KubeVirt
+    name: kubevirt
