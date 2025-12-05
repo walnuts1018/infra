@@ -2,7 +2,7 @@ function() (import '../../components/helm.libsonnet') {
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
   ociChartURL: 'docker.io/envoyproxy/gateway-helm',
-  targetRevision: '1.6.0',
+  targetRevision: '1.6.1',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'), {}
   ),
