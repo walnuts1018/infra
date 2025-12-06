@@ -1,0 +1,148 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: terrakube-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: terrakube
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: terrakube
+    helm:
+      releaseName: terrakube
+      valuesObject:
+        api:
+          defaultDatabase: false
+          defaultRedis: false
+          dynamicCredentials:
+            enabled: false
+            privateKey: ""
+            privateKeyPath: /etc/terrakube/credentials/private-key.pem
+            publicKey: ""
+            publicKeyPath: /etc/terrakube/credentials/public-key.pem
+          enabled: true
+          env:
+            - name: OTEL_JAVAAGENT_ENABLE
+              value: "true"
+            - name: OTEL_SERVICE_NAME
+              value: terrakube-api
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: AwsEnableRoleAuth
+              value: true
+          loadSampleData: false
+          properties:
+            databaseHostname: postgresql-default-rw.databases.svc.cluster.local
+            databaseName: terrakube
+            databasePassword: to-be-replaced
+            databasePort: "5432"
+            databaseSchema: public
+            databaseSslMode: disable
+            databaseType: POSTGRESQL
+            databaseUser: terrakube
+            redisHostname: terrakube-redis
+            redisPassword: to-be-replaced
+            redisPort: "6379"
+          replicaCount: "1"
+          resources: {}
+          secrets:
+            - terrakube-api-secrets
+            - terrakube-api-secrets-overlay-2d6ea7
+        dex:
+          enabled: true
+          existingSecret: true
+        executor:
+          enabled: true
+          env:
+            - name: OTEL_JAVAAGENT_ENABLE
+              value: "true"
+            - name: OTEL_SERVICE_NAME
+              value: terrakube-executor
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: AwsIncludeBackendKeys
+              value: false
+            - name: AwsEnableRoleAuth
+              value: true
+          replicaCount: "1"
+          resources: {}
+          secrets:
+            - terrakube-executor-secrets
+            - terrakube-executor-secrets-overlay-8bff29
+        ingress:
+          api:
+            domain: terrakube-api.walnuts.dev
+            enabled: true
+            ingressClassName: cilium
+            useTls: false
+          controller: generic
+          dex:
+            enabled: true
+          executor:
+            domain: terrakube-executor.walnuts.dev
+            enabled: false
+            ingressClassName: cilium
+            useTls: false
+          includeTlsHosts: true
+          registry:
+            domain: terrakube-reg.walnuts.dev
+            enabled: true
+            ingressClassName: cilium
+            useTls: false
+          ui:
+            domain: terrakube.walnuts.dev
+            enabled: true
+            ingressClassName: cilium
+            useTls: false
+          useTls: false
+        name: terrakube
+        registry:
+          enabled: true
+          env:
+            - name: OTEL_JAVAAGENT_ENABLE
+              value: "true"
+            - name: OTEL_SERVICE_NAME
+              value: terrakube-registry
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: AwsEnableRoleAuth
+              value: true
+          replicaCount: "1"
+          resources: {}
+          secrets:
+            - terrakube-registry-secrets
+            - terrakube-registry-secrets-overlay-2e7ede
+        security:
+          dexClientId: terrakube-ui
+          dexIssuerUri: http://terrakube-api.walnuts.dev/dex
+          internalSecret: to-be-replaced
+          patSecret: to-be-replaced
+          useOpenLDAP: false
+        storage:
+          defaultStorage: false
+          minio:
+            accessKey: dummy
+            bucketName: terrakube
+            endpoint: http://minio.minio.svc.cluster.local
+            secretKey: dummy
+        ui:
+          enabled: true
+          replicaCount: "1"
+          resources: {}
+    repoURL: https://charts.terrakube.io
+    targetRevision: 4.5.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

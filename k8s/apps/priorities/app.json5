@@ -1,4 +1,0 @@
-{
-  name: "priorities",
-  namespace: "kube-system",
-}

@@ -1,0 +1,47 @@
+apiVersion: sts.min.io/v1alpha1
+kind: PolicyBinding
+metadata:
+  name: ipu
+  namespace: minio
+spec:
+  application:
+    namespace: ipu
+    serviceaccount: ipu
+  policies:
+    - readonly
+---
+apiVersion: sts.min.io/v1alpha1
+kind: PolicyBinding
+metadata:
+  name: loki
+  namespace: minio
+spec:
+  application:
+    namespace: loki
+    serviceaccount: loki
+  policies:
+    - readwrite
+---
+apiVersion: sts.min.io/v1alpha1
+kind: PolicyBinding
+metadata:
+  name: tempo
+  namespace: minio
+spec:
+  application:
+    namespace: tempo
+    serviceaccount: tempo
+  policies:
+    - readwrite
+---
+apiVersion: sts.min.io/v1alpha1
+kind: PolicyBinding
+metadata:
+  name: misskey-postgresql
+  namespace: minio
+spec:
+  application:
+    namespace: misskey
+    serviceaccount: misskey-postgresql
+  policies:
+    - readwrite
