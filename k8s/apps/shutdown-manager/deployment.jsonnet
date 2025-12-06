@@ -19,7 +19,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet'), {
             name: 'proxy',
-            image: 'ghcr.io/walnuts1018/shutdown-manager:0.0.7',
+            image: 'ghcr.io/walnuts1018/shutdown-manager:0.0.8',
             env: [
               {
                 name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
