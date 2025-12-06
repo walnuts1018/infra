@@ -87,33 +87,66 @@ ui:
   replicaCount: "1"
   resources: {}
 
+# ingress:
+#   useTls: false
+#   includeTlsHosts: true
+#   controller: "gatewayapi"
+
+#   gatewayapi:
+#     enabled: true
+#     gateways:
+#     - name: "envoy-gateway"
+#       namespace: "envoy-gateway-system"
+
+#   ui:
+#     enabled: true
+#     domain: "terrakube.walnuts.dev"
+#     ingressClassName: "gateway"
+#     useTls: false
+
+#   api:
+#     enabled: true
+#     domain: "terrakube-api.walnuts.dev"
+#     ingressClassName: "gateway"
+#     useTls: false
+
+#   registry:
+#     enabled: true
+#     domain: "terrakube-reg.walnuts.dev"
+#     ingressClassName: "gateway"
+#     useTls: false
+
+#   dex:
+#     enabled: true
+
+#   executor:
+#     enabled: false
+#     domain: "terrakube-executor.walnuts.dev"
+#     ingressClassName: "gateway"
+#     useTls: false
+
+
 ingress:
   useTls: false
   includeTlsHosts: true
-  controller: "gatewayapi"
-
-  gatewayapi:
-    enabled: true
-    gateways:
-    - name: "envoy-gateway"
-      namespace: "envoy-gateway-system"
+  controller: "generic"
 
   ui:
     enabled: true
     domain: "terrakube.walnuts.dev"
-    ingressClassName: "gateway"
+    ingressClassName: "cilium"
     useTls: false
 
   api:
     enabled: true
     domain: "terrakube-api.walnuts.dev"
-    ingressClassName: "gateway"
+    ingressClassName: "cilium"
     useTls: false
 
   registry:
     enabled: true
     domain: "terrakube-reg.walnuts.dev"
-    ingressClassName: "gateway"
+    ingressClassName: "cilium"
     useTls: false
 
   dex:
@@ -122,5 +155,5 @@ ingress:
   executor:
     enabled: false
     domain: "terrakube-executor.walnuts.dev"
-    ingressClassName: "gateway"
+    ingressClassName: "cilium"
     useTls: false
