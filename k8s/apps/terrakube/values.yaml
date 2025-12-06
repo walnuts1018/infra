@@ -53,6 +53,8 @@ api:
     value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317'
   - name: OTEL_EXPORTER_OTLP_INSECURE
     value: 'true'
+  - name: AwsEnableRoleAuth
+    value: true
 
 executor:
   enabled: true
@@ -67,6 +69,10 @@ executor:
     value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317'
   - name: OTEL_EXPORTER_OTLP_INSECURE
     value: 'true'
+  - name: AwsIncludeBackendKeys
+    value: false
+  - name: AwsEnableRoleAuth
+    value: true
 
 registry:
   enabled: true
@@ -81,6 +87,8 @@ registry:
     value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317'
   - name: OTEL_EXPORTER_OTLP_INSECURE
     value: 'true'
+  - name: AwsEnableRoleAuth
+    value: true
 
 ui:
   enabled: true

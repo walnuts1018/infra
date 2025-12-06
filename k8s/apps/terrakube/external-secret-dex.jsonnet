@@ -1,5 +1,6 @@
 (import '../../components/external-secret.libsonnet') {
-  name: 'terrakube-api-secrets-overlay',
+  name: 'terrakube-dex',
+  use_suffix: false,
   namespace: (import 'app.json5').namespace,
   data: [
     {
