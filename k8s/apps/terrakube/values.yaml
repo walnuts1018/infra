@@ -1,0 +1,126 @@
+name: "terrakube"
+
+security:
+  useOpenLDAP: false
+  patSecret: "to-be-replaced"
+  internalSecret: "to-be-replaced"
+  dexClientId: "terrakube-ui"
+  dexIssuerUri: "http://terrakube-api.walnuts.dev/dex"
+
+dex:
+  enabled: true
+  existingSecret: true
+
+storage:
+  defaultStorage: false
+  minio:
+    accessKey: "dummy"
+    secretKey: "dummy"
+    bucketName: "terrakube"
+    endpoint: "http://minio.minio.svc.cluster.local"
+
+api:
+  enabled: true
+  replicaCount: "1"
+  dynamicCredentials:
+    enabled: false
+    publicKey: ""
+    publicKeyPath: "/etc/terrakube/credentials/public-key.pem"
+    privateKey: ""
+    privateKeyPath: "/etc/terrakube/credentials/private-key.pem"
+  resources: {}
+  defaultDatabase: false
+  defaultRedis: false
+  loadSampleData: false
+  properties:
+    databaseType: "POSTGRESQL"
+    databaseHostname: "postgresql-default-rw.databases.svc.cluster.local"
+    databaseName: "terrakube"
+    databaseUser: "terrakube"
+    databaseSchema: "public"
+    databasePassword: "to-be-replaced"
+    databaseSslMode: "disable"
+    databasePort: "5432"
+    redisHostname: "terrakube-redis"
+    redisPassword: "to-be-replaced"
+    redisPort: "6379"
+  env:
+  - name: OTEL_JAVAAGENT_ENABLE
+    value: 'true'
+  - name: OTEL_SERVICE_NAME
+    value: 'terrakube-api'
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317'
+  - name: OTEL_EXPORTER_OTLP_INSECURE
+    value: 'true'
+
+executor:
+  enabled: true
+  replicaCount: "1"
+  resources: {}
+  env:
+  - name: OTEL_JAVAAGENT_ENABLE
+    value: 'true'
+  - name: OTEL_SERVICE_NAME
+    value: 'terrakube-executor'
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317'
+  - name: OTEL_EXPORTER_OTLP_INSECURE
+    value: 'true'
+
+registry:
+  enabled: true
+  replicaCount: "1"
+  resources: {}
+  env:
+  - name: OTEL_JAVAAGENT_ENABLE
+    value: 'true'
+  - name: OTEL_SERVICE_NAME
+    value: 'terrakube-registry'
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317'
+  - name: OTEL_EXPORTER_OTLP_INSECURE
+    value: 'true'
+
+ui:
+  enabled: true
+  replicaCount: "1"
+  resources: {}
+
+ingress:
+  useTls: false
+  includeTlsHosts: true
+  controller: "gatewayapi"
+
+  gatewayapi:
+    enabled: true
+    gateways:
+    - name: "envoy-gateway"
+      namespace: "envoy-gateway-system"
+
+  ui:
+    enabled: true
+    domain: "terrakube.walnuts.dev"
+    ingressClassName: "gateway"
+    useTls: false
+
+  api:
+    enabled: true
+    domain: "terrakube-api.walnuts.dev"
+    ingressClassName: "gateway"
+    useTls: false
+
+  registry:
+    enabled: true
+    domain: "terrakube-reg.walnuts.dev"
+    ingressClassName: "gateway"
+    useTls: false
+
+  dex:
+    enabled: true
+
+  executor:
+    enabled: false
+    domain: "terrakube-executor.walnuts.dev"
+    ingressClassName: "gateway"
+    useTls: false

@@ -1,0 +1,30 @@
+connectors:
+- config:
+    clientID: "349881633530249634"
+    clientSecret: {{ .clientSecret }}
+    insecureEnableGroups: true
+    issuer: https://auth.walnuts.dev
+    redirectURI: https://terrakube-api.walnuts.dev/dex/callback
+  id: TerrakubeClient
+  name: TerrakubeClient
+  type: oidc
+issuer: http://terrakube-api.walnuts.dev/dex
+oauth2:
+  responseTypes:
+  - code
+  - token
+  - id_token
+staticClients:
+- id: terrakube-ui
+  name: terrakube-ui
+  public: true
+  redirectURIs:
+  - https://terrakube-ui.walnuts.dev
+  - /device/callback
+storage:
+  type: memory
+web:
+  allowedOrigins:
+  - '*'
+  http: 0.0.0.0:5556
+  skipApprovalScreen: true

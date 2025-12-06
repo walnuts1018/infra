@@ -47,4 +47,8 @@
     db_name: 'n8n',
     user_name: 'n8n',
   },
+  {
+    db_name: 'terrakube',
+    user_name: 'terrakube',
+  },
 ]
