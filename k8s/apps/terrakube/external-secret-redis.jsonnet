@@ -1,5 +1,6 @@
 (import '../../components/external-secret.libsonnet') {
   name: (import 'app.json5').name + '-minio',
+  namespace: (import 'app.json5').namespace,
   data: [
     {
       secretKey: 'redispassword',

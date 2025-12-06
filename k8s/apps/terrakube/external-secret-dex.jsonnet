@@ -1,6 +1,6 @@
 (import '../../components/external-secret.libsonnet') {
   name: 'terrakube-api-secrets-overlay',
-  namespace: (import '../app.json5').namespace,
+  namespace: (import 'app.json5').namespace,
   data: [
     {
       secretKey: 'clientSecret',
