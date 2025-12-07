@@ -110,9 +110,9 @@
         'ghcr.io/cloudnative-pg/postgresql',
       ],
       matchUpdateTypes: [
-        'minor',
-        'patch',
+        'major',
       ],
+      enabled: false,
     }
   ],
 }
