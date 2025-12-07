@@ -1,7 +1,7 @@
 connectors:
 - config:
     clientID: "349881633530249634"
-    clientSecret: {{ .clientSecret }}
+    clientSecret: "{{ .clientSecret }}"
     insecureEnableGroups: true
     issuer: https://auth.walnuts.dev
     redirectURI: https://terrakube-api.walnuts.dev/dex/callback
@@ -33,7 +33,7 @@ storage:
     port: 5432
     database: terrakube_dex
     user: terrakube_dex
-    password: {{ .postgresPassword }}
+    password: "{{ .postgresPassword }}"
     ssl:
       mode: disable
 web:
