@@ -5,7 +5,7 @@ security:
   patSecret: "to-be-replaced"
   internalSecret: "to-be-replaced"
   dexClientId: "terrakube-ui"
-  dexIssuerUri: "http://terrakube-api.walnuts.dev/dex"
+  dexIssuerUri: "https://terrakube-api.walnuts.dev/dex"
 
 dex:
   enabled: true
@@ -13,7 +13,7 @@ dex:
   configSecret:
     create: false
   config:
-    issuer: "http://terrakube-api.walnuts.dev/dex" # 外部のSecretですでに設定されているが、terrakube-api-secretsなどで参照されているので埋めておく
+    issuer: "https://terrakube-api.walnuts.dev/dex" # 外部のSecretですでに設定されているが、terrakube-api-secretsなどで参照されているので埋めておく
 
 storage:
   defaultStorage: false
@@ -263,7 +263,7 @@ ui:
 
 
 ingress:
-  useTls: false
+  useTls: true # 外部（Cloudflare）でTLS終端するのでtrue、環境変数などに影響する
   includeTlsHosts: true
   controller: "generic"
 
