@@ -5,6 +5,10 @@ connectors:
     insecureEnableGroups: true
     issuer: https://auth.walnuts.dev
     redirectURI: https://terrakube-api.walnuts.dev/dex/callback
+    scopes:
+    - profile
+    - email
+    userNameKey: 
   id: TerrakubeClient
   name: TerrakubeClient
   type: oidc
