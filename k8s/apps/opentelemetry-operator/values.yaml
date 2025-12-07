@@ -5,12 +5,12 @@ manager:
   - --enable-go-instrumentation=true
   - --enable-nginx-instrumentation=true
   resources:
+    requests:
+      cpu: 3m
+      memory: 81Mi
     limits:
       cpu: 200m
       memory: 128Mi
-    requests:
-      cpu: 5m
-      memory: 50Mi
 
 tolerations:
 - key: "node.walnuts.dev/low-performance"
