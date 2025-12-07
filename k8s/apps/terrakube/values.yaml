@@ -160,7 +160,7 @@ registry:
   replicaCount: "1"
   resources:
     requests:
-      cpu: 2m
+      cpu: 250m
       memory: 448Mi
     limits:
       cpu: 500m
