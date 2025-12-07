@@ -95,13 +95,13 @@
               },
             ],
             resources: {
-              limits: {
-                memory: '10Gi',
-                cpu: '1000m',
-              },
               requests: {
-                memory: '2Gi',
                 cpu: '10m',
+                memory: '1Gi',
+              },
+              limits: {
+                cpu: '1',
+                memory: '6Gi',
               },
             },
             securityContext:: null,
