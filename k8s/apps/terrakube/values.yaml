@@ -28,7 +28,13 @@ api:
     publicKeyPath: "/etc/terrakube/credentials/public-key.pem"
     privateKey: ""
     privateKeyPath: "/etc/terrakube/credentials/private-key.pem"
-  resources: {}
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
   defaultDatabase: false
   defaultRedis: false
   loadSampleData: false
