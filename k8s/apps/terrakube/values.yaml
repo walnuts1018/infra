@@ -18,13 +18,11 @@ dex:
 
 storage:
   defaultStorage: false
-  minio:
+  aws:
     accessKey: "dummy"
     secretKey: "dummy"
     bucketName: "terrakube"
-    # 空にしないとDefaultCredentialsProviderを使わない
-    # https://github.com/terrakube-io/terrakube/blob/366018d7a6c6f04a69318b7392e68e418877d8f7/api/src/main/java/io/terrakube/api/plugin/storage/configuration/StorageTypeAutoConfiguration.java#L65
-    endpoint: ""
+    region: "ap-northeast-1"
 
 api:
   enabled: true
@@ -91,8 +89,6 @@ api:
     value: 'true'
   - name: AwsEnableRoleAuth
     value: "true"
-  - name: AwsStorageRegion
-    value: ap-northeast-1
   - name: AWS_CA_BUNDLE
     value: /etc/ssl/certs/trust-bundle.pem
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
@@ -149,8 +145,6 @@ executor:
     value: "false"
   - name: AwsEnableRoleAuth
     value: "true"
-  - name: AwsStorageRegion
-    value: ap-northeast-1
   - name: AWS_CA_BUNDLE
     value: /etc/ssl/certs/trust-bundle.pem
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
@@ -205,8 +199,6 @@ registry:
     value: 'true'
   - name: AwsEnableRoleAuth
     value: "true"
-  - name: AwsStorageRegion
-    value: ap-northeast-1
   - name: AWS_CA_BUNDLE
     value: /etc/ssl/certs/trust-bundle.pem
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
