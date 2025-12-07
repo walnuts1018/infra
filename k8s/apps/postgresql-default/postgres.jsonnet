@@ -9,7 +9,7 @@
     imageCatalogRef: {
       apiGroup: 'postgresql.cnpg.io',
       kind: 'ClusterImageCatalog',
-      name: (import '../cloudnative-pg/image-catalog.jsonnet').metadata.name,
+      name: (import '../cloudnative-pg-image-catalog/standard.jsonnet').metadata.name,
       major: 17,
     },
     storage: {
