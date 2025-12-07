@@ -89,6 +89,8 @@ api:
     value: 'true'
   - name: AwsEnableRoleAuth
     value: "true"
+  - name: AwsStorageRegion
+    value: ap-northeast-1
   - name: AWS_CA_BUNDLE
     value: /etc/ssl/certs/trust-bundle.pem
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
@@ -97,7 +99,7 @@ api:
     value: https://sts.minio-operator.svc.cluster.local:4223/sts/minio
   - name: AWS_ENDPOINT_URL_S3
     value: http://minio.minio.svc.cluster.local
-  - name: AwsStorageRegion
+  - name: AWS_REGION
     value: ap-northeast-1
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::dummy:role/terrakube-api
@@ -145,6 +147,8 @@ executor:
     value: "false"
   - name: AwsEnableRoleAuth
     value: "true"
+  - name: AwsStorageRegion
+    value: ap-northeast-1
   - name: AWS_CA_BUNDLE
     value: /etc/ssl/certs/trust-bundle.pem
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
@@ -153,7 +157,7 @@ executor:
     value: https://sts.minio-operator.svc.cluster.local:4223/sts/minio
   - name: AWS_ENDPOINT_URL_S3
     value: http://minio.minio.svc.cluster.local
-  - name: AwsStorageRegion
+  - name: AWS_REGION
     value: ap-northeast-1
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::dummy:role/terrakube-api
@@ -199,6 +203,8 @@ registry:
     value: 'true'
   - name: AwsEnableRoleAuth
     value: "true"
+  - name: AwsStorageRegion
+    value: ap-northeast-1
   - name: AWS_CA_BUNDLE
     value: /etc/ssl/certs/trust-bundle.pem
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
@@ -207,7 +213,7 @@ registry:
     value: https://sts.minio-operator.svc.cluster.local:4223/sts/minio
   - name: AWS_ENDPOINT_URL_S3
     value: http://minio.minio.svc.cluster.local
-  - name: AwsStorageRegion
+  - name: AWS_REGION
     value: ap-northeast-1
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::dummy:role/terrakube-api
