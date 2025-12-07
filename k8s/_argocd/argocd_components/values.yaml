@@ -137,10 +137,10 @@ applicationSet:
       enabled: true
   resources:
     requests:
-      cpu: 10m
+      cpu: 30m
       memory: 64Mi
     limits:
-      cpu: 100m
+      cpu: 200m
       memory: 128Mi
 
 notifications:
