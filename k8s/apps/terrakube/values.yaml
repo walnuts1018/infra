@@ -32,11 +32,14 @@ api:
     privateKeyPath: "/etc/terrakube/credentials/private-key.pem"
   resources:
     requests:
-      cpu: 100m
+      cpu: 300m
       memory: 256Mi
     limits:
-      cpu: 500m
+      cpu: 1
       memory: 1Gi
+  startupProbe:
+    failureThreshold: 30
+    periodSeconds: 10
   defaultDatabase: false
   defaultRedis: false
   loadSampleData: false
@@ -95,10 +98,17 @@ api:
     value: ap-northeast-1
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::dummy:role/terrakube-api
+
 executor:
   enabled: true
   replicaCount: "1"
-  resources: {}
+  resources:
+    requests:
+      cpu: 2m
+      memory: 448Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
   serviceAccountName: "terrakube-executor"
   volumeMounts:
   - name: 'minio-sts-token'
@@ -148,7 +158,13 @@ executor:
 registry:
   enabled: true
   replicaCount: "1"
-  resources: {}
+  resources:
+    requests:
+      cpu: 2m
+      memory: 448Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
   serviceAccountName: "terrakube-registry"
   volumeMounts:
   - name: 'minio-sts-token'
@@ -196,7 +212,13 @@ registry:
 ui:
   enabled: true
   replicaCount: "1"
-  resources: {}
+  resources:
+    requests:
+      cpu: 1m
+      memory: 10Mi
+    limits:
+      cpu: 100m
+      memory: 256Mi
   serviceAccountName: "terrakube-ui"
 
 # ingress:
