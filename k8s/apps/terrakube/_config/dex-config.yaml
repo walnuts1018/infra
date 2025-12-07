@@ -10,6 +10,12 @@ connectors:
     scopes:
     - profile
     - email
+    claimMapping:
+      groups: "my:zitadel:grants"
+    allowedGroups:
+    - admin
+
+    promptType: select_account # https://zitadel.com/docs/apis/openidoauth/endpoints#:~:text=implicit%20flow.-,prompt,-If%20the%20Auth
   id: TerrakubeClient
   name: TerrakubeClient
   type: oidc

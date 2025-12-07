@@ -18,6 +18,6 @@
     },
   ],
   template_data: {
-    'config.yaml': (importstr '_config/dex-config.yaml.tmpl'),
+    'config.yaml': (importstr '_config/dex-config.yaml'),
   },
 }
