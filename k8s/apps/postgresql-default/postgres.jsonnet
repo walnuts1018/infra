@@ -6,6 +6,12 @@
   },
   spec: {
     instances: 3,
+    imageCatalogRef: {
+      apiGroup: 'postgresql.cnpg.io',
+      kind: 'ClusterImageCatalog',
+      name: (import '../cloudnative-pg/image-catalog.jsonnet').metadata.name,
+      major: 17,
+    },
     storage: {
       size: '10Gi',
       storageClass: 'local-path',
