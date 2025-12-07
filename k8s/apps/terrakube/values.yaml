@@ -104,7 +104,7 @@ executor:
   replicaCount: "1"
   resources:
     requests:
-      cpu: 2m
+      cpu: 100m
       memory: 448Mi
     limits:
       cpu: 1
