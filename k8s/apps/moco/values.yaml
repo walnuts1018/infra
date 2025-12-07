@@ -4,3 +4,7 @@ resources:
   requests:
     cpu: 1m
     memory: 40Mi
+
+tolerations:
+- key: "node.walnuts.dev/low-performance"
+  operator: "Exists"
