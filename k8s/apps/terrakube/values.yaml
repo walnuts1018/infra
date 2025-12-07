@@ -32,7 +32,7 @@ api:
     privateKeyPath: "/etc/terrakube/credentials/private-key.pem"
   resources:
     requests:
-      cpu: 300m
+      cpu: 500m
       memory: 256Mi
     limits:
       cpu: 1
