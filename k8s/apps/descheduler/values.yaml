@@ -31,8 +31,8 @@ deschedulerPolicy:
           memory: 75
           pods: 90
         targetThresholds:
-          cpu: 85
-          memory: 85
+          cpu: 80
+          memory: 80
           pods: 95
     - name: RemovePodsViolatingInterPodAntiAffinity
     - name: RemovePodsViolatingNodeAffinity
