@@ -43,10 +43,6 @@
                 mountPath: '/misskey/.config',
                 readOnly: true,
               },
-              {
-                name: 'misskey-built',
-                mountPath: '/misskey/built',
-              },
             ],
           },
         ],
@@ -69,10 +65,6 @@
                 name: 'misskey-config',
                 mountPath: '/misskey/.config',
                 readOnly: true,
-              },
-              {
-                name: 'misskey-built',
-                mountPath: '/misskey/built',
               },
               {
                 name: 'tmp',
@@ -136,10 +128,6 @@
           },
           {
             name: 'misskey-files',
-            emptyDir: {},
-          },
-          {
-            name: 'misskey-built',
             emptyDir: {},
           },
         ],
