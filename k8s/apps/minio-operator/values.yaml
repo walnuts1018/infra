@@ -7,8 +7,8 @@ operator:
   replicaCount: 1
   resources:
     requests:
-      cpu: 5m
+      cpu: 100m
       memory: 50Mi
     limits:
-      cpu: 100m
+      cpu: 300m
       memory: 256Mi
