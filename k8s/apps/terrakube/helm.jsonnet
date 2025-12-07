@@ -7,6 +7,11 @@
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'),
     {
+      dex: {
+        configSecret: {
+          name: (import 'external-secret-dex.jsonnet').spec.target.name,
+        },
+      },
       api: {
         secrets: [
           'terrakube-api-secrets',
