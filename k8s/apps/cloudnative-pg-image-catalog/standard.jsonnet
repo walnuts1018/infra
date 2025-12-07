@@ -8,23 +8,23 @@
     images: [
       {
         major: 13,
-        image: 'ghcr.io/cloudnative-pg/postgresql:13.22-standard-trixie',
+        image: 'ghcr.io/cloudnative-pg/postgresql:18.1-standard-trixie',
       },
       {
         major: 14,
-        image: 'ghcr.io/cloudnative-pg/postgresql:14.20-standard-trixie',
+        image: 'ghcr.io/cloudnative-pg/postgresql:18.1-standard-trixie',
       },
       {
         major: 15,
-        image: 'ghcr.io/cloudnative-pg/postgresql:15.15-standard-trixie',
+        image: 'ghcr.io/cloudnative-pg/postgresql:18.1-standard-trixie',
       },
       {
         major: 16,
-        image: 'ghcr.io/cloudnative-pg/postgresql:16.11-standard-trixie',
+        image: 'ghcr.io/cloudnative-pg/postgresql:18.1-standard-trixie',
       },
       {
         major: 17,
-        image: 'ghcr.io/cloudnative-pg/postgresql:17.7-standard-trixie',
+        image: 'ghcr.io/cloudnative-pg/postgresql:18.1-standard-trixie',
       },
       {
         major: 18,
