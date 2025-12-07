@@ -2,7 +2,7 @@
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'ClusterImageCatalog',
   metadata: {
-    name: 'postgresql',
+    name: 'standard',
   },
   spec: {
     images: [
