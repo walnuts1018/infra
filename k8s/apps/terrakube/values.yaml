@@ -10,6 +10,8 @@ security:
 dex:
   enabled: true
   existingSecret: true
+  configSecret:
+    create: false
 
 storage:
   defaultStorage: false
