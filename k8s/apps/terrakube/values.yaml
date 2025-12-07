@@ -12,6 +12,8 @@ dex:
   existingSecret: true
   configSecret:
     create: false
+  config:
+    issuer: "http://terrakube-api.walnuts.dev/dex" # 外部のSecretですでに設定されているが、terrakube-api-secretsなどで参照されているので埋めておく
 
 storage:
   defaultStorage: false
