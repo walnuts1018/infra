@@ -2,6 +2,7 @@ name: "terrakube"
 
 security:
   useOpenLDAP: false
+  adminGroup: "349881613179420909:admin"
   patSecret: "to-be-replaced"
   internalSecret: "to-be-replaced"
   dexClientId: "terrakube-ui"
