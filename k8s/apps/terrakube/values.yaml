@@ -33,7 +33,7 @@ api:
   resources:
     requests:
       cpu: 500m
-      memory: 256Mi
+      memory: 448Mi
     limits:
       cpu: 1
       memory: 1Gi
