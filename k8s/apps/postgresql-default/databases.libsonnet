@@ -51,4 +51,8 @@
     db_name: 'terrakube',
     user_name: 'terrakube',
   },
+  {
+    db_name: 'terrakube_dex',
+    user_name: 'terrakube_dex',
+  },
 ]

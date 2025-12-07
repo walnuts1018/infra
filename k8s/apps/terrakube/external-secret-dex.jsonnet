@@ -9,6 +9,13 @@
         property: 'client_secret',
       },
     },
+    {
+      secretKey: 'postgresPassword',
+      remoteRef: {
+        key: 'postgres_passwords',
+        property: 'terrakube_dex',
+      },
+    },
   ],
   template_data: {
     'config.yaml': (importstr '_config/dex-config.yaml.tmpl'),

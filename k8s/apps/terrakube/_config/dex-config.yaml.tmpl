@@ -27,7 +27,15 @@ staticClients:
   - https://terrakube.walnuts.dev
   - /device/callback
 storage:
-  type: memory
+  type: postgres
+  config:
+    host: postgresql-default-rw.databases.svc.cluster.local
+    port: 5432
+    database: terrakube_dex
+    user: terrakube_dex
+    password: {{ .postgresPassword }}
+    ssl:
+      mode: disable
 web:
   allowedOrigins:
   - '*'
