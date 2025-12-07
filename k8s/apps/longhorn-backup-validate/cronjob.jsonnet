@@ -6,6 +6,7 @@
   },
   spec: {
     schedule: '20 4 */7 * *',  // 適当
+    suspend: true,
     concurrencyPolicy: 'Forbid',
     startingDeadlineSeconds: 120,
     jobTemplate: {
