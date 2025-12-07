@@ -1,4 +1,5 @@
-priorityClassName: "high"
+replicaCount: 1
+
 affinity:
   nodeAffinity:
     preferredDuringSchedulingIgnoredDuringExecution:
