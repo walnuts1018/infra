@@ -57,7 +57,7 @@ controller:
       enabled: true
   resources:
     requests:
-      cpu: 488m
+      cpu: 600m
       memory: 1268Mi
     limits:
       cpu: 800m
