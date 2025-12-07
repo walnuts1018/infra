@@ -5,7 +5,7 @@ connectors:
     insecureEnableGroups: true
     issuer: https://auth.walnuts.dev
     redirectURI: https://terrakube-api.walnuts.dev/dex/callback
-    getUserInfo: true
+    # getUserInfo: true
     userNameKey: preferred_username
     scopes:
     - profile
