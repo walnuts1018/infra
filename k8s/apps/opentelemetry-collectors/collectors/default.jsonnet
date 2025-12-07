@@ -134,8 +134,12 @@ function(
     },
     resources: {
       requests: {
-        cpu: '20m',
+        cpu: '5m',
         memory: '100Mi',
+      },
+      limits: {
+        cpu: '200m',
+        memory: '2Gi',
       },
     },
     env: [
