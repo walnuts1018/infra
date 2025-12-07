@@ -8,7 +8,7 @@
     images: [
       {
         major: 13,
-        image: 'ghcr.io/cloudnative-pg/postgresql:13.22-standard-trixie',
+        image: 'ghcr.io/cloudnative-pg/postgresql:14.20-standard-trixie',
       },
       {
         major: 14,
