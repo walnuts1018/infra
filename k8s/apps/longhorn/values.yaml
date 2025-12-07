@@ -15,13 +15,13 @@ persistence:
   reclaimPolicy: Retain
 
 longhornUI:
-  replicas: 2
+  replicas: 1
 longhornConversionWebhook:
-  replicas: 2
+  replicas: 1
 longhornAdmissionWebhook:
-  replicas: 2
+  replicas: 1
 longhornRecoveryBackend:
-  replicas: 2
+  replicas: 1
 metrics:
   serviceMonitor:
     enabled: true
