@@ -68,24 +68,24 @@ dex:
     serviceMonitor:
       enabled: true
   resources:
-    limits:
-      cpu: 50m
-      memory: 64Mi
     requests:
       cpu: 1m
       memory: 20Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
 redis:
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
   resources:
-    limits:
-      cpu: 200m
-      memory: 128Mi
     requests:
       cpu: 5m
       memory: 16Mi
+    limits:
+      cpu: 100m
+      memory: 256Mi
 
 server:
   ingress:
