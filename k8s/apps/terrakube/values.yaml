@@ -164,7 +164,7 @@ registry:
       memory: 448Mi
     limits:
       cpu: 500m
-      memory: 512Mi
+      memory: 1Gi
   serviceAccountName: "terrakube-registry"
   volumeMounts:
   - name: 'minio-sts-token'
