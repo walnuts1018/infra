@@ -22,7 +22,9 @@ storage:
     accessKey: "dummy"
     secretKey: "dummy"
     bucketName: "terrakube"
-    endpoint: "http://minio.minio.svc.cluster.local"
+    # 空にしないとDefaultCredentialsProviderを使わない
+    # https://github.com/terrakube-io/terrakube/blob/366018d7a6c6f04a69318b7392e68e418877d8f7/api/src/main/java/io/terrakube/api/plugin/storage/configuration/StorageTypeAutoConfiguration.java#L65
+    endpoint: ""
 
 api:
   enabled: true
@@ -160,7 +162,7 @@ executor:
   - name: AWS_REGION
     value: ap-northeast-1
   - name: AWS_ROLE_ARN
-    value: arn:aws:iam::dummy:role/terrakube-api
+    value: arn:aws:iam::dummy:role/terrakube-executor
 
 registry:
   enabled: true
@@ -216,7 +218,7 @@ registry:
   - name: AWS_REGION
     value: ap-northeast-1
   - name: AWS_ROLE_ARN
-    value: arn:aws:iam::dummy:role/terrakube-api
+    value: arn:aws:iam::dummy:role/terrakube-registry
 
 ui:
   enabled: true
