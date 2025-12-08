@@ -3,6 +3,7 @@
 /aws-cli/aws sts assume-role-with-web-identity \
   --role-arn arn:aws:iam::dummy:role/terrakube \
   --role-session-name "terrakube-session-$(date +%s)" \
+  --profile assume-role
   --duration-seconds 86400 \
   --web-identity-token file:///var/run/secrets/sts.min.io/serviceaccount/token \
   --endpoint-url https://sts-minio.local.walnuts.dev/sts/minio \
