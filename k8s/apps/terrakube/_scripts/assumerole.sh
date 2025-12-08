@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-aws sts assume-role-with-web-identity \
+/aws-cli/aws sts assume-role-with-web-identity \
   --role-arn arn:aws:iam::dummy:role/terrakube \
   --role-session-name "terrakube-session-$(date +%s)" \
   --duration-seconds 86400 \
