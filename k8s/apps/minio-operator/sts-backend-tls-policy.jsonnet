@@ -18,8 +18,8 @@
       caCertificateRefs: [
         {
           group: '',
-          kind: 'Secret',
-          name: (import '../clusterissuer/local-issuer.jsonnet').spec.ca.secretName,
+          kind: 'ConfigMap',
+          name: (import 'sts-ca-cert-configmap.jsonnet').metadata.name,  // TrustManagerがClusterBundleに対応したら、直接そちらを参照できるだろう
         },
       ],
       hostname: 'sts.minio-operator.svc.cluster.local',
