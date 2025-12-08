@@ -27,25 +27,6 @@ storage:
 api:
   enabled: true
   replicaCount: "1"
-  initContainers:
-  - name: generate-certs
-    image: amazoncorretto:25.0.1
-    command: [ "/bin/sh", "-c" ]
-    args:
-    - |
-      cp $JAVA_HOME/lib/security/cacerts /certs/cacerts
-      keytool -import -trustcacerts -noprompt \
-        -alias local-ca-bundle \
-        -file /etc/ssl/certs/trust-bundle.pem \
-        -keystore /certs/cacerts \
-        -storepass storepass
-    volumeMounts:
-    - name: certs
-      mountPath: /certs
-    - name: 'local-ca-bundle'
-      mountPath: '/etc/ssl/certs/trust-bundle.pem'
-      subPath: 'trust-bundle.pem'
-      readOnly: true
   dynamicCredentials:
     enabled: false
     publicKey: ""
@@ -86,10 +67,6 @@ api:
     mountPath: '/etc/ssl/certs/trust-bundle.pem'
     subPath: 'trust-bundle.pem'
     readOnly: true
-  - name: 'certs'
-    mountPath: '/cacerts'
-    subPath: 'cacerts'
-    readOnly: true
   volumes:
   - name: minio-sts-token
     projected:
@@ -101,8 +78,6 @@ api:
   - name: local-ca-bundle
     configMap:
       name: local-ca-bundle
-  - name: certs
-    emptyDir: {}
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'
@@ -126,31 +101,10 @@ api:
     value: ap-northeast-1
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::dummy:role/terrakube-api
-  - name: JAVA_TOOL_OPTIONS
-    value: "-Djavax.net.ssl.trustStore=/certs/cacerts -Djavax.net.ssl.trustStorePassword=storepass"
 
 executor:
   enabled: true
   replicaCount: "1"
-  initContainers:
-  - name: generate-certs
-    image: amazoncorretto:25.0.1
-    command: [ "/bin/sh", "-c" ]
-    args:
-    - |
-      cp $JAVA_HOME/lib/security/cacerts /certs/cacerts
-      keytool -import -trustcacerts -noprompt \
-        -alias local-ca-bundle \
-        -file /etc/ssl/certs/trust-bundle.pem \
-        -keystore /certs/cacerts \
-        -storepass storepass
-    volumeMounts:
-    - name: certs
-      mountPath: /certs
-    - name: 'local-ca-bundle'
-      mountPath: '/etc/ssl/certs/trust-bundle.pem'
-      subPath: 'trust-bundle.pem'
-      readOnly: true
   resources:
     requests:
       cpu: 100m
@@ -167,10 +121,6 @@ executor:
     mountPath: '/etc/ssl/certs/trust-bundle.pem'
     subPath: 'trust-bundle.pem'
     readOnly: true
-  - name: 'certs'
-    mountPath: '/cacerts'
-    subPath: 'cacerts'
-    readOnly: true
   volumes:
   - name: minio-sts-token
     projected:
@@ -182,8 +132,6 @@ executor:
   - name: local-ca-bundle
     configMap:
       name: local-ca-bundle
-  - name: certs
-    emptyDir: {}
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'
@@ -209,31 +157,10 @@ executor:
     value: ap-northeast-1
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::dummy:role/terrakube-executor
-  - name: JAVA_TOOL_OPTIONS
-    value: "-Djavax.net.ssl.trustStore=/certs/cacerts -Djavax.net.ssl.trustStorePassword=storepass"
 
 registry:
   enabled: true
   replicaCount: "1"
-  initContainers:
-  - name: generate-certs
-    image: amazoncorretto:25.0.1
-    command: [ "/bin/sh", "-c" ]
-    args:
-    - |
-      cp $JAVA_HOME/lib/security/cacerts /certs/cacerts
-      keytool -import -trustcacerts -noprompt \
-        -alias local-ca-bundle \
-        -file /etc/ssl/certs/trust-bundle.pem \
-        -keystore /certs/cacerts \
-        -storepass storepass
-    volumeMounts:
-    - name: certs
-      mountPath: /certs
-    - name: 'local-ca-bundle'
-      mountPath: '/etc/ssl/certs/trust-bundle.pem'
-      subPath: 'trust-bundle.pem'
-      readOnly: true
   resources:
     requests:
       cpu: 250m
@@ -250,10 +177,6 @@ registry:
     mountPath: '/etc/ssl/certs/trust-bundle.pem'
     subPath: 'trust-bundle.pem'
     readOnly: true
-  - name: 'certs'
-    mountPath: '/cacerts'
-    subPath: 'cacerts'
-    readOnly: true
   volumes:
   - name: minio-sts-token
     projected:
@@ -265,8 +188,6 @@ registry:
   - name: local-ca-bundle
     configMap:
       name: local-ca-bundle
-  - name: certs
-    emptyDir: {}
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'
@@ -290,8 +211,6 @@ registry:
     value: ap-northeast-1
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::dummy:role/terrakube-registry
-  - name: JAVA_TOOL_OPTIONS
-    value: "-Djavax.net.ssl.trustStore=/certs/cacerts -Djavax.net.ssl.trustStorePassword=storepass"
 
 ui:
   enabled: true
