@@ -73,7 +73,7 @@ api:
     subPath: "assumerole.sh"
   - name: aws-cli
     mountPath: /aws-cli
-    subPath: usr/local/bin
+    subPath: usr/local/aws-cli/v2/current/dist
   volumes:
   - name: minio-sts-token
     projected:
@@ -125,7 +125,7 @@ executor:
     subPath: "assumerole.sh"
   - name: aws-cli
     mountPath: /aws-cli
-    subPath: usr/local/bin
+    subPath: usr/local/aws-cli/v2/current/dist
   volumes:
   - name: minio-sts-token
     projected:
@@ -179,7 +179,7 @@ registry:
     subPath: "assumerole.sh"
   - name: aws-cli
     mountPath: /aws-cli
-    subPath: usr/local/bin
+    subPath: usr/local/aws-cli/v2/current/dist
   volumes:
   - name: minio-sts-token
     projected:
