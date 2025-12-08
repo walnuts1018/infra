@@ -17,9 +17,9 @@
     validation: {
       caCertificateRefs: [
         {
-          group: 'trust.cert-manager.io',
-          kind: 'Bundle',
-          name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
+          group: '',
+          kind: 'Secret',
+          name: (import '../clusterissuer/local-issuer.jsonnet').spec.ca.secretName,
         },
       ],
       hostname: 'sts.minio-operator.svc.cluster.local',
