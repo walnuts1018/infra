@@ -94,7 +94,7 @@ api:
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
     value: /var/run/secrets/sts.min.io/serviceaccount/token
   - name: AWS_ENDPOINT_URL_STS
-    value: https://sts.minio-operator.svc.cluster.local:4223/sts/minio
+    value: https://sts-minio.local.walnuts.dev/sts/minio
   - name: AWS_ENDPOINT_URL_S3
     value: http://minio.minio.svc.cluster.local
   - name: AWS_REGION
@@ -150,7 +150,7 @@ executor:
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
     value: /var/run/secrets/sts.min.io/serviceaccount/token
   - name: AWS_ENDPOINT_URL_STS
-    value: https://sts.minio-operator.svc.cluster.local:4223/sts/minio
+    value: https://sts-minio.local.walnuts.dev/sts/minio
   - name: AWS_ENDPOINT_URL_S3
     value: http://minio.minio.svc.cluster.local
   - name: AWS_REGION
@@ -204,7 +204,7 @@ registry:
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
     value: /var/run/secrets/sts.min.io/serviceaccount/token
   - name: AWS_ENDPOINT_URL_STS
-    value: https://sts.minio-operator.svc.cluster.local:4223/sts/minio
+    value: https://sts-minio.local.walnuts.dev/sts/minio
   - name: AWS_ENDPOINT_URL_S3
     value: http://minio.minio.svc.cluster.local
   - name: AWS_REGION
