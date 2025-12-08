@@ -63,10 +63,14 @@ api:
   - name: 'minio-sts-token'
     mountPath: '/var/run/secrets/sts.min.io/serviceaccount'
     readOnly: true
-  - name: 'local-ca-bundle'
-    mountPath: '/etc/ssl/certs/trust-bundle.pem'
-    subPath: 'trust-bundle.pem'
+  - name: 'aws-config'
+    mountPath: '/home/cnb/.aws/config'
     readOnly: true
+    subPath: 'config'
+  - name: "aws-config"
+    mountPath: "/scripts/assumerole.sh"
+    readOnly: true
+    subPath: "assumerole.sh"
   volumes:
   - name: minio-sts-token
     projected:
@@ -75,9 +79,9 @@ api:
           audience: 'sts.min.io'
           path: token
           expirationSeconds: 86400
-  - name: local-ca-bundle
+  - name: aws-config
     configMap:
-      name: local-ca-bundle
+      name: aws-config
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'
@@ -89,18 +93,6 @@ api:
     value: 'true'
   - name: AwsEnableRoleAuth
     value: "true"
-  - name: AWS_CA_BUNDLE
-    value: /etc/ssl/certs/trust-bundle.pem
-  - name: AWS_WEB_IDENTITY_TOKEN_FILE
-    value: /var/run/secrets/sts.min.io/serviceaccount/token
-  - name: AWS_ENDPOINT_URL_STS
-    value: https://sts-minio.local.walnuts.dev/sts/minio
-  - name: AWS_ENDPOINT_URL_S3
-    value: http://minio.minio.svc.cluster.local
-  - name: AWS_REGION
-    value: ap-northeast-1
-  - name: AWS_ROLE_ARN
-    value: arn:aws:iam::dummy:role/terrakube-api
 
 executor:
   enabled: true
@@ -117,10 +109,14 @@ executor:
   - name: 'minio-sts-token'
     mountPath: '/var/run/secrets/sts.min.io/serviceaccount'
     readOnly: true
-  - name: 'local-ca-bundle'
-    mountPath: '/etc/ssl/certs/trust-bundle.pem'
-    subPath: 'trust-bundle.pem'
+  - name: 'aws-config'
+    mountPath: '/home/cnb/.aws/config'
     readOnly: true
+    subPath: 'config'
+  - name: "aws-config"
+    mountPath: "/scripts/assumerole.sh"
+    readOnly: true
+    subPath: "assumerole.sh"
   volumes:
   - name: minio-sts-token
     projected:
@@ -129,9 +125,9 @@ executor:
           audience: 'sts.min.io'
           path: token
           expirationSeconds: 86400
-  - name: local-ca-bundle
+  - name: aws-config
     configMap:
-      name: local-ca-bundle
+      name: aws-config
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'
@@ -145,18 +141,6 @@ executor:
     value: "false"
   - name: AwsEnableRoleAuth
     value: "true"
-  - name: AWS_CA_BUNDLE
-    value: /etc/ssl/certs/trust-bundle.pem
-  - name: AWS_WEB_IDENTITY_TOKEN_FILE
-    value: /var/run/secrets/sts.min.io/serviceaccount/token
-  - name: AWS_ENDPOINT_URL_STS
-    value: https://sts-minio.local.walnuts.dev/sts/minio
-  - name: AWS_ENDPOINT_URL_S3
-    value: http://minio.minio.svc.cluster.local
-  - name: AWS_REGION
-    value: ap-northeast-1
-  - name: AWS_ROLE_ARN
-    value: arn:aws:iam::dummy:role/terrakube-executor
 
 registry:
   enabled: true
@@ -173,10 +157,14 @@ registry:
   - name: 'minio-sts-token'
     mountPath: '/var/run/secrets/sts.min.io/serviceaccount'
     readOnly: true
-  - name: 'local-ca-bundle'
-    mountPath: '/etc/ssl/certs/trust-bundle.pem'
-    subPath: 'trust-bundle.pem'
+  - name: 'aws-config'
+    mountPath: '/home/cnb/.aws/config'
     readOnly: true
+    subPath: 'config'
+  - name: "aws-config"
+    mountPath: "/scripts/assumerole.sh"
+    readOnly: true
+    subPath: "assumerole.sh"
   volumes:
   - name: minio-sts-token
     projected:
@@ -185,9 +173,9 @@ registry:
           audience: 'sts.min.io'
           path: token
           expirationSeconds: 86400
-  - name: local-ca-bundle
+  - name: aws-config
     configMap:
-      name: local-ca-bundle
+      name: aws-config
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'
@@ -199,18 +187,6 @@ registry:
     value: 'true'
   - name: AwsEnableRoleAuth
     value: "true"
-  - name: AWS_CA_BUNDLE
-    value: /etc/ssl/certs/trust-bundle.pem
-  - name: AWS_WEB_IDENTITY_TOKEN_FILE
-    value: /var/run/secrets/sts.min.io/serviceaccount/token
-  - name: AWS_ENDPOINT_URL_STS
-    value: https://sts-minio.local.walnuts.dev/sts/minio
-  - name: AWS_ENDPOINT_URL_S3
-    value: http://minio.minio.svc.cluster.local
-  - name: AWS_REGION
-    value: ap-northeast-1
-  - name: AWS_ROLE_ARN
-    value: arn:aws:iam::dummy:role/terrakube-registry
 
 ui:
   enabled: true
