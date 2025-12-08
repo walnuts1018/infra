@@ -1,9 +1,9 @@
 [default]
 region = ap-northeast-1
-endpoint_url = http://minio.minio.svc.cluster.local
+endpoint_url = http://minio.svc.cluster.local
 credential_process = bash /scripts/assumerole.sh
 s3 =
-  endpoint_url = http://minio.minio.svc.cluster.local
+  endpoint_url = http://minio.svc.cluster.local
   s3_force_path_style = true
 
 [profile assume-role]
