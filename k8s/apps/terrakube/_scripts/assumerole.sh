@@ -8,7 +8,7 @@
   --web-identity-token file:///var/run/secrets/sts.min.io/serviceaccount/token \
   --endpoint-url https://sts-minio.local.walnuts.dev/sts/minio \
   --region ap-northeast-1 | \
-  jq '{
+  /jq/jq '{
     Version: 1,
     AccessKeyId: .Credentials.AccessKeyId,
     SecretAccessKey: .Credentials.SecretAccessKey,
