@@ -74,6 +74,8 @@ api:
   - name: aws-cli
     mountPath: /aws-cli
     subPath: usr/local/aws-cli/v2/current/dist
+  - name: jq
+    mountPath: /jq
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'
@@ -112,6 +114,8 @@ executor:
   - name: aws-cli
     mountPath: /aws-cli
     subPath: usr/local/aws-cli/v2/current/dist
+  - name: jq
+    mountPath: /jq
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'
@@ -152,6 +156,8 @@ registry:
   - name: aws-cli
     mountPath: /aws-cli
     subPath: usr/local/aws-cli/v2/current/dist
+  - name: jq
+    mountPath: /jq
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'

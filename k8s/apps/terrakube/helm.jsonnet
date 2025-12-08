@@ -44,6 +44,12 @@
               reference: 'public.ecr.aws/aws-cli/aws-cli:2.32.11',
             },
           },
+          {
+            name: 'jq',
+            image: {
+              reference: 'ghcr.io/jqlang/jq:1.8.1',
+            },
+          },
         ],
       },
       executor: {
@@ -78,6 +84,12 @@
               reference: 'public.ecr.aws/aws-cli/aws-cli:2.32.11',
             },
           },
+          {
+            name: 'jq',
+            image: {
+              reference: 'ghcr.io/jqlang/jq:1.8.1',
+            },
+          },
         ],
       },
       registry: {
@@ -110,6 +122,12 @@
             name: 'aws-cli',
             image: {
               reference: 'public.ecr.aws/aws-cli/aws-cli:2.32.11',
+            },
+          },
+          {
+            name: 'jq',
+            image: {
+              reference: 'ghcr.io/jqlang/jq:1.8.1',
             },
           },
         ],
