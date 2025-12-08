@@ -74,20 +74,6 @@ api:
   - name: aws-cli
     mountPath: /aws-cli
     subPath: usr/local/aws-cli/v2/current/dist
-  volumes:
-  - name: minio-sts-token
-    projected:
-      sources:
-      - serviceAccountToken:
-          audience: 'sts.min.io'
-          path: token
-          expirationSeconds: 86400
-  - name: aws-config
-    configMap:
-      name: aws-config
-  - name: aws-cli
-    image:
-      reference: public.ecr.aws/aws-cli/aws-cli:2.32.11
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'
@@ -126,20 +112,6 @@ executor:
   - name: aws-cli
     mountPath: /aws-cli
     subPath: usr/local/aws-cli/v2/current/dist
-  volumes:
-  - name: minio-sts-token
-    projected:
-      sources:
-      - serviceAccountToken:
-          audience: 'sts.min.io'
-          path: token
-          expirationSeconds: 86400
-  - name: aws-config
-    configMap:
-      name: aws-config
-  - name: aws-cli
-    image:
-      reference: public.ecr.aws/aws-cli/aws-cli:2.32.11
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'
@@ -180,20 +152,6 @@ registry:
   - name: aws-cli
     mountPath: /aws-cli
     subPath: usr/local/aws-cli/v2/current/dist
-  volumes:
-  - name: minio-sts-token
-    projected:
-      sources:
-      - serviceAccountToken:
-          audience: 'sts.min.io'
-          path: token
-          expirationSeconds: 86400
-  - name: aws-config
-    configMap:
-      name: aws-config
-  - name: aws-cli
-    image:
-      reference: public.ecr.aws/aws-cli/aws-cli:2.32.11
   env:
   - name: OTEL_JAVAAGENT_ENABLE
     value: 'true'
