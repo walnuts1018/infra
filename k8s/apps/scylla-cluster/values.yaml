@@ -7,13 +7,13 @@ racks:
   storage:
     storageClassName: local-path
     capacity: 8Gi
-  resources: {}
-    # requests:
-    #   cpu: 1
-    #   memory: 4Gi
-    # limits:
-    #   cpu: 1
-    #   memory: 4Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 2Gi
   placement:
     nodeAffinity: {}
     tolerations: []
