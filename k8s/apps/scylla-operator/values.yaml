@@ -5,11 +5,15 @@ resources:
   requests:
     cpu: 2m
     memory: 70Mi
-tolerations: []
+tolerations:
+- key: "node.walnuts.dev/low-performance"
+  operator: "Exists"
 
 webhookServerReplicas: 1
 webhookServerResources:
   requests:
     cpu: 2m
     memory: 12Mi
-webhookServerTolerations: []
+webhookServerTolerations:
+- key: "node.walnuts.dev/low-performance"
+  operator: "Exists"
