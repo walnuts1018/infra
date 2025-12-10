@@ -28,27 +28,27 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
         placement: {
           nodeAffinity: {},
           podAffinity: {},
-          // podAntiAffinity: {
-          //   preferredDuringSchedulingIgnoredDuringExecution: [
-          //     {
-          //       weight: 100,
-          //       podAffinityTerm: {
-          //         labelSelector: {
-          //           matchExpressions: [
-          //             {
-          //               key: 'scylla/cluster',
-          //               operator: 'In',
-          //               values: [
-          //                 'scylla-cluster',
-          //               ],
-          //             },
-          //           ],
-          //         },
-          //         topologyKey: 'kubernetes.io/hostname',
-          //       },
-          //     },
-          //   ],
-          // },
+          podAntiAffinity: {
+            preferredDuringSchedulingIgnoredDuringExecution: [
+              {
+                weight: 100,
+                podAffinityTerm: {
+                  labelSelector: {
+                    matchExpressions: [
+                      {
+                        key: 'scylla/cluster',
+                        operator: 'In',
+                        values: [
+                          'scylla-cluster',
+                        ],
+                      },
+                    ],
+                  },
+                  topologyKey: 'kubernetes.io/hostname',
+                },
+              },
+            ],
+          },
           tolerations: [],
         },
       },
