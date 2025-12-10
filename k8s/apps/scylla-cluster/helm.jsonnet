@@ -4,5 +4,57 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
   chart: 'scylla',
   repoURL: 'https://scylla-operator-charts.storage.googleapis.com/stable',
   targetRevision: 'v1.19.0',
-  values: (importstr 'values.yaml'),
+  valuesObject: {
+    datacenter: 'iwakura',
+    racks: [
+      {
+        name: 'iwakura-a',
+        scyllaConfig: (import 'configmap-scylla-config.jsonnet').metadata.name,
+        members: 3,
+        storage: {
+          storageClassName: 'local-path',
+          capacity: '8Gi',
+        },
+        resources: {
+          requests: {
+            cpu: '100m',
+            memory: '512Mi',
+          },
+          limits: {
+            cpu: '1',
+            memory: '2Gi',
+          },
+        },
+        placement: {
+          nodeAffinity: {},
+          podAffinity: {},
+          // podAntiAffinity: {
+          //   preferredDuringSchedulingIgnoredDuringExecution: [
+          //     {
+          //       weight: 100,
+          //       podAffinityTerm: {
+          //         labelSelector: {
+          //           matchExpressions: [
+          //             {
+          //               key: 'scylla/cluster',
+          //               operator: 'In',
+          //               values: [
+          //                 'scylla-cluster',
+          //               ],
+          //             },
+          //           ],
+          //         },
+          //         topologyKey: 'kubernetes.io/hostname',
+          //       },
+          //     },
+          //   ],
+          // },
+          tolerations: [],
+        },
+      },
+    ],
+    serviceMonitor: {
+      create: true,
+    },
+  },
 }
