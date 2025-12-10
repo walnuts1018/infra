@@ -18,11 +18,11 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
         resources: {
           requests: {
             cpu: '100m',
-            memory: '512Mi',
+            memory: '1.2Gi',
           },
           limits: {
             cpu: '1',
-            memory: '4Gi',
+            memory: '3Gi',
           },
         },
         placement: {
