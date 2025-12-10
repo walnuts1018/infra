@@ -5,6 +5,9 @@ resources:
   requests:
     cpu: 2m
     memory: 70Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
 tolerations:
 - key: "node.walnuts.dev/low-performance"
   operator: "Exists"
@@ -14,6 +17,9 @@ webhookServerResources:
   requests:
     cpu: 2m
     memory: 12Mi
+  limits:
+    cpu: 100m
+    memory: 256Mi
 webhookServerTolerations:
 - key: "node.walnuts.dev/low-performance"
   operator: "Exists"
