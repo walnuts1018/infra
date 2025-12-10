@@ -6,7 +6,7 @@ resources:
     cpu: 2m
     memory: 70Mi
   limits:
-    cpu: 200m
+    cpu: 300m
     memory: 256Mi
 tolerations:
 - key: "node.walnuts.dev/low-performance"
