@@ -3,13 +3,13 @@ replicas: 1
 logLevel: 2
 resources:
   requests:
-    cpu: 100m
-    memory: 20Mi
+    cpu: 2m
+    memory: 70Mi
 tolerations: []
 
 webhookServerReplicas: 1
 webhookServerResources:
   requests:
-    cpu: 10m
-    memory: 20Mi
+    cpu: 2m
+    memory: 12Mi
 webhookServerTolerations: []
