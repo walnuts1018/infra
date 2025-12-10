@@ -1,0 +1,4 @@
+{
+  name: "scylla-operator",
+  namespace: "scylla-operator",
+}
