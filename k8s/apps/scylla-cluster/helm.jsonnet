@@ -22,7 +22,7 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
           },
           limits: {
             cpu: '1',
-            memory: '2Gi',
+            memory: '4Gi',
           },
         },
         placement: {
