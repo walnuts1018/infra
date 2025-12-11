@@ -1,0 +1,11 @@
+[
+  {
+    "username": "walnuk",
+    "password": "{{ .walnuk_password }}",
+    "superuser": false,
+    "login": true,
+    "keyspace_permissions": [
+      "walnuk"
+    ]
+  }
+]
