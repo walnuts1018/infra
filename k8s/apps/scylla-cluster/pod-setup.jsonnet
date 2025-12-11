@@ -3,6 +3,7 @@ local appname = (import 'app.json5').name + '-setup';
   apiVersion: 'batch/v1',
   kind: 'Job',
   metadata: {
+    name: appname,
     namespace: (import 'app.json5').namespace,
     labels: (import '../../components/labels.libsonnet') + { appname: appname },
   },
