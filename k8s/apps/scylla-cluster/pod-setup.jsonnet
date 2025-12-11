@@ -50,7 +50,7 @@
       {
         name: 'scripts',
         configMap: {
-          name: (import 'configmap-scylla-setup.jsonnet').metadata.name,
+          name: (import 'configmap-setup.jsonnet').metadata.name,
           items: [
             {
               key: 'setup.sh',
@@ -62,7 +62,7 @@
       {
         name: 'keyspaces-config',
         configMap: {
-          name: (import 'configmap-scylla-setup.jsonnet').metadata.name,
+          name: (import 'configmap-setup.jsonnet').metadata.name,
           items: [
             {
               key: 'keyspaces.json',
