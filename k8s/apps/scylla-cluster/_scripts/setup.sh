@@ -105,8 +105,7 @@ create_keyspaces() {
         log "info" "Creating keyspace" "name" "${name}" "replication_class" "${replication_class}" "replication_factor" "${replication_factor}" "replication_opt" "${replication_opt}"
         cqlsh --cqlshrc="${cqlshrc}" -e "
             CREATE KEYSPACE IF NOT EXISTS ${name}
-            WITH replication = ${replication_opt};
-        "
+            WITH replication = ${replication_opt};"
     done
     
     log "info" "Keyspaces created successfully!"
@@ -140,8 +139,7 @@ create_users() {
             CREATE ROLE IF NOT EXISTS '${username}'
             WITH PASSWORD = '${password}'
             AND SUPERUSER = ${superuser}
-            AND LOGIN = ${login};
-        "
+            AND LOGIN = ${login};"
         
         # キースペース権限を付与
         local keyspace_perms
@@ -151,8 +149,7 @@ create_users() {
             echo "$keyspace_perms" | jq -r '.[]' | while read -r ks; do
                 log "info" "Granting permissions on keyspace" "keyspace" "${ks}" "to_user" "${username}"
                 cqlsh --cqlshrc="${cqlshrc}" -e "
-                    GRANT ALL PERMISSIONS ON KEYSPACE ${ks} TO '${username}';
-                "
+                    GRANT ALL PERMISSIONS ON KEYSPACE ${ks} TO '${username}';"
             done
         fi
     done
