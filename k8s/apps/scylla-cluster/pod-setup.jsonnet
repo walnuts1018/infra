@@ -12,9 +12,10 @@
     containers: [
       {
         name: 'setup',
-        image: 'debian:13.2-slim',
+        image: 'scylladb/scylla:2025.3.3',
         command: ['/bin/bash', '/scripts/setup.sh'],
         env: [
+          { name: 'PATH', value: '$PATH:/jq' },
           { name: 'SCYLLA_HOST', value: (import 'app.json5').name + '-client' },
           { name: 'SCYLLA_PORT', value: '9142' },
         ],
@@ -24,6 +25,7 @@
           { name: 'scripts', mountPath: '/scripts', readOnly: true },
           { name: 'keyspaces-config', mountPath: '/config/keyspaces.json', subPath: 'keyspaces.json', readOnly: true },
           { name: 'users-config', mountPath: '/config/users.json', subPath: 'users.json', readOnly: true },
+          { name: 'jq', mountPath: '/jq', readOnly: true },
         ],
       },
     ],
@@ -81,6 +83,12 @@
               path: 'users.json',
             },
           ],
+        },
+      },
+      {
+        name: 'jq',
+        image: {
+          reference: 'ghcr.io/jqlang/jq:1.8.1',
         },
       },
     ],
