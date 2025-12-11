@@ -92,12 +92,20 @@ create_keyspaces() {
         local replication_class
         replication_class=$(echo "$ks" | jq -r '.replication_class')
         local replication_factor
-        replication_factor=$(echo "$ks" | jq -r '.replication_factor')
+        for dc in $(echo "$ks" | jq -r '.replication_factor | keys[]'); do
+            local rf_value
+            rf_value=$(echo "$ks" | jq -r ".replication_factor.\"${dc}\"")
+            replication_factor+="'${dc}': ${rf_value}, "
+        done
+        replication_factor=${replication_factor%, } # 末尾のカンマとスペースを削除
+
+        local replication_opt
+        replication_opt="{'class': '${replication_class}', ${replication_factor}}"
         
-        log "info" "Creating keyspace" "name" "${name}" "replication_class" "${replication_class}" "replication_factor" "${replication_factor}"
+        log "info" "Creating keyspace" "name" "${name}" "replication_class" "${replication_class}" "replication_factor" "${replication_factor}" "replication_opt" "${replication_opt}"
         cqlsh --cqlshrc="${cqlshrc}" -e "
             CREATE KEYSPACE IF NOT EXISTS ${name}
-            WITH replication = {'class': '${replication_class}', 'replication_factor': ${replication_factor}};
+            WITH replication = ${replication_opt};
         "
     done
     

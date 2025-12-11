@@ -2,6 +2,8 @@
   {
     "name": "walnuk",
     "replication_class": "NetworkTopologyStrategy",
-    "replication_factor": 2
+    "replication_factor": {
+      "iwakura": 2
+    }
   }
 ]
