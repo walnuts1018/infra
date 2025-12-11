@@ -54,6 +54,11 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
         },
       },
     ],
+    exposeOptions: {
+      nodeService: {
+        type: 'LoadBalancer',
+      },
+    },
     serviceMonitor: {
       create: true,
     },
