@@ -12,6 +12,7 @@ local appname = (import 'app.json5').name + '-setup';
     labels: (import '../../components/labels.libsonnet') + { appname: appname },
   },
   spec: {
+    ttlSecondsAfterFinished: 60,
     template: {
       metadata: {
         labels: (import '../../components/labels.libsonnet') + { appname: appname },
