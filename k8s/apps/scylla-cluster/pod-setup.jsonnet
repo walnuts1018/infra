@@ -45,7 +45,7 @@
         configMap: {
           name: (import 'app.json5').name + '-local-serving-ca',
           items: [
-            { key: 'tls.crt', path: 'tls.crt' },
+            { key: 'ca-bundle.crt', path: 'ca-bundle.crt' },
           ],
         },
       },
