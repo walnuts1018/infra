@@ -80,7 +80,7 @@ wait_for_cluster() {
 create_keyspaces() {
     local cqlshrc="$1"
     
-    echo "Creating keyspaces..."
+    log "info" "Creating keyspaces..."
     
     local keyspaces
     keyspaces=$(cat "${KEYSPACES_CONFIG}")
@@ -92,21 +92,21 @@ create_keyspaces() {
         local replication
         replication=$(echo "$ks" | jq -rc '.replication')
         
-        echo "Creating keyspace: ${name}"
+        log "info" "Creating keyspace" "name" "${name}" "replication" "${replication}"
         cqlsh --cqlshrc="${cqlshrc}" -e "
             CREATE KEYSPACE IF NOT EXISTS ${name}
             WITH replication = ${replication};
         "
     done
     
-    echo "Keyspaces created successfully!"
+    log "info" "Keyspaces created successfully!"
 }
 
 
 create_users() {
     local cqlshrc="$1"
     
-    echo "Creating users..."
+    log "info" "Creating users..."
     
     local users
     users=$(cat "${USERS_CONFIG}")
@@ -124,7 +124,7 @@ create_users() {
         local login
         login=$(echo "$user" | jq -r '.login')
         
-        echo "Creating user: ${username} (superuser=${superuser}, login=${login})"
+        log "info" "Creating user" "username" "${username}" "superuser" "${superuser}" "login" "${login}"
         
         cqlsh --cqlshrc="${cqlshrc}" -e "
             CREATE ROLE IF NOT EXISTS '${username}'
@@ -139,7 +139,7 @@ create_users() {
         
         if [ -n "$keyspace_perms" ] && [ "$keyspace_perms" != "null" ]; then
             echo "$keyspace_perms" | jq -r '.[]' | while read -r ks; do
-                echo "Granting permissions on keyspace ${ks} to ${username}"
+                log "info" "Granting permissions on keyspace" "keyspace" "${ks}" "to_user" "${username}"
                 cqlsh --cqlshrc="${cqlshrc}" -e "
                     GRANT ALL PERMISSIONS ON KEYSPACE ${ks} TO '${username}';
                 "
@@ -147,7 +147,7 @@ create_users() {
         fi
     done
     
-    echo "Users created successfully!"
+    log "info" "Users created successfully!"
 }
 
 log "info" "Preparing temporary directory..."
