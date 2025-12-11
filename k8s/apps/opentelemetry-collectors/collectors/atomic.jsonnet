@@ -164,6 +164,7 @@ function(
               'resource/cluster_name',
             ],
             exporters: [
+              'otlp/mackerel',
               'prometheusremotewrite',
             ],
           },
