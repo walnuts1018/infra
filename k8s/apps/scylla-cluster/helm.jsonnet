@@ -10,6 +10,7 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
     racks: [
       {
         name: 'iwakura-a',
+        scyllaConfig: (import 'configmap-scylla-config.jsonnet').metadata.name,
         members: 3,
         storage: {
           storageClassName: 'local-path',
