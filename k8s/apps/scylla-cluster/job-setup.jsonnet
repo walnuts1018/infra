@@ -3,7 +3,11 @@ local appname = (import 'app.json5').name + '-setup';
   apiVersion: 'batch/v1',
   kind: 'Job',
   metadata: {
-    name: appname,
+    name: appname + '-' + std.md5(
+      std.toString($.spec) +
+      std.toString(import 'configmap-setup.jsonnet') +
+      std.toString(import 'external-secret-users.jsonnet')
+    )[0:10],
     namespace: (import 'app.json5').namespace,
     labels: (import '../../components/labels.libsonnet') + { appname: appname },
   },
