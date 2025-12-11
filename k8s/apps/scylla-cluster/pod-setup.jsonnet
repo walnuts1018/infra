@@ -17,9 +17,12 @@ local appname = (import 'app.json5').name + '-setup';
           {
             name: 'setup',
             image: 'scylladb/scylla:2025.3.3',
-            command: ['/bin/bash', '/scripts/setup.sh'],
+            command: ['/bin/bash'],
+            args: [
+              '-c',
+              'export PATH=$PATH:/jq && bash /scripts/setup.sh',
+            ],
             env: [
-              { name: 'PATH', value: '$PATH:/jq' },
               { name: 'SCYLLA_HOST', value: (import 'app.json5').name + '-client' },
               { name: 'SCYLLA_PORT', value: '9142' },
             ],
