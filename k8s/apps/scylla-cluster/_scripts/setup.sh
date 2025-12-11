@@ -8,6 +8,8 @@ ADMIN_CERTS_DIR="${ADMIN_CERTS_DIR:-/certs/admin}"
 CA_CERTS_DIR="${CA_CERTS_DIR:-/certs/ca}"
 KEYSPACES_CONFIG="${KEYSPACES_CONFIG:-/config/keyspaces.json}"
 USERS_CONFIG="${USERS_CONFIG:-/config/users.json}"
+SCYLLA_ADMIN_USER="${SCYLLA_ADMIN_USER:-cassandra}"
+SCYLLA_ADMIN_PASSWORD="${SCYLLA_ADMIN_PASSWORD:-cassandra}"
 
 log() {
     local level="$1"
@@ -27,6 +29,14 @@ log() {
 setup_cqlshrc_config() {
     local cqlshrc_path="$1"
 
+
+    cat > "${cqlshrc_path}.credentials" <<EOF
+[PlainTextAuthProvider]
+username = ${SCYLLA_ADMIN_USER}
+password = ${SCYLLA_ADMIN_PASSWORD}
+EOF
+    chmod 600 "${cqlshrc_path}.credentials"
+
     cat > "${cqlshrc_path}" <<EOF
 [connection]
 hostname = ${SCYLLA_HOST}
@@ -39,6 +49,9 @@ validate = true
 certfile = /certs/ca/ca-bundle.crt
 usercert = /certs/admin/tls.crt
 userkey = /certs/admin/tls.key
+
+[authentication]
+credentials = ${cqlshrc_path}.credentials
 EOF
 }
 

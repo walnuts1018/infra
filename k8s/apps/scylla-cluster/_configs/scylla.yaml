@@ -1,2 +1,2 @@
-authenticator: com.scylladb.auth.CertificateAuthenticator
+authenticator: PasswordAuthenticator
 authorizer: CassandraAuthorizer

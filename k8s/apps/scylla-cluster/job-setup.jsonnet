@@ -30,6 +30,24 @@ local appname = (import 'app.json5').name + '-setup';
             env: [
               { name: 'SCYLLA_HOST', value: (import 'app.json5').name + '-client' },
               { name: 'SCYLLA_PORT', value: '9142' },
+              {
+                name: 'SCYLLA_ADMIN_USER',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret-users.jsonnet').spec.target.name,
+                    key: 'admin_username',
+                  },
+                },
+              },
+              {
+                name: 'SCYLLA_ADMIN_PASSWORD',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret-users.jsonnet').spec.target.name,
+                    key: 'admin_password',
+                  },
+                },
+              },
             ],
             volumeMounts: [
               { name: 'admin-certs', mountPath: '/certs/admin', readOnly: true },
