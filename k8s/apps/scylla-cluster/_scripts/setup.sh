@@ -89,13 +89,15 @@ create_keyspaces() {
         local name
         name=$(echo "$ks" | jq -r '.name')
 
-        local replication
-        replication=$(echo "$ks" | jq -rc '.replication')
+        local replication_class
+        replication_class=$(echo "$ks" | jq -r '.replication_class')
+        local replication_factor
+        replication_factor=$(echo "$ks" | jq -r '.replication_factor')
         
-        log "info" "Creating keyspace" "name" "${name}" "replication" "${replication}"
+        log "info" "Creating keyspace" "name" "${name}" "replication_class" "${replication_class}" "replication_factor" "${replication_factor}"
         cqlsh --cqlshrc="${cqlshrc}" -e "
             CREATE KEYSPACE IF NOT EXISTS ${name}
-            WITH replication = ${replication};
+            WITH replication = {'class': '${replication_class}', 'replication_factor': ${replication_factor}};
         "
     done
     
