@@ -1,96 +1,102 @@
+local appname = (import 'app.json5').name + '-setup';
 {
   apiVersion: 'v1',
-  kind: 'Pod',
+  kind: 'Job',
   metadata: {
-    local appname = (import 'app.json5').name + '-setup',
-    name: appname,
     namespace: (import 'app.json5').namespace,
     labels: (import '../../components/labels.libsonnet') + { appname: appname },
   },
   spec: {
-    restartPolicy: 'OnFailure',
-    containers: [
-      {
-        name: 'setup',
-        image: 'scylladb/scylla:2025.3.3',
-        command: ['/bin/bash', '/scripts/setup.sh'],
-        env: [
-          { name: 'PATH', value: '$PATH:/jq' },
-          { name: 'SCYLLA_HOST', value: (import 'app.json5').name + '-client' },
-          { name: 'SCYLLA_PORT', value: '9142' },
+    template: {
+      metadata: {
+        labels: (import '../../components/labels.libsonnet') + { appname: appname },
+      },
+      spec: {
+        restartPolicy: 'OnFailure',
+        containers: [
+          {
+            name: 'setup',
+            image: 'scylladb/scylla:2025.3.3',
+            command: ['/bin/bash', '/scripts/setup.sh'],
+            env: [
+              { name: 'PATH', value: '$PATH:/jq' },
+              { name: 'SCYLLA_HOST', value: (import 'app.json5').name + '-client' },
+              { name: 'SCYLLA_PORT', value: '9142' },
+            ],
+            volumeMounts: [
+              { name: 'admin-certs', mountPath: '/certs/admin', readOnly: true },
+              { name: 'serving-ca', mountPath: '/certs/ca', readOnly: true },
+              { name: 'scripts', mountPath: '/scripts', readOnly: true },
+              { name: 'keyspaces-config', mountPath: '/config/keyspaces.json', subPath: 'keyspaces.json', readOnly: true },
+              { name: 'users-config', mountPath: '/config/users.json', subPath: 'users.json', readOnly: true },
+              { name: 'jq', mountPath: '/jq', readOnly: true },
+            ],
+          },
         ],
-        volumeMounts: [
-          { name: 'admin-certs', mountPath: '/certs/admin', readOnly: true },
-          { name: 'serving-ca', mountPath: '/certs/ca', readOnly: true },
-          { name: 'scripts', mountPath: '/scripts', readOnly: true },
-          { name: 'keyspaces-config', mountPath: '/config/keyspaces.json', subPath: 'keyspaces.json', readOnly: true },
-          { name: 'users-config', mountPath: '/config/users.json', subPath: 'users.json', readOnly: true },
-          { name: 'jq', mountPath: '/jq', readOnly: true },
+        volumes: [
+          {
+            name: 'admin-certs',
+            secret: {
+              secretName: (import 'app.json5').name + '-local-user-admin',
+              items: [
+                { key: 'tls.crt', path: 'tls.crt' },
+                { key: 'tls.key', path: 'tls.key' },
+              ],
+            },
+          },
+          {
+            name: 'serving-ca',
+            configMap: {
+              name: (import 'app.json5').name + '-local-serving-ca',
+              items: [
+                { key: 'ca-bundle.crt', path: 'ca-bundle.crt' },
+              ],
+            },
+          },
+          {
+            name: 'scripts',
+            configMap: {
+              name: (import 'configmap-setup.jsonnet').metadata.name,
+              items: [
+                {
+                  key: 'setup.sh',
+                  path: 'setup.sh',
+                },
+              ],
+            },
+          },
+          {
+            name: 'keyspaces-config',
+            configMap: {
+              name: (import 'configmap-setup.jsonnet').metadata.name,
+              items: [
+                {
+                  key: 'keyspaces.json',
+                  path: 'keyspaces.json',
+                },
+              ],
+            },
+          },
+          {
+            name: 'users-config',
+            secret: {
+              secretName: (import 'external-secret-users.jsonnet').spec.target.name,
+              items: [
+                {
+                  key: 'users.json',
+                  path: 'users.json',
+                },
+              ],
+            },
+          },
+          {
+            name: 'jq',
+            image: {
+              reference: 'ghcr.io/jqlang/jq:1.8.1',
+            },
+          },
         ],
       },
-    ],
-    volumes: [
-      {
-        name: 'admin-certs',
-        secret: {
-          secretName: (import 'app.json5').name + '-local-user-admin',
-          items: [
-            { key: 'tls.crt', path: 'tls.crt' },
-            { key: 'tls.key', path: 'tls.key' },
-          ],
-        },
-      },
-      {
-        name: 'serving-ca',
-        configMap: {
-          name: (import 'app.json5').name + '-local-serving-ca',
-          items: [
-            { key: 'ca-bundle.crt', path: 'ca-bundle.crt' },
-          ],
-        },
-      },
-      {
-        name: 'scripts',
-        configMap: {
-          name: (import 'configmap-setup.jsonnet').metadata.name,
-          items: [
-            {
-              key: 'setup.sh',
-              path: 'setup.sh',
-            },
-          ],
-        },
-      },
-      {
-        name: 'keyspaces-config',
-        configMap: {
-          name: (import 'configmap-setup.jsonnet').metadata.name,
-          items: [
-            {
-              key: 'keyspaces.json',
-              path: 'keyspaces.json',
-            },
-          ],
-        },
-      },
-      {
-        name: 'users-config',
-        secret: {
-          secretName: (import 'external-secret-users.jsonnet').spec.target.name,
-          items: [
-            {
-              key: 'users.json',
-              path: 'users.json',
-            },
-          ],
-        },
-      },
-      {
-        name: 'jq',
-        image: {
-          reference: 'ghcr.io/jqlang/jq:1.8.1',
-        },
-      },
-    ],
+    },
   },
 }
