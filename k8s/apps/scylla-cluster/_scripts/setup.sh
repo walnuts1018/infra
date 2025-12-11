@@ -36,7 +36,7 @@ factory = cqlshlib.ssl.ssl_transport_factory
 
 [ssl]
 validate = true
-certfile = /certs/ca/tls.crt
+certfile = /certs/ca/ca-bundle.crt
 usercert = /certs/admin/tls.crt
 userkey = /certs/admin/tls.key
 EOF
