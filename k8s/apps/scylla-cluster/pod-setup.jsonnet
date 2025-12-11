@@ -1,6 +1,6 @@
 local appname = (import 'app.json5').name + '-setup';
 {
-  apiVersion: 'v1',
+  apiVersion: 'batch/v1',
   kind: 'Job',
   metadata: {
     namespace: (import 'app.json5').namespace,
