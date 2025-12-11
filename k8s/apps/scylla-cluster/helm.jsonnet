@@ -57,7 +57,7 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
     exposeOptions: {
       broadcastOptions: {
         clients: {
-          type: 'ServiceLoadBalancerIngress',
+          type: 'LoadBalancer',
           podIP: {
             source: 'Status',
           },
