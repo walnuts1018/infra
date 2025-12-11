@@ -18,8 +18,8 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
         },
         resources: {
           requests: {
-            cpu: '100m',
-            memory: '1152Mi',
+            cpu: '50m',
+            memory: '1Gi',
           },
           limits: {
             cpu: '1',
@@ -55,8 +55,13 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
       },
     ],
     exposeOptions: {
-      nodeService: {
-        type: 'LoadBalancer',
+      broadcastOptions: {
+        clients: {
+          type: 'ServiceLoadBalancerIngress',
+          podIP: {
+            source: 'Status',
+          },
+        },
       },
     },
     serviceMonitor: {
