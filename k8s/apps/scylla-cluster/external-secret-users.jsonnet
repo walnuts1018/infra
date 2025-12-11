@@ -8,7 +8,7 @@
         key: 'scylladb',
         property: 'admin',
       },
-    }
+    },
     {
       secretKey: 'walnuk_password',
       remoteRef: {
