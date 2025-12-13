@@ -20,6 +20,18 @@
               cidr: '192.168.0.0/16',
             },
           },
+          {
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'kube-system',
+              },
+            },
+            podSelector: {
+              matchLabels: {
+                'k8s-app': 'kube-dns',
+              },
+            },
+          },
         ],
       },
     ],
