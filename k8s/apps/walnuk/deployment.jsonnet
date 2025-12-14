@@ -49,7 +49,7 @@
                 name: 'SCYLLA_USER',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secrets.jsonnet').spec.target.name,
+                    name: (import 'external-secret.jsonnet').spec.target.name,
                     key: 'scylladb_username',
                   },
                 },
@@ -58,7 +58,7 @@
                 name: 'SCYLLA_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secrets.jsonnet').spec.target.name,
+                    name: (import 'external-secret.jsonnet').spec.target.name,
                     key: 'scylladb_password',
                   },
                 },
