@@ -43,7 +43,25 @@
               },
               {
                 name: 'SCYLLA_URL',
-                value: 'scylla-scylla-db.walnuk.svc.cluster.local:9042',
+                value: 'scylla-cluster-client.databases.svc.cluster.local:9142',
+              },
+              {
+                name: 'SCYLLA_USER',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secrets.jsonnet').spec.target.name,
+                    key: 'scylladb_username',
+                  },
+                },
+              },
+              {
+                name: 'SCYLLA_PASSWORD',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secrets.jsonnet').spec.target.name,
+                    key: 'scylladb_password',
+                  },
+                },
               },
             ],
             livenessProbe: {
