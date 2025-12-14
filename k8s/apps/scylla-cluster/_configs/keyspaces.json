@@ -1,9 +1,0 @@
-[
-  {
-    "name": "walnuk",
-    "replication_class": "NetworkTopologyStrategy",
-    "replication_factor": {
-      "iwakura": 2
-    }
-  }
-]

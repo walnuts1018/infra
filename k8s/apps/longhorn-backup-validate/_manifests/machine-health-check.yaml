@@ -1,0 +1,10 @@
+apiVersion: cluster.x-k8s.io/v1beta2
+kind: MachineHealthCheck
+metadata:
+  name: longhorn-backup-validate
+  namespace: longhorn-backup-validate
+spec:
+  clusterName: longhorn-backup-validate
+  selector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: longhorn-backup-validate

@@ -1,0 +1,36 @@
+apiVersion: v1
+data:
+  assumerole.sh: |
+    #!/usr/bin/bash
+
+    /aws-cli/aws sts assume-role-with-web-identity \
+      --role-arn arn:aws:iam::dummy:role/terrakube \
+      --role-session-name "terrakube-session-$(date +%s)" \
+      --profile assume-role \
+      --duration-seconds 86400 \
+      --web-identity-token file:///var/run/secrets/sts.min.io/serviceaccount/token \
+      --endpoint-url https://sts-minio.local.walnuts.dev/sts/minio \
+      --region ap-northeast-1 | \
+      /jq/jq '{
+        Version: 1,
+        AccessKeyId: .Credentials.AccessKeyId,
+        SecretAccessKey: .Credentials.SecretAccessKey,
+        SessionToken: .Credentials.SessionToken,
+        Expiration: .Credentials.Expiration
+      }'
+  config: |
+    [default]
+    region = ap-northeast-1
+    endpoint_url = http://minio.minio.svc.cluster.local
+    credential_process = bash /scripts/assumerole.sh
+    s3 =
+      endpoint_url = http://minio.svc.cluster.local
+
+    [profile assume-role]
+    region = ap-northeast-1
+    output = json
+kind: ConfigMap
+metadata:
+  labels: {}
+  name: aws-config-269904
+  namespace: terrakube

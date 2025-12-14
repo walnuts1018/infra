@@ -1,0 +1,954 @@
+---
+# Source: terrakube/charts/dex/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: terrakube-dex
+  namespace: terrakube
+  labels:
+    helm.sh/chart: dex-0.24.0
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.44.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: terrakube/templates/secrets-api.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: terrakube-api-secrets
+  labels:
+    helm.sh/chart: terrakube-4.5.1
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.28.1"
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+stringData:
+  GroupValidationType: 'DEX'
+  UserValidationType: 'DEX'
+  AuthenticationValidationType: 'DEX'
+  PatSecret: 'dG8tYmUtcmVwbGFjZWQ='
+  InternalSecret: 'dG8tYmUtcmVwbGFjZWQ='
+  DexIssuerUri: 'https://terrakube-api.walnuts.dev/dex'
+  DexClientId: 'terrakube-ui'
+  TerrakubeToolsRepository: 'https://github.com/terrakube-io/terrakube-extensions'
+  TerrakubeToolsBranch: 'main'
+  TerrakubeHostname: 'terrakube-api.walnuts.dev'
+  AzBuilderExecutorUrl: 'http://terrakube-executor-service:8090/api/v1/terraform-rs'
+  ExecutorReplicas: '1'
+  TerrakubeUiURL: 'https://terrakube.walnuts.dev'
+  TERRAKUBE_ADMIN_GROUP: '349881613179420909:admin'
+  TerrakubeRedisPort: '6379'
+  DynamicCredentialPublicKeyPath: '/etc/terrakube/credentials/public-key.pem'
+  DynamicCredentialPrivateKeyPath: '/etc/terrakube/credentials/private-key.pem'
+  #Custom Redis
+  TerrakubeRedisHostname: 'terrakube-redis'
+  TerrakubeRedisPassword: 'to-be-replaced'
+  #AWS S3 Storage
+  StorageType: 'AWS'
+  AwsStorageAccessKey: 'dummy'
+  AwsStorageSecretKey: 'dummy'
+  AwsStorageBucketName: 'terrakube'
+  AwsStorageRegion: 'ap-northeast-1'
+  AwsEndpoint: ''
+  ApiDataSourceType: 'POSTGRESQL'
+  DatasourceHostname: 'postgresql-default-rw.databases.svc.cluster.local'
+  DatasourceDatabase: 'terrakube'
+  DatasourceUser: 'terrakube'
+  DatasourcePassword: 'to-be-replaced' 
+  DatasourceSslMode: 'disable' 
+  DatasourcePort: '5432' 
+  DatasourceSchema: 'public'  
+
+  #Custom terraform releases url
+  CustomTerraformReleasesUrl : 'https://releases.hashicorp.com/terraform/index.json' 
+  CustomTofuReleasesUrl : 'https://api.github.com/repos/opentofu/opentofu/releases' 
+  ModuleCacheMaxTotal: '128' 
+  ModuleCacheMaxIdle: '128' 
+  ModuleCacheMinIdle: '64' 
+  ModuleCacheTimeout: '600000' 
+  ModuleCacheSchedule: '0 */3 * ? * *'
+---
+# Source: terrakube/templates/secrets-executor.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: terrakube-executor-secrets
+  labels:
+    helm.sh/chart: terrakube-4.5.1
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.28.1"
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+stringData:
+  # General Settings
+  AzBuilderApiUrl: 'http://terrakube-api-service:8080'
+  InternalSecret: 'dG8tYmUtcmVwbGFjZWQ='
+
+  ExecutorFlagBatch: 'false'
+  ExecutorFlagDisableAcknowledge: 'false'
+  TerrakubeToolsRepository: 'https://github.com/terrakube-io/terrakube-extensions'
+  TerrakubeToolsBranch: 'main'
+  TerrakubeEnableSecurity: 'true'
+  TerrakubeRegistryDomain: 'terrakube-reg.walnuts.dev'
+  TerrakubeApiUrl: 'https://terrakube-api.walnuts.dev'
+  TerrakubeRedisPort: '6379'
+  #Custom Redis
+  TerrakubeRedisHostname: 'terrakube-redis'
+  TerrakubeRedisPassword: 'to-be-replaced'
+  #AWS S3 Storage
+  TerraformStateType: 'AwsTerraformStateImpl'
+  AwsTerraformStateAccessKey: 'dummy'
+  AwsTerraformStateSecretKey: 'dummy'
+  AwsTerraformStateBucketName: 'terrakube'
+  AwsTerraformStateRegion: 'ap-northeast-1'
+  TerraformOutputType: 'AwsTerraformOutputImpl'
+  AwsTerraformOutputAccessKey: 'dummy'
+  AwsTerraformOutputSecretKey: 'dummy'
+  AwsTerraformOutputBucketName: 'terrakube'
+  AwsTerraformOutputRegion: 'ap-northeast-1'
+  AwsEndpoint: '' 
+
+  #Custom terraform releases url
+  CustomTerraformReleasesUrl : 'https://releases.hashicorp.com/terraform/index.json'
+---
+# Source: terrakube/templates/secrets-registry.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: terrakube-registry-secrets
+  labels:
+    helm.sh/chart: terrakube-4.5.1
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.28.1"
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+stringData:
+  AzBuilderRegistry: 'https://terrakube-reg.walnuts.dev'
+  AzBuilderApiUrl: 'http://terrakube-api-service:8080'
+  AuthenticationValidationTypeRegistry: 'DEX'
+  PatSecret: 'dG8tYmUtcmVwbGFjZWQ='
+  InternalSecret: 'dG8tYmUtcmVwbGFjZWQ='
+  DexIssuerUri: 'https://terrakube-api.walnuts.dev/dex'
+  TerrakubeEnableSecurity: 'true'
+  TerrakubeUiURL: 'https://terrakube.walnuts.dev'
+  AppClientId: 'terrakube-ui'
+  AppIssuerUri: 'https://terrakube-api.walnuts.dev/dex'
+  #Aws Storage
+  RegistryStorageType: 'AwsStorageImpl'
+  AwsStorageAccessKey: 'dummy'
+  AwsStorageSecretKey: 'dummy'
+  AwsStorageBucketName: 'terrakube'
+  AwsStorageRegion: 'ap-northeast-1'
+  AwsEndpoint: ''
+---
+# Source: terrakube/templates/secrets-ui.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: terrakube-ui-secrets
+  labels:
+    helm.sh/chart: terrakube-4.5.1
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.28.1"
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+stringData:
+  # This UI configuration file is loaded in /app/env-config.js
+  env-config.js: |
+    window._env_ = {
+      REACT_APP_TERRAKUBE_API_URL: "https://terrakube-api.walnuts.dev/api/v1/",
+      REACT_APP_CLIENT_ID: "terrakube-ui",
+      REACT_APP_AUTHORITY: "https://terrakube-api.walnuts.dev/dex",
+      REACT_APP_REDIRECT_URI: "https://terrakube.walnuts.dev",
+      REACT_APP_REGISTRY_URI: "https://terrakube-reg.walnuts.dev",
+      REACT_APP_SCOPE: "email openid profile offline_access groups",
+      REACT_APP_TERRAKUBE_VERSION: "2.28.1",
+    }
+---
+# Source: terrakube/templates/configMap-ui.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: terrakube-ui
+  labels:
+    helm.sh/chart: terrakube-4.5.1
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.28.1"
+    app.kubernetes.io/managed-by: Helm
+data:
+  my_server_block.conf: |
+    server {
+        listen 0.0.0.0:8080;
+        listen [::]:8080 default_server;
+
+      location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+        try_files $uri $uri/ /index.html;
+      }
+    }
+---
+# Source: terrakube/charts/dex/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: terrakube-dex
+  labels:
+    helm.sh/chart: dex-0.24.0
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.44.0"
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["list", "create"]
+---
+# Source: terrakube/charts/dex/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: terrakube-dex-cluster
+  labels:
+    helm.sh/chart: dex-0.24.0
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.44.0"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  kind: ClusterRole
+  apiGroup: rbac.authorization.k8s.io
+  name: terrakube-dex
+subjects:
+- kind: ServiceAccount
+  namespace: terrakube
+  name: terrakube-dex
+---
+# Source: terrakube/charts/dex/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: terrakube-dex
+  namespace: terrakube
+  labels:
+    helm.sh/chart: dex-0.24.0
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.44.0"
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups: ["dex.coreos.com"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+# Source: terrakube/charts/dex/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: terrakube-dex
+  namespace: terrakube
+  labels:
+    helm.sh/chart: dex-0.24.0
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.44.0"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  kind: Role
+  apiGroup: rbac.authorization.k8s.io
+  name: terrakube-dex
+subjects:
+- kind: ServiceAccount
+  namespace: terrakube
+  name: terrakube-dex
+---
+# Source: terrakube/charts/dex/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: terrakube-dex
+  namespace: terrakube
+  labels:
+    helm.sh/chart: dex-0.24.0
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.44.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 5556
+      targetPort: http
+      protocol: TCP
+      appProtocol: http
+    - name: telemetry
+      port: 5558
+      targetPort: telemetry
+      protocol: TCP
+      appProtocol: http
+  selector:
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: terrakube
+---
+# Source: terrakube/templates/service-api.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: terrakube-api-service
+  labels:
+    app.kubernetes.io/component: terrakube-api
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+spec:
+  # Use NodePort for GKE or the specified type from values (default to ClusterIP)
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/component: terrakube-api
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+---
+# Source: terrakube/templates/service-executor.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: terrakube-executor-service
+  labels:
+    app.kubernetes.io/component: terrakube-executor
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8090
+      targetPort: 8090
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/component: terrakube-executor
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+---
+# Source: terrakube/templates/service-registry.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: terrakube-registry-service
+  labels:
+    app.kubernetes.io/component: terrakube-registry
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+spec:
+  # Use NodePort for GKE or the specified type from values
+  type: ClusterIP
+  ports:
+    - port: 8075
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/component: terrakube-registry
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+---
+# Source: terrakube/templates/service-ui.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: terrakube-ui-service
+  labels:
+    app.kubernetes.io/component: terrakube-ui
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+spec:
+  # Use NodePort for GKE or the specified type from values
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/component: terrakube-ui
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+---
+# Source: terrakube/charts/dex/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terrakube-dex
+  namespace: terrakube
+  labels:
+    helm.sh/chart: dex-0.24.0
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.44.0"
+    app.kubernetes.io/managed-by: Helm
+    
+  
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dex
+      app.kubernetes.io/instance: terrakube
+  template:
+    metadata:
+      annotations:
+      
+      labels:
+        app.kubernetes.io/name: dex
+        app.kubernetes.io/instance: terrakube
+    spec:
+      serviceAccountName: terrakube-dex
+      securityContext:
+        {}
+      containers:
+        - name: dex
+          securityContext:
+            {}
+          image: "ghcr.io/dexidp/dex:v2.44.0"
+          imagePullPolicy: IfNotPresent
+          args:
+            - dex
+            - serve
+            - --web-http-addr
+            - 0.0.0.0:5556
+            - --telemetry-addr
+            - 0.0.0.0:5558
+            - /etc/dex/config.yaml
+          env:
+          ports:
+            - name: http
+              containerPort: 5556
+              protocol: TCP
+            - name: telemetry
+              containerPort: 5558
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz/live
+              port: telemetry
+          readinessProbe:
+            httpGet:
+              path: /healthz/ready
+              port: telemetry
+          resources:
+            {}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/dex
+              readOnly: true
+      volumes:
+        - name: config
+          secret:
+            secretName: terrakube-dex-899c19
+        - name: gcp-credentials
+          secret:
+            items:
+            - key: gcp-credentials
+              path: gcp-credentials
+            secretName: terrakube-dex-secrets
+---
+# Source: terrakube/templates/deployment-api.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terrakube-api
+  labels:
+    helm.sh/chart: terrakube-4.5.1
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.28.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: terrakube-api
+      app.kubernetes.io/name: terrakube
+      app.kubernetes.io/instance: terrakube
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: terrakube-api
+        app.kubernetes.io/name: terrakube
+        app.kubernetes.io/instance: terrakube
+      annotations:
+        checksum/config: 7caa096949132551ecb420015768128f7ff4aed4f238a1273d2a3806a6d0195d
+    spec:
+      containers:
+      - name: terrakube-api
+        image: azbuilder/api-server:2.28.1
+        resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+        ports:
+        - name: http
+          containerPort: 8080
+        env:
+        - name: OTEL_JAVAAGENT_ENABLE
+          value: "true"
+        - name: OTEL_SERVICE_NAME
+          value: terrakube-api
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+        - name: OTEL_EXPORTER_OTLP_INSECURE
+          value: "true"
+        - name: AwsEnableRoleAuth
+          value: "true"
+        volumeMounts:
+        - mountPath: /var/run/secrets/sts.min.io/serviceaccount
+          name: minio-sts-token
+          readOnly: true
+        - mountPath: /home/cnb/.aws/config
+          name: aws-config
+          readOnly: true
+          subPath: config
+        - mountPath: /scripts/assumerole.sh
+          name: aws-config
+          readOnly: true
+          subPath: assumerole.sh
+        - mountPath: /aws-cli
+          name: aws-cli
+          subPath: usr/local/aws-cli/v2/current/dist
+        - mountPath: /jq
+          name: jq
+        envFrom:
+        - secretRef:
+            name: "terrakube-api-secrets"
+        - secretRef:
+            name: "terrakube-api-secrets-overlay-2d6ea7"
+        startupProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          periodSeconds: 10
+          failureThreshold: 30
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: http
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: http
+          periodSeconds: 10
+      volumes:
+      - name: minio-sts-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              audience: sts.min.io
+              expirationSeconds: 86400
+              path: token
+      - configMap:
+          name: aws-config-269904
+        name: aws-config
+      - image:
+          reference: public.ecr.aws/aws-cli/aws-cli:2.32.11
+        name: aws-cli
+      - image:
+          reference: ghcr.io/jqlang/jq:1.8.1
+        name: jq
+      serviceAccountName: "terrakube-api"
+      automountServiceAccountToken: true
+---
+# Source: terrakube/templates/deployment-executor.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terrakube-executor
+  labels:
+    helm.sh/chart: terrakube-4.5.1
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.28.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: terrakube-executor
+      app.kubernetes.io/name: terrakube
+      app.kubernetes.io/instance: terrakube
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: terrakube-executor
+        app.kubernetes.io/name: terrakube
+        app.kubernetes.io/instance: terrakube
+      annotations:
+        checksum/config: 41ee98022dd045aba99663369a17e0a6052e5f9ebf150715f554fac8ac620a10
+    spec:
+      containers:
+      - name: terrakube-executor
+        image: azbuilder/executor:2.28.1
+        resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 144Mi
+        ports:
+        - name: http
+          containerPort: 8090
+        env:
+        - name: OTEL_JAVAAGENT_ENABLE
+          value: "true"
+        - name: OTEL_SERVICE_NAME
+          value: terrakube-executor
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+        - name: OTEL_EXPORTER_OTLP_INSECURE
+          value: "true"
+        - name: AwsIncludeBackendKeys
+          value: "false"
+        - name: AwsEnableRoleAuth
+          value: "true"
+        volumeMounts:
+        - mountPath: /var/run/secrets/sts.min.io/serviceaccount
+          name: minio-sts-token
+          readOnly: true
+        - mountPath: /home/cnb/.aws/config
+          name: aws-config
+          readOnly: true
+          subPath: config
+        - mountPath: /scripts/assumerole.sh
+          name: aws-config
+          readOnly: true
+          subPath: assumerole.sh
+        - mountPath: /aws-cli
+          name: aws-cli
+          subPath: usr/local/aws-cli/v2/current/dist
+        - mountPath: /jq
+          name: jq
+        envFrom:
+        - secretRef:
+            name: "terrakube-executor-secrets"
+        - secretRef:
+            name: "terrakube-executor-secrets-overlay-8bff29"
+        startupProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8090
+          failureThreshold: 30
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8090
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8090
+          periodSeconds: 10
+      volumes:
+      - name: minio-sts-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              audience: sts.min.io
+              expirationSeconds: 86400
+              path: token
+      - configMap:
+          name: aws-config-269904
+        name: aws-config
+      - image:
+          reference: public.ecr.aws/aws-cli/aws-cli:2.32.11
+        name: aws-cli
+      - image:
+          reference: ghcr.io/jqlang/jq:1.8.1
+        name: jq
+      serviceAccountName: "terrakube-executor"
+---
+# Source: terrakube/templates/deployment-registry.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terrakube-registry
+  labels:
+    helm.sh/chart: terrakube-4.5.1
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.28.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: terrakube-registry
+      app.kubernetes.io/name: terrakube
+      app.kubernetes.io/instance: terrakube
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: terrakube-registry
+        app.kubernetes.io/name: terrakube
+        app.kubernetes.io/instance: terrakube
+      annotations:
+        checksum/config: 5688d6f50a68d60dafc3eb5f580bf2340b390489b46465acdd6d855fb4dc0a86
+    spec:
+      containers:
+      - name: terrakube-registry
+        image: azbuilder/open-registry:2.28.1
+        resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+        ports:
+        - name: http
+          containerPort: 8075
+        env:
+        - name: OTEL_JAVAAGENT_ENABLE
+          value: "true"
+        - name: OTEL_SERVICE_NAME
+          value: terrakube-registry
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+        - name: OTEL_EXPORTER_OTLP_INSECURE
+          value: "true"
+        - name: AwsEnableRoleAuth
+          value: "true"
+        volumeMounts:
+        - mountPath: /var/run/secrets/sts.min.io/serviceaccount
+          name: minio-sts-token
+          readOnly: true
+        - mountPath: /home/cnb/.aws/config
+          name: aws-config
+          readOnly: true
+          subPath: config
+        - mountPath: /scripts/assumerole.sh
+          name: aws-config
+          readOnly: true
+          subPath: assumerole.sh
+        - mountPath: /aws-cli
+          name: aws-cli
+          subPath: usr/local/aws-cli/v2/current/dist
+        - mountPath: /jq
+          name: jq
+        envFrom:
+        - secretRef:
+            name: "terrakube-registry-secrets"
+        - secretRef:
+            name: "terrakube-registry-secrets-overlay-2e7ede"
+        startupProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8075
+          failureThreshold: 30
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8075
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8075
+          periodSeconds: 10
+      volumes:
+      - name: minio-sts-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              audience: sts.min.io
+              expirationSeconds: 86400
+              path: token
+      - configMap:
+          name: aws-config-269904
+        name: aws-config
+      - image:
+          reference: public.ecr.aws/aws-cli/aws-cli:2.32.11
+        name: aws-cli
+      - image:
+          reference: ghcr.io/jqlang/jq:1.8.1
+        name: jq
+      serviceAccountName: "terrakube-registry"
+---
+# Source: terrakube/templates/deployment-ui.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terrakube-ui
+  labels:
+    helm.sh/chart: terrakube-4.5.1
+    app.kubernetes.io/name: terrakube
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.28.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: terrakube-ui
+      app.kubernetes.io/name: terrakube
+      app.kubernetes.io/instance: terrakube
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: terrakube-ui
+        app.kubernetes.io/name: terrakube
+        app.kubernetes.io/instance: terrakube
+      annotations:
+        checksum/configmap: 28f57b29a27bdfa976e1019ff2f9c70ba9e512d9df96275138a1facf40fa0556
+        checksum/config: 27f975224bdba97be4ef8a69fa96527111b93568446092febdcb31f2fd6b4114
+    spec:
+      containers:
+      - name: terrakube-ui
+        image: azbuilder/terrakube-ui:2.28.1
+        volumeMounts:
+        - name: ui-config
+          mountPath: "/usr/share/nginx/html/env-config.js"
+          subPath: "env-config.js"
+          readOnly: true
+        - name: ui-web-config
+          mountPath: "/etc/nginx/conf.d/default.conf"
+          subPath: my_server_block.conf
+          readOnly: true
+        resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 1m
+              memory: 10Mi
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - secretRef:
+            name: terrakube-ui-secrets
+      volumes:
+      - name: ui-config
+        secret:
+          secretName: terrakube-ui-secrets
+          items:
+          - key: env-config.js
+            path: env-config.js
+      - name: ui-web-config
+        configMap:
+          name: terrakube-ui
+      serviceAccountName: "terrakube-ui"
+---
+# Source: terrakube/templates/ingress-api.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: terrakube-api
+  labels:
+    app: terrakube-api
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-set-headers: "terrakube/custom-headers"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: "terrakube-api.walnuts.dev"
+      http:
+        paths:
+          - path: "/"
+            pathType: "Prefix"
+            backend:
+              service:
+                name: terrakube-api-service
+                port:
+                  number: 8080
+          - path: "/dex/"
+            pathType: "Prefix"
+            backend:
+              service:
+                name: terrakube-dex
+                port:
+                  number: 5556
+---
+# Source: terrakube/templates/ingress-registry.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: terrakube-registry
+  labels:
+    app: terrakube-registry
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-set-headers: "terrakube/custom-headers"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: "terrakube-reg.walnuts.dev"
+      http:
+        paths:
+          - path: "/"
+            pathType: "Prefix"
+            backend:
+              service:
+                name: terrakube-registry-service
+                port:
+                  number: 8075
+---
+# Source: terrakube/templates/ingress-ui.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: terrakube-ui
+  labels:
+    app: terrakube-ui
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: "terrakube.walnuts.dev"
+      http:
+        paths:
+          - path: "/"
+            pathType: "Prefix"
+            backend:
+              service:
+                name: terrakube-ui-service
+                port:
+                  number: 8080
+---
+# Source: terrakube/charts/dex/templates/tests/no-config-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: terrakube-dex-899c19-test-no-create
+  labels:
+    helm.sh/chart: dex-0.24.0
+    app.kubernetes.io/name: dex
+    app.kubernetes.io/instance: terrakube
+    app.kubernetes.io/version: "2.44.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+type: Opaque
+data:
+  config.yaml: "Y29ubmVjdG9yczoKLSBjb25maWc6CiAgICBiaW5kRE46IGNuPWFkbWluLGRjPWV4YW1wbGUsZGM9b3JnCiAgICBiaW5kUFc6IGFkbWluCiAgICBncm91cFNlYXJjaDoKICAgICAgYmFzZUROOiBvdT1Hcm91cHMsZGM9ZXhhbXBsZSxkYz1vcmcKICAgICAgZmlsdGVyOiAob2JqZWN0Q2xhc3M9Z3JvdXBPZk5hbWVzKQogICAgICBuYW1lQXR0cjogY24KICAgICAgdXNlck1hdGNoZXJzOgogICAgICAtIGdyb3VwQXR0cjogbWVtYmVyCiAgICAgICAgdXNlckF0dHI6IEROCiAgICBob3N0OiB0ZXJyYWt1YmUtb3BlbmxkYXAtc2VydmljZToxMzg5CiAgICBpbnNlY3VyZU5vU1NMOiB0cnVlCiAgICB1c2VyU2VhcmNoOgogICAgICBiYXNlRE46IG91PXVzZXJzLGRjPWV4YW1wbGUsZGM9b3JnCiAgICAgIGVtYWlsQXR0cjogbWFpbAogICAgICBmaWx0ZXI6IChvYmplY3RDbGFzcz1wZXJzb24pCiAgICAgIGlkQXR0cjogRE4KICAgICAgbmFtZUF0dHI6IGNuCiAgICAgIHVzZXJuYW1lOiBtYWlsCiAgICB1c2VybmFtZVByb21wdDogRW1haWwgQWRkcmVzcwogIGlkOiBsZGFwCiAgbmFtZTogT3BlbkxEQVAKICB0eXBlOiBsZGFwCmlzc3VlcjogaHR0cHM6Ly90ZXJyYWt1YmUtYXBpLndhbG51dHMuZGV2L2RleApvYXV0aDI6CiAgcmVzcG9uc2VUeXBlczoKICAtIGNvZGUKICAtIHRva2VuCiAgLSBpZF90b2tlbgpzdGF0aWNDbGllbnRzOgotIGlkOiBleGFtcGxlLWFwcAogIG5hbWU6IGV4YW1wbGUtYXBwCiAgcHVibGljOiB0cnVlCiAgcmVkaXJlY3RVUklzOgogIC0gaHR0cDovL3RlcnJha3ViZS11aS5taW5pa3ViZS5uZXQKICAtIC9kZXZpY2UvY2FsbGJhY2sKICAtIGh0dHA6Ly9sb2NhbGhvc3Q6MTAwMDAvbG9naW4KICAtIGh0dHA6Ly9sb2NhbGhvc3Q6MTAwMDEvbG9naW4Kc3RvcmFnZToKICB0eXBlOiBtZW1vcnkKd2ViOgogIGFsbG93ZWRPcmlnaW5zOgogIC0gJyonCiAgaHR0cDogMC4wLjAuMDo1NTU2CiAgc2tpcEFwcHJvdmFsU2NyZWVuOiB0cnVl"

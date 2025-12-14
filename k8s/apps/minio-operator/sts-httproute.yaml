@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: minio-operator-sts
+  namespace: minio-operator
+spec:
+  hostnames:
+    - sts-minio.local.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: sts
+          port: 4223
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

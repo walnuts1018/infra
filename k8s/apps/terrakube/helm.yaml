@@ -1,0 +1,287 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: terrakube-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: terrakube
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: terrakube
+    helm:
+      releaseName: terrakube
+      valuesObject:
+        api:
+          defaultDatabase: false
+          defaultRedis: false
+          dynamicCredentials:
+            enabled: false
+            privateKey: ""
+            privateKeyPath: /etc/terrakube/credentials/private-key.pem
+            publicKey: ""
+            publicKeyPath: /etc/terrakube/credentials/public-key.pem
+          enabled: true
+          env:
+            - name: OTEL_JAVAAGENT_ENABLE
+              value: "true"
+            - name: OTEL_SERVICE_NAME
+              value: terrakube-api
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: AwsEnableRoleAuth
+              value: "true"
+          loadSampleData: false
+          properties:
+            databaseHostname: postgresql-default-rw.databases.svc.cluster.local
+            databaseName: terrakube
+            databasePassword: to-be-replaced
+            databasePort: "5432"
+            databaseSchema: public
+            databaseSslMode: disable
+            databaseType: POSTGRESQL
+            databaseUser: terrakube
+            redisHostname: terrakube-redis
+            redisPassword: to-be-replaced
+            redisPort: "6379"
+          replicaCount: "1"
+          resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          secrets:
+            - terrakube-api-secrets
+            - terrakube-api-secrets-overlay-2d6ea7
+          serviceAccountName: terrakube-api
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.min.io/serviceaccount
+              name: minio-sts-token
+              readOnly: true
+            - mountPath: /home/cnb/.aws/config
+              name: aws-config
+              readOnly: true
+              subPath: config
+            - mountPath: /scripts/assumerole.sh
+              name: aws-config
+              readOnly: true
+              subPath: assumerole.sh
+            - mountPath: /aws-cli
+              name: aws-cli
+              subPath: usr/local/aws-cli/v2/current/dist
+            - mountPath: /jq
+              name: jq
+          volumes:
+            - name: minio-sts-token
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      audience: sts.min.io
+                      expirationSeconds: 86400
+                      path: token
+            - configMap:
+                name: aws-config-269904
+              name: aws-config
+            - image:
+                reference: public.ecr.aws/aws-cli/aws-cli:2.32.11
+              name: aws-cli
+            - image:
+                reference: ghcr.io/jqlang/jq:1.8.1
+              name: jq
+        dex:
+          config:
+            issuer: https://terrakube-api.walnuts.dev/dex
+          configSecret:
+            create: false
+            name: terrakube-dex-899c19
+          enabled: true
+          existingSecret: true
+        executor:
+          enabled: true
+          env:
+            - name: OTEL_JAVAAGENT_ENABLE
+              value: "true"
+            - name: OTEL_SERVICE_NAME
+              value: terrakube-executor
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: AwsIncludeBackendKeys
+              value: "false"
+            - name: AwsEnableRoleAuth
+              value: "true"
+          replicaCount: "1"
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 144Mi
+          secrets:
+            - terrakube-executor-secrets
+            - terrakube-executor-secrets-overlay-8bff29
+          serviceAccountName: terrakube-executor
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.min.io/serviceaccount
+              name: minio-sts-token
+              readOnly: true
+            - mountPath: /home/cnb/.aws/config
+              name: aws-config
+              readOnly: true
+              subPath: config
+            - mountPath: /scripts/assumerole.sh
+              name: aws-config
+              readOnly: true
+              subPath: assumerole.sh
+            - mountPath: /aws-cli
+              name: aws-cli
+              subPath: usr/local/aws-cli/v2/current/dist
+            - mountPath: /jq
+              name: jq
+          volumes:
+            - name: minio-sts-token
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      audience: sts.min.io
+                      expirationSeconds: 86400
+                      path: token
+            - configMap:
+                name: aws-config-269904
+              name: aws-config
+            - image:
+                reference: public.ecr.aws/aws-cli/aws-cli:2.32.11
+              name: aws-cli
+            - image:
+                reference: ghcr.io/jqlang/jq:1.8.1
+              name: jq
+        ingress:
+          api:
+            domain: terrakube-api.walnuts.dev
+            enabled: true
+            ingressClassName: cilium
+            useTls: false
+          controller: generic
+          dex:
+            enabled: true
+          executor:
+            domain: terrakube-executor.walnuts.dev
+            enabled: false
+            ingressClassName: cilium
+            useTls: false
+          includeTlsHosts: true
+          registry:
+            domain: terrakube-reg.walnuts.dev
+            enabled: true
+            ingressClassName: cilium
+            useTls: false
+          ui:
+            domain: terrakube.walnuts.dev
+            enabled: true
+            ingressClassName: cilium
+            useTls: false
+          useTls: true
+        name: terrakube
+        registry:
+          enabled: true
+          env:
+            - name: OTEL_JAVAAGENT_ENABLE
+              value: "true"
+            - name: OTEL_SERVICE_NAME
+              value: terrakube-registry
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: AwsEnableRoleAuth
+              value: "true"
+          replicaCount: "1"
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+          secrets:
+            - terrakube-registry-secrets
+            - terrakube-registry-secrets-overlay-2e7ede
+          serviceAccountName: terrakube-registry
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.min.io/serviceaccount
+              name: minio-sts-token
+              readOnly: true
+            - mountPath: /home/cnb/.aws/config
+              name: aws-config
+              readOnly: true
+              subPath: config
+            - mountPath: /scripts/assumerole.sh
+              name: aws-config
+              readOnly: true
+              subPath: assumerole.sh
+            - mountPath: /aws-cli
+              name: aws-cli
+              subPath: usr/local/aws-cli/v2/current/dist
+            - mountPath: /jq
+              name: jq
+          volumes:
+            - name: minio-sts-token
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      audience: sts.min.io
+                      expirationSeconds: 86400
+                      path: token
+            - configMap:
+                name: aws-config-269904
+              name: aws-config
+            - image:
+                reference: public.ecr.aws/aws-cli/aws-cli:2.32.11
+              name: aws-cli
+            - image:
+                reference: ghcr.io/jqlang/jq:1.8.1
+              name: jq
+        security:
+          adminGroup: 349881613179420909:admin
+          dexClientId: terrakube-ui
+          dexIssuerUri: https://terrakube-api.walnuts.dev/dex
+          internalSecret: to-be-replaced
+          patSecret: to-be-replaced
+          useOpenLDAP: false
+        storage:
+          aws:
+            accessKey: dummy
+            bucketName: terrakube
+            region: ap-northeast-1
+            secretKey: dummy
+          defaultStorage: false
+        ui:
+          enabled: true
+          replicaCount: "1"
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 1m
+              memory: 10Mi
+          serviceAccountName: terrakube-ui
+    repoURL: https://charts.terrakube.io
+    targetRevision: 4.5.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true
