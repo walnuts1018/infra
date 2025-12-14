@@ -49,6 +49,18 @@
               },
             },
           },
+          {
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'databases',
+              },
+            },
+            podSelector: {
+              matchLabels: {
+                'scylla/cluster': 'scylla-cluster',
+              },
+            },
+          },
         ],
       },
     ],
