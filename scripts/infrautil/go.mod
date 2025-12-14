@@ -11,7 +11,7 @@ require (
 	github.com/yosuke-furukawa/json5 v0.1.1
 	golang.org/x/sync v0.18.0
 	gopkg.in/yaml.v3 v3.0.1
-	helm.sh/helm/v3 v3.19.2
+	helm.sh/helm/v3 v3.19.4
 	sigs.k8s.io/yaml v1.6.0
 )
 
