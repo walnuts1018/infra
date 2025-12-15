@@ -28,14 +28,26 @@
         matches: [
           {
             path: {
-              type: 'PathPrefix',
-              value: '/api/',
-            },
-          },
-          {
-            path: {
               type: 'RegularExpression',
               value: '/[A-Za-z0-9]+',
+            },
+          },
+        ],
+      },
+      {
+        backendRefs: [
+          {
+            kind: 'Service',
+            name: (import 'service-frontend.jsonnet').metadata.name,
+            port: 3000,
+            weight: 1,
+          },
+        ],
+        matches: [
+          {
+            path: {
+              type: 'PathPrefix',
+              value: '/',
             },
           },
         ],
