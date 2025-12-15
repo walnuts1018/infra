@@ -21,7 +21,7 @@
           {
             path: {
               type: 'PathPrefix',
-              value: '/admin',
+              value: '/pages/admin',
             },
           },
         ],
@@ -70,9 +70,14 @@
               value: '/',
             },
           },
+          {
+            path: {
+              type: 'PathPrefix',
+              value: '/pages',
+            },
+          },
         ],
       },
-
     ],
   },
 }
