@@ -82,13 +82,13 @@
             ],
             livenessProbe: {
               httpGet: {
-                path: '/livez',
+                path: '/health/livez',
                 port: 8080,
               },
             },
             readinessProbe: {
               httpGet: {
-                path: '/readyz',
+                path: '/health/readyz',
                 port: 8080,
               },
             },
