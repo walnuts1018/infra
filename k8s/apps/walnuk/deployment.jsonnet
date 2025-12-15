@@ -42,6 +42,10 @@
                 value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317',
               },
               {
+                name: 'SCYLLA_CA_CERT_PATH',
+                value: '/etc/certs/scylla-db/ca.crt',
+              },
+              {
                 name: 'SCYLLA_URL',
                 value: 'scylla-cluster-client.databases.svc.cluster.local:9142',
               },
@@ -81,6 +85,11 @@
                 name: 'tmp',
                 mountPath: '/tmp',
               },
+              {
+                name: 'scylla-db-ca-cert',
+                mountPath: '/etc/certs/scylla-db',
+                readOnly: true,
+              },
             ],
           }, {
             securityContext: {
@@ -94,6 +103,18 @@
           {
             name: 'tmp',
             emptyDir: {},
+          },
+          {
+            name: 'scylla-db-ca-cert',
+            configMap: {
+              name: (import 'configmap-scylladb-ca.jsonnet').metadata.name,
+              items: [
+                {
+                  key: 'ca.crt',
+                  path: 'ca.crt',
+                },
+              ],
+            },
           },
         ],
       },
