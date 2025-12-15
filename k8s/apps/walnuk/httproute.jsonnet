@@ -20,7 +20,7 @@
         backendRefs: [
           {
             kind: 'Service',
-            name: (import 'service.jsonnet').metadata.name,
+            name: (import 'service-backend.jsonnet').metadata.name,
             port: 8080,
             weight: 1,
           },
@@ -29,7 +29,13 @@
           {
             path: {
               type: 'PathPrefix',
-              value: '/',
+              value: '/api/',
+            },
+          },
+          {
+            path: {
+              type: 'RegularExpression',
+              value: '/[A-Za-z0-9]+',
             },
           },
         ],

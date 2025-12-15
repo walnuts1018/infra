@@ -27,6 +27,12 @@
                   },
                 ],
               },
+              {
+                path: {
+                  type: 'PathPrefix',
+                  value: '/api/',
+                },
+              },
             ],
             limit: {
               requests: 60,

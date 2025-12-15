@@ -2,12 +2,12 @@
   apiVersion: 'networking.k8s.io/v1',
   kind: 'NetworkPolicy',
   metadata: {
-    name: (import 'app.json5').name,
+    name: (import 'app.json5').appname.backend,
     namespace: (import 'app.json5').namespace,
   },
   spec: {
     podSelector: {
-      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.backend },
     },
     policyTypes: [
       'Egress',

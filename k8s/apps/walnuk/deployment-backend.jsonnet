@@ -2,18 +2,18 @@
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').name,
+    name: (import 'app.json5').appname.backend,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.backend },
   },
   spec: {
     replicas: 2,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.backend },
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+        labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.backend },
       },
       spec: {
         containers: [
