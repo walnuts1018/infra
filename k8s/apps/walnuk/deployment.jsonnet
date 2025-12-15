@@ -46,6 +46,14 @@
                 value: '/etc/certs/scylla-db/ca.crt',
               },
               {
+                name: 'SCYLLA_CLIENT_CERT_PATH',
+                value: '/etc/certs/scylla-db-client/tls.crt',
+              },
+              {
+                name: 'SCYLLA_CLIENT_KEY_PATH',
+                value: '/etc/certs/scylla-db-client/tls.key',
+              },
+              {
                 name: 'SCYLLA_URL',
                 value: 'scylla-cluster-client.databases.svc.cluster.local:9142',
               },
@@ -94,6 +102,11 @@
                 mountPath: '/etc/certs/scylla-db',
                 readOnly: true,
               },
+              {
+                name: 'scylla-db-client-cert',
+                mountPath: '/etc/certs/scylla-db-client',
+                readOnly: true,
+              },
             ],
           }, {
             securityContext: {
@@ -116,6 +129,22 @@
                 {
                   key: 'ca.crt',
                   path: 'ca.crt',
+                },
+              ],
+            },
+          },
+          {
+            name: 'scylla-db-client-cert',
+            secret: {
+              secretName: 'scylla-cluster-local-client-ca',  // database namespaceから手動コピーしてるけどいい方法を考えないといけない
+              items: [
+                {
+                  key: 'tls.crt',
+                  path: 'tls.crt',
+                },
+                {
+                  key: 'tls.key',
+                  path: 'tls.key',
                 },
               ],
             },
