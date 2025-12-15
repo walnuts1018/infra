@@ -17,6 +17,24 @@
     ],
     rules: [
       {
+        backendRefs: [
+          {
+            kind: 'Service',
+            name: (import 'service-backend.jsonnet').metadata.name,
+            port: 8080,
+            weight: 1,
+          },
+        ],
+        matches: [
+          {
+            path: {
+              type: 'RegularExpression',
+              value: '/[A-Za-z0-9]+',
+            },
+          },
+        ],
+      },
+      {
         matches: [
           {
             path: {
@@ -32,24 +50,6 @@
               group: 'gateway.envoyproxy.io',
               kind: 'HTTPRouteFilter',
               name: (import 'http-route-filter.jsonnet').metadata.name,
-            },
-          },
-        ],
-      },
-      {
-        backendRefs: [
-          {
-            kind: 'Service',
-            name: (import 'service-backend.jsonnet').metadata.name,
-            port: 8080,
-            weight: 1,
-          },
-        ],
-        matches: [
-          {
-            path: {
-              type: 'RegularExpression',
-              value: '/[A-Za-z0-9]+',
             },
           },
         ],
