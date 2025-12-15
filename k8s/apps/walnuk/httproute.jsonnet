@@ -35,6 +35,26 @@
         ],
       },
       {
+        matches: [
+          {
+            path: {
+              type: 'PathPrefix',
+              value: '/admin',
+            },
+          },
+        ],
+        filters: [
+          {
+            type: 'ExtensionRef',
+            extensionRef: {
+              group: 'gateway.envoyproxy.io',
+              kind: 'HTTPRouteFilter',
+              name: (import 'http-route-filter.jsonnet').metadata.name,
+            },
+          },
+        ],
+      },
+      {
         backendRefs: [
           {
             kind: 'Service',
@@ -52,6 +72,7 @@
           },
         ],
       },
+
     ],
   },
 }
