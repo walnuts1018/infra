@@ -12,3 +12,15 @@ config:
     extensionApis:
       enableBackend: true
       enableEnvoyPatchPolicy: true
+    rateLimit:
+      backend:
+        type: Redis
+        redis:
+          url: "envoy-gateway-redis-leader.envoy-gateway-system.svc.cluster.local:6379,envoy-gateway-redis-leader.envoy-gateway-system.svc.cluster.local:6379"
+    provider:
+      kubernetes:
+        rateLimitDeployment:
+          container:
+            env:
+            - name: REDIS_TLS
+              value: "false"
