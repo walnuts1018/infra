@@ -67,6 +67,10 @@
                   },
                 },
               },
+              {
+                name: 'RUST_BACKTRACE',
+                value: '1',
+              },
             ],
             livenessProbe: {
               httpGet: {
