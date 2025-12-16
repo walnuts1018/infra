@@ -120,6 +120,7 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **teddy**
 - **ubuntu-test**: テスト・デバッグ用のコンテナ
 - **wakatime-to-slack-profile**: VSCodeで書いている言語をSlackのステータスに反映 / <https://github.com/walnuts1018/wakatime-to-slack-profile>
+- **walnuk**: 短縮URLサービス <https://waln.uk>
 - **walnuts-dev**: <https://walnuts.dev>
 - **walnuts-dev-www-redirect**: <https://www.walnuts.dev>
 - **warrior**
