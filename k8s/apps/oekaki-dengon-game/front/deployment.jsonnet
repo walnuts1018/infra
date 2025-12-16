@@ -4,16 +4,16 @@
   metadata: {
     name: (import '../app.json5').name + '-front',
     namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-front' },
+    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-front' },
+      matchLabels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
     },
     template: {
       metadata: {
-        labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-front' },
+        labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
       },
       spec: {
         imagePullSecrets: [

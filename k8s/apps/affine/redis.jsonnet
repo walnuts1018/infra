@@ -5,7 +5,7 @@
     local appname = (import 'app.json5').name + '-redis',
     name: appname,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: appname },
+    labels: (import '../../components/labels.libsonnet')(appname),
 
   },
   spec: {

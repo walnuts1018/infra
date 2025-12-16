@@ -4,7 +4,7 @@
   metadata: {
     name: (import '../app.json5').name + '-front',
     namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-front' },
+    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
   },
   spec: {
     ports: [
@@ -14,7 +14,7 @@
         targetPort: 3000,
       },
     ],
-    selector: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-front' },
+    selector: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
     type: 'ClusterIP',
   },
 }

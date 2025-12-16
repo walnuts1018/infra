@@ -4,7 +4,7 @@
   metadata: {
     name: (import 'app.json5').appname.backend,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.backend },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.backend),
   },
   spec: {
     ports: [
@@ -14,7 +14,7 @@
         targetPort: 8080,
       },
     ],
-    selector: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.backend },
+    selector: (import '../../components/labels.libsonnet')((import 'app.json5').appname.backend),
     type: 'ClusterIP',
   },
 }

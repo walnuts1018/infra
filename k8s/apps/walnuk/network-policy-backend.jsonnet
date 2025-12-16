@@ -7,7 +7,7 @@
   },
   spec: {
     podSelector: {
-      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.backend },
+      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.backend),
     },
     policyTypes: [
       'Egress',

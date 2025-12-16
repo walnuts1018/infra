@@ -4,16 +4,16 @@
   metadata: {
     name: (import 'app.json5').appname.backend,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.backend },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.backend),
   },
   spec: {
     replicas: 2,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.backend },
+      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.backend),
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.backend },
+        labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.backend),
       },
       spec: {
         containers: [
@@ -156,7 +156,7 @@
             topologyKey: 'kubernetes.io/hostname',
             whenUnsatisfiable: 'ScheduleAnyway',
             labelSelector: {
-              matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.backend },
+              matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.backend),
             },
           },
         ],
