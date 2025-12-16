@@ -23,7 +23,7 @@ Walnuts 家の自宅サーバ全般のリポジトリです。
 
 ## Kubernetes Manifests
 
-- [README](./k8s/README.md)
+- [README](https://github.com/walnuts1018/infra/tree/main/k8s#readme)
 
 ### YAML
 
