@@ -4,9 +4,7 @@ function(nameOverride='', replicas=3, enableServiceMonitor=true) {
   metadata: {
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + {
-      appname: (import 'app.json5').name,
-    },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
     replicas: replicas,
