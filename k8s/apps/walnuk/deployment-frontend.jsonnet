@@ -72,6 +72,16 @@
             emptyDir: {},
           },
         ],
+        topologySpreadConstraints: [
+          {
+            maxSkew: 1,
+            topologyKey: 'kubernetes.io/hostname',
+            whenUnsatisfiable: 'ScheduleAnyway',
+            labelSelector: {
+              matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.frontend },
+            },
+          },
+        ],
       },
     },
   },
