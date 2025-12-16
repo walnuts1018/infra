@@ -9,13 +9,13 @@ local appname = (import 'app.json5').name + '-setup';
       std.toString(import 'external-secret-users.jsonnet')
     )[0:10],
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: appname },
+    labels: (import '../../components/labels.libsonnet')(appname),
   },
   spec: {
     // ttlSecondsAfterFinished: 60,
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet') + { appname: appname },
+        labels: (import '../../components/labels.libsonnet')(appname),
       },
       spec: {
         restartPolicy: 'OnFailure',

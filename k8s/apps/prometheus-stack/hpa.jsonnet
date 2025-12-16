@@ -4,7 +4,7 @@
   metadata: {
     name: (import 'app.json5').name + '-grafana',
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name + '-grafana' },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name + '-grafana'),
   },
   spec: {
     minReplicas: 2,

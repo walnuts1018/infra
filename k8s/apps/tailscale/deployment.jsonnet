@@ -4,19 +4,19 @@
   metadata: {
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
     },
     template: {
       metadata: {
         annotations: {
           'k8s.v1.cni.cncf.io/networks': '[{"name": "tailscale-bridge", "ips": ["192.168.0.24/24"]}]',
         },
-        labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
       },
       spec: {
         serviceAccountName: (import 'sa.jsonnet').metadata.name,

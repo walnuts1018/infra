@@ -4,10 +4,10 @@
   metadata: {
     name: (import '../app.json5').name + '-back',
     namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-back' },
+    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-back'),
   },
   spec: {
-    selector: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-back' },
+    selector: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-back'),
     ports: [
       {
         protocol: 'TCP',

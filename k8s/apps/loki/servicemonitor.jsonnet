@@ -6,7 +6,7 @@ local helmname = (import 'helm.jsonnet').spec.source.helm.releaseName;
   metadata: {
     name: 'loki',
     namespace: 'loki',
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
     selector: {

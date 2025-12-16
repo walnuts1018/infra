@@ -4,7 +4,7 @@
   metadata: {
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
     ports: [
@@ -14,7 +14,7 @@
         targetPort: 8080,
       },
     ],
-    selector: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    selector: (import '../../components/labels.libsonnet')((import 'app.json5').name),
     type: 'LoadBalancer',
     loadBalancerIP: '192.168.0.130',
   },
