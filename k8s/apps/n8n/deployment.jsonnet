@@ -4,19 +4,19 @@
   metadata: {
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
     },
     strategy: {
       type: 'Recreate',
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
       },
       spec: {
         securityContext: {
@@ -26,7 +26,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'n8n',
-            image: 'n8nio/n8n:1.123.5',
+            image: 'n8nio/n8n:1.123.7',
             command: ['/bin/sh'],
             args: ['-c', 'n8n start'],
             ports: [

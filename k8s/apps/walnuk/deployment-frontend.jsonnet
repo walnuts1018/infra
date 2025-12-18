@@ -4,22 +4,22 @@
   metadata: {
     name: (import 'app.json5').appname.frontend,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.frontend },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
   },
   spec: {
     replicas: 2,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.frontend },
+      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').appname.frontend },
+        labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
       },
       spec: {
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'next',
-            image: 'ghcr.io/walnuts1018/walnuk-frontend:v0.0.35',
+            image: 'ghcr.io/walnuts1018/walnuk-frontend:v0.0.37',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
@@ -70,6 +70,16 @@
           {
             name: 'next-cache',
             emptyDir: {},
+          },
+        ],
+        topologySpreadConstraints: [
+          {
+            maxSkew: 1,
+            topologyKey: 'kubernetes.io/hostname',
+            whenUnsatisfiable: 'ScheduleAnyway',
+            labelSelector: {
+              matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
+            },
           },
         ],
       },

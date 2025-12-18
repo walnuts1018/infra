@@ -3,7 +3,7 @@
   kind: 'PersistentVolume',
   metadata: {
     name: (import 'app.json5').name + '-pv',
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
     storageClassName: 'manual-minio-hostpath',

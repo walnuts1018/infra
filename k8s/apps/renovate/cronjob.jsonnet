@@ -4,7 +4,7 @@
   metadata: {
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
     schedule: '*/5 * * * *',
@@ -41,7 +41,7 @@
             containers: [
               (import '../../components/container.libsonnet') {
                 name: 'renovate',
-                image: 'ghcr.io/renovatebot/renovate:42.52.8',
+                image: 'ghcr.io/renovatebot/renovate:42.57.1',
                 resources: {
                   requests: {
                     cpu: '400m',

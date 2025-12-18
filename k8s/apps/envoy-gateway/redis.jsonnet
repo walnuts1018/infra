@@ -3,7 +3,7 @@
   kind: 'RedisCluster',
   metadata: {
     name: (import 'app.json5').name + '-redis',
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name + '-redis' },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name + '-redis'),
   },
   spec: {
     clusterSize: 3,

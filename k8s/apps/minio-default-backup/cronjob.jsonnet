@@ -4,7 +4,7 @@
   metadata: {
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
     schedule: '10 3 * * *',  // AM 3:10
@@ -15,7 +15,7 @@
       spec: {
         template: {
           metadata: {
-            labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+            labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
           },
           spec: {
             serviceAccountName: (import 'sa.jsonnet').metadata.name,
@@ -24,7 +24,7 @@
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'rclone',
-                  image: 'public.ecr.aws/aws-cli/aws-cli:2.32.16',
+                  image: 'public.ecr.aws/aws-cli/aws-cli:2.32.19',
                   command: [
                     '/usr/bin/bash',
                     '-c',
