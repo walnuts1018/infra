@@ -6,7 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "infrautil"
 version = "1.0.0"
 description = "Infrastructure utility for Kubernetes manifest management"
-readme = "README.md"
 requires-python = ">=3.11"
 authors = [
     {name = "Infrastructure Team"},
@@ -39,8 +38,8 @@ dev = [
 [project.scripts]
 infrautil = "infrautil.cli:main"
 
-[tool.setuptools.packages.find]
-where = ["scripts"]
+[tool.setuptools]
+packages = ["infrautil", "infrautil.lib", "infrautil.commands", "infrautil.tests"]
 
 [tool.black]
 line-length = 100

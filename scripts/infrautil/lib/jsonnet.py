@@ -21,10 +21,14 @@ def build_yaml(filepath: str | Path) -> str:
         RuntimeError: If Jsonnet evaluation fails
         ValueError: If JSON parsing fails
     """
-    filepath_str = str(filepath)
+    filepath_path = Path(filepath)
+    filepath_str = str(filepath_path.resolve())
+    
+    # Set up import callback to allow imports relative to the file
+    import_dirs = [str(filepath_path.parent)]
     
     try:
-        json_str = _jsonnet.evaluate_file(filepath_str)
+        json_str = _jsonnet.evaluate_file(filepath_str, jpathdir=import_dirs)
     except Exception as e:
         raise RuntimeError(f"failed to evaluate jsonnet file: {e}") from e
     

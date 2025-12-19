@@ -4,17 +4,16 @@ import json
 from pathlib import Path
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class AppJSON(BaseModel):
     """Application configuration model."""
     
+    model_config = ConfigDict(populate_by_name=True)
+    
     name: str = Field(..., description="Application name")
     namespace: str = Field(..., description="Kubernetes namespace", alias="namespace")
-    
-    class Config:
-        populate_by_name = True
 
 
 APP_JSON_FILE = "app.json5"
