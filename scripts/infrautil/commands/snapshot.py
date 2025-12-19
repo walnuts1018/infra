@@ -1,6 +1,7 @@
 """Snapshot command implementation."""
 
 import logging
+import shutil
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -24,7 +25,6 @@ def execute_snapshot(app_dir: str, output_dir: str) -> int:
     output_path = Path(output_dir)
     
     if output_path.exists():
-        import shutil
         shutil.rmtree(output_path)
     
     jsonnet_files = list(app_path.rglob("*.jsonnet"))
