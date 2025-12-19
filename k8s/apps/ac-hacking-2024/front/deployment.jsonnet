@@ -4,16 +4,16 @@
   metadata: {
     name: (import '../app.json5').frontend.name,
     namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').frontend.name },
+    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').frontend.name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').frontend.name },
+      matchLabels: (import '../../../components/labels.libsonnet')((import '../app.json5').frontend.name),
     },
     template: {
       metadata: {
-        labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').frontend.name },
+        labels: (import '../../../components/labels.libsonnet')((import '../app.json5').frontend.name),
       },
       spec: {
         containers: [

@@ -7,7 +7,7 @@
       kind: 'RedisReplication',
       metadata: {
         name: $.name,
-        labels: (import '../labels.libsonnet') { appname: $.name },
+        labels: (import '../labels.libsonnet')($.name),
       },
       spec: {
         clusterSize: 2,
@@ -54,7 +54,7 @@
       kind: 'RedisSentinel',
       metadata: {
         name: $.name,
-        labels: (import '../labels.libsonnet') { appname: $.name },
+        labels: (import '../labels.libsonnet')($.name),
       },
       spec: {
         clusterSize: 3,

@@ -4,16 +4,16 @@
   metadata: {
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
       },
       spec: {
         serviceAccountName: (import 'sa.jsonnet').metadata.name,
@@ -24,7 +24,7 @@
         containers: [
           {
             name: 'proxy',
-            image: 'ghcr.io/walnuts1018/s3-oauth2-proxy:0.0.49',
+            image: 'ghcr.io/walnuts1018/s3-oauth2-proxy:0.0.50',
             env: [
               {
                 name: 'OTEL_EXPORTER_OTLP_ENDPOINT',

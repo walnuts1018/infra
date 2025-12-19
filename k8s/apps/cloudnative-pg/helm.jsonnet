@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'cloudnative-pg',
   repoURL: 'https://cloudnative-pg.github.io/charts',
-  targetRevision: '0.26.1',
+  targetRevision: '0.27.0',
   values: (importstr 'values.yaml'),
 }

@@ -4,17 +4,17 @@
   metadata: {
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
     },
     serviceName: (import 'service.jsonnet').metadata.name,
     replicas: 1,
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
       },
       spec: {
         // securityContext: {

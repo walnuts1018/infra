@@ -9,20 +9,20 @@ local appname = (import 'app.json5').name + '-setup';
       std.toString(import 'external-secret-users.jsonnet')
     )[0:10],
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: appname },
+    labels: (import '../../components/labels.libsonnet')(appname),
   },
   spec: {
     // ttlSecondsAfterFinished: 60,
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet') + { appname: appname },
+        labels: (import '../../components/labels.libsonnet')(appname),
       },
       spec: {
         restartPolicy: 'OnFailure',
         containers: [
           {
             name: 'setup',
-            image: 'scylladb/scylla:2025.3.5',
+            image: 'scylladb/scylla:2025.4.0',
             command: ['/bin/bash'],
             args: [
               '-c',

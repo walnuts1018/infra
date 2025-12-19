@@ -4,6 +4,9 @@
     "replication_class": "NetworkTopologyStrategy",
     "replication_factor": {
       "iwakura": 2
+    },
+    "tablets": {
+      "enabled": false
     }
   }
 ]

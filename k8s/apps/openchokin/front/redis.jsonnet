@@ -4,7 +4,7 @@
     kind: 'RedisReplication',
     metadata: {
       name: (import '../app.json5').name + '-front-redis',
-      labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-front-redis' },
+      labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front-redis'),
     },
     spec: {
       clusterSize: 2,
@@ -51,7 +51,7 @@
     kind: 'RedisSentinel',
     metadata: {
       name: (import '../app.json5').name + '-front-redis',
-      labels: (import '../../../components/labels.libsonnet') + { appname: (import '../app.json5').name + '-front-redis' },
+      labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front-redis'),
     },
     spec: {
       clusterSize: 3,

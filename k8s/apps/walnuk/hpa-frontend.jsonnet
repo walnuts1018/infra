@@ -2,12 +2,12 @@
   apiVersion: 'autoscaling/v2',
   kind: 'HorizontalPodAutoscaler',
   metadata: {
-    name: (import 'app.json5').name,
+    name: (import 'app.json5').appname.frontend,
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet') + { appname: (import 'app.json5').name },
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
   },
   spec: {
-    minReplicas: 1,
+    minReplicas: 2,
     maxReplicas: 5,
     metrics: [
       {
@@ -24,7 +24,7 @@
     scaleTargetRef: {
       apiVersion: 'apps/v1',
       kind: 'Deployment',
-      name: (import 'deployment.jsonnet').metadata.name,
+      name: (import 'deployment-frontend.jsonnet').metadata.name,
     },
   },
 }

@@ -101,11 +101,15 @@ create_keyspaces() {
 
         local replication_opt
         replication_opt="{'class': '${replication_class}', ${replication_factor}}"
+
+        local tablets
+        tablets="{'enabled': $(echo "$ks" | jq -r '.tablets.enabled // false')}"
         
         log "info" "Creating keyspace" "name" "${name}" "replication_class" "${replication_class}" "replication_factor" "${replication_factor}" "replication_opt" "${replication_opt}"
         cqlsh --cqlshrc="${cqlshrc}" -e "
             CREATE KEYSPACE IF NOT EXISTS ${name}
-            WITH replication = ${replication_opt};"
+            WITH replication = ${replication_opt}
+            AND tablets = ${tablets};"
     done
     
     log "info" "Keyspaces created successfully!"
