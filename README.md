@@ -21,6 +21,22 @@ walnuts.dev を支える技術
 
 Walnuts 家の自宅サーバ全般のリポジトリです。
 
+## Infrastructure Tools
+
+### infrautil (Python)
+
+Python-based utility for Kubernetes manifest management. See [scripts/README.md](scripts/README.md) for details.
+
+```bash
+# Generate YAML snapshots from Jsonnet
+make snapshot
+
+# Generate namespace manifests
+make namespace
+```
+
+**Note**: This project follows a **Python-first principle**. See [docs/LANGUAGE_DECISION.md](docs/LANGUAGE_DECISION.md) for rationale.
+
 ## Kubernetes Manifests
 
 - [README](https://github.com/walnuts1018/infra/tree/main/k8s#readme)
