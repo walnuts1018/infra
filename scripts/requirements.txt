@@ -1,0 +1,4 @@
+pyyaml>=6.0.1
+jsonnet>=0.20.0
+click>=8.1.7
+pydantic>=2.5.0
