@@ -4,6 +4,6 @@
 
   chart: 'k8s-ephemeral-storage-metrics',
   repoURL: 'https://jmcgrath207.github.io/k8s-ephemeral-storage-metrics/chart',
-  targetRevision: '1.18.2',
+  targetRevision: '1.19.1',
   values: (importstr 'values.yaml'),
 }
