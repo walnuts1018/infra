@@ -17,8 +17,8 @@ serviceMonitor:
     url: "https://misskey.walnuts.dev/healthz"
   - name: "minio"
     url: "https://minio.walnuts.dev/minio/health/live"
-  - name: "nextcloud"
-    url: "https://nextcloud.walnuts.dev/status.php"
+  - name: "walnuk"
+    url: "https://waln.uk/"
   - name: "zitadel"
     url: "https://auth.walnuts.dev/healthz"
 
