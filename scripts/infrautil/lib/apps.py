@@ -1,9 +1,9 @@
 """Application JSON configuration management."""
 
-import json
 from pathlib import Path
 from typing import Any
 
+import json5
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -47,11 +47,10 @@ def get_app_json(basedir: str | Path) -> list[AppJSON]:
         
         try:
             with open(app_json_path, "r", encoding="utf-8") as f:
-                content = f.read()
-                data: Any = json.loads(content)
+                data: Any = json5.load(f)
                 app_json = AppJSON.model_validate(data)
                 app_jsons.append(app_json)
-        except (json.JSONDecodeError, ValueError) as e:
+        except (ValueError, Exception) as e:
             raise ValueError(
                 f"failed to decode app json5 {app_dir.name}: {e}"
             ) from e

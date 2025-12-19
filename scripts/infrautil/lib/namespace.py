@@ -1,7 +1,8 @@
 """Namespace management utilities."""
 
-import json
 from typing import TYPE_CHECKING, TextIO
+
+import json5
 
 if TYPE_CHECKING:
     from infrautil.lib.apps import AppJSON
@@ -25,9 +26,9 @@ def get_namespaces(reader: TextIO) -> list[str]:
         return []
     
     try:
-        namespaces: list[str] = json.loads(content)
+        namespaces: list[str] = json5.loads(content)
         return namespaces
-    except json.JSONDecodeError as e:
+    except Exception as e:
         raise ValueError(f"failed to parse namespace json: {e}") from e
 
 
@@ -53,4 +54,4 @@ def gen_namespace_json(
     
     unique_namespaces = sorted(set(namespaces))
     
-    return json.dumps(unique_namespaces, indent=2)
+    return json5.dumps(unique_namespaces, indent=2)
