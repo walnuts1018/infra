@@ -16,6 +16,9 @@
         labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
       },
       spec: {
+        securityContext: {
+          runAsUser: 10001,
+        },
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'next',
