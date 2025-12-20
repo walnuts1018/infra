@@ -11,7 +11,7 @@ grafana:
     resources:
       requests:
         cpu: 1m
-        memory: 200Mi
+        memory: 275Mi
       limits:
         memory: 512Mi
   ingress:
@@ -81,7 +81,7 @@ grafana:
     resources:
       requests:
         cpu: 1m
-        memory: 200Mi
+        memory: 275Mi
       limits:
         memory: 512Mi
   plugins:
