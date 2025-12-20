@@ -16,6 +16,10 @@
         labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
       },
       spec: {
+        securityContext: {
+          runAsUser: 65532,
+          runAsGroup: 65532,
+        },
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'fitbit-manager',

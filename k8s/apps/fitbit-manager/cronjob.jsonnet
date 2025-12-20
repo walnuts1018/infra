@@ -15,6 +15,10 @@
         template: {
           spec: {
             restartPolicy: 'OnFailure',
+            securityContext: {
+              runAsUser: 65532,
+              runAsGroup: 65532,
+            },
             containers: [
               (import '../../components/container.libsonnet') {
                 name: 'fitbit-manager',
