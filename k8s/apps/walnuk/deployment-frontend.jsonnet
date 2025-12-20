@@ -18,6 +18,7 @@
       spec: {
         securityContext: {
           runAsUser: 10001,
+          runAsGroup: 65534,
         },
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
