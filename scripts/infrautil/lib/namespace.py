@@ -52,4 +52,5 @@ def gen_namespace_json(app_jsons: list["AppJSON"], existing_ns: list[str] | None
 
     unique_namespaces = sorted(set(namespaces))
 
-    return json5.dumps(unique_namespaces, indent=2)
+    result: str = json5.dumps(unique_namespaces, indent=2)
+    return result
