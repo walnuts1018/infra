@@ -23,7 +23,7 @@
             requestRedirect: {
               scheme: 'https',
               hostname: 'walnuts.dev',
-              statusCode: 308,
+              statusCode: 301,
             },
           },
         ],
