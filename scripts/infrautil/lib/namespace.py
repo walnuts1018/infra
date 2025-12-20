@@ -52,5 +52,5 @@ def gen_namespace_json(app_jsons: list["AppJSON"], existing_ns: list[str] | None
 
     unique_namespaces = sorted(set(namespaces))
 
-    result: str = json5.dumps(unique_namespaces, indent=2)
-    return result
+    # json5.dumps is typed to return str, but mypy needs explicit annotation
+    return str(json5.dumps(unique_namespaces, indent=2))
