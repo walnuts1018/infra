@@ -28,3 +28,7 @@ resources:
 
 serviceMonitor:
   enabled: true
+
+nodeCollector:
+  tolerations:
+  - operator: "Exists"
