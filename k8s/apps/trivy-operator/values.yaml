@@ -23,6 +23,7 @@ operator:
   privateRegistryScanSecretsNames:
     trivy-system: ghcr-login-secret
   vulnerabilityScannerEnabled: false
+  metricsVulnIdEnabled: true
 
 resources:
   requests:
