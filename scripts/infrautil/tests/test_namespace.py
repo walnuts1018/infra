@@ -1,6 +1,6 @@
 """Tests for namespace module."""
 
-import json
+import json5
 from io import StringIO
 
 import pytest
@@ -37,7 +37,7 @@ def test_gen_namespace_json_basic() -> None:
         AppJSON(name="app2", namespace="ns2"),
     ]
     result = gen_namespace_json(apps)
-    parsed = json.loads(result)
+    parsed = json5.loads(result)
     assert parsed == ["ns1", "ns2"]
 
 
@@ -48,7 +48,7 @@ def test_gen_namespace_json_duplicates() -> None:
         AppJSON(name="app2", namespace="ns1"),
     ]
     result = gen_namespace_json(apps)
-    parsed = json.loads(result)
+    parsed = json5.loads(result)
     assert parsed == ["ns1"]
 
 
@@ -59,7 +59,7 @@ def test_gen_namespace_json_sorting() -> None:
         AppJSON(name="app2", namespace="ns1"),
     ]
     result = gen_namespace_json(apps)
-    parsed = json.loads(result)
+    parsed = json5.loads(result)
     assert parsed == ["ns1", "ns2"]
 
 
@@ -71,5 +71,5 @@ def test_gen_namespace_json_with_existing() -> None:
     ]
     existing = ["ns3"]
     result = gen_namespace_json(apps, existing)
-    parsed = json.loads(result)
+    parsed = json5.loads(result)
     assert parsed == ["ns1", "ns2", "ns3"]

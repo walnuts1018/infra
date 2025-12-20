@@ -17,9 +17,15 @@ def load_yaml_file(filename: str) -> str:
     return filepath.read_text(encoding="utf-8")
 
 
-def normalize_yaml(yaml_str: str) -> dict:
-    """Parse and normalize YAML for comparison."""
-    return yaml.safe_load(yaml_str)
+def normalize_yaml(yaml_str: str) -> dict | list:
+    """Parse and normalize YAML for comparison.
+    
+    Handles both single and multi-document YAML strings.
+    """
+    docs = list(yaml.safe_load_all(yaml_str))
+    if len(docs) == 1:
+        return docs[0]
+    return docs
 
 
 @pytest.mark.parametrize(

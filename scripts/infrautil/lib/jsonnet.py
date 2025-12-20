@@ -51,4 +51,7 @@ def build_yaml(filepath: str | Path) -> str:
         )
         yaml_parts.append(yaml_str)
     
+    # Join with document separator for multi-document YAML
+    if len(yaml_parts) > 1:
+        return "---\n" + "---\n".join(yaml_parts)
     return "".join(yaml_parts)
