@@ -1,0 +1,4 @@
+{
+  name: "trivy-operator",
+  namespace: "trivy-system",
+}
