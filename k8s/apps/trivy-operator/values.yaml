@@ -1,9 +1,6 @@
 # comma separated list of namespaces (or glob patterns)
 excludeNamespaces: "kube-system"
 
-imagePullSecrets:
-- name: ghcr-login-secret
-
 trivy:
   resources:
     requests:
@@ -20,6 +17,11 @@ trivy:
       limits:
         cpu: "1"
         memory: 1Gi
+  ignoreUnfixed: true
+
+operator:
+  privateRegistryScanSecretsNames:
+    trivy-system: ghcr-login-secret
 
 resources:
   requests:
