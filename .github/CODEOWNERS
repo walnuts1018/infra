@@ -1,0 +1,25 @@
+# Code Owners for infra repository
+#
+# These owners will be automatically requested for review
+# when someone opens a pull request affecting their areas.
+#
+# More info: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+* @Rtur2003
+
+# Infrastructure Python utilities
+/scripts/infrautil/ @Rtur2003
+
+# Kubernetes manifests
+/k8s/ @Rtur2003
+
+# Terraform configurations
+/terraform/ @Rtur2003
+
+# Documentation
+/docs/ @Rtur2003
+*.md @Rtur2003
+
+# GitHub workflows and configuration
+/.github/ @Rtur2003

@@ -12,7 +12,7 @@ DEFAULT_HELM_SNAPSHOT_OUTPUT: Final[str] = "k8s/snapshots/helm"
 
 class Config:
     """Global configuration container."""
-    
+
     def __init__(self) -> None:
         self.verbose: bool = False
         self.root_dir: Path = Path.cwd()

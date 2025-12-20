@@ -7,7 +7,6 @@ import yaml
 
 from infrautil.lib.jsonnet import build_yaml
 
-
 TESTFILES_DIR = Path(__file__).parent.parent / "lib" / "testfiles"
 
 
@@ -17,9 +16,15 @@ def load_yaml_file(filename: str) -> str:
     return filepath.read_text(encoding="utf-8")
 
 
-def normalize_yaml(yaml_str: str) -> dict:
-    """Parse and normalize YAML for comparison."""
-    return yaml.safe_load(yaml_str)
+def normalize_yaml(yaml_str: str) -> dict | list:
+    """Parse and normalize YAML for comparison.
+
+    Handles both single and multi-document YAML strings.
+    """
+    docs = list(yaml.safe_load_all(yaml_str))
+    if len(docs) == 1:
+        return docs[0]
+    return docs
 
 
 @pytest.mark.parametrize(
@@ -35,12 +40,12 @@ def test_build_yaml(jsonnet_file: str, expected_yaml_file: str) -> None:
     """Test Jsonnet to YAML conversion."""
     jsonnet_path = TESTFILES_DIR / jsonnet_file
     expected_yaml = load_yaml_file(expected_yaml_file)
-    
+
     result = build_yaml(jsonnet_path)
-    
+
     result_parsed = normalize_yaml(result)
     expected_parsed = normalize_yaml(expected_yaml)
-    
+
     assert result_parsed == expected_parsed
 
 
