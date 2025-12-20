@@ -1,6 +1,9 @@
 # comma separated list of namespaces (or glob patterns)
 excludeNamespaces: "kube-system"
 
+imagePullSecrets:
+- name: ghcr-login-secret
+
 trivy:
   resources:
     requests:
