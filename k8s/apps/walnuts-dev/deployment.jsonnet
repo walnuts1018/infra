@@ -16,6 +16,10 @@
         labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
       },
       spec: {
+        securityContext: {
+          runAsUser: 10001,
+          runAsGroup: 65534,
+        },
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'walnuts-dev',
