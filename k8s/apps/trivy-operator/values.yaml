@@ -1,5 +1,5 @@
 # comma separated list of namespaces (or glob patterns)
-excludeNamespaces: "kube-system"
+excludeNamespaces: "kube-system,cilium-system,longhorn-system"
 
 trivy:
   resources:
