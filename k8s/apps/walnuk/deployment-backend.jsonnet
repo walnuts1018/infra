@@ -16,6 +16,10 @@
         labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.backend),
       },
       spec: {
+        securityContext: {
+          runAsUser: 65532,
+          runAsGroup: 65532,
+        },
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'apiserver',
