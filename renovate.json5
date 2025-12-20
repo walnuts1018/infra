@@ -107,6 +107,12 @@
     },
     {
       matchPackageNames: [
+        'ghcr.io/servercontainers/samba',
+      ],
+      versioning: 'loose',
+    },
+    {
+      matchPackageNames: [
         'ghcr.io/cloudnative-pg/postgresql',
       ],
       matchUpdateTypes: [
