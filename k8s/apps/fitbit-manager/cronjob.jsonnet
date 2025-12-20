@@ -29,11 +29,13 @@
                   },
                 ],
                 resources: {
-                  limits: {
-                    memory: '300Mi',
-                  },
                   requests: {
+                    cpu: '1m',
                     memory: '10Mi',
+                  },
+                  limits: {
+                    cpu: '100m',
+                    memory: '300Mi',
                   },
                 },
                 env: (import 'env.libsonnet').env,
