@@ -1,8 +1,8 @@
 """Tests for namespace module."""
 
-import json5
 from io import StringIO
 
+import json5
 import pytest
 
 from infrautil.lib.apps import AppJSON
