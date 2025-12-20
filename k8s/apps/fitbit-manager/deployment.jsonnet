@@ -19,7 +19,7 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'fitbit-manager',
-            image: 'ghcr.io/walnuts1018/fitbit-manager:1.0.4',
+            image: 'ghcr.io/walnuts1018/fitbit-manager:1.0.5',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
