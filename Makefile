@@ -1,24 +1,34 @@
-INFRAUTIL ?= scripts/infrautil/infrautil
+# Python-based infrautil (primary implementation)
+PYTHON ?= python3
+INFRAUTIL_PY = $(PYTHON) -m infrautil.cli
 
+# Go-based infrautil (legacy, kept for compatibility)
+INFRAUTIL_GO = scripts/infrautil/infrautil
+
+.PHONY: setup-python
+setup-python:
+	cd scripts && $(PYTHON) -m pip install -q -e .
+
+.PHONY: build-infrautil
 build-infrautil:
 	cd scripts/infrautil && go build -o infrautil .
 
 .PHONY: namespace
-namespace: build-infrautil
-	$(INFRAUTIL) namespace -d ./k8s/apps -o ./k8s/namespaces/namespaces.json5
+namespace: setup-python
+	cd scripts && $(INFRAUTIL_PY) namespace -d ../k8s/apps -o ../k8s/namespaces/namespaces.json5
 
 .PHONY: snapshot
-snapshot: build-infrautil
+snapshot: setup-python
 	make app-snapshot
 	make helm-snapshot
 
 .PHONY: app-snapshot
-app-snapshot:
-	$(INFRAUTIL) snapshot -d ./k8s/apps -o ./k8s/snapshots/apps
+app-snapshot: setup-python
+	cd scripts && $(INFRAUTIL_PY) snapshot -d ../k8s/apps -o ../k8s/snapshots/apps
 
 .PHONY: helm-snapshot
-helm-snapshot: 
-	$(INFRAUTIL) helm-snapshot -d ./k8s/snapshots/apps -o ./k8s/snapshots/helm
+helm-snapshot: build-infrautil
+	$(INFRAUTIL_GO) helm-snapshot -d ./k8s/snapshots/apps -o ./k8s/snapshots/helm
 
 .PHONY: terraform-init
 terraform-init:	
