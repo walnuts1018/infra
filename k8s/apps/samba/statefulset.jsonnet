@@ -1,6 +1,6 @@
 {
   apiVersion: 'apps/v1',
-  kind: 'Deployment',
+  kind: 'StatefulSet',
   metadata: {
     name: (import 'app.json5').name,
     namespace: (import 'app.json5').namespace,
@@ -10,9 +10,8 @@
     selector: {
       matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
     },
-    strategy: {
-      type: 'Recreate',
-    },
+    serviceName: (import 'service.jsonnet').metadata.name,
+    replicas: 1,
     template: {
       metadata: {
         labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
