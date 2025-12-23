@@ -26,7 +26,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'n8n',
-            image: 'n8nio/n8n:1.123.8',
+            image: 'n8nio/n8n:1.123.9',
             command: ['/bin/sh'],
             args: ['-c', 'n8n start'],
             ports: [
