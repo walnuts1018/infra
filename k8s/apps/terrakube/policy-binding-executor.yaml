@@ -1,0 +1,11 @@
+apiVersion: sts.min.io/v1alpha1
+kind: PolicyBinding
+metadata:
+  name: terrakube-executor
+  namespace: minio
+spec:
+  application:
+    namespace: terrakube
+    serviceaccount: terrakube-executor
+  policies:
+    - readwrite
