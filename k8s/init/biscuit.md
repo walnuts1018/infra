@@ -41,7 +41,7 @@ sudo apt update && sudo apt upgrade -y
 ```
 
 ```bash
-curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC='--flannel-backend=none --disable-kube-proxy --disable-network-policy --disable=servicelb,traefik' sh -
+curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC='--flannel-backend=none --disable-kube-proxy --disable-network-policy --disable=servicelb,traefik --kube-apiserver-arg=oidc-issuer-url=https://192.168.0.17:16443 --kube-apiserver-arg=oidc-client-id=kurumi.k8s.walnuts.dev --kube-apiserver-arg=oidc-username-claim=sub' sh -
 ```
 
 ## kubeconfig
@@ -120,47 +120,4 @@ scp cake:/etc/kubernetes/pki/ca.crt biscuit:/usr/local/share/ca-certificates/kur
 ```bash
 # on biscuit
 sudo update-ca-certificates
-```
-
-```bash
-vim /etc/rancher/k3s/config.yaml
-```
-
-```diff
-[Unit]
-Description=Lightweight Kubernetes
-Documentation=https://k3s.io
-Wants=network-online.target
-After=network-online.target
-
-[Install]
-WantedBy=multi-user.target
-
-[Service]
-Type=notify
-EnvironmentFile=-/etc/default/%N
-EnvironmentFile=-/etc/sysconfig/%N
-EnvironmentFile=-/etc/systemd/system/k3s.service.env
-KillMode=process
-Delegate=yes
-User=root
-# Having non-zero Limit*s causes performance problems due to accounting overhead
-# in the kernel. We recommend using cgroups to do container-local accounting.
-LimitNOFILE=1048576
-LimitNPROC=infinity
-LimitCORE=infinity
-TasksMax=infinity
-TimeoutStartSec=0
-Restart=always
-RestartSec=5s
-ExecStartPre=-/sbin/modprobe br_netfilter
-ExecStartPre=-/sbin/modprobe overlay
-ExecStart=/usr/local/bin/k3s \
-    server \
-        '--flannel-backend=none' \
-        '--disable-network-policy' \
-        '--disable=servicelb,traefik' \
-+       '--kube-apiserver-arg=oidc-issuer-url=https://192.168.0.17:16443' \
-+       '--kube-apiserver-arg=oidc-client-id=kurumi.k8s.walnuts.dev' \
-+       '--kube-apiserver-arg=oidc-username-claim=sub' \
 ```
