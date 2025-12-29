@@ -1,6 +1,5 @@
 #!/usr/bin/bash
 
-
 CRONJOB_NAME="minio-biscuit-backup"
 NAMESPACE="minio-biscuit"
 
