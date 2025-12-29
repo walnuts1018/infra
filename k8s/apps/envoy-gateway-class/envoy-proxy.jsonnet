@@ -45,11 +45,12 @@ function(loadBalancerIP='192.168.0.138') {
         },
       },
     },
-    // logging: {
-    //   level: {
-    //     default: 'debug',
-    //   },
-    // },
+    logging: {
+      level: {
+        default: 'debug',
+        jwt: 'debug',
+      },
+    },
     telemetry: {
       tracing: {
         samplingRate: 100,
