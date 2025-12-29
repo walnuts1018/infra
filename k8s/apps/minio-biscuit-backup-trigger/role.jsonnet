@@ -3,7 +3,7 @@
   kind: 'Role',
   metadata: {
     name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
+    namespace: (import '../minio-default-backup/app.json5').namespace,
   },
   rules: [
     {

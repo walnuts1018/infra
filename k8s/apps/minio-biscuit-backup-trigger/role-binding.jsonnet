@@ -3,13 +3,13 @@
   kind: 'RoleBinding',
   metadata: {
     name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
+    namespace: (import 'role.jsonnet').metadata.namespace,
   },
   subjects: [
     {
       kind: 'ServiceAccount',
       name: (import 'sa.jsonnet').metadata.name,
-      namespace: (import 'app.json5').namespace,
+      namespace: (import 'sa.jsonnet').metadata.namespace,
     },
   ],
   roleRef: {
