@@ -18,7 +18,7 @@
           audiences: ['shutdown-manager.local.walnuts.dev'],
           issuer: 'https://192.168.0.17:16443',
           remoteJWKS: {
-            uri: 'https://192.168.0.17:16443/openid/v1/jwks',
+            uri: 'https://kurumi.local.walnuts.dev/openid/v1/jwks',
             backendRefs: [
               {
                 group: 'gateway.envoyproxy.io',
