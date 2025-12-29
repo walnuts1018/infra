@@ -2,7 +2,7 @@
 
 
 CRONJOB_NAME="minio-biscuit-backup"
-NAMESPACE="minio"
+NAMESPACE="minio-biscuit"
 
 log() {
     local level="$1"
