@@ -11,18 +11,12 @@
         group: 'gateway.envoyproxy.io',
         kind: 'Backend',
         name: (import 'backend.jsonnet').metadata.name,
-        sectionName: '16443',
+        sectionName: '443',
       },
     ],
     validation: {
-      caCertificateRefs: [
-        {
-          group: '',
-          kind: 'ConfigMap',
-          name: (import 'configmap-ca.jsonnet').metadata.name,
-        },
-      ],
-      hostname: '192.168.0.17',
+      wellKnownCACertificates: 'System',
+      hostname: 'kurumi.local.walnuts.dev',
     },
   },
 }

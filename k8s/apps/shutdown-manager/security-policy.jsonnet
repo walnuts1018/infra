@@ -24,7 +24,7 @@
                 group: 'gateway.envoyproxy.io',
                 kind: 'Backend',
                 name: (import 'backend.jsonnet').metadata.name,
-                port: 16443,
+                port: 443,
               },
             ],
             backendSettings: {

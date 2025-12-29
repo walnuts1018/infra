@@ -8,10 +8,9 @@
   spec: {
     endpoints: [
       {
-        hostname: '192.168.0.17',
         fqdn: {
-          hostname: '192.168.0.17',
-          port: 16443,
+          hostname: 'kurumi.local.walnuts.dev',
+          port: 443,
         },
       },
     ],
