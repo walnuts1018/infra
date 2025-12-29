@@ -33,7 +33,7 @@ DEST_PATH="b2-encrypted:"
 
 log "info" "Sync started" source "${SOURCE_PATH}" dest "${DEST_PATH}"
 
-rclone sync --metrics-addr=:9250 --config=/config/rclone.conf -v \
+rclone sync --metrics-addr=:9250 --config=/config/rclone.conf --fast-list -v \
     "${SOURCE_PATH}" "${DEST_PATH}" "${EXCLUDE_ARGS[@]}"
 
 if [[ $? -eq 0 ]]; then
