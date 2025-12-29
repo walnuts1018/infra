@@ -8,6 +8,7 @@
   spec: {
     targetRefs: [
       {
+        group: '',
         kind: 'Service',
         name: 'kubernetes',
       },
