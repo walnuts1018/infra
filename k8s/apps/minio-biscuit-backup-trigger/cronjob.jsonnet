@@ -11,13 +11,14 @@
     startingDeadlineSeconds: 120,
     jobTemplate: {
       spec: {
+        backoffLimit: 0,
         template: {
           metadata: {
             labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
           },
           spec: {
             serviceAccountName: (import 'sa.jsonnet').metadata.name,
-            restartPolicy: 'OnFailure',
+            restartPolicy: 'Never',
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'wait-minio-default-backup',
