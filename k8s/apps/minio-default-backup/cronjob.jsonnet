@@ -7,7 +7,7 @@
     labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
-    schedule: '10 3 * * *',  // AM 3:10
+    schedule: '10 2 * * *',  // AM 2:10
     timeZone: 'Asia/Tokyo',
     concurrencyPolicy: 'Forbid',
     startingDeadlineSeconds: 120,
