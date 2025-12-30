@@ -3,7 +3,7 @@
   namespace: (import 'app.json5').namespace,
   chart: 'terrakube',
   repoURL: 'https://charts.terrakube.io',
-  targetRevision: '4.5.1',
+  targetRevision: '4.5.2',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'),
     {
