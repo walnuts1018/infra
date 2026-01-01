@@ -11,7 +11,7 @@
     ],
     resources: {
       requests: {
-        storage: '29Gi',
+        storage: '32Gi',
       },
     },
   },
