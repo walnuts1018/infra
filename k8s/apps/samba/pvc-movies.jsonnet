@@ -5,7 +5,7 @@
     name: 'movies',
   },
   spec: {
-    storageClassName: 'longhorn-local',
+    storageClassName: 'longhorn-single',
     accessModes: [
       'ReadWriteOnce',
     ],

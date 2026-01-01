@@ -6,7 +6,7 @@
     namespace: (import 'app.json5').namespace,
   },
   spec: {
-    storageClassName: 'longhorn-local-encrypted',
+    storageClassName: 'longhorn-single-encrypted',
     accessModes: [
       'ReadWriteOnce',
     ],
