@@ -43,6 +43,11 @@
                 mountPath: '/misskey/.config',
                 readOnly: true,
               },
+              {
+                name: 'misskey-config-2',
+                mountPath: '/misskey/built',
+                readOnly: true,
+              },
             ],
           },
         ],
