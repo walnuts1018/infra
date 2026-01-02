@@ -58,8 +58,8 @@
       ],
       matchStringsStrategy: 'combination',
       matchStrings: [
-        "repository:\\s+[\"']?(?<repository>[^\\s'\"]+)[\"']?",
-        "tag:\\s+[\"']?(?<tag>[^\\s'\"]+)[\"']?",
+        "repository:\\s+[\"']?(?<packageName>[^\\s'\"]+)[\"']?",
+        "tag:\\s+[\"']?(?<currentValue>[^\\s'\"]+)[\"']?",
       ],
       datasourceTemplate: 'docker',
     },
