@@ -24,6 +24,10 @@
         selfHeal: true,
         prune: true,
       },
+      syncOptions: [
+        'ServerSideApply=true',
+        'FailOnSharedResource=true',
+      ],
     },
   },
 }
