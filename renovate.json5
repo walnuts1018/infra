@@ -27,9 +27,9 @@
       ],
       matchStringsStrategy: 'combination',
       matchStrings: [
-        'chart:\\s+["\']?(?<depName>[a-z0-9-]+)["\']',
-        'repoURL:\\s+["\']?(?<registryUrl>\\S+)["\']',
-        'targetRevision:\\s+["\']?(?<currentValue>\\S+)["\']',
+        "chart:\\s+[\"']?(?<depName>[a-z0-9-]+)[\"']",
+        "repoURL:\\s+[\"']?(?<registryUrl>\\S+)[\"']",
+        "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
       ],
       datasourceTemplate: 'helm',
     },
@@ -43,26 +43,26 @@
       ],
       matchStringsStrategy: 'combination',
       matchStrings: [
-        'ociChartURL:\\s+["\']?(?<packageName>\\S+)["\']?',
-        'targetRevision:\\s+["\']?(?<currentValue>\\S+)["\']?',
+        "ociChartURL:\\s+[\"']?(?<packageName>\\S+)[\"']?",
+        "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']?",
       ],
       datasourceTemplate: 'docker',
     },
-    // {
-    //   customType: 'regex',
-    //   managerFilePatterns: [
-    //     '/^k8s/.*/.+.jsonnet$/',
-    //     '/^k8s/.*/.+.libsonnet$/',
-    //     '/^k8s/.*/.+.yaml$/',
-    //     '/^k8s/.*/.+.yml$/',
-    //   ],
-    //   matchStringsStrategy: 'combination',
-    //   matchStrings: [
-    //     'repository:\\s+["\']?(?<repository>\\S+)["\']',
-    //     'tag:\\s+["\']?(?<tag>\\S+)["\']',
-    //   ],
-    //   datasourceTemplate: 'docker',
-    // },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^k8s/.*/.+.jsonnet$/',
+        '/^k8s/.*/.+.libsonnet$/',
+        '/^k8s/.*/.+.yaml$/',
+        '/^k8s/.*/.+.yml$/',
+      ],
+      matchStringsStrategy: 'combination',
+      matchStrings: [
+        "repository:\\s+[\"']?(?<repository>[^\\s'\"]+)[\"']?",
+        "tag:\\s+[\"']?(?<tag>[^\\s'\"]+)[\"']?",
+      ],
+      datasourceTemplate: 'docker',
+    },
     {
       customType: 'regex',
       managerFilePatterns: [
