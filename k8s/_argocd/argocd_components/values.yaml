@@ -46,8 +46,14 @@ configs:
   rbac:
     create: true
     policy.csv: |
+      p, role:viewer, applications, get, */*, allow
+      p, role:viewer, applicationsets, get, */*, allow
+      p, role:viewer, clusters, get, *, allow
+      p, role:viewer, repositories, get, *, allow
+      p, role:viewer, projects, get, *, allow
+
       g, 237477822715658605:argocd-admin, role:admin
-      g, 237477822715658605:argocd-viewer, role:readonly
+      g, 237477822715658605:argocd-viewer, role:viewer
     scopes: '[my:zitadel:grants]'
     policy.default: ''
 
