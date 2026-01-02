@@ -44,7 +44,7 @@
                 readOnly: true,
               },
               {
-                name: 'misskey-config',
+                name: 'tmp',
                 mountPath: '/misskey/built',
                 readOnly: true,
               },
