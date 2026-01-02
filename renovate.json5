@@ -140,7 +140,7 @@
         'scylladb/scylla',
       ],
       automerge: false,
-      "dependencyDashboardApproval": true,
+      "dependencyDashboardApproval": true, // Major, Minor versionはスキップ禁止なので、手動でPRを作るようにする
     },
   ],
 }
