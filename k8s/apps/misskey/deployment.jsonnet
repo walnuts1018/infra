@@ -46,7 +46,7 @@
             ],
           } + {
             securityContext+: {
-              readOnlyRootFilesystem: false,  // TODO:  /misskey/built/.config.jsonを生成するせいで、ReadOnlyRootFilesystemにできない
+              readOnlyRootFilesystem: false,  // TODO: /misskey/built/.config.jsonを生成するせいで、ReadOnlyRootFilesystemにできない
             },
           },
         ],
