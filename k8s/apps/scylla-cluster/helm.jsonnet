@@ -8,7 +8,7 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
     developerMode: true,
     scyllaImage: {
       repository: 'scylladb/scylla',
-      tag: '2025.4.0',
+      tag: '2025.4.0',  // TODO: Operatorのサポートバージョンがあるので、手動で指定するのをやめる？
     },
     datacenter: 'iwakura',
     racks: [
