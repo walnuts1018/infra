@@ -43,12 +43,11 @@
                 mountPath: '/misskey/.config',
                 readOnly: true,
               },
-              {
-                name: 'tmp',
-                mountPath: '/misskey/built',
-                readOnly: true,
-              },
             ],
+          } + {
+            securityContext+: {
+              readOnlyRootFilesystem: false,
+            },
           },
         ],
         containers: [
