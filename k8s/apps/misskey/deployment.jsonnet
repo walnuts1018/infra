@@ -117,6 +117,10 @@
               },
               limits: {},
             },
+          } + {
+            securityContext+: {
+              readOnlyRootFilesystem: false,
+            },
           },
         ],
         volumes: [
