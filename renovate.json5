@@ -51,6 +51,21 @@
     {
       customType: 'regex',
       managerFilePatterns: [
+        '/^k8s/.*/.+.jsonnet$/',
+        '/^k8s/.*/.+.libsonnet$/',
+        '/^k8s/.*/.+.yaml$/',
+        '/^k8s/.*/.+.yml$/',
+      ],
+      matchStringsStrategy: 'combination',
+      matchStrings: [
+        'repository:\\s+["\']?(?<repository>\\S+)["\']',
+        'tag:\\s+["\']?(?<tag>\\S+)["\']',
+      ],
+      datasourceTemplate: 'docker',
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
         '/^k8s/apps/.*/kustomization.yaml$/',
       ],
       matchStringsStrategy: 'any',
