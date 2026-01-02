@@ -51,10 +51,10 @@
     {
       customType: 'regex',
       managerFilePatterns: [
-        '/^k8s/.*/.+.jsonnet$/',
-        '/^k8s/.*/.+.libsonnet$/',
-        '/^k8s/.*/.+.yaml$/',
-        '/^k8s/.*/.+.yml$/',
+        '/^k8s/.*/.+\\.jsonnet$/',
+        '/^k8s/.*/.+\\.libsonnet$/',
+        '/^k8s/.*/.+\\.yaml$/',
+        '/^k8s/.*/.+\\.yml$/',
       ],
       matchStringsStrategy: 'combination',
       matchStrings: [
