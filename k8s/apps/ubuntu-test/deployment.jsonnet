@@ -23,11 +23,11 @@
             securityContext:: null,
             command: ['sleep', 'infinity'],
             resources: {
-              limits: {
-                memory: '100Mi',
-              },
               requests: {
                 memory: '5Mi',
+              },
+              limits: {
+                memory: '1Gi',
               },
             },
             volumeMounts: [
