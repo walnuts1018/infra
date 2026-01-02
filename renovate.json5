@@ -140,6 +140,7 @@
         'scylladb/scylla',
       ],
       automerge: false,
+      "dependencyDashboardApproval": true,
     },
   ],
 }
