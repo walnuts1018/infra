@@ -1,9 +1,9 @@
-(import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+local tanka = import 'github.com/grafana/jsonnet-libs/tanka-util/main.libsonnet';
+local helm = tanka.helm.new(std.thisFile);
 
-  chart: 'zitadel',
-  repoURL: 'https://charts.zitadel.com',
-  targetRevision: '9.13.0',
-  values: (importstr 'values.yaml'),
-}
+local resources = helm.template((import 'app.json5').name, '../../charts/zitadel', {
+  namespace: (import 'app.json5').namespace,
+  values: std.parseYaml(importstr 'values.yaml'),
+});
+
+std.objectValues(resources)
