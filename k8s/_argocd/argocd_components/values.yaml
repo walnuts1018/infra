@@ -47,6 +47,7 @@ configs:
     create: true
     policy.csv: |
       g, 237477822715658605:argocd-admin, role:admin
+      g, 237477822715658605:argocd-viewer, role:readonly
     scopes: '[my:zitadel:grants]'
     policy.default: ''
 
