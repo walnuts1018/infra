@@ -42,6 +42,16 @@ terraform-apply:
 aqua:
 	aqua i
 
+.PHONY: jsonnet-fmt
+jsonnet-fmt:
+	@echo "Formatting Jsonnet files..."
+	@find k8s \( -name '*.jsonnet' -o -name '*.libsonnet' \) -type f | xargs jsonnetfmt -i
+
+.PHONY: jsonnet-fmt-check
+jsonnet-fmt-check:
+	@echo "Checking Jsonnet format..."
+	@find k8s \( -name '*.jsonnet' -o -name '*.libsonnet' \) -type f | xargs jsonnetfmt --test
+
 .PHONY: lint
 lint: snapshot
 	kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
