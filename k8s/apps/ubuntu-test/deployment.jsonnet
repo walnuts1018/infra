@@ -37,14 +37,6 @@
                 subPath: 'trust-bundle.pem',
                 readOnly: true,
               },
-              {
-                name: 'localpath',
-                mountPath: '/mnt/localpath',
-              },
-              {
-                name: 'longhorn',
-                mountPath: '/mnt/longhorn',
-              },
             ],
           },
         ],
@@ -53,18 +45,6 @@
             name: 'local-ca-bundle',
             configMap: {
               name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
-            },
-          },
-          {
-            name: 'localpath',
-            persistentVolumeClaim: {
-              claimName: (import 'pvc-localpath.jsonnet').metadata.name,
-            },
-          },
-          {
-            name: 'longhorn',
-            persistentVolumeClaim: {
-              claimName: (import 'pvc-longhorn.jsonnet').metadata.name,
             },
           },
         ],
