@@ -6,6 +6,10 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
   targetRevision: 'v1.19.0',
   valuesObject: {
     developerMode: true,
+    scyllaImage: {
+      repository: 'scylladb/scylla',
+      tag: '2025.3.3',
+    },
     datacenter: 'iwakura',
     racks: [
       {
