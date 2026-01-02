@@ -44,7 +44,7 @@
                 readOnly: true,
               },
               {
-                name: 'misskey-config-2',
+                name: 'misskey-config',
                 mountPath: '/misskey/built',
                 readOnly: true,
               },
