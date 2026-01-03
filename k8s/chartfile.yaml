@@ -1,0 +1,10 @@
+directory: charts
+repositories:
+- name: stable
+  url: https://charts.helm.sh/stable
+- name: zitadel
+  url: https://charts.zitadel.com
+requires:
+- chart: zitadel/zitadel
+  version: 9.13.0
+version: 1

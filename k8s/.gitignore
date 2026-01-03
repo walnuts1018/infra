@@ -4,3 +4,5 @@ secrets.*
 ./tmp
 
 snapshots/
+vendor/
+charts/
