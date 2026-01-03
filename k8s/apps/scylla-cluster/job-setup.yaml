@@ -1,0 +1,96 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: scylla-cluster-setup
+    app.kubernetes.io/name: scylla-cluster-setup
+  name: scylla-cluster-setup-232d9659a8
+  namespace: databases
+spec:
+  template:
+    metadata:
+      labels:
+        app: scylla-cluster-setup
+        app.kubernetes.io/name: scylla-cluster-setup
+    spec:
+      containers:
+        - args:
+            - -c
+            - export PATH=$PATH:/jq && bash /scripts/setup.sh
+          command:
+            - /bin/bash
+          env:
+            - name: SCYLLA_HOST
+              value: scylla-cluster-client
+            - name: SCYLLA_PORT
+              value: "9142"
+            - name: SCYLLA_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  key: admin_username
+                  name: scylla-cluster-users-fd1b5f
+            - name: SCYLLA_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: admin_password
+                  name: scylla-cluster-users-fd1b5f
+          image: scylladb/scylla:2025.4.0
+          name: setup
+          volumeMounts:
+            - mountPath: /certs/admin
+              name: admin-certs
+              readOnly: true
+            - mountPath: /certs/ca
+              name: serving-ca
+              readOnly: true
+            - mountPath: /scripts
+              name: scripts
+              readOnly: true
+            - mountPath: /config/keyspaces.json
+              name: keyspaces-config
+              readOnly: true
+              subPath: keyspaces.json
+            - mountPath: /config/users.json
+              name: users-config
+              readOnly: true
+              subPath: users.json
+            - mountPath: /jq
+              name: jq
+              readOnly: true
+      restartPolicy: OnFailure
+      volumes:
+        - name: admin-certs
+          secret:
+            items:
+              - key: tls.crt
+                path: tls.crt
+              - key: tls.key
+                path: tls.key
+            secretName: scylla-cluster-local-user-admin
+        - configMap:
+            items:
+              - key: ca-bundle.crt
+                path: ca-bundle.crt
+            name: scylla-cluster-local-serving-ca
+          name: serving-ca
+        - configMap:
+            items:
+              - key: setup.sh
+                path: setup.sh
+            name: scylla-setup-58563b
+          name: scripts
+        - configMap:
+            items:
+              - key: keyspaces.json
+                path: keyspaces.json
+            name: scylla-setup-58563b
+          name: keyspaces-config
+        - name: users-config
+          secret:
+            items:
+              - key: users.json
+                path: users.json
+            secretName: scylla-cluster-users-fd1b5f
+        - image:
+            reference: ghcr.io/jqlang/jq:1.8.1
+          name: jq

@@ -1,0 +1,82 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyPatchPolicy
+metadata:
+  name: http-dump-oidc-patch
+  namespace: envoy-gateway-system
+spec:
+  jsonPatches:
+    - name: envoy-gateway-system/envoy-gateway/http
+      operation:
+        jsonPath: ..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*-oidc-u348djs2')].typed_config.config
+        op: add
+        path: preserve_authorization_header
+        value: false
+      type: type.googleapis.com/envoy.config.listener.v3.Listener
+    - name: envoy-gateway-system/envoy-gateway/http
+      operation:
+        jsonPath: ..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*-oidc-u348djs2')].typed_config.config
+        op: add
+        path: forward_bearer_token
+        value: true
+      type: type.googleapis.com/envoy.config.listener.v3.Listener
+    - name: envoy-gateway-system/envoy-gateway/http
+      operation:
+        jsonPath: ..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*-oidc-u348djs2')].typed_config.config
+        op: add
+        path: disable_id_token_set_cookie
+        value: true
+      type: type.googleapis.com/envoy.config.listener.v3.Listener
+    - name: envoy-gateway-system/envoy-gateway/http
+      operation:
+        jsonPath: ..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*-oidc-u348djs2')].typed_config.config
+        op: add
+        path: disable_access_token_set_cookie
+        value: true
+      type: type.googleapis.com/envoy.config.listener.v3.Listener
+    - name: envoy-gateway-system/envoy-gateway/http
+      operation:
+        jsonPath: ..default_filter_chain.filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*-oidc-u348djs2')].typed_config.config
+        op: add
+        path: disable_refresh_token_set_cookie
+        value: true
+      type: type.googleapis.com/envoy.config.listener.v3.Listener
+    - name: envoy-gateway-system/envoy-gateway/https
+      operation:
+        jsonPath: ..filter_chains[0].filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*-oidc-u348djs2')].typed_config.config
+        op: add
+        path: preserve_authorization_header
+        value: false
+      type: type.googleapis.com/envoy.config.listener.v3.Listener
+    - name: envoy-gateway-system/envoy-gateway/https
+      operation:
+        jsonPath: ..filter_chains[0].filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*-oidc-u348djs2')].typed_config.config
+        op: add
+        path: forward_bearer_token
+        value: true
+      type: type.googleapis.com/envoy.config.listener.v3.Listener
+    - name: envoy-gateway-system/envoy-gateway/https
+      operation:
+        jsonPath: ..filter_chains[0].filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*-oidc-u348djs2')].typed_config.config
+        op: add
+        path: disable_id_token_set_cookie
+        value: true
+      type: type.googleapis.com/envoy.config.listener.v3.Listener
+    - name: envoy-gateway-system/envoy-gateway/https
+      operation:
+        jsonPath: ..filter_chains[0].filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*-oidc-u348djs2')].typed_config.config
+        op: add
+        path: disable_access_token_set_cookie
+        value: true
+      type: type.googleapis.com/envoy.config.listener.v3.Listener
+    - name: envoy-gateway-system/envoy-gateway/https
+      operation:
+        jsonPath: ..filter_chains[0].filters[0].typed_config.http_filters[?match(@.name, 'envoy.filters.http.oauth2/securitypolicy/.*-oidc-u348djs2')].typed_config.config
+        op: add
+        path: disable_refresh_token_set_cookie
+        value: true
+      type: type.googleapis.com/envoy.config.listener.v3.Listener
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: envoy-gateway
+  type: JSONPatch

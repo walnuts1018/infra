@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ipxe-manager
+    app.kubernetes.io/name: ipxe-manager
+  name: ipxe-manager
+  namespace: ipxe-manager
+spec:
+  loadBalancerIP: 192.168.0.134
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: ipxe-manager
+    app.kubernetes.io/name: ipxe-manager
+  type: LoadBalancer
