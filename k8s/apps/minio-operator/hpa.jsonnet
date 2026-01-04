@@ -12,6 +12,16 @@
     metrics: [
       {
         resource: {
+          name: 'cpu',
+          target: {
+            averageUtilization: 100,
+            type: 'Utilization',
+          },
+        },
+        type: 'Resource',
+      },
+      {
+        resource: {
           name: 'memory',
           target: {
             averageUtilization: 100,
