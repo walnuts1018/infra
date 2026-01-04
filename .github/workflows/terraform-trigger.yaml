@@ -15,6 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - run: git switch -c tfc-trigger
       - name: Update dummy file
         run: |
           date > terraform/dummy
@@ -25,4 +26,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add terraform/dummy
           git commit -m "dummy: trigger TFC run"
-          git push
+          git push origin tfc-trigger --force
+
+      - name: create PR
+        run: |
+          gh pr create --title "dummy: trigger TFC run" --body "dummy: trigger TFC run" --base main --head tfc-trigger
+          gh pr merge --merge --auto
