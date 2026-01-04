@@ -1,0 +1,28 @@
+# TODO: Delete This
+name: Trigger TFC via Commit
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  commit-trigger:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Update dummy file
+        run: |
+          date > terraform/dummy
+
+      - name: Commit and Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add terraform/dummy
+          git commit -m "dummy: trigger TFC run"
+          git push
