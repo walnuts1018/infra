@@ -112,7 +112,7 @@ server:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 8m
+      cpu: 20m
       memory: 196Mi
     limits:
       cpu: 500m
@@ -131,7 +131,7 @@ repoServer:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 30m
+      cpu: 50m
       memory: 256Mi
     limits:
       cpu: 500m
