@@ -1,5 +1,6 @@
 resource "aws_ssoadmin_permission_set" "admin" {
   name             = "AdminAccess"
+  description      = "Administrator Access"
   instance_arn     = local.sso_instance_arn
   session_duration = "PT12H"
 }
