@@ -2,9 +2,9 @@
 #   type = string
 # }
 
-# variable "cloudflare_api_token" {
-#   type = string
-# }
+variable "cloudflare_api_token" {
+  type = string
+}
 
 variable "b2_application_key" {
   type = string
