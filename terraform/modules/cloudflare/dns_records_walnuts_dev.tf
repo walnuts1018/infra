@@ -61,36 +61,6 @@ resource "cloudflare_dns_record" "smtp_send_resend_walnuts_dev" {
   zone_id  = cloudflare_zone.walnuts_dev.id
 }
 
-resource "cloudflare_dns_record" "route1_mx_walnuts_dev" {
-  content  = "route1.mx.cloudflare.net"
-  name     = "walnuts.dev"
-  priority = 12
-  proxied  = false
-  ttl      = 1
-  type     = "MX"
-  zone_id  = cloudflare_zone.walnuts_dev.id
-}
-
-resource "cloudflare_dns_record" "route_2_mx_walnuts_dev" {
-  content  = "route2.mx.cloudflare.net"
-  name     = "walnuts.dev"
-  priority = 1
-  proxied  = false
-  ttl      = 1
-  type     = "MX"
-  zone_id  = cloudflare_zone.walnuts_dev.id
-}
-
-resource "cloudflare_dns_record" "route3_mx_walnuts_dev" {
-  content  = "route3.mx.cloudflare.net"
-  name     = "walnuts.dev"
-  priority = 33
-  proxied  = false
-  ttl      = 1
-  type     = "MX"
-  zone_id  = cloudflare_zone.walnuts_dev.id
-}
-
 resource "cloudflare_dns_record" "dmarc" {
   content = "\"v=DMARC1; p=none; rua=mailto:5e9239fe52ad41fd850bd72545e1e484@dmarc-reports.cloudflare.net;\""
   name    = "_dmarc.walnuts.dev"
@@ -121,15 +91,6 @@ resource "cloudflare_dns_record" "spf_send_resend_walnuts_dev" {
 resource "cloudflare_dns_record" "visual_studio_marketplace_walnuts_dev" {
   content = "\"81a38dcc-dcaf-4c0c-b029-b215d8a3c67c\""
   name    = "_visual-studio-marketplace-walnuts1018.walnuts.dev"
-  proxied = false
-  ttl     = 1
-  type    = "TXT"
-  zone_id = cloudflare_zone.walnuts_dev.id
-}
-
-resource "cloudflare_dns_record" "spf_walnuts_dev" {
-  content = "\"v=spf1 include:_spf.mx.cloudflare.net ~all\""
-  name    = "walnuts.dev"
   proxied = false
   ttl     = 1
   type    = "TXT"
