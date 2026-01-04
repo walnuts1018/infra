@@ -141,11 +141,11 @@ write:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      memory: 400Mi
       cpu: 60m
+      memory: 700Mi
     limits:
-      memory: 1Gi
       cpu: 1
+      memory: 1Gi
   extraArgs: [ "-config.expand-env=true" ]
   extraEnvFrom:
   - secretRef:
