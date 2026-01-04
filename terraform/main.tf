@@ -11,6 +11,7 @@ variable "zitadel_jwt_profile_json" {
 }
 
 terraform {
+  required_version = "~>1.14.0"
   cloud {
     organization = "walnuts-dev"
 
