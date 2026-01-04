@@ -10,5 +10,5 @@ operator:
       cpu: 50m
       memory: 50Mi
     limits:
-      cpu: 400m
+      cpu: 800m
       memory: 512Mi
