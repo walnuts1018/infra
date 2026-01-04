@@ -47,12 +47,4 @@
     db_name: 'n8n',
     user_name: 'n8n',
   },
-  {
-    db_name: 'terrakube',
-    user_name: 'terrakube',
-  },
-  {
-    db_name: 'terrakube_dex',
-    user_name: 'terrakube_dex',
-  },
 ]
