@@ -137,6 +137,41 @@ repoServer:
       cpu: 500m
       memory: 512Mi
 
+  # Grafana Tankaをインストールするためのコンテナ
+  # https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/
+  extraContainers:
+  - name: cmp-tanka
+    image: curlimages/curl:8.17.0
+    command: [ "/bin/sh", "-c" ]
+    args:
+    - |
+      cd /home/argocd/cmp-server/plugins && \
+      ARCH=$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/') && \
+      curl -Lo jb "https://github.com/jsonnet-bundler/jsonnet-bundler/releases/download/v0.6.0/jb-linux-$ARCH" && \
+      curl -Lo tk "https://github.com/grafana/tanka/releases/v0.36.2/download/tk-linux-$ARCH" && \
+      chmod +x jb tk && \
+      /var/run/argocd/argocd-cmp-server
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 999
+    volumeMounts:
+    - mountPath: /var/run/argocd
+      name: var-files
+    - mountPath: /home/argocd/cmp-server/plugins
+      name: plugins
+    - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+      subPath: plugin.yaml
+      name: cmp-tanka-config
+    - mountPath: /tmp
+      name: cmp-tmp
+
+  volumes:
+  - name: cmp-tanka-config
+    configMap:
+      name: cmp-tanka
+  - name: cmp-tmp
+    emptyDir: {}
+
 applicationSet:
   metrics:
     enabled: true

@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ConfigManagementPlugin
+metadata:
+  name: tanka
+  namespace: argocd
+spec:
+  version: v0.25.0
+  init:
+    command: [ "sh", "-c", "/home/argocd/cmp-server/plugins/jb install" ]
+  generate:
+    command: [ "sh", "-c", "/home/argocd/cmp-server/plugins/tk eval helm.jsonnet" ]
+  discover:
+    find:
+      glob: "**/*.jsonnet"
