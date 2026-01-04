@@ -7,7 +7,7 @@ terraform {
   }
 }
 
-variable "jwt_profile_file_path" {
+variable "jwt_profile_json" {
   type = string
 }
 
@@ -15,5 +15,5 @@ provider "zitadel" {
   domain           = "auth.walnuts.dev"
   insecure         = "false"
   port             = "443"
-  jwt_profile_file = var.jwt_profile_file_path
+  jwt_profile_json = var.jwt_profile_json
 }
