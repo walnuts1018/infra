@@ -1,6 +1,6 @@
 resource "b2_application_key" "minio_biscuit_backup" {
-  key_name  = "minio-biscuit-backup"
-  bucket_id = b2_bucket.minio_biscuit_backup.id
+  key_name   = "minio-biscuit-backup"
+  bucket_ids = [b2_bucket.minio_biscuit_backup.id]
   capabilities = [
     "deleteFiles",
     "listAllBucketNames",
