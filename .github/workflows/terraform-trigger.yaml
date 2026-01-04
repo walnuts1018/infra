@@ -3,7 +3,7 @@ name: Trigger TFC via Commit
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/12 * * * *"
   workflow_dispatch:
 
 jobs:
