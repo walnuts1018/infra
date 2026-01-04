@@ -8,7 +8,7 @@ operator:
   resources:
     requests:
       cpu: 50m
-      memory: 50Mi
+      memory: 80Mi
     limits:
       cpu: 800m
       memory: 512Mi
