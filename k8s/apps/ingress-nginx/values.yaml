@@ -41,3 +41,9 @@ controller:
     limits:
       cpu: 100m
       memory: 256Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: null
+    targetMemoryUtilizationPercentage: 100
