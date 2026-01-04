@@ -28,6 +28,16 @@ jobs:
           git commit -m "dummy: trigger TFC run"
           git push origin tfc-trigger --force
 
+      - uses: actions/create-github-app-token@v2
+        id: generate_token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Set env
+        run: |
+          echo "GH_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
+
       - name: create PR
         run: |
           gh pr create --title "dummy: trigger TFC run" --body "dummy: trigger TFC run" --base main --head tfc-trigger
