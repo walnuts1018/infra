@@ -8,7 +8,8 @@ terraform {
 }
 
 variable "jwt_profile_json" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 provider "zitadel" {

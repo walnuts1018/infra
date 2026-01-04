@@ -8,7 +8,8 @@ terraform {
 }
 
 variable "application_key" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "application_key_id" {
