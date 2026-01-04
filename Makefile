@@ -20,28 +20,6 @@ app-snapshot:
 helm-snapshot: 
 	$(INFRAUTIL) helm-snapshot -d ./k8s/snapshots/apps -o ./k8s/snapshots/helm
 
-# TODO: Deprecated: Terraform Cloudに移行したのでいい感じにする、variableはterraform cloudで管理する
-
-.PHONY: terraform-init
-terraform-init:	
-	terraform -chdir="./terraform" init -upgrade -migrate-state
-
-.PHONY: terraform-plan
-terraform-plan:
-	$(eval MINIO_SECRET_KEY := $(shell op item get minio --field terraform-secret-key --reveal))
-	$(eval CLOUDFLARE_API_TOKEN := $(shell op item get hhrmfgqkbfvtpifxqjbtl24ihq --field terraform-api-token --reveal))
-	$(eval B2_APPLICATION_KEY := $(shell op item get b2 --field terraform_application_key --reveal))
-	terraform -chdir="./terraform" plan -var="minio_secret_key=$(MINIO_SECRET_KEY)" -var="cloudflare_api_token=$(CLOUDFLARE_API_TOKEN)" -var="b2_application_key=$(B2_APPLICATION_KEY)"
-
-.PHONY: terraform-apply
-terraform-apply:
-	$(eval MINIO_SECRET_KEY := $(shell op item get minio --field terraform-secret-key --reveal))
-	$(eval CLOUDFLARE_API_TOKEN := $(shell op item get hhrmfgqkbfvtpifxqjbtl24ihq --field terraform-api-token --reveal))
-	$(eval B2_APPLICATION_KEY := $(shell op item get b2 --field terraform_application_key --reveal))
-	terraform -chdir="./terraform" apply -var="minio_secret_key=$(MINIO_SECRET_KEY)" -var="cloudflare_api_token=$(CLOUDFLARE_API_TOKEN)" -var="b2_application_key=$(B2_APPLICATION_KEY)" -auto-approve
-
-# END: TODO
-
 .PHONY: aqua
 aqua:
 	aqua i
