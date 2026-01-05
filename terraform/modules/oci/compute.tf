@@ -42,6 +42,6 @@ locals {
   ssh_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFCARCw/4dlz/+tr5o45BvEeAJDYd0lA+ntdbYgiMBdn"
 }
 
-output "public-ip-for-orange-instance" {
+output "orange_public_ip" {
   value = oci_core_instance.orange.public_ip
 }
