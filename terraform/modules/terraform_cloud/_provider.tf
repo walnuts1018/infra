@@ -6,6 +6,3 @@ terraform {
     }
   }
 }
-
-provider "tfe" {
-}
