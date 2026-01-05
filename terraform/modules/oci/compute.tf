@@ -21,7 +21,7 @@ resource "oci_core_instance" "orange" {
   metadata = {
     ssh_authorized_keys = local.ssh_public_key
   }
-  preserve_boot_volume = false
+  preserve_boot_volume = true
 }
 
 resource "oci_core_volume" "orange_volume" {
