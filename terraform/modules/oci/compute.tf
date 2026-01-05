@@ -1,4 +1,3 @@
-
 resource "oci_core_instance" "orange" {
   availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
   compartment_id      = data.oci_identity_availability_domains.ads.compartment_id
@@ -9,8 +8,9 @@ resource "oci_core_instance" "orange" {
   }
 
   source_details {
-    source_id   = "ocid1.image.oc1.ap-osaka-1.aaaaaaaawzfbc5pjimseh6eisfqhfztalzx46h5bhntvxomckmulk7hqtyoa"
-    source_type = "image"
+    source_id               = "ocid1.image.oc1.ap-osaka-1.aaaaaaaawzfbc5pjimseh6eisfqhfztalzx46h5bhntvxomckmulk7hqtyoa"
+    source_type             = "image"
+    boot_volume_size_in_gbs = 50
   }
 
   display_name = "orange"
@@ -22,6 +22,20 @@ resource "oci_core_instance" "orange" {
     ssh_authorized_keys = local.ssh_public_key
   }
   preserve_boot_volume = false
+}
+
+resource "oci_core_volume" "orange_volume" {
+  compartment_id      = data.oci_identity_availability_domains.ads.compartment_id
+  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
+  display_name        = "orange-volume"
+  size_in_gbs         = 150
+  vpus_per_gb         = 10
+}
+
+resource "oci_core_volume_attachment" "orange_volume_attachment" {
+  attachment_type = "iscsi"
+  instance_id     = oci_core_instance.orange.id
+  volume_id       = oci_core_volume.orange_volume.id
 }
 
 locals {
