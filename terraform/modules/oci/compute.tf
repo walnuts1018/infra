@@ -9,9 +9,8 @@ resource "oci_core_instance" "orange" {
   }
 
   source_details {
-    source_id               = "ocid1.image.oc1.ap-osaka-1.aaaaaaaawzfbc5pjimseh6eisfqhfztalzx46h5bhntvxomckmulk7hqtyoa"
-    source_type             = "image"
-    boot_volume_size_in_gbs = 200
+    source_id   = "ocid1.image.oc1.ap-osaka-1.aaaaaaaawzfbc5pjimseh6eisfqhfztalzx46h5bhntvxomckmulk7hqtyoa"
+    source_type = "image"
   }
 
   display_name = "orange"
