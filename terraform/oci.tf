@@ -11,3 +11,11 @@ locals {
 output "oci_orange_public_ip" {
   value = module.oci.orange_public_ip
 }
+
+output "oci_default_vcn_ipv6_cidr_block" {
+  value = module.oci.default_vcn_ipv6_cidr_block
+}
+
+output "oci_default_subnet_ipv6_cidr_block" {
+  value = module.oci.default_subnet_ipv6_cidr_block
+}
