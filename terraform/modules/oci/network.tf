@@ -6,8 +6,12 @@ resource "oci_core_vcn" "default" {
   dns_label      = "default"
 }
 
+data "oci_core_vcn" "default" {
+  vcn_id = oci_core_vcn.default.id
+}
+
 output "default_vcn_ipv6_cidr_block" {
-  value = oci_core_vcn.default.ipv6cidr_blocks[0]
+  value = data.oci_core_vcn.default.ipv6cidr_blocks[0]
 }
 
 resource "oci_core_internet_gateway" "default" {
@@ -80,6 +84,10 @@ resource "oci_core_subnet" "default_subnet" {
   security_list_ids = [oci_core_security_list.default_sl.id, oci_core_security_list.ssh_sl.id, oci_core_security_list.wireguard_sl.id]
 }
 
+data "oci_core_subnet" "default_subnet" {
+  subnet_id = oci_core_subnet.default_subnet.id
+}
+
 output "default_subnet_ipv6_cidr_block" {
-  value = oci_core_subnet.default_subnet.ipv6cidr_block
+  value = data.oci_core_subnet.default_subnet.ipv6cidr_block
 }
