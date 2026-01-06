@@ -63,8 +63,26 @@ resource "oci_core_security_list" "default_sl" {
   }
 
   ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "::/0"
+    tcp_options {
+      min = 22
+      max = 22
+    }
+  }
+
+  ingress_security_rules {
     protocol = "17" # UDP
     source   = "0.0.0.0/0"
+    udp_options {
+      min = 51820
+      max = 51820
+    }
+  }
+
+  ingress_security_rules {
+    protocol = "17" # UDP
+    source   = "::/0"
     udp_options {
       min = 51820
       max = 51820
