@@ -57,3 +57,7 @@ Endpoint = <orange-public-ip>:51820
 PersistentKeepalive = 25
 AllowedIPs = 192.168.1.11/32, 172.16.0.196/32
 ```
+
+```bash
+sudo systemctl enable --now wg-quick@wg0
+```
