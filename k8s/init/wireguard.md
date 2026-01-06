@@ -1,4 +1,13 @@
 ```bash
+cat <<EOF | sudo tee /etc/sysctl.d/99-wireguard.conf
+net.ipv6.conf.all.forwarding=1
+net.ipv6.conf.all.accept_ra=2
+net.ipv6.conf.default.accept_ra=2
+EOF
+sudo sysctl --system
+```
+
+```bash
 sudo apt-get install wireguard -y
 sudo su
 ```
