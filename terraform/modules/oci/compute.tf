@@ -16,6 +16,7 @@ resource "oci_core_instance" "orange" {
   display_name = "orange"
   create_vnic_details {
     assign_public_ip = true
+    assign_ipv6ip    = true
     subnet_id        = oci_core_subnet.default_subnet.id
   }
   metadata = {
