@@ -76,7 +76,7 @@ resource "oci_core_security_list" "wireguard_sl" {
 
 resource "oci_core_subnet" "default_subnet" {
   cidr_block        = "172.16.0.0/24"
-  ipv6cidr_block    = cidrsubnet(oci_core_vcn.default.ipv6cidr_blocks[0], 8, 1)
+  ipv6cidr_block    = cidrsubnet(data.oci_core_vcn.default.ipv6cidr_blocks[0], 8, 1)
   compartment_id    = data.oci_identity_availability_domains.ads.compartment_id
   vcn_id            = oci_core_vcn.default.id
   display_name      = "default-subnet"
