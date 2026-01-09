@@ -35,7 +35,7 @@ local appname = (import 'app.json5').name + '-setup';
                 name: 'SCYLLA_ADMIN_USER',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret-users.jsonnet').spec.target.name,
+                    name: (import 'external-secret-migrations.jsonnet').spec.target.name,
                     key: 'admin_username',
                   },
                 },
@@ -44,7 +44,7 @@ local appname = (import 'app.json5').name + '-setup';
                 name: 'SCYLLA_ADMIN_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret-users.jsonnet').spec.target.name,
+                    name: (import 'external-secret-migrations.jsonnet').spec.target.name,
                     key: 'admin_password',
                   },
                 },

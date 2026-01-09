@@ -1,0 +1,17 @@
+[leveldb2]
+enabled = false
+
+[cassandra]
+enabled = true
+keyspace = "seaweedfs"
+hosts = ["scylla-cluster-client.databases.svc.cluster.local:9142"]
+username = "seaweedfs"
+password = "{{ .scylladb_password }}"
+localDC = "iwakura"
+
+[filer.options]
+saveToFilerLimit = 10485760
+defaultReplication = "010"
+disableDirListing = false
+maxMB = 4
+dirListingLimit = 100000
