@@ -13,7 +13,7 @@
       volumeSizeLimitMB: 1024,
     },
     volume: {
-      replicas: 0,
+      replicas: 3,
       requests: {
         cpu: '100m',
         memory: '512Mi',
@@ -24,16 +24,36 @@
         memory: '2Gi',
       },
       storageClassName: 'local-path',
-    },
-    volumeTopology: {
-      'iwakura-rack1': {
-        replicas: 3,
-        dataCenter: 'iwakura',
-        rack: 'rack1',
-        nodeSelector: {
-          'topology.kubernetes.io/region': 'ap-japan-kansai',
-          'topology.kubernetes.io/zone': 'iwakura',
-          'topology.kubernetes.io/rack': 'rack1',
+      affinity: {
+        podAntiAffinity: {
+          requiredDuringSchedulingIgnoredDuringExecution: [
+            {
+              labelSelector: {
+                matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+              },
+              topologyKey: 'kubernetes.io/hostname',
+            },
+          ],
+          preferredDuringSchedulingIgnoredDuringExecution: [
+            {
+              weight: 50,
+              podAffinityTerm: {
+                labelSelector: {
+                  matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+                },
+                topologyKey: 'topology.kubernetes.io/zone',
+              },
+            },
+            {
+              weight: 40,
+              podAffinityTerm: {
+                labelSelector: {
+                  matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+                },
+                topologyKey: 'kubernetes.io/region',
+              },
+            },
+          ],
         },
       },
     },
