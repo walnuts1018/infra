@@ -6,7 +6,7 @@ local appname = (import 'app.json5').name + '-setup';
     name: appname + '-' + std.md5(
       std.toString($.spec) +
       std.toString(import 'configmap-setup.jsonnet') +
-      std.toString(import 'external-secret-users.jsonnet')
+      std.toString(import 'external-secret-migrations.jsonnet')
     )[0:10],
     namespace: (import 'app.json5').namespace,
     labels: (import '../../components/labels.libsonnet')(appname),
