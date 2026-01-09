@@ -6,8 +6,7 @@ MAX_RETRIES="${MAX_RETRIES:-60}" # 10分
 RETRY_INTERVAL="${RETRY_INTERVAL:-10}"
 ADMIN_CERTS_DIR="${ADMIN_CERTS_DIR:-/certs/admin}"
 CA_CERTS_DIR="${CA_CERTS_DIR:-/certs/ca}"
-KEYSPACES_SCHEMA="${KEYSPACES_SCHEMA:-/config/keyspaces.cql}"
-USERS_CONFIG="${USERS_CONFIG:-/config/users.json}"
+SCHEMA_FILE="${SCHEMA_FILE:-/config/migrations.cql}"
 SCYLLA_ADMIN_USER="${SCYLLA_ADMIN_USER:-cassandra}"
 SCYLLA_ADMIN_PASSWORD="${SCYLLA_ADMIN_PASSWORD:-cassandra}"
 
@@ -77,58 +76,12 @@ wait_for_cluster() {
 }
 
 
-create_keyspaces() {
+migration() {
     local cqlshrc="$1"
     
-    log "info" "Creating keyspaces..."
-    cqlsh --cqlshrc="${cqlshrc}" -f "${KEYSPACES_SCHEMA}"
-    log "info" "Keyspaces created successfully!"
-}
-
-
-create_users() {
-    local cqlshrc="$1"
-    
-    log "info" "Creating users..."
-    
-    local users
-    users=$(cat "${USERS_CONFIG}")
-    
-    echo "$users" | jq -c '.[]' | while read -r user; do
-        local username
-        username=$(echo "$user" | jq -r '.username')
-
-        local password        
-        password=$(echo "$user" | jq -r '.password')
-
-        local superuser
-        superuser=$(echo "$user" | jq -r '.superuser')
-
-        local login
-        login=$(echo "$user" | jq -r '.login')
-        
-        log "info" "Creating user" "username" "${username}" "superuser" "${superuser}" "login" "${login}"
-        
-        cqlsh --cqlshrc="${cqlshrc}" -e "
-            CREATE ROLE IF NOT EXISTS '${username}'
-            WITH PASSWORD = '${password}'
-            AND SUPERUSER = ${superuser}
-            AND LOGIN = ${login};"
-        
-        # キースペース権限を付与
-        local keyspace_perms
-        keyspace_perms=$(echo "$user" | jq -r '.keyspace_permissions // empty')
-        
-        if [ -n "$keyspace_perms" ] && [ "$keyspace_perms" != "null" ]; then
-            echo "$keyspace_perms" | jq -r '.[]' | while read -r ks; do
-                log "info" "Granting permissions on keyspace" "keyspace" "${ks}" "to_user" "${username}"
-                cqlsh --cqlshrc="${cqlshrc}" -e "
-                    GRANT ALL PERMISSIONS ON KEYSPACE ${ks} TO '${username}';"
-            done
-        fi
-    done
-    
-    log "info" "Users created successfully!"
+    log "info" "Applying migrations from ${SCHEMA_FILE}..."
+    cqlsh --cqlshrc="${cqlshrc}" -f "${SCHEMA_FILE}"
+    log "info" "Migrations applied successfully."
 }
 
 log "info" "Preparing temporary directory..."
@@ -140,11 +93,8 @@ setup_cqlshrc_config "/tmp/cqlsh/default.cqlshrc"
 log "info" "Waiting for cluster..."
 wait_for_cluster "/tmp/cqlsh/default.cqlshrc"
 
-log "info" "Creating keyspaces..."
-create_keyspaces "/tmp/cqlsh/default.cqlshrc"
-
-log "info" "Creating users..."
-create_users "/tmp/cqlsh/default.cqlshrc"
+log "info" "Running migrations..."
+migration "/tmp/cqlsh/default.cqlshrc"
 
 log "info" "Final verification..."
 log "info" "Listing all roles:"

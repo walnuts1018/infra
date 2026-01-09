@@ -54,8 +54,7 @@ local appname = (import 'app.json5').name + '-setup';
               { name: 'admin-certs', mountPath: '/certs/admin', readOnly: true },
               { name: 'serving-ca', mountPath: '/certs/ca', readOnly: true },
               { name: 'scripts', mountPath: '/scripts', readOnly: true },
-              { name: 'keyspaces-config', mountPath: '/config/keyspaces.json', subPath: 'keyspaces.json', readOnly: true },
-              { name: 'users-config', mountPath: '/config/users.json', subPath: 'users.json', readOnly: true },
+              { name: 'migration-config', mountPath: '/config/migrations.cql', subPath: 'migrations.cql', readOnly: true },
               { name: 'jq', mountPath: '/jq', readOnly: true },
             ],
           },
@@ -93,25 +92,13 @@ local appname = (import 'app.json5').name + '-setup';
             },
           },
           {
-            name: 'keyspaces-config',
-            configMap: {
-              name: (import 'configmap-setup.jsonnet').metadata.name,
-              items: [
-                {
-                  key: 'keyspaces.json',
-                  path: 'keyspaces.json',
-                },
-              ],
-            },
-          },
-          {
-            name: 'users-config',
+            name: 'migration-config',
             secret: {
-              secretName: (import 'external-secret-users.jsonnet').spec.target.name,
+              secretName: (import 'external-secret-migrations.jsonnet').spec.target.name,
               items: [
                 {
-                  key: 'users.json',
-                  path: 'users.json',
+                  key: 'migrations.cql',
+                  path: 'migrations.cql',
                 },
               ],
             },

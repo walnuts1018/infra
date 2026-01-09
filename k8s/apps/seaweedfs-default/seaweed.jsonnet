@@ -7,7 +7,7 @@
     labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
-    image: 'chrislusf/seaweedfs:dev', // TODO: filerがpanicするのでdev使ってみる
+    image: 'chrislusf/seaweedfs:dev',  // TODO: filerがpanicするのでdev使ってみる
     master: {
       replicas: 3,
       volumeSizeLimitMB: 1024,
@@ -78,11 +78,7 @@
       service: {
         type: 'ClusterIP',
       },
-      config: |||
-        [leveldb2]
-        enabled = true
-        dir = "/data/filerldb2"
-      |||,
+      config: (importstr '_config/filer.toml'),
     },
   },
 }
