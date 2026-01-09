@@ -17,7 +17,7 @@
       replicas: 3,
       requests: {
         cpu: '100m',
-        memory: '512Mi',
+        memory: '128Mi',
         storage: '2Gi',
       },
       limits: {
