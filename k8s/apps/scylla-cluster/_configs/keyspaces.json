@@ -8,5 +8,15 @@
     "tablets": {
       "enabled": false
     }
+  },
+  {
+    "name": "seaweedfs",
+    "replication_class": "NetworkTopologyStrategy",
+    "replication_factor": {
+      "iwakura": 3
+    },
+    "tablets": {
+      "enabled": false
+    }
   }
 ]
