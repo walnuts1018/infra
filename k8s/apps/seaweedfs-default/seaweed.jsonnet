@@ -26,11 +26,15 @@
       },
       storageClassName: 'local-path',
       affinity: {
+        local labels = {
+          'app.kubernetes.io/component': 'volume',
+          'app.kubernetes.io/instance': $.metadata.name,
+        },
         podAntiAffinity: {
           requiredDuringSchedulingIgnoredDuringExecution: [
             {
               labelSelector: {
-                matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+                matchLabels: labels,
               },
               topologyKey: 'kubernetes.io/hostname',
             },
@@ -40,7 +44,7 @@
               weight: 50,
               podAffinityTerm: {
                 labelSelector: {
-                  matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+                  matchLabels: labels,
                 },
                 topologyKey: 'topology.kubernetes.io/zone',
               },
@@ -49,7 +53,7 @@
               weight: 40,
               podAffinityTerm: {
                 labelSelector: {
-                  matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+                  matchLabels: labels,
                 },
                 topologyKey: 'kubernetes.io/region',
               },
