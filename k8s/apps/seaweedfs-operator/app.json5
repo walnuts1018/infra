@@ -1,0 +1,4 @@
+{
+  name: "seaweedfs-operator",
+  namespace: "seaweedfs-operator",
+}
