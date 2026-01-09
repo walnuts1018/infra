@@ -12,6 +12,7 @@
       replicas: 3,
       volumeSizeLimitMB: 1024,
     },
+    // TODO: volumeTopology使いたいけど、ServiceのSelectorがバグってる気がする
     volume: {
       replicas: 3,
       requests: {
