@@ -63,22 +63,22 @@
       },
     },
     filer: {
-      replicas: 2,
-      s3: {
-        enabled: true,
-      },
-      requests: {
-        cpu: '100m',
-        memory: '128Mi',
-      },
-      limits: {
-        cpu: '200m',
-        memory: '256Mi',
-      },
-      service: {
-        type: 'ClusterIP',
-      },
-      config: (importstr '_config/filer.toml'),
+      replicas: 0,
+      // s3: {
+      //   enabled: true,
+      // },
+      // requests: {
+      //   cpu: '100m',
+      //   memory: '128Mi',
+      // },
+      // limits: {
+      //   cpu: '200m',
+      //   memory: '256Mi',
+      // },
+      // service: {
+      //   type: 'ClusterIP',
+      // },
+      // config: (importstr '_config/filer.toml'),
     },
   },
 }
