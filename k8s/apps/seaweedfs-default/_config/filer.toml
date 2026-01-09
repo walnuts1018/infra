@@ -7,6 +7,9 @@ keyspace = "seaweedfs"
 hosts = ["scylla-cluster-client.databases.svc.cluster.local:9142"]
 username = "seaweedfs"
 password = "{{ .scylladb_password }}"
+tls_ca_file = "/etc/seaweedfs/scylladb-ca/ca.crt"
+tls_client_crt_file = "/etc/seaweedfs/scylladb-client/tls.crt"
+tls_client_key_file = "/etc/seaweedfs/scylladb-client/tls.key"
 localDC = "iwakura"
 
 [filer.options]
