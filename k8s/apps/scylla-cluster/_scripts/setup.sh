@@ -6,7 +6,7 @@ MAX_RETRIES="${MAX_RETRIES:-60}" # 10分
 RETRY_INTERVAL="${RETRY_INTERVAL:-10}"
 ADMIN_CERTS_DIR="${ADMIN_CERTS_DIR:-/certs/admin}"
 CA_CERTS_DIR="${CA_CERTS_DIR:-/certs/ca}"
-KEYSPACES_CONFIG="${KEYSPACES_CONFIG:-/config/keyspaces.json}"
+KEYSPACES_SCHEMA="${KEYSPACES_SCHEMA:-/config/keyspaces.cql}"
 USERS_CONFIG="${USERS_CONFIG:-/config/users.json}"
 SCYLLA_ADMIN_USER="${SCYLLA_ADMIN_USER:-cassandra}"
 SCYLLA_ADMIN_PASSWORD="${SCYLLA_ADMIN_PASSWORD:-cassandra}"
@@ -81,37 +81,7 @@ create_keyspaces() {
     local cqlshrc="$1"
     
     log "info" "Creating keyspaces..."
-    
-    local keyspaces
-    keyspaces=$(cat "${KEYSPACES_CONFIG}")
-
-    echo "$keyspaces" | jq -c '.[]' | while read -r ks; do
-        local name
-        name=$(echo "$ks" | jq -r '.name')
-
-        local replication_class
-        replication_class=$(echo "$ks" | jq -r '.replication_class')
-        local replication_factor
-        for dc in $(echo "$ks" | jq -r '.replication_factor | keys[]'); do
-            local rf_value
-            rf_value=$(echo "$ks" | jq -r ".replication_factor.\"${dc}\"")
-            replication_factor+="'${dc}': ${rf_value}, "
-        done
-        replication_factor=${replication_factor%, } # 末尾のカンマとスペースを削除
-
-        local replication_opt
-        replication_opt="{'class': '${replication_class}', ${replication_factor}}"
-
-        local tablets
-        tablets="{'enabled': $(echo "$ks" | jq -r '.tablets.enabled // false')}"
-        
-        log "info" "Creating keyspace" "name" "${name}" "replication_class" "${replication_class}" "replication_factor" "${replication_factor}" "replication_opt" "${replication_opt}"
-        cqlsh --cqlshrc="${cqlshrc}" -e "
-            CREATE KEYSPACE IF NOT EXISTS ${name}
-            WITH replication = ${replication_opt}
-            AND tablets = ${tablets};"
-    done
-    
+    cqlsh --cqlshrc="${cqlshrc}" -f "${KEYSPACES_SCHEMA}"
     log "info" "Keyspaces created successfully!"
 }
 

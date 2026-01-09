@@ -7,5 +7,14 @@
     "keyspace_permissions": [
       "walnuk"
     ]
+  },
+  {
+    "username": "seaweedfs",
+    "password": "{{ .seaweedfs_password }}",
+    "superuser": false,
+    "login": true,
+    "keyspace_permissions": [
+      "seaweedfs"
+    ]
   }
 ]
