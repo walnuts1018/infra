@@ -2,7 +2,7 @@
   apiVersion: 'apps/v1',
   kind: 'StatefulSet',
   metadata: {
-    name: 'seaweedfs-default-filer',
+    name: 'seaweedfs-default-filer-manual',
     namespace: 'seaweedfs',
   },
   spec: {
