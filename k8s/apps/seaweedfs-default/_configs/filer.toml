@@ -1,7 +1,7 @@
 [leveldb2]
 enabled = false
 
-[cassandra]
+[cassandra2]
 enabled = true
 keyspace = "seaweedfs"
 hosts = ["scylla-cluster-client.databases.svc.cluster.local:9142"]
