@@ -78,8 +78,14 @@
       service: {
         type: 'ClusterIP',
       },
-      config: (importstr '_configs/filer.toml'),
+      config: '',
       volumes: [
+        {
+          name: 'filer-config-custom',
+          secret: {
+            secretName: (import 'external-secret-config.jsonnet').spec.target.name,
+          },
+        },
         {
           name: 'scylla-db-ca-cert',
           configMap: {
@@ -110,6 +116,11 @@
         },
       ],
       volumeMounts: [
+        {
+          mountPath: '/etc/seaweedfs',
+          name: 'filer-config-custom',
+          readOnly: true,
+        },
         {
           mountPath: '/etc/seaweedfs/scylladb-ca',
           name: 'scylla-db-ca-cert',
