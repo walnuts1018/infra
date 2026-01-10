@@ -4,7 +4,7 @@ enabled = false
 [cassandra2]
 enabled = true
 keyspace = "seaweedfs"
-hosts = ["scylla-cluster-client.databases.svc.cluster.local:9142"]
+hosts = ["scylla-cluster-client.databases.svc:9142"]
 username = "seaweedfs"
 password = "{{ .scylladb_password }}"
 tls_ca_file = "/etc/seaweedfs/scylladb-ca/ca.crt"
