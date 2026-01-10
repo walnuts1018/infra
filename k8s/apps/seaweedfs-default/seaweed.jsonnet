@@ -63,7 +63,7 @@
       },
     },
     filer: {
-      replicas: 0,
+      replicas: 2,
       s3: {
         enabled: true,
       },
