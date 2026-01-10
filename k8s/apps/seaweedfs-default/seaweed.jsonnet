@@ -64,21 +64,63 @@
     },
     filer: {
       replicas: 0,
-      // s3: {
-      //   enabled: true,
-      // },
-      // requests: {
-      //   cpu: '100m',
-      //   memory: '128Mi',
-      // },
-      // limits: {
-      //   cpu: '200m',
-      //   memory: '256Mi',
-      // },
-      // service: {
-      //   type: 'ClusterIP',
-      // },
-      // config: (importstr '_config/filer.toml'),
+      s3: {
+        enabled: true,
+      },
+      requests: {
+        cpu: '100m',
+        memory: '128Mi',
+      },
+      limits: {
+        cpu: '200m',
+        memory: '256Mi',
+      },
+      service: {
+        type: 'ClusterIP',
+      },
+      config: (importstr '_configs/filer.toml'),
+      volumes: [
+        {
+          name: 'scylla-db-ca-cert',
+          configMap: {
+            name: (import 'configmap-scylladb-ca.jsonnet').metadata.name,
+            items: [
+              {
+                key: 'ca.crt',
+                path: 'ca.crt',
+              },
+            ],
+          },
+        },
+        {
+          name: 'scylla-db-client-cert',
+          secret: {
+            secretName: 'scylla-cluster-local-client-ca',  // database namespaceから手動コピーしてるけどいい方法を考えないといけない
+            items: [
+              {
+                key: 'tls.crt',
+                path: 'tls.crt',
+              },
+              {
+                key: 'tls.key',
+                path: 'tls.key',
+              },
+            ],
+          },
+        },
+      ],
+      volumeMounts: [
+        {
+          mountPath: '/etc/seaweedfs/scylladb-ca',
+          name: 'scylla-db-ca-cert',
+          readOnly: true,
+        },
+        {
+          mountPath: '/etc/seaweedfs/scylladb-client',
+          name: 'scylla-db-client-cert',
+          readOnly: true,
+        },
+      ],
     },
   },
 }
