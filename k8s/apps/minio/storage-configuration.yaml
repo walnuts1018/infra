@@ -1,0 +1,35 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: minio-default-storage-config-3b8673
+  namespace: minio
+spec:
+  data:
+    - remoteRef:
+        key: minio
+        property: rootUser
+      secretKey: rootUser
+    - remoteRef:
+        key: minio
+        property: rootPassword
+      secretKey: rootPassword
+    - remoteRef:
+        key: minio
+        property: client-secret
+      secretKey: clientSecret
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: minio-default-storage-config-3b8673
+    template:
+      data:
+        config.env: |
+          export MINIO_ROOT_USER="{{ .rootUser }}"
+          export MINIO_ROOT_PASSWORD="{{ .rootPassword }}"
+          export MINIO_IDENTITY_OPENID_CLIENT_SECRET="{{ .clientSecret }}"
+          export MINIO_STORAGE_CLASS_STANDARD="EC:1"
+          export MINIO_STORAGE_CLASS_RRS="EC:0"
+      engineVersion: v2
+      type: Opaque

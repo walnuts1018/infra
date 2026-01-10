@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: openchokin-front
+    app.kubernetes.io/name: openchokin-front
+  name: openchokin-front
+  namespace: openchokin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openchokin-front
+      app.kubernetes.io/name: openchokin-front
+  template:
+    metadata:
+      labels:
+        app: openchokin-front
+        app.kubernetes.io/name: openchokin-front
+    spec:
+      containers:
+        - env:
+            - name: ZITADEL_URL
+              value: https://auth.walnuts.dev
+            - name: NEXTAUTH_URL
+              value: https://openchokin.walnuts.dev
+            - name: ZITADEL_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: zitade-client-id
+                  name: openchokin-5b8e1f
+            - name: ZITADEL_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: zitadel-client-secret
+                  name: openchokin-5b8e1f
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: nextauth-secret
+                  name: openchokin-5b8e1f
+            - name: REDIS_SENTINEL_HOST
+              value: openchokin-front-redis-sentinel
+            - name: REDIS_SENTINEL_PORT
+              value: "26379"
+            - name: REDIS_SENTINEL_NAME
+              value: mymaster
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redis-password
+                  name: openchokin-5b8e1f
+            - name: CACHE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: cache-password
+                  name: openchokin-5b8e1f
+          image: ghcr.io/walnuts1018/openchokin-front:v0.0.0-805921b42b330190ff496e2d810ec3846947162a-66
+          imagePullPolicy: IfNotPresent
+          name: openchokin-front
+          ports:
+            - containerPort: 3000
+          resources:
+            limits: {}
+            requests:
+              memory: 100Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
