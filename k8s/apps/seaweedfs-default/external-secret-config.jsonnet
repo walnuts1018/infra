@@ -1,5 +1,5 @@
 (import '../../components/external-secret.libsonnet') {
-  name: 'scylla-cluster-migrations',
+  name: (import 'app.json5').name + '-filer-config',
   namespace: (import 'app.json5').namespace,
   data: [
     {
