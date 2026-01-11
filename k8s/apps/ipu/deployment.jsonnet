@@ -87,7 +87,7 @@
               },
               {
                 name: 'AWS_ENDPOINT_URL_S3',
-                value: 'https://httptest.local.walnuts.dev',
+                value: 'https://seaweedfs.local.walnuts.dev',
               },
               {
                 name: 'AWS_REGION',
