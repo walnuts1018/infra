@@ -211,12 +211,7 @@
                         "Action": [
                             "sts:AssumeRoleWithWebIdentity"
                         ],
-                        "Condition": {
-                            "StringEquals": {
-                                "oidc:iss": "https://192.168.0.17:16443",
-                                "oidc:aud": "sts.seaweedfs.com"
-                            }
-                        }
+                        "Condition": {}
                     }
                 ]
             }
