@@ -105,9 +105,8 @@
                             "s3:List*"
                         ],
                         "Resource": [
-                            "ipu",
-                            "ipu/*",
-                            "*"
+                            "arn:aws:s3:::ipu",
+                            "arn:aws:s3:::ipu/*"
                         ]
                     }
                 ]
