@@ -11,7 +11,7 @@
             "type": "oidc",
             "enabled": true,
             "config": {
-                "issuer": "https://kubernetes.default.svc.cluster.local",
+                "issuer": "https://192.168.0.17:16443",
                 "clientId": "sts.seaweedfs.com",
                 "jwksUri": "https://kubernetes.default.svc/openid/v1/jwks",
                 "tlsCaCert": "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
@@ -186,7 +186,7 @@
                         ],
                         "Condition": {
                             "StringEquals": {
-                                "seaweed:Issuer": "https://kubernetes.default.svc.cluster.local"
+                                "seaweed:Issuer": "https://192.168.0.17:16443"
                             }
                         }
                     }
@@ -212,7 +212,7 @@
                         ],
                         "Condition": {
                             "StringEquals": {
-                                "seaweed:Issuer": "https://kubernetes.default.svc.cluster.local"
+                                "seaweed:Issuer": "https://192.168.0.17:16443"
                             }
                         }
                     }
