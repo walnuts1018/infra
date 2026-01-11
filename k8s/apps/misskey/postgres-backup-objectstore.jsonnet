@@ -36,7 +36,7 @@
         },
         {
           name: 'AWS_ROLE_ARN',
-          value: 'arn:aws:iam::dummy:role/ipu',
+          value: 'arn:aws:iam::role/misskey-postgres',
         },
       ],
     },
