@@ -11,6 +11,7 @@
     master: {
       replicas: 3,
       volumeSizeLimitMB: 1024,
+      defaultReplication: '001',
     },
     // TODO: volumeTopology使いたいけど、ServiceのSelectorがバグってる気がする
     volume: {
