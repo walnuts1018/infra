@@ -3,9 +3,119 @@
         "tokenDuration": "1h",
         "maxSessionLength": "12h",
         "issuer": "seaweedfs-sts",
-        "signingKey": "your-base64-encoded-signing-key"
+        "signingKey": "{{ .sts_signing_key }}"
     },
-    "providers": [],
-    "policies": [],
-    "roles": []
+    "providers": [
+        {
+            "name": "k8s",
+            "type": "oidc",
+            "enabled": true,
+            "config": {
+                "issuer": "https://kubernetes.default.svc.cluster.local",
+                "clientId": "sts.seaweedfs.com",
+                "jwksUri": "https://kubernetes.default.svc/openid/v1/jwks",
+                "tlsCaCert": "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+                "roleMapping": {
+                    "rules": [
+                        {
+                            "claim": "sub",
+                            "value": "system:serviceaccount:loki:loki",
+                            "role": "arn:aws:iam::role/loki"
+                        }
+                    ],
+                    "defaultRole": "arn:aws:iam::role/S3DenyAllRole"
+                }
+            }
+        }
+    ],
+    "policies": [
+        {
+            "name": "DenyAllPolicy",
+            "document": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Deny",
+                        "Action": [
+                            "s3:*"
+                        ],
+                        "Resource": [
+                            "*"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "loki",
+            "document": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                            "s3:*"
+                        ],
+                        "Resource": [
+                            "loki-admin",
+                            "loki-chunks",
+                            "loki-ruler",
+                            "loki-admin/*",
+                            "loki-chunks/*",
+                            "loki-ruler/*"
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "roles": [
+        {
+            "roleName": "S3DenyAllRole",
+            "roleArn": "arn:aws:iam::role/S3DenyAllRole",
+            "attachedPolicies": [
+                "DenyAllPolicy"
+            ],
+            "trustPolicy": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Federated": "*"
+                        },
+                        "Action": [
+                            "sts:AssumeRoleWithWebIdentity"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "roleName": "loki",
+            "roleArn": "arn:aws:iam::role/loki",
+            "attachedPolicies": [
+                "loki"
+            ],
+            "trustPolicy": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Federated": "*"
+                        },
+                        "Action": [
+                            "sts:AssumeRoleWithWebIdentity"
+                        ],
+                        "Condition": {
+                            "StringEquals": {
+                                "seaweed:Issuer": "https://kubernetes.default.svc.cluster.local"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
 }
