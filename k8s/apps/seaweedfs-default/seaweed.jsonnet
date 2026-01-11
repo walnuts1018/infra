@@ -13,12 +13,20 @@
       volumeSizeLimitMB: 1024,
       defaultReplication: '001',
       metricsPort: 9327,
+      requests: {
+        cpu: '10m',
+        memory: '50Mi',
+      },
+      limits: {
+        cpu: '1',
+        memory: '2Gi',
+      },
     },
     // TODO: volumeTopology使いたいけど、ServiceのSelectorがバグってる気がする
     volume: {
       replicas: 3,
       requests: {
-        cpu: '100m',
+        cpu: '10m',
         memory: '128Mi',
         storage: '2Gi',
       },
@@ -75,8 +83,8 @@
         },
       },
       requests: {
-        cpu: '100m',
-        memory: '128Mi',
+        cpu: '10m',
+        memory: '88Mi',
       },
       limits: {
         cpu: '200m',
