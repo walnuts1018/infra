@@ -83,15 +83,15 @@
               },
               {
                 name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-                value: '/var/run/secrets/sts.min.io/serviceaccount/token',
+                value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
               },
               {
                 name: 'AWS_ENDPOINT_URL_STS',
-                value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/minio',
+                value: 'https://seaweedfs.local.walnuts.dev',
               },
               {
                 name: 'AWS_ENDPOINT_URL_S3',
-                value: 'http://minio.minio.svc.cluster.local',
+                value: 'https://seaweedfs.local.walnuts.dev',
               },
               {
                 name: 'AWS_REGION',
@@ -137,14 +137,8 @@
             },
             volumeMounts: [
               {
-                name: 'minio-sts-token',
-                mountPath: '/var/run/secrets/sts.min.io/serviceaccount',
-                readOnly: true,
-              },
-              {
-                name: 'local-ca-bundle',
-                mountPath: '/etc/ssl/certs/trust-bundle.pem',
-                subPath: 'trust-bundle.pem',
+                name: 'seaweedfs-sts-token',
+                mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
                 readOnly: true,
               },
             ],
@@ -152,23 +146,17 @@
         ],
         volumes: [
           {
-            name: 'minio-sts-token',
+            name: 'seaweedfs-sts-token',
             projected: {
               sources: [
                 {
                   serviceAccountToken: {
-                    audience: 'sts.min.io',
+                    audience: 'sts.seaweedfs.com',
                     expirationSeconds: 86400,
                     path: 'token',
                   },
                 },
               ],
-            },
-          },
-          {
-            name: 'local-ca-bundle',
-            configMap: {
-              name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
             },
           },
         ],

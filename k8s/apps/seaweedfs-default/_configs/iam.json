@@ -21,6 +21,11 @@
                             "claim": "sub",
                             "value": "system:serviceaccount:loki:loki",
                             "role": "arn:aws:iam::role/loki"
+                        },
+                        {
+                            "claim": "sub",
+                            "value": "system:serviceaccount:ipu:ipu",
+                            "role": "arn:aws:iam::role/ipu"
                         }
                     ],
                     "defaultRole": "arn:aws:iam::role/S3DenyAllRole"
@@ -87,6 +92,25 @@
                     }
                 ]
             }
+        },
+        {
+            "name": "ipu",
+            "document": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                            "s3:Get*",
+                            "s3:List*"
+                        ],
+                        "Resource": [
+                            "ipu",
+                            "ipu/*"
+                        ]
+                    }
+                ]
+            }
         }
     ],
     "roles": [
@@ -107,6 +131,36 @@
                         "Action": [
                             "sts:AssumeRoleWithWebIdentity"
                         ]
+                    }
+                ]
+            }
+        },
+        {
+            "roleName": "TerraformCloud",
+            "roleArn": "arn:aws:iam::role/TerraformCloud",
+            "attachedPolicies": [
+                "AmazonS3FullAccess"
+            ],
+            "trustPolicy": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Federated": "*"
+                        },
+                        "Action": "sts:AssumeRoleWithWebIdentity",
+                        "Condition": {
+                            "StringEquals": {
+                                "seaweed:Issuer": "https://app.terraform.io",
+                                "app.terraform.io:aud": "aws.workload.identity"
+                            },
+                            "StringLike": {
+                                "app.terraform.io:sub": [
+                                    "organization:walnuts-dev:project:*:workspace:*:run_phase:*"
+                                ]
+                            }
+                        }
                     }
                 ]
             }
@@ -138,10 +192,10 @@
             }
         },
         {
-            "roleName": "TerraformCloud",
-            "roleArn": "arn:aws:iam::role/TerraformCloud",
+            "roleName": "ipu",
+            "roleArn": "arn:aws:iam::role/ipu",
             "attachedPolicies": [
-                "AmazonS3FullAccess"
+                "ipu"
             ],
             "trustPolicy": {
                 "Version": "2012-10-17",
@@ -151,16 +205,12 @@
                         "Principal": {
                             "Federated": "*"
                         },
-                        "Action": "sts:AssumeRoleWithWebIdentity",
+                        "Action": [
+                            "sts:AssumeRoleWithWebIdentity"
+                        ],
                         "Condition": {
                             "StringEquals": {
-                                "seaweed:Issuer": "https://app.terraform.io",
-                                "app.terraform.io:aud": "aws.workload.identity"
-                            },
-                            "StringLike": {
-                                "app.terraform.io:sub": [
-                                    "organization:walnuts-dev:project:*:workspace:*:run_phase:*"
-                                ]
+                                "seaweed:Issuer": "https://kubernetes.default.svc.cluster.local"
                             }
                         }
                     }
