@@ -26,6 +26,11 @@
                             "claim": "sub",
                             "value": "system:serviceaccount:ipu:ipu",
                             "role": "arn:aws:iam::role/ipu"
+                        },
+                        {
+                            "claim": "sub",
+                            "value": "system:serviceaccount:misskey:misskey-postgresql",
+                            "role": "arn:aws:iam::role/misskey-postgres"
                         }
                     ],
                     "defaultRole": "arn:aws:iam::role/S3DenyAllRole"
@@ -107,6 +112,24 @@
                         "Resource": [
                             "arn:aws:s3:::ipu",
                             "arn:aws:s3:::ipu/*"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "misskey-postgres",
+            "document": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                            "s3:*"
+                        ],
+                        "Resource": [
+                            "arn:aws:s3:::cloudnative-pg-backup",
+                            "arn:aws:s3:::cloudnative-pg-backup/*"
                         ]
                     }
                 ]
@@ -197,6 +220,32 @@
             "roleArn": "arn:aws:iam::role/ipu",
             "attachedPolicies": [
                 "ipu"
+            ],
+            "trustPolicy": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Federated": "*"
+                        },
+                        "Action": [
+                            "sts:AssumeRoleWithWebIdentity"
+                        ],
+                        "Condition": {
+                            "StringEquals": {
+                                "oidc:iss": "https://192.168.0.17:16443"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "roleName": "misskey-postgres",
+            "roleArn": "arn:aws:iam::role/misskey-postgres",
+            "attachedPolicies": [
+                "misskey-postgres"
             ],
             "trustPolicy": {
                 "Version": "2012-10-17",

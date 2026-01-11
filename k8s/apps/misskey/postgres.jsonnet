@@ -28,16 +28,16 @@
         },
       },
       // recovery: {
-      //   source: 'minio-backup',
+      //   source: 'seaweedfs-backup',
       // },
     },
     // externalClusters: [
     //   {
-    //     name: 'minio-backup',
+    //     name: 'seaweedfs-backup',
     //     plugin: {
     //       name: 'barman-cloud.cloudnative-pg.io',
     //       parameters: {
-    //         barmanObjectName: 'minio-store',
+    //         barmanObjectName: 'seaweedfs-store',
     //         serverName: (import 'app.json5').name + '-postgresql-backup2',
     //       },
     //     },
@@ -62,20 +62,9 @@
       sources: [
         {
           serviceAccountToken: {
-            audience: 'sts.min.io',
+            audience: 'sts.seaweedfs.com',
             expirationSeconds: 86400,
-            path: 'sts.min.io/serviceaccount/token',
-          },
-        },
-        {
-          configMap: {
-            name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
-            items: [
-              {
-                key: 'trust-bundle.pem',
-                path: 'certificate/trust-bundle.pem',
-              },
-            ],
+            path: 'sts.seaweedfs.com/serviceaccount/token',
           },
         },
       ],
