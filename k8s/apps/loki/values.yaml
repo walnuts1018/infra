@@ -44,14 +44,9 @@ loki:
     object_store:
       type: s3
       s3:
-        endpoint: "minio.minio.svc.cluster.local"
+        endpoint: "seaweedfs.walnuts.dev"
         region: ap-northeast-1
         storage_class: REDUCED_REDUNDANCY
-        insecure: true
-        http:
-          tls_ca_path: /etc/ssl/certs/trust-bundle.pem
-          insecure_skip_verify: true
-        sts_endpoint: "https://sts.minio-operator.svc.cluster.local:4223/sts/minio"
         bucket_lookup_type: path
   storage_config:
     use_thanos_objstore: true
@@ -103,28 +98,28 @@ loki:
 global:
   extraEnv:
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
-    value: /var/run/secrets/sts.min.io/serviceaccount/token
+    value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
   - name: AWS_ROLE_ARN
-    value: arn:aws:iam::dummy:role/loki-minio-role
+    value: arn:aws:iam::role/loki
   # - name: REDIS_PASSWORD
   #   valueFrom:
   #     secretKeyRef:
   #       name: loki
   #       key: redispassword
   extraVolumes:
-  - name: minio-sts-token
+  - name: seaweedfs-sts-token
     projected:
       sources:
       - serviceAccountToken:
-          audience: sts.min.io
+          audience: sts.seaweedfs.com
           expirationSeconds: 3600
           path: token
   - name: local-ca-bundle
     configMap:
       name: local-ca-bundle
   extraVolumeMounts:
-  - name: minio-sts-token
-    mountPath: /var/run/secrets/sts.min.io/serviceaccount
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
     readOnly: true
   - name: local-ca-bundle
     mountPath: /etc/ssl/certs/trust-bundle.pem
