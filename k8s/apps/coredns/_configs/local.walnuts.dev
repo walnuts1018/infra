@@ -4,3 +4,4 @@
 192.168.0.138 sts-minio.local.walnuts.dev
 192.168.0.158 shutdown-manager.local.walnuts.dev
 192.168.0.138 kurumi.local.walnuts.dev
+192.168.0.138 seaweedfs.local.walnuts.dev
