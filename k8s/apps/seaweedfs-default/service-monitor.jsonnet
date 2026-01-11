@@ -24,8 +24,16 @@
       },
       endpoints: [
         {
-          targetPort: 9327,
+          port: component + '-http',
           path: '/metrics',
+          relabelings: [
+            {
+              sourceLabels: ['__address__'],
+              targetLabel: '__address__',
+              regex: '([^:]+)(?::\\d+)?',
+              replacement: '${1}:9327',
+            },
+          ],
         },
       ],
     },
