@@ -95,7 +95,7 @@
               },
               {
                 name: 'AWS_ROLE_ARN',
-                value: 'arn:aws:iam::dummy:role/ipu',
+                value: 'arn:aws:iam::role/ipu',
               },
               {
                 name: 'S3_USE_PATH_STYLE',
