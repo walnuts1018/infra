@@ -21,7 +21,7 @@
           {
             kind: 'Service',
             name: 'seaweedfs-default-filer',
-            port: 'filer-s3',
+            port: '8333',
             weight: 1,
           },
         ],
