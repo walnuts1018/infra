@@ -12,5 +12,6 @@
   ],
   template_data: {
     'filer.toml': (importstr '_configs/filer.toml'),
+    'iam.json': (importstr '_configs/iam.json'),
   },
 }

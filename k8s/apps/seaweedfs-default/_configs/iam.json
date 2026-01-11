@@ -1,0 +1,11 @@
+{
+    "sts": {
+        "tokenDuration": "1h",
+        "maxSessionLength": "12h",
+        "issuer": "seaweedfs-sts",
+        "signingKey": "your-base64-encoded-signing-key"
+    },
+    "providers": [],
+    "policies": [],
+    "roles": []
+}

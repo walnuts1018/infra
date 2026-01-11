@@ -79,6 +79,7 @@
         type: 'ClusterIP',
       },
       config: '',
+      extraArgs: ['-iam.config=/etc/seaweedfs/iam.json'],
       volumes: [
         {
           name: 'filer-config-custom',
