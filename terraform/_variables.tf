@@ -17,3 +17,12 @@ variable "oci_private_key" {
   type      = string
   sensitive = true
 }
+
+locals {
+  seaweedfs_access_key = "terraform"
+}
+
+variable "seaweedfs_secret_key" {
+  type      = string
+  sensitive = true
+}
