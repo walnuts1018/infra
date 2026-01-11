@@ -149,7 +149,9 @@
                         "Principal": {
                             "Federated": "*"
                         },
-                        "Action": "sts:AssumeRoleWithWebIdentity",
+                        "Action": [
+                            "sts:AssumeRoleWithWebIdentity"
+                        ],
                         "Condition": {
                             "StringEquals": {
                                 "seaweed:Issuer": "https://app.terraform.io",
