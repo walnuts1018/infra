@@ -78,10 +78,6 @@
                 value: 'ipu',
               },
               {
-                name: 'AWS_CA_BUNDLE',
-                value: '/etc/ssl/certs/trust-bundle.pem',
-              },
-              {
                 name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
                 value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
               },
