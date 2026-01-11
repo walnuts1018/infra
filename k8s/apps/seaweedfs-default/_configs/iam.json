@@ -102,8 +102,7 @@
                         "Effect": "Allow",
                         "Action": [
                             "s3:Get*",
-                            "s3:List*",
-                            "s3:*"
+                            "s3:List*"
                         ],
                         "Resource": [
                             "ipu",
