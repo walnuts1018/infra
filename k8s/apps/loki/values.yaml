@@ -44,10 +44,12 @@ loki:
     object_store:
       type: s3
       s3:
-        endpoint: "seaweedfs.walnuts.dev"
-        region: ap-northeast-1
+        endpoint: "seaweedfs.local.walnuts.dev"
+        # sts_endpoint: "https://seaweedfs.local.walnuts.dev"
+        region: us-east-1
         storage_class: REDUCED_REDUNDANCY
         bucket_lookup_type: path
+
   storage_config:
     use_thanos_objstore: true
   server:
