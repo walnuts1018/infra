@@ -213,8 +213,7 @@
                         ],
                         "Condition": {
                             "StringEquals": {
-                                "iss": "https://192.168.0.17:16443",
-                                "aud": "sts.seaweedfs.com"
+                                "iss": "https://192.168.0.17:16443"
                             }
                         }
                     }
