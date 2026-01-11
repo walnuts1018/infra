@@ -3,7 +3,7 @@
         "tokenDuration": "1h",
         "maxSessionLength": "12h",
         "issuer": "seaweedfs-sts",
-        "signingKey": "{{ .sts_signing_key }}"
+        "signingKey": "{{ .sts_signing_key | b64enc }}"
     },
     "providers": [
         {

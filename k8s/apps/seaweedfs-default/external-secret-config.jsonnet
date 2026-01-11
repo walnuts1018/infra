@@ -9,6 +9,13 @@
         property: 'seaweedfs',
       },
     },
+    {
+      secretKey: 'sts_signing_key',
+      remoteRef: {
+        key: 'seaweedfs',
+        property: 'sts_signing_key',
+      },
+    },
   ],
   template_data: {
     'filer.toml': (importstr '_configs/filer.toml'),
