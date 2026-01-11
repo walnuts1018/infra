@@ -66,6 +66,10 @@
       replicas: 2,
       s3: {
         enabled: true,
+        configSecret: {
+          name: (import 'external-secret-config.jsonnet').spec.target.name,
+          key: 'seaweedfs_s3_config.json',
+        },
       },
       requests: {
         cpu: '100m',

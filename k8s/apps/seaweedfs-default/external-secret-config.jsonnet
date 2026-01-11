@@ -16,9 +16,17 @@
         property: 'sts_signing_key',
       },
     },
+    {
+      secretKey: 'terraform_secretkey',
+      remoteRef: {
+        key: 'seaweedfs',
+        property: 'terraform_secretkey',
+      },
+    },
   ],
   template_data: {
     'filer.toml': (importstr '_configs/filer.toml'),
     'iam.json': (importstr '_configs/iam.json'),
+    'seaweedfs_s3_config.json': (importstr '_configs/seaweedfs_s3_config.json'),
   },
 }
