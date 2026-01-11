@@ -82,12 +82,12 @@
                             "s3:*"
                         ],
                         "Resource": [
-                            "loki-admin",
-                            "loki-chunks",
-                            "loki-ruler",
-                            "loki-admin/*",
-                            "loki-chunks/*",
-                            "loki-ruler/*"
+                            "arn:aws:s3:::loki-admin",
+                            "arn:aws:s3:::loki-chunks",
+                            "arn:aws:s3:::loki-ruler",
+                            "arn:aws:s3:::loki-admin/*",
+                            "arn:aws:s3:::loki-chunks/*",
+                            "arn:aws:s3:::loki-ruler/*"
                         ]
                     }
                 ]
