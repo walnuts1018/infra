@@ -45,7 +45,7 @@ loki:
       type: s3
       s3:
         endpoint: "seaweedfs.local.walnuts.dev"
-        # sts_endpoint: "https://seaweedfs.local.walnuts.dev"
+        sts_endpoint: "https://seaweedfs.local.walnuts.dev"
         region: us-east-1
         storage_class: REDUCED_REDUNDANCY
         bucket_lookup_type: path
