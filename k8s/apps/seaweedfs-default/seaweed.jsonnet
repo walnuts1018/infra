@@ -83,7 +83,7 @@
         type: 'ClusterIP',
       },
       config: '',
-      extraArgs: ['-s3.iam.config=/etc/seaweedfs/iam.json', '-v=4'],
+      extraArgs: ['-s3.iam.config=/etc/seaweedfs/iam.json'],
       volumes: [
         {
           name: 'filer-config-custom',
