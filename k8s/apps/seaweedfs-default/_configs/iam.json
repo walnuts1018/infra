@@ -154,11 +154,11 @@
                         ],
                         "Condition": {
                             "StringEquals": {
-                                "seaweed:Issuer": "https://app.terraform.io",
-                                "app.terraform.io:aud": "aws.workload.identity"
+                                "oidc:iss": "https://192.168.0.17:16443",
+                                "oidc:aud": "aws.workload.identity"
                             },
                             "StringLike": {
-                                "app.terraform.io:sub": [
+                                "oidc:sub": [
                                     "organization:walnuts-dev:project:*:workspace:*:run_phase:*"
                                 ]
                             }
@@ -186,7 +186,8 @@
                         ],
                         "Condition": {
                             "StringEquals": {
-                                "seaweed:Issuer": "https://192.168.0.17:16443"
+                                "oidc:iss": "https://192.168.0.17:16443",
+                                "oidc:aud": "sts.seaweedfs.com"
                             }
                         }
                     }
@@ -212,7 +213,8 @@
                         ],
                         "Condition": {
                             "StringEquals": {
-                                "seaweed:Issuer": "https://192.168.0.17:16443"
+                                "oidc:iss": "https://192.168.0.17:16443",
+                                "oidc:aud": "sts.seaweedfs.com"
                             }
                         }
                     }
