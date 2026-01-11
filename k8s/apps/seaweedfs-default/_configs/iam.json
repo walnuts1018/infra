@@ -26,6 +26,26 @@
                     "defaultRole": "arn:aws:iam::role/S3DenyAllRole"
                 }
             }
+        },
+        {
+            "name": "terraform_cloud",
+            "type": "oidc",
+            "enabled": true,
+            "config": {
+                "issuer": "https://app.terraform.io",
+                "clientId": "aws.workload.identity",
+                "jwksUri": "https://app.terraform.io/.well-known/jwks",
+                "roleMapping": {
+                    "rules": [
+                        {
+                            "claim": "aud",
+                            "value": "aws.workload.identity",
+                            "role": "arn:aws:iam::role/TerraformCloud"
+                        }
+                    ],
+                    "defaultRole": "arn:aws:iam::role/S3DenyAllRole"
+                }
+            }
         }
     ],
     "policies": [
@@ -111,6 +131,36 @@
                         "Condition": {
                             "StringEquals": {
                                 "seaweed:Issuer": "https://kubernetes.default.svc.cluster.local"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "roleName": "TerraformCloud",
+            "roleArn": "arn:aws:iam::role/TerraformCloud",
+            "attachedPolicies": [
+                "AmazonS3FullAccess"
+            ],
+            "trustPolicy": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Federated": "*"
+                        },
+                        "Action": "sts:AssumeRoleWithWebIdentity",
+                        "Condition": {
+                            "StringEquals": {
+                                "seaweed:Issuer": "https://app.terraform.io",
+                                "app.terraform.io:aud": "aws.workload.identity"
+                            },
+                            "StringLike": {
+                                "app.terraform.io:sub": [
+                                    "organization:walnuts-dev:project:*:workspace:*:run_phase:*"
+                                ]
                             }
                         }
                     }
