@@ -12,7 +12,7 @@
       replicas: 3,
       volumeSizeLimitMB: 1024,
       defaultReplication: '001',
-      extraArgs: ['-metricsPort=9327'],
+      extraArgs: ['-metricsIp=0.0.0.0', '-metricsPort=9327'],
     },
     // TODO: volumeTopology使いたいけど、ServiceのSelectorがバグってる気がする
     volume: {
@@ -27,7 +27,7 @@
         memory: '2Gi',
       },
       storageClassName: 'local-path',
-      extraArgs: ['-metricsPort=9327'],
+      extraArgs: ['-metricsIp=0.0.0.0', '-metricsPort=9327'],
       affinity: {
         local labels = {
           'app.kubernetes.io/component': 'volume',
@@ -86,7 +86,7 @@
         type: 'ClusterIP',
       },
       config: '',
-      extraArgs: ['-s3.iam.config=/etc/seaweedfs/iam.json', '-metricsPort=9327'],
+      extraArgs: ['-s3.iam.config=/etc/seaweedfs/iam.json', '-metricsIp=0.0.0.0', '-metricsPort=9327'],
       volumes: [
         {
           name: 'filer-config-custom',
