@@ -36,6 +36,11 @@
                             "claim": "sub",
                             "value": "system:serviceaccount:databases:postgresql-default",
                             "role": "arn:aws:iam::role/cloudnative-pg-backup"
+                        },
+                        {
+                            "claim": "sub",
+                            "value": "system:serviceaccount:tempo:tempo",
+                            "role": "arn:aws:iam::role/tempo"
                         }
                     ],
                     "defaultRole": "arn:aws:iam::role/S3DenyAllRole"
@@ -135,6 +140,24 @@
                         "Resource": [
                             "arn:aws:s3:::cloudnative-pg-backup",
                             "arn:aws:s3:::cloudnative-pg-backup/*"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "tempo",
+            "document": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                            "s3:*"
+                        ],
+                        "Resource": [
+                            "arn:aws:s3:::tempo",
+                            "arn:aws:s3::/tempo/*"
                         ]
                     }
                 ]
@@ -251,6 +274,32 @@
             "roleArn": "arn:aws:iam::role/cloudnative-pg-backup",
             "attachedPolicies": [
                 "cloudnative-pg-backup"
+            ],
+            "trustPolicy": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Federated": "*"
+                        },
+                        "Action": [
+                            "sts:AssumeRoleWithWebIdentity"
+                        ],
+                        "Condition": {
+                            "StringEquals": {
+                                "oidc:iss": "https://192.168.0.17:16443"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "roleName": "tempo",
+            "roleArn": "arn:aws:iam::role/tempo",
+            "attachedPolicies": [
+                "tempo"
             ],
             "trustPolicy": {
                 "Version": "2012-10-17",
