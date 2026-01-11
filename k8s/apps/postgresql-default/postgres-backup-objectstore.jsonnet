@@ -2,13 +2,13 @@
   apiVersion: 'barmancloud.cnpg.io/v1',
   kind: 'ObjectStore',
   metadata: {
-    name: 'minio-store',
+    name: 'seaweedfs-store',
     namespace: (import 'app.json5').namespace,
   },
   spec: {
     configuration: {
       destinationPath: 's3://cloudnative-pg-backup/',
-      endpointURL: 'http://minio.minio.svc.cluster.local',
+      endpointURL: 'https://seaweedfs.local.walnuts.dev',
       s3Credentials: {
         inheritFromIAMRole: true,
       },
@@ -23,24 +23,20 @@
     instanceSidecarConfiguration: {
       env: [
         {
-          name: 'AWS_CA_BUNDLE',
-          value: '/projected/certificate/trust-bundle.pem',
-        },
-        {
           name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-          value: '/projected/sts.min.io/serviceaccount/token',
+          value: '/projected/sts.seaweedfs.com/serviceaccount/token',
         },
         {
           name: 'AWS_ENDPOINT_URL_STS',
-          value: 'https://sts.minio-operator.svc.cluster.local:4223/sts/minio',
+          value: 'https://seaweedfs.local.walnuts.dev',
         },
         {
           name: 'AWS_REGION',
-          value: 'ap-northeast-1',
+          value: 'us-east-1',
         },
         {
           name: 'AWS_ROLE_ARN',
-          value: 'arn:aws:iam::dummy:role/postgres-backup',
+          value: 'arn:aws:iam::role/cloudnative-pg-backup',
         },
       ],
     },

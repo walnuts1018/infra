@@ -30,7 +30,12 @@
                         {
                             "claim": "sub",
                             "value": "system:serviceaccount:misskey:misskey-postgresql",
-                            "role": "arn:aws:iam::role/misskey-postgres"
+                            "role": "arn:aws:iam::role/cloudnative-pg-backup"
+                        },
+                        {
+                            "claim": "sub",
+                            "value": "system:serviceaccount:databases:postgresql-default",
+                            "role": "arn:aws:iam::role/cloudnative-pg-backup"
                         }
                     ],
                     "defaultRole": "arn:aws:iam::role/S3DenyAllRole"
@@ -118,7 +123,7 @@
             }
         },
         {
-            "name": "misskey-postgres",
+            "name": "cloudnative-pg-backup",
             "document": {
                 "Version": "2012-10-17",
                 "Statement": [
@@ -242,10 +247,10 @@
             }
         },
         {
-            "roleName": "misskey-postgres",
-            "roleArn": "arn:aws:iam::role/misskey-postgres",
+            "roleName": "cloudnative-pg-backup",
+            "roleArn": "arn:aws:iam::role/cloudnative-pg-backup",
             "attachedPolicies": [
-                "misskey-postgres"
+                "cloudnative-pg-backup"
             ],
             "trustPolicy": {
                 "Version": "2012-10-17",

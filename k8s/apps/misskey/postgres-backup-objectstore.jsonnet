@@ -36,7 +36,7 @@
         },
         {
           name: 'AWS_ROLE_ARN',
-          value: 'arn:aws:iam::role/misskey-postgres',
+          value: 'arn:aws:iam::role/cloudnative-pg-backup',
         },
       ],
     },
