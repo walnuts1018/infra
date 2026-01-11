@@ -91,7 +91,7 @@
               },
               {
                 name: 'AWS_REGION',
-                value: 'ap-northeast-1',
+                value: 'us-east-1',
               },
               {
                 name: 'AWS_ROLE_ARN',
