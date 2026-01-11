@@ -101,6 +101,10 @@
                 name: 'S3_USE_PATH_STYLE',
                 value: 'true',
               },
+              {
+                name: 'LOG_LEVEL',
+                value: 'debug',
+              },
             ],
             ports: [
               {
