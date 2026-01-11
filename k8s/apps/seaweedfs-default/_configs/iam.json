@@ -154,8 +154,7 @@
                         ],
                         "Condition": {
                             "StringEquals": {
-                                "oidc:iss": "https://192.168.0.17:16443",
-                                "oidc:aud": "aws.workload.identity"
+                                "oidc:iss": "https://app.terraform.io"
                             },
                             "StringLike": {
                                 "oidc:sub": [
@@ -186,8 +185,7 @@
                         ],
                         "Condition": {
                             "StringEquals": {
-                                "oidc:iss": "https://192.168.0.17:16443",
-                                "oidc:aud": "sts.seaweedfs.com"
+                                "oidc:iss": "https://192.168.0.17:16443"
                             }
                         }
                     }
@@ -213,7 +211,7 @@
                         ],
                         "Condition": {
                             "StringEquals": {
-                                "iss": "https://192.168.0.17:16443"
+                                "oidc:iss": "https://192.168.0.17:16443"
                             }
                         }
                     }
