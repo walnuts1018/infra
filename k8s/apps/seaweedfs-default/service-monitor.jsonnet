@@ -23,15 +23,16 @@
         ],
       },
       endpoints: [
+        // Operatorによって作られるServiceにMetricPortが定義されていないので、以下のようにして頑張る
         {
-          port: component + '-http',
+          port: component + '-http',  // PodIPを見つけるために、Serviceで定義されているPortの中から適当なものを指定する。このPortからスクレイピングするわけではない
           path: '/metrics',
           relabelings: [
             {
               sourceLabels: ['__address__'],
               targetLabel: '__address__',
               regex: '([^:]+)(?::\\d+)?',
-              replacement: '${1}:9327',
+              replacement: '${1}:9327',  // Relabelingの中でPortを固定値に書き換える
             },
           ],
         },
