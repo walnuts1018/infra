@@ -24,7 +24,7 @@
       },
       endpoints: [
         {
-          port: 9327,
+          targetPort: 9327,
           path: '/metrics',
         },
       ],
