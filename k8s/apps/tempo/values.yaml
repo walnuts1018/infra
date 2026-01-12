@@ -1,20 +1,4 @@
-tempo:
-  resources:
-    requests:
-      cpu: 5m
-      memory: 256Mi
-    limits:
-      memory: 4Gi
-  storage:
-    trace:
-      backend: s3
-      s3:
-        bucket: tempo
-        endpoint: "seaweedfs.local.walnuts.dev"
-        region: us-east-1
-        forcepathstyle: true
-  # server:
-  #   log_level: debug
+global:
   extraArgs:
     "-config.expand-env": true
   extraEnv:
@@ -25,17 +9,184 @@ tempo:
     value: https://seaweedfs.local.walnuts.dev
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::role/tempo
+  storageClass: longhorn
+multitenancyEnabled: false
+
+ingester:
+  replicas: 3
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 2Gi
+      cpu: 1000m
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
     readOnly: true
-extraVolumes:
-- name: seaweedfs-sts-token
-  projected:
-    sources:
-    - serviceAccountToken:
-        audience: sts.seaweedfs.com
-        expirationSeconds: 3600
-        path: token
-serviceMonitor:
+  extraVolumes:
+  - name: seaweedfs-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 3600
+          path: token
+  persistence:
+    enabled: true
+    size: 10Gi
+  config:
+    replication_factor: 3
+
+metricsGenerator:
+  enabled: false
+
+distributor:
+  replicas: 1
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: null
+    targetMemoryUtilizationPercentage: 100
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 2Gi
+      cpu: 1000m
+
+compactor:
+  replicas: 1
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    hpa:
+      enabled: true
+      targetCPUUtilizationPercentage: null
+      targetMemoryUtilizationPercentage: 100
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 2Gi
+      cpu: 1000m
+  extraVolumeMounts:
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+    readOnly: true
+  extraVolumes:
+  - name: seaweedfs-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 3600
+          path: token
+
+querier:
+  replicas: 1
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: null
+    targetMemoryUtilizationPercentage: 100
+  extraVolumeMounts:
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+    readOnly: true
+  extraVolumes:
+  - name: seaweedfs-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 3600
+          path: token
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 2Gi
+      cpu: 1000m
+
+queryFrontend:
+  replicas: 1
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: null
+    targetMemoryUtilizationPercentage: 100
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 2Gi
+      cpu: 1000m
+
+traces:
+  otlp:
+    http:
+      enabled: true
+    grpc:
+      enabled: true
+
+server:
+  logLevel: info
+  logFormat: logfmt
+
+cache:
+  caches:
+  - redis:
+      endpoint: "tempo-redis-leader.tempo.svc.cluster.local:6379,tempo-redis-leader.tempo.svc.cluster.local:6379"
+      tls-enabled: true
+      tls-insecure-skip-verify: true
+    roles:
+    - parquet-footer
+    - bloom
+    - frontend-search
+
+storage:
+  trace:
+    backend: s3
+    s3:
+      bucket: tempo
+      endpoint: "seaweedfs.local.walnuts.dev"
+      region: us-east-1
+      forcepathstyle: true
+
+memcached:
+  enabled: false
+
+metaMonitoring:
+  serviceMonitor:
+    enabled: true
+
+gateway:
   enabled: true
+  replicas: 1
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: null
+    targetMemoryUtilizationPercentage: 100
+  verboseLogging: true
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 2Gi
+      cpu: 1000m
+
+provisioner:
+  enabled: false

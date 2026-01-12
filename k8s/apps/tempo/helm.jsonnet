@@ -2,8 +2,8 @@
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
 
-  chart: 'tempo',
+  chart: 'tempo-distributed',
   repoURL: 'https://grafana.github.io/helm-charts',
-  targetRevision: '1.24.1',
+  targetRevision: '1.59.0',
   values: (importstr 'values.yaml'),
 }
