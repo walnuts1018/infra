@@ -159,7 +159,8 @@
                             "s3:DeleteObject",
                             "s3:GetObjectTagging",
                             "s3:PutObjectTagging",
-                            "s3:AbortMultipartUpload"
+                            "s3:AbortMultipartUpload",
+                            "s3:ListBucketMultipartUploads"
                         ],
                         "Resource": [
                             "arn:aws:s3:::tempo",
