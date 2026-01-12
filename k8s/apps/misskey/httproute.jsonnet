@@ -21,47 +21,6 @@
           {
             path: {
               type: 'PathPrefix',
-              value: '/files',
-            },
-          },
-        ],
-        filters: [
-          {
-            type: 'URLRewrite',
-            urlRewrite: {
-              path: {
-                type: 'ReplacePrefixMatch',
-                replacePrefixMatch: '/misskey/files',
-              },
-            },
-          },
-          {
-            type: 'RequestHeaderModifier',
-            requestHeaderModifier: {
-              add: [
-                {
-                  name: 'X-Forwarded-Prefix',
-                  value: '/files',
-                },
-              ],
-            },
-          },
-        ],
-        backendRefs: [
-          {
-            kind: 'Service',
-            name: (import '../seaweedfs-default/seaweed.jsonnet').metadata.name + '-filer',
-            namespace: (import '../seaweedfs-default/seaweed.jsonnet').metadata.namespace,
-            port: 8333,
-            weight: 1,
-          },
-        ],
-      },
-      {
-        matches: [
-          {
-            path: {
-              type: 'PathPrefix',
               value: '/',
             },
           },
