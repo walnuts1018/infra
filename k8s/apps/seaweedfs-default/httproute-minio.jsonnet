@@ -30,7 +30,7 @@
             type: 'RequestRedirect',
             requestRedirect: {
               scheme: 'https',
-              statusCode: 301,
+              statusCode: 308,
               hostname: 'seaweedfs.walnuts.dev',
             },
           },
