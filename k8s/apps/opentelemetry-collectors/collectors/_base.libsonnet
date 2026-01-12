@@ -33,7 +33,7 @@ function(
           },
         },
         'otlp/tempo': {
-          endpoint: 'tempo.tempo.svc.clusterset.local:4317',
+          endpoint: 'tempo-gateway.tempo.svc.clusterset.local:4317',
           tls: {
             insecure: true,
           },
