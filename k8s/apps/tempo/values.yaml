@@ -1,6 +1,6 @@
 global:
   extraArgs:
-    "-config.expand-env": true
+  - "-config.expand-env"
   extraEnv:
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
     value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
