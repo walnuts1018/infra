@@ -82,11 +82,11 @@ compactor:
       targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 3m
-      memory: 30Mi
+      cpu: 120m
+      memory: 512Mi
     limits:
-      cpu: 500m
-      memory: 1Gi
+      cpu: "1"
+      memory: 2Gi
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
