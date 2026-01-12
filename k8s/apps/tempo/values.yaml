@@ -43,7 +43,7 @@ metricsGenerator:
   enabled: false
 
 distributor:
-  replicas: 1
+  replicas: 2
   autoscaling:
     enabled: true
     minReplicas: 1
@@ -71,7 +71,7 @@ distributor:
           path: token
 
 compactor:
-  replicas: 1
+  replicas: 2
   autoscaling:
     enabled: true
     minReplicas: 1
@@ -101,7 +101,7 @@ compactor:
           path: token
 
 querier:
-  replicas: 1
+  replicas: 2
   autoscaling:
     enabled: true
     minReplicas: 1
@@ -129,7 +129,7 @@ querier:
       cpu: 1000m
 
 queryFrontend:
-  replicas: 1
+  replicas: 2
   autoscaling:
     enabled: true
     minReplicas: 1
@@ -197,7 +197,7 @@ metaMonitoring:
 
 gateway:
   enabled: true
-  replicas: 1
+  replicas: 2
   autoscaling:
     enabled: true
     minReplicas: 1
