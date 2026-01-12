@@ -23,6 +23,7 @@ tempo:
   extraEnv:
   - name: AWS_WEB_IDENTITY_TOKEN_FILE
     value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+  # https://github.com/grafana/tempo/blob/47b3f3900de1b69b58bae14d8486d70f2fcee394/tempodb/backend/s3/s3.go#L702
   - name: TEST_IAM_ENDPOINT
     value: https://seaweedfs.local.walnuts.dev
   - name: AWS_ROLE_ARN
