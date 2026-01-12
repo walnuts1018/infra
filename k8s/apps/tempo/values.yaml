@@ -21,9 +21,9 @@ tempo:
   extraArgs:
     "-config.expand-env": true
   extraEnv:
-  - name: MC_WEB_IDENTITY_TOKEN
+  - name: AWS_WEB_IDENTITY_TOKEN_FILE
     value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
-  - name: MC_STS_ENDPOINT
+  - name: TEST_IAM_ENDPOINT
     value: https://seaweedfs.local.walnuts.dev
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::role/tempo
