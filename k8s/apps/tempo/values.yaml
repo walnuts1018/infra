@@ -122,8 +122,8 @@ querier:
           path: token
   resources:
     requests:
-      cpu: 3m
-      memory: 50Mi
+      cpu: 4m
+      memory: 64Mi
     limits:
       cpu: 500m
       memory: 512Mi
