@@ -16,7 +16,7 @@ ingester:
   replicas: 3
   resources:
     requests:
-      cpu: 4m
+      cpu: 3m
       memory: 40Mi
     limits:
       memory: 2Gi
@@ -52,7 +52,7 @@ distributor:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 4m
+      cpu: 3m
       memory: 40Mi
     limits:
       memory: 2Gi
@@ -82,7 +82,7 @@ compactor:
       targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 4m
+      cpu: 3m
       memory: 40Mi
     limits:
       memory: 2Gi
@@ -122,7 +122,7 @@ querier:
           path: token
   resources:
     requests:
-      cpu: 4m
+      cpu: 3m
       memory: 40Mi
     limits:
       memory: 2Gi
@@ -138,7 +138,7 @@ queryFrontend:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 4m
+      cpu: 3m
       memory: 40Mi
     limits:
       memory: 2Gi
@@ -207,7 +207,7 @@ gateway:
   verboseLogging: true
   resources:
     requests:
-      cpu: 4m
+      cpu: 3m
       memory: 40Mi
     limits:
       memory: 2Gi
