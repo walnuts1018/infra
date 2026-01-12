@@ -26,6 +26,21 @@
                     "secretKey": "{{ .misskey_secretkey }}"
                 }
             ]
+        },
+        {
+            "name": "oekaki_dengon_game",
+            "actions": [
+                "Read:oekaki-dengon-game",
+                "Write:oekaki-dengon-game",
+                "List:oekaki-dengon-game",
+                "Tagging:oekaki-dengon-game"
+            ],
+            "credentials": [
+                {
+                    "accessKey": "oekaki_dengon_game",
+                    "secretKey": "{{ .oekaki_dengon_game_secretkey }}"
+                }
+            ]
         }
     ]
 }

@@ -80,16 +80,11 @@
               },
               {
                 name: 'MINIO_ENDPOINT',
-                value: 'minio.walnuts.dev',
+                value: 'seaweedfs.walnuts.dev',
               },
               {
                 name: 'MINIO_ACCESS_KEY',
-                valueFrom: {
-                  secretKeyRef: {
-                    name: (import '../external-secret.jsonnet').spec.target.name,
-                    key: 'minio-access-key',
-                  },
-                },
+                value: 'oekaki_dengon_game',
               },
               {
                 name: 'MINIO_SECRET_KEY',

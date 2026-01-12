@@ -30,6 +30,13 @@
         property: 'misskey_secretkey',
       },
     },
+    {
+      secretKey: 'oekaki_dengon_game_secretkey',
+      remoteRef: {
+        key: 'seaweedfs',
+        property: 'oekaki_dengon_game_secretkey',
+      },
+    },
   ],
   template_data: {
     'filer.toml': (importstr '_configs/filer.toml'),

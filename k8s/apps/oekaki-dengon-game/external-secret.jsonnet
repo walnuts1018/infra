@@ -16,17 +16,10 @@
       },
     },
     {
-      secretKey: 'minio-access-key',
-      remoteRef: {
-        key: 'oekaki-dengon-game',
-        property: 'minio-access-key',
-      },
-    },
-    {
       secretKey: 'minio-secret-key',
       remoteRef: {
-        key: 'oekaki-dengon-game',
-        property: 'minio-secret-key',
+        key: 'seaweedfs',
+        property: 'oekaki_dengon_game_secretkey',
       },
     },
   ],
