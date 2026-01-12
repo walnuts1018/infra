@@ -87,8 +87,8 @@
         memory: '88Mi',
       },
       limits: {
-        cpu: '200m',
-        memory: '256Mi',
+        cpu: '1',
+        memory: '2Gi',
       },
       service: {
         type: 'ClusterIP',
