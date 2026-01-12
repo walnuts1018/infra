@@ -15,7 +15,7 @@
       metricsPort: 9327,
       requests: {
         cpu: '10m',
-        memory: '50Mi',
+        memory: '40Mi',
       },
       limits: {
         cpu: '1',
@@ -27,7 +27,7 @@
       replicas: 3,
       requests: {
         cpu: '10m',
-        memory: '128Mi',
+        memory: '256Mi',
         storage: '2Gi',
       },
       limits: {
@@ -83,8 +83,8 @@
         },
       },
       requests: {
-        cpu: '10m',
-        memory: '88Mi',
+        cpu: '18m',
+        memory: '90Mi',
       },
       limits: {
         cpu: '1',
