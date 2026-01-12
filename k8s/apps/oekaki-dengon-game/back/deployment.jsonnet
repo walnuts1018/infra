@@ -76,7 +76,7 @@
               },
               {
                 name: 'MINIO_ENDPOINT',
-                value: 'seaweedfs.walnuts.dev',
+                value: 'minio.walnuts.dev',
               },
               {
                 name: 'MINIO_ACCESS_KEY',
