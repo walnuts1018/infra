@@ -13,8 +13,8 @@ tempo:
         endpoint: "seaweedfs.local.walnuts.dev"
         region: us-east-1
         forcepathstyle: true
-  server:
-    log_level: debug
+  # server:
+  #   log_level: debug
   extraArgs:
     "-config.expand-env": true
   extraEnv:
