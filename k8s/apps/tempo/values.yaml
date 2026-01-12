@@ -169,6 +169,7 @@ server:
 
 cache:
   caches:
+  # TODO: level=error ts=2026-01-12T07:17:21.403417712Z caller=redis_cache.go:46 msg="error connecting to redis" name=parquet-footer|bloom|frontend-search err="context deadline exceeded"
   - redis:
       endpoint: "tempo-redis-leader.tempo.svc.cluster.local:6379,tempo-redis-leader.tempo.svc.cluster.local:6379"
       tls_enabled: true
