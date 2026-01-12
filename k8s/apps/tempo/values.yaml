@@ -12,6 +12,7 @@ tempo:
         bucket: tempo
         endpoint: "seaweedfs.local.walnuts.dev"
         region: us-east-1
+        forcepathstyle: true
   # server:
   #   log_level: debug
   extraArgs:
