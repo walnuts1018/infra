@@ -16,8 +16,8 @@ ingester:
   replicas: 3
   resources:
     requests:
-      cpu: 4m
-      memory: 60Mi
+      cpu: 6m
+      memory: 100Mi
     limits:
       cpu: "1"
       memory: 1Gi
