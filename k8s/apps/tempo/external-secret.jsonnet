@@ -3,17 +3,17 @@
   use_suffix: false,
   data: [
     {
-      secretKey: 'MINIO_ACCESS_KEY',
+      secretKey: 'SEAWEED_ACCESS_KEY',
       remoteRef: {
         key: 'tempo',
-        property: 'minio_access_key',
+        property: 'seaweed_access_key',
       },
     },
     {
-      secretKey: 'MINIO_SECRET_KEY',
+      secretKey: 'SEAWEED_SECRET_KEY',
       remoteRef: {
         key: 'tempo',
-        property: 'minio_secret_key',
+        property: 'seaweed_secret_key',
       },
     },
   ],

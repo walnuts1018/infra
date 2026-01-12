@@ -13,6 +13,8 @@ tempo:
         endpoint: "seaweedfs.local.walnuts.dev"
         region: us-east-1
         forcepathstyle: true
+        access_key: '${SEAWEED_ACCESS_KEY}'
+        secret_key: '${SEAWEED_SECRET_KEY}'
   # server:
   #   log_level: debug
   extraArgs:
@@ -29,7 +31,18 @@ tempo:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
     readOnly: true
-
+  ##### TODO: remove #####
+  - name: SEAWEED_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: tempo-credentials
+        key: SEAWEED_ACCESS_KEY
+  - name: SEAWEED_SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: tempo-credentials
+        key: SEAWEED_SECRET_KEY
+  ######################
 extraVolumes:
 - name: seaweedfs-sts-token
   projected:
@@ -38,3 +51,5 @@ extraVolumes:
         audience: sts.seaweedfs.com
         expirationSeconds: 3600
         path: token
+serviceMonitor:
+  enabled: true
