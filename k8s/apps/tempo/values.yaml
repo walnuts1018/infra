@@ -27,10 +27,6 @@ tempo:
     value: https://seaweedfs.local.walnuts.dev
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::role/tempo
-  extraVolumeMounts:
-  - name: seaweedfs-sts-token
-    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
-    readOnly: true
   ##### TODO: remove #####
   - name: SEAWEED_ACCESS_KEY
     valueFrom:
@@ -43,6 +39,10 @@ tempo:
         name: tempo-credentials
         key: SEAWEED_SECRET_KEY
   ######################
+  extraVolumeMounts:
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+    readOnly: true
 extraVolumes:
 - name: seaweedfs-sts-token
   projected:
