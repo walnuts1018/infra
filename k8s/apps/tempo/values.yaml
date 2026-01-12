@@ -16,11 +16,11 @@ ingester:
   replicas: 3
   resources:
     requests:
-      cpu: 3m
-      memory: 40Mi
+      cpu: 4m
+      memory: 60Mi
     limits:
-      memory: 2Gi
-      cpu: 1000m
+      cpu: "1"
+      memory: 1Gi
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
@@ -55,8 +55,8 @@ distributor:
       cpu: 3m
       memory: 40Mi
     limits:
-      memory: 2Gi
-      cpu: 1000m
+      cpu: 500m
+      memory: 1Gi
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
@@ -83,10 +83,10 @@ compactor:
   resources:
     requests:
       cpu: 3m
-      memory: 40Mi
+      memory: 30Mi
     limits:
-      memory: 2Gi
-      cpu: 1000m
+      cpu: 500m
+      memory: 1Gi
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
@@ -123,10 +123,10 @@ querier:
   resources:
     requests:
       cpu: 3m
-      memory: 40Mi
+      memory: 50Mi
     limits:
-      memory: 2Gi
-      cpu: 1000m
+      cpu: 500m
+      memory: 512Mi
 
 queryFrontend:
   replicas: 2
@@ -138,11 +138,11 @@ queryFrontend:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 3m
-      memory: 40Mi
+      cpu: 2m
+      memory: 50Mi
     limits:
-      memory: 2Gi
-      cpu: 1000m
+      cpu: 500m
+      memory: 512Mi
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
@@ -210,8 +210,8 @@ gateway:
       cpu: 3m
       memory: 40Mi
     limits:
-      memory: 2Gi
       cpu: 1000m
+      memory: 1Gi
 
 provisioner:
   enabled: false
