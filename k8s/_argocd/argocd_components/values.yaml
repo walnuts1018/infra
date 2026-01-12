@@ -17,9 +17,6 @@ configs:
     resource.customizations.ignoreDifferences.apps_StatefulSet: |
       jsonPointers:
       - /spec/replicas
-    resource.customizations.ignoreDifferences.autoscaling_HorizontalPodAutoscaler: |
-      jsonPointers:
-      - /spec/metrics
     resource.customizations.ignoreDifferences.argoproj.io_Application: |
       jsonPointers:
       - /spec/syncPolicy
