@@ -207,11 +207,11 @@ gateway:
   verboseLogging: true
   resources:
     requests:
-      cpu: 3m
-      memory: 40Mi
+      cpu: 2m
+      memory: 30Mi
     limits:
-      cpu: 1000m
-      memory: 1Gi
+      cpu: 500m
+      memory: 512Mi
 
 provisioner:
   enabled: false
