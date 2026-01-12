@@ -13,8 +13,6 @@ tempo:
         endpoint: "seaweedfs.local.walnuts.dev"
         region: us-east-1
         forcepathstyle: true
-        access_key: '${SEAWEED_ACCESS_KEY}'
-        secret_key: '${SEAWEED_SECRET_KEY}'
   # server:
   #   log_level: debug
   extraArgs:
@@ -27,18 +25,6 @@ tempo:
     value: https://seaweedfs.local.walnuts.dev
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::role/tempo
-  ##### TODO: remove #####
-  - name: SEAWEED_ACCESS_KEY
-    valueFrom:
-      secretKeyRef:
-        name: tempo-credentials
-        key: SEAWEED_ACCESS_KEY
-  - name: SEAWEED_SECRET_KEY
-    valueFrom:
-      secretKeyRef:
-        name: tempo-credentials
-        key: SEAWEED_SECRET_KEY
-  ######################
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
