@@ -157,7 +157,7 @@
                         ],
                         "Resource": [
                             "arn:aws:s3:::tempo",
-                            "arn:aws:s3::/tempo/*"
+                            "arn:aws:s3:::tempo/*"
                         ]
                     }
                 ]
