@@ -147,8 +147,8 @@ cache:
   caches:
   - redis:
       endpoint: "tempo-redis-leader.tempo.svc.cluster.local:6379,tempo-redis-leader.tempo.svc.cluster.local:6379"
-      tls-enabled: true
-      tls-insecure-skip-verify: true
+      tls_enabled: true
+      tls_insecure_skip_verify: true
     roles:
     - parquet-footer
     - bloom
