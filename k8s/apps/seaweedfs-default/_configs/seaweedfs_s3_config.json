@@ -11,6 +11,21 @@
                     "secretKey": "{{ .terraform_secretkey }}"
                 }
             ]
+        },
+        {
+            "name": "misskey",
+            "actions": [
+                "Read:misskey",
+                "Write:misskey",
+                "List:misskey",
+                "Tagging:misskey"
+            ],
+            "credentials": [
+                {
+                    "accessKey": "misskey",
+                    "secretKey": "{{ .misskey_secretkey }}"
+                }
+            ]
         }
     ]
 }

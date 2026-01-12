@@ -23,6 +23,13 @@
         property: 'terraform_secretkey',
       },
     },
+    {
+      secretKey: 'misskey_secretkey',
+      remoteRef: {
+        key: 'seaweedfs',
+        property: 'misskey_secretkey',
+      },
+    },
   ],
   template_data: {
     'filer.toml': (importstr '_configs/filer.toml'),
