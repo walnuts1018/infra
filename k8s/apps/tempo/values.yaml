@@ -143,6 +143,18 @@ queryFrontend:
     limits:
       memory: 2Gi
       cpu: 1000m
+  extraVolumeMounts:
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+    readOnly: true
+  extraVolumes:
+  - name: seaweedfs-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 3600
+          path: token
 
 traces:
   otlp:
