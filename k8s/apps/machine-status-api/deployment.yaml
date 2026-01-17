@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: machine-status-api
+    app.kubernetes.io/name: machine-status-api
+  name: machine-status-api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: machine-status-api
+      app.kubernetes.io/name: machine-status-api
+  template:
+    metadata:
+      labels:
+        app: machine-status-api
+        app.kubernetes.io/name: machine-status-api
+    spec:
+      containers:
+        - env:
+            - name: GIN_MODE
+              value: release
+            - name: PVE_API_URL
+              value: invalid
+            - name: PVE_API_TOKEN_ID
+              value: invalid
+            - name: PVE_API_SECRET
+              value: invalid
+          image: ghcr.io/walnuts1018/machine-status-api:1.2.0
+          imagePullPolicy: IfNotPresent
+          name: machine-status-api
+          ports:
+            - containerPort: 8080
+          resources:
+            limits: {}
+            requests:
+              memory: 10Mi
+          securityContext:
+            privileged: true
+            readOnlyRootFilesystem: true
+            runAsGroup: 997
+            seccompProfile:
+              type: RuntimeDefault
+      nodeSelector:
+        kubernetes.io/hostname: cheese
+      priorityClassName: high
+      tolerations:
+        - operator: Exists

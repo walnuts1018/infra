@@ -1,0 +1,17 @@
+apiVersion: gateway.networking.k8s.io/v1alpha3
+kind: BackendTLSPolicy
+metadata:
+  name: minio-operator-sts
+  namespace: minio-operator
+spec:
+  targetRefs:
+    - group: ""
+      kind: Service
+      name: sts
+      sectionName: https
+  validation:
+    caCertificateRefs:
+      - group: ""
+        kind: ConfigMap
+        name: minio-operator-sts-ca-cert-512bbd
+    hostname: sts.minio-operator.svc.cluster.local

@@ -1,0 +1,11 @@
+apiVersion: sts.min.io/v1alpha1
+kind: PolicyBinding
+metadata:
+  name: minio-biscuit-backup
+  namespace: minio-biscuit
+spec:
+  application:
+    namespace: minio-biscuit
+    serviceaccount: minio-biscuit-backup
+  policies:
+    - readwrite
