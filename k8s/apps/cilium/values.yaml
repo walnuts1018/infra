@@ -129,7 +129,6 @@ hubble:
     - drop
     - tcp:labelsContext=source_namespace,source_workload,destination_namespace,destination_workload,traffic_direction
     - flow
-    - flow:sourceContext
     - port-distribution
     - icmp
     - httpV2:exemplars=true;
