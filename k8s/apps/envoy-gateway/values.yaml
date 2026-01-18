@@ -21,6 +21,13 @@ config:
       kubernetes:
         rateLimitDeployment:
           container:
+            resources:
+              requests:
+                cpu: 2m
+                memory: 20Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
             env:
             - name: REDIS_TLS
               value: "false"
