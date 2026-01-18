@@ -14,8 +14,8 @@
       defaultReplication: '001',
       metricsPort: 9327,
       requests: {
-        cpu: '10m',
-        memory: '40Mi',
+        cpu: '6m',
+        memory: '36Mi',
       },
       limits: {
         cpu: '1',
@@ -26,7 +26,7 @@
     volume: {
       replicas: 3,
       requests: {
-        cpu: '10m',
+        cpu: '6m',
         memory: '256Mi',
         storage: '2Gi',
       },
@@ -83,7 +83,7 @@
         },
       },
       requests: {
-        cpu: '18m',
+        cpu: '10m',
         memory: '90Mi',
       },
       limits: {
