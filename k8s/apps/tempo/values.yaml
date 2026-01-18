@@ -83,7 +83,7 @@ compactor:
   resources:
     requests:
       cpu: 5m
-      memory: 38Mi
+      memory: 96Mi
     limits:
       cpu: "1"
       memory: 2Gi
