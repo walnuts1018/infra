@@ -94,6 +94,7 @@ grafana:
   - knightss27-weathermap-panel
   - grafana-github-datasource
   - volkovlabs-echarts-panel
+  - novatec-sdg-panel
 prometheus-node-exporter:
   prometheus:
     monitor:
