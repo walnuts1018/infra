@@ -22,8 +22,8 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
         },
         resources: {
           requests: {
-            cpu: '50m',
-            memory: '1Gi',
+            cpu: '30m',
+            memory: '256Mi',
           },
           limits: {
             cpu: '1',
