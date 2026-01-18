@@ -1,5 +1,0 @@
-{
-  name: "minio-operator",
-  namespace: "minio-operator",
-  caSecretName: "operator-ca-tls",
-}
