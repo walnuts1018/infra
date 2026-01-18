@@ -187,8 +187,12 @@ function(
     },
     resources: {
       requests: {
-        cpu: '300m',
-        memory: '956Mi',
+        cpu: '350m',
+        memory: '1.1Gi',
+      },
+      limits: {
+        cpu: '1',
+        memory: '4Gi',
       },
     },
     tolerations: [
