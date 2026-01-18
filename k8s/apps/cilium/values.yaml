@@ -128,7 +128,8 @@ hubble:
     - dns
     - drop
     - tcp
-    - flow:labelsContext=source_namespace,source_workload,destination_namespace,destination_workload,traffic_direction
+    - flow:labelsContext=source_namespace,source_workload_kind,source_workload,destination_namespace,destination_workload_kind,destination_workload,traffic_direction
+    - flows-to-world
     - port-distribution
     - icmp
     - httpV2:exemplars=true;
