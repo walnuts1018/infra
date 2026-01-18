@@ -1,0 +1,19 @@
+image:
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 50Mi
+  limits:
+    cpu: 300m
+    memory: 512Mi
+
+tolerations:
+- operator: Exists
+
+victoria-metrics-single:
+  enabled: false
+
+grafana:
+  enabled: false
