@@ -133,10 +133,10 @@ prometheus:
     resources:
       requests:
         cpu: 500m
-        memory: 2Gi
+        memory: 3Gi
       limits:
         cpu: "1"
-        memory: 4Gi
+        memory: 8Gi
     retention: 14d
     retentionSize: 30GiB
     replicas: 1
