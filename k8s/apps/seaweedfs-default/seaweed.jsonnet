@@ -7,8 +7,8 @@
     labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   },
   spec: {
+    image: 'chrislusf/seaweedfs:4.07',
     master: {
-      image: 'chrislusf/seaweedfs:4.07',
       replicas: 3,
       volumeSizeLimitMB: 1024,
       defaultReplication: '001',
