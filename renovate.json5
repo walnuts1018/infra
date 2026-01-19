@@ -143,5 +143,11 @@
       // Major, Minor versionはスキップ禁止なので、手動でPRを作るようにする
       "dependencyDashboardApproval": true,
     },
+    {
+      matchPackageNames: [
+        'chrislusf/seaweedfs',
+      ],
+      versioning: 'regex:^(?<major>[0-9]+)\\.(?<minor>[0-9]+)(_(?<compatibility>.+))?$',
+    },
   ],
 }
