@@ -8,6 +8,7 @@
   },
   spec: {
     master: {
+      image: 'chrislusf/seaweedfs:4.07',
       replicas: 3,
       volumeSizeLimitMB: 1024,
       defaultReplication: '001',
