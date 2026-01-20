@@ -10,9 +10,6 @@
     <a href="https://walnuts.dev" alt="Walnuts.dev">
         <img alt="Walnuts.dev Status" src="https://img.shields.io/website?url=https%3A%2F%2Fwalnuts.dev&label=Walnuts.dev">
     </a>
-    <a href="https://wakatime.com/badge/user/981e52dd-a7ab-4b00-9a71-125be9dc2de6/project/07d86b66-ede6-45aa-a456-0985d4aed1a9.svg" alt="WakaTime">
-        <img src="https://wakatime.com/badge/user/981e52dd-a7ab-4b00-9a71-125be9dc2de6/project/07d86b66-ede6-45aa-a456-0985d4aed1a9.svg" alt="WakaTime" />
-    </a>
 </p>
 
 # Infra
