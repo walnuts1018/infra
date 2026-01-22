@@ -7,7 +7,7 @@
   },
   spec: {
     authenticate: {
-      url: 'https://pomerium.walnuts.dev',
+      url: 'https://pomerium.local.walnuts.dev',
     },
     secrets: (import 'app.json5').namespace + '/' + 'bootstrap',
     identityProvider: {
