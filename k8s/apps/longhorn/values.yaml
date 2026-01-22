@@ -5,7 +5,7 @@ defaultSettings:
   autoCleanupSnapshotWhenDeleteBackup: true
   snapshotDataIntegrity: true
   snapshotDataIntegrityImmediateCheckAfterSnapshotCreation: false
-  snapshotDataIntegrityCronjob: "2 3 */7 * *"
+  snapshotDataIntegrityCronjob: "5 18 */7 * *"
 csi:
   attacherReplicaCount: 2
   provisionerReplicaCount: 2
