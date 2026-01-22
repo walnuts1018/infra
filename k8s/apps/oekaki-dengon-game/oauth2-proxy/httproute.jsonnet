@@ -65,6 +65,16 @@
             weight: 1,
           },
         ],
+        filters: [
+          {
+            type: 'ExtensionRef',
+            extensionRef: {
+              group: 'gateway.pomerium.io',
+              kind: 'PolicyFilter',
+              name: (import 'policy-filter-public.jsonnet').metadata.name,
+            },
+          },
+        ],
       },
       {
         matches: [
