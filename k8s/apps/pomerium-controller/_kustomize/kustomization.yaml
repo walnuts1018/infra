@@ -17,3 +17,11 @@ patches:
     - op: "replace"
       path: "/spec/template/spec/containers/0/resources"
       value: {"requests": {"cpu": "10m", "memory": "32Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}
+- target:
+    kind: Service
+    name: pomerium-metrics
+    namespace: pomerium
+  patch: |-
+    - op: "add"
+      path: "/metadata/labels/app.kubernetes.io~1component"
+      value: metrics
