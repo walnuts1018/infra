@@ -5,6 +5,16 @@
     name: 'global',
   },
   spec: {
-    secrets: 'pomerium/bootstrap',
+    secrets: (import 'app.json5').namespace + '/' + 'bootstrap',
+    identityProvider: {
+      provider: 'oidc',
+      scopes: [
+        'openid',
+        'email',
+        'profile',
+      ],
+      secret: (import 'app.json5').namespace + '/' + (import 'external-secret.jsonnet').spec.target.name,
+      url: 'https://auth.walnuts.dev',
+    },
   },
 }
