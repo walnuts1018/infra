@@ -10,7 +10,7 @@
   namespace: error 'namespace is required',
   chart: 'oauth2-proxy',
   repoURL: 'https://oauth2-proxy.github.io/manifests',
-  targetRevision: '9.0.1',
+  targetRevision: '10.1.0',
   values: '',
   valuesObject: std.mergePatch((import 'values.libsonnet') {
     upstream: $.upstream,
