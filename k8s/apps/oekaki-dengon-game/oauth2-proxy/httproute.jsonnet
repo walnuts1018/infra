@@ -29,8 +29,8 @@
             path: {
               type: 'PathPrefix',
               value: '/api',
-              method: 'GET',
             },
+            method: 'GET',
           },
           {
             path: {
