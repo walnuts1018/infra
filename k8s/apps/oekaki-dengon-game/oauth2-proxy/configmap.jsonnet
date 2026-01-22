@@ -3,6 +3,6 @@
   namespace: (import '../app.json5').namespace,
   labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name),
   data: {
-    'robots.txt': (importstr './config/robots.txt'),
+    'robots.txt': (importstr './_config/robots.txt'),
   },
 }
