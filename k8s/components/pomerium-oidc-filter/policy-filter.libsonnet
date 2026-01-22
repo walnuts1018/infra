@@ -13,7 +13,7 @@
     ppl: |||
       allow:
         and:
-          - groups:
+          - claim/my:zitadel:grants:
               has: %s
     ||| % [$.allowedGroup],
   },
