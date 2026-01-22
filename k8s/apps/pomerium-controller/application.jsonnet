@@ -18,12 +18,12 @@
       kustomize: {
         patches: [
           {
-            target: {
-              kind: 'Namespace',
-              name: 'pomerium',
-            },
-            patch: |||-
-              - op: delete
+            patch: |||
+              $patch: delete
+              apiVersion: v1
+              kind: Namespace
+              metadata:
+                name: local-path-storage
             |||,
           },
           {
@@ -32,7 +32,7 @@
               name: 'pomerium',
               namespace: 'pomerium',
             },
-            patch: |||-
+            patch: |||
               - op: replace
                 path: "/spec/template/spec/containers/0/resources"
                 value: {"requests": {"cpu": "10m", "memory": "32Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}
@@ -44,7 +44,7 @@
               name: 'pomerium-metrics',
               namespace: 'pomerium',
             },
-            patch: |||-
+            patch: |||
               - op: add
                 path: "/metadata/labels/role"
                 value: metrics
