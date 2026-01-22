@@ -1,3 +1,4 @@
+// https://www.pomerium.com/docs/internals/configuration
 {
   apiVersion: 'ingress.pomerium.io/v1',
   kind: 'Pomerium',
