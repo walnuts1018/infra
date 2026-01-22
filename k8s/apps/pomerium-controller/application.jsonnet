@@ -36,6 +36,9 @@
               - op: replace
                 path: "/spec/template/spec/containers/0/resources"
                 value: {"requests": {"cpu": "10m", "memory": "32Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}
+              - op: replace
+                path: "/spec/replicas"
+                value: 1
             |||,
           },
           {
