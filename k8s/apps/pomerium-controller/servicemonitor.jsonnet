@@ -12,7 +12,7 @@ local helmname = (import 'helm.jsonnet').spec.source.helm.releaseName;
     selector: {
       matchLabels: {
         'app.kubernetes.io/name': 'pomerium',
-        'app.kubernetes.io/component': 'metrics',
+        role: 'metrics',
       },
     },
     endpoints: [

@@ -23,5 +23,5 @@ patches:
     namespace: pomerium
   patch: |-
     - op: "add"
-      path: "/metadata/labels/app.kubernetes.io~1component"
+      path: "/metadata/labels/role"
       value: metrics
