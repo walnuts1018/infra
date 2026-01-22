@@ -1,0 +1,4 @@
+{
+  name: "pomerium-global",
+  namespace: "pomerium",
+}
