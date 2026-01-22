@@ -7,5 +7,5 @@
   },
   "compactSequenceIndent": true,
   "includeDocumentStart": true,
-  "cSpell.words": ["agones"]
+  "cSpell.words": ["agones", "pomerium"]
 }
