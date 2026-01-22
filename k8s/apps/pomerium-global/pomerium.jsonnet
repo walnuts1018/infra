@@ -5,6 +5,9 @@
     name: 'global',
   },
   spec: {
+    authenticate: {
+      url: 'https://pomerium.walnuts.dev',
+    },
     secrets: (import 'app.json5').namespace + '/' + 'bootstrap',
     identityProvider: {
       provider: 'oidc',
