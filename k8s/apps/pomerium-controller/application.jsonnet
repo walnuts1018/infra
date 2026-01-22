@@ -12,12 +12,46 @@
       server: 'https://kubernetes.default.svc',
     },
     source: {
-      path: 'k8s/apps/pomerium-controller/_kustomize',
-      repoURL: 'https://github.com/walnuts1018/infra',
-      targetRevision: 'main',
-      // kustomize: {
-      //   patches: [],
-      // },
+      path: 'config/gateway-api',
+      repoURL: 'https://github.com/pomerium/ingress-controller',
+      targetRevision: 'v0.32.0',
+      kustomize: {
+        patches: [
+          {
+            target: {
+              kind: 'Namespace',
+              name: 'pomerium',
+            },
+            patch: |||
+              - op: "delete"
+            |||,
+          },
+          {
+            target: {
+              kind: 'Deployment',
+              name: 'pomerium',
+              namespace: 'pomerium',
+            },
+            patch: |||
+              - op: "replace"
+                path: "/spec/template/spec/containers/0/resources"
+                value: {"requests": {"cpu": "10m", "memory": "32Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}
+            |||,
+          },
+          {
+            target: {
+              kind: 'Service',
+              name: 'pomerium-metrics',
+              namespace: 'pomerium',
+            },
+            patch: |||
+              - op: "add"
+                path: "/metadata/labels/role"
+                value: metrics
+            |||,
+          },
+        ],
+      },
     },
     syncPolicy: {
       automated: {
