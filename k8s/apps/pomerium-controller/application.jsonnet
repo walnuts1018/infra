@@ -22,7 +22,7 @@
               kind: 'Namespace',
               name: 'pomerium',
             },
-            patch: |||
+            patch: |||-
               - op: delete
             |||,
           },
@@ -32,7 +32,7 @@
               name: 'pomerium',
               namespace: 'pomerium',
             },
-            patch: |||
+            patch: |||-
               - op: replace
                 path: "/spec/template/spec/containers/0/resources"
                 value: {"requests": {"cpu": "10m", "memory": "32Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}
@@ -44,7 +44,7 @@
               name: 'pomerium-metrics',
               namespace: 'pomerium',
             },
-            patch: |||
+            patch: |||-
               - op: add
                 path: "/metadata/labels/role"
                 value: metrics
