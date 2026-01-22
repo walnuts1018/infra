@@ -1,0 +1,4 @@
+{
+  name: "pomerium-controller",
+  namespace: "pomerium",
+}

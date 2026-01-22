@@ -71,6 +71,7 @@
       matchStringsStrategy: 'any',
       matchStrings: [
         'https:\\/\\/github\\.com\\/(?<depName>.*?)\\/releases\\/download\\/(?<currentValue>[^\\/]+)\\/.*\\s*',
+        'https:\\/\\/github\\.com\\/(?<depName>([^\\/]+\\/[^\\/]+)?)\\/.*\\\\\\?ref=(?<currentValue>[^&\\s]+)\\s*',
         'https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>.*?)\\/refs\\/tags\\/(?<currentValue>[^\\/]+)\\/.*\\s*',
         'https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^/]+\\/[^/]+?)\\/(?<currentValue>[^\\/]+?)\\/.*\\s*',
       ],
