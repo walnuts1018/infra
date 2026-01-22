@@ -35,7 +35,7 @@ ingester:
           path: token
   persistence:
     enabled: true
-    size: 10Gi
+    size: 1Gi
   config:
     replication_factor: 3
 
