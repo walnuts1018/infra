@@ -23,7 +23,7 @@
               name: 'pomerium',
             },
             patch: |||
-              - op: "delete"
+              - op: delete
             |||,
           },
           {
@@ -33,7 +33,7 @@
               namespace: 'pomerium',
             },
             patch: |||
-              - op: "replace"
+              - op: replace
                 path: "/spec/template/spec/containers/0/resources"
                 value: {"requests": {"cpu": "10m", "memory": "32Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}
             |||,
@@ -45,7 +45,7 @@
               namespace: 'pomerium',
             },
             patch: |||
-              - op: "add"
+              - op: add
                 path: "/metadata/labels/role"
                 value: metrics
             |||,
