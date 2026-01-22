@@ -23,7 +23,7 @@
               apiVersion: v1
               kind: Namespace
               metadata:
-                name: local-path-storage
+                name: pomerium
             |||,
           },
           {
