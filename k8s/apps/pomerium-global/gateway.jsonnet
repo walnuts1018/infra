@@ -10,9 +10,13 @@
     listeners: [
       {
         name: 'https',
-        hostname: '*.localhost.pomerium.io',
         protocol: 'HTTPS',
         port: 443,
+        allowedRoutes: {
+          namespaces: {
+            from: 'All',
+          },
+        },
         tls: {
           mode: 'Terminate',
           certificateRefs: [
