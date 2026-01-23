@@ -22,7 +22,7 @@ local appname = (import 'app.json5').name + '-setup';
         containers: [
           {
             name: 'setup',
-            image: 'scylladb/scylla:2025.4.0',
+            image: 'scylladb/scylla:2025.4.2',
             command: ['/bin/bash'],
             args: [
               '-c',
