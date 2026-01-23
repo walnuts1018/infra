@@ -2,8 +2,8 @@
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
+    name: (import '../app.json5').name,
+    namespace: (import '../app.json5').namespace,
   },
   spec: {
     parentRefs: [
