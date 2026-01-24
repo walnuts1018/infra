@@ -19,7 +19,7 @@
         containers: [
           {
             name: 'warrior',
-            image: 'atdr.meo.ws/archiveteam/warrior-dockerfile@sha256:e8137b57f9ab9619e750b16afb375c203ec9da37389497790bcba28b1aaeabe3',
+            image: 'atdr.meo.ws/archiveteam/warrior-dockerfile@sha256:db162f841c520696c3d2655efd4fdbbdab7c3f50f338fb6d671d6f875ecabf58',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
