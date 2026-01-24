@@ -219,6 +219,7 @@ function(
             ],
             exporters: [
               'prometheusremotewrite',
+              'otlphttp/victoriametrics',
             ],
           },
         },

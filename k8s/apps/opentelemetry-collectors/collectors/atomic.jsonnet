@@ -165,6 +165,7 @@ function(
             ],
             exporters: [
               'prometheusremotewrite',
+              'otlphttp/victoriametrics',
             ],
           },
           logs: {

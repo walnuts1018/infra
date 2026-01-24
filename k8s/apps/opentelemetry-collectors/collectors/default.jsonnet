@@ -108,6 +108,7 @@ function(
               // 'otlphttp/prometheus',
               'prometheusremotewrite',
               // 'otlp/mackerel',
+              'otlphttp/victoriametrics',
             ],
           },
           logs: {
