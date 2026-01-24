@@ -64,7 +64,7 @@ vmstorage:
     size: 10Gi
   resources:
     requests:
-      cpu: 120m
+      cpu: 180m
       memory: 800Mi
     limits:
       cpu: "1"
