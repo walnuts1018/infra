@@ -22,12 +22,6 @@ vmselect:
       memory: 1Gi
   serviceMonitor:
     enabled: true
-  extraArgs:
-    envflag.enable: true
-    envflag.prefix: VM_
-    loggerFormat: json
-    httpListenAddr: :8481
-    opentelemetry.usePrometheusNaming: true
 
 vminsert:
   enabled: true
@@ -86,9 +80,3 @@ vmstorage:
         app.kubernetes.io/name: victoria-metrics-cluster
   serviceMonitor:
     enabled: true
-  extraArgs:
-    envflag.enable: true
-    envflag.prefix: VM_
-    loggerFormat: json
-    httpListenAddr: :8482
-    opentelemetry.usePrometheusNaming: true
