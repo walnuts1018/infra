@@ -15,8 +15,8 @@ vmselect:
       type: Resource
   resources:
     requests:
-      cpu: 10m
-      memory: 64Mi
+      cpu: 5m
+      memory: 32Mi
     limits:
       cpu: "1"
       memory: 1Gi
@@ -64,8 +64,8 @@ vmstorage:
     size: 10Gi
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 120m
+      memory: 800Mi
     limits:
       cpu: "1"
       memory: 1Gi
