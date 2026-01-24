@@ -41,7 +41,7 @@ vminsert:
   resources:
     requests:
       cpu: 150m
-      memory: 652Mi
+      memory: 1Gi
     limits:
       cpu: "2"
       memory: 2Gi
