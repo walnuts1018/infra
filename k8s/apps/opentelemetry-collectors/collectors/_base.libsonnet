@@ -20,7 +20,7 @@ function(
         },
       },
       exporters: {
-        'otlp_http/prometheus': {
+        'otlphttp/prometheus': {
           endpoint: 'http://prometheus-stack-kube-prom-prometheus.monitoring.svc.clusterset.local:9090/api/v1/otlp',
           tls: {
             insecure: true,
@@ -32,26 +32,26 @@ function(
             enabled: true,
           },
         },
-        'otlp_grpc/tempo': {
+        'otlp/tempo': {
           endpoint: 'tempo-gateway.tempo.svc.clusterset.local:4317',
           tls: {
             insecure: true,
           },
         },
-        'otlp_http/loki': {
+        'otlphttp/loki': {
           endpoint: 'http://loki-gateway.loki.svc.clusterset.local/otlp',
           tls: {
             insecure: true,
           },
         },
-        'otlp_http/vaxila': {
+        'otlphttp/vaxila': {
           endpoint: 'https://otlp-vaxila.mackerelio.com',
           headers: {
             Accept: '*/*',
             'Mackerel-Api-Key': '${env:MACKEREL_APIKEY}',
           },
         },
-        'otlp_grpc/mackerel': {
+        'otlp/mackerel': {
           endpoint: 'otlp.mackerelio.com:4317',
           compression: 'gzip',
           headers: {

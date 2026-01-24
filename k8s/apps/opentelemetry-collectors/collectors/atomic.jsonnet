@@ -180,7 +180,7 @@ function(
               'resource/cluster_name',
             ],
             exporters: [
-              'otlp_http/loki',
+              'otlphttp/loki',
             ],
           },
         },
