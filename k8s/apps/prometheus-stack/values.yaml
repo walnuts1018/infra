@@ -95,6 +95,7 @@ grafana:
   - grafana-github-datasource
   - volkovlabs-echarts-panel
   - novatec-sdg-panel
+  - victoriametrics-metrics-datasource
 prometheus-node-exporter:
   prometheus:
     monitor:
