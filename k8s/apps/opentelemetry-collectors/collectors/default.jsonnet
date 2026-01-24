@@ -88,9 +88,9 @@ function(
               'resource/cluster_name',
             ],
             exporters: [
-              'otlp/tempo',
+              'otlp_grpc/tempo',
               'spanmetrics',
-              'otlphttp/vaxila',
+              'otlp_http/vaxila',
             ],
           },
           metrics: {
@@ -105,9 +105,9 @@ function(
               'resource/cluster_name',
             ],
             exporters: [
-              // 'otlphttp/prometheus',
+              // 'otlp_http/prometheus',
               'prometheusremotewrite',
-              // 'otlp/mackerel',
+              // 'otlp_grpc/mackerel',
               'prometheusremotewrite/victoriametrics',
             ],
           },
@@ -122,7 +122,7 @@ function(
               'resource/cluster_name',
             ],
             exporters: [
-              'otlphttp/loki',
+              'otlp_http/loki',
             ],
           },
         },

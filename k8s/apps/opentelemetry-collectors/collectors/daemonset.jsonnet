@@ -187,7 +187,7 @@ function(
               'resource/cluster_name',
             ],
             exporters: [
-              'otlphttp/loki',
+              'otlp_http/loki',
             ],
           },
           'logs/journald': {
@@ -202,7 +202,7 @@ function(
               'resource/cluster_name',
             ],
             exporters: [
-              'otlphttp/loki',
+              'otlp_http/loki',
             ],
           },
           metrics: {
