@@ -45,6 +45,12 @@ vminsert:
     limits:
       cpu: "1"
       memory: 1Gi
+  service:
+    extraPorts:
+    - name: otlp-http
+      port: 8428
+      targetPort: 8428
+      protocol: TCP
   serviceMonitor:
     enabled: true
 vmstorage:
