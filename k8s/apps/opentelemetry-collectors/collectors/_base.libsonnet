@@ -58,12 +58,10 @@ function(
             'Mackerel-Api-Key': '${env:MACKEREL_APIKEY}',
           },
         },
-        'otlphttp/victoriametrics': {
-          compression: 'gzip',
-          encoding: 'proto',
-          metrics_endpoint: 'http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/opentelemetry/v1/metrics',
-          tls: {
-            insecure: true,
+        'prometheusremotewrite/victoriametrics': {
+          endpoint: 'http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write',
+          resource_to_telemetry_conversion: {
+            enabled: true,
           },
         },
         file: {

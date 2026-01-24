@@ -47,12 +47,6 @@ vminsert:
       memory: 2Gi
   serviceMonitor:
     enabled: true
-  extraArgs:
-    envflag.enable: true
-    envflag.prefix: VM_
-    loggerFormat: json
-    httpListenAddr: :8480
-    opentelemetry.usePrometheusNaming: true
 
 vmstorage:
   enabled: true
