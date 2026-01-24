@@ -61,7 +61,7 @@ function(
         'otlphttp/victoriametrics': {
           compression: 'gzip',
           encoding: 'proto',
-          metrics_endpoint: 'http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/opentelemetry/v1/metrics',
+          metrics_endpoint: 'http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/opentelemetry/v1/metrics',
           tls: {
             insecure: true,
           },
