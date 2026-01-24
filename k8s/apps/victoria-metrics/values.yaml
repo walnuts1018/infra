@@ -40,11 +40,11 @@ vminsert:
       type: Resource
   resources:
     requests:
-      cpu: 10m
-      memory: 64Mi
+      cpu: 150m
+      memory: 512Mi
     limits:
-      cpu: "1"
-      memory: 1Gi
+      cpu: "2"
+      memory: 2Gi
   serviceMonitor:
     enabled: true
   extraArgs:
