@@ -85,6 +85,8 @@ grafana:
       user: grafana
       password: $__file{/etc/secrets/postgres_password}
   sidecar:
+    dashboards:
+      enabled: false
     plugins:
       enabled: true
     resources:
