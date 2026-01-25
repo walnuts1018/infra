@@ -69,6 +69,9 @@ grafana:
         "urn:zitadel:iam:org:project:roles"."admin"  && 'GrafanaAdmin' || "urn:zitadel:iam:org:project:roles"."grafana-editor" && 'Editor' || "urn:zitadel:iam:org:project:roles"."grafana-viewer" && 'Viewer'
       allow_assign_grafana_admin: true
       use_pkce: true
+    feature_toggles:
+      provisioning: true
+      kubernetesDashboards: true
     smtp:
       enabled: true
       from_address: grafana@resend.walnuts.dev
