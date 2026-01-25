@@ -16,7 +16,7 @@ serviceMonitor:
   - name: "misskey"
     url: "https://misskey.walnuts.dev/healthz"
   - name: "seaweedfs"
-    url: "https://seaweedfs.walnuts.dev/misskey/files/2273de75-527d-44cf-b7e0-6a85ae4eea36.webp"
+    url: "https://seaweedfs.walnuts.dev/misskey/files/b318bef0-983e-4f24-b7ee-9075ec17fc01.webp"
   - name: "walnuk-front"
     url: "https://waln.uk/"
   - name: "walnuk-back"
