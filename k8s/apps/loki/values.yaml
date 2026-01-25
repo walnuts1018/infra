@@ -90,7 +90,7 @@ loki:
 
   limits_config:
     allow_structured_metadata: true
-    retention_period: 336h
+    retention_period: 336h # 14 days
     ingestion_burst_size_mb: 100
     shard_streams:
       enabled: true
