@@ -49,6 +49,9 @@ loki:
         region: us-east-1
         storage_class: REDUCED_REDUNDANCY
         bucket_lookup_type: path
+  compactor:
+    retention_enabled: true
+    delete_request_store: s3
 
   storage_config:
     use_thanos_objstore: true
