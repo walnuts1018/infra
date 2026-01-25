@@ -106,6 +106,17 @@ grafana:
     url: http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus
     access: proxy
     isDefault: true
+  - name: Loki
+    type: loki
+    url: http://loki-gateway.loki.svc.cluster.local
+    access: proxy
+    isDefault: true
+  - name: Tempo
+    type: tempo
+    url: http://tempo-gateway.tempo.svc.cluster.local
+    access: proxy
+    isDefault: false
+  # TODO: add InfluxDB
 prometheus-node-exporter:
   prometheus:
     monitor:
