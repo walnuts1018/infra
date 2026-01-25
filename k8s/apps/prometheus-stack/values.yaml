@@ -100,6 +100,12 @@ grafana:
   - knightss27-weathermap-panel
   - grafana-github-datasource
   - volkovlabs-echarts-panel
+  additionalDataSources:
+  - name: VictoriaMetrics
+    type: prometheus
+    url: http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus
+    access: proxy
+    isDefault: true
 prometheus-node-exporter:
   prometheus:
     monitor:
