@@ -87,6 +87,7 @@ grafana:
   sidecar:
     dashboards:
       enabled: false
+      initDashboards: false
     plugins:
       enabled: true
     resources:
