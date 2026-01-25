@@ -90,6 +90,9 @@ grafana:
       initDashboards: false
     plugins:
       enabled: true
+    datasources:
+      enabled: true
+      isDefaultDatasource: false
     resources:
       requests:
         cpu: 1m
