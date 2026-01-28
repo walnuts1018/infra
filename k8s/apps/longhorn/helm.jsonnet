@@ -3,7 +3,7 @@
   namespace: (import 'app.json5').namespace,
   chart: 'longhorn',
   repoURL: 'https://charts.longhorn.io',
-  targetRevision: '1.10.1',
+  targetRevision: '1.10.2',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'),
     {
