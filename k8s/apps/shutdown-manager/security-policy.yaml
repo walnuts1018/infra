@@ -1,0 +1,51 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: shutdown-manager
+  namespace: shutdown-manager
+spec:
+  authorization:
+    defaultAction: Deny
+    rules:
+      - action: Allow
+        principal:
+          jwt:
+            claims:
+              - name: sub
+                values:
+                  - system:serviceaccount:biscuit-manager:biscuit-manager
+            provider: kurumi-k8s
+  jwt:
+    providers:
+      - audiences:
+          - shutdown-manager.local.walnuts.dev
+        claimToHeaders:
+          - claim: kubernetes.io/serviceaccount.name
+            header: x-k8s-sa-name
+          - claim: kubernetes.io/namespace
+            header: x-k8s-namespace
+        issuer: https://192.168.0.17:16443
+        name: kurumi-k8s
+        remoteJWKS:
+          backendRefs:
+            - group: gateway.envoyproxy.io
+              kind: Backend
+              name: kurumi-api-server
+              port: 443
+          backendSettings:
+            retry:
+              numRetries: 3
+              perRetry:
+                backOff:
+                  baseInterval: 1s
+                  maxInterval: 5s
+              retryOn:
+                triggers:
+                  - 5xx
+                  - gateway-error
+                  - reset
+          uri: https://kurumi.local.walnuts.dev/openid/v1/jwks
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: shutdown-manager

@@ -1,0 +1,8 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: cilium-cluster-mesh
+  namespace: cilium-system
+spec:
+  ca:
+    secretName: cilium-cluster-mesh-01ad8f
