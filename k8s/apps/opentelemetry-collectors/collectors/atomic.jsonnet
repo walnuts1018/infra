@@ -39,11 +39,12 @@ function(
       },
       resources: {
         requests: {
-          cpu: '3m',
-          memory: '83Mi',
+          cpu: '369m',
+          memory: '778Mi',
         },
         limits: {
-          memory: '1Gi',
+          cpu: '2',
+          memory: '3Gi',
         },
       },
     },
