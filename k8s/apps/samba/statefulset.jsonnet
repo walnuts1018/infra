@@ -23,7 +23,7 @@
         },
         containers: [
           (import '../../components/container.libsonnet') {
-            image: 'ghcr.io/servercontainers/samba:a3.23.2-s4.22.6-r0',
+            image: 'ghcr.io/servercontainers/samba:a3.23.3-s4.22.6-r0',
             imagePullPolicy: 'IfNotPresent',
             name: 'samba',
             env: [
