@@ -25,7 +25,7 @@
                 command: [
                   'sh',
                   '-c',
-                  'df --output=target,pcent | awk \'{if( $1 == "/tmp/renovate" && 0+$2 > 75 ){ system("rm -rf /tmp/renovate/cache") }}\'',
+                  'df --output=target,pcent | awk \'{if( $1 == "/tmp/renovate" && int($2) > 75 ){ system("rm -rf /tmp/renovate/cache") }}\'',
                 ],
                 volumeMounts: [
                   {
