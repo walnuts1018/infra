@@ -112,10 +112,13 @@
             },
             resources: {
               requests: {
-                cpu: '10m',
-                memory: '720Mi',
+                cpu: '96m',
+                memory: '512Mi',
               },
-              limits: {},
+              limits: {
+                cpu: '1',
+                memory: '2Gi',
+              },
             },
           } + {
             securityContext+: {

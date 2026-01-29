@@ -45,8 +45,12 @@
     // ],
     resources: {
       requests: {
-        cpu: '20m',
-        memory: '150Mi',
+        cpu: '12m',
+        memory: '662Mi',
+      },
+      limits: {
+        cpu: '2',
+        memory: '4Gi',
       },
     },
     plugins: [
