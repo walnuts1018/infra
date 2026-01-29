@@ -8,8 +8,8 @@ grafana:
     targetMemory: "100"
   resources:
     requests:
-      cpu: 12m
-      memory: 240Mi
+      cpu: 22m
+      memory: 280Mi
     limits:
       cpu: 500m
       memory: 2Gi
@@ -19,7 +19,8 @@ grafana:
         cpu: 1m
         memory: 295Mi
       limits:
-        memory: 512Mi
+        cpu: "1"
+        memory: 1Gi
   ingress:
     enabled: true
     hosts:
@@ -96,7 +97,7 @@ grafana:
     resources:
       requests:
         cpu: 1m
-        memory: 295Mi
+        memory: 92Mi
       limits:
         memory: 512Mi
   plugins:
@@ -135,7 +136,7 @@ prometheus-node-exporter:
       cpu: 1m
       memory: 20Mi
     limits:
-      memory: 256Mi
+      memory: 512Mi
 prometheus:
   prometheusSpec:
     serviceMonitorSelector:
