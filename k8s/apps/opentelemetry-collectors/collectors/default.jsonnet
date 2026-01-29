@@ -139,7 +139,7 @@ function(
         memory: '256Mi',
       },
       limits: {
-        cpu: '200m',
+        cpu: '1',
         memory: '2Gi',
       },
     },
