@@ -1,0 +1,55 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: velero
+  namespace: longhorn-backup-validate
+spec:
+  chartName: velero
+  clusterSelector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: longhorn-backup-validate
+  namespace: velero
+  options:
+    atomic: true
+    timeout: 5m
+    wait: true
+    waitForJobs: true
+  releaseName: velero
+  repoURL: https://vmware-tanzu.github.io/helm-charts
+  valuesTemplate: |
+    kubectl:
+      image:
+        repository: docker.io/bitnamilegacy/kubectl
+        tag: 1.33.4
+
+    initContainers:
+    - name: velero-plugin-for-aws
+      image: velero/velero-plugin-for-aws:v1.13.1
+      volumeMounts:
+      - mountPath: /target
+        name: plugins
+    configuration:
+      features: EnableCSI
+      # logLevel: debug
+      backupStorageLocation:
+      - name: minio-biscuit
+        provider: aws
+        bucket: velero-backup
+        config:
+          s3Url: https://minio-biscuit.local.walnuts.dev/
+          region: ap-northeast-1
+          s3ForcePathStyle: "true"
+        credential:
+          name: velero-credential
+          key: credentials
+      volumeSnapshotLocation:
+      - name: minio-biscuit
+        provider: aws
+        config:
+          s3Url: https://minio-biscuit.local.walnuts.dev/
+          region: ap-northeast-1
+          s3ForcePathStyle: "true"
+        credential:
+          name: velero-credential
+          key: credentials
+  version: 11.1.1

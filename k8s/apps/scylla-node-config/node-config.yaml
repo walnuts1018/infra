@@ -1,0 +1,11 @@
+apiVersion: scylla.scylladb.com/v1alpha1
+kind: NodeConfig
+metadata:
+  name: default
+spec:
+  placement:
+    nodeSelector: {}
+    tolerations: []
+  sysctls:
+    - name: fs.aio-max-nr
+      value: "30000000"

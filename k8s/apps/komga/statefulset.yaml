@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: komga
+    app.kubernetes.io/name: komga
+  name: komga
+  namespace: komga
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: komga
+      app.kubernetes.io/name: komga
+  serviceName: komga
+  template:
+    metadata:
+      labels:
+        app: komga
+        app.kubernetes.io/name: komga
+    spec:
+      containers:
+        - env:
+            - name: JAVA_TOOL_OPTIONS
+              value: -XX:MaxRAMPercentage=70 -XX:MaxMetaspaceSize=256m
+          image: gotson/komga:1.24.1
+          name: komga
+          ports:
+            - containerPort: 25600
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+          resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
+            requests:
+              cpu: 5m
+              memory: 2Gi
+          volumeMounts:
+            - mountPath: /config
+              name: config-dir
+            - mountPath: /config/application.yml
+              name: config-file
+              readOnly: true
+              subPath: application.yml
+            - mountPath: /books
+              name: book-dir
+            - mountPath: /tmp
+              name: tmp
+      nodeSelector:
+        kubernetes.io/hostname: cake
+      volumes:
+        - name: config-dir
+          persistentVolumeClaim:
+            claimName: komga-config
+        - name: config-file
+          secret:
+            secretName: komga-9a709c
+        - name: book-dir
+          persistentVolumeClaim:
+            claimName: books
+        - emptyDir: {}
+          name: tmp
