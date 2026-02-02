@@ -6,6 +6,7 @@ defaultSettings:
   snapshotDataIntegrity: true
   snapshotDataIntegrityImmediateCheckAfterSnapshotCreation: false
   snapshotDataIntegrityCronjob: "5 18 */7 * *"
+  replicaAutoBalance: disabled
 csi:
   attacherReplicaCount: 2
   provisionerReplicaCount: 2
