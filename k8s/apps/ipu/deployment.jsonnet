@@ -24,7 +24,7 @@
         containers: [
           {
             name: 'proxy',
-            image: 'ghcr.io/walnuts1018/s3-oauth2-proxy:0.0.58',
+            image: 'ghcr.io/walnuts1018/s3-oauth2-proxy:0.0.59',
             env: [
               {
                 name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
