@@ -4,6 +4,6 @@
 
   chart: 'prometheus-snmp-exporter',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '9.11.1',
+  targetRevision: '9.12.0',
   values: (importstr 'values.yaml'),
 }
