@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: biscuit-manager-start
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - command:
+                - bash
+                - /start.sh
+              image: debian:13.3-slim
+              name: biscuit-manager
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: 512Mi
+                requests:
+                  cpu: 10m
+                  memory: 10Mi
+              volumeMounts:
+                - mountPath: /start.sh
+                  name: start-script
+                  readOnly: true
+                  subPath: start.sh
+          hostNetwork: true
+          restartPolicy: OnFailure
+          serviceAccountName: biscuit-manager
+          volumes:
+            - configMap:
+                items:
+                  - key: start.sh
+                    path: start.sh
+                name: biscuit-manager-script-8c5a6f
+              name: start-script
+  schedule: 0 2 * * *
+  startingDeadlineSeconds: 120
+  timeZone: Asia/Tokyo

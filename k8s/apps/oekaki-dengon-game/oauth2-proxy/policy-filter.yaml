@@ -1,0 +1,11 @@
+apiVersion: gateway.pomerium.io/v1alpha1
+kind: PolicyFilter
+metadata:
+  name: oekaki-dengon-game
+  namespace: oekaki-dengon-game
+spec:
+  ppl: |
+    allow:
+      and:
+        - claim/my:zitadel:grants:
+            has: 356681781363081691:oekaki-admin

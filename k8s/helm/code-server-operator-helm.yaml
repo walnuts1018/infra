@@ -1,0 +1,1277 @@
+---
+# Source: code-server-operator/crds/codeserver-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: code-server-operator-system/code-server-operator-serving-cert
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: codeservers.cs.walnuts.dev
+spec:
+  conversion:
+    strategy: Webhook
+    webhook:
+      clientConfig:
+        service:
+          name: code-server-operator-webhook-service
+          namespace: code-server-operator-system
+          path: /convert
+      conversionReviewVersions:
+      - v1
+  group: cs.walnuts.dev
+  names:
+    kind: CodeServer
+    listKind: CodeServerList
+    plural: codeservers
+    singular: codeserver
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: Storage size
+      jsonPath: .spec.storageSize
+      name: STORAGE
+      type: string
+    - description: CodeServer status
+      jsonPath: .status
+      name: STATUS
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        description: CodeServer is the Schema for the codeservers API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CodeServerSpec defines the desired state of CodeServer
+            properties:
+              containerPort:
+                default: 19200
+                description: Specifies the terminal container port for connection,
+                  defaults in 19200.
+                format: int32
+                type: integer
+              domain:
+                description: Specifies the domain for code server
+                type: string
+              envs:
+                description: Specifies the envs
+                items:
+                  description: EnvVar represents an environment variable present in
+                    a Container.
+                  properties:
+                    name:
+                      description: Name of the environment variable. Must be a C_IDENTIFIER.
+                      type: string
+                    value:
+                      description: |-
+                        Variable references $(VAR_NAME) are expanded
+                        using the previously defined environment variables in the container and
+                        any service environment variables. If a variable cannot be resolved,
+                        the reference in the input string will be unchanged. Double $$ are reduced
+                        to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+                        "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+                        Escaped references will never be expanded, regardless of whether the variable
+                        exists or not.
+                        Defaults to "".
+                      type: string
+                    valueFrom:
+                      description: Source for the environment variable's value. Cannot
+                        be used if value is not empty.
+                      properties:
+                        configMapKeyRef:
+                          description: Selects a key of a ConfigMap.
+                          properties:
+                            key:
+                              description: The key to select.
+                              type: string
+                            name:
+                              description: |-
+                                Name of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?
+                              type: string
+                            optional:
+                              description: Specify whether the ConfigMap or its key
+                                must be defined
+                              type: boolean
+                          required:
+                          - key
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        fieldRef:
+                          description: |-
+                            Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
+                            spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+                          properties:
+                            apiVersion:
+                              description: Version of the schema the FieldPath is
+                                written in terms of, defaults to "v1".
+                              type: string
+                            fieldPath:
+                              description: Path of the field to select in the specified
+                                API version.
+                              type: string
+                          required:
+                          - fieldPath
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        resourceFieldRef:
+                          description: |-
+                            Selects a resource of the container: only resources limits and requests
+                            (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+                          properties:
+                            containerName:
+                              description: 'Container name: required for volumes,
+                                optional for env vars'
+                              type: string
+                            divisor:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: Specifies the output format of the exposed
+                                resources, defaults to "1"
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            resource:
+                              description: 'Required: resource to select'
+                              type: string
+                          required:
+                          - resource
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        secretKeyRef:
+                          description: Selects a key of a secret in the pod's namespace
+                          properties:
+                            key:
+                              description: The key of the secret to select from.  Must
+                                be a valid secret key.
+                              type: string
+                            name:
+                              description: |-
+                                Name of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?
+                              type: string
+                            optional:
+                              description: Specify whether the Secret or its key must
+                                be defined
+                              type: boolean
+                          required:
+                          - key
+                          type: object
+                          x-kubernetes-map-type: atomic
+                      type: object
+                  required:
+                  - name
+                  type: object
+                type: array
+              image:
+                default: ghcr.io/coder/code-server:latest
+                description: Specifies the image used to running code server
+                type: string
+              imagePullSecrets:
+                description: ImagePullSecrets is an optional list of references to
+                  secrets in the same namespace to use for pulling any of the images
+                  used by this PodSpec.
+                items:
+                  description: |-
+                    LocalObjectReference contains enough information to let you locate the
+                    referenced object inside the same namespace.
+                  properties:
+                    name:
+                      description: |-
+                        Name of the referent.
+                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                        TODO: Add other useful fields. apiVersion, kind, uid?
+                      type: string
+                  type: object
+                  x-kubernetes-map-type: atomic
+                type: array
+              ingressClassName:
+                type: string
+              initCommand:
+                description: InitCommand specifies the init commands that will be
+                  running to finish before code server running.
+                type: string
+              initPlugins:
+                additionalProperties:
+                  additionalProperties:
+                    type: string
+                  type: object
+                description: Specifies the init plugins that will be running to finish
+                  before code server running.
+                type: object
+              nodeSelector:
+                additionalProperties:
+                  type: string
+                description: Specifies the node selector for scheduling.
+                type: object
+              publicProxyPorts:
+                description: PublicProxyPorts specifies the public proxy ports for
+                  code server
+                items:
+                  format: int32
+                  type: integer
+                type: array
+              resources:
+                description: Specifies the resource requirements for code server pod.
+                properties:
+                  claims:
+                    description: |-
+                      Claims lists the names of resources, defined in spec.resourceClaims,
+                      that are used by this container.
+
+
+                      This is an alpha field and requires enabling the
+                      DynamicResourceAllocation feature gate.
+
+
+                      This field is immutable. It can only be set for containers.
+                    items:
+                      description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                      properties:
+                        name:
+                          description: |-
+                            Name must match the name of one entry in pod.spec.resourceClaims of
+                            the Pod where this field is used. It makes that resource available
+                            inside a container.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
+                  limits:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Limits describes the maximum amount of compute resources allowed.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                  requests:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Requests describes the minimum amount of compute resources required.
+                      If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                      otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                type: object
+              storageAnnotations:
+                additionalProperties:
+                  type: string
+                description: Specifies the additional annotations for persistent volume
+                  claim
+                type: object
+              storageClassName:
+                description: Specifies the storage class name for persistent volume
+                  claim
+                type: string
+              storageSize:
+                default: 1Gi
+                description: Specifies the storage size that will be used for code
+                  server
+                pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                type: string
+              suspendAfterSeconds:
+                description: Specifies the period before controller suspend the resources
+                  (delete all resources except data).
+                format: int64
+                type: integer
+              volumeName:
+                description: VolumeName specifies the volume name for persistent volume
+                  claim
+                type: string
+            type: object
+          status:
+            description: CodeServerStatus defines the observed state of CodeServer
+            enum:
+            - NotReady
+            - Ready
+            - Suspended
+            type: string
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+
+---
+# Source: code-server-operator/crds/codeserverdeployment-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: code-server-operator-system/code-server-operator-serving-cert
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: codeserverdeployments.cs.walnuts.dev
+spec:
+  group: cs.walnuts.dev
+  names:
+    kind: CodeServerDeployment
+    listKind: CodeServerDeploymentList
+    plural: codeserverdeployments
+    singular: codeserverdeployment
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: Number of replicas
+      jsonPath: .spec.replicas
+      name: REPLICAS
+      type: integer
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        description: CodeServerDeployment is the Schema for the codeserverdeployments
+          API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: CodeServerDeploymentSpec defines the desired state of CodeServerDeployment
+            properties:
+              replicas:
+                format: int32
+                type: integer
+              template:
+                properties:
+                  spec:
+                    description: CodeServerSpec defines the desired state of CodeServer
+                    properties:
+                      containerPort:
+                        default: 19200
+                        description: Specifies the terminal container port for connection,
+                          defaults in 19200.
+                        format: int32
+                        type: integer
+                      domain:
+                        description: Specifies the domain for code server
+                        type: string
+                      envs:
+                        description: Specifies the envs
+                        items:
+                          description: EnvVar represents an environment variable present
+                            in a Container.
+                          properties:
+                            name:
+                              description: Name of the environment variable. Must
+                                be a C_IDENTIFIER.
+                              type: string
+                            value:
+                              description: |-
+                                Variable references $(VAR_NAME) are expanded
+                                using the previously defined environment variables in the container and
+                                any service environment variables. If a variable cannot be resolved,
+                                the reference in the input string will be unchanged. Double $$ are reduced
+                                to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
+                                "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
+                                Escaped references will never be expanded, regardless of whether the variable
+                                exists or not.
+                                Defaults to "".
+                              type: string
+                            valueFrom:
+                              description: Source for the environment variable's value.
+                                Cannot be used if value is not empty.
+                              properties:
+                                configMapKeyRef:
+                                  description: Selects a key of a ConfigMap.
+                                  properties:
+                                    key:
+                                      description: The key to select.
+                                      type: string
+                                    name:
+                                      description: |-
+                                        Name of the referent.
+                                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                        TODO: Add other useful fields. apiVersion, kind, uid?
+                                      type: string
+                                    optional:
+                                      description: Specify whether the ConfigMap or
+                                        its key must be defined
+                                      type: boolean
+                                  required:
+                                  - key
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                fieldRef:
+                                  description: |-
+                                    Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
+                                    spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
+                                  properties:
+                                    apiVersion:
+                                      description: Version of the schema the FieldPath
+                                        is written in terms of, defaults to "v1".
+                                      type: string
+                                    fieldPath:
+                                      description: Path of the field to select in
+                                        the specified API version.
+                                      type: string
+                                  required:
+                                  - fieldPath
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                resourceFieldRef:
+                                  description: |-
+                                    Selects a resource of the container: only resources limits and requests
+                                    (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+                                  properties:
+                                    containerName:
+                                      description: 'Container name: required for volumes,
+                                        optional for env vars'
+                                      type: string
+                                    divisor:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
+                                      description: Specifies the output format of
+                                        the exposed resources, defaults to "1"
+                                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                      x-kubernetes-int-or-string: true
+                                    resource:
+                                      description: 'Required: resource to select'
+                                      type: string
+                                  required:
+                                  - resource
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                                secretKeyRef:
+                                  description: Selects a key of a secret in the pod's
+                                    namespace
+                                  properties:
+                                    key:
+                                      description: The key of the secret to select
+                                        from.  Must be a valid secret key.
+                                      type: string
+                                    name:
+                                      description: |-
+                                        Name of the referent.
+                                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                        TODO: Add other useful fields. apiVersion, kind, uid?
+                                      type: string
+                                    optional:
+                                      description: Specify whether the Secret or its
+                                        key must be defined
+                                      type: boolean
+                                  required:
+                                  - key
+                                  type: object
+                                  x-kubernetes-map-type: atomic
+                              type: object
+                          required:
+                          - name
+                          type: object
+                        type: array
+                      image:
+                        default: ghcr.io/coder/code-server:latest
+                        description: Specifies the image used to running code server
+                        type: string
+                      imagePullSecrets:
+                        description: ImagePullSecrets is an optional list of references
+                          to secrets in the same namespace to use for pulling any
+                          of the images used by this PodSpec.
+                        items:
+                          description: |-
+                            LocalObjectReference contains enough information to let you locate the
+                            referenced object inside the same namespace.
+                          properties:
+                            name:
+                              description: |-
+                                Name of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?
+                              type: string
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        type: array
+                      ingressClassName:
+                        type: string
+                      initCommand:
+                        description: InitCommand specifies the init commands that
+                          will be running to finish before code server running.
+                        type: string
+                      initPlugins:
+                        additionalProperties:
+                          additionalProperties:
+                            type: string
+                          type: object
+                        description: Specifies the init plugins that will be running
+                          to finish before code server running.
+                        type: object
+                      nodeSelector:
+                        additionalProperties:
+                          type: string
+                        description: Specifies the node selector for scheduling.
+                        type: object
+                      publicProxyPorts:
+                        description: PublicProxyPorts specifies the public proxy ports
+                          for code server
+                        items:
+                          format: int32
+                          type: integer
+                        type: array
+                      resources:
+                        description: Specifies the resource requirements for code
+                          server pod.
+                        properties:
+                          claims:
+                            description: |-
+                              Claims lists the names of resources, defined in spec.resourceClaims,
+                              that are used by this container.
+
+
+                              This is an alpha field and requires enabling the
+                              DynamicResourceAllocation feature gate.
+
+
+                              This field is immutable. It can only be set for containers.
+                            items:
+                              description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                              properties:
+                                name:
+                                  description: |-
+                                    Name must match the name of one entry in pod.spec.resourceClaims of
+                                    the Pod where this field is used. It makes that resource available
+                                    inside a container.
+                                  type: string
+                              required:
+                              - name
+                              type: object
+                            type: array
+                            x-kubernetes-list-map-keys:
+                            - name
+                            x-kubernetes-list-type: map
+                          limits:
+                            additionalProperties:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            description: |-
+                              Limits describes the maximum amount of compute resources allowed.
+                              More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                            type: object
+                          requests:
+                            additionalProperties:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            description: |-
+                              Requests describes the minimum amount of compute resources required.
+                              If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                              otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                              More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                            type: object
+                        type: object
+                      storageAnnotations:
+                        additionalProperties:
+                          type: string
+                        description: Specifies the additional annotations for persistent
+                          volume claim
+                        type: object
+                      storageClassName:
+                        description: Specifies the storage class name for persistent
+                          volume claim
+                        type: string
+                      storageSize:
+                        default: 1Gi
+                        description: Specifies the storage size that will be used
+                          for code server
+                        pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
+                        type: string
+                      suspendAfterSeconds:
+                        description: Specifies the period before controller suspend
+                          the resources (delete all resources except data).
+                        format: int64
+                        type: integer
+                      volumeName:
+                        description: VolumeName specifies the volume name for persistent
+                          volume claim
+                        type: string
+                    type: object
+                required:
+                - spec
+                type: object
+            required:
+            - replicas
+            - template
+            type: object
+          status:
+            description: CodeServerDeploymentStatus defines the observed state of
+              CodeServerDeployment
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+
+---
+# Source: code-server-operator/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: code-server-operator-controller-manager
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    {}
+---
+# Source: code-server-operator/templates/manager-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: code-server-operator-manager-role
+  labels:
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserver
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserver/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserver/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserverdeployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserverdeployments/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeserverdeployments/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeservers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeservers/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - cs.walnuts.dev
+  resources:
+  - codeservers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+# Source: code-server-operator/templates/metrics-reader-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: code-server-operator-metrics-reader
+  labels:
+    app.kubernetes.io/component: kube-rbac-proxy
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+# Source: code-server-operator/templates/proxy-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: code-server-operator-proxy-role
+  labels:
+    app.kubernetes.io/component: kube-rbac-proxy
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+# Source: code-server-operator/templates/manager-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: code-server-operator-manager-rolebinding
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'code-server-operator-manager-role'
+subjects:
+- kind: ServiceAccount
+  name: 'code-server-operator-controller-manager'
+  namespace: 'code-server'
+---
+# Source: code-server-operator/templates/proxy-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: code-server-operator-proxy-rolebinding
+  labels:
+    app.kubernetes.io/component: kube-rbac-proxy
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: 'code-server-operator-proxy-role'
+subjects:
+- kind: ServiceAccount
+  name: 'code-server-operator-controller-manager'
+  namespace: 'code-server'
+---
+# Source: code-server-operator/templates/leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: code-server-operator-leader-election-role
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+# Source: code-server-operator/templates/leader-election-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: code-server-operator-leader-election-rolebinding
+  labels:
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: 'code-server-operator-leader-election-role'
+subjects:
+- kind: ServiceAccount
+  name: 'code-server-operator-controller-manager'
+  namespace: 'code-server'
+---
+# Source: code-server-operator/templates/metrics-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: code-server-operator-controller-manager-metrics-service
+  labels:
+    app.kubernetes.io/component: kube-rbac-proxy
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    control-plane: controller-manager
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+    control-plane: controller-manager
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+---
+# Source: code-server-operator/templates/webhook-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: code-server-operator-webhook-service
+  labels:
+    app.kubernetes.io/component: webhook
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+    control-plane: controller-manager
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 9443
+---
+# Source: code-server-operator/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-server-operator-controller-manager
+  labels:
+    app.kubernetes.io/component: manager
+    app.kubernetes.io/created-by: code-server-operator
+    app.kubernetes.io/part-of: code-server-operator
+    control-plane: controller-manager
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+      app.kubernetes.io/name: code-server-operator
+      app.kubernetes.io/instance: code-server-operator
+  template:
+    metadata:
+      labels:
+        control-plane: controller-manager
+        app.kubernetes.io/name: code-server-operator
+        app.kubernetes.io/instance: code-server-operator
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+    spec:
+      containers:
+      - args:
+        - --health-probe-bind-address=:8081
+        - --metrics-bind-address=127.0.0.1:8080
+        - --leader-elect
+        command:
+        - /manager
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: "cluster.local"
+        image: ghcr.io/walnuts1018/code-server-operator:0.5.13
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: manager
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+          readOnly: true
+      - args:
+        - --secure-listen-address=0.0.0.0:8443
+        - --upstream=http://127.0.0.1:8080/
+        - --logtostderr=true
+        - --v=0
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: "cluster.local"
+        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.16.0
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 5m
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: code-server-operator-controller-manager
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: webhook-server-cert
+---
+# Source: code-server-operator/templates/serving-cert.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: code-server-operator-serving-cert
+  labels:
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  dnsNames:
+  - 'code-server-operator-webhook-service.code-server.svc'
+  - 'code-server-operator-webhook-service.code-server.svc.cluster.local'
+  issuerRef:
+    kind: Issuer
+    name: 'code-server-operator-selfsigned-issuer'
+  secretName: webhook-server-cert
+---
+# Source: code-server-operator/templates/selfsigned-issuer.yaml
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: code-server-operator-selfsigned-issuer
+  labels:
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selfSigned: {}
+---
+# Source: code-server-operator/templates/mutating-webhook-configuration.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: code-server-operator-mutating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: code-server/code-server-operator-serving-cert
+  labels:
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'code-server-operator-webhook-service'
+      namespace: 'code-server'
+      path: /mutate-cs-walnuts-dev-v1alpha2-codeserver
+  failurePolicy: Fail
+  name: mcodeserver.kb.io
+  rules:
+  - apiGroups:
+    - cs.walnuts.dev
+    apiVersions:
+    - v1alpha2
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - codeservers
+  sideEffects: None
+---
+# Source: code-server-operator/templates/validating-webhook-configuration.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: code-server-operator-validating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: code-server/code-server-operator-serving-cert
+  labels:
+    helm.sh/chart: code-server-operator-0.5.13
+    app.kubernetes.io/name: code-server-operator
+    app.kubernetes.io/instance: code-server-operator
+    app.kubernetes.io/version: "0.5.13"
+    app.kubernetes.io/managed-by: Helm
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: 'code-server-operator-webhook-service'
+      namespace: 'code-server'
+      path: /validate-cs-walnuts-dev-v1alpha2-codeserver
+  failurePolicy: Fail
+  name: vcodeserver.kb.io
+  rules:
+  - apiGroups:
+    - cs.walnuts.dev
+    apiVersions:
+    - v1alpha2
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - codeservers
+  sideEffects: None

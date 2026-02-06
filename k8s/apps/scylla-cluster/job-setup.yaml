@@ -1,0 +1,86 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: scylla-cluster-setup
+    app.kubernetes.io/name: scylla-cluster-setup
+  name: scylla-cluster-setup-77611d8909
+  namespace: databases
+spec:
+  template:
+    metadata:
+      labels:
+        app: scylla-cluster-setup
+        app.kubernetes.io/name: scylla-cluster-setup
+    spec:
+      containers:
+        - args:
+            - -c
+            - export PATH=$PATH:/jq && bash /scripts/setup.sh
+          command:
+            - /bin/bash
+          env:
+            - name: SCYLLA_HOST
+              value: scylla-cluster-client
+            - name: SCYLLA_PORT
+              value: "9142"
+            - name: SCYLLA_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  key: admin_username
+                  name: scylla-cluster-migrations-7ba27e
+            - name: SCYLLA_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: admin_password
+                  name: scylla-cluster-migrations-7ba27e
+          image: scylladb/scylla:2025.4.2
+          name: setup
+          volumeMounts:
+            - mountPath: /certs/admin
+              name: admin-certs
+              readOnly: true
+            - mountPath: /certs/ca
+              name: serving-ca
+              readOnly: true
+            - mountPath: /scripts
+              name: scripts
+              readOnly: true
+            - mountPath: /config/migrations.cql
+              name: migration-config
+              readOnly: true
+              subPath: migrations.cql
+            - mountPath: /jq
+              name: jq
+              readOnly: true
+      restartPolicy: OnFailure
+      volumes:
+        - name: admin-certs
+          secret:
+            items:
+              - key: tls.crt
+                path: tls.crt
+              - key: tls.key
+                path: tls.key
+            secretName: scylla-cluster-local-user-admin
+        - configMap:
+            items:
+              - key: ca-bundle.crt
+                path: ca-bundle.crt
+            name: scylla-cluster-local-serving-ca
+          name: serving-ca
+        - configMap:
+            items:
+              - key: setup.sh
+                path: setup.sh
+            name: scylla-setup-09ebf4
+          name: scripts
+        - name: migration-config
+          secret:
+            items:
+              - key: migrations.cql
+                path: migrations.cql
+            secretName: scylla-cluster-migrations-7ba27e
+        - image:
+            reference: ghcr.io/jqlang/jq:1.8.1
+          name: jq

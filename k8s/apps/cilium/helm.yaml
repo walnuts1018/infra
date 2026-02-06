@@ -1,0 +1,204 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: cilium-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: cilium
+    helm:
+      releaseName: cilium
+      valuesObject:
+        bgpControlPlane:
+          enabled: true
+        cluster:
+          id: 1
+          name: kurumi
+        clustermesh:
+          apiserver:
+            etcd:
+              init:
+                resources:
+                  limits:
+                    cpu: 100m
+                    memory: 100Mi
+                  requests:
+                    cpu: 100m
+                    memory: 100Mi
+              resources:
+                limits:
+                  cpu: 1000m
+                  memory: 256Mi
+                requests:
+                  cpu: 7m
+                  memory: 64Mi
+            kvstoremesh:
+              enabled: true
+              resources:
+                limits:
+                  cpu: 1000m
+                  memory: 1024M
+                requests:
+                  cpu: 2m
+                  memory: 36Mi
+            metrics:
+              enabled: true
+              serviceMonitor:
+                enabled: true
+            replicas: 1
+            resources:
+              limits:
+                cpu: 1000m
+                memory: 1024M
+              requests:
+                cpu: 5m
+                memory: 49Mi
+            service:
+              loadBalancerIP: 192.168.0.139
+              type: LoadBalancer
+            tls:
+              auto:
+                certManagerIssuerRef:
+                  group: cert-manager.io
+                  kind: Issuer
+                  name: cilium-cluster-mesh
+                enabled: true
+                method: certmanager
+          config:
+            clusters:
+              - ips:
+                  - 192.168.0.160
+                name: biscuit
+                port: 2379
+            enabled: true
+          enableEndpointSliceSynchronization: false
+          enableMCSAPISupport: true
+          maxConnectedClusters: 255
+          useAPIServer: true
+        envoy:
+          prometheus:
+            enabled: true
+            serviceMonitor:
+              enabled: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 51Mi
+        envoyConfig:
+          enabled: true
+          secretsNamespace:
+            create: false
+            name: cilium-secrets
+        hubble:
+          metrics:
+            dashboards:
+              enabled: true
+            enableOpenMetrics: true
+            enabled:
+              - dns
+              - drop
+              - tcp
+              - flow:labelsContext=source_namespace,source_workload_kind,source_workload,destination_namespace,destination_workload_kind,destination_workload,traffic_direction
+              - flows-to-world
+              - port-distribution
+              - icmp
+              - httpV2:exemplars=true;
+            serviceMonitor:
+              enabled: true
+          relay:
+            enabled: true
+            prometheus:
+              enabled: true
+              serviceMonitor:
+                enabled: true
+            resources:
+              limits:
+                memory: 512Mi
+              requests:
+                cpu: 1m
+                memory: 80Mi
+          tls:
+            auto:
+              enabled: true
+              method: cronJob
+            enabled: true
+          ui:
+            backend:
+              resources:
+                limits:
+                  memory: 256Mi
+                requests:
+                  cpu: 1m
+                  memory: 60Mi
+            enabled: true
+            frontend:
+              resources:
+                limits:
+                  memory: 256Mi
+                requests:
+                  cpu: 1m
+                  memory: 10Mi
+        ingressController:
+          default: true
+          defaultSecretName: cloudflare-origin-cert
+          defaultSecretNamespace: cilium-system
+          enabled: true
+          enforceHttps: true
+          loadbalancerMode: shared
+          secretsNamespace:
+            create: false
+            name: cilium-secrets
+            sync: true
+          service:
+            loadBalancerIP: 192.168.0.129
+        k8sClientRateLimit:
+          burst: 20
+          qps: 10
+        k8sServiceHost: 192.168.0.17
+        k8sServicePort: 16443
+        kubeProxyReplacement: true
+        l2announcements:
+          enabled: true
+        l7Proxy: true
+        nodePort:
+          enabled: true
+        operator:
+          prometheus:
+            enabled: true
+            serviceMonitor:
+              enabled: true
+          replicas: 2
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 2m
+              memory: 51Mi
+        prometheus:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+            trustCRDsExist: true
+        resources:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 512Mi
+        tls:
+          secretsNamespace:
+            create: false
+            name: cilium-secrets
+    repoURL: https://helm.cilium.io/
+    targetRevision: 1.18.6
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true
