@@ -4,5 +4,5 @@
 
   chart: 'prometheus-operator-crds',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '26.0.1',
+  targetRevision: '27.0.0',
 }
