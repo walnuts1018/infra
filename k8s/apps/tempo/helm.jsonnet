@@ -3,7 +3,7 @@
   namespace: (import 'app.json5').namespace,
 
   chart: 'tempo-distributed',
-  repoURL: 'https://grafana.github.io/helm-charts',
-  targetRevision: '1.61.3',
+  repoURL: 'https://grafana-community.github.io/helm-charts',
+  targetRevision: '2.1.2',
   values: (importstr 'values.yaml'),
 }
