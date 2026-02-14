@@ -6,20 +6,19 @@ metadata:
 spec:
   goTemplate: true
   generators:
-  - git:
-      repoURL: https://github.com/walnuts1018/infra
-      revision: main
-      files:
-      - path: "k8s/apps/*/app.json5"
-      # TODO: rm
-      - path: "k8s/apps/minio-biscuit/app.json5"
-        exclude: true
-      - path: "k8s/apps/minio-biscuit-backup/app.json5"
-        exclude: true
-      - path: "k8s/apps/prometheus-operator-crds/app.json5"
-        exclude: true
-      - path: "k8s/apps/shutdown-manager/app.json5"
-        exclude: true
+  - matrix:
+      generators:
+      - git:
+          repoURL: https://github.com/walnuts1018/infra
+          revision: main
+          files:
+          - path: "k8s/apps/*/app.json5"
+      - list:
+          elements:
+          - kurumiEnabled: '{{ hasKey .clusters "kurumi" }}'
+    selector:
+      matchLabels:
+        kurumiEnabled: "true"
   ignoreApplicationDifferences:
   - jsonPointers:
     - /spec/syncPolicy
