@@ -1,4 +1,7 @@
 {
   name: "scylla-cluster",
   namespace: "databases",
+  clusters: {
+    kurumi: {},
+  },
 }

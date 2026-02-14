@@ -1,4 +1,7 @@
 {
   name: "scylla-operator",
   namespace: "scylla-operator",
+  clusters: {
+    kurumi: {},
+  },
 }

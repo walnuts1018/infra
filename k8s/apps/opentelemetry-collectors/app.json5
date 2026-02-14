@@ -1,4 +1,7 @@
 {
   name: "opentelemetry-collectors",
   namespace: "opentelemetry-collector",
+  clusters: {
+    kurumi: {},
+  },
 }

@@ -1,4 +1,7 @@
 {
   name: "machine-status-api",
   namespace: "default",
+  clusters: {
+    kurumi: {},
+  },
 }

@@ -1,4 +1,7 @@
 {
   name: "trust-manager",
   namespace: "cert-manager",
+  clusters: {
+    kurumi: {},
+  },
 }

@@ -1,4 +1,7 @@
 {
   name: "external-snapshotter",
   namespace: "kube-system",
+  clusters: {
+    kurumi: {},
+  },
 }

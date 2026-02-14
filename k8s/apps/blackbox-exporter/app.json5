@@ -1,4 +1,7 @@
 {
   name: "blackbox-exporter",
   namespace: "monitoring",
+  clusters: {
+    kurumi: {},
+  },
 }

@@ -1,4 +1,7 @@
 {
   name: "mcs-api",
   namespace: "kube-system",
+  clusters: {
+    kurumi: {},
+  },
 }

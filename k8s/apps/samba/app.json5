@@ -1,4 +1,7 @@
 {
   name: "samba",
   namespace: "samba",
+  clusters: {
+    kurumi: {},
+  },
 }

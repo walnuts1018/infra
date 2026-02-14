@@ -1,4 +1,7 @@
 {
   name: "tailscale",
   namespace: "network-exporter",
+  clusters: {
+    kurumi: {},
+  },
 }

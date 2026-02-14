@@ -1,4 +1,7 @@
 {
   name: "zitadel",
   namespace: "zitadel",
+  clusters: {
+    kurumi: {},
+  },
 }

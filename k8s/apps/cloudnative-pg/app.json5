@@ -1,4 +1,7 @@
 {
   name: "cloudnative-pg",
   namespace: "cloudnative-pg",
+  clusters: {
+    kurumi: {},
+  },
 }

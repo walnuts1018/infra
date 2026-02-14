@@ -1,4 +1,7 @@
 {
   name: "metrics-server",
   namespace: "monitoring",
+  clusters: {
+    kurumi: {},
+  },
 }

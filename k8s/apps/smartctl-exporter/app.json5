@@ -1,4 +1,7 @@
 {
   name: "smartctl-exporter",
   namespace: "monitoring",
+  clusters: {
+    kurumi: {},
+  },
 }

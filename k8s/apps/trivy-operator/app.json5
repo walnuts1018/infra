@@ -1,4 +1,7 @@
 {
   name: "trivy-operator",
   namespace: "trivy-system",
+  clusters: {
+    kurumi: {},
+  },
 }

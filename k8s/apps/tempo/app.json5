@@ -1,4 +1,7 @@
 {
   name: "tempo",
   namespace: "tempo",
+  clusters: {
+    kurumi: {},
+  },
 }

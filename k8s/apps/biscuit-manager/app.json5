@@ -1,4 +1,7 @@
 {
   name: "biscuit-manager",
   namespace: "biscuit-manager",
+  clusters: {
+    kurumi: {},
+  },
 }

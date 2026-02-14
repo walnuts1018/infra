@@ -1,4 +1,7 @@
 {
   name: "affine",
   namespace: "affine",
+  clusters: {
+    kurumi: {},
+  },
 }

@@ -1,4 +1,7 @@
 {
   name: "ingress-nginx",
   namespace: "ingress-nginx",
+  clusters: {
+    kurumi: {},
+  },
 }

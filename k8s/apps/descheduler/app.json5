@@ -1,4 +1,7 @@
 {
   name: "descheduler",
   namespace: "kube-system",
+  clusters: {
+    kurumi: {},
+  },
 }

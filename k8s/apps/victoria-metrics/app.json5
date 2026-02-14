@@ -1,4 +1,7 @@
 {
   name: "victoria-metrics",
   namespace: "victoria-metrics",
+  clusters: {
+    kurumi: {},
+  },
 }

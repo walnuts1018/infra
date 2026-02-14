@@ -1,4 +1,7 @@
 {
   name: "renovate",
   namespace: "renovate",
+  clusters: {
+    kurumi: {},
+  },
 }

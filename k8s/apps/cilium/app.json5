@@ -1,4 +1,7 @@
 {
   name: "cilium",
   namespace: "cilium-system",
+  clusters: {
+    kurumi: {},
+  },
 }

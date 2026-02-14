@@ -1,4 +1,7 @@
 {
   name: "envoy-gateway-class",
   namespace: "envoy-gateway-system",
+  clusters: {
+    kurumi: {},
+  },
 }

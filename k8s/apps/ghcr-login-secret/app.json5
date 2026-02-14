@@ -1,4 +1,7 @@
 {
   name: "ghcr-login-secret",
   namespace: "external-secrets",
+  clusters: {
+    kurumi: {},
+  },
 }

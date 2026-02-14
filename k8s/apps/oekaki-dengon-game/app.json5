@@ -1,4 +1,7 @@
 {
   name: "oekaki-dengon-game",
   namespace: "oekaki-dengon-game",
+  clusters: {
+    kurumi: {},
+  },
 }

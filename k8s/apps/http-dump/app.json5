@@ -1,4 +1,7 @@
 {
   name: "http-dump",
   namespace: "default",
+  clusters: {
+    kurumi: {},
+  },
 }

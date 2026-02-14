@@ -1,4 +1,7 @@
 {
   name: "github-readme-stats",
   namespace: "github-readme-stats",
+  clusters: {
+    kurumi: {},
+  },
 }

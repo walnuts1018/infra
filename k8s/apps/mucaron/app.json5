@@ -1,4 +1,7 @@
 {
   name: "mucaron",
   namespace: "mucaron",
+  clusters: {
+    kurumi: {},
+  },
 }

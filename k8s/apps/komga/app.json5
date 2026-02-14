@@ -1,4 +1,7 @@
 {
   name: "komga",
   namespace: "komga",
+  clusters: {
+    kurumi: {},
+  },
 }

@@ -1,4 +1,7 @@
 {
   name: "moco",
   namespace: "moco-system",
+  clusters: {
+    kurumi: {},
+  },
 }

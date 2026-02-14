@@ -1,4 +1,7 @@
 {
   name: "code-server-operator",
   namespace: "code-server",
+  clusters: {
+    kurumi: {},
+  },
 }
