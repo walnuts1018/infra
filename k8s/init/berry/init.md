@@ -65,5 +65,5 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 ### Init
 
 ```bash
-kubectl apply -f k8s/_argocd/berry/base.yaml
+kubectl apply -f k8s/_argocd/clusters/berry/base.yaml
 ```

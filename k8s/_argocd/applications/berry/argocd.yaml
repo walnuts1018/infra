@@ -15,9 +15,7 @@ spec:
     directory:
       recurse: true
       jsonnet:
-        tlas:
-        - name: 'domain'
-          value: 'argocd.walnuts.dev'
+        tlas: []
   syncPolicy:
     automated:
       selfHeal: true

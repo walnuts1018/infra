@@ -109,8 +109,6 @@ applicationSet:
 
 notifications:
   argocdUrl: "https://argocd.local.walnuts.dev"
-  context:
-    cluster: "kurumi"
   secret:
     create: false
     name: "argocd-notifications-secret"
