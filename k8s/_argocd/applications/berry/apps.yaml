@@ -73,7 +73,7 @@ spec:
           # - $infra/path/to/file/values.yaml
           - {{ printf "$infra/%s/%s" $.path.path . }}
           {{- end }}
-          {{ with $.clusters.berry.additionalSources.helm.valuesObject }}
+          {{- with $.clusters.berry.additionalSources.helm.valuesObject }}
           valuesObject: {{ toJson . | indent 12 }}
           {{- end }}
       {{- end }}
