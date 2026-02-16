@@ -81,8 +81,8 @@ server:
   httproute:
     enabled: true
     parentRefs:
-    - name: test
-      namespace: argocd
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
   metrics:
     enabled: true
     serviceMonitor:
