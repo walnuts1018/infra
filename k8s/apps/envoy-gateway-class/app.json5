@@ -1,0 +1,22 @@
+{
+  name: "envoy-gateway-class",
+  namespace: "envoy-gateway-system",
+  clusters: {
+    berry: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "minReplicas",
+            value: "1",
+            code: true,
+          },
+          {
+            name: "loadBalancerIP",
+            value: "192.168.8.2",
+            code: true,
+          },
+        ]
+      }
+    },
+  },
+}

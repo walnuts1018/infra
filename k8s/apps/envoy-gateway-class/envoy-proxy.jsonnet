@@ -1,4 +1,4 @@
-function(loadBalancerIP='192.168.0.138') {
+function(loadBalancerIP, minReplicas) {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'EnvoyProxy',
   metadata: {
@@ -10,7 +10,7 @@ function(loadBalancerIP='192.168.0.138') {
       type: 'Kubernetes',
       kubernetes: {
         envoyDeployment: {
-          replicas: 2,
+          replicas: minReplicas,
           container: {
             resources: {
               requests: {
@@ -24,7 +24,7 @@ function(loadBalancerIP='192.168.0.138') {
           },
         },
         envoyHpa: {
-          minReplicas: 2,
+          minReplicas: minReplicas,
           maxReplicas: 5,
           metrics: [
             {
@@ -40,8 +40,8 @@ function(loadBalancerIP='192.168.0.138') {
           ],
         },
         envoyService: {
-          loadBalancerIP: loadBalancerIP,
           type: 'LoadBalancer',
+          loadBalancerIP: loadBalancerIP,
         },
       },
     },

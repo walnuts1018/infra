@@ -1,9 +1,6 @@
 {
   name: "envoy-gateway",
   namespace: "envoy-gateway-system",
-  clusters: {
-    berry: {},
-  },
   additionalSources: {
     helm: {
       repoURL: "docker.io/envoyproxy",
@@ -13,5 +10,8 @@
         "values.yaml"
       ]
     },
-  }
+  },
+  clusters: {
+    berry: {},
+  },
 }

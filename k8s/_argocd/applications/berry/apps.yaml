@@ -57,7 +57,10 @@ spec:
           recurse: true
           exclude: '{config/*,_*/*}'
           jsonnet:
-            tlas: []
+            tlas:
+            {{ range $tla := .clusters.berry.tlas }}
+            - {{ $tla }}
+            {{- end }}
         ref: infra
       {{- with .additionalSources.helm }}
       - repoURL: '{{ .repoURL }}'
