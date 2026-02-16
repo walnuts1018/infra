@@ -6,13 +6,13 @@
       jsonnet: {
         tlas: [
           {
+            name: "loadBalancerIP",
+            value: "192.168.8.2",
+          },
+          {
             name: "minReplicas",
             value: "1",
             code: true,
-          },
-          {
-            name: "loadBalancerIP",
-            value: "192.168.8.2",
           },
         ]
       }
