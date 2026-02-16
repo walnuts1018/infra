@@ -44,7 +44,8 @@ kubectl create secret generic onepassword-token -n onepassword --from-literal=to
 
 ```bash
 kubectl create namespace argocd
-kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+helm repo add argo https://argoproj.github.io/argo-helm
+helm template -n argocd argocd argo/argo-cd | kubectl apply --server-side --force-conflicts -f -
 ```
 
 ### ArgoCD CLI インストール
