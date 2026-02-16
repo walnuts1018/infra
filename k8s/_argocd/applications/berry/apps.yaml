@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+  - matrix:
+      generators:
+      - git:
+          repoURL: https://github.com/walnuts1018/infra
+          revision: clusterapi # TODO
+          files:
+          - path: "k8s/apps/*/app.json5"
+      - list:
+          elements:
+          - berryEnabled: '{{ hasKey .clusters "berry" }}'
+    selector:
+      matchLabels:
+        berryEnabled: "true"
+  ignoreApplicationDifferences:
+  - jsonPointers:
+    - /spec/syncPolicy
+  template:
+    metadata:
+      name: '{{.name}}'
+      # annotations:
+      #   argocd.argoproj.io/manifest-generate-paths: .;../components
+    spec:
+      project: default
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.namespace}}'
+      source:
+        repoURL: 'https://github.com/walnuts1018/infra'
+        targetRevision: clusterapi # TODO
+        path: '{{.path.path}}'
+        directory:
+          recurse: true
+          exclude: '{config/*,_*/*}'
+          jsonnet:
+            tlas: []
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+        - ServerSideApply=true
+        - FailOnSharedResource=true
+  templatePatch: |
+    {{- with  .annotations }}
+    metadata:
+      annotations:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    {{- end }}
