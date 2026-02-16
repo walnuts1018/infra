@@ -1,0 +1,17 @@
+{
+  name: "metrics-server",
+  namespace: "monitoring",
+  additionalSources: {
+    helm: {
+      repoURL: "https://kubernetes-sigs.github.io/metrics-server/",
+      chart: "metrics-server",
+      targetRevision: "3.13.0",
+      valueFiles: [
+        "values.yaml"
+      ]
+    },
+  },
+  clusters: {
+    berry: {},
+  },
+}
