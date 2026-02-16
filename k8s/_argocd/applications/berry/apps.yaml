@@ -32,6 +32,23 @@ spec:
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{.namespace}}'
+      sources: []
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+        - ServerSideApply=true
+        - FailOnSharedResource=true
+  templatePatch: |
+    {{- with .annotations }}
+    metadata:
+      annotations:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    {{- end }}
+    spec:
       sources:
       - repoURL: 'https://github.com/walnuts1018/infra'
         targetRevision: clusterapi # TODO
@@ -49,22 +66,7 @@ spec:
         helm:
           valueFiles:
           {{- range .valueFiles }}
+          # - $infra/path/to/file/values.yaml
           - {{ printf "$infra/%s/%s" $.path.path . }}
           {{- end }}
       {{- end }}
-
-      syncPolicy:
-        automated:
-          selfHeal: true
-          prune: true
-        syncOptions:
-        - ServerSideApply=true
-        - FailOnSharedResource=true
-  templatePatch: |
-    {{- with .annotations }}
-    metadata:
-      annotations:
-        {{- range $key, $value := . }}
-        {{ $key }}: {{ $value | quote }}
-        {{- end }}
-    {{- end }}
