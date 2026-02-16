@@ -35,10 +35,27 @@ vim ~/.kube/config
 ### ArgoCD インストール
 
 ```bash
-export ARGOCD_VERSION=v3.3.0
+kubectl create namespace argocd
+kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
+### ArgoCD CLI インストール
+
 ```bash
-kubectl create namespace argocd
-kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/$ARGOCD_VERSION/manifests/core-install.yaml
+brew install argocd
+```
+
+### ログイン
+
+```bash
+argocd admin initial-password -n argocd
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
+
+<http://localhost:8080>
+
+### Init
+
+```bash
+kubectl apply -f k8s/_argocd/berry/base.yaml
 ```
