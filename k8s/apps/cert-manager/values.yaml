@@ -23,7 +23,3 @@ cainjector:
     requests:
       cpu: 1m
       memory: 112Mi
-
-tolerations:
-- key: "node.walnuts.dev/low-performance"
-  operator: "Exists"
