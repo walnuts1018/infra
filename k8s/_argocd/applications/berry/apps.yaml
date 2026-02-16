@@ -24,7 +24,7 @@ spec:
     - /spec/syncPolicy
   template:
     metadata:
-      name: '{{ printf "%s-berry" .name }}'
+      name: '{{ printf "%s" .name }}'
       # annotations:
       #   argocd.argoproj.io/manifest-generate-paths: .;../components
     spec:

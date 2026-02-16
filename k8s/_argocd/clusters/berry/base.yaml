@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: base-berry
+  name: base
   namespace: argocd
 spec:
   project: default
