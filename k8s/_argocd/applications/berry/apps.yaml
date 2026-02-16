@@ -32,8 +32,7 @@ spec:
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{.namespace}}'
-      sources:
-      - { test: }
+      sources: []
       syncPolicy:
         automated:
           selfHeal: true
