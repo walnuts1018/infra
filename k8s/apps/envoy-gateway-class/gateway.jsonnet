@@ -1,4 +1,4 @@
-function(loadBalancerIP, minReplicas) {
+{
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'Gateway',
   metadata: {
@@ -6,7 +6,7 @@ function(loadBalancerIP, minReplicas) {
     namespace: (import 'app.json5').namespace,
   },
   spec: {
-    gatewayClassName: (import 'gateway-class.jsonnet')(loadBalancerIP, minReplicas).metadata.name,
+    gatewayClassName: (import 'gateway-class.jsonnet').metadata.name,
     listeners: [
       {
         name: 'http',

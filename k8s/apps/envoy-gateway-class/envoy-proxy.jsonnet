@@ -1,10 +1,7 @@
 function(loadBalancerIP, minReplicas) {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'EnvoyProxy',
-  metadata: {
-    name: 'custom-config',
-    namespace: (import 'app.json5').namespace,
-  },
+  metadata: (import 'envoy-proxy-metadata.libsonnet'),
   spec: {
     provider: {
       type: 'Kubernetes',
