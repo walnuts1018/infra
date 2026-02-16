@@ -58,7 +58,7 @@ spec:
           exclude: '{config/*,_*/*}'
           jsonnet:
             tlas:
-            {{ range $tla := .clusters.berry.tlas }}
+            {{ range $tla := .clusters.berry.jsonnet.tlas }}
             - {{ $tla }}
             {{- end }}
         ref: infra
