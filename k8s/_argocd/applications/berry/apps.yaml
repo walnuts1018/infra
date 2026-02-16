@@ -32,7 +32,8 @@ spec:
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{.namespace}}'
-      sources: []
+      sources:
+      - { test: }
       syncPolicy:
         automated:
           selfHeal: true
@@ -58,10 +59,8 @@ spec:
           exclude: '{config/*,_*/*}'
           jsonnet:
             tlas:
-            {{- range .clusters.berry.jsonnet.tlas }}
-            - name: {{ .name }}
-              value: {{ .value | toJson }}
-              code: {{ .code }}
+            {{- range $tla := .clusters.berry.jsonnet.tlas }}
+            - {{ $tla | toJson }}
             {{- end }}
         ref: infra
       {{- with .additionalSources.helm }}
