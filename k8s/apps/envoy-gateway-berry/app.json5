@@ -1,0 +1,17 @@
+{
+  name: "envoy-gateway",
+  namespace: "envoy-gateway-system",
+  clusters: {
+    berry: {},
+  },
+  additionalSources: {
+    helm: {
+      repoURL: "docker.io/envoyproxy",
+      chart: "gateway-helm",
+      targetRevision: "1.6.1",
+      valueFiles: [
+        "values.yaml"
+      ]
+    },
+  }
+}

@@ -1,0 +1,19 @@
+connect:
+  create: true
+  replicas: 1
+  api:
+    resources:
+      requests:
+        cpu: 5m
+        memory: 80Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  credentialsName: op-credentials
+  credentialsKey: 1password-credentials.json
+
+operator:
+  create: true
+  token:
+    name: onepassword-token
+    key: token

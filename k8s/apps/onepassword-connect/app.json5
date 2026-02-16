@@ -1,0 +1,17 @@
+{
+  name: "onepassword-connect",
+  namespace: "onepassword",
+  clusters: {
+    berry: {},
+  },
+  additionalSources: {
+    helm: {
+      repoURL: "https://1password.github.io/connect-helm-charts/",
+      chart: "connect",
+      targetRevision: "2.3.0",
+      valueFiles: [
+        "values.yaml"
+      ]
+    },
+  }
+}
