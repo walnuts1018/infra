@@ -16,6 +16,7 @@ spec:
       recurse: true
       jsonnet:
         tlas: []
+    ref: infra
   - repoURL: "https://argoproj.github.io/argo-helm"
     chart: "argo-cd"
     targetRevision: "9.4.2"
