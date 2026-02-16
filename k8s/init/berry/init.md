@@ -30,6 +30,14 @@ make get-kubeconfig
 vim ~/.kube/config
 ```
 
+## Secret for 1Password Connect
+
+```bash
+kubectl create namespace onepassword
+kubectl create secret generic op-credentials -n onepassword --from-literal=1password-credentials.json="$(op read "op://kurumi/k8s Credentials File/1password-credentials.json")"
+kubectl create secret generic onepassword-token -n onepassword --from-literal=token="$(op read "op://kurumi/pcookjymtl2zwyozhofaco5yhy/credential")"
+```
+
 ## ArgoCD
 
 ### ArgoCD インストール

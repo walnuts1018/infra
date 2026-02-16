@@ -1,6 +1,5 @@
 connect:
   create: true
-  replicas: 1
   api:
     resources:
       requests:
