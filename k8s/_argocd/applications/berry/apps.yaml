@@ -42,6 +42,17 @@ spec:
           jsonnet:
             tlas: []
         ref: infra
+      {{- with .additionalSources.helm }}
+      - repoURL: '{{ .repoURL }}'
+        chart: '{{ .chart }}'
+        targetRevision: '{{ .targetRevision }}'
+        helm:
+          valueFiles:
+          {{- range .valueFiles }}
+          - {{ printf "$infra/%s/%s" $.path.path . }}
+          {{- end }}
+      {{- end }}
+
       syncPolicy:
         automated:
           selfHeal: true
@@ -56,17 +67,4 @@ spec:
         {{- range $key, $value := . }}
         {{ $key }}: {{ $value | quote }}
         {{- end }}
-    {{- end }}
-    {{- with .additionalSources.helm }}
-    spec:
-      sources:
-      - repoURL: '{{ .repoURL }}'
-        chart: '{{ .chart }}'
-        targetRevision: '{{ .targetRevision }}'
-        helm:
-          valueFiles:
-          {{- range .valueFiles }}
-          # - $infra/path/to/file/values.yaml
-          - {{ printf "$infra/%s/%s" $.path.path . }}
-          {{- end }}
     {{- end }}
