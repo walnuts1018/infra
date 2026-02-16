@@ -24,7 +24,7 @@ spec:
     - /spec/syncPolicy
   template:
     metadata:
-      name: '{{.name}}'
+      name: '{{ printf "%s-berry" .name }}'
       # annotations:
       #   argocd.argoproj.io/manifest-generate-paths: .;../components
     spec:
@@ -64,6 +64,7 @@ spec:
         chart: '{{ .chart }}'
         targetRevision: '{{ .targetRevision }}'
         helm:
+          releaseName: '{{ $.name }}'
           valueFiles:
           {{- range .valueFiles }}
           # - $infra/path/to/file/values.yaml
