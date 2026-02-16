@@ -9,15 +9,18 @@ machine:
       - network: 0.0.0.0/0
         gateway: 192.168.0.1
     nameservers:
-      - 192.168.0.1
+    - 192.168.0.1
   time:
     servers:
-      - ntp.jst.mfeed.ad.jp
+    - ntp.jst.mfeed.ad.jp
   install:
     disk: /dev/sda
     wipe: true
 cluster:
   allowSchedulingOnControlPlanes: true
+  network:
+    cni:
+      name: none
 ---
 apiVersion: v1alpha1
 kind: HostnameConfig
