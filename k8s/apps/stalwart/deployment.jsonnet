@@ -49,21 +49,21 @@
               {
                 containerPort: 25,
               },
-              {
-                containerPort: 587,
-              },
+              // {
+              //   containerPort: 587,
+              // },
               {
                 containerPort: 465,
               },
-              {
-                containerPort: 143,
-              },
+              // {
+              //   containerPort: 143,
+              // },
               {
                 containerPort: 993,
               },
-              {
-                containerPort: 4190,
-              },
+              // {
+              //   containerPort: 4190,
+              // },
             ],
             volumeMounts: [
               {
