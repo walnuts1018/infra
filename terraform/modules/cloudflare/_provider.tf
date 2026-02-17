@@ -12,6 +12,10 @@ variable "cloudflare_api_token" {
   sensitive = true
 }
 
+variable "amazonses_verification_token" {
+  type = string
+}
+
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }

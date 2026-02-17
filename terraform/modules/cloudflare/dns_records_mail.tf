@@ -82,3 +82,12 @@ resource "cloudflare_dns_record" "spf_walnuts_dev" {
   type    = "TXT"
   zone_id = cloudflare_zone.walnuts_dev.id
 }
+
+resource "cloudflare_dns_record" "amazonses_verification_record_walnuts_dev" {
+  zone_id = cloudflare_zone.walnuts_dev.id
+  content = var.amazonses_verification_token
+  name    = "_amazonses.walnuts.dev"
+  type    = "TXT"
+  ttl     = 600
+  proxied = false
+}
