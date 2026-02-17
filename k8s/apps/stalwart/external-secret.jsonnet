@@ -8,6 +8,13 @@
         property: 'stalwart',
       },
     },
+    {
+      secretKey: 'admin_secret',
+      remoteRef: {
+        key: 'stalwart',
+        property: 'admin_secret',
+      },
+    },
   ],
   template_data: {
     'config.toml': importstr '_config/config.toml',
