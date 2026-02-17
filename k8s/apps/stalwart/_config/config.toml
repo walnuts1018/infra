@@ -49,3 +49,9 @@ store = "postgresql"
 [authentication.fallback-admin]
 user = "admin"
 secret = "{{ .admin_secret }}"
+
+[tracer."stdout"]
+type = "stdout"
+level = "trace"
+ansi = false
+enable = true
