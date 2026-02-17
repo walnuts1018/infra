@@ -89,9 +89,9 @@ resource "cloudflare_dns_record" "amazonses_dkim_walnuts_dev" {
 resource "cloudflare_dns_record" "amazonses_mail_from_mx_walnuts_dev" {
   zone_id  = cloudflare_zone.walnuts_dev.id
   name     = "mail.walnuts.dev"
-  content  = "10 feedback-smtp.ap-northeast-1.amazonses.com"
+  content  = "feedback-smtp.ap-northeast-1.amazonses.com"
   type     = "MX"
-  priority = 100
+  priority = 10
   ttl      = 600
   proxied  = false
 }
