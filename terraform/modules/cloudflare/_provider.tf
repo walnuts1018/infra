@@ -12,8 +12,12 @@ variable "cloudflare_api_token" {
   sensitive = true
 }
 
-variable "amazonses_verification_token" {
+variable "amazonses_verification_token_walnuts_dev" {
   type = string
+}
+
+variable "amazonses_dkim_tokens_walnuts_dev" {
+  type = list(string)
 }
 
 provider "cloudflare" {
