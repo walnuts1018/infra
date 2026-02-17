@@ -15,6 +15,7 @@ cd talos
 ```
 
 ```bash
+make gen-init-config
 make initial-apply INITIAL_NODE_IP=192.168.0.107
 ```
 
