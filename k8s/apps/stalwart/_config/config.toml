@@ -53,5 +53,5 @@ secret = "{{ .admin_secret }}"
 [tracer."stdout"]
 type = "stdout"
 level = "trace"
-ansi = false
+ansi = true
 enable = true
