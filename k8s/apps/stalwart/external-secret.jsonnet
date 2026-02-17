@@ -8,13 +8,13 @@
         property: 'stalwart',
       },
     },
-    // {
-    //   secretKey: 'admin_secret',
-    //   remoteRef: {
-    //     key: 'stalwart',
-    //     property: 'admin_secret',
-    //   },
-    // },
+    {
+      secretKey: 'admin_password',
+      remoteRef: {
+        key: 'stalwart',
+        property: 'admin_password',
+      },
+    },
     {
       secretKey: 's3_secret_key',
       remoteRef: {
