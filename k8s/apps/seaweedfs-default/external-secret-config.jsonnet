@@ -37,6 +37,13 @@
         property: 'oekaki_dengon_game_secretkey',
       },
     },
+    {
+      secretKey: 'stalwart_secretkey',
+      remoteRef: {
+        key: 'seaweedfs',
+        property: 'stalwart_secretkey',
+      },
+    },
   ],
   template_data: {
     'filer.toml': (importstr '_configs/filer.toml'),

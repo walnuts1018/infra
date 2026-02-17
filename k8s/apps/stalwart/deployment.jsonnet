@@ -39,28 +39,6 @@
             name: 'stalwart',
             image: 'docker.io/stalwartlabs/stalwart:v0.15.5',
             imagePullPolicy: 'IfNotPresent',
-            env: [
-              {
-                name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-                value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
-              },
-              {
-                name: 'AWS_ENDPOINT_URL_STS',
-                value: 'https://seaweedfs.local.walnuts.dev',
-              },
-              {
-                name: 'AWS_ENDPOINT_URL_S3',
-                value: 'https://seaweedfs.local.walnuts.dev',
-              },
-              {
-                name: 'AWS_REGION',
-                value: 'us-east-1',
-              },
-              {
-                name: 'AWS_ROLE_ARN',
-                value: 'arn:aws:iam::role/stalwart',
-              },
-            ],
             ports: [
               {
                 containerPort: 8080,
@@ -96,11 +74,6 @@
                 name: 'stalwart-config',
                 mountPath: '/opt/stalwart/etc/config.toml',
                 subPath: 'config.toml',
-                readOnly: true,
-              },
-              {
-                name: 'seaweedfs-sts-token',
-                mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
                 readOnly: true,
               },
               {
@@ -153,20 +126,6 @@
                 {
                   key: 'config.toml',
                   path: 'config.toml',
-                },
-              ],
-            },
-          },
-          {
-            name: 'seaweedfs-sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 86400,
-                    path: 'token',
-                  },
                 },
               ],
             },

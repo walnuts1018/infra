@@ -15,6 +15,13 @@
         property: 'admin_secret',
       },
     },
+    {
+      secretKey: 's3_secret_key',
+      remoteRef: {
+        key: 'seaweedfs',
+        property: 'stalwart_secretkey',
+      },
+    },
   ],
   template_data: {
     'config.toml': importstr '_config/config.toml',

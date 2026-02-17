@@ -39,6 +39,8 @@ type = "s3"
 bucket = "stalwart"
 region = "us-east-1"
 endpoint = "https://seaweedfs.local.walnuts.dev"
+access-key = "stalwart"
+secret-key = "{{ .s3_secret_key }}"
 timeout = "30s"
 key-prefix = "mail/"
 

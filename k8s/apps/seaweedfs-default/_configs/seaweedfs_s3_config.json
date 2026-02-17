@@ -41,6 +41,21 @@
                     "secretKey": "{{ .oekaki_dengon_game_secretkey }}"
                 }
             ]
+        },
+        {
+            "name": "stalwart",
+            "actions": [
+                "Read:stalwart",
+                "Write:stalwart",
+                "List:stalwart",
+                "Tagging:stalwart"
+            ],
+            "credentials": [
+                {
+                    "accessKey": "stalwart",
+                    "secretKey": "{{ .stalwart_secretkey }}"
+                }
+            ]
         }
     ]
 }
