@@ -9,10 +9,10 @@
       },
     },
     {
-      secretKey: 'admin_password',
+      secretKey: 'hashed_admin_secret',
       remoteRef: {
         key: 'stalwart',
-        property: 'admin_password',
+        property: 'hashed_admin_secret',
       },
     },
     {
@@ -25,6 +25,5 @@
   ],
   template_data: {
     'config.toml': importstr '_config/config.toml',
-    admin_password: '{{ .admin_password }}',
   },
 }

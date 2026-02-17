@@ -72,3 +72,7 @@ tls.implicit = true
 [server.listener.http]
 protocol = "http"
 bind = "[::]:8080"
+
+[authentication.fallback-admin]
+user = "admin"
+secret = "{{ .hashed_admin_secret }}"
