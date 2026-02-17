@@ -41,35 +41,27 @@
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
+                name: 'http',
                 containerPort: 8080,
               },
               {
+                name: 'https',
                 containerPort: 443,
               },
               {
+                name: 'smtp',
                 containerPort: 25,
               },
-              // {
-              //   containerPort: 587,
-              // },
               {
+                name: 'smtps',
                 containerPort: 465,
               },
-              // {
-              //   containerPort: 143,
-              // },
               {
+                name: 'imaps',
                 containerPort: 993,
               },
-              // {
-              //   containerPort: 4190,
-              // },
             ],
             volumeMounts: [
-              {
-                name: 'data',
-                mountPath: '/opt/stalwart',
-              },
               {
                 name: 'stalwart-config',
                 mountPath: '/opt/stalwart/etc/config.toml',
@@ -116,16 +108,10 @@
               },
             },
           } + {
-            securityContext+: {
-              readOnlyRootFilesystem: false,
-            },
+            securityContext: null,
           },
         ],
         volumes: [
-          {
-            name: 'data',
-            emptyDir: {},
-          },
           {
             name: 'stalwart-config',
             secret: {
