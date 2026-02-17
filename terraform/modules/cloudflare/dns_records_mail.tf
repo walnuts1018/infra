@@ -99,7 +99,7 @@ resource "cloudflare_dns_record" "amazonses_mail_from_mx_walnuts_dev" {
 resource "cloudflare_dns_record" "spf_mail_walnuts_dev" {
   zone_id = cloudflare_zone.walnuts_dev.id
   name    = "mail.walnuts.dev"
-  content = "v=spf1 include:amazonses.com ~all"
+  content = "\"v=spf1 include:amazonses.com ~all\""
   type    = "TXT"
   ttl     = 600
   proxied = false
