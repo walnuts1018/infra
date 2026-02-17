@@ -39,17 +39,6 @@
             name: 'stalwart',
             image: 'docker.io/stalwartlabs/stalwart:v0.15.5',
             imagePullPolicy: 'IfNotPresent',
-            env: [
-              {
-                name: 'STALWART_ADMIN_PASSWORD',
-                valueFrom: {
-                  secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').spec.target.name,
-                    key: 'admin_password',
-                  },
-                },
-              },
-            ],
             ports: [
               {
                 name: 'http',
