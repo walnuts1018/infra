@@ -8,10 +8,10 @@ resource "cloudflare_dns_record" "smtp_send_resend_walnuts_dev" {
   zone_id  = cloudflare_zone.walnuts_dev.id
 }
 
-resource "cloudflare_dns_record" "mx_cloudflare_3_walnuts_dev" {
-  content  = "route3.mx.cloudflare.net"
+resource "cloudflare_dns_record" "mx_cloudflare_1_walnuts_dev" {
+  content  = "route1.mx.cloudflare.net"
   name     = "walnuts.dev"
-  priority = 33
+  priority = 110
   proxied  = false
   ttl      = 1
   type     = "MX"
@@ -21,17 +21,17 @@ resource "cloudflare_dns_record" "mx_cloudflare_3_walnuts_dev" {
 resource "cloudflare_dns_record" "mx_cloudflare_2_walnuts_dev" {
   content  = "route2.mx.cloudflare.net"
   name     = "walnuts.dev"
-  priority = 1
+  priority = 120
   proxied  = false
   ttl      = 1
   type     = "MX"
   zone_id  = cloudflare_zone.walnuts_dev.id
 }
 
-resource "cloudflare_dns_record" "mx_cloudflare_1_walnuts_dev" {
-  content  = "route1.mx.cloudflare.net"
+resource "cloudflare_dns_record" "mx_cloudflare_3_walnuts_dev" {
+  content  = "route3.mx.cloudflare.net"
   name     = "walnuts.dev"
-  priority = 12
+  priority = 130
   proxied  = false
   ttl      = 1
   type     = "MX"
