@@ -20,11 +20,7 @@ max-connections = 20
 [store."redis"]
 type = "redis"
 redis-type = "cluster"
-urls = [
-    "redis://stalwart-redis-leader-0.stalwart-redis-leader.stalwart.svc.cluster.local:6379",
-    "redis://stalwart-redis-leader-1.stalwart-redis-leader.stalwart.svc.cluster.local:6379",
-    "redis://stalwart-redis-leader-2.stalwart-redis-leader.stalwart.svc.cluster.local:6379",
-]
+urls = ["redis://stalwart-redis-leader.stalwart.svc.cluster.local:6379"]
 timeout = "10s"
 read-from-replicas = false
 protocol-version = "resp3"
