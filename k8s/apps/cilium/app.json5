@@ -1,0 +1,69 @@
+{
+  name: "cilium",
+  namespace: "cilium-system",
+  additionalSources: {
+    helm: {
+      repoURL: "https://helm.cilium.io/",
+      chart: "cilium",
+      targetRevision: "1.18.6",
+      valueFiles: [
+        "values.yaml"
+      ]
+    },
+  },
+  clusters: {
+    berry: {
+      additionalSources: {
+        helm: {
+          valuesObject: {
+            k8sServiceHost: "192.168.0.14",
+            k8sServicePort: 6443,
+            ingressController: {
+              service: {
+                loadBalancerIP: "192.168.8.3",
+              },
+            },
+            cluster: {
+              id: 1,
+              name: "berry",
+            },
+            hubble: {
+              relay: {
+                prometheus: {
+                  serviceMonitor: {
+                    enabled: false,
+                  },
+                },
+              },
+              metrics: {
+                serviceMonitor: {
+                  enabled: false,
+                },
+              },
+            },
+            envoy: {
+              prometheus: {
+                serviceMonitor: {
+                  enabled: false,
+                },
+              },
+            },
+            operator: {
+              prometheus: {
+                serviceMonitor: {
+                  enabled: false,
+                },
+              },
+              replicas: 1,
+            },
+            prometheus: {
+              serviceMonitor: {
+                enabled: false,
+              },
+            },
+          }
+        }
+      }
+    },
+  },
+}
