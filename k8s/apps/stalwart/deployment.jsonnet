@@ -95,7 +95,7 @@
                 port: 8080,
               },
               periodSeconds: 10,
-              failureThreshold: 10,
+              failureThreshold: 30,
             },
             readinessProbe: {
               httpGet: {
