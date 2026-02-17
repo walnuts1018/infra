@@ -1,0 +1,25 @@
+[storage]
+data = "postgresql"
+blob = "s3"
+fts = "postgresql"
+lookup = "postgresql"
+
+[store."postgresql"]
+type = "postgresql"
+host = "postgresql-default-rw.databases.svc.cluster.local"
+port = 5432
+database = "stalwart"
+user = "stalwart"
+password = "{{ .postgres_password }}"
+timeout = "15s"
+
+[store."postgresql".pool]
+max-connections = 20
+
+[store."s3"]
+type = "s3"
+bucket = "stalwart"
+region = "us-east-1"
+endpoint = "https://seaweedfs.local.walnuts.dev"
+timeout = "30s"
+key-prefix = "mail/"
