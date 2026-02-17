@@ -86,8 +86,8 @@
                 path: '/healthz/live',
                 port: 8080,
               },
-              periodSeconds: 30,
-              failureThreshold: 30,
+              periodSeconds: 10,
+              failureThreshold: 10,
             },
             readinessProbe: {
               httpGet: {
