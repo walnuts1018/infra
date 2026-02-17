@@ -89,6 +89,14 @@
               initialDelaySeconds: 30,
               periodSeconds: 10,
             },
+            startupProbe: {
+              httpGet: {
+                path: '/healthz/live',
+                port: 8080,
+              },
+              periodSeconds: 10,
+              failureThreshold: 10,
+            },
             readinessProbe: {
               httpGet: {
                 path: '/healthz/ready',
