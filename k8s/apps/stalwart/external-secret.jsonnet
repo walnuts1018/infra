@@ -25,5 +25,6 @@
   ],
   template_data: {
     'config.toml': importstr '_config/config.toml',
+    admin_password: '{{ .admin_password }}',
   },
 }
