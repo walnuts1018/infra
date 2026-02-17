@@ -11,7 +11,7 @@ use Raspberry Pi Imager
 ## Setup Node
 
 ```bash
-mv talos
+cd talos
 ```
 
 ```bash
