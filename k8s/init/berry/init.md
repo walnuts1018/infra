@@ -39,6 +39,15 @@ kubectl create secret generic op-credentials -n onepassword --from-literal=1pass
 kubectl create secret generic onepassword-token -n onepassword --from-literal=token="$(op read "op://kurumi/pcookjymtl2zwyozhofaco5yhy/credential")"
 ```
 
+## Cilium
+
+```bash
+kubectl create namespace cilium-system
+kubectl label namespace cilium-system pod-security.kubernetes.io/enforce=privileged
+helm repo add cilium https://helm.cilium.io/
+helm template -n cilium-system cilium/cilium --version 1.18.6 --set ipam.mode=kubernetes --set kubeProxyReplacement=true --set securityContext.capabilities.ciliumAgent="{CHOWN,KILL,NET_ADMIN,NET_RAW,IPC_LOCK,SYS_ADMIN,SYS_RESOURCE,DAC_OVERRIDE,FOWNER,SETGID,SETUID}" --set securityContext.capabilities.cleanCiliumState="{NET_ADMIN,SYS_ADMIN,SYS_RESOURCE}" --set cgroup.autoMount.enabled=false --set cgroup.hostRoot=/sys/fs/cgroup --set k8sServiceHost=localhost --set k8sServicePort=7445 | kubectl apply --server-side --force-conflicts -f -
+```
+
 ## ArgoCD
 
 ### ArgoCD インストール
