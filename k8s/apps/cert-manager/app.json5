@@ -15,14 +15,9 @@
     berry: {
       additionalSources: {
         helm: {
-          valuesObject: {
-            prometheus: {
-              enabled: false,
-              servicemonitor: {
-                enabled: false,
-              },
-            },
-          }
+          additionalValueFiles: [
+            "values-berry.yaml",
+          ],
         }
       }
     },

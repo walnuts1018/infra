@@ -15,54 +15,9 @@
     berry: {
       additionalSources: {
         helm: {
-          valuesObject: {
-            ipam: {
-              mode: "kubernetes",
-            },
-            ingressController: {
-              service: {
-                loadBalancerIP: "192.168.8.3",
-              },
-            },
-            cluster: {
-              id: 1,
-              name: "berry",
-            },
-            hubble: {
-              relay: {
-                prometheus: {
-                  serviceMonitor: {
-                    enabled: false,
-                  },
-                },
-              },
-              metrics: {
-                serviceMonitor: {
-                  enabled: false,
-                },
-              },
-            },
-            envoy: {
-              prometheus: {
-                serviceMonitor: {
-                  enabled: false,
-                },
-              },
-            },
-            operator: {
-              prometheus: {
-                serviceMonitor: {
-                  enabled: false,
-                },
-              },
-              replicas: 1,
-            },
-            prometheus: {
-              serviceMonitor: {
-                enabled: false,
-              },
-            },
-          }
+          additionalValueFiles: [
+            "values-berry.yaml",
+          ],
         }
       }
     },
