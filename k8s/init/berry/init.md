@@ -1,34 +1,64 @@
 # berry init
 
-## Download Talos Linux Image
-
-<https://factory.talos.dev/?arch=arm64&board=rpi_generic&bootloader=auto&cmdline-set=true&extensions=-&platform=metal&target=sbc&version=1.12.4>
-
-## Install Talos Linux
+## Raspberry Pi OS Lite (64bit)
 
 use Raspberry Pi Imager
 
-## Setup Node
+## Setup
+
+### /boot/firmware
 
 ```bash
-cd talos
+sudo su
 ```
 
 ```bash
-make gen-init-config
-make initial-apply INITIAL_NODE_IP=192.168.0.107
+sed -i 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/g' /boot/firmware/cmdline.txt
+rpi-eeprom-update -a
+echo -n "dtoverlay=cma,cma-64
+dtoverlay=disable-bt
+dtoverlay=disable-wifi
+dtparam=watchdog=on
+" >> /boot/firmware/config.txt
+
+exit
+```
+
+再起動
+
+### Timezone
+
+```bash
+sudo timedatectl set-timezone Asia/Tokyo
+```
+
+### IP 固定
+
+いい感じにやる
+
+## k3s Install
+
+k3s-config.yaml を作成
+
+```yaml
+write-kubeconfig-mode: "0644"
+disable:
+- traefik
+- servicelb
+- local-storage
 ```
 
 ```bash
-make bootstrap
+curl -sfL https://get.k3s.io | sh -s - --config ./k3s-config.yaml
 ```
 
-```bash
-make get-kubeconfig
-```
+### kubeconfig
 
 ```bash
-vim ~/.kube/config
+sudo rm -r .kube
+mkdir -p $HOME/.kube
+sudo cp -i /etc/rancher/k3s/k3s.yaml $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
 ## Secret for 1Password Connect
@@ -37,15 +67,6 @@ vim ~/.kube/config
 kubectl create namespace onepassword
 kubectl create secret generic op-credentials -n onepassword --from-literal=1password-credentials.json="$(op read "op://kurumi/k8s Credentials File/1password-credentials.json")"
 kubectl create secret generic onepassword-token -n onepassword --from-literal=token="$(op read "op://kurumi/pcookjymtl2zwyozhofaco5yhy/credential")"
-```
-
-## Cilium
-
-```bash
-kubectl create namespace cilium-system
-kubectl label namespace cilium-system pod-security.kubernetes.io/enforce=privileged
-helm repo add cilium https://helm.cilium.io/
-helm template -n cilium-system cilium/cilium --version 1.18.6 --set ipam.mode=kubernetes --set kubeProxyReplacement=true --set securityContext.capabilities.ciliumAgent="{CHOWN,KILL,NET_ADMIN,NET_RAW,IPC_LOCK,SYS_ADMIN,SYS_RESOURCE,DAC_OVERRIDE,FOWNER,SETGID,SETUID}" --set securityContext.capabilities.cleanCiliumState="{NET_ADMIN,SYS_ADMIN,SYS_RESOURCE}" --set cgroup.autoMount.enabled=false --set cgroup.hostRoot=/sys/fs/cgroup --set k8sServiceHost=localhost --set k8sServicePort=7445 | kubectl apply --server-side --force-conflicts -f -
 ```
 
 ## ArgoCD

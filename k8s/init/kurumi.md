@@ -11,13 +11,11 @@
 ## ラズパイのみ
 
 ```bash
-sudo sed -i 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/g' /boot/firmware/cmdline.txt
+sudo su
 ```
 
-再起動
-
 ```bash
-sudo su
+sed -i 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/g' /boot/firmware/cmdline.txt
 rpi-eeprom-update -a
 echo -n "dtoverlay=cma,cma-64
 dtoverlay=disable-bt
@@ -27,6 +25,8 @@ dtparam=watchdog=on
 
 exit
 ```
+
+再起動
 
 ### Raspberry Pi OS カスタムビルド
 

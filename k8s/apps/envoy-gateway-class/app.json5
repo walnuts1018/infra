@@ -2,7 +2,7 @@
   name: "envoy-gateway-class",
   namespace: "envoy-gateway-system",
   clusters: {
-    berry: {
+    kurumi: {
       jsonnet: {
         tlas: [
           {
@@ -11,7 +11,7 @@
           },
           {
             name: "minReplicas",
-            value: "1",
+            value: "2",
             code: true,
           },
         ]
