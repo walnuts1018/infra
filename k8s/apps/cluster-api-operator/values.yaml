@@ -1,12 +1,12 @@
 core:
   cluster-api: {}
 bootstrap:
-  talos: {}
+  kubeadm: {}
   k3s: {}
 controlPlane:
-  talos: {}
+  kubeadm: {}
   k3s: {}
 infrastructure:
-  k0sproject-k0smotron: {}
+  kubekey: {}
 resources:
   manager: {}
