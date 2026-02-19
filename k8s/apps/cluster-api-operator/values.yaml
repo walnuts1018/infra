@@ -8,7 +8,8 @@ controlPlane:
   k3s: {}
 infrastructure:
   kubekey:
+    version: v4.0.3
     fetchConfig:
-      url: "https://github.com/walnuts1018/kubekey/releases/download/v4.0.3/infrastructure-components.yaml"
+      url: https://github.com/walnuts1018/kubekey/releases/download/v4.0.3/infrastructure-components.yaml
 resources:
   manager: {}
