@@ -59,21 +59,39 @@ controller:
     enabled: true
     serviceMonitor:
       enabled: true
-  resources: {}
+  resources:
+    requests:
+      cpu: 300m
+      memory: 300Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
 
 dex:
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
-  resources: {}
+  resources:
+    requests:
+      cpu: 1m
+      memory: 15Mi
+    limits:
+      cpu: 100m
+      memory: 256Mi
 
 redis:
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
-  resources: {}
+  resources:
+    requests:
+      cpu: 10m
+      memory: 10Mi
+    limits:
+      cpu: 100m
+      memory: 256Mi
 
 server:
   ingress:
@@ -86,11 +104,17 @@ server:
       enabled: true
   autoscaling:
     enabled: false
-  resources: {}
   service:
     type: NodePort
     nodePortHttp: 30080
     nodePortHttps: 30443
+  resources:
+    requests:
+      cpu: 5m
+      memory: 50Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
 
 repoServer:
   metrics:
@@ -99,14 +123,26 @@ repoServer:
       enabled: true
   autoscaling:
     enabled: false
-  resources: {}
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 300m
+      memory: 512Mi
 
 applicationSet:
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
-  resources: {}
+  resources:
+    requests:
+      cpu: 3m
+      memory: 40Mi
+    limits:
+      cpu: 100m
+      memory: 512Mi
 
 notifications:
   argocdUrl: "https://argocd.local.walnuts.dev"
@@ -392,4 +428,10 @@ notifications:
     enabled: true
     serviceMonitor:
       enabled: true
-  resources: {}
+  resources:
+    requests:
+      cpu: 1m
+      memory: 30Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
