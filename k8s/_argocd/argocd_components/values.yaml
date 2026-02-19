@@ -79,10 +79,7 @@ server:
   ingress:
     enabled: false
   httproute:
-    enabled: true
-    parentRefs:
-    - name: envoy-gateway
-      namespace: envoy-gateway-system
+    enabled: false
   metrics:
     enabled: true
     serviceMonitor:
@@ -90,6 +87,10 @@ server:
   autoscaling:
     enabled: false
   resources: {}
+  service:
+    type: NodePort
+    nodePortHttp: 30080
+    nodePortHttps: 30443
 
 repoServer:
   metrics:
