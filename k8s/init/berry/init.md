@@ -38,7 +38,12 @@ sudo timedatectl set-timezone Asia/Tokyo
 
 ## k3s Install
 
-k3s-config.yaml を作成
+`/etc/rancher/k3s/config.yaml` を作成
+
+```bash
+sudo mkdir -p /etc/rancher/k3s
+sudo vim /etc/rancher/k3s/config.yaml
+```
 
 ```yaml
 write-kubeconfig-mode: "0644"
@@ -49,7 +54,7 @@ disable:
 ```
 
 ```bash
-curl -sfL https://get.k3s.io | sh -s - --config ./k3s-config.yaml
+curl -sfL https://get.k3s.io | sh -
 ```
 
 ### kubeconfig
