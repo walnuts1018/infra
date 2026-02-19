@@ -13,3 +13,4 @@ infrastructure:
       url: https://github.com/walnuts1018/kubekey/releases/v4.0.3/infrastructure-components.yaml
 resources:
   manager: {}
+enableHelmHook: false # これをつけないと、毎回Syncする時にnamespaceごと消える
