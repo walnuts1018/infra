@@ -10,6 +10,6 @@ infrastructure:
   kubekey:
     version: v4.0.3
     fetchConfig:
-      url: https://github.com/walnuts1018/kubekey/releases/
+      url: https://github.com/walnuts1018/kubekey/releases/v4.0.3/infrastructure-components.yaml
 resources:
   manager: {}
