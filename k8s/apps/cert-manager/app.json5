@@ -12,11 +12,11 @@
     },
   },
   clusters: {
-    kurumi: {
+    berry: {
       additionalSources: {
         helm: {
           additionalValueFiles: [
-            "values-kurumi.yaml",
+            "values-berry.yaml",
           ],
         }
       }
