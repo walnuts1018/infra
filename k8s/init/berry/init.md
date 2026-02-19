@@ -90,20 +90,25 @@ helm template -n argocd argocd argo/argo-cd | kubectl apply --server-side --forc
 brew install argocd
 ```
 
-### パスワード
-
-```bash
-argocd account update-password --insecure --port-forward --port-forward-namespace argocd --plaintext --current-password $(argocd admin initial-password -n argocd
-) --new-password $(op item get kma3l3fsrsfccw4c62h2f5rqfe --reveal --fields label=admin)
-```
-
-### ログイン
+### Port Forwarding
 
 ```bash
 kubectl port-forward svc/argocd-server -n argocd 8080:443
 ```
 
+### ログイン
+
+```bash
+argocd admin initial-password -n argocd
+```
+
 <http://localhost:8080>
+
+### パスワード更新
+
+```bash
+argocd account update-password --insecure --plaintext --new-password "$(op item get kma3l3fsrsfccw4c62h2f5rqfe --reveal --fields label=admin)"
+```
 
 ### Init
 
