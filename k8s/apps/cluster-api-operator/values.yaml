@@ -1,0 +1,12 @@
+core:
+  cluster-api: {}
+bootstrap:
+  talos: {}
+  k3s: {}
+controlPlane:
+  talos: {}
+  k3s: {}
+infrastructure:
+  k0sproject-k0smotron: {}
+resources:
+  manager: {}

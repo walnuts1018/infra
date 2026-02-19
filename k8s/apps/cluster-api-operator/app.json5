@@ -1,0 +1,17 @@
+{
+  name: "cluster-api-operator",
+  namespace: "cluster-api-operator",
+  additionalSources: {
+    helm: {
+      repoURL: "https://kubernetes-sigs.github.io/cluster-api-operator",
+      chart: "cluster-api-operator",
+      targetRevision: "0.25.0",
+      valueFiles: [
+        "values.yaml"
+      ]
+    },
+  },
+  clusters: {
+    berry: {},
+  },
+}
