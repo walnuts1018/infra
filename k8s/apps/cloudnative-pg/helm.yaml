@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudnative-pg-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: cloudnative-pg
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: cloudnative-pg
+    helm:
+      releaseName: cloudnative-pg
+      values: |
+        resources:
+          requests:
+            cpu: 2m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 200Mi
+
+        monitoring:
+          podMonitorEnabled: true
+          grafanaDashboard:
+            create: true
+            namespace: monitoring
+    repoURL: https://cloudnative-pg.github.io/charts
+    targetRevision: 0.27.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

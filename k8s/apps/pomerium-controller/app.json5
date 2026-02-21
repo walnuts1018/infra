@@ -1,7 +1,0 @@
-{
-  name: "pomerium-controller",
-  namespace: "pomerium",
-  clusters: {
-    kurumi: {},
-  },
-}

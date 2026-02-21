@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: warrior
+    app.kubernetes.io/name: warrior
+  name: warrior
+  namespace: warrior
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: warrior
+      app.kubernetes.io/name: warrior
+  template:
+    metadata:
+      labels:
+        app: warrior
+        app.kubernetes.io/name: warrior
+    spec:
+      containers:
+        - env:
+            - name: DOWNLOADER
+              value: walnuts1018
+            - name: SELECTED_PROJECT
+              value: auto
+            - name: CONCURRENT_ITEMS
+              value: "6"
+          image: atdr.meo.ws/archiveteam/warrior-dockerfile@sha256:19918c64baffa56e7177539e392b6278becd4f0b59a524bd3eed4d29ee6b9a00
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - echo "Stopping Warrior..."; sleep 100;
+          livenessProbe:
+            failureThreshold: 1
+            httpGet:
+              path: /info
+              port: 8001
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          name: warrior
+          ports:
+            - containerPort: 8001
+              name: http
+          resources:
+            limits:
+              cpu: 100m
+              memory: 768Mi
+            requests:
+              cpu: 50m
+              memory: 300Mi
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      tolerations:
+        - key: node.walnuts.dev/untrusted
+          operator: Exists

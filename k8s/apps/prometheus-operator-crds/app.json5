@@ -1,7 +1,0 @@
-{
-  name: "prometheus-operator-crds",
-  namespace: "monitoring",
-  clusters: {
-    biscuit: {},
-  },
-}
