@@ -20,7 +20,7 @@ registries:
 packages:
 - name: yannh/kubeconform@v0.7.0
 - name: hashicorp/terraform@v1.14.5
-- name: homeport/dyff@v1.10.4
+- name: homeport/dyff@v1.10.5
 - name: google/go-jsonnet@v0.21.0
 - name: grafana/tanka@v0.36.3
 - name: jsonnet-bundler/jsonnet-bundler@v0.6.0
