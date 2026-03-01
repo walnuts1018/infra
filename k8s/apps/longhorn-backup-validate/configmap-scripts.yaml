@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  validate-longhorn-backup.sh: "#!/usr/bin/bash\n\nlog() {\n    local level=\"$1\"\n    local msg=\"$2\"\n    local timestamp\n    timestamp=$(date '+%Y-%m-%dT%H:%M:%S%z')\n    \n    shift 2\n    local json=\"{\\\"level\\\":\\\"$level\\\",\\\"time\\\":\\\"$timestamp\\\",\\\"msg\\\":\\\"$msg\\\"\"\n    while [[ $# -gt 0 ]]; do\n        json+=\",\\\"$1\\\":\\\"$2\\\"\"\n        shift 2\n    done\n    echo \"$json}\"\n}\n\n\nlog \"info\" \"Starting Longhorn backup validation process\"\n\nKUBECONFIG=/kubeconfig/config\n\nsleep infinity # TODO\n"
+  wait-for-cluster.sh: "#!/usr/bin/bash\n\nCLUSTER_NAME=\"longhorn-backup-validate\"\nNAMESPACE=\"longhorn-backup-validate\"\n\nlog() {\n    local level=\"$1\"\n    local msg=\"$2\"\n    local timestamp\n    timestamp=$(date '+%Y-%m-%dT%H:%M:%S%z')\n    \n    shift 2\n    local json=\"{\\\"level\\\":\\\"$level\\\",\\\"time\\\":\\\"$timestamp\\\",\\\"msg\\\":\\\"$msg\\\"\"\n    while [[ $# -gt 0 ]]; do\n        json+=\",\\\"$1\\\":\\\"$2\\\"\"\n        shift 2\n    done\n    echo \"$json}\"\n}\n\nlog info \"Waiting for cluster to be ready\" \"cluster\" \"$CLUSTER_NAME\"\n\nSTART_TIME=$(date +%s)\nEND_TIME=$((START_TIME + 3600)) # Timeout: 1 hours\n\nwhile [ \"$(date +%s)\" -lt $END_TIME ]; do\n  if [ \"$(kubectl get clusters.cluster.x-k8s.io -n \"$NAMESPACE\" \"$CLUSTER_NAME\" -o jsonpath='{.status.conditions[?(@.type==\"Available\")].status}')\" == \"True\" ]; then\n    log info \"Cluster is ready\" \"cluster\" \"$CLUSTER_NAME\"\n    exit 0\n  fi\n\n  if [ \"$(kubectl get clusters.cluster.x-k8s.io -n \"$NAMESPACE\" \"$CLUSTER_NAME\" -o jsonpath='{.status.phase}')\" == \"Failed\" ]; then\n    log error \"Cluster creation failed\" \"cluster\" \"$CLUSTER_NAME\"\n    exit 1\n  fi\n\n  log info \"Cluster is not ready yet... Checking again in 30 seconds.\" \"cluster\" \"$CLUSTER_NAME\"\n  sleep 30\ndone\n\nlog error \"Timed out waiting for cluster to be ready.\" \"cluster\" \"$CLUSTER_NAME\"\nexit 1\n"
+kind: ConfigMap
+metadata:
+  labels:
+    app: longhorn-backup-validate
+    app.kubernetes.io/name: longhorn-backup-validate
+  name: longhorn-backup-validate-scripts-7c49ac
+  namespace: longhorn-backup-validate

@@ -1,0 +1,212 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-stack-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: kube-prometheus-stack
+    helm:
+      releaseName: prometheus-stack
+      valuesObject:
+        additionalPrometheusRulesMap:
+          opentelemetry:
+            groups:
+              - name: k8s_resource_requests
+                rules:
+                  - expr: avg (avg by (container_id, k8s_namespace_name, k8s_deployment_name, k8s_container_name) (rate(container_cpu_time_seconds_total{k8s_deployment_name!=""}[30s])) / on(container_id) group_left avg by (container_id) (k8s_container_cpu_request)) by (k8s_namespace_name, k8s_deployment_name, k8s_container_name)
+                    record: k8s_deployment:k8s_container_cpu_request_pressure:avg
+                  - expr: avg (avg by (container_id, k8s_namespace_name, k8s_deployment_name, k8s_container_name) (container_memory_usage_bytes{k8s_deployment_name!=""}) / on(container_id) group_left avg by (container_id) (k8s_container_memory_request_bytes)) by (k8s_namespace_name, k8s_deployment_name, k8s_container_name)
+                    record: k8s_deployment:k8s_container_memory_request_pressure:avg
+        grafana:
+          additionalDataSources:
+            - access: proxy
+              isDefault: true
+              name: VictoriaMetrics
+              type: prometheus
+              url: http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus
+            - access: proxy
+              isDefault: false
+              name: Loki
+              type: loki
+              url: http://loki-gateway.loki.svc.cluster.local
+            - access: proxy
+              isDefault: false
+              name: Tempo
+              type: tempo
+              url: http://tempo-gateway.tempo.svc.cluster.local
+          admin:
+            existingSecret: grafana
+            passwordKey: admin-password
+            userKey: admin-username
+          autoscaling:
+            enabled: true
+            maxReplicas: 5
+            minReplicas: 1
+            targetCPU: ""
+            targetMemory: "100"
+          downloadDashboards:
+            resources:
+              limits:
+                cpu: "1"
+                memory: 1Gi
+              requests:
+                cpu: 1m
+                memory: 295Mi
+          extraSecretMounts:
+            - mountPath: /etc/secrets
+              name: auth-generic-oauth-secret
+              readOnly: true
+              secretName: grafana
+          grafana.ini:
+            auth:
+              disable_login_form: true
+              oauth_auto_login: true
+            auth.basic:
+              enabled: false
+            auth.generic_oauth:
+              allow_assign_grafana_admin: true
+              api_url: https://auth.walnuts.dev/oidc/v1/userinfo
+              auth_url: https://auth.walnuts.dev/oauth/v2/authorize
+              client_id: 237480184528306541@walnuts.dev
+              client_secret: $__file{/etc/secrets/client_secret}
+              email_attribute_path: email
+              enabled: true
+              login_attribute_path: preferred_username
+              name_attribute_path: preferred_username
+              role_attribute_path: |
+                "urn:zitadel:iam:org:project:roles"."admin"  && 'GrafanaAdmin' || "urn:zitadel:iam:org:project:roles"."grafana-editor" && 'Editor' || "urn:zitadel:iam:org:project:roles"."grafana-viewer" && 'Viewer'
+              role_attribute_strict: true
+              scopes: openid email profile offline_access urn:zitadel:iam:org:projects:roles
+              token_url: https://auth.walnuts.dev/oauth/v2/token
+              use_pkce: true
+            database:
+              host: postgresql-default-rw.databases.svc.cluster.local
+              name: grafana
+              password: $__file{/etc/secrets/postgres_password}
+              type: postgres
+              user: grafana
+            feature_toggles:
+              kubernetesDashboards: true
+              provisioning: true
+            server:
+              domain: grafana.walnuts.dev
+              root_url: https://grafana.walnuts.dev/
+            smtp:
+              enabled: true
+              from_address: grafana@resend.walnuts.dev
+              host: smtp.resend.com:587
+              password: $__file{/etc/secrets/smtp_password}
+              user: resend
+          ingress:
+            enabled: true
+            hosts:
+              - grafana.walnuts.dev
+            ingressClassName: cilium
+          persistence:
+            enabled: false
+          plugins:
+            - knightss27-weathermap-panel
+            - grafana-github-datasource
+            - volkovlabs-echarts-panel
+          rbac:
+            pspEnabled: false
+          replicas: 1
+          resources:
+            limits:
+              cpu: 500m
+              memory: 2Gi
+            requests:
+              cpu: 22m
+              memory: 280Mi
+          service:
+            type: ClusterIP
+          sidecar:
+            dashboards:
+              enabled: false
+              initDashboards: false
+            datasources:
+              enabled: true
+              isDefaultDatasource: false
+            plugins:
+              enabled: true
+            resources:
+              limits:
+                memory: 512Mi
+              requests:
+                cpu: 1m
+                memory: 92Mi
+          testFramework:
+            enabled: false
+        prometheus:
+          prometheusSpec:
+            additionalConfig:
+              enableOTLPReceiver: true
+              otlp:
+                translationStrategy: NoUTF8EscapingWithSuffixes
+            enableFeatures:
+              - promql-experimental-functions
+            enableOTLPReceiver: true
+            enableRemoteWriteReceiver: true
+            otlp:
+              translationStrategy: NoUTF8EscapingWithSuffixes
+            podMonitorSelector:
+              matchLabels: {}
+            probeNamespaceSelector:
+              matchLabels: {}
+            probeSelector:
+              matchLabels: {}
+            replicas: 1
+            resources:
+              limits:
+                cpu: "1"
+                memory: 8Gi
+              requests:
+                cpu: 500m
+                memory: 3Gi
+            retention: 14d
+            retentionSize: 24GiB
+            serviceMonitorSelector:
+              matchLabels:
+                walnuts.dev/scraped-by: prometheus
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 32Gi
+                  storageClassName: longhorn-local
+            tsdb:
+              outOfOrderTimeWindow: 30m
+        prometheus-node-exporter:
+          prometheus:
+            monitor:
+              relabelings:
+                - action: replace
+                  regex: ^(.*)$
+                  replacement: $1
+                  separator: ;
+                  sourceLabels:
+                    - __meta_kubernetes_pod_node_name
+                  targetLabel: node
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 1m
+              memory: 20Mi
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 81.6.9
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

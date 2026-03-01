@@ -1,0 +1,158 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: default
+spec:
+  autoscaler:
+    maxReplicas: 10
+    minReplicas: 1
+    targetMemoryUtilization: 100
+  config:
+    connectors:
+      spanmetrics:
+        dimensions:
+          - default: GET
+            name: http.method
+          - name: http.host
+          - name: http.path
+          - name: http.target
+          - name: http.status_code
+        histogram:
+          explicit:
+            buckets:
+              - 1ms
+              - 10ms
+              - 100ms
+              - 200ms
+              - 400ms
+              - 800ms
+              - 1s
+        metrics_flush_interval: 15s
+    exporters:
+      debug:
+        verbosity: detailed
+      file:
+        format: json
+        path: /tmp/debug.json
+      otlp/mackerel:
+        compression: gzip
+        endpoint: otlp.mackerelio.com:4317
+        headers:
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+      otlp/tempo:
+        endpoint: tempo-gateway.tempo.svc.clusterset.local:4317
+        tls:
+          insecure: true
+      otlphttp/loki:
+        endpoint: http://loki-gateway.loki.svc.clusterset.local/otlp
+        tls:
+          insecure: true
+      otlphttp/prometheus:
+        endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.clusterset.local:9090/api/v1/otlp
+        tls:
+          insecure: true
+      otlphttp/vaxila:
+        endpoint: https://otlp-vaxila.mackerelio.com
+        headers:
+          Accept: '*/*'
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+      prometheusremotewrite:
+        endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.clusterset.local:9090/api/v1/write
+        resource_to_telemetry_conversion:
+          enabled: true
+      prometheusremotewrite/victoriametrics:
+        endpoint: http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write
+        resource_to_telemetry_conversion:
+          enabled: true
+    processors:
+      batch:
+        send_batch_max_size: 5000
+        send_batch_size: 5000
+        timeout: 10s
+      k8sattributes:
+        auth_type: serviceAccount
+        extract:
+          metadata:
+            - k8s.cluster.uid
+      memory_limiter:
+        check_interval: 5s
+        limit_mib: 2000
+        spike_limit_percentage: 15
+      resource/cluster_name:
+        attributes:
+          - action: upsert
+            key: k8s.cluster.name
+            value: kurumi
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            max_recv_msg_size_mib: 100
+          http: {}
+    service:
+      pipelines:
+        logs:
+          exporters:
+            - otlphttp/loki
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+            - resource/cluster_name
+          receivers:
+            - otlp
+        metrics:
+          exporters:
+            - prometheusremotewrite
+            - prometheusremotewrite/victoriametrics
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+            - resource/cluster_name
+          receivers:
+            - otlp
+            - spanmetrics
+        traces:
+          exporters:
+            - otlp/tempo
+            - spanmetrics
+            - otlphttp/vaxila
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+            - resource/cluster_name
+          receivers:
+            - otlp
+  env:
+    - name: K8S_NODE_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
+    - name: K8S_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+    - name: MACKEREL_APIKEY
+      valueFrom:
+        secretKeyRef:
+          key: mackerel-api-key
+          name: opentelemetry-collectors-acaba9
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.146.1
+  managementState: managed
+  mode: deployment
+  resources:
+    limits:
+      cpu: "1"
+      memory: 2Gi
+    requests:
+      cpu: 5m
+      memory: 256Mi
+  serviceAccount: opentelemetry-collectors
+  volumeMounts:
+    - mountPath: /tmp
+      name: tmp
+  volumes:
+    - emptyDir: {}
+      name: tmp

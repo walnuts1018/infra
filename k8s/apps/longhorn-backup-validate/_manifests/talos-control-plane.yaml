@@ -1,0 +1,17 @@
+apiVersion: controlplane.cluster.x-k8s.io/v1alpha3
+kind: TalosControlPlane
+metadata:
+  name: longhorn-backup-validate-control-plane
+  namespace: longhorn-backup-validate
+spec:
+  controlPlaneConfig:
+    controlplane:
+      generateType: controlplane
+      talosVersion: v1.11.5
+  infrastructureTemplate:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    kind: KubevirtMachineTemplate
+    name: longhorn-backup-validate-template-control-plane
+    namespace: longhorn-backup-validate
+  replicas: 1
+  version: v1.34.1

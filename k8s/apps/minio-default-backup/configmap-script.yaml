@@ -1,0 +1,28 @@
+apiVersion: v1
+data:
+  assumerole.sh: |
+    #!/usr/bin/bash
+
+    aws sts assume-role-with-web-identity \
+      --role-arn arn:aws:iam::dummy:role/minio-default-backup \
+      --role-session-name "minio-default-backup-session-$(date +%s)" \
+      --duration-seconds 86400 \
+      --web-identity-token file:///var/run/secrets/sts.min.io/serviceaccount/token \
+      --endpoint-url https://sts.minio-operator.svc.cluster.local:4223/sts/minio \
+      --ca-bundle /etc/ssl/certs/trust-bundle.pem \
+      --region ap-northeast-1 | \
+      jq '{
+        Version: 1,
+        AccessKeyId: .Credentials.AccessKeyId,
+        SecretAccessKey: .Credentials.SecretAccessKey,
+        SessionToken: .Credentials.SessionToken,
+        Expiration: .Credentials.Expiration
+      }'
+  backup.sh: "#!/usr/bin/bash\n\nlog() {\n    local level=\"$1\"\n    local msg=\"$2\"\n    local timestamp\n    timestamp=$(date '+%Y-%m-%dT%H:%M:%S%z')\n    \n    shift 2\n    local json=\"{\\\"level\\\":\\\"$level\\\",\\\"time\\\":\\\"$timestamp\\\",\\\"msg\\\":\\\"$msg\\\"\"\n    while [[ $# -gt 0 ]]; do\n        json+=\",\\\"$1\\\":\\\"$2\\\"\"\n        shift 2\n    done\n    echo \"$json}\"\n}\n\n\nlog \"info\" \"Starting backup process\"\n\nEXCLUDE_ARGS=()\nfor BUCKET in $(rclone lsf minio-default: --dirs-only --config=/config/rclone.conf | sed 's/\\///g'); do\n    if aws s3api get-bucket-tagging --profile minio-default --bucket \"${BUCKET}\" 2>/dev/null | jq -e '.TagSet[] | select(.Key == \"skip-backup\")' > /dev/null; then\n        log \"info\" \"Excluding bucket due to skip-backup tag\" bucket \"${BUCKET}\"\n        EXCLUDE_ARGS+=(\"--exclude\" \"/${BUCKET}/**\")\n    else\n        log \"info\" \"Including bucket in sync\" bucket \"${BUCKET}\"\n    fi\ndone\n\nSOURCE_PATH=\"minio-default:\"\nDEST_PATH=\"minio-biscuit:minio-default-backup/\"\n\nlog \"info\" \"Sync started\" source \"${SOURCE_PATH}\" dest \"${DEST_PATH}\"\n\nrclone sync --metrics-addr=:9250 --config=/config/rclone.conf -v \\\n    \"${SOURCE_PATH}\" \"${DEST_PATH}\" \"${EXCLUDE_ARGS[@]}\"\n\nif [[ $? -eq 0 ]]; then\n    log \"info\" \"Sync completed successfully\" source \"${SOURCE_PATH}\" dest \"${DEST_PATH}\"\n    log \"info\" \"Backup process completed successfully\"\nelse\n    log \"error\" \"Sync failed\" source \"${SOURCE_PATH}\" dest \"${DEST_PATH}\"\n    log \"error\" \"Backup process completed with errors\"\n    exit 1\nfi\n"
+kind: ConfigMap
+metadata:
+  labels:
+    app: minio-default-backup
+    app.kubernetes.io/name: minio-default-backup
+  name: minio-default-backup-script-715c10
+  namespace: minio

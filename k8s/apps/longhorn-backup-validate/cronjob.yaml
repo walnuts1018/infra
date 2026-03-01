@@ -1,0 +1,191 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: longhorn-backup-validate
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: longhorn-backup-validate
+            app.kubernetes.io/name: longhorn-backup-validate
+        spec:
+          containers:
+            - args:
+                - export PATH=$PATH:/kubectl:/velero:/longhorn-cli && bash /scripts/validate-longhorn-backup.sh
+              command:
+                - /usr/bin/bash
+                - -c
+              image: debian:13.3-slim
+              lifecycle:
+                preStop:
+                  exec:
+                    command:
+                      - /usr/bin/bash
+                      - -c
+                      - export PATH=$PATH:/kustomize:/kubectl && kustomize build /manifests | kubectl delete -f -
+              name: backup-validate
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: 512Mi
+                requests:
+                  cpu: 10m
+                  memory: 10Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /scripts
+                  name: scripts
+                - mountPath: /manifests
+                  name: manifests
+                - mountPath: /kubectl
+                  name: kubectl
+                  subPath: bin
+                - mountPath: /kustomize
+                  name: kustomize
+                  subPath: app
+                - mountPath: /tmp
+                  name: tmp
+                - mountPath: /kubeconfig
+                  name: kubeconfig
+                - mountPath: /velero
+                  name: velero
+                - mountPath: /longhorn-cli
+                  name: longhorn-cli
+                  subPath: usr/local/bin
+          dnsPolicy: Default
+          initContainers:
+            - args:
+                - export PATH=$PATH:/kustomize:/kubectl && kustomize build /manifests > /tmp/manifests.yaml && kubectl apply -f /tmp/manifests.yaml
+              command:
+                - /usr/bin/bash
+                - -c
+              image: debian:13.3-slim
+              name: cluster-deploy
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 512Mi
+                requests:
+                  cpu: 1m
+                  memory: 128Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /manifests
+                  name: manifests
+                - mountPath: /kubectl
+                  name: kubectl
+                  subPath: bin
+                - mountPath: /kustomize
+                  name: kustomize
+                  subPath: app
+                - mountPath: /tmp
+                  name: tmp
+            - args:
+                - export PATH=$PATH:/kubectl && bash /scripts/wait-for-cluster.sh
+              command:
+                - /usr/bin/bash
+                - -c
+              image: debian:13.3-slim
+              name: wait-for-cluster
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 512Mi
+                requests:
+                  cpu: 1m
+                  memory: 10Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /scripts
+                  name: scripts
+                - mountPath: /kubectl
+                  name: kubectl
+                  subPath: bin
+                - mountPath: /tmp
+                  name: tmp
+            - args:
+                - export PATH=$PATH:/kubectl && kubectl get secrets -n longhorn-backup-validate longhorn-backup-validate-kubeconfig -o jsonpath="{.data.value}" | base64 -d > /kubeconfig/config
+              command:
+                - /usr/bin/bash
+                - -c
+              image: debian:13.3-slim
+              name: copy-kubeconfig
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 512Mi
+                requests:
+                  cpu: 1m
+                  memory: 10Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /kubectl
+                  name: kubectl
+                  subPath: bin
+                - mountPath: /kubeconfig
+                  name: kubeconfig
+                - mountPath: /tmp
+                  name: tmp
+          restartPolicy: OnFailure
+          serviceAccountName: longhorn-backup-validate
+          volumes:
+            - configMap:
+                name: longhorn-backup-validate-scripts-7c49ac
+              name: scripts
+            - configMap:
+                name: longhorn-backup-validate-manifests-a80230
+              name: manifests
+            - emptyDir: {}
+              name: tmp
+            - image:
+                reference: registry.k8s.io/kubectl:v1.34.1
+              name: kubectl
+            - emptyDir: {}
+              name: kubeconfig
+            - image:
+                reference: registry.k8s.io/kustomize/kustomize:v5.8.0
+              name: kustomize
+            - image:
+                reference: velero/velero:v1.17.0
+              name: velero
+            - image:
+                reference: longhornio/longhorn-cli:v1.10.1
+              name: longhorn-cli
+  schedule: 20 4 */7 * *
+  startingDeadlineSeconds: 120
+  suspend: true

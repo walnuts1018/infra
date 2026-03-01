@@ -1,0 +1,17 @@
+apiVersion: v1
+data:
+  config: |
+    [profile minio-biscuit]
+    region = ap-northeast-1
+    endpoint_url = https://minio-biscuit.local.walnuts.dev
+    credential_process = bash /scripts/assumerole.sh
+    s3 =
+      endpoint_url = https://minio-biscuit.local.walnuts.dev
+      s3_force_path_style = true
+kind: ConfigMap
+metadata:
+  labels:
+    app: minio-biscuit-backup
+    app.kubernetes.io/name: minio-biscuit-backup
+  name: minio-biscuit-backup-aws-24c5c3
+  namespace: minio-biscuit

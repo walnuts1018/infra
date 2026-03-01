@@ -1,0 +1,22 @@
+apiVersion: v1
+data:
+  shutdown.sh: |
+    #!/bin/bash
+
+    apt-get update
+    apt-get install -y \
+        curl
+
+    curl -X POST \
+        -H "Authorization: Bearer $(cat /var/run/secrets/shutdown-manager.local.walnuts.dev/serviceaccount/token)" \
+        http://shutdown-manager.local.walnuts.dev/shutdown -v
+
+    echo "biscuit manager shutdown command sent"
+  start.sh: "#!/bin/bash\n\ntimeout=$((60*10)) #10分\ninterval=20 #[s]\nbiscuit_ip=192.168.0.15\nbiscuit_mac=18:03:73:e4:b9:e7\n\napt-get update\napt-get install -y \\\n    wakeonlan\n\nwakeonlan $biscuit_mac\n\n# 起動するまで待つ\nnow=$(date +%s)\nend=$(($now + $timeout))\nwhile [ \"$(date +%s)\" -lt \"$end\" ]; do\n    ping -c 1 $biscuit_ip > /dev/null 2>&1\n    if [ $? -eq 0 ]; then\n        break\n    fi\n    sleep $interval \ndone\n\necho \"biscuit started\"\n"
+kind: ConfigMap
+metadata:
+  labels:
+    app: biscuit-manager
+    app.kubernetes.io/name: biscuit-manager
+  name: biscuit-manager-script-8c5a6f
+  namespace: biscuit-manager

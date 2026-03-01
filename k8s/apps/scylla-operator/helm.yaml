@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: scylla-operator-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: scylla-operator
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: scylla-operator
+    helm:
+      releaseName: scylla-operator
+      values: |
+        replicas: 1
+        # Scylla Operator log level, 0-9 (higher number means more detailed logs)
+        logLevel: 2
+        resources:
+          requests:
+            cpu: 2m
+            memory: 70Mi
+          limits:
+            cpu: 300m
+            memory: 256Mi
+        tolerations:
+        - key: "node.walnuts.dev/low-performance"
+          operator: "Exists"
+
+        webhookServerReplicas: 1
+        webhookServerResources:
+          requests:
+            cpu: 2m
+            memory: 12Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+        webhookServerTolerations:
+        - key: "node.walnuts.dev/low-performance"
+          operator: "Exists"
+    repoURL: https://scylla-operator-charts.storage.googleapis.com/stable
+    targetRevision: v1.20.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

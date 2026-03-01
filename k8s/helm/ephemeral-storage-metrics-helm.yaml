@@ -1,0 +1,209 @@
+---
+# Source: k8s-ephemeral-storage-metrics/templates/RBAC.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    k8s-app: ephemeral-storage-metrics
+    helm.sh/chart: k8s-ephemeral-storage-metrics-1.19.2
+    app.kubernetes.io/name: k8s-ephemeral-storage-metrics
+    app.kubernetes.io/instance: ephemeral-storage-metrics
+    app.kubernetes.io/version: "1.19.2"
+    app.kubernetes.io/managed-by: Helm
+  name: k8s-ephemeral-storage-metrics
+  namespace: monitoring
+---
+# Source: k8s-ephemeral-storage-metrics/templates/RBAC.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: k8s-ephemeral-storage-metrics
+  labels:
+    helm.sh/chart: k8s-ephemeral-storage-metrics-1.19.2
+    app.kubernetes.io/name: k8s-ephemeral-storage-metrics
+    app.kubernetes.io/instance: ephemeral-storage-metrics
+    app.kubernetes.io/version: "1.19.2"
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups: [""]
+    resources: ["nodes","nodes/proxy", "nodes/stats", "pods"]
+    verbs: ["get","list", "watch"]
+---
+# Source: k8s-ephemeral-storage-metrics/templates/RBAC.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: k8s-ephemeral-storage-metrics
+  labels:
+    helm.sh/chart: k8s-ephemeral-storage-metrics-1.19.2
+    app.kubernetes.io/name: k8s-ephemeral-storage-metrics
+    app.kubernetes.io/instance: ephemeral-storage-metrics
+    app.kubernetes.io/version: "1.19.2"
+    app.kubernetes.io/managed-by: Helm
+subjects:
+  - kind: ServiceAccount
+    name: k8s-ephemeral-storage-metrics
+    namespace: monitoring
+roleRef:
+  kind: ClusterRole
+  name: k8s-ephemeral-storage-metrics
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: k8s-ephemeral-storage-metrics/templates/metrics.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-ephemeral-storage-metrics
+  namespace: "monitoring"
+  labels:
+      helm.sh/chart: k8s-ephemeral-storage-metrics-1.19.2
+      app.kubernetes.io/name: k8s-ephemeral-storage-metrics
+      app.kubernetes.io/instance: ephemeral-storage-metrics
+      app.kubernetes.io/version: "1.19.2"
+      app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+      app.kubernetes.io/name: k8s-ephemeral-storage-metrics
+      app.kubernetes.io/instance: ephemeral-storage-metrics
+  ports:
+    - name: metrics
+      port: 9100
+      protocol: TCP
+      targetPort: metrics
+---
+# Source: k8s-ephemeral-storage-metrics/templates/DeployType.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-ephemeral-storage-metrics
+  namespace: monitoring
+  labels:
+    helm.sh/chart: k8s-ephemeral-storage-metrics-1.19.2
+    app.kubernetes.io/name: k8s-ephemeral-storage-metrics
+    app.kubernetes.io/instance: ephemeral-storage-metrics
+    app.kubernetes.io/version: "1.19.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: k8s-ephemeral-storage-metrics
+      app.kubernetes.io/instance: ephemeral-storage-metrics
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: k8s-ephemeral-storage-metrics-1.19.2
+        app.kubernetes.io/name: k8s-ephemeral-storage-metrics
+        app.kubernetes.io/instance: ephemeral-storage-metrics
+        app.kubernetes.io/version: "1.19.2"
+        app.kubernetes.io/managed-by: Helm
+      annotations:
+        {}
+    spec:
+      serviceAccountName: k8s-ephemeral-storage-metrics
+      nodeSelector:
+        {}
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: metrics
+          image: ghcr.io/jmcgrath207/k8s-ephemeral-storage-metrics:1.19.2
+          imagePullPolicy: IfNotPresent
+          resources:
+            {}
+          ports:
+            - name: metrics
+              containerPort: 9100
+              protocol: TCP
+            
+            
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /metrics
+              port: 9100
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 30
+          readinessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /metrics
+              port: 9100
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+          env:
+            - name: DEPLOY_TYPE
+              value: "Deployment"
+            - name: SCRAPE_INTERVAL
+              value: "15"
+            - name: MAX_NODE_CONCURRENCY
+              value: "10"
+            - name: CLIENT_GO_QPS
+              value: "5"
+            - name: CLIENT_GO_BURST
+              value: "10"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: EPHEMERAL_STORAGE_POD_USAGE
+              value: "true"
+            - name: EPHEMERAL_STORAGE_NODE_AVAILABLE
+              value: "true"
+            - name: EPHEMERAL_STORAGE_NODE_CAPACITY
+              value: "true"
+            - name: EPHEMERAL_STORAGE_NODE_PERCENTAGE
+              value: "true"
+            - name: EPHEMERAL_STORAGE_CONTAINER_LIMIT_PERCENTAGE
+              value: "true"
+            - name: EPHEMERAL_STORAGE_CONTAINER_VOLUME_USAGE
+              value: "true"
+            - name: EPHEMERAL_STORAGE_CONTAINER_VOLUME_LIMITS_PERCENTAGE
+              value: "true"
+            - name: EPHEMERAL_STORAGE_INODES
+              value: "true"
+            - name: GC_INTERVAL
+              value: "5"
+            - name: GC_BATCH_SIZE
+              value: "500"
+---
+# Source: k8s-ephemeral-storage-metrics/templates/metrics.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: k8s-ephemeral-storage-metrics
+  namespace: "monitoring"
+  labels:
+    helm.sh/chart: k8s-ephemeral-storage-metrics-1.19.2
+    app.kubernetes.io/name: k8s-ephemeral-storage-metrics
+    app.kubernetes.io/instance: ephemeral-storage-metrics
+    app.kubernetes.io/version: "1.19.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+    - path: /metrics
+      port: metrics
+      scheme: http
+      interval: "15s"
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: k8s-ephemeral-storage-metrics
+      app.kubernetes.io/instance: ephemeral-storage-metrics

@@ -1,0 +1,60 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: scylla-cluster-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: databases
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: scylla
+    helm:
+      releaseName: scylla-cluster
+      valuesObject:
+        datacenter: iwakura
+        developerMode: true
+        racks:
+          - members: 3
+            name: iwakura-a
+            placement:
+              nodeAffinity: {}
+              podAffinity: {}
+              podAntiAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                  - podAffinityTerm:
+                      labelSelector:
+                        matchExpressions:
+                          - key: scylla/cluster
+                            operator: In
+                            values:
+                              - scylla-cluster
+                      topologyKey: kubernetes.io/hostname
+                    weight: 100
+              tolerations: []
+            resources:
+              limits:
+                cpu: "1"
+                memory: 3Gi
+              requests:
+                cpu: 30m
+                memory: 256Mi
+            scyllaConfig: scylla-config-f2b364
+            storage:
+              capacity: 8Gi
+              storageClassName: local-path
+        scyllaImage:
+          repository: scylladb/scylla
+          tag: 2025.4.2
+        serviceMonitor:
+          create: true
+    repoURL: https://scylla-operator-charts.storage.googleapis.com/stable
+    targetRevision: v1.20.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

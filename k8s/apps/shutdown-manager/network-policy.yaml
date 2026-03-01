@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: shutdown-manager
+  namespace: shutdown-manager
+spec:
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: envoy-gateway-system
+          podSelector:
+            matchLabels:
+              gateway.envoyproxy.io/owning-gateway-name: envoy-gateway
+              gateway.envoyproxy.io/owning-gateway-namespace: envoy-gateway-system
+  podSelector:
+    matchLabels:
+      app: shutdown-manager
+      app.kubernetes.io/name: shutdown-manager
+  policyTypes:
+    - Ingress

@@ -1,0 +1,129 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: fitbit-manager
+spec:
+  cluster:
+    name: postgresql-default
+  name: fitbit_manager
+  owner: fitbit_manager
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: grafana
+spec:
+  cluster:
+    name: postgresql-default
+  name: grafana
+  owner: grafana
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: hedgedoc
+spec:
+  cluster:
+    name: postgresql-default
+  name: hedgedoc
+  owner: hedgedoc
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: nextcloud
+spec:
+  cluster:
+    name: postgresql-default
+  name: nextcloud
+  owner: nextcloud
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: oekaki-dengon-game
+spec:
+  cluster:
+    name: postgresql-default
+  name: oekaki_dengon_game
+  owner: oekaki_dengon_game
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: openchokin
+spec:
+  cluster:
+    name: postgresql-default
+  name: openchokin
+  owner: openchokin
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: wakatime-to-slack
+spec:
+  cluster:
+    name: postgresql-default
+  name: wakatime_to_slack
+  owner: wakatime
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: zitadel
+spec:
+  cluster:
+    name: postgresql-default
+  name: zitadel
+  owner: zitadel
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: ac-hacking
+spec:
+  cluster:
+    name: postgresql-default
+  name: ac_hacking
+  owner: ac_hacking
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: mucaron
+spec:
+  cluster:
+    name: postgresql-default
+  name: mucaron
+  owner: mucaron
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: affine
+spec:
+  cluster:
+    name: postgresql-default
+  name: affine
+  owner: affine
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: n8n
+spec:
+  cluster:
+    name: postgresql-default
+  name: n8n
+  owner: n8n
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: stalwart
+spec:
+  cluster:
+    name: postgresql-default
+  name: stalwart
+  owner: stalwart

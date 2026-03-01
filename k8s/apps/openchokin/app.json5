@@ -1,7 +1,0 @@
-{
-  name: "openchokin",
-  namespace: "openchokin",
-  clusters: {
-    kurumi: {},
-  },
-}

@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pomerium-controller-kustomize
+  namespace: argocd
+spec:
+  destination:
+    namespace: pomerium
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    kustomize:
+      patches:
+        - patch: |
+            $patch: delete
+            apiVersion: v1
+            kind: Namespace
+            metadata:
+              name: pomerium
+        - patch: |
+            - op: replace
+              path: "/spec/template/spec/containers/0/resources"
+              value: {"requests": {"cpu": "10m", "memory": "32Mi"}, "limits": {"cpu": "1", "memory": "1Gi"}}
+            - op: replace
+              path: "/spec/replicas"
+              value: 1
+          target:
+            kind: Deployment
+            name: pomerium
+            namespace: pomerium
+        - patch: |
+            - op: add
+              path: "/metadata/labels/role"
+              value: metrics
+          target:
+            kind: Service
+            name: pomerium-metrics
+            namespace: pomerium
+    path: config/gateway-api
+    repoURL: https://github.com/pomerium/ingress-controller
+    targetRevision: v0.32.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

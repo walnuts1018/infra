@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mpeg-dash-encoder
+    app.kubernetes.io/name: mpeg-dash-encoder
+  name: mpeg-dash-encoder
+  namespace: mpeg-dash-encoder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mpeg-dash-encoder
+      app.kubernetes.io/name: mpeg-dash-encoder
+  template:
+    metadata:
+      labels:
+        app: mpeg-dash-encoder
+        app.kubernetes.io/name: mpeg-dash-encoder
+    spec:
+      containers:
+        - env:
+            - name: LOG_LEVEL
+              value: debug
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: admin_token
+                  name: mpeg-dash-encoder-65bb67
+            - name: JWT_SIGN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: jwt_sign_secret
+                  name: mpeg-dash-encoder-65bb67
+            - name: MINIO_ENDPOINT
+              value: minio.minio.svc.cluster.local:9000
+            - name: MINIO_ACCESS_KEY
+              value: k1KHQ1COSPXdYb3CBDUJ
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: minio_secret_key
+                  name: mpeg-dash-encoder-65bb67
+            - name: MINIO_BUCKET
+              value: mucaron
+            - name: MINIO_REGION
+              value: ap-northeast-1
+            - name: MINIO_USE_SSL
+              value: "false"
+            - name: FFMPEG_HW_ACCEL
+              value: qsv
+            - name: MINIO_SOURCE_UPLOAD_BUCKET
+              value: mpeg-dash-encoder-source-upload
+            - name: MINIO_OUTPUT_BUCKET
+              value: mpeg-dash-encoder-output
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+          image: ghcr.io/walnuts1018/mpeg-dash-encoder:52054e17d80858a0d2c515601db0a6f189352cf4-14
+          livenessProbe:
+            failureThreshold: 1
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          name: mpeg-dash-encoder
+          ports:
+            - containerPort: 8080
+          resources: {}
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            privileged: true
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /var/log/mpeg-dash-encoder
+              name: log
+      nodeSelector:
+        kubernetes.io/hostname: cake
+      volumes:
+        - emptyDir: {}
+          name: tmp
+        - emptyDir: {}
+          name: log

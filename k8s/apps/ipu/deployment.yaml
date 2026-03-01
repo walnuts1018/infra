@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ipu
+    app.kubernetes.io/name: ipu
+  name: ipu
+  namespace: ipu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ipu
+      app.kubernetes.io/name: ipu
+  template:
+    metadata:
+      labels:
+        app: ipu
+        app.kubernetes.io/name: ipu
+    spec:
+      containers:
+        - env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: session-secret
+                  name: ipu-948900
+            - name: OIDC_ISSUER_URL
+              value: https://auth.walnuts.dev
+            - name: OIDC_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: client-id
+                  name: ipu-948900
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: client-secret
+                  name: ipu-948900
+            - name: OIDC_REDIRECT_URL
+              value: https://ipu.walnuts.dev/auth/callback
+            - name: OIDC_ALLOWED_GROUPS
+              value: 326185042176901521:viewer
+            - name: OIDC_GROUP_CLAIM
+              value: my:zitadel:grants
+            - name: S3_BUCKET
+              value: ipu
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ENDPOINT_URL_STS
+              value: https://seaweedfs.local.walnuts.dev
+            - name: AWS_ENDPOINT_URL_S3
+              value: https://seaweedfs.local.walnuts.dev
+            - name: AWS_REGION
+              value: us-east-1
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/ipu
+            - name: S3_USE_PATH_STYLE
+              value: "true"
+          image: ghcr.io/walnuts1018/s3-oauth2-proxy:0.0.60
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: http
+          name: proxy
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 1m
+              memory: 10Mi
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+      securityContext:
+        fsGroup: 101
+        fsGroupChangePolicy: OnRootMismatch
+      serviceAccountName: ipu
+      volumes:
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 86400
+                  path: token

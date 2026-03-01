@@ -1,0 +1,11 @@
+apiVersion: gateway.pomerium.io/v1alpha1
+kind: PolicyFilter
+metadata:
+  name: oekaki-dengon-game-public
+  namespace: oekaki-dengon-game
+spec:
+  ppl: |
+    allow:
+      and:
+        - accept:
+            is: true

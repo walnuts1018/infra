@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-virt-kustomize
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-virt
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: k8s/apps/kube-virt/_kustomize
+    repoURL: https://github.com/walnuts1018/infra
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

@@ -1,0 +1,14 @@
+apiVersion: gateway.networking.k8s.io/v1alpha3
+kind: BackendTLSPolicy
+metadata:
+  name: kurumi-api-server
+  namespace: shutdown-manager
+spec:
+  targetRefs:
+    - group: gateway.envoyproxy.io
+      kind: Backend
+      name: kurumi-api-server
+      sectionName: "443"
+  validation:
+    hostname: kurumi.local.walnuts.dev
+    wellKnownCACertificates: System

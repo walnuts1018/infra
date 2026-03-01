@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: walnuk-frontend
+    app.kubernetes.io/name: walnuk-frontend
+  name: walnuk-frontend
+  namespace: walnuk
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: walnuk-frontend
+      app.kubernetes.io/name: walnuk-frontend
+  template:
+    metadata:
+      labels:
+        app: walnuk-frontend
+        app.kubernetes.io/name: walnuk-frontend
+    spec:
+      containers:
+        - env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: API_ENDPOINT
+              value: http://walnuk-backend.walnuk.svc.cluster.local:8080
+          image: ghcr.io/walnuts1018/walnuk-frontend:v0.0.113
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+          name: next
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 10m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /app/.next/cache
+              name: next-cache
+      priorityClassName: high
+      securityContext:
+        runAsGroup: 65534
+        runAsUser: 10001
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app: walnuk-frontend
+              app.kubernetes.io/name: walnuk-frontend
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - emptyDir: {}
+          name: next-cache

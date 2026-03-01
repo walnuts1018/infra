@@ -1,0 +1,16 @@
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha3
+kind: TalosConfigTemplate
+metadata:
+  name: longhorn-backup-validate-templateworker
+spec:
+  template:
+    spec:
+      configPatches:
+        - op: add
+          path: /machine/disks
+          value:
+            - device: /dev/vdb
+              partitions:
+                - mountpoint: /var/lib/longhorn
+      generateType: join
+      talosVersion: v1.11.5

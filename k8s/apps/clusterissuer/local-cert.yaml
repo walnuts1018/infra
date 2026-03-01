@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: local-ca-cert
+  namespace: cert-manager
+spec:
+  commonName: operator
+  duration: 70128h
+  isCA: true
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: selfsigned
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  secretName: local-ca-secret

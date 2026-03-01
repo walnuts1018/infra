@@ -1,9 +1,0 @@
-192.168.0.159 minio-biscuit.local.walnuts.dev
-192.168.0.159 minio-biscuit-console.local.walnuts.dev
-192.168.0.138 httptest.local.walnuts.dev
-192.168.0.138 sts-minio.local.walnuts.dev
-192.168.0.158 shutdown-manager.local.walnuts.dev
-192.168.0.138 kurumi.local.walnuts.dev
-192.168.0.138 seaweedfs.local.walnuts.dev
-192.168.0.138 stalwart.local.walnuts.dev
-192.168.0.138 argocd.local.walnuts.dev

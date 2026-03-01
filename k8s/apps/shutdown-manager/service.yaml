@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: shutdown-manager
+    app.kubernetes.io/name: shutdown-manager
+  name: shutdown-manager
+  namespace: shutdown-manager
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: http
+  selector:
+    app: shutdown-manager
+    app.kubernetes.io/name: shutdown-manager
+  type: ClusterIP

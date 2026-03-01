@@ -1,0 +1,263 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: daemonset
+spec:
+  config:
+    exporters:
+      debug:
+        verbosity: detailed
+      file:
+        format: json
+        path: /tmp/debug.json
+      otlp/mackerel:
+        compression: gzip
+        endpoint: otlp.mackerelio.com:4317
+        headers:
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+      otlp/tempo:
+        endpoint: tempo-gateway.tempo.svc.clusterset.local:4317
+        tls:
+          insecure: true
+      otlphttp/loki:
+        endpoint: http://loki-gateway.loki.svc.clusterset.local/otlp
+        tls:
+          insecure: true
+      otlphttp/prometheus:
+        endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.clusterset.local:9090/api/v1/otlp
+        tls:
+          insecure: true
+      otlphttp/vaxila:
+        endpoint: https://otlp-vaxila.mackerelio.com
+        headers:
+          Accept: '*/*'
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+      prometheusremotewrite:
+        endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.clusterset.local:9090/api/v1/write
+        resource_to_telemetry_conversion:
+          enabled: true
+      prometheusremotewrite/victoriametrics:
+        endpoint: http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write
+        resource_to_telemetry_conversion:
+          enabled: true
+    processors:
+      batch:
+        send_batch_size: 10000
+        timeout: 10s
+      k8sattributes:
+        auth_type: serviceAccount
+        extract:
+          metadata:
+            - k8s.namespace.name
+            - k8s.pod.name
+            - k8s.pod.start_time
+            - k8s.pod.uid
+            - k8s.deployment.name
+            - k8s.deployment.uid
+            - k8s.node.name
+            - k8s.cluster.uid
+            - k8s.cronjob.name
+            - k8s.job.name
+            - k8s.daemonset.name
+            - k8s.daemonset.uid
+            - k8s.statefulset.name
+            - k8s.statefulset.uid
+            - container.id
+        filter:
+          node_from_env_var: K8S_NODE_NAME
+        pod_association:
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.ip
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.uid
+          - sources:
+              - from: connection
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 2000
+        spike_limit_percentage: 15
+      resource/cluster_name:
+        attributes:
+          - action: upsert
+            key: k8s.cluster.name
+            value: kurumi
+      resource/journald:
+        attributes:
+          - action: upsert
+            key: service.name
+            value: journald
+      resourcedetection:
+        detectors:
+          - env
+        override: false
+        timeout: 15s
+      transform/jsonparse:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            statements:
+              - merge_maps(cache, ParseJSON(body), "upsert") where IsMatch(body, "^\\{")
+              - set(body, cache["msg"]) where cache["msg"] != nil
+              - delete_key(cache, "msg")
+              - truncate_all(cache, 1024)
+              - limit(cache, 100, [])
+              - merge_maps(resource.attributes, cache, "insert")
+    receivers:
+      filelog:
+        include:
+          - /var/log/pods/*/*/*.log
+        include_file_path: true
+        operators:
+          - id: container-parser
+            type: container
+      hostmetrics:
+        collection_interval: 10s
+        scrapers:
+          cpu:
+            metrics:
+              system.cpu.logical.count:
+                enabled: true
+          memory:
+            metrics:
+              system.linux.memory.available:
+                enabled: true
+              system.memory.limit:
+                enabled: true
+          system:
+            metrics:
+              system.uptime:
+                enabled: true
+      journald:
+        directory: /var/log/journal
+        priority: info
+        units:
+          - kubelet.service
+      kubeletstats:
+        auth_type: serviceAccount
+        collection_interval: 10s
+        endpoint: ${env:K8S_NODE_IP}:10250
+        extra_metadata_labels:
+          - k8s.volume.type
+        insecure_skip_verify: true
+        k8s_api_config:
+          auth_type: serviceAccount
+        metric_groups:
+          - node
+          - pod
+          - container
+          - volume
+    service:
+      pipelines:
+        logs:
+          exporters:
+            - otlphttp/loki
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+            - resource/cluster_name
+          receivers:
+            - filelog
+        logs/journald:
+          exporters:
+            - otlphttp/loki
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+            - resource/journald
+            - resource/cluster_name
+          receivers:
+            - journald
+        metrics:
+          exporters:
+            - prometheusremotewrite
+            - prometheusremotewrite/victoriametrics
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+            - resourcedetection
+            - resource/cluster_name
+          receivers:
+            - hostmetrics
+            - kubeletstats
+  env:
+    - name: K8S_NODE_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
+    - name: K8S_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+    - name: MACKEREL_APIKEY
+      valueFrom:
+        secretKeyRef:
+          key: mackerel-api-key
+          name: opentelemetry-collectors-acaba9
+    - name: OTEL_RESOURCE_ATTRIBUTES
+      value: k8s.node.name=$(K8S_NODE_NAME),k8s.node.ip=$(K8S_NODE_IP)
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.146.1
+  managementState: managed
+  mode: daemonset
+  resources:
+    limits:
+      cpu: 500m
+    requests:
+      cpu: 100m
+      memory: 150Mi
+  securityContext:
+    runAsGroup: 0
+    runAsUser: 0
+  serviceAccount: opentelemetry-collectors
+  volumeMounts:
+    - mountPath: /var/log/pods
+      name: varlogpods
+      readOnly: true
+    - mountPath: /var/lib/docker/containers
+      name: varlibdockercontainers
+      readOnly: true
+    - mountPath: /var/log/journal
+      name: varlogjournal
+      readOnly: true
+    - mountPath: /usr/bin/journalctl
+      name: journalctl
+      readOnly: true
+    - mountPath: /usr/lib
+      name: usrlib
+      readOnly: true
+    - mountPath: /lib
+      name: lib
+      readOnly: true
+    - mountPath: /lib64
+      name: lib64
+      readOnly: true
+  volumes:
+    - hostPath:
+        path: /var/log/pods
+      name: varlogpods
+    - hostPath:
+        path: /var/lib/docker/containers
+      name: varlibdockercontainers
+    - hostPath:
+        path: /var/log/journal
+      name: varlogjournal
+    - hostPath:
+        path: /usr/bin/journalctl
+        type: File
+      name: journalctl
+    - hostPath:
+        path: /usr/lib
+        type: Directory
+      name: usrlib
+    - hostPath:
+        path: /lib
+        type: Directory
+      name: lib
+    - hostPath:
+        path: /lib64
+        type: Directory
+      name: lib64

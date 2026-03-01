@@ -1,0 +1,79 @@
+---
+# Source: scylla/templates/scyllacluster.yaml
+apiVersion: scylla.scylladb.com/v1
+kind: ScyllaCluster
+metadata:
+  name: scylla-cluster
+  namespace: databases
+spec:
+  version: 2025.4.2
+  agentVersion: 3.8.0@sha256:2fb6552788d112c1c008f8de27f8abeba12e3a067d58a5260eaea477ef7ddaf2
+  repository: scylladb/scylla
+  agentRepository: scylladb/scylla-manager-agent
+  developerMode: true
+  datacenter:
+    name: iwakura
+    racks:
+    - members: 3
+      name: iwakura-a
+      placement:
+        nodeAffinity: {}
+        podAffinity: {}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: scylla/cluster
+                  operator: In
+                  values:
+                  - scylla-cluster
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+        tolerations: []
+      resources:
+        limits:
+          cpu: "1"
+          memory: 3Gi
+        requests:
+          cpu: 30m
+          memory: 256Mi
+      scyllaConfig: scylla-config-f2b364
+      storage:
+        capacity: 8Gi
+        storageClassName: local-path
+---
+# Source: scylla/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: scylla-cluster-service-monitor
+  namespace: databases
+spec:
+  jobLabel: "app"
+  targetLabels: ["scylla/cluster"]
+  podTargetLabels: ["scylla/datacenter"]
+  selector:
+    matchLabels:
+      app: scylla
+  endpoints:
+  - port: agent-prometheus
+    metricRelabelings:
+    # rename job label to 'manager_agent' due to hardcoded name
+    # in Scylla Monitoring.
+    - sourceLabels: [ endpoint ]
+      targetLabel: job
+      regex: agent-prometheus
+      replacement: manager_agent
+  - port: prometheus
+    metricRelabelings:
+    - sourceLabels: [ scylla_cluster ]
+      targetLabel: cluster
+      regex: (.*)
+      replacement: ${1}
+      action: replace
+    - sourceLabels: [ scylla_datacenter ]
+      targetLabel: dc
+      regex: (.*)
+      replacement: ${1}
+      action: replace

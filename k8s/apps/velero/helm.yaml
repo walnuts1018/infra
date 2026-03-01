@@ -1,0 +1,86 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: velero-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: velero
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: velero
+    helm:
+      releaseName: velero
+      valuesObject:
+        configuration:
+          backupStorageLocation:
+            - bucket: velero-backup
+              config:
+                region: ap-northeast-1
+                s3ForcePathStyle: "true"
+                s3Url: https://minio-biscuit.local.walnuts.dev
+              credential:
+                key: credentials
+                name: velero-minio-biscuit-8a3d33
+              default: true
+              name: minio-biscuit
+              provider: aws
+          features: EnableCSI
+          volumeSnapshotLocation:
+            - config:
+                region: ap-northeast-1
+                s3ForcePathStyle: "true"
+                s3Url: https://minio-biscuit.local.walnuts.dev
+              credential:
+                key: credentials
+                name: velero-minio-biscuit-8a3d33
+              name: minio-biscuit
+              provider: aws
+        initContainers:
+          - image: velero/velero-plugin-for-aws:v1.13.2
+            name: velero-plugin-for-aws
+            volumeMounts:
+              - mountPath: /target
+                name: plugins
+        kubectl:
+          image:
+            repository: docker.io/bitnamilegacy/kubectl
+            tag: 1.33.4
+        metrics:
+          enabled: true
+          nodeAgentPodMonitor:
+            autodetect: false
+            enabled: true
+          prometheusRule:
+            autodetect: false
+            enabled: false
+          serviceMonitor:
+            autodetect: false
+            enabled: true
+        resources:
+          limits:
+            cpu: "2"
+            memory: 2Gi
+          requests:
+            cpu: 10m
+            memory: 128Mi
+        schedules:
+          minio-biscuit:
+            schedule: 10 17 * * *
+            template:
+              csiSnapshotTimeout: 6h
+              excludedNamespaceScopedResources:
+                - secret
+              snapshotVolumes: true
+              storageLocation: minio-biscuit
+              ttl: 336h
+    repoURL: https://vmware-tanzu.github.io/helm-charts
+    targetRevision: 11.4.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

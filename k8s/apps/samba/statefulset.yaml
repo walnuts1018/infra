@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: samba
+    app.kubernetes.io/name: samba
+  name: samba
+  namespace: samba
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: samba
+      app.kubernetes.io/name: samba
+  serviceName: samba
+  template:
+    metadata:
+      labels:
+        app: samba
+        app.kubernetes.io/name: samba
+    spec:
+      containers:
+        - env:
+            - name: ACCOUNT_samba
+              valueFrom:
+                secretKeyRef:
+                  key: account-samba
+                  name: samba-secret-dbea5d
+            - name: SAMBA_CONF_LOG_LEVEL
+              value: "3"
+            - name: WSDD2_DISABLE
+              value: "1"
+            - name: AVAHI_DISABLE
+              value: "1"
+            - name: GROUPS_samba
+              value: samba
+            - name: SAMBA_VOLUME_CONFIG_share
+              value: '[share]; path=/samba-share; valid users = samba; public = no; read only = no; browseable = yes; available = yes'
+            - name: SAMBA_GLOBAL_CONFIG_smb_SPACE_ports
+              value: 10445 10139
+          image: ghcr.io/servercontainers/samba:a3.23.3-s4.22.6-r0
+          imagePullPolicy: IfNotPresent
+          name: samba
+          ports:
+            - containerPort: 10445
+              name: samba
+          resources:
+            limits:
+              cpu: "1"
+              memory: 6Gi
+            requests:
+              cpu: 10m
+              memory: 1Gi
+          volumeMounts:
+            - mountPath: /samba-share
+              name: root
+            - mountPath: /samba-share/books
+              name: books
+            - mountPath: /samba-share/CameraRoll
+              name: camera-roll
+            - mountPath: /samba-share/mega
+              name: mega
+            - mountPath: /samba-share/movies
+              name: movies
+            - mountPath: /samba-share/musics
+              name: musics
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      volumes:
+        - hostPath:
+            path: /mnt/data/share
+            type: Directory
+          name: samba-local-dir
+        - name: root
+          persistentVolumeClaim:
+            claimName: root
+        - name: books
+          persistentVolumeClaim:
+            claimName: books
+        - name: camera-roll
+          persistentVolumeClaim:
+            claimName: camera-roll
+        - name: mega
+          persistentVolumeClaim:
+            claimName: mega
+        - name: movies
+          persistentVolumeClaim:
+            claimName: movies
+        - name: musics
+          persistentVolumeClaim:
+            claimName: musics

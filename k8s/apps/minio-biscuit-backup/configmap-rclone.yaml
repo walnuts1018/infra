@@ -1,0 +1,31 @@
+apiVersion: v1
+data:
+  rclone.conf.template: |
+    [minio-biscuit]
+    type = s3
+    provider = Minio
+    env_auth = true
+    region = ap-northeast-1
+    profile = minio-biscuit
+    upload_cutoff = 16M
+
+    [b2]
+    type = b2
+    account = 004ab15b5942e2c000000000e
+    key = {{ .Env.B2_APPLICATION_KEY }}
+    hard_delete = true
+
+    [b2-encrypted]
+    type = crypt
+    remote = b2:walnuts-minio-biscuit-backup-81f18e5
+    filename_encryption = off
+    directory_name_encryption = false
+    password = {{ .Env.B2_ENCRYPTED_PASSWORD_OBSCURED }}
+    password2 = {{ .Env.B2_ENCRYPTED_SALT_OBSCURED }}
+kind: ConfigMap
+metadata:
+  labels:
+    app: minio-biscuit-backup
+    app.kubernetes.io/name: minio-biscuit-backup
+  name: minio-biscuit-backup-rclone-4f3e1f
+  namespace: minio-biscuit

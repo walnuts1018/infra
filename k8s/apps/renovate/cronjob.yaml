@@ -1,0 +1,78 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    app: renovate
+    app.kubernetes.io/name: renovate
+  name: renovate
+  namespace: renovate
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - env:
+                - name: LOG_LEVEL
+                  value: debug
+                - name: RENOVATE_AUTODISCOVER
+                  value: "true"
+                - name: RENOVATE_AUTODISCOVER_FILTER
+                  value: walnuts1018/infra
+                - name: RENOVATE_BRANCH_PREFIX
+                  value: renovate/
+                - name: RENOVATE_BRANCH_PREFIX_OLD
+                  value: renovate/
+                - name: RENOVATE_GIT_AUTHOR
+                  value: renovate[bot] <renovate[bot]@users.noreply.github.com>
+                - name: RENOVATE_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      key: github-token
+                      name: renovate-9d4624
+              image: ghcr.io/renovatebot/renovate:43.35.1
+              name: renovate
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 2Gi
+                requests:
+                  cpu: 400m
+                  memory: 1Gi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /tmp/renovate
+                  name: renovate
+          initContainers:
+            - command:
+                - sh
+                - -c
+                - findmnt /tmp/renovate -n -o USE% | awk '{if( int($1) > 75 ){ system("rm -rf /tmp/renovate/cache") }}'
+              image: debian:13.3-slim
+              name: disk-cleaner
+              securityContext:
+                runAsUser: 0
+              volumeMounts:
+                - mountPath: /tmp/renovate
+                  name: renovate
+          restartPolicy: Never
+          securityContext:
+            fsGroup: 12021
+            fsGroupChangePolicy: OnRootMismatch
+          tolerations:
+            - key: node.walnuts.dev/untrusted
+              operator: Exists
+          volumes:
+            - name: renovate
+              persistentVolumeClaim:
+                claimName: renovate
+  schedule: '*/5 * * * *'

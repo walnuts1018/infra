@@ -1,0 +1,19 @@
+apiVersion: addons.cluster.x-k8s.io/v1alpha1
+kind: HelmChartProxy
+metadata:
+  name: snapshot-controller
+  namespace: longhorn-backup-validate
+spec:
+  chartName: snapshot-controller
+  clusterSelector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: longhorn-backup-validate
+  namespace: kube-system
+  options:
+    atomic: true
+    timeout: 5m
+    wait: true
+    waitForJobs: true
+  releaseName: snapshot-controller
+  repoURL: https://piraeus.io/helm-charts/
+  version: 4.2.0

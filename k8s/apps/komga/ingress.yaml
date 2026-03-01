@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 4G
+  labels:
+    app: komga
+    app.kubernetes.io/name: komga
+  name: komga
+  namespace: komga
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: komga.walnuts.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: komga
+                port:
+                  name: http
+            path: /
+            pathType: Prefix

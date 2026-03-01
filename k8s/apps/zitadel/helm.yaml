@@ -1,0 +1,99 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: zitadel-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: zitadel
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: zitadel
+    helm:
+      releaseName: zitadel
+      values: |
+        zitadel:
+          configmapConfig:
+            Log:
+              # Level: debug
+              Formatter:
+                Format: json
+            Tracing:
+              Type: otel
+              Endpoint: default-collector.opentelemetry-collector.svc.cluster.local:4317
+            ExternalDomain: auth.walnuts.dev
+            TLS:
+              Enabled: false
+              # KeyPath: /etc/ssl/certs/tls.key
+              # CertPath: /etc/ssl/certs/tls.crt
+            ExternalPort: 443
+            ExternalSecure: true
+          masterkeySecretName: "zitadel"
+          configSecretName: zitadel
+          configSecretKey: "config.yaml"
+        replicaCount: 1
+        ingress:
+          enabled: true
+          className: "nginx"
+          annotations:
+            cert-manager.io/cluster-issuer: 'letsencrypt-prod'
+          hosts:
+          - host: auth.walnuts.dev
+            paths:
+            - path: /
+              pathType: Prefix
+          tls:
+          - secretName: zitadel-tls
+            hosts:
+            - auth.walnuts.dev
+        metrics:
+          enabled: true
+          serviceMonitor:
+            enabled: true
+        resources:
+          requests:
+            cpu: 10m
+            memory: 196Mi
+          limits:
+            memory: 1Gi
+        affinity:
+          nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                - key: kubernetes.io/arch
+                  operator: In
+                  values:
+                  - amd64
+            - weight: 10
+              preference:
+                matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: NotIn
+                  values:
+                  - donut
+
+        # extraVolumes:
+        # - name: zitadel-tls
+        #   secret:
+        #     defaultMode: 420
+        #     secretName: zitadel-tls
+        # extraVolumeMounts:
+        # - name: zitadel-tls
+        #   mountPath: /etc/ssl/certs
+        #   readOnly: true
+
+        # https://zitadel.com/docs/self-hosting/manage/login-client
+        login:
+          enabled: false # 一旦使うつもりはないのでいいかな
+    repoURL: https://charts.zitadel.com
+    targetRevision: 9.23.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

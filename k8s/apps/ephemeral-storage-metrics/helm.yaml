@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ephemeral-storage-metrics-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: k8s-ephemeral-storage-metrics
+    helm:
+      releaseName: ephemeral-storage-metrics
+      values: |
+        serviceMonitor:
+          enable: true
+
+        metrics:
+          ephemeral_storage_container_limit_percentage: true
+          ephemeral_storage_container_volume_usage: true
+          ephemeral_storage_container_volume_limit_percentage: true
+          ephemeral_storage_pod_usage: true
+          ephemeral_storage_inodes: true
+          ephemeral_storage_node_available: true
+          ephemeral_storage_node_capacity: true
+          ephemeral_storage_node_percentage: true
+          adjusted_polling_rate: false
+
+        prometheus:
+          enable: true
+    repoURL: https://jmcgrath207.github.io/k8s-ephemeral-storage-metrics/chart
+    targetRevision: 1.19.2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

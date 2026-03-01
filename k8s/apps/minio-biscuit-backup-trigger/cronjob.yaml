@@ -1,0 +1,105 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: minio-biscuit-backup-trigger
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: minio-biscuit-backup-trigger
+            app.kubernetes.io/name: minio-biscuit-backup-trigger
+        spec:
+          containers:
+            - args:
+                - PATH=$PATH:/kubectl bash /scripts/trigger_and_wait_minio-biscuit-backup.sh
+              command:
+                - /usr/bin/bash
+                - -c
+              image: debian:13.3-slim
+              name: trigger-and-wait-minio-biscuit-backup
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 256Mi
+                requests:
+                  cpu: 1m
+                  memory: 10Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: false
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /kubectl
+                  name: kubectl
+                  subPath: bin
+                - mountPath: /scripts
+                  name: scripts
+                  readOnly: true
+                - mountPath: /tmp
+                  name: tmp
+                - mountPath: /var/run/secrets/kurumi.k8s.walnuts.dev/serviceaccount
+                  name: sa-token
+                  readOnly: true
+          initContainers:
+            - args:
+                - PATH=$PATH:/kubectl bash /scripts/wait_minio-default-backup.sh
+              command:
+                - /usr/bin/bash
+                - -c
+              image: debian:13.3-slim
+              name: wait-minio-default-backup
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 128Mi
+                requests:
+                  cpu: 1m
+                  memory: 10Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /kubectl
+                  name: kubectl
+                  subPath: bin
+                - mountPath: /scripts
+                  name: scripts
+                  readOnly: true
+                - mountPath: /tmp
+                  name: tmp
+          restartPolicy: Never
+          serviceAccountName: minio-biscuit-backup-trigger
+          volumes:
+            - configMap:
+                name: minio-biscuit-backup-trigger-script-c10bb3
+              name: scripts
+            - emptyDir: {}
+              name: tmp
+            - name: sa-token
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      audience: kurumi.k8s.walnuts.dev
+                      expirationSeconds: 86400
+                      path: token
+            - image:
+                reference: registry.k8s.io/kubectl:v1.34.1
+              name: kubectl
+  schedule: 10 3 * * *
+  startingDeadlineSeconds: 120
+  timeZone: Asia/Tokyo

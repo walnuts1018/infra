@@ -1,0 +1,37 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: custom-config
+  namespace: envoy-gateway-system
+spec:
+  provider:
+    kubernetes:
+      envoyDeployment:
+        container:
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 5m
+              memory: 64Mi
+        replicas: 2
+      envoyHpa:
+        maxReplicas: 5
+        metrics:
+          - resource:
+              name: memory
+              target:
+                averageUtilization: 100
+                type: Utilization
+            type: Resource
+        minReplicas: 2
+      envoyService:
+        loadBalancerIP: 192.168.0.138
+        type: LoadBalancer
+    type: Kubernetes
+  telemetry:
+    tracing:
+      provider:
+        host: default-collector.opentelemetry-collector.svc.cluster.local
+        port: 4317
+      samplingRate: 100

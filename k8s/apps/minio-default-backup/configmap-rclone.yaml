@@ -1,0 +1,24 @@
+apiVersion: v1
+data:
+  rclone.conf: |
+    [minio-default]
+    type = s3
+    provider = Minio
+    env_auth = true
+    region = ap-northeast-1
+    profile = minio-default
+
+    [minio-biscuit]
+    type = s3
+    provider = Minio
+    env_auth = true
+    region = ap-northeast-1
+    profile = minio-biscuit
+    upload_cutoff = 16M
+kind: ConfigMap
+metadata:
+  labels:
+    app: minio-default-backup
+    app.kubernetes.io/name: minio-default-backup
+  name: minio-default-backup-rclone-424fa6
+  namespace: minio

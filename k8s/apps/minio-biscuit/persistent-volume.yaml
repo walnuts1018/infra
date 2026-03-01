@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    app: minio-biscuit
+    app.kubernetes.io/name: minio-biscuit
+  name: minio-biscuit-pv
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 32Gi
+  hostPath:
+    path: /mnt/HDD-1TB/minio
+  storageClassName: manual-minio-hostpath

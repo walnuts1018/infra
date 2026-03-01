@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: walnuk-backend
+    app.kubernetes.io/name: walnuk-backend
+  name: walnuk-backend
+  namespace: walnuk
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: walnuk-backend
+      app.kubernetes.io/name: walnuk-backend
+  template:
+    metadata:
+      labels:
+        app: walnuk-backend
+        app.kubernetes.io/name: walnuk-backend
+    spec:
+      containers:
+        - env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: SCYLLA_CA_CERT_PATH
+              value: /etc/certs/scylla-db/ca.crt
+            - name: SCYLLA_CLIENT_CERT_PATH
+              value: /etc/certs/scylla-db-client/tls.crt
+            - name: SCYLLA_CLIENT_KEY_PATH
+              value: /etc/certs/scylla-db-client/tls.key
+            - name: SCYLLA_URL
+              value: scylla-cluster-client.databases.svc.cluster.local:9142
+            - name: SCYLLA_USER
+              valueFrom:
+                secretKeyRef:
+                  key: scylladb_username
+                  name: walnuk-51af8a
+            - name: SCYLLA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: scylladb_password
+                  name: walnuk-51af8a
+            - name: RUST_BACKTRACE
+              value: "1"
+          image: ghcr.io/walnuts1018/walnuk-backend:v0.0.113
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /health/livez
+              port: 8080
+          name: apiserver
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /health/readyz
+              port: 8080
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 2m
+              memory: 16Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /etc/certs/scylla-db
+              name: scylla-db-ca-cert
+              readOnly: true
+            - mountPath: /etc/certs/scylla-db-client
+              name: scylla-db-client-cert
+              readOnly: true
+      priorityClassName: high
+      securityContext:
+        runAsGroup: 65532
+        runAsUser: 65532
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app: walnuk-backend
+              app.kubernetes.io/name: walnuk-backend
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - emptyDir: {}
+          name: tmp
+        - configMap:
+            items:
+              - key: ca.crt
+                path: ca.crt
+            name: walnuk-scylladb-ca-cert-c0f830
+          name: scylla-db-ca-cert
+        - name: scylla-db-client-cert
+          secret:
+            items:
+              - key: tls.crt
+                path: tls.crt
+              - key: tls.key
+                path: tls.key
+            secretName: scylla-cluster-local-client-ca

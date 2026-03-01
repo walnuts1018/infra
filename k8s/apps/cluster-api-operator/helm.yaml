@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-api-operator-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: cluster-api-operator
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: cluster-api-operator
+    helm:
+      releaseName: cluster-api-operator
+      valuesObject:
+        addon:
+          helm: {}
+        bootstrap:
+          talos: {}
+        controlPlane:
+          talos: {}
+        core:
+          cluster-api: {}
+        infrastructure:
+          kubevirt: {}
+        resources:
+          manager:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+    repoURL: https://kubernetes-sigs.github.io/cluster-api-operator
+    targetRevision: 0.25.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

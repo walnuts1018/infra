@@ -1,0 +1,30 @@
+apiVersion: cluster.x-k8s.io/v1beta2
+kind: MachineDeployment
+metadata:
+  labels:
+    cluster.x-k8s.io/cluster-name: longhorn-backup-validate
+  name: longhorn-backup-validate-worker
+  namespace: longhorn-backup-validate
+spec:
+  clusterName: longhorn-backup-validate
+  replicas: 1
+  selector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: longhorn-backup-validate
+  template:
+    metadata:
+      labels:
+        cluster.x-k8s.io/cluster-name: longhorn-backup-validate
+        node-role.kubernetes.io/worker: ""
+    spec:
+      bootstrap:
+        configRef:
+          apiGroup: bootstrap.cluster.x-k8s.io
+          kind: TalosConfigTemplate
+          name: longhorn-backup-validate-templateworker
+      clusterName: longhorn-backup-validate
+      infrastructureRef:
+        apiGroup: infrastructure.cluster.x-k8s.io
+        kind: KubevirtMachineTemplate
+        name: longhorn-backup-validate-template-worker
+      version: v1.34.1

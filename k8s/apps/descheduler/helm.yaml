@@ -1,0 +1,72 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: descheduler-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: descheduler
+    helm:
+      releaseName: descheduler
+      values: |
+        schedule: "*/30 * * * *"
+        deschedulerPolicy:
+          profiles:
+          - name: default
+            plugins:
+              balance:
+                enabled:
+                - RemoveDuplicates
+                - RemovePodsViolatingTopologySpreadConstraint
+                - LowNodeUtilization
+              deschedule:
+                enabled:
+                - RemovePodsViolatingInterPodAntiAffinity
+                - RemovePodsViolatingNodeAffinity
+                - RemovePodsViolatingNodeTaints
+                - RemovePodsHavingTooManyRestarts
+            pluginConfig:
+            - name: DefaultEvictor
+              args:
+                ignorePvcPods: true
+                evictLocalStoragePods: true
+            - name: RemoveDuplicates
+            - name: RemovePodsViolatingTopologySpreadConstraint
+              args:
+                constraints:
+                - ScheduleAnyway
+            - name: LowNodeUtilization
+              args:
+                useDeviationThresholds: true
+                thresholds:
+                  cpu: 65
+                  memory: 75
+                  pods: 90
+                targetThresholds:
+                  cpu: 75
+                  memory: 80
+                  pods: 95
+            - name: RemovePodsViolatingInterPodAntiAffinity
+            - name: RemovePodsViolatingNodeAffinity
+              args:
+                nodeAffinityType:
+                - requiredDuringSchedulingIgnoredDuringExecution
+                - preferredDuringSchedulingIgnoredDuringExecution
+            - name: RemovePodsViolatingNodeTaints
+            - name: RemovePodsHavingTooManyRestarts
+              args:
+                podRestartThreshold: 100
+                includingInitContainers: true
+    repoURL: https://kubernetes-sigs.github.io/descheduler/
+    targetRevision: 0.35.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

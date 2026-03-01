@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: github-readme-stats
+    app.kubernetes.io/name: github-readme-stats
+  name: github-readme-stats
+  namespace: github-readme-stats
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-readme-stats
+      app.kubernetes.io/name: github-readme-stats
+  template:
+    metadata:
+      labels:
+        app: github-readme-stats
+        app.kubernetes.io/name: github-readme-stats
+    spec:
+      containers:
+        - env:
+            - name: PAT_1
+              valueFrom:
+                secretKeyRef:
+                  key: github-token
+                  name: github-readme-stats-ae1c3d
+          image: ghcr.io/walnuts1018/github-readme-stats:v1.0.3
+          imagePullPolicy: IfNotPresent
+          name: github-readme-stats
+          ports:
+            - containerPort: 80
+          resources:
+            limits: {}
+            requests:
+              memory: 32Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault

@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudnative-pg-barman-cloud-plugin-kustomize
+  namespace: argocd
+spec:
+  destination:
+    namespace: cloudnative-pg
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: k8s/apps/cloudnative-pg-barman-cloud-plugin/_kustomize
+    repoURL: https://github.com/walnuts1018/infra
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

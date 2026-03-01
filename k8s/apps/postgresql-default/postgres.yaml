@@ -1,0 +1,155 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgresql-default
+spec:
+  bootstrap:
+    initdb:
+      database: app
+      owner: app
+  enableSuperuserAccess: true
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ClusterImageCatalog
+    major: 17
+    name: standard
+  instances: 3
+  managed:
+    roles:
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: fitbit_manager
+        passwordSecret:
+          name: fitbit-manager-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: grafana
+        passwordSecret:
+          name: grafana-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: hedgedoc
+        passwordSecret:
+          name: hedgedoc-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: nextcloud
+        passwordSecret:
+          name: nextcloud-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: oekaki_dengon_game
+        passwordSecret:
+          name: oekaki-dengon-game-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: openchokin
+        passwordSecret:
+          name: openchokin-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: wakatime
+        passwordSecret:
+          name: wakatime-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: zitadel
+        passwordSecret:
+          name: zitadel-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: ac_hacking
+        passwordSecret:
+          name: ac-hacking-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: mucaron
+        passwordSecret:
+          name: mucaron-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: affine
+        passwordSecret:
+          name: affine-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: n8n
+        passwordSecret:
+          name: n8n-db-password
+        superuser: false
+      - ensure: present
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        login: true
+        name: stalwart
+        passwordSecret:
+          name: stalwart-db-password
+        superuser: false
+  plugins:
+    - isWALArchiver: true
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: seaweedfs-store
+  projectedVolumeTemplate:
+    sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 86400
+          path: sts.seaweedfs.com/serviceaccount/token
+  resources:
+    requests:
+      cpu: 20m
+      memory: 150Mi
+  storage:
+    size: 10Gi
+    storageClass: local-path
+  superuserSecret:
+    name: postgres-superuser-password-e616d3

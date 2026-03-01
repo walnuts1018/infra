@@ -1,7 +1,0 @@
-{
-  name: "prometheus-stack",
-  namespace: "monitoring",
-  clusters: {
-    kurumi: {},
-  },
-}

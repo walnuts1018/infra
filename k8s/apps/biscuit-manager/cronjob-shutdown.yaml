@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: biscuit-manager-shutdown
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - command:
+                - bash
+                - /shutdown.sh
+              image: debian:13.3-slim
+              name: biscuit-manager
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: 512Mi
+                requests:
+                  cpu: 10m
+                  memory: 10Mi
+              volumeMounts:
+                - mountPath: /shutdown.sh
+                  name: shutdown-script
+                  readOnly: true
+                  subPath: shutdown.sh
+                - mountPath: /var/run/secrets/shutdown-manager.local.walnuts.dev/serviceaccount
+                  name: shutdown-manager-token
+                  readOnly: true
+                - mountPath: /tmp
+                  name: tmp
+          hostNetwork: true
+          restartPolicy: OnFailure
+          serviceAccountName: biscuit-manager
+          volumes:
+            - configMap:
+                items:
+                  - key: shutdown.sh
+                    path: shutdown.sh
+                name: biscuit-manager-script-8c5a6f
+              name: shutdown-script
+            - name: shutdown-manager-token
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      audience: shutdown-manager.local.walnuts.dev
+                      expirationSeconds: 86400
+                      path: token
+            - emptyDir: {}
+              name: tmp
+  schedule: 0 6 * * *
+  startingDeadlineSeconds: 120
+  timeZone: Asia/Tokyo

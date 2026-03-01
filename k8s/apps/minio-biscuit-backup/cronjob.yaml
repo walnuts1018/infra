@@ -1,0 +1,160 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: minio-biscuit-backup
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: minio-biscuit-backup
+            app.kubernetes.io/name: minio-biscuit-backup
+        spec:
+          containers:
+            - args:
+                - export PATH=$PATH:/rclone && bash /scripts/backup.sh
+              command:
+                - /usr/bin/bash
+                - -c
+              image: public.ecr.aws/aws-cli/aws-cli:2.33.31
+              name: backuper
+              ports:
+                - containerPort: 9250
+                  name: metrics
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: 2Gi
+                requests:
+                  cpu: 10m
+                  memory: 10Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: false
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /rclone
+                  name: rclone
+                  readOnly: true
+                - mountPath: /root/.aws/config
+                  name: aws-config
+                  readOnly: true
+                  subPath: config
+                - mountPath: /config
+                  name: rclone-config
+                  readOnly: true
+                - mountPath: /scripts
+                  name: scripts
+                  readOnly: true
+                - mountPath: /tmp
+                  name: tmp
+                - mountPath: /var/run/secrets/sts.min.io/serviceaccount
+                  name: minio-biscuit-sts-token
+                  readOnly: true
+                - mountPath: /etc/ssl/certs/trust-bundle.pem
+                  name: local-ca-bundle
+                  readOnly: true
+                  subPath: trust-bundle.pem
+          initContainers:
+            - args:
+                - cp /usr/local/bin/rclone /rclone/rclone
+              command:
+                - /bin/sh
+                - -c
+              image: ghcr.io/rclone/rclone:1.73.1
+              name: copy-rclone
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 128Mi
+                requests:
+                  cpu: 1m
+                  memory: 10Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /rclone
+                  name: rclone
+            - args:
+                - export PATH=$PATH:/rclone && ash /scripts/inject-secret-to-config.sh /template/rclone.conf.template /config/rclone.conf
+              command:
+                - /bin/sh
+                - -c
+              envFrom:
+                - secretRef:
+                    name: minio-biscuit-backup-rclone-07d032
+              image: ghcr.io/hairyhenderson/gomplate:v4.3.3-alpine
+              name: inject-secret-to-config
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 256Mi
+                requests:
+                  cpu: 1m
+                  memory: 10Mi
+              securityContext:
+                readOnlyRootFilesystem: false
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /rclone
+                  name: rclone
+                  readOnly: true
+                - mountPath: /template
+                  name: rclone-config-template
+                  readOnly: true
+                - mountPath: /config
+                  name: rclone-config
+                - mountPath: /scripts
+                  name: scripts
+                  readOnly: true
+          restartPolicy: OnFailure
+          serviceAccountName: minio-biscuit-backup
+          volumes:
+            - emptyDir: {}
+              name: rclone
+            - emptyDir: {}
+              name: rclone-config
+            - configMap:
+                items:
+                  - key: rclone.conf.template
+                    path: rclone.conf.template
+                name: minio-biscuit-backup-rclone-4f3e1f
+              name: rclone-config-template
+            - configMap:
+                items:
+                  - key: config
+                    path: config
+                name: minio-biscuit-backup-aws-24c5c3
+              name: aws-config
+            - name: minio-biscuit-sts-token
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      audience: sts.min.io
+                      path: token
+            - configMap:
+                name: local-ca-bundle
+              name: local-ca-bundle
+            - configMap:
+                name: minio-biscuit-backup-script-7770a7
+              name: scripts
+            - emptyDir: {}
+              name: tmp
+  schedule: 10 3 * * *
+  startingDeadlineSeconds: 120
+  suspend: true

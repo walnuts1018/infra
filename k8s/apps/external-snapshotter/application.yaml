@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-snapshotter-kustomize-crd
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: client/config/crd
+    repoURL: https://github.com/kubernetes-csi/external-snapshotter
+    targetRevision: v8.3.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-snapshotter-kustomize-snapshot-controller
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: deploy/kubernetes/snapshot-controller
+    repoURL: https://github.com/kubernetes-csi/external-snapshotter
+    targetRevision: v8.3.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

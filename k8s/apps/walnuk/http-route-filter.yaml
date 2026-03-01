@@ -1,0 +1,12 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: admin-auth-filter
+  namespace: walnuk
+spec:
+  directResponse:
+    body:
+      inline: Unauthorized
+      type: Inline
+    contentType: text/plain
+    statusCode: 401

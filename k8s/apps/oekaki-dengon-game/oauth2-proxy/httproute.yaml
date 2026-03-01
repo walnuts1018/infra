@@ -1,0 +1,58 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: oekaki-dengon-game
+  namespace: oekaki-dengon-game
+spec:
+  hostnames:
+    - oekaki.walnuts.dev
+  parentRefs:
+    - name: pomerium-gateway
+      namespace: pomerium
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: oekaki-dengon-game-front
+          port: 3000
+          weight: 1
+      filters:
+        - extensionRef:
+            group: gateway.pomerium.io
+            kind: PolicyFilter
+            name: oekaki-dengon-game-public
+          type: ExtensionRef
+      matches:
+        - path:
+            type: PathPrefix
+            value: /public
+        - method: GET
+          path:
+            type: PathPrefix
+            value: /api
+        - path:
+            type: PathPrefix
+            value: /_next
+        - path:
+            type: PathPrefix
+            value: /texture.png
+        - path:
+            type: PathPrefix
+            value: /favicon.ico
+        - path:
+            type: PathPrefix
+            value: /site.webmanifest
+    - backendRefs:
+        - kind: Service
+          name: oekaki-dengon-game-front
+          port: 3000
+          weight: 1
+      filters:
+        - extensionRef:
+            group: gateway.pomerium.io
+            kind: PolicyFilter
+            name: oekaki-dengon-game
+          type: ExtensionRef
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

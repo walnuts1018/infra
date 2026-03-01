@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: openchokin-back
+    app.kubernetes.io/name: openchokin-back
+  name: openchokin-back
+  namespace: openchokin
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: api-openchokin.walnuts.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: openchokin-back
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix

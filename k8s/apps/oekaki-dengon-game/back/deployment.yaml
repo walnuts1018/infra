@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: oekaki-dengon-game-back
+    app.kubernetes.io/name: oekaki-dengon-game-back
+  name: oekaki-dengon-game-back
+  namespace: oekaki-dengon-game
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oekaki-dengon-game-back
+      app.kubernetes.io/name: oekaki-dengon-game-back
+  template:
+    metadata:
+      labels:
+        app: oekaki-dengon-game-back
+        app.kubernetes.io/name: oekaki-dengon-game-back
+    spec:
+      containers:
+        - env:
+            - name: GIN_MODE
+              value: release
+            - name: POSTGRES_ADMIN_USER
+              value: postgres
+            - name: POSTGRES_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgres-admin-password
+                  name: oekaki-dengon-game-58e067
+            - name: POSTGRES_USER
+              value: oekaki_dengon_game
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgres-user-password
+                  name: oekaki-dengon-game-58e067
+            - name: POSTGRES_DB
+              value: oekaki_dengon_game
+            - name: POSTGRES_HOST
+              value: postgresql-default-rw.databases.svc.cluster.local
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: MINIO_ENDPOINT
+              value: minio.walnuts.dev
+            - name: MINIO_ACCESS_KEY
+              value: oekaki_dengon_game
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: minio-secret-key
+                  name: oekaki-dengon-game-58e067
+            - name: MINIO_BUCKET
+              value: oekaki-dengon-game
+            - name: MINIO_KEY_PREFIX
+              value: ""
+          image: ghcr.io/kmc-jp/oekaki-dengon-game-back:v0.0.0-a6d6d6e7d66e6d0dfafbf416b462be908b208489-13
+          imagePullPolicy: IfNotPresent
+          name: oekaki-dengon-game-back
+          ports:
+            - containerPort: 8080
+          resources:
+            limits: {}
+            requests:
+              memory: 10Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+      imagePullSecrets:
+        - name: ghcr-login-secret

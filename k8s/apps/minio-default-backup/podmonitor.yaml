@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app: minio-default-backup
+    app.kubernetes.io/name: minio-default-backup
+  name: minio-default-backup
+  namespace: minio
+spec:
+  podMetricsEndpoints:
+    - port: metrics
+  selector:
+    matchLabels:
+      app: minio-default-backup
+      app.kubernetes.io/name: minio-default-backup

@@ -1,0 +1,780 @@
+---
+# Source: zitadel/templates/service_zitadel.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: zitadel
+  annotations:
+    traefik.ingress.kubernetes.io/service.serversscheme: h2c
+  labels:
+    helm.sh/chart: zitadel-9.23.0
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/version: "v4.10.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http2-server
+      appProtocol: kubernetes.io/h2c
+  selector:
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/component: start
+---
+# Source: zitadel/templates/deployment_zitadel.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zitadel
+  labels:
+    helm.sh/chart: zitadel-9.23.0
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/version: "v4.10.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: start
+spec:
+  revisionHistoryLimit: 10
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: zitadel
+      app.kubernetes.io/instance: zitadel
+      app.kubernetes.io/component: start
+  template:
+    metadata:
+      annotations:
+        checksum/configmap: f199326e3d5eb66be2a8a3845951266a453ac3e6ab573677aaa07a414a66b1e1
+        checksum/secret-db-ssl-ca-crt: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+        checksum/secret-zitadel-secrets: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/debug/metrics"
+        prometheus.io/port: "8080"
+      labels:
+        helm.sh/chart: zitadel-9.23.0
+        app.kubernetes.io/name: zitadel
+        app.kubernetes.io/instance: zitadel
+        app.kubernetes.io/version: "v4.10.1"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: start
+    spec:
+      serviceAccountName: zitadel
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      enableServiceLinks: false
+      containers:
+        - name: zitadel
+          securityContext:
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 1000
+          image: "ghcr.io/zitadel/zitadel:v4.10.1"
+          imagePullPolicy: IfNotPresent
+          args:
+            - start
+            - --config
+            - /config/zitadel-config-yaml
+            - --config
+            - /zitadel-secret-config-yaml/config.yaml
+            - --masterkeyFromEnv
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: ZITADEL_MASTERKEY
+              valueFrom:
+                secretKeyRef:
+                  name: zitadel
+                  key: masterkey
+          ports:
+          - containerPort: 8080
+            name: http2-server
+            protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /debug/healthz
+              port: http2-server
+              httpHeaders:
+                - name: Host
+                  value: auth.walnuts.dev
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /debug/ready
+              port: http2-server
+              httpHeaders:
+                - name: Host
+                  value: auth.walnuts.dev
+              scheme: HTTP
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /debug/ready
+              port: http2-server
+              httpHeaders:
+                - name: Host
+                  value: auth.walnuts.dev
+              scheme: HTTP
+            periodSeconds: 1
+            failureThreshold: 30
+          volumeMounts:
+          - name: zitadel-config-yaml
+            mountPath: /config
+            readOnly: true
+          - name: zitadel-secret-config-yaml
+            mountPath: /zitadel-secret-config-yaml
+            readOnly: true
+          resources:
+              limits:
+                memory: 1Gi
+              requests:
+                cpu: 10m
+                memory: 196Mi
+      initContainers:
+      # The following initContainer is conditional. It is only added if the
+      # PostgreSQL endpoint can be fully determined from the Helm values. This is
+      # necessary to gracefully handle configurations where database credentials are
+      # provided via external secrets (instead of the values file), which would
+      # otherwise cause a template rendering error during `helm install`.
+      volumes:
+      - name: zitadel-config-yaml
+        configMap:
+          name: zitadel-config-yaml
+      - name: zitadel-secret-config-yaml
+        secret:
+          secretName: zitadel
+          defaultMode: 0440
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+            weight: 100
+          - preference:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                - donut
+            weight: 10
+---
+# Source: zitadel/templates/ingress_zitadel.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zitadel
+  labels:
+    helm.sh/chart: zitadel-9.23.0
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/version: "v4.10.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/backend-protocol: GRPC
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+      - auth.walnuts.dev
+      secretName: zitadel-tls
+  rules:
+    - host: "auth.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: zitadel
+                port:
+                  number: 8080
+---
+# Source: zitadel/templates/hpa_login.yaml
+#file: noinspection ExcessiveWhitespaceTrimInspection,KubernetesUnknownResourcesInspection
+---
+# Source: zitadel/templates/hpa_zitadel.yaml
+#file: noinspection ExcessiveWhitespaceTrimInspection,KubernetesUnknownResourcesInspection
+---
+# Source: zitadel/templates/secret_self-signed.yaml
+#file: noinspection HelmUnknownValues
+---
+# Source: zitadel/templates/servicemonitor.yaml
+#file: noinspection KubernetesUnknownResourcesInspection
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: zitadel
+  labels:
+    helm.sh/chart: zitadel-9.23.0
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/version: "v4.10.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: start
+spec:
+  endpoints:
+  - port: http2-server
+    path: /debug/metrics
+    honorLabels: false
+    honorTimestamps: true
+  jobLabel: zitadel
+  namespaceSelector:
+    matchNames:
+    - "zitadel"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: zitadel
+      app.kubernetes.io/instance: zitadel
+---
+# Source: zitadel/templates/serviceaccount_zitadel.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: zitadel
+  labels:
+    helm.sh/chart: zitadel-9.23.0
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/version: "v4.10.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: "0"
+---
+# Source: zitadel/templates/configmap_zitadel.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zitadel-config-yaml
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: "0"
+  labels:
+    helm.sh/chart: zitadel-9.23.0
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/version: "v4.10.1"
+    app.kubernetes.io/managed-by: Helm
+data:
+  zitadel-config-yaml: |-
+    Database:
+      Postgres:
+        Host: ""
+        Port: 5432
+    ExternalDomain: auth.walnuts.dev
+    ExternalPort: 443
+    ExternalSecure: true
+    FirstInstance:
+      LoginClientPatPath: null
+      MachineKeyPath: null
+      Org:
+        LoginClient:
+          Machine:
+            Name: Automatically Initialized IAM Login Client
+            Username: login-client
+          Pat:
+            ExpirationDate: "2029-01-01T00:00:00Z"
+        Machine:
+          Machine:
+            Name: Automatically Initialized IAM Admin
+            Username: iam-admin
+          MachineKey:
+            ExpirationDate: "2029-01-01T00:00:00Z"
+            Type: 1
+          Pat:
+            ExpirationDate: "2029-01-01T00:00:00Z"
+        Skip: null
+      PatPath: null
+      Skip: false
+    Log:
+      Formatter:
+        Format: json
+    Machine:
+      Identification:
+        Hostname:
+          Enabled: true
+        Webhook:
+          Enabled: false
+    TLS:
+      Enabled: false
+    Tracing:
+      Endpoint: default-collector.opentelemetry-collector.svc.cluster.local:4317
+      Type: otel
+---
+# Source: zitadel/templates/rbac_zitadel.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: zitadel
+  labels:
+    helm.sh/chart: zitadel-9.23.0
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/version: "v4.10.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: "0"
+rules:
+  - apiGroups: [ "" ]
+    resources: [ "secrets" ]
+    verbs: [ "get", "create", "list", "delete" ]
+  - apiGroups: [ "" ]
+    resources: [ "pods" ]
+    verbs: [ "get" ]
+---
+# Source: zitadel/templates/rbac_zitadel.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: zitadel
+  labels:
+    helm.sh/chart: zitadel-9.23.0
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/version: "v4.10.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: "0"
+subjects:
+  - kind: ServiceAccount
+    name:  zitadel
+roleRef:
+  kind: Role
+  name: zitadel
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: zitadel/templates/job_cleanup.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "zitadel-cleanup"
+  labels:
+    helm.sh/chart: zitadel-9.23.0
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/version: "v4.10.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: cleanup
+  annotations:
+    helm.sh/hook: post-delete
+    helm.sh/hook-delete-policy: hook-succeeded
+    helm.sh/hook-weight: "-1"
+spec:
+  backoffLimit: 3
+  activeDeadlineSeconds: 60
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: zitadel-9.23.0
+        app.kubernetes.io/name: zitadel
+        app.kubernetes.io/instance: zitadel
+        app.kubernetes.io/version: "v4.10.1"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: cleanup
+    spec:
+      serviceAccountName: zitadel
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      enableServiceLinks: false
+      restartPolicy: Never
+      containers:
+        - name: "zitadel-cleanup"
+          securityContext:
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 1000
+          image: docker.io/alpine/k8s:1.20.0
+          imagePullPolicy: 'IfNotPresent'
+          command:
+            - sh
+            - -c
+            - |
+              echo "Cleaning up secrets created by zitadel-setup..."
+              kubectl --namespace=zitadel delete secret \
+                --selector='app.kubernetes.io/managed-by=Zitadel,app.kubernetes.io/instance=zitadel' \
+                --ignore-not-found=true
+              echo "Cleanup completed"
+          resources:
+              {}
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+            weight: 100
+          - preference:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                - donut
+            weight: 10
+---
+# Source: zitadel/templates/job_init.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "zitadel-init"
+  labels:
+    helm.sh/chart: zitadel-9.23.0
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/version: "v4.10.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: init
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: "1"
+spec:
+  backoffLimit: 5
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: zitadel-9.23.0
+        app.kubernetes.io/name: zitadel
+        app.kubernetes.io/instance: zitadel
+        app.kubernetes.io/version: "v4.10.1"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: init
+    spec:
+      serviceAccountName: zitadel
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      enableServiceLinks: false
+      restartPolicy: Never
+      containers:
+        - name: "zitadel-init"
+          securityContext:
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 1000
+          image: "ghcr.io/zitadel/zitadel:v4.10.1"
+          imagePullPolicy: IfNotPresent
+          args:
+            - init
+            - --config
+            - /config/zitadel-config-yaml
+            - --config
+            - /zitadel-secret-config-yaml/config.yaml
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+          volumeMounts:
+          - name: zitadel-config-yaml
+            mountPath: /config
+            readOnly: true
+          - name: zitadel-secret-config-yaml
+            mountPath: /zitadel-secret-config-yaml
+            readOnly: true
+          resources:
+              {}
+      volumes:
+      - name: zitadel-config-yaml
+        configMap:
+          name: zitadel-config-yaml
+          defaultMode: 0440
+      - name: zitadel-secret-config-yaml
+        secret:
+          secretName: zitadel
+          defaultMode: 0440
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+            weight: 100
+          - preference:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                - donut
+            weight: 10
+---
+# Source: zitadel/templates/job_setup.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "zitadel-setup"
+  labels:
+    helm.sh/chart: zitadel-9.23.0
+    app.kubernetes.io/name: zitadel
+    app.kubernetes.io/instance: zitadel
+    app.kubernetes.io/version: "v4.10.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: setup
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+    helm.sh/hook-weight: "2"
+spec:
+  backoffLimit: 5
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: zitadel-9.23.0
+        app.kubernetes.io/name: zitadel
+        app.kubernetes.io/instance: zitadel
+        app.kubernetes.io/version: "v4.10.1"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: setup
+    spec:
+      serviceAccountName: zitadel
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      enableServiceLinks: false
+      restartPolicy: Never
+      containers:
+        - name: "zitadel-setup"
+          securityContext:
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 1000
+          image: "ghcr.io/zitadel/zitadel:v4.10.1"
+          imagePullPolicy: IfNotPresent
+          args:
+            - setup
+            - --masterkeyFromEnv
+            - --config
+            - /config/zitadel-config-yaml
+            - --steps
+            - /config/zitadel-config-yaml
+            - --config
+            - /zitadel-secret-config-yaml/config.yaml
+            - --steps
+            - /zitadel-secret-config-yaml/config.yaml
+            - --init-projections=true
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: ZITADEL_MASTERKEY
+              valueFrom:
+                secretKeyRef:
+                  name: zitadel
+                  key: masterkey
+            - name: ZITADEL_FIRSTINSTANCE_MACHINEKEYPATH
+              value: "/machinekey/sa.json"
+            - name: ZITADEL_FIRSTINSTANCE_PATPATH
+              value: "/machinekey/pat"
+            - name: ZITADEL_FIRSTINSTANCE_LOGINCLIENTPATPATH
+              value: "/login-client/pat"
+          volumeMounts:
+          - name: zitadel-config-yaml
+            mountPath: /config
+            readOnly: true
+          - name: zitadel-secret-config-yaml
+            mountPath: /zitadel-secret-config-yaml
+            readOnly: true
+          - name: machinekey
+            mountPath: "/machinekey"
+          - name: login-client
+            mountPath: "/login-client"
+          resources:
+            {}
+        - name: "zitadel-machinekey"
+          securityContext:
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 1000
+          image: docker.io/alpine/k8s:1.20.0
+          imagePullPolicy: 'IfNotPresent'
+          command:
+            - sh
+            - -c
+            - |
+              until [ ! -z $(kubectl --namespace=zitadel get pod ${POD_NAME} --output=jsonpath="{.status.containerStatuses[?(@.name=='zitadel-setup')].state.terminated}") ]; do
+                echo 'waiting for zitadel-setup container to terminate';
+                sleep 5;
+              done &&
+              echo 'zitadel-setup container terminated' &&
+              if [ -f /machinekey/sa.json ]; then
+                kubectl --namespace=zitadel create secret generic iam-admin \
+                  --from-file=iam-admin.json=/machinekey/sa.json \
+                  --dry-run=client --output=yaml | \
+                kubectl annotate --local --filename=- \
+                  helm.sh/resource-policy=keep \
+                  --output=yaml | \
+                kubectl label --local --filename=- \
+                  app.kubernetes.io/managed-by=Zitadel \
+                  app.kubernetes.io/name=zitadel \
+                  app.kubernetes.io/instance=zitadel \
+                  --output=yaml | \
+                kubectl apply --filename=-;
+              fi;
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - name: machinekey
+              mountPath: "/machinekey"
+              readOnly: true
+          resources:
+            {}
+        - name: "zitadel-machine-pat"
+          securityContext:
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 1000
+          image: docker.io/alpine/k8s:1.20.0
+          imagePullPolicy: 'IfNotPresent'
+          command:
+            - sh
+            - -c
+            - |
+              until [ ! -z $(kubectl --namespace=zitadel get pod ${POD_NAME} --output=jsonpath="{.status.containerStatuses[?(@.name=='zitadel-setup')].state.terminated}") ]; do
+                echo 'waiting for zitadel-setup container to terminate';
+                sleep 5;
+              done &&
+              echo 'zitadel-setup container terminated' &&
+              if [ -f /machinekey/pat ]; then
+                kubectl --namespace=zitadel create secret generic iam-admin-pat \
+                  --from-file=pat=/machinekey/pat \
+                  --dry-run=client --output=yaml | \
+                kubectl annotate --local --filename=- \
+                  helm.sh/resource-policy=keep \
+                  --output=yaml | \
+                kubectl label --local --filename=- \
+                  app.kubernetes.io/managed-by=Zitadel \
+                  app.kubernetes.io/name=zitadel \
+                  app.kubernetes.io/instance=zitadel \
+                  --output=yaml | \
+                kubectl apply --filename=-;
+              fi;
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - name: machinekey
+              mountPath: "/machinekey"
+              readOnly: true
+          resources:
+            {}
+        - name: "zitadel-login-client-pat"
+          securityContext:
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 1000
+          image: docker.io/alpine/k8s:1.20.0
+          imagePullPolicy: 'IfNotPresent'
+          command:
+            - sh
+            - -c
+            - |
+              until [ ! -z $(kubectl --namespace=zitadel get pod ${POD_NAME} --output=jsonpath="{.status.containerStatuses[?(@.name=='zitadel-setup')].state.terminated}") ]; do
+                echo 'waiting for zitadel-setup container to terminate';
+                sleep 5;
+              done &&
+              echo 'zitadel-setup container terminated' &&
+              if [ -f /login-client/pat ]; then
+                kubectl --namespace=zitadel create secret generic login-client \
+                  --from-file=pat=/login-client/pat \
+                  --dry-run=client --output=yaml | \
+                kubectl annotate --local --filename=- \
+                  helm.sh/resource-policy=keep \
+                  --output=yaml | \
+                kubectl label --local --filename=- \
+                  app.kubernetes.io/managed-by=Zitadel \
+                  app.kubernetes.io/name=zitadel \
+                  app.kubernetes.io/instance=zitadel \
+                  --output=yaml | \
+                kubectl apply --filename=-;
+              fi;
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - name: login-client
+              mountPath: "/login-client"
+              readOnly: true
+          resources:
+            {}
+      volumes:
+      - name: zitadel-config-yaml
+        configMap:
+          name: zitadel-config-yaml
+          defaultMode: 0440
+      - name: zitadel-secret-config-yaml
+        secret:
+          secretName: zitadel
+          defaultMode: 0440
+      - name: machinekey
+        emptyDir: { }
+      - name: login-client
+        emptyDir: { }
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+            weight: 100
+          - preference:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                - donut
+            weight: 10

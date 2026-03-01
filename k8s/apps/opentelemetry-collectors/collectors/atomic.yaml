@@ -1,0 +1,174 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: atomic
+spec:
+  config:
+    exporters:
+      debug:
+        verbosity: detailed
+      file:
+        format: json
+        path: /tmp/debug.json
+      otlp/mackerel:
+        compression: gzip
+        endpoint: otlp.mackerelio.com:4317
+        headers:
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+      otlp/tempo:
+        endpoint: tempo-gateway.tempo.svc.clusterset.local:4317
+        tls:
+          insecure: true
+      otlphttp/loki:
+        endpoint: http://loki-gateway.loki.svc.clusterset.local/otlp
+        tls:
+          insecure: true
+      otlphttp/prometheus:
+        endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.clusterset.local:9090/api/v1/otlp
+        tls:
+          insecure: true
+      otlphttp/vaxila:
+        endpoint: https://otlp-vaxila.mackerelio.com
+        headers:
+          Accept: '*/*'
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+      prometheusremotewrite:
+        endpoint: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.clusterset.local:9090/api/v1/write
+        resource_to_telemetry_conversion:
+          enabled: true
+      prometheusremotewrite/victoriametrics:
+        endpoint: http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write
+        resource_to_telemetry_conversion:
+          enabled: true
+    processors:
+      batch:
+        send_batch_size: 10000
+        timeout: 10s
+      k8sattributes:
+        auth_type: serviceAccount
+        extract:
+          metadata:
+            - k8s.cluster.uid
+        pod_association:
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.ip
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.uid
+          - sources:
+              - from: connection
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 2000
+        spike_limit_percentage: 15
+      resource/cluster_name:
+        attributes:
+          - action: upsert
+            key: k8s.cluster.name
+            value: kurumi
+      resource/k8s-events-receiver:
+        attributes:
+          - action: upsert
+            key: service.name
+            value: k8s-events-receiver
+    receivers:
+      k8s_cluster:
+        allocatable_types_to_report:
+          - cpu
+          - memory
+        auth_type: serviceAccount
+        node_conditions_to_report:
+          - Ready
+          - MemoryPressure
+        resource_attributes:
+          k8s.container.status.last_terminated_reason:
+            enabled: true
+          k8s.deployment.name:
+            enabled: true
+      k8s_events:
+        auth_type: serviceAccount
+        namespaces: []
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: otel-collector
+              scrape_interval: 30s
+              static_configs:
+                - targets:
+                    - 0.0.0.0:8888
+    service:
+      pipelines:
+        logs:
+          exporters:
+            - otlphttp/loki
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+            - resource/k8s-events-receiver
+            - resource/cluster_name
+          receivers:
+            - k8s_events
+        metrics:
+          exporters:
+            - prometheusremotewrite
+            - prometheusremotewrite/victoriametrics
+          processors:
+            - memory_limiter
+            - batch
+            - k8sattributes
+            - resource/cluster_name
+          receivers:
+            - k8s_cluster
+            - prometheus
+  env:
+    - name: K8S_NODE_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.146.1
+  managementState: managed
+  mode: statefulset
+  replicas: 1
+  resources:
+    limits:
+      cpu: "1"
+      memory: 4Gi
+    requests:
+      cpu: 350m
+      memory: 1.1Gi
+  serviceAccount: opentelemetry-collectors
+  targetAllocator:
+    enabled: true
+    prometheusCR:
+      enabled: true
+      podMonitorSelector:
+        matchExpressions:
+          - key: walnuts.dev/scraped-by
+            operator: NotIn
+            values:
+              - prometheus
+      serviceMonitorSelector:
+        matchExpressions:
+          - key: walnuts.dev/scraped-by
+            operator: NotIn
+            values:
+              - prometheus
+    resources:
+      limits:
+        cpu: "2"
+        memory: 3Gi
+      requests:
+        cpu: 369m
+        memory: 778Mi
+    serviceAccount: opentelemetry-collectors
+  tolerations:
+    - key: node.walnuts.dev/untrusted
+      operator: Exists
+  volumeMounts:
+    - mountPath: /tmp
+      name: tmp
+  volumes:
+    - emptyDir: {}
+      name: tmp

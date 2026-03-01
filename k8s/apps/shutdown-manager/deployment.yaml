@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: shutdown-manager
+    app.kubernetes.io/name: shutdown-manager
+  name: shutdown-manager
+  namespace: shutdown-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shutdown-manager
+      app.kubernetes.io/name: shutdown-manager
+  template:
+    metadata:
+      labels:
+        app: shutdown-manager
+        app.kubernetes.io/name: shutdown-manager
+    spec:
+      containers:
+        - env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+          image: ghcr.io/walnuts1018/shutdown-manager:0.0.12
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: http
+          name: proxy
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 1m
+              memory: 10Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+                - SYS_ADMIN
+                - CAP_SYS_BOOT
+              drop:
+                - all
+            privileged: true
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /run/systemd/system
+              name: run-systemd-system
+            - mountPath: /var/run/dbus
+              name: var-run-dbus
+      nodeSelector:
+        kubernetes.io/hostname: biscuit
+        kubernetes.io/os: linux
+      volumes:
+        - hostPath:
+            path: /run/systemd/system
+          name: run-systemd-system
+        - hostPath:
+            path: /var/run/dbus
+          name: var-run-dbus
