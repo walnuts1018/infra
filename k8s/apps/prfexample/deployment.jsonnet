@@ -111,7 +111,6 @@
             ],
           }, {
             securityContext: {
-              runAsNonRoot: true,
               allowPrivilegeEscalation: false,
             },
           }),
