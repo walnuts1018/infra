@@ -23,6 +23,13 @@
         property: 'seaweedfs',
       },
     },
+    {
+      secretKey: 'prfexample_password',
+      remoteRef: {
+        key: 'scylladb',
+        property: 'prfexample',
+      },
+    },
   ],
   template_data: {
     admin_username: 'cassandra',

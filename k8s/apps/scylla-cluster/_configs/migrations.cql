@@ -23,3 +23,12 @@ CREATE TABLE seaweedfs.filemeta (
     meta blob,
 PRIMARY KEY ((dirhash, directory), name)
 ) WITH CLUSTERING ORDER BY (name ASC);
+
+CREATE KEYSPACE IF NOT EXISTS prfexample
+    WITH replication = {'class': 'NetworkTopologyStrategy', 'iwakura': '3'}
+    AND tablets = {'enabled': false};
+CREATE ROLE IF NOT EXISTS 'prfexample'
+    WITH PASSWORD = '{{ .prfexample_password }}'
+    AND SUPERUSER = false
+    AND LOGIN = true;
+GRANT ALL PERMISSIONS ON KEYSPACE prfexample TO 'prfexample';
