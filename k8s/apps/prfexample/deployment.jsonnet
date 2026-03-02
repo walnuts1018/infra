@@ -84,6 +84,10 @@
                   },
                 },
               },
+              {
+                name: 'SERVER_ADDITIONAL_ORIGINS',
+                value: 'android:apk-key-hash:lQHKOP1Xm9fdIS_R8RbgdktIxTaucWdqLFaSe7QJTWM',
+              },
             ],
             livenessProbe: {
               httpGet: {
