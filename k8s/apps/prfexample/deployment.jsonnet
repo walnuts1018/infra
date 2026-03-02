@@ -24,7 +24,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'apiserver',
-            image: 'ghcr.io/walnuts1018/prfexample/server:v0.0.1',
+            image: 'ghcr.io/walnuts1018/prfexample/server:0.0.11',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
