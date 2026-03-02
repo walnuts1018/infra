@@ -1,0 +1,7 @@
+{
+  name: "prfexample",
+  namespace: "prfexample",
+  clusters: {
+    kurumi: {},
+  },
+}
