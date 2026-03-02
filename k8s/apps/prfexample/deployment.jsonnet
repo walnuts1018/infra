@@ -24,7 +24,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'apiserver',
-            image: 'ghcr.io/walnuts1018/prfexample/server:0.0.11',
+            image: 'ghcr.io/walnuts1018/prfexample/server:0.0.15',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
@@ -59,8 +59,12 @@
                 value: '/etc/certs/scylla-db-client/tls.key',
               },
               {
-                name: 'SCYLLA_ENDPOINT',
-                value: 'scylla-cluster-client.databases.svc.cluster.local:9142',
+                name: 'SCYLLA_HOST',
+                value: 'scylla-cluster-client.databases.svc.cluster.local',
+              },
+              {
+                name: 'SCYLLA_PORT',
+                value: '9142',
               },
               {
                 name: 'SCYLLA_USER',
