@@ -72,6 +72,15 @@ function(
             'k8s.container.status.reason': {
               enabled: true,
             },
+            'k8s.container.status.state': {
+              enabled: true,
+            },
+            'k8s.node.condition': {
+              enabled: true,
+            },
+            'k8s.pod.status_reason': {
+              enabled: true,
+            },
           },
         },
         prometheus: {
