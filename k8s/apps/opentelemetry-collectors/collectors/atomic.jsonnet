@@ -68,6 +68,11 @@ function(
               enabled: true,
             },
           },
+          metrics: {
+            'k8s.container.status.reason': {
+              enabled: true,
+            },
+          },
         },
         prometheus: {
           config: {
