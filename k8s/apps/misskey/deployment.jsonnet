@@ -26,7 +26,7 @@
         initContainers: [
           (import '../../components/container.libsonnet') {
             name: 'misskey-init',
-            image: 'misskey/misskey:2025.12.2',
+            image: 'misskey/misskey:2026.3.1',
             imagePullPolicy: 'IfNotPresent',
             command: [
               'pnpm',
@@ -53,7 +53,7 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'misskey',
-            image: 'misskey/misskey:2025.12.2',
+            image: 'misskey/misskey:2026.3.1',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
