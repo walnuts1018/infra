@@ -1,0 +1,601 @@
+---
+# Source: prometheus-blackbox-exporter/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: prometheus-blackbox-exporter/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+data:
+  blackbox.yaml: |
+    modules:
+      http_2xx:
+        http:
+          follow_redirects: true
+          preferred_ip_protocol: ip4
+          valid_http_versions:
+          - HTTP/1.1
+          - HTTP/2.0
+        prober: http
+        timeout: 5s
+---
+# Source: prometheus-blackbox-exporter/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9115
+      targetPort: http
+      protocol: TCP
+      name: http
+    
+  selector:
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+---
+# Source: prometheus-blackbox-exporter/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+        app.kubernetes.io/name: prometheus-blackbox-exporter
+        app.kubernetes.io/instance: blackbox-exporter
+        app.kubernetes.io/version: "v0.28.0"
+        app.kubernetes.io/managed-by: Helm
+      annotations:
+        checksum/config: f43e733459690a84886aec93596a01748c2f936776a534eeaeb9f084e62ebb91
+    spec:
+      automountServiceAccountToken: false
+      serviceAccountName: blackbox-exporter-prometheus-blackbox-exporter
+      restartPolicy: Always
+      
+      containers:
+      
+      - name: blackbox-exporter
+        image: quay.io/prometheus/blackbox-exporter:v0.28.0
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+        args:
+        - "--config.file=/config/blackbox.yaml"
+        resources:
+          limits:
+            memory: 300Mi
+          requests:
+            cpu: 2m
+            memory: 39Mi
+        ports:
+        - containerPort: 9115
+          name: http
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /-/healthy
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /-/healthy
+            port: http
+        volumeMounts:
+        - mountPath: /config
+          name: config
+      hostNetwork: false
+      volumes:
+      - name: config
+        configMap:
+          name: blackbox-exporter-prometheus-blackbox-exporter
+---
+# Source: prometheus-blackbox-exporter/templates/selfservicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+  - path: /metrics
+    interval: 30s
+    scrapeTimeout: 30s
+    scheme: http
+  jobLabel: "blackbox-exporter"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring
+---
+# Source: prometheus-blackbox-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter-walnuts-dev
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+  - port: http
+    scheme: http
+    path: /probe
+    interval: 30s
+    scrapeTimeout: 30s
+    honorTimestamps: true
+    params:
+      module:
+      - http_2xx
+      target:
+      - https://walnuts.dev/healthz
+    metricRelabelings:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: https://walnuts.dev/healthz
+        action: replace
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: walnuts-dev
+        action: replace
+  jobLabel: "blackbox-exporter"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring
+---
+# Source: prometheus-blackbox-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter-http-test
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+  - port: http
+    scheme: http
+    path: /probe
+    interval: 30s
+    scrapeTimeout: 30s
+    honorTimestamps: true
+    params:
+      module:
+      - http_2xx
+      target:
+      - https://httptest.walnuts.dev/
+    metricRelabelings:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: https://httptest.walnuts.dev/
+        action: replace
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: http-test
+        action: replace
+  jobLabel: "blackbox-exporter"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring
+---
+# Source: prometheus-blackbox-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter-blog
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+  - port: http
+    scheme: http
+    path: /probe
+    interval: 30s
+    scrapeTimeout: 30s
+    honorTimestamps: true
+    params:
+      module:
+      - http_2xx
+      target:
+      - https://blog.walnuts.dev/
+    metricRelabelings:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: https://blog.walnuts.dev/
+        action: replace
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: blog
+        action: replace
+  jobLabel: "blackbox-exporter"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring
+---
+# Source: prometheus-blackbox-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter-grafana
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+  - port: http
+    scheme: http
+    path: /probe
+    interval: 30s
+    scrapeTimeout: 30s
+    honorTimestamps: true
+    params:
+      module:
+      - http_2xx
+      target:
+      - https://grafana.walnuts.dev/healthz
+    metricRelabelings:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: https://grafana.walnuts.dev/healthz
+        action: replace
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: grafana
+        action: replace
+  jobLabel: "blackbox-exporter"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring
+---
+# Source: prometheus-blackbox-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter-oekaki-dengon-game
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+  - port: http
+    scheme: http
+    path: /probe
+    interval: 30s
+    scrapeTimeout: 30s
+    honorTimestamps: true
+    params:
+      module:
+      - http_2xx
+      target:
+      - https://oekaki.walnuts.dev/public
+    metricRelabelings:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: https://oekaki.walnuts.dev/public
+        action: replace
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: oekaki-dengon-game
+        action: replace
+  jobLabel: "blackbox-exporter"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring
+---
+# Source: prometheus-blackbox-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter-misskey
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+  - port: http
+    scheme: http
+    path: /probe
+    interval: 30s
+    scrapeTimeout: 30s
+    honorTimestamps: true
+    params:
+      module:
+      - http_2xx
+      target:
+      - https://misskey.walnuts.dev/healthz
+    metricRelabelings:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: https://misskey.walnuts.dev/healthz
+        action: replace
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: misskey
+        action: replace
+  jobLabel: "blackbox-exporter"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring
+---
+# Source: prometheus-blackbox-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter-seaweedfs
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+  - port: http
+    scheme: http
+    path: /probe
+    interval: 30s
+    scrapeTimeout: 30s
+    honorTimestamps: true
+    params:
+      module:
+      - http_2xx
+      target:
+      - https://seaweedfs.walnuts.dev/misskey/files/b318bef0-983e-4f24-b7ee-9075ec17fc01.webp
+    metricRelabelings:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: https://seaweedfs.walnuts.dev/misskey/files/b318bef0-983e-4f24-b7ee-9075ec17fc01.webp
+        action: replace
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: seaweedfs
+        action: replace
+  jobLabel: "blackbox-exporter"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring
+---
+# Source: prometheus-blackbox-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter-walnuk-front
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+  - port: http
+    scheme: http
+    path: /probe
+    interval: 30s
+    scrapeTimeout: 30s
+    honorTimestamps: true
+    params:
+      module:
+      - http_2xx
+      target:
+      - https://waln.uk/
+    metricRelabelings:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: https://waln.uk/
+        action: replace
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: walnuk-front
+        action: replace
+  jobLabel: "blackbox-exporter"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring
+---
+# Source: prometheus-blackbox-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter-walnuk-back
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+  - port: http
+    scheme: http
+    path: /probe
+    interval: 30s
+    scrapeTimeout: 30s
+    honorTimestamps: true
+    params:
+      module:
+      - http_2xx
+      target:
+      - https://waln.uk/oDwHe
+    metricRelabelings:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: https://waln.uk/oDwHe
+        action: replace
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: walnuk-back
+        action: replace
+  jobLabel: "blackbox-exporter"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring
+---
+# Source: prometheus-blackbox-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: blackbox-exporter-prometheus-blackbox-exporter-zitadel
+  namespace: monitoring
+  labels:
+    helm.sh/chart: prometheus-blackbox-exporter-11.8.0
+    app.kubernetes.io/name: prometheus-blackbox-exporter
+    app.kubernetes.io/instance: blackbox-exporter
+    app.kubernetes.io/version: "v0.28.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  endpoints:
+  - port: http
+    scheme: http
+    path: /probe
+    interval: 30s
+    scrapeTimeout: 30s
+    honorTimestamps: true
+    params:
+      module:
+      - http_2xx
+      target:
+      - https://auth.walnuts.dev/healthz
+    metricRelabelings:
+      - sourceLabels: [instance]
+        targetLabel: instance
+        replacement: https://auth.walnuts.dev/healthz
+        action: replace
+      - sourceLabels: [target]
+        targetLabel: target
+        replacement: zitadel
+        action: replace
+  jobLabel: "blackbox-exporter"
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-blackbox-exporter
+      app.kubernetes.io/instance: blackbox-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring

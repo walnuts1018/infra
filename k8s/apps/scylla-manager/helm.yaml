@@ -1,0 +1,54 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: scylla-manager-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: scylla-manager
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: scylla-manager
+    helm:
+      releaseName: scylla-manager
+      values: |
+        # Scylla Manager log level, allowed values are: error, warn, info, debug, trace
+        logLevel: info
+        resources:
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        serviceAccount:
+          create: true
+          name: ""
+        scylla:
+          developerMode: true
+          datacenter: iwakura
+          racks:
+          - name: iwakura-a
+            members: 1
+            storage:
+              capacity: 5Gi
+              storageClassName: local-path
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 1
+                memory: 1Gi
+            placement:
+              nodeAffinity: {}
+              tolerations: []
+        serviceMonitor:
+          create: true
+    repoURL: https://scylla-operator-charts.storage.googleapis.com/stable
+    targetRevision: v1.20.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

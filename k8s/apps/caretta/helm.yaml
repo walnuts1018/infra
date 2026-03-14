@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: caretta-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: caretta
+    helm:
+      releaseName: caretta
+      valuesObject:
+        grafana:
+          enabled: false
+        image:
+          pullPolicy: IfNotPresent
+        rbac:
+          pspEnabled: false
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 400Mi
+        tolerations:
+          - operator: Exists
+        victoria-metrics-single:
+          enabled: false
+    repoURL: https://helm.groundcover.com/
+    targetRevision: 0.0.16
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

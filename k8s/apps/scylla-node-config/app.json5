@@ -1,7 +1,0 @@
-{
-  name: "scylla-node-config",
-  namespace: "scylla-operator",
-  clusters: {
-    kurumi: {},
-  },
-}
