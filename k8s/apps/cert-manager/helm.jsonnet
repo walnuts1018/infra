@@ -3,7 +3,7 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
   namespace: (import 'app.json5').namespace,
   chart: 'cert-manager',
   repoURL: 'https://charts.jetstack.io',
-  targetRevision: 'v1.19.4',
+  targetRevision: 'v1.20.1',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'), {
       prometheus: {
