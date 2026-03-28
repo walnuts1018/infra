@@ -20,7 +20,7 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'komga',
-            image: 'gotson/komga:1.24.1',
+            image: 'gotson/komga:1.24.3',
             resources: {
               limits: {
                 cpu: '1',
