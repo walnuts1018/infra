@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metrics-server-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: metrics-server
+    helm:
+      releaseName: metrics-server
+      values: |
+        args:
+        - "--kubelet-insecure-tls"
+
+        resources:
+          requests:
+            cpu: 5m
+            memory: 62Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+    repoURL: https://kubernetes-sigs.github.io/metrics-server/
+    targetRevision: 3.13.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

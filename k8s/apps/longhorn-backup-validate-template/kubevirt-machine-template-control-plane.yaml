@@ -1,0 +1,61 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+kind: KubevirtMachineTemplate
+metadata:
+  name: longhorn-backup-validate-template-control-plane
+  namespace: longhorn-backup-validate
+spec:
+  template:
+    spec:
+      virtualMachineBootstrapCheck:
+        checkStrategy: none
+      virtualMachineTemplate:
+        metadata:
+          namespace: longhorn-backup-validate
+        spec:
+          dataVolumeTemplates:
+            - metadata:
+                name: boot-volume
+              spec:
+                pvc:
+                  accessModes:
+                    - ReadWriteOnce
+                  dataSource:
+                    apiGroup: ""
+                    kind: PersistentVolumeClaim
+                    name: talos-image-1-11-5
+                  resources:
+                    requests:
+                      storage: 16Gi
+                  storageClassName: longhorn-local-temporary
+                  volumeMode: Block
+          instancetype:
+            kind: VirtualMachineClusterInstancetype
+            name: u1.large
+          preference:
+            kind: VirtualMachineClusterPreference
+            name: ubuntu
+          runStrategy: Always
+          template:
+            spec:
+              affinity:
+                nodeAffinity:
+                  preferredDuringSchedulingIgnoredDuringExecution:
+                    - preference:
+                        matchExpressions:
+                          - key: kubernetes.io/hostname
+                            operator: In
+                            values:
+                              - cake
+                      weight: 100
+              domain:
+                devices:
+                  disks:
+                    - disk:
+                        bus: virtio
+                      name: dv-volume
+                  networkInterfaceMultiqueue: true
+              evictionStrategy: External
+              volumes:
+                - dataVolume:
+                    name: boot-volume
+                  name: dv-volume

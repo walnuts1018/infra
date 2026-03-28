@@ -1,0 +1,160 @@
+---
+# Source: prometheus-smartctl-exporter/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: smartctl-exporter-prometheus-smartctl-exporter
+  labels:
+    helm.sh/chart: prometheus-smartctl-exporter-0.16.0
+    app.kubernetes.io/name: prometheus-smartctl-exporter
+    app.kubernetes.io/instance: smartctl-exporter
+    app.kubernetes.io/version: "v0.14.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: prometheus-smartctl-exporter/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: smartctl-exporter-prometheus-smartctl-exporter
+  labels:
+    helm.sh/chart: prometheus-smartctl-exporter-0.16.0
+    app.kubernetes.io/name: prometheus-smartctl-exporter
+    app.kubernetes.io/instance: smartctl-exporter
+    app.kubernetes.io/version: "v0.14.0"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: unrestricted-psp
+subjects:
+- kind: ServiceAccount
+  name: smartctl-exporter-prometheus-smartctl-exporter
+  namespace: monitoring
+---
+# Source: prometheus-smartctl-exporter/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: smartctl-exporter-prometheus-smartctl-exporter
+  labels:
+    helm.sh/chart: prometheus-smartctl-exporter-0.16.0
+    app.kubernetes.io/name: prometheus-smartctl-exporter
+    app.kubernetes.io/instance: smartctl-exporter
+    app.kubernetes.io/version: "v0.14.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: prometheus-smartctl-exporter
+    app.kubernetes.io/instance: smartctl-exporter
+---
+# Source: prometheus-smartctl-exporter/templates/daemonset.yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: smartctl-exporter-prometheus-smartctl-exporter-0
+  labels:
+    helm.sh/chart: prometheus-smartctl-exporter-0.16.0
+    app.kubernetes.io/name: prometheus-smartctl-exporter
+    app.kubernetes.io/instance: smartctl-exporter
+    app.kubernetes.io/version: "v0.14.0"
+    app.kubernetes.io/managed-by: Helm
+    idx: i0
+spec:
+  updateStrategy: 
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-smartctl-exporter
+      app.kubernetes.io/instance: smartctl-exporter
+      idx: i0
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9666"
+        prometheus.io/scrape: "true"
+      labels:
+        app.kubernetes.io/name: prometheus-smartctl-exporter
+        app.kubernetes.io/instance: smartctl-exporter
+        idx: i0
+    spec:
+      containers:
+      - image: "ghcr.io/joryirving/smartctl_exporter:0.14.0"
+        imagePullPolicy: IfNotPresent
+        args:
+        - '--smartctl.path=/usr/sbin/smartctl'
+        - '--smartctl.interval=120s'
+
+        - '--web.listen-address=0.0.0.0:9633'
+        - '--web.telemetry-path=/metrics'
+        name: main
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        ports:
+        - name: http
+          containerPort: 9633
+          protocol: TCP
+        resources:
+          {}
+        volumeMounts:
+        - mountPath: /hostdev
+          name: dev
+      dnsPolicy: ClusterFirst
+      hostNetwork: false
+      restartPolicy: Always
+      serviceAccountName: smartctl-exporter-prometheus-smartctl-exporter
+      volumes:
+      - hostPath:
+          path: /dev
+        name: dev
+      tolerations:
+        - effect: NoSchedule
+          operator: Exists
+---
+# Source: prometheus-smartctl-exporter/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: smartctl-exporter-prometheus-smartctl-exporter
+  labels:
+    helm.sh/chart: prometheus-smartctl-exporter-0.16.0
+    app.kubernetes.io/name: prometheus-smartctl-exporter
+    app.kubernetes.io/instance: smartctl-exporter
+    app.kubernetes.io/version: "v0.14.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  attachMetadata:
+    node: false
+  endpoints:
+    - interval: 60s
+      path: /metrics
+      port: http
+      scheme: http
+      scrapeTimeout: 30s
+      relabelings: 
+        - action: replace
+          regex: ^(.*)$
+          replacement: $1
+          separator: ;
+          sourceLabels:
+          - __meta_kubernetes_pod_node_name
+          targetLabel: node
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  selector:
+    matchLabels:
+      helm.sh/chart: prometheus-smartctl-exporter-0.16.0
+      app.kubernetes.io/name: prometheus-smartctl-exporter
+      app.kubernetes.io/instance: smartctl-exporter
+      app.kubernetes.io/version: "v0.14.0"
+      app.kubernetes.io/managed-by: Helm
