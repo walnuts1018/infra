@@ -104,6 +104,7 @@ grafana:
   - knightss27-weathermap-panel
   - grafana-github-datasource
   - volkovlabs-echarts-panel
+  - grafana-googlesheets-datasource
   additionalDataSources:
   - name: VictoriaMetrics
     type: prometheus
