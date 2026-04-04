@@ -1,7 +1,0 @@
-{
-  name: "clusterissuer",
-  namespace: "cert-manager",
-  clusters: {
-    kurumi: {},
-  },
-}

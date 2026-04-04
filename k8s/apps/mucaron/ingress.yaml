@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 10G
+  labels:
+    app: mucaron
+    app.kubernetes.io/name: mucaron
+  name: mucaron
+  namespace: mucaron
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: mucaron.walnuts.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: mucaron-back
+                port:
+                  number: 8080
+            path: /api
+            pathType: Prefix
+          - backend:
+              service:
+                name: mucaron-front
+                port:
+                  number: 3000
+            path: /
+            pathType: Prefix

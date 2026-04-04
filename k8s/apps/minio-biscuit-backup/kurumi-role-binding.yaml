@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: minio-biscuit-backup-kurumi-rolebinding
+  namespace: minio-biscuit
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: minio-biscuit-backup-kurumi-role
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: https://192.168.0.17:16443#system:serviceaccount:minio-biscuit:minio-biscuit-backup-trigger
