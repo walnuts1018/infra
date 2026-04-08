@@ -21,7 +21,7 @@
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'copy-rclone',
-                image: 'ghcr.io/rclone/rclone:1.73.3',
+                image: 'ghcr.io/rclone/rclone:1.73.4',
                 command: [
                   '/bin/sh',
                   '-c',
