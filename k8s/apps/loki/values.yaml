@@ -165,6 +165,18 @@ route:
     hostnames: []
     parentRefs: []
 
+write:
+  enabled: false
+  replicas: 0
+
+read:
+  enabled: false
+  replicas: 0
+
+backend:
+  enabled: false
+  replicas: 0
+
 ingester:
   enabled: true
   replicas: 1
