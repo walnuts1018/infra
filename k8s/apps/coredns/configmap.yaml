@@ -1,0 +1,63 @@
+apiVersion: v1
+data:
+  Corefile: |
+    (base) {
+        errors
+        log
+        loop
+        loadbalance
+        reload
+        ready
+        cache
+    }
+
+    . {
+        import base
+        health {
+            lameduck 5s
+        }
+        prometheus :9153
+        forward . 1.1.1.1 1.0.0.1 {
+            tls_servername cloudflare-dns.com
+            force_tcp
+        }
+    }
+
+    # http://.:443 {
+    #     tls /etc/coredns/tls/tls.crt /etc/coredns/tls/tls.key
+    #     forward . 127.0.0.1:53
+    # }
+
+    # tls://.:853 {
+    #     tls /etc/coredns/tls/tls.crt /etc/coredns/tls/tls.key
+    #     forward . 127.0.0.1:53
+    # }
+
+
+    local.walnuts.dev {
+        import base
+        hosts /etc/coredns/local.walnuts.dev {
+            fallthrough
+        }
+        forward . 1.1.1.1 1.0.0.1 {
+            tls_servername cloudflare-dns.com
+            force_tcp
+        }
+    }
+  local.walnuts.dev: |
+    192.168.0.159 minio-biscuit.local.walnuts.dev
+    192.168.0.159 minio-biscuit-console.local.walnuts.dev
+    192.168.0.138 httptest.local.walnuts.dev
+    192.168.0.138 sts-minio.local.walnuts.dev
+    192.168.0.158 shutdown-manager.local.walnuts.dev
+    192.168.0.138 kurumi.local.walnuts.dev
+    192.168.0.138 seaweedfs.local.walnuts.dev
+    192.168.0.138 stalwart.local.walnuts.dev
+    192.168.0.138 argocd.local.walnuts.dev
+kind: ConfigMap
+metadata:
+  labels:
+    app: coredns
+    app.kubernetes.io/name: coredns
+  name: coredns-config-b081fb
+  namespace: coredns

@@ -1,0 +1,696 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: loki
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: loki
+    helm:
+      releaseName: loki
+      values: |
+        global:
+          extraArgs:
+          - "-config.expand-env=true"
+          extraEnv:
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::role/loki
+          extraVolumes:
+          - name: seaweedfs-sts-token
+            projected:
+              sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 3600
+                  path: token
+          - name: local-ca-bundle
+            configMap:
+              name: local-ca-bundle
+          extraVolumeMounts:
+          - name: seaweedfs-sts-token
+            mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+            readOnly: true
+          - name: local-ca-bundle
+            mountPath: /etc/ssl/certs/trust-bundle.pem
+            subPath: trust-bundle.pem
+            readOnly: true
+
+        deploymentMode: Distributed
+
+        loki:
+          auth_enabled: false # TODO: いつか有効化してもいい、修正はOTelColとGrafanaくらい？
+          server:
+            log_level: info
+          # -- Limits config
+          limits_config:
+            allow_structured_metadata: true
+            ingestion_burst_size_mb: 100
+            retention_period: 336h # 14 days
+            reject_old_samples: false
+            shard_streams:
+              enabled: true
+              desired_rate: 104857600 # 10MiB
+          commonConfig:
+            replication_factor: 1
+
+          storage:
+            type: s3
+            use_thanos_objstore: true
+            bucketNames:
+              chunks: "loki-chunks"
+              ruler: "loki-ruler"
+              admin: "loki-admin"
+            object_store:
+              type: s3
+              s3:
+                endpoint: "seaweedfs.local.walnuts.dev"
+                sts_endpoint: "https://seaweedfs.local.walnuts.dev"
+                region: us-east-1
+                storage_class: REDUCED_REDUNDANCY
+                bucket_lookup_type: path
+
+          schemaConfig:
+            configs:
+            - from: '2024-01-01'
+              store: tsdb
+              index:
+                prefix: loki_index_
+                period: 24h
+              object_store: s3
+              schema: v13
+          # https://grafana.com/docs/loki/latest/get-started/components/#pattern-ingester
+          pattern_ingester:
+            enabled: true
+          ingester:
+            # https://grafana.com/blog/the-essential-config-settings-you-should-use-so-you-wont-drop-logs-in-loki/#:~:text=chunk_encoding%20The%20chunk%20encoding%20determines%20which%20compression%20algorithm%20is%20used%20for%20our%20chunks%20in%20storage.%20gzip%20is%20the%20default%20and%20has%20the%20best%20compression%20ratio%2C%20but%20we%20suggest%20snappy%20for%20its%20faster%20decompression%20rate%2C%20which%20results%20in%20better%20query%20speeds.
+            chunk_encoding: snappy
+
+          distributor:
+            otlp_config:
+              default_resource_attributes_as_index_labels:
+              - service.name
+              - service.namespace
+              - service.instance.id
+              # - deployment.environment
+              # - deployment.environment.name
+              - cloud.region
+              - cloud.availability_zone
+              - k8s.cluster.name
+              - k8s.namespace.name
+              # - k8s.pod.name
+              - k8s.container.name
+              - container.name
+              # - k8s.replicaset.name
+              - k8s.deployment.name
+              - k8s.statefulset.name
+              - k8s.daemonset.name
+              - k8s.cronjob.name
+              - k8s.job.name
+          tracing:
+            enabled: true
+
+          # https://grafana.com/docs/loki/latest/operations/bloom-filters/
+          bloom_build:
+            enabled: true
+            planner:
+              planning_interval: 6h
+          bloom_gateway:
+            enabled: true
+
+          compactor:
+            retention_enabled: true
+            delete_request_store: s3
+
+        lokiCanary:
+          enabled: true
+          kind: Deployment
+          replicas: 1
+
+        networkPolicy:
+          enabled: false # TODO: いつか有効化する
+
+        gateway:
+          enabled: true
+          replicas: 1
+          verboseLogging: true
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 3
+            targetCPUUtilizationPercentage: null
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              cpu: 5m
+              memory: 20Mi
+            limits:
+              cpu: 100m
+              memory: 512Mi
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      app.kubernetes.io/component: gateway
+                      app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                      app.kubernetes.io/instance: '{{ .Release.Name }}'
+          metrics:
+            enabled: true
+            resources:
+              requests:
+                cpu: 1m
+                memory: 10Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+
+        # TODO: .local.walnuts.dev でHTTPRoute作ってもいい
+        route:
+          main:
+            enabled: false
+            hostnames: []
+            parentRefs: []
+
+        write:
+          enabled: false
+          replicas: 0
+
+        read:
+          enabled: false
+          replicas: 0
+
+        backend:
+          enabled: false
+          replicas: 0
+
+        ingester:
+          enabled: true
+          replicas: 1
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 3
+            targetCPUUtilizationPercentage: null
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              cpu: 10m
+              memory: 512Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: ingester
+                app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}'
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+
+          trafficDistribution: ""
+
+        distributor:
+          enabled: true
+          replicas: 1
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 3
+            targetCPUUtilizationPercentage: null
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              cpu: 10m
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: distributor
+                app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}'
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+
+        querier:
+          enabled: true
+          replicas: 1
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 3
+            targetCPUUtilizationPercentage: null
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              cpu: 10m
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: querier
+                app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}'
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+
+        queryFrontend:
+          enabled: true
+          replicas: 1
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 3
+            targetCPUUtilizationPercentage: null
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: query-frontend
+                app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}'
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+
+        queryScheduler:
+          enabled: true
+          replicas: 1
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: query-scheduler
+                app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}'
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+
+        indexGateway:
+          enabled: true
+          replicas: 1
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: index-gateway
+                app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}'
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+
+        compactor:
+          enabled: true
+          kind: StatefulSet
+          replicas: 2
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      app.kubernetes.io/component: compactor
+                      app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                      app.kubernetes.io/instance: '{{ .Release.Name }}'
+                  topologyKey: "kubernetes.io/hostname"
+          resources:
+            requests:
+              cpu: 30m
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          persistence:
+            enabled: false
+            type: ephemeral # TODO: enableStatefulSetAutoDeletePVCをtrueにして、pvcにしてもいい
+
+        bloomGateway:
+          enabled: true
+          replicas: 1
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      app.kubernetes.io/component: bloom-gateway
+                      app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                      app.kubernetes.io/instance: '{{ .Release.Name }}'
+                  topologyKey: "kubernetes.io/hostname"
+          resources:
+            requests:
+              cpu: 30m
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+
+        bloomPlanner:
+          enabled: true
+          replicas: 1
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+              preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      app.kubernetes.io/component: bloom-planner
+                      app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                      app.kubernetes.io/instance: '{{ .Release.Name }}'
+                  topologyKey: "kubernetes.io/hostname"
+          resources:
+            requests:
+              cpu: 30m
+              memory: 256Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+
+        bloomBuilder:
+          enabled: true
+          kind: Deployment
+          replicas: 1
+          autoscaling:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 3
+            targetCPUUtilizationPercentage: null
+            targetMemoryUtilizationPercentage: 100
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: bloom-builder
+                app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}'
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+          # TODO: persistenceを検討
+          persistence:
+            enabled: false
+            type: ephemeral
+            size: 10Gi
+
+        patternIngester:
+          enabled: true
+          replicas: 1
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: pattern-ingester
+                app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}'
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+
+        ruler:
+          enabled: true
+          replicas: 1
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: ruler
+                app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}'
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution: []
+
+        overridesExporter:
+          enabled: false
+
+        memcached:
+          enabled: true
+
+        memcachedExporter:
+          enabled: true
+          resources:
+            requests:
+              cpu: 1m
+              memory: 20Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+
+        resultsCache:
+          enabled: true
+          replicas: 1
+          defaultValidity: 12h
+          timeout: 500ms
+          # -- Amount of memory allocated to results-cache for object storage (in MB).
+          allocatedMemory: 1024
+          # -- Amount of cpu allocated to results-cache for object storage (in integer or millicores).
+          allocatedCPU: 500m
+          # -- Maximum item results-cache for memcached (in MB).
+          maxItemMemory: 5
+          # -- Maximum number of connections allowed
+          connectionLimit: 16384
+          # -- Max memory to use for cache write back
+          writebackSizeLimit: 500MB
+          # -- Max number of objects to use for cache write back
+          writebackBuffer: 500000
+          # -- Resource requests and limits for the results-cache
+          # By default a safe memory limit will be requested based on allocatedMemory value (floor (* 1.2 allocatedMemory)).
+          resources: null
+
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: results-cache
+                app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}'
+
+        chunksCache:
+          enabled: true
+          replicas: 1
+
+          batchSize: 4
+          parallelism: 5
+          timeout: 2000ms
+          defaultValidity: 0s
+
+          # -- Amount of memory allocated to chunks-cache for object storage (in MB).
+          allocatedMemory: 8192
+          # -- Amount of cpu allocated to chunks-cache for object storage (in integer or millicores).
+          allocatedCPU: 500m
+          # -- Maximum item memory for chunks-cache (in MB).
+          maxItemMemory: 5
+          # -- Maximum number of connections allowed
+          connectionLimit: 16384
+          # -- Max memory to use for cache write back
+          writebackSizeLimit: 500MB
+          # -- Max number of objects to use for cache write back
+          writebackBuffer: 500000
+          # -- Resource requests and limits for the chunks-cache
+          # By default a safe memory limit will be requested based on allocatedMemory value (floor (* 1.2 allocatedMemory)).
+          resources: null
+
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: ScheduleAnyway
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: chunks-cache
+                app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                app.kubernetes.io/instance: '{{ .Release.Name }}'
+          persistence:
+            enabled: false
+
+          l2:
+            enabled: true
+            replicas: 1
+
+            # -- The age of chunks should be transferred from l1 cache to l2
+            l2ChunkCacheHandoff: 345600s # 4 days
+            # -- Batchsize for sending and receiving chunks from chunks cache
+            batchSize: 4
+            # -- Parallel threads for sending and receiving chunks from chunks cache
+            parallelism: 5
+            # -- Memcached operation timeout
+            timeout: 2000ms
+            # -- Specify how long cached chunks should be stored in the chunks-cache-l2 before being expired
+            defaultValidity: 0s
+            # -- Amount of memory allocated to chunks-cache-l2 for object storage (in MB).
+            allocatedMemory: 8192
+            # -- Amount of cpu allocated to chunks-cache-l2 for object storage (in integer or millicores).
+            allocatedCPU: 500m
+            # -- Maximum item memory for chunks-cache-l2 (in MB).
+            maxItemMemory: 5
+            # -- Maximum number of connections allowed
+            connectionLimit: 16384
+            # -- Max memory to use for cache write back
+            writebackSizeLimit: 500MB
+            # -- Max number of objects to use for cache write back
+            writebackBuffer: 500000
+            # -- Resource requests and limits for the chunks-cache-l2
+            # By default a safe memory limit will be requested based on allocatedMemory value (floor (* 1.2 allocatedMemory)).
+            resources: null
+
+            topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: "kubernetes.io/hostname"
+              whenUnsatisfiable: ScheduleAnyway
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: chunks-cache-l2
+                  app.kubernetes.io/name: '{{ include "loki.name" . }}'
+                  app.kubernetes.io/instance: '{{ .Release.Name }}'
+            persistence:
+              enabled: false
+
+        rollout_operator:
+          enabled: false
+
+        minio:
+          enabled: false
+          replicas: 1
+          # Minio requires 2 to 16 drives for erasure code (drivesPerNode * replicas)
+          # https://docs.min.io/docs/minio-erasure-code-quickstart-guide
+          # Since we only have 1 replica, that means 2 drives must be used.
+          drivesPerNode: 2
+          # root user
+          rootUser: root-user
+          rootPassword: supersecretpassword
+          # The first user in the list below is used for Loki authentication.
+          # You can add additional users if desired; they will not impact Loki.
+          # `accessKey` = username, `secretKey` = password
+          users:
+          - accessKey: logs-user
+            secretKey: supersecretpassword
+            policy: readwrite
+          buckets:
+          - name: chunks
+            policy: none
+            purge: false
+          - name: ruler
+            policy: none
+            purge: false
+          persistence:
+            size: 5Gi
+            annotations: {}
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          # Allow the address used by Loki to refer to Minio to be overridden
+          address: null
+
+        sidecar:
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 5m
+              memory: 100Mi
+
+        monitoring:
+          serviceMonitor:
+            enabled: true
+    repoURL: ghcr.io/grafana-community/helm-charts
+    targetRevision: 13.2.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true
