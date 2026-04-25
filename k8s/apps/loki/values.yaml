@@ -195,7 +195,7 @@ ingester:
       memory: 1Gi
   topologySpreadConstraints:
   - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+    topologyKey: "kubernetes.io/hostname"
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
@@ -226,7 +226,7 @@ distributor:
       memory: 1Gi
   topologySpreadConstraints:
   - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+    topologyKey: "kubernetes.io/hostname"
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
@@ -255,7 +255,7 @@ querier:
       memory: 1Gi
   topologySpreadConstraints:
   - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+    topologyKey: "kubernetes.io/hostname"
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
@@ -284,7 +284,7 @@ queryFrontend:
       memory: 1Gi
   topologySpreadConstraints:
   - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+    topologyKey: "kubernetes.io/hostname"
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
@@ -307,7 +307,7 @@ queryScheduler:
       memory: 1Gi
   topologySpreadConstraints:
   - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+    topologyKey: "kubernetes.io/hostname"
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
@@ -330,7 +330,7 @@ indexGateway:
       memory: 1Gi
   topologySpreadConstraints:
   - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+    topologyKey: "kubernetes.io/hostname"
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
@@ -356,7 +356,7 @@ compactor:
               app.kubernetes.io/component: compactor
               app.kubernetes.io/name: '{{ include "loki.name" . }}'
               app.kubernetes.io/instance: '{{ .Release.Name }}'
-          topologyKey: kubernetes.io/hostname
+          topologyKey: "kubernetes.io/hostname"
   resources:
     requests:
       cpu: 30m
@@ -382,7 +382,7 @@ bloomGateway:
               app.kubernetes.io/component: bloom-gateway
               app.kubernetes.io/name: '{{ include "loki.name" . }}'
               app.kubernetes.io/instance: '{{ .Release.Name }}'
-          topologyKey: kubernetes.io/hostname
+          topologyKey: "kubernetes.io/hostname"
   resources:
     requests:
       cpu: 30m
@@ -405,7 +405,7 @@ bloomPlanner:
               app.kubernetes.io/component: bloom-planner
               app.kubernetes.io/name: '{{ include "loki.name" . }}'
               app.kubernetes.io/instance: '{{ .Release.Name }}'
-          topologyKey: kubernetes.io/hostname
+          topologyKey: "kubernetes.io/hostname"
   resources:
     requests:
       cpu: 30m
@@ -433,7 +433,7 @@ bloomBuilder:
       memory: 1Gi
   topologySpreadConstraints:
   - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+    topologyKey: "kubernetes.io/hostname"
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
@@ -461,7 +461,7 @@ patternIngester:
       memory: 1Gi
   topologySpreadConstraints:
   - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+    topologyKey: "kubernetes.io/hostname"
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
@@ -484,7 +484,7 @@ ruler:
       memory: 1Gi
   topologySpreadConstraints:
   - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+    topologyKey: "kubernetes.io/hostname"
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
@@ -534,7 +534,7 @@ resultsCache:
 
   topologySpreadConstraints:
   - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+    topologyKey: "kubernetes.io/hostname"
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
@@ -569,7 +569,7 @@ chunksCache:
 
   topologySpreadConstraints:
   - maxSkew: 1
-    topologyKey: kubernetes.io/hostname
+    topologyKey: "kubernetes.io/hostname"
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
@@ -611,7 +611,7 @@ chunksCache:
 
     topologySpreadConstraints:
     - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
+      topologyKey: "kubernetes.io/hostname"
       whenUnsatisfiable: ScheduleAnyway
       labelSelector:
         matchLabels:
