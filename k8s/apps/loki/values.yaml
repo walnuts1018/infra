@@ -148,6 +148,7 @@ gateway:
               app.kubernetes.io/component: gateway
               app.kubernetes.io/name: '{{ include "loki.name" . }}'
               app.kubernetes.io/instance: '{{ .Release.Name }}'
+          topologyKey: "kubernetes.io/hostname"
   metrics:
     enabled: true
     resources:
