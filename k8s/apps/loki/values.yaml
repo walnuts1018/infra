@@ -204,8 +204,8 @@ ingester:
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution: []
-
-  trafficDistribution: ""
+  zoneAwareReplication:
+    enabled: false
 
 distributor:
   enabled: true
