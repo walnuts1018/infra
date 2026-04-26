@@ -532,16 +532,15 @@ resultsCache:
   # -- Resource requests and limits for the results-cache
   # By default a safe memory limit will be requested based on allocatedMemory value (floor (* 1.2 allocatedMemory)).
   resources: null
-
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: "kubernetes.io/hostname"
-    whenUnsatisfiable: ScheduleAnyway
-    labelSelector:
-      matchLabels:
-        app.kubernetes.io/component: results-cache
-        app.kubernetes.io/name: '{{ include "loki.name" . }}'
-        app.kubernetes.io/instance: '{{ .Release.Name }}'
+  # topologySpreadConstraints:
+  # - maxSkew: 1
+  #   topologyKey: "kubernetes.io/hostname"
+  #   whenUnsatisfiable: ScheduleAnyway
+  #   labelSelector:
+  #     matchLabels:
+  #       app.kubernetes.io/component: results-cache
+  #       app.kubernetes.io/name: '{{ include "loki.name" . }}'
+  #       app.kubernetes.io/instance: '{{ .Release.Name }}'
 
 chunksCache:
   enabled: true
@@ -568,15 +567,15 @@ chunksCache:
   # By default a safe memory limit will be requested based on allocatedMemory value (floor (* 1.2 allocatedMemory)).
   resources: null
 
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: "kubernetes.io/hostname"
-    whenUnsatisfiable: ScheduleAnyway
-    labelSelector:
-      matchLabels:
-        app.kubernetes.io/component: chunks-cache
-        app.kubernetes.io/name: '{{ include "loki.name" . }}'
-        app.kubernetes.io/instance: '{{ .Release.Name }}'
+  # topologySpreadConstraints:
+  # - maxSkew: 1
+  #   topologyKey: "kubernetes.io/hostname"
+  #   whenUnsatisfiable: ScheduleAnyway
+  #   labelSelector:
+  #     matchLabels:
+  #       app.kubernetes.io/component: chunks-cache
+  #       app.kubernetes.io/name: '{{ include "loki.name" . }}'
+  #       app.kubernetes.io/instance: '{{ .Release.Name }}'
   persistence:
     enabled: false
 
@@ -610,15 +609,15 @@ chunksCache:
     # By default a safe memory limit will be requested based on allocatedMemory value (floor (* 1.2 allocatedMemory)).
     resources: null
 
-    topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: "kubernetes.io/hostname"
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app.kubernetes.io/component: chunks-cache-l2
-          app.kubernetes.io/name: '{{ include "loki.name" . }}'
-          app.kubernetes.io/instance: '{{ .Release.Name }}'
+    # topologySpreadConstraints:
+    # - maxSkew: 1
+    #   topologyKey: "kubernetes.io/hostname"
+    #   whenUnsatisfiable: ScheduleAnyway
+    #   labelSelector:
+    #     matchLabels:
+    #       app.kubernetes.io/component: chunks-cache-l2
+    #       app.kubernetes.io/name: '{{ include "loki.name" . }}'
+    #       app.kubernetes.io/instance: '{{ .Release.Name }}'
     persistence:
       enabled: false
 
