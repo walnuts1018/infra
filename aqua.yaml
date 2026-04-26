@@ -24,3 +24,4 @@ packages:
 - name: google/go-jsonnet@v0.22.0
 - name: grafana/tanka@v0.37.0
 - name: jsonnet-bundler/jsonnet-bundler@v0.6.0
+
