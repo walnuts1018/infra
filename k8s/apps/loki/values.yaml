@@ -516,17 +516,17 @@ resultsCache:
   defaultValidity: 12h
   timeout: 500ms
   # -- Amount of memory allocated to results-cache for object storage (in MB).
-  allocatedMemory: 1024
+  allocatedMemory: 256
   # -- Amount of cpu allocated to results-cache for object storage (in integer or millicores).
-  allocatedCPU: 500m
+  allocatedCPU: 50m
   # -- Maximum item results-cache for memcached (in MB).
-  maxItemMemory: 5
+  maxItemMemory: 1
   # -- Maximum number of connections allowed
   connectionLimit: 16384
   # -- Max memory to use for cache write back
-  writebackSizeLimit: 500MB
+  writebackSizeLimit: 10MB
   # -- Max number of objects to use for cache write back
-  writebackBuffer: 500000
+  writebackBuffer: 10000
   # -- Resource requests and limits for the results-cache
   # By default a safe memory limit will be requested based on allocatedMemory value (floor (* 1.2 allocatedMemory)).
   resources: null
@@ -550,17 +550,17 @@ chunksCache:
   defaultValidity: 0s
 
   # -- Amount of memory allocated to chunks-cache for object storage (in MB).
-  allocatedMemory: 8192
+  allocatedMemory: 2048
   # -- Amount of cpu allocated to chunks-cache for object storage (in integer or millicores).
-  allocatedCPU: 500m
+  allocatedCPU: 100m
   # -- Maximum item memory for chunks-cache (in MB).
   maxItemMemory: 5
   # -- Maximum number of connections allowed
   connectionLimit: 16384
   # -- Max memory to use for cache write back
-  writebackSizeLimit: 500MB
+  writebackSizeLimit: 100MB
   # -- Max number of objects to use for cache write back
-  writebackBuffer: 500000
+  writebackBuffer: 100000
   # -- Resource requests and limits for the chunks-cache
   # By default a safe memory limit will be requested based on allocatedMemory value (floor (* 1.2 allocatedMemory)).
   resources: null
@@ -592,17 +592,17 @@ chunksCache:
     # -- Specify how long cached chunks should be stored in the chunks-cache-l2 before being expired
     defaultValidity: 0s
     # -- Amount of memory allocated to chunks-cache-l2 for object storage (in MB).
-    allocatedMemory: 8192
+    allocatedMemory: 1024
     # -- Amount of cpu allocated to chunks-cache-l2 for object storage (in integer or millicores).
-    allocatedCPU: 500m
+    allocatedCPU: 100m
     # -- Maximum item memory for chunks-cache-l2 (in MB).
     maxItemMemory: 5
     # -- Maximum number of connections allowed
     connectionLimit: 16384
     # -- Max memory to use for cache write back
-    writebackSizeLimit: 500MB
+    writebackSizeLimit: 50MB
     # -- Max number of objects to use for cache write back
-    writebackBuffer: 500000
+    writebackBuffer: 50000
     # -- Resource requests and limits for the chunks-cache-l2
     # By default a safe memory limit will be requested based on allocatedMemory value (floor (* 1.2 allocatedMemory)).
     resources: null
