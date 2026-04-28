@@ -4,6 +4,9 @@
   metadata: {
     name: 'envoy-gateway',
     namespace: (import 'app.json5').namespace,
+    annotations: {
+      'external-dns.alpha.kubernetes.io/target': '111.100.165.117',
+    },
   },
   spec: {
     gatewayClassName: (import 'gateway-class.jsonnet').metadata.name,
