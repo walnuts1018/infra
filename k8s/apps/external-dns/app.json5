@@ -1,0 +1,7 @@
+{
+  name: "external-dns",
+  namespace: "external-dns",
+  clusters: {
+    kurumi: {},
+  },
+}
