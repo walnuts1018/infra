@@ -30,5 +30,5 @@ env:
 - name: CF_API_TOKEN
   valueFrom:
     secretKeyRef:
-      name: envoy
+      name: envoy-gateway
       key: cloudflare_api_token
