@@ -187,7 +187,7 @@ ingester:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 10m
+      cpu: 25m
       memory: 512Mi
     limits:
       cpu: 1
@@ -218,8 +218,8 @@ distributor:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 10m
-      memory: 100Mi
+      cpu: 15m
+      memory: 256Mi
     limits:
       cpu: 1
       memory: 1Gi
@@ -247,8 +247,8 @@ querier:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 10m
-      memory: 256Mi
+      cpu: 14m
+      memory: 105Mi
     limits:
       cpu: 1
       memory: 1Gi
@@ -384,10 +384,10 @@ bloomGateway:
           topologyKey: "kubernetes.io/hostname"
   resources:
     requests:
-      cpu: 30m
-      memory: 256Mi
+      cpu: 3m
+      memory: 40Mi
     limits:
-      cpu: 1
+      cpu: 500m
       memory: 1Gi
 
 bloomPlanner:
@@ -407,10 +407,10 @@ bloomPlanner:
           topologyKey: "kubernetes.io/hostname"
   resources:
     requests:
-      cpu: 30m
-      memory: 256Mi
+      cpu: 4m
+      memory: 40Mi
     limits:
-      cpu: 1
+      cpu: 500m
       memory: 1Gi
 
 bloomBuilder:
@@ -425,8 +425,8 @@ bloomBuilder:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 10m
-      memory: 128Mi
+      cpu: 2m
+      memory: 36Mi
     limits:
       cpu: 1
       memory: 1Gi
@@ -453,8 +453,8 @@ patternIngester:
   replicas: 1
   resources:
     requests:
-      cpu: 10m
-      memory: 128Mi
+      cpu: 12m
+      memory: 228Mi
     limits:
       cpu: 1
       memory: 1Gi
