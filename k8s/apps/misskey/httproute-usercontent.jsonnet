@@ -4,6 +4,9 @@
   metadata: {
     name: (import 'app.json5').name + '-usercontent',
     namespace: (import 'app.json5').namespace,
+    annotations: {
+      'external-dns.alpha.kubernetes.io/cloudflare-proxied': 'true',
+    },
   },
   spec: {
     parentRefs: [
