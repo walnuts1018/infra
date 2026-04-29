@@ -19,7 +19,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet'), {
             name: 'coredns',
-            image: 'coredns/coredns:1.14.2',
+            image: 'coredns/coredns:1.14.3',
             args: [
               '-conf',
               '/etc/coredns/Corefile',

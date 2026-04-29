@@ -21,7 +21,7 @@
             initContainers: [
               (import '../../components/container.libsonnet') {
                 name: 'copy-rclone',
-                image: 'ghcr.io/rclone/rclone:1.73.4',
+                image: 'ghcr.io/rclone/rclone:1.73.5',
                 command: [
                   '/bin/sh',
                   '-c',
@@ -105,7 +105,7 @@
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'backuper',
-                  image: 'public.ecr.aws/aws-cli/aws-cli:2.34.32',
+                  image: 'public.ecr.aws/aws-cli/aws-cli:2.34.38',
                   command: [
                     '/usr/bin/bash',
                     '-c',
