@@ -30,16 +30,11 @@ spec:
           code: true
         - name: 'ingressLoadBalancerIP'
           value: "192.168.0.159"
-        - name: 'clusterMeshLoadBalancerIP'
-          value: "192.168.0.160"
         - name: "operatorReplicas"
           value: "1"
           code: true
         - name: 'usek3s'
           value: 'true'
-          code: true
-        - name: 'clusterMeshPeers'
-          value: '[{name: "kurumi",ip:"192.168.0.139"}]'
           code: true
   syncPolicy:
     automated:

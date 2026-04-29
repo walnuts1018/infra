@@ -15,62 +15,6 @@ resources:
     memory: 512Mi
   limits:
     memory: 2Gi
-clustermesh:
-  useAPIServer: true
-  maxConnectedClusters: 255
-  enableEndpointSliceSynchronization: false
-  enableMCSAPISupport: true
-  config:
-    enabled: true
-  apiserver:
-    etcd:
-      resources:
-        requests:
-          cpu: 7m
-          memory: 64Mi
-        limits:
-          cpu: 1000m
-          memory: 256Mi
-      init:
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            cpu: 100m
-            memory: 100Mi
-    kvstoremesh:
-      enabled: true
-      resources:
-        requests:
-          cpu: 2m
-          memory: 36Mi
-        limits:
-          cpu: 1000m
-          memory: 1024M
-    service:
-      type: LoadBalancer
-    replicas: 1
-    resources:
-      requests:
-        cpu: 5m
-        memory: 49Mi
-      limits:
-        cpu: 1000m
-        memory: 1024M
-    # TODO
-    tls:
-      auto:
-        enabled: true
-        method: certmanager
-        certManagerIssuerRef:
-          group: cert-manager.io
-          kind: Issuer
-          name: cilium-cluster-mesh
-    metrics:
-      enabled: true
-      serviceMonitor:
-        enabled: true
 ingressController:
   enabled: true
   loadbalancerMode: shared

@@ -4,16 +4,9 @@ function(
   k8sServiceHost='192.168.0.17',
   k8sServicePort=16443,
   ingressLoadBalancerIP='192.168.0.129',
-  clusterMeshLoadBalancerIP='192.168.0.139',
   enableServiceMonitor=true,
   operatorReplicas=2,
   usek3s=false,
-  clusterMeshPeers=[
-    {
-      name: 'biscuit',
-      ip: '192.168.0.160',
-    },
-  ],
 ) (import '../../components/helm.libsonnet') {
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
@@ -32,31 +25,6 @@ function(
       cluster: {
         id: clusterID,
         name: clusterName,
-      },
-      clustermesh: {
-        config: {
-          clusters: [
-            {
-              name: peer.name,
-              port: 2379,
-              ips: [
-                peer.ip,
-              ],
-            }
-            for peer in clusterMeshPeers
-          ],
-
-        },
-        apiserver: {
-          service: {
-            loadBalancerIP: clusterMeshLoadBalancerIP,
-          },
-          metrics: {
-            serviceMonitor: {
-              enabled: enableServiceMonitor,
-            },
-          },
-        },
       },
       hubble: {
         relay: {
