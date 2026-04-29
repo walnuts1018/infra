@@ -109,8 +109,8 @@ server:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 20m
-      memory: 196Mi
+      cpu: 10m
+      memory: 86Mi
     limits:
       cpu: 500m
       memory: 512Mi
