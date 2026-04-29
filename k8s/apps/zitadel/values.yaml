@@ -18,20 +18,25 @@ zitadel:
   configSecretName: zitadel
   configSecretKey: "config.yaml"
 replicaCount: 1
-ingress:
-  enabled: true
-  className: "nginx"
-  annotations:
-    cert-manager.io/cluster-issuer: 'letsencrypt-prod'
-  hosts:
-  - host: auth.walnuts.dev
-    paths:
-    - path: /
-      pathType: Prefix
-  tls:
-  - secretName: zitadel-tls
-    hosts:
-    - auth.walnuts.dev
+gateway:
+  httpRoute:
+    enabled: true
+    parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-gateway
+      namespace: envoy-gateway-system
+    hostnames:
+    - "auth.walnuts.dev"
+  grpcRoute:
+    enabled: true
+    parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-gateway
+      namespace: envoy-gateway-system
+    hostnames:
+    - "auth.walnuts.dev"
 metrics:
   enabled: true
   serviceMonitor:
