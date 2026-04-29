@@ -39,8 +39,8 @@ function(
       },
       resources: {
         requests: {
-          cpu: '369m',
-          memory: '778Mi',
+          cpu: '26m',
+          memory: '167Mi',
         },
         limits: {
           cpu: '2',
@@ -203,8 +203,8 @@ function(
     },
     resources: {
       requests: {
-        cpu: '350m',
-        memory: '1.1Gi',
+        cpu: '550m',
+        memory: '1.3Gi',
       },
       limits: {
         cpu: '1',
