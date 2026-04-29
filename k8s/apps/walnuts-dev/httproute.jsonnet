@@ -1,0 +1,42 @@
+{
+  apiVersion: 'gateway.networking.k8s.io/v1',
+  kind: 'HTTPRoute',
+  metadata: {
+    name: (import 'app.json5').name,
+    namespace: (import 'app.json5').namespace,
+    annotations: {
+      'external-dns.alpha.kubernetes.io/cloudflare-proxied': 'true',
+    },
+  },
+  spec: {
+    parentRefs: [
+      {
+        name: (import '../envoy-gateway-class/gateway.jsonnet').metadata.name,
+        namespace: (import '../envoy-gateway-class/gateway.jsonnet').metadata.namespace,
+      },
+    ],
+    hostnames: [
+      'walnuts.dev',
+    ],
+    rules: [
+      {
+        matches: [
+          {
+            path: {
+              type: 'PathPrefix',
+              value: '/',
+            },
+          },
+        ],
+        backendRefs: [
+          {
+            kind: 'Service',
+            name: (import 'service.jsonnet').metadata.name,
+            port: 3000,
+            weight: 1,
+          },
+        ],
+      },
+    ],
+  },
+}
