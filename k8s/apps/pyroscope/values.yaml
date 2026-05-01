@@ -67,5 +67,8 @@ architecture:
     v1: false
     v2: true
 
+alloy:
+  enabled: false
+
 serviceMonitor:
   enabled: true
