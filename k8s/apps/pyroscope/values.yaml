@@ -28,12 +28,9 @@ pyroscope:
         app.kubernetes.io/component: "all"
 
   extraEnvVars:
-  - name: AWS_WEB_IDENTITY_TOKEN_FILE
-    value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
-  - name: AWS_ROLE_ARN
-    value: "arn:aws:iam::role/tempo"
-  - name: AWS_ENDPOINT_URL_STS
-    value: "https://seaweedfs.walnuts.dev"
+    AWS_WEB_IDENTITY_TOKEN_FILE: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+    AWS_ROLE_ARN: "arn:aws:iam::role/tempo"
+    nAWS_ENDPOINT_URL_STS: "https://seaweedfs.walnuts.dev"
 
   extraVolumes:
   - name: seaweedfs-sts-token
