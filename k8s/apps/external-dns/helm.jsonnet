@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'external-dns',
   repoURL: 'https://kubernetes-sigs.github.io/external-dns/',
-  targetRevision: '1.20.0',
+  targetRevision: '1.21.1',
   values: (importstr 'values.yaml'),
 }
