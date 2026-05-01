@@ -125,6 +125,10 @@ function(
               'otlphttp/loki',
             ],
           },
+          profiles: {
+            receivers: ['otlp'],
+            exporters: ['otlp_grpc/pyroscope'],
+          },
         },
       },
     },
