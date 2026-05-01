@@ -80,6 +80,9 @@ function(
           ],
           priority: 'info',
         },
+        profiling: {
+          samples_per_second: 97,
+        },
       },
       processors: {
         memory_limiter: {
@@ -221,6 +224,10 @@ function(
               'prometheusremotewrite',
               'prometheusremotewrite/victoriametrics',
             ],
+          },
+          profiles: {
+            receivers: ['profiling'],
+            exporters: ['otlp_grpc/pyroscope'],
           },
         },
       },

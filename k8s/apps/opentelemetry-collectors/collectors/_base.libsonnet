@@ -21,25 +21,25 @@ function(
       },
       exporters: {
         'otlphttp/prometheus': {
-          endpoint: 'http://prometheus-stack-kube-prom-prometheus.monitoring.svc.clusterset.local:9090/api/v1/otlp',
+          endpoint: 'http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/otlp',
           tls: {
             insecure: true,
           },
         },
         prometheusremotewrite: {
-          endpoint: 'http://prometheus-stack-kube-prom-prometheus.monitoring.svc.clusterset.local:9090/api/v1/write',
+          endpoint: 'http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/write',
           resource_to_telemetry_conversion: {
             enabled: true,
           },
         },
         'otlp/tempo': {
-          endpoint: 'tempo-gateway.tempo.svc.clusterset.local:4317',
+          endpoint: 'tempo-gateway.tempo.svc.cluster.local:4317',
           tls: {
             insecure: true,
           },
         },
         'otlphttp/loki': {
-          endpoint: 'http://loki-gateway.loki.svc.clusterset.local/otlp',
+          endpoint: 'http://loki-gateway.loki.svc.cluster.local/otlp',
           tls: {
             insecure: true,
           },
@@ -62,6 +62,12 @@ function(
           endpoint: 'http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write',
           resource_to_telemetry_conversion: {
             enabled: true,
+          },
+        },
+        'otlp_grpc/pyroscope': {
+          endpoint: 'http://pyroscope.pyroscope.svc.cluster.local:4317',
+          tls: {
+            insecure: true,
           },
         },
         file: {
