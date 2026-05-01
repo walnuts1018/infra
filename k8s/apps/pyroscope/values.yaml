@@ -60,6 +60,7 @@ pyroscope:
         endpoint: seaweedfs.local.walnuts.dev
         region: us-east-1
         bucket_name: pyroscope
+        force_path_style: true
         native_aws_auth_enabled: true
 
 architecture:
