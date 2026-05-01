@@ -76,6 +76,7 @@ function(
         },
       },
       service: {
+        profilesSupport: true,
         pipelines: {
           traces: {
             receivers: [
