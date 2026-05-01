@@ -41,6 +41,11 @@
                             "claim": "sub",
                             "value": "system:serviceaccount:tempo:tempo",
                             "role": "arn:aws:iam::role/tempo"
+                        },
+                        {
+                            "claim": "sub",
+                            "value": "system:serviceaccount:pyroscope:pyroscope",
+                            "role": "arn:aws:iam::role/pyroscope"
                         }
                     ],
                     "defaultRole": "arn:aws:iam::role/S3DenyAllRole"
@@ -158,6 +163,24 @@
                         "Resource": [
                             "arn:aws:s3:::tempo",
                             "arn:aws:s3:::tempo/*"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "pyroscope",
+            "document": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                            "s3:*"
+                        ],
+                        "Resource": [
+                            "arn:aws:s3:::pyroscope",
+                            "arn:aws:s3:::pyroscope/*"
                         ]
                     }
                 ]
