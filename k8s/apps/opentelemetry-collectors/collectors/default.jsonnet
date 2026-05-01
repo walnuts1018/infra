@@ -76,7 +76,6 @@ function(
         },
       },
       service: {
-        profilesSupport: true,
         pipelines: {
           traces: {
             receivers: [
@@ -125,10 +124,6 @@ function(
             exporters: [
               'otlphttp/loki',
             ],
-          },
-          profiles: {
-            receivers: ['otlp'],
-            exporters: ['otlp_grpc/pyroscope'],
           },
         },
       },
