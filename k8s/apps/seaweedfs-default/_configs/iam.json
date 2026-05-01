@@ -343,6 +343,32 @@
                     }
                 ]
             }
+        },
+        {
+            "roleName": "pyroscope",
+            "roleArn": "arn:aws:iam::role/pyroscope",
+            "attachedPolicies": [
+                "pyroscope"
+            ],
+            "trustPolicy": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Federated": "*"
+                        },
+                        "Action": [
+                            "sts:AssumeRoleWithWebIdentity"
+                        ],
+                        "Condition": {
+                            "StringEquals": {
+                                "oidc:iss": "https://192.168.0.17:16443"
+                            }
+                        }
+                    }
+                ]
+            }
         }
     ]
 }
