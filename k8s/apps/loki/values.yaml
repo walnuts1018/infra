@@ -624,37 +624,6 @@ rollout_operator:
 
 minio:
   enabled: false
-  replicas: 1
-  # Minio requires 2 to 16 drives for erasure code (drivesPerNode * replicas)
-  # https://docs.min.io/docs/minio-erasure-code-quickstart-guide
-  # Since we only have 1 replica, that means 2 drives must be used.
-  drivesPerNode: 2
-  # root user
-  rootUser: root-user
-  rootPassword: supersecretpassword
-  # The first user in the list below is used for Loki authentication.
-  # You can add additional users if desired; they will not impact Loki.
-  # `accessKey` = username, `secretKey` = password
-  users:
-  - accessKey: logs-user
-    secretKey: supersecretpassword
-    policy: readwrite
-  buckets:
-  - name: chunks
-    policy: none
-    purge: false
-  - name: ruler
-    policy: none
-    purge: false
-  persistence:
-    size: 5Gi
-    annotations: {}
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-  # Allow the address used by Loki to refer to Minio to be overridden
-  address: null
 
 sidecar:
   resources:
