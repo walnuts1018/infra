@@ -40,17 +40,10 @@ pyroscope:
           audience: sts.seaweedfs.com
           expirationSeconds: 3600
           path: token
-  - name: local-ca-bundle
-    configMap:
-      name: local-ca-bundle
 
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
-    readOnly: true
-  - name: local-ca-bundle
-    mountPath: /etc/ssl/certs/trust-bundle.pem
-    subPath: trust-bundle.pem
     readOnly: true
 
   structuredConfig:
