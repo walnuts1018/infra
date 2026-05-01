@@ -29,7 +29,7 @@ pyroscope:
 
   extraEnvVars:
     AWS_WEB_IDENTITY_TOKEN_FILE: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
-    AWS_ROLE_ARN: "arn:aws:iam::role/tempo"
+    AWS_ROLE_ARN: "arn:aws:iam::role/pyroscope"
     nAWS_ENDPOINT_URL_STS: "https://seaweedfs.walnuts.dev"
 
   extraVolumes:
