@@ -66,7 +66,7 @@ sudo apt install -y software-properties-common curl
 ```
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
+curl -fsSL https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.34/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
 echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.34/deb/ /" | sudo tee /etc/apt/sources.list.d/cri-o.list
 ```
 
@@ -125,7 +125,7 @@ events {
 stream {
   upstream kube_apiserver {
     least_conn;
-    server $(hostname -I | cut -f1 -d' '):6443; # to be changed
+    server $(hostname -I | cut -f1 -d' '):6443;
     }
 
   server {
