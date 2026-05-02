@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: pomerium-gateway
+  namespace: pomerium
+spec:
+  gatewayClassName: pomerium-gateway
+  listeners:
+    - allowedRoutes:
+        namespaces:
+          from: All
+      name: https
+      port: 443
+      protocol: HTTPS
+      tls:
+        certificateRefs:
+          - group: ""
+            kind: Secret
+            name: pomerium-gateway-cert
+        mode: Terminate

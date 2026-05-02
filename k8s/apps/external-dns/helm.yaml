@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: external-dns
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: external-dns
+    helm:
+      releaseName: external-dns
+      values: |
+        resources:
+          requests:
+            cpu: 2m
+            memory: 51Mi
+          limits:
+            memory: 1Gi
+        topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: 'kubernetes.io/hostname'
+          whenUnsatisfiable: 'ScheduleAnyway'
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: external-dns
+        serviceMonitor:
+          enabled: true
+        triggerLoopOnEvent: true
+        sources:
+        - gateway-httproute
+        - gateway-grpcroute
+        - gateway-tlsroute
+        - gateway-tcproute
+        - gateway-udproute
+        policy: upsert-only
+        registry: txt
+        excludeDomains:
+        - "local.walnuts.dev"
+
+        provider:
+          name: cloudflare
+        env:
+        - name: CF_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: external-dns
+              key: cloudflare_api_token
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    targetRevision: 1.21.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

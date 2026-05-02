@@ -1,0 +1,26 @@
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: Redis
+metadata:
+  labels:
+    app: affine-redis
+    app.kubernetes.io/name: affine-redis
+  name: affine-redis
+  namespace: affine
+spec:
+  kubernetesConfig:
+    image: quay.io/opstree/redis:v7.4.8
+    imagePullPolicy: IfNotPresent
+    redisSecret:
+      key: redispassword
+      name: affine-minio
+  podSecurityContext:
+    fsGroup: 1000
+    runAsUser: 1000
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi

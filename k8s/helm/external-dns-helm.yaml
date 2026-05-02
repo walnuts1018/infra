@@ -1,0 +1,318 @@
+---
+# Source: external-dns/crds/dnsendpoints.externaldns.k8s.io.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    api-approved.kubernetes.io: https://github.com/kubernetes-sigs/external-dns/pull/2007
+  name: dnsendpoints.externaldns.k8s.io
+spec:
+  group: externaldns.k8s.io
+  names:
+    kind: DNSEndpoint
+    listKind: DNSEndpointList
+    plural: dnsendpoints
+    singular: dnsendpoint
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          description: |-
+            DNSEndpoint is a contract that a user-specified CRD must implement to be used as a source for external-dns.
+            The user-specified CRD should also have the status sub-resource.
+          properties:
+            apiVersion:
+              description: |-
+                APIVersion defines the versioned schema of this representation of an object.
+                Servers should convert recognized schemas to the latest internal value, and
+                may reject unrecognized values.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+              type: string
+            kind:
+              description: |-
+                Kind is a string value representing the REST resource this object represents.
+                Servers may infer this from the endpoint the client submits requests to.
+                Cannot be updated.
+                In CamelCase.
+                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+              type: string
+            metadata:
+              type: object
+            spec:
+              description: DNSEndpointSpec defines the desired state of DNSEndpoint
+              properties:
+                endpoints:
+                  items:
+                    description: Endpoint is a high-level way of a connection between a service and an IP
+                    properties:
+                      dnsName:
+                        description: The hostname of the DNS record
+                        type: string
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: Labels stores labels defined for the Endpoint
+                        type: object
+                      providerSpecific:
+                        description: ProviderSpecific stores provider specific config
+                        items:
+                          description: ProviderSpecificProperty holds the name and value of a configuration which is specific to individual DNS providers
+                          properties:
+                            name:
+                              type: string
+                            value:
+                              type: string
+                          type: object
+                        type: array
+                      recordTTL:
+                        description: TTL for the record
+                        format: int64
+                        type: integer
+                      recordType:
+                        description: RecordType type of record, e.g. CNAME, A, AAAA, SRV, TXT etc
+                        type: string
+                      setIdentifier:
+                        description: Identifier to distinguish multiple records with the same name and type (e.g. Route53 records with routing policies other than 'simple')
+                        type: string
+                      targets:
+                        description: The targets the DNS record points to
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  type: array
+              type: object
+            status:
+              description: DNSEndpointStatus defines the observed state of DNSEndpoint
+              properties:
+                observedGeneration:
+                  description: The generation observed by the external-dns controller.
+                  format: int64
+                  type: integer
+              type: object
+          type: object
+      served: true
+      storage: true
+      subresources:
+        status: {}
+
+---
+# Source: external-dns/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: external-dns
+  namespace: external-dns
+  labels:
+    helm.sh/chart: external-dns-1.21.1
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/version: "0.21.0"
+    app.kubernetes.io/managed-by: Helm
+automountServiceAccountToken: true
+---
+# Source: external-dns/templates/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: external-dns
+  labels:
+    helm.sh/chart: external-dns-1.21.1
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/version: "0.21.0"
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["gateways"]
+    verbs: ["get","watch","list"]
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get","watch","list"]
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["httproutes"]
+    verbs: ["get","watch","list"]
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["grpcroutes"]
+    verbs: ["get","watch","list"]
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["tlsroutes"]
+    verbs: ["get","watch","list"]
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["tcproutes"]
+    verbs: ["get","watch","list"]
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["udproutes"]
+    verbs: ["get","watch","list"]
+---
+# Source: external-dns/templates/clusterrolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: external-dns-viewer
+  labels:
+    helm.sh/chart: external-dns-1.21.1
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/version: "0.21.0"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: external-dns
+subjects:
+  - kind: ServiceAccount
+    name: external-dns
+    namespace: external-dns
+---
+# Source: external-dns/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-dns
+  namespace: external-dns
+  labels:
+    helm.sh/chart: external-dns-1.21.1
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/version: "0.21.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/instance: external-dns
+  ports:
+    - name: http
+      port: 7979
+      targetPort: http
+      protocol: TCP
+---
+# Source: external-dns/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-dns
+  namespace: external-dns
+  labels:
+    helm.sh/chart: external-dns-1.21.1
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/version: "0.21.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: external-dns
+      app.kubernetes.io/instance: external-dns
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: external-dns
+        app.kubernetes.io/instance: external-dns
+    spec:
+      automountServiceAccountToken: true
+      serviceAccountName: external-dns
+      securityContext:
+        fsGroup: 65534
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: external-dns
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+          image: registry.k8s.io/external-dns/external-dns:v0.21.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: CF_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: cloudflare_api_token
+                  name: external-dns
+          args:
+            - --log-level=info
+            - --log-format=text
+            - --interval=1m
+            - --events
+            - --source=gateway-httproute
+            - --source=gateway-grpcroute
+            - --source=gateway-tlsroute
+            - --source=gateway-tcproute
+            - --source=gateway-udproute
+            - --policy=upsert-only
+            - --registry=txt
+            - --exclude-domains=local.walnuts.dev
+            - --provider=cloudflare
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: 7979
+          livenessProbe:
+            failureThreshold: 2
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 2m
+              memory: 51Mi
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: external-dns
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+---
+# Source: external-dns/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: external-dns
+  namespace: external-dns
+  labels:
+    helm.sh/chart: external-dns-1.21.1
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/instance: external-dns
+    app.kubernetes.io/version: "0.21.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  jobLabel: app.kubernetes.io/instance
+  namespaceSelector:
+    matchNames:
+      - external-dns
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: external-dns
+      app.kubernetes.io/instance: external-dns
+  endpoints:
+    - port: http
+      path: /metrics

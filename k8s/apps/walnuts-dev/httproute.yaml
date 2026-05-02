@@ -1,0 +1,23 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+  name: walnuts-dev
+  namespace: walnuts-dev
+spec:
+  hostnames:
+    - walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: walnuts-dev
+          port: 3000
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

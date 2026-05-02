@@ -1,7 +1,0 @@
-{
-  name: "shutdown-manager",
-  namespace: "shutdown-manager",
-  clusters: {
-    biscuit: {},
-  },
-}

@@ -1,7 +1,0 @@
-{
-  name: "postgresql-default",
-  namespace: "databases",
-  clusters: {
-    kurumi: {},
-  },
-}
