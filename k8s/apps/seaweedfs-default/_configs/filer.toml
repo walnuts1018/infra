@@ -11,3 +11,13 @@ ssl_ca_path = "/etc/seaweedfs/scylladb-ca/ca.crt"
 ssl_cert_path = "/etc/seaweedfs/scylladb-client/tls.crt"
 ssl_key_path = "/etc/seaweedfs/scylladb-client/tls.key"
 localDC = "iwakura"
+
+[postgres2]
+enabled = true
+location = "/buckets/loki-chunks"
+hostname = "postgresql-default-rw.databases.svc.cluster.local"
+port = 5432
+database = "seaweedfs_loki_chunks"
+username = "seaweedfs"
+password = "{{ .postgres_seaweedfs_password }}"
+sslmode = "disable"

@@ -10,6 +10,13 @@
       },
     },
     {
+      secretKey: 'postgres_seaweedfs_password',
+      remoteRef: {
+        key: 'postgres_passwords',
+        property: 'seaweedfs',
+      },
+    },
+    {
       secretKey: 'sts_signing_key',
       remoteRef: {
         key: 'seaweedfs',

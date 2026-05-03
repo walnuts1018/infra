@@ -51,4 +51,8 @@
     db_name: 'stalwart',
     user_name: 'stalwart',
   },
+  {
+    db_name: 'seaweedfs_loki_chunks',
+    user_name: 'seaweedfs',
+  },
 ]
