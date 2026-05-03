@@ -34,7 +34,7 @@ sslmode = "disable"
 connection_max_idle = 10
 connection_max_open = 50
 connection_max_lifetime_seconds = 300
-pgbouncer_compatible = true
+pgbouncer_compatible = false
 enableUpsert = true
 upsertQuery = """
   INSERT INTO "%[1]s" (dirhash, name, directory, meta)
