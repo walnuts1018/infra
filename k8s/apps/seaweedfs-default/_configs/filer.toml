@@ -12,7 +12,7 @@ ssl_cert_path = "/etc/seaweedfs/scylladb-client/tls.crt"
 ssl_key_path = "/etc/seaweedfs/scylladb-client/tls.key"
 localDC = "iwakura"
 
-[postgres2]
+[postgres2.loki_chunks]
 enabled = true
 location = "/buckets/loki-chunks"
 hostname = "postgresql-default-rw.databases.svc.cluster.local"
