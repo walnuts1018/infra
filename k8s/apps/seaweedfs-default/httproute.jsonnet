@@ -33,6 +33,9 @@
             },
           },
         ],
+        timeouts: {
+          requests: '1h',
+        },
       },
     ],
   },
