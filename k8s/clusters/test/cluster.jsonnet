@@ -19,7 +19,7 @@
     },
     controlPlaneEndpoint: {
       host: '192.168.0.15',
-      port: '6443',
+      port: 6443,
     },
     controlPlaneRef: {
       apiGroup: 'controlplane.cluster.x-k8s.io',
