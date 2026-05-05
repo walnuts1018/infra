@@ -34,7 +34,7 @@
           },
         ],
         timeouts: {
-          requests: '1h',
+          request: '1h',
         },
       },
     ],
