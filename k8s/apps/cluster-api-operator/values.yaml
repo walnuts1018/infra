@@ -8,7 +8,6 @@ controlPlane:
   k3s: {}
 infrastructure:
   tart:
-    version: v0.0.1
     fetchConfig:
       url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.0.1/infrastructure-components.yaml
 resources:
