@@ -9,7 +9,7 @@ controlPlane:
 infrastructure:
   tart:
     fetchConfig:
-      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.0.5/infrastructure-components.yaml
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.0.1/infrastructure-components.yaml
 resources:
   manager: {}
 enableHelmHook: false # これをつけないと、毎回Syncする時にnamespaceごと消える
