@@ -26,6 +26,8 @@ ingressController:
     # -- Enable secret sync, which will make sure all TLS secrets used by Ingress are synced to secretsNamespace.name.
     # If disabled, TLS secrets must be maintained externally.
     sync: true
+gatewayAPI:
+  enabled: true
 nodePort:
   enabled: true
 hubble:
