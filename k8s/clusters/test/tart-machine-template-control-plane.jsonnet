@@ -9,11 +9,13 @@
       spec: {
         image: 'https://cloud-images.ubuntu.com/releases/resolute/release/unpacked/ubuntu-26.04-server-cloudimg-amd64-vmlinuz-generic',
         initrd: 'https://cloud-images.ubuntu.com/releases/resolute/release/unpacked/ubuntu-26.04-server-cloudimg-amd64-initrd-generic',
+        bootstrap: {
+          format: 'NoCloud',
+        },
         kernelParams: [
           'console=ttyS0',
           'ip=dhcp',
           'autoinstall',
-          'ds=nocloud-net\\;s=http://tart.local.walnuts.dev/metadata',
         ],
       },
     },
