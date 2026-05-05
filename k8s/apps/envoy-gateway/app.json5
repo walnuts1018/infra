@@ -13,6 +13,5 @@
   },
   clusters: {
     kurumi: {},
-    berry: {},
   },
 }
