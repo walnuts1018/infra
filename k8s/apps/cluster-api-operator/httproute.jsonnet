@@ -8,8 +8,8 @@
   spec: {
     parentRefs: [
       {
-        name: (import '../envoy-gateway-class/gateway.jsonnet').metadata.name,
-        namespace: (import '../envoy-gateway-class/gateway.jsonnet').metadata.namespace,
+        name: 'traefik-gateway',
+        namespace: 'kube-system',
       },
     ],
     hostnames: [
