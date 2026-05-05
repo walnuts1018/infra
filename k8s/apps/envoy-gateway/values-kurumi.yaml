@@ -9,6 +9,9 @@ deployment:
 
 config:
   envoyGateway:
+    extensionApis:
+      enableBackend: true
+      enableEnvoyPatchPolicy: true
     rateLimit:
       backend:
         type: Redis
