@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: clusters
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+  - git:
+      repoURL: https://github.com/walnuts1018/infra
+      revision: clusterapi # TODO
+      files:
+      - path: "k8s/clusters/*/cluster.json5"
+  ignoreApplicationDifferences:
+  - jsonPointers:
+    - /spec/syncPolicy
+  template:
+    metadata:
+      name: '{{ printf "%s" .name }}'
+    spec:
+      project: default
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.namespace}}'
+      sources: []
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: false # Cluster削除するの怖いので
+        syncOptions:
+        - ServerSideApply=true
+        - FailOnSharedResource=true
