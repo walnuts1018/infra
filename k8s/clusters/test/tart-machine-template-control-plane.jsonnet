@@ -15,6 +15,7 @@
         kernelParams: [
           'console=tty0',
           'ip=dhcp',
+          'boot=casper',
           'autoinstall',
           'url=http://ftp.riken.go.jp/Linux/ubuntu-releases/26.04/ubuntu-26.04-live-server-amd64.iso',
         ],
