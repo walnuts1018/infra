@@ -16,17 +16,25 @@ spec:
     - /spec/syncPolicy
   template:
     metadata:
-      name: '{{ printf "%s" .name }}'
+      name: '{{.name}}'
     spec:
       project: default
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{.namespace}}'
-      sources: []
+      source:
+        repoURL: 'https://github.com/walnuts1018/infra'
+        targetRevision: clusterapi # TODO
+        path: '{{.path.path}}'
+        directory:
+          recurse: true
+          exclude: '{config/*,_*/*}'
+          jsonnet:
+            tlas: []
       syncPolicy:
         automated:
           selfHeal: true
-          prune: false # Cluster削除するの怖いので
+          prune: false # Cluster削除するのは怖いので
         syncOptions:
         - ServerSideApply=true
         - FailOnSharedResource=true
