@@ -13,7 +13,7 @@
           format: 'NoCloud',
         },
         kernelParams: [
-          'console=ttyS0',
+          'console=tty0',
           'ip=dhcp',
           'autoinstall',
         ],
