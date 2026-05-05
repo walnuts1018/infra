@@ -1,16 +1,28 @@
 core:
-  cluster-api: {}
+  cluster-api:
+    manager:
+      featureGates:
+        InPlaceUpdates: true
 bootstrap:
-  kubeadm: {}
+  kubeadm:
+    manager:
+      featureGates:
+        InPlaceUpdates: true
   k3s: {}
 controlPlane:
-  kubeadm: {}
+  kubeadm:
+    manager:
+      featureGates:
+        InPlaceUpdates: true
   k3s: {}
 infrastructure:
   tart:
     version: v0.0.5
     fetchConfig:
       url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.0.5/infrastructure-components.yaml
+    manager:
+      featureGates:
+        InPlaceUpdates: true
 resources:
   manager: {}
 enableHelmHook: false # これをつけないと、毎回Syncする時にnamespaceごと消える
