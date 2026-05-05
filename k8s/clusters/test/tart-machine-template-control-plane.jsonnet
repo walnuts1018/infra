@@ -7,8 +7,8 @@
   spec: {
     template: {
       spec: {
-        image: 'https://cloud-images.ubuntu.com/releases/resolute/release/unpacked/ubuntu-26.04-server-cloudimg-amd64-vmlinuz-generic',
-        initrd: 'https://cloud-images.ubuntu.com/releases/resolute/release/unpacked/ubuntu-26.04-server-cloudimg-amd64-initrd-generic',
+        image: 'http://cloud-images.ubuntu.com/releases/resolute/release/unpacked/ubuntu-26.04-server-cloudimg-amd64-vmlinuz-generic',
+        initrd: 'http://cloud-images.ubuntu.com/releases/resolute/release/unpacked/ubuntu-26.04-server-cloudimg-amd64-initrd-generic',
         bootstrap: {
           format: 'NoCloud',
         },
