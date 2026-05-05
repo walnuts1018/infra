@@ -13,7 +13,7 @@
           'console=ttyS0',
           'ip=dhcp',
           'autoinstall',
-          'ds=nocloud-net;s=http://tart.local.walnuts.dev/metadata',
+          'ds=nocloud-net\\;s=http://tart.local.walnuts.dev/metadata',
         ],
       },
     },
