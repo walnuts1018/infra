@@ -1,0 +1,7 @@
+{
+    name: "test",
+    namespace: "test",
+    kubernetesVersion: "v1.35.4",
+    controlPlaneMachineCount: 1,
+    workerMachineCount: 0
+}
