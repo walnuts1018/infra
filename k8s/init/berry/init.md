@@ -48,9 +48,26 @@ sudo vim /etc/rancher/k3s/config.yaml
 ```yaml
 write-kubeconfig-mode: "0644"
 disable:
-- traefik
-- servicelb
 - local-storage
+```
+
+```bash
+sudo vim /var/lib/rancher/k3s/server/manifests/traefik-config.yaml
+```
+
+```yaml
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    providers:
+      kubernetesIngress:
+        enabled: false
+      kubernetesGateway:
+        enabled: true
 ```
 
 ```bash
