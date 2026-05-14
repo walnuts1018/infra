@@ -23,7 +23,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'apiserver',
-            image: 'ghcr.io/walnuts1018/walnuk-backend:v0.0.142',
+            image: 'ghcr.io/walnuts1018/walnuk-backend:v0.0.143',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
