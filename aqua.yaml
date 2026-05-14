@@ -22,6 +22,6 @@ packages:
 - name: hashicorp/terraform@v1.14.9
 - name: homeport/dyff@v1.12.0
 - name: google/go-jsonnet@v0.22.0
-- name: grafana/tanka@v0.37.0
+- name: grafana/tanka@v0.37.2
 - name: jsonnet-bundler/jsonnet-bundler@v0.6.0
 
