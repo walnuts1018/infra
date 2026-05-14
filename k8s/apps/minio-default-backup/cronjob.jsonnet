@@ -24,7 +24,7 @@
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'rclone',
-                  image: 'public.ecr.aws/aws-cli/aws-cli:2.34.46',
+                  image: 'public.ecr.aws/aws-cli/aws-cli:2.34.47',
                   command: [
                     '/usr/bin/bash',
                     '-c',
