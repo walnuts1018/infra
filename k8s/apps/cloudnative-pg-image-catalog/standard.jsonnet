@@ -20,7 +20,7 @@
       },
       {
         major: 16,
-        image: 'ghcr.io/cloudnative-pg/postgresql:16.13-standard-trixie',
+        image: 'ghcr.io/cloudnative-pg/postgresql:16.14-standard-trixie',
       },
       {
         major: 17,
