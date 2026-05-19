@@ -61,10 +61,10 @@ controller:
       enabled: true
   resources:
     requests:
-      cpu: 600m
+      cpu: "1"
       memory: 1268Mi
     limits:
-      cpu: 800m
+      cpu: "1.5"
       memory: 2Gi
 dex:
   metrics:
