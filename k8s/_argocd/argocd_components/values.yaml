@@ -64,7 +64,7 @@ controller:
       cpu: "1"
       memory: 1268Mi
     limits:
-      cpu: "1.5"
+      cpu: "2"
       memory: 2Gi
 dex:
   metrics:
