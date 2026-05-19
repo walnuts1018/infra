@@ -40,6 +40,7 @@ function(loadBalancerIP='192.168.0.138') {
           ],
         },
         envoyService: {
+          externalTrafficPolicy: 'Cluster',
           loadBalancerIP: loadBalancerIP,
           type: 'LoadBalancer',
         },
