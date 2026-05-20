@@ -53,8 +53,8 @@
             ],
             resources: {
               requests: {
-                cpu: '1',
-                memory: '3Gi',
+                cpu: '100m',
+                memory: '128Mi',
               },
               limits: {
                 cpu: '2',

@@ -51,8 +51,8 @@
             ],
             resources: {
               requests: {
-                cpu: '1',
-                memory: '4Gi',
+                cpu: '100m',
+                memory: '128Mi',
                 'nvidia.com/gpu': '1',
               },
               limits: {

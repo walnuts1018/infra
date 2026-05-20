@@ -18,9 +18,7 @@
       spec: {
         serviceAccountName: (import 'serviceaccount.jsonnet').metadata.name,
         imagePullSecrets: [
-          {
-            name: 'ghcr-login-secret',
-          },
+          { name: 'ghcr-login-secret' },
         ],
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
@@ -98,8 +96,8 @@
             ],
             resources: {
               requests: {
-                cpu: '250m',
-                memory: '512Mi',
+                cpu: '100m',
+                memory: '128Mi',
               },
               limits: {
                 cpu: '1',
