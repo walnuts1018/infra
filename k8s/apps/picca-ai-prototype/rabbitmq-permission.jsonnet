@@ -17,8 +17,8 @@
       read: '.*',
     },
     rabbitmqClusterReference: {
-      name: 'default',
-      namespace: 'rabbitmq',
+      name: (import '../rabbitmq-default/rabbitmqcluster.jsonnet').metadata.name,
+      namespace: (import '../rabbitmq-default/rabbitmqcluster.jsonnet').metadata.namespace,
     },
   },
 }
