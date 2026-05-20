@@ -19,6 +19,8 @@
     },
   ],
   template_data: {
+    username: '{{ .username }}',
+    password: '{{ .password }}',
     amqp_url: 'amqp://{{ .username }}:{{ .password }}@default.rabbitmq.svc.cluster.local:5672/%2F',
     uri: 'http://default.rabbitmq.svc.cluster.local:15672',
   },

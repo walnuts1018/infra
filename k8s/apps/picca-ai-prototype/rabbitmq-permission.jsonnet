@@ -11,7 +11,7 @@
   },
   spec: {
     vhost: '/',
-    user: 'picca-ai-prototype',
+    user: 'picca_ai',
     permissions: {
       configure: '.*',
       write: '.*',
