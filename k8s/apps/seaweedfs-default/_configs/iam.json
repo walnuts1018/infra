@@ -153,7 +153,7 @@
                             "s3:ListBucket"
                         ],
                         "Resource": [
-                            "arn:aws:s3:::picca_ai_prototype"
+                            "arn:aws:s3:::picca-ai-prototype"
                         ]
                     },
                     {
@@ -162,8 +162,8 @@
                             "s3:GetObject"
                         ],
                         "Resource": [
-                            "arn:aws:s3:::picca_ai_prototype",
-                            "arn:aws:s3:::picca_ai_prototype/*"
+                            "arn:aws:s3:::picca-ai-prototype",
+                            "arn:aws:s3:::picca-ai-prototype/*"
                         ]
                     }
                 ]
@@ -180,7 +180,7 @@
                             "s3:ListBucket"
                         ],
                         "Resource": [
-                            "arn:aws:s3:::picca_ai_prototype"
+                            "arn:aws:s3:::picca-ai-prototype"
                         ]
                     },
                     {
@@ -190,8 +190,8 @@
                             "s3:PutObject"
                         ],
                         "Resource": [
-                            "arn:aws:s3:::picca_ai_prototype",
-                            "arn:aws:s3:::picca_ai_prototype/*"
+                            "arn:aws:s3:::picca-ai-prototype",
+                            "arn:aws:s3:::picca-ai-prototype/*"
                         ]
                     }
                 ]

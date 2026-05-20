@@ -93,7 +93,7 @@
               },
               {
                 name: 'S3_BUCKET',
-                value: 'picca_ai_prototype',
+                value: 'picca-ai-prototype',
               },
               {
                 name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
