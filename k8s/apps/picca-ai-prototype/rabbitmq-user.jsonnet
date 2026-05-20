@@ -4,9 +4,6 @@
   metadata: {
     name: 'picca-ai-prototype-app',
     namespace: (import 'app.json5').namespace,
-    annotations: {
-      'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
-    },
     labels: (import '../../components/labels.libsonnet')((import 'app.json5').name + '-rabbitmq-user'),
   },
   spec: {
