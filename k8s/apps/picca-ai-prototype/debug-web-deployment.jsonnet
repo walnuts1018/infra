@@ -20,6 +20,12 @@
         imagePullSecrets: [
           { name: 'ghcr-login-secret' },
         ],
+        securityContext: {
+          runAsUser: 65532,
+          runAsGroup: 65532,
+          fsGroup: 65532,
+          fsGroupChangePolicy: 'OnRootMismatch',
+        },
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'debug-web',
@@ -137,19 +143,8 @@
             ],
           }, {
             securityContext: {
+              runAsNonRoot: true,
               allowPrivilegeEscalation: false,
-              capabilities: {
-                add: [
-                  'NET_BIND_SERVICE',
-                ],
-                drop: [
-                  'all',
-                ],
-              },
-              readOnlyRootFilesystem: false,
-              seccompProfile: {
-                type: 'RuntimeDefault',
-              },
             },
           }),
         ],
