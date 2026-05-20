@@ -58,7 +58,7 @@
               },
               limits: {
                 cpu: '2',
-                memory: '8Gi',
+                memory: '16Gi',
               },
             },
             volumeMounts: [
