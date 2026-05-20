@@ -12,7 +12,7 @@
   spec: {
     vhost: '/',
     userReference: {
-      name: (import '../rabbitmq-user.jsonnet').metadata.name,
+      name: (import './rabbitmq-user.jsonnet').metadata.name,
     },
     permissions: {
       configure: '.*',
