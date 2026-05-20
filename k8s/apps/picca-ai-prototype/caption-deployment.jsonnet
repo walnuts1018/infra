@@ -56,11 +56,11 @@
             resources: {
               requests: {
                 cpu: '100m',
-                memory: '128Mi',
+                memory: '4Gi',
               },
               limits: {
                 cpu: '2',
-                memory: '10Gi',
+                memory: '16Gi',
               },
             },
             volumeMounts: [

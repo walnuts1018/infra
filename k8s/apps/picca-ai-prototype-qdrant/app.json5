@@ -1,0 +1,7 @@
+{
+  name: "picca-ai-prototype-qdrant",
+  namespace: "picca-ai-prototype",
+  clusters: {
+    kurumi: {},
+  },
+}
