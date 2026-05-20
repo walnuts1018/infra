@@ -11,7 +11,9 @@
   },
   spec: {
     vhost: '/',
-    user: 'picca_ai',
+    userReference: {
+      name: (import '../rabbitmq-user.jsonnet').metadata.name,
+    },
     permissions: {
       configure: '.*',
       write: '.*',
