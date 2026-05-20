@@ -50,6 +50,10 @@
                 name: 'PADDLEX_HOME',
                 value: '/models/paddlex',
               },
+              {
+                name: 'FLAGS_enable_pir_api',
+                value: '0',
+              },
             ],
             resources: {
               requests: {
