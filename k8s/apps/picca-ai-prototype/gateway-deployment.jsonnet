@@ -51,7 +51,7 @@
               },
               {
                 name: 'RABBITMQ_QUEUE',
-                value: 'image_jobs',
+                value: 'picca_prototype_image_jobs',
               },
               {
                 name: 'S3_ENDPOINT_URL',
