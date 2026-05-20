@@ -113,11 +113,11 @@
             resources: {
               requests: {
                 cpu: '10m',
-                memory: '32Mi',
+                memory: '128Mi',
               },
               limits: {
                 cpu: '1',
-                memory: '512Mi',
+                memory: '1Gi',
               },
             },
             volumeMounts: [
