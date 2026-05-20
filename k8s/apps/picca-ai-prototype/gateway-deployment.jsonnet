@@ -34,7 +34,7 @@
             env: [
               {
                 name: 'QDRANT_URL',
-                value: 'http://qdrant:6333',
+                value: 'http://picca-ai-prototype-qdrant:6333',
               },
               {
                 name: 'QDRANT_COLLECTION',
