@@ -52,7 +52,7 @@
             resources: {
               requests: {
                 cpu: '100m',
-                memory: '128Mi',
+                memory: '1.8Gi',
                 'nvidia.com/gpu': '1',
               },
               limits: {
