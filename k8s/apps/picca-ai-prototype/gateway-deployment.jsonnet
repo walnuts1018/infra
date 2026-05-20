@@ -54,6 +54,10 @@
                 value: 'picca_prototype_image_jobs',
               },
               {
+                name: 'RABBITMQ_RESULT_QUEUE',
+                value: 'picca_prototype_image_job_results',
+              },
+              {
                 name: 'S3_ENDPOINT_URL',
                 value: 'https://seaweedfs.local.walnuts.dev',
               },
