@@ -29,8 +29,13 @@
                         },
                         {
                             "claim": "sub",
-                            "value": "system:serviceaccount:picca-ai-prototype:picca-ai-prototype",
+                            "value": "system:serviceaccount:picca-ai-prototype:picca-ai-prototype-gateway",
                             "role": "arn:aws:iam::role/picca-ai-prototype-gateway"
+                        },
+                        {
+                            "claim": "sub",
+                            "value": "system:serviceaccount:picca-ai-prototype:picca-ai-prototype-debug-web",
+                            "role": "arn:aws:iam::role/picca-ai-prototype-debug-web"
                         },
                         {
                             "claim": "sub",
@@ -145,12 +150,48 @@
                     {
                         "Effect": "Allow",
                         "Action": [
-                            "s3:Get*",
-                            "s3:List*"
+                            "s3:ListBucket"
                         ],
                         "Resource": [
-                            "arn:aws:s3:::images",
-                            "arn:aws:s3:::images/*"
+                            "arn:aws:s3:::picca_ai_prototype"
+                        ]
+                    },
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                            "s3:GetObject"
+                        ],
+                        "Resource": [
+                            "arn:aws:s3:::picca_ai_prototype",
+                            "arn:aws:s3:::picca_ai_prototype/*"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "picca-ai-prototype-debug-web",
+            "document": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                            "s3:ListBucket"
+                        ],
+                        "Resource": [
+                            "arn:aws:s3:::picca_ai_prototype"
+                        ]
+                    },
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                            "s3:GetObject",
+                            "s3:PutObject"
+                        ],
+                        "Resource": [
+                            "arn:aws:s3:::picca_ai_prototype",
+                            "arn:aws:s3:::picca_ai_prototype/*"
                         ]
                     }
                 ]
@@ -347,6 +388,32 @@
             "roleArn": "arn:aws:iam::role/picca-ai-prototype-gateway",
             "attachedPolicies": [
                 "picca-ai-prototype-gateway"
+            ],
+            "trustPolicy": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Federated": "*"
+                        },
+                        "Action": [
+                            "sts:AssumeRoleWithWebIdentity"
+                        ],
+                        "Condition": {
+                            "StringEquals": {
+                                "oidc:iss": "https://192.168.0.17:16443"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "roleName": "picca-ai-prototype-debug-web",
+            "roleArn": "arn:aws:iam::role/picca-ai-prototype-debug-web",
+            "attachedPolicies": [
+                "picca-ai-prototype-debug-web"
             ],
             "trustPolicy": {
                 "Version": "2012-10-17",

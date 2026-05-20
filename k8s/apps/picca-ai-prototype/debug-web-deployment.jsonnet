@@ -2,43 +2,67 @@
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: 'gateway',
+    name: 'debug-web',
     namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')('picca-ai-prototype-gateway'),
+    labels: (import '../../components/labels.libsonnet')('picca-ai-prototype-debug-web'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')('picca-ai-prototype-gateway'),
+      matchLabels: (import '../../components/labels.libsonnet')('picca-ai-prototype-debug-web'),
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')('picca-ai-prototype-gateway'),
+        labels: (import '../../components/labels.libsonnet')('picca-ai-prototype-debug-web'),
       },
       spec: {
-        serviceAccountName: (import 'gateway-serviceaccount.jsonnet').metadata.name,
+        serviceAccountName: (import 'debug-web-serviceaccount.jsonnet').metadata.name,
         imagePullSecrets: [
           { name: 'ghcr-login-secret' },
         ],
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
-            name: 'gateway',
-            image: 'ghcr.io/walnuts1018/picca-ai-prototype-gateway:latest',
+            name: 'debug-web',
+            image: 'ghcr.io/walnuts1018/picca-ai-prototype-debug-web:latest',
             imagePullPolicy: 'Always',
             ports: [
               {
                 name: 'http',
-                containerPort: 8000,
+                containerPort: 8080,
               },
             ],
             env: [
               {
-                name: 'QDRANT_URL',
-                value: 'http://picca-ai-prototype-qdrant:6333',
+                name: 'DEBUG_WEB_HOST',
+                value: '0.0.0.0',
               },
               {
-                name: 'QDRANT_COLLECTION',
-                value: 'picca_images',
+                name: 'DEBUG_WEB_PORT',
+                value: '8080',
+              },
+              {
+                name: 'GATEWAY_BASE_URL',
+                value: 'http://gateway:8000',
+              },
+              {
+                name: 'SQLITE_PATH',
+                value: '/data/debug-web.sqlite',
+              },
+              {
+                name: 'STATUS_POLL_INTERVAL_MS',
+                value: '3000',
+              },
+              {
+                name: 'SEARCH_TIMEOUT_SECONDS',
+                value: '30',
+              },
+              {
+                name: 'UPLOAD_OBJECT_PREFIX',
+                value: 'debug/',
+              },
+              {
+                name: 'MAX_UPLOAD_SIZE_MB',
+                value: '64',
               },
               {
                 name: 'RABBITMQ_URL',
@@ -83,51 +107,27 @@
               },
               {
                 name: 'AWS_ROLE_ARN',
-                value: 'arn:aws:iam::role/picca-ai-prototype-gateway',
-              },
-              {
-                name: 'S3_USE_PATH_STYLE',
-                value: 'true',
-              },
-              {
-                name: 'DENSE_SERVICE_URL',
-                value: 'http://dense:8001',
-              },
-              {
-                name: 'SPARSE_SERVICE_URL',
-                value: 'http://sparse:8002',
-              },
-              {
-                name: 'OCR_SERVICE_URL',
-                value: 'http://ocr:8003',
-              },
-              {
-                name: 'CAPTION_SERVICE_URL',
-                value: 'http://caption:8004',
-              },
-              {
-                name: 'INGEST_BATCH_SIZE',
-                value: '8',
-              },
-              {
-                name: 'INGEST_BATCH_WAIT_SECONDS',
-                value: '2.0',
+                value: 'arn:aws:iam::role/picca-ai-prototype-debug-web',
               },
             ],
             resources: {
+              limits: {
+                cpu: '1',
+                memory: '512Mi',
+              },
               requests: {
                 cpu: '100m',
                 memory: '128Mi',
-              },
-              limits: {
-                cpu: '1',
-                memory: '1Gi',
               },
             },
             volumeMounts: [
               {
                 name: 'tmp',
                 mountPath: '/tmp',
+              },
+              {
+                name: 'debug-web-data',
+                mountPath: '/data',
               },
               {
                 name: 'seaweedfs-sts-token',
@@ -138,7 +138,18 @@
           }, {
             securityContext: {
               allowPrivilegeEscalation: false,
+              capabilities: {
+                add: [
+                  'NET_BIND_SERVICE',
+                ],
+                drop: [
+                  'all',
+                ],
+              },
               readOnlyRootFilesystem: false,
+              seccompProfile: {
+                type: 'RuntimeDefault',
+              },
             },
           }),
         ],
@@ -146,6 +157,12 @@
           {
             name: 'tmp',
             emptyDir: {},
+          },
+          {
+            name: 'debug-web-data',
+            persistentVolumeClaim: {
+              claimName: (import 'debug-web-pvc.jsonnet').metadata.name,
+            },
           },
           {
             name: 'seaweedfs-sts-token',
