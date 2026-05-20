@@ -1,0 +1,7 @@
+{
+  name: "rabbitmq-operator",
+  namespace: "rabbitmq-operator",
+  clusters: {
+    kurumi: {},
+  },
+}

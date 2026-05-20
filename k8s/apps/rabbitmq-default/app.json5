@@ -1,0 +1,10 @@
+{
+  name: "rabbitmq-default",
+  namespace: "rabbitmq",
+  annotations: {
+    "argocd.argoproj.io/sync-wave": "-9",
+  },
+  clusters: {
+    kurumi: {},
+  },
+}
