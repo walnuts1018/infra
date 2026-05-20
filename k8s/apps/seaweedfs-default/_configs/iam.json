@@ -29,6 +29,11 @@
                         },
                         {
                             "claim": "sub",
+                            "value": "system:serviceaccount:picca-ai-prototype:picca-ai-prototype",
+                            "role": "arn:aws:iam::role/picca-ai-prototype-gateway"
+                        },
+                        {
+                            "claim": "sub",
                             "value": "system:serviceaccount:misskey:misskey-postgresql",
                             "role": "arn:aws:iam::role/cloudnative-pg-backup"
                         },
@@ -127,6 +132,25 @@
                         "Resource": [
                             "arn:aws:s3:::ipu",
                             "arn:aws:s3:::ipu/*"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "picca-ai-prototype-gateway",
+            "document": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                            "s3:Get*",
+                            "s3:List*"
+                        ],
+                        "Resource": [
+                            "arn:aws:s3:::images",
+                            "arn:aws:s3:::images/*"
                         ]
                     }
                 ]
@@ -297,6 +321,32 @@
             "roleArn": "arn:aws:iam::role/cloudnative-pg-backup",
             "attachedPolicies": [
                 "cloudnative-pg-backup"
+            ],
+            "trustPolicy": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Federated": "*"
+                        },
+                        "Action": [
+                            "sts:AssumeRoleWithWebIdentity"
+                        ],
+                        "Condition": {
+                            "StringEquals": {
+                                "oidc:iss": "https://192.168.0.17:16443"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "roleName": "picca-ai-prototype-gateway",
+            "roleArn": "arn:aws:iam::role/picca-ai-prototype-gateway",
+            "attachedPolicies": [
+                "picca-ai-prototype-gateway"
             ],
             "trustPolicy": {
                 "Version": "2012-10-17",

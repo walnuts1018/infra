@@ -59,15 +59,31 @@
               },
               {
                 name: 'S3_BUCKET',
-                value: 'images',
+                value: 'picca_ai_prototype',
               },
               {
-                name: 'S3_ACCESS_KEY_ID',
-                value: 'seaweedfs',
+                name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
+                value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
               },
               {
-                name: 'S3_SECRET_ACCESS_KEY',
-                value: 'seaweedfs',
+                name: 'AWS_ENDPOINT_URL_STS',
+                value: 'https://seaweedfs.local.walnuts.dev',
+              },
+              {
+                name: 'AWS_ENDPOINT_URL_S3',
+                value: 'https://seaweedfs.local.walnuts.dev',
+              },
+              {
+                name: 'AWS_REGION',
+                value: 'us-east-1',
+              },
+              {
+                name: 'AWS_ROLE_ARN',
+                value: 'arn:aws:iam::role/picca-ai-prototype-gateway',
+              },
+              {
+                name: 'S3_USE_PATH_STYLE',
+                value: 'true',
               },
               {
                 name: 'DENSE_SERVICE_URL',
@@ -109,6 +125,11 @@
                 name: 'tmp',
                 mountPath: '/tmp',
               },
+              {
+                name: 'seaweedfs-sts-token',
+                mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
+                readOnly: true,
+              },
             ],
           }, {
             securityContext: {
@@ -121,6 +142,20 @@
           {
             name: 'tmp',
             emptyDir: {},
+          },
+          {
+            name: 'seaweedfs-sts-token',
+            projected: {
+              sources: [
+                {
+                  serviceAccountToken: {
+                    audience: 'sts.seaweedfs.com',
+                    expirationSeconds: 86400,
+                    path: 'token',
+                  },
+                },
+              ],
+            },
           },
         ],
       },
