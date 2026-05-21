@@ -20,6 +20,34 @@
         imagePullSecrets: [
           { name: 'ghcr-login-secret' },
         ],
+        initContainers: [
+          std.mergePatch((import '../../components/container.libsonnet') {
+            name: 'prepare-models',
+            image: 'ghcr.io/walnuts1018/picca-ai-prototype-model:latest',
+            imagePullPolicy: 'Always',
+            command: [
+              'sh',
+              '-c',
+              'cp -a /models-image/. /models/',
+            ],
+            volumeMounts: [
+              {
+                name: 'models-image',
+                mountPath: '/models-image',
+                readOnly: true,
+              },
+              {
+                name: 'models',
+                mountPath: '/models',
+              },
+            ],
+          }, {
+            securityContext: {
+              allowPrivilegeEscalation: false,
+              readOnlyRootFilesystem: false,
+            },
+          }),
+        ],
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'dense',
@@ -85,11 +113,15 @@
             emptyDir: {},
           },
           {
-            name: 'models',
+            name: 'models-image',
             image: {
               reference: 'ghcr.io/walnuts1018/picca-ai-prototype-models:dev',
               pullPolicy: 'Always',
             },
+          },
+          {
+            name: 'models',
+            emptyDir: {},
           },
         ],
       },
