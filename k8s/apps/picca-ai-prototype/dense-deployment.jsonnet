@@ -23,6 +23,7 @@
         initContainers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'prepare-models',
+            // TODO: debian-slimとかでもいい
             image: 'ghcr.io/walnuts1018/picca-ai-prototype-model:latest',
             imagePullPolicy: 'Always',
             command: [
