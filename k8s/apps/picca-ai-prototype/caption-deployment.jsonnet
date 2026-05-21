@@ -55,11 +55,11 @@
             ],
             resources: {
               requests: {
-                cpu: '100m',
+                cpu: '1',
                 memory: '4Gi',
               },
               limits: {
-                cpu: '2',
+                cpu: '4',
                 memory: '16Gi',
               },
             },
