@@ -29,7 +29,7 @@
             command: [
               'sh',
               '-c',
-              'cp -a /models-image/. /models/',
+              'cp -r /models-image/. /models/',
             ],
             volumeMounts: [
               {
