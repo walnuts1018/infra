@@ -101,8 +101,9 @@
                 readOnly: true,
               },
               {
-                name: 'models',
-                mountPath: '/models-from-oci',
+                name: 'models-image',
+                mountPath: '/models-image',
+                readOnly: true,
               },
             ],
           }, {
