@@ -100,6 +100,10 @@
                 mountPath: '/models',
                 readOnly: true,
               },
+              {
+                name: 'models',
+                mountPath: '/models-from-oci',
+              },
             ],
           }, {
             securityContext: {
