@@ -3,6 +3,6 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
   namespace: (import 'app.json5').namespace,
   chart: 'gpu-operator',
   repoURL: 'https://helm.ngc.nvidia.com/nvidia',
-  targetRevision: 'v26.3.1',
+  targetRevision: 'v26.3.2',
   values: (importstr 'values.yaml'),
 }
