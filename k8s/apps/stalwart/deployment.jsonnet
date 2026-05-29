@@ -37,7 +37,7 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'stalwart',
-            image: 'docker.io/stalwartlabs/stalwart:v0.16.6',
+            image: 'docker.io/stalwartlabs/stalwart:v0.16.7',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
