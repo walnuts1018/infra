@@ -23,8 +23,8 @@
             imagePullPolicy: 'IfNotPresent',
             resources: {
               requests: {
-                cpu: '5m',
-                memory: '32Mi',
+                cpu: '2m',
+                memory: '10Mi',
               },
               limits: {
                 cpu: '100m',
