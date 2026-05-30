@@ -19,7 +19,7 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'esp32-thermohygrometer-exporter',
-            image: 'ghcr.io/walnuts1018/esp32-thermohygrometer-exporter:v0.0.5',
+            image: 'ghcr.io/walnuts1018/esp32-thermohygrometer-exporter:v0.0.7',
             imagePullPolicy: 'IfNotPresent',
             resources: {
               requests: {
