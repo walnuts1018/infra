@@ -7,5 +7,6 @@
   },
   "compactSequenceIndent": true,
   "includeDocumentStart": true,
-  "cSpell.words": ["agones", "pomerium"]
+  "cSpell.words": ["agones", "pomerium"],
+  "chat.disableAIFeatures": false
 }

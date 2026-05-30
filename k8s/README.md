@@ -101,6 +101,7 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **affine**: ノート
 - **code-server**: ブラウザベース IDE
 - **code-server-operator**: Code Server を Custom Resource から自動作成
+- **esp32-thermohygrometer-exporter**: ESP32 の温湿度データを OpenTelemetry にエクスポート
 - **fitbit-manager**: Fitbitのデータを収集し、InfluxDBに保存する /<https://walnuts.dev> に心拍数データを提供
 - **github-readme-stats**
 - **hedgedoc**: メモツール / <https://hedgedoc.org/>

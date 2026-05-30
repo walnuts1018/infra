@@ -1,0 +1,96 @@
+{
+  apiVersion: 'apps/v1',
+  kind: 'Deployment',
+  metadata: {
+    name: (import 'app.json5').name,
+    namespace: (import 'app.json5').namespace,
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+  },
+  spec: {
+    replicas: 1,
+    selector: {
+      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    },
+    template: {
+      metadata: {
+        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      },
+      spec: {
+        containers: [
+          (import '../../components/container.libsonnet') {
+            name: 'esp32-thermohygrometer-exporter',
+            image: 'ghcr.io/walnuts1018/esp32-thermohygrometer-exporter:v0.0.5',
+            imagePullPolicy: 'IfNotPresent',
+            resources: {
+              requests: {
+                cpu: '5m',
+                memory: '32Mi',
+              },
+              limits: {
+                cpu: '100m',
+                memory: '128Mi',
+              },
+            },
+            local projectID = '375241036420612774',
+            env: [
+              {
+                name: 'FETCH_INTERVAL',
+                value: '60s',
+              },
+              {
+                name: 'DEVICE_URL',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 'device_url',
+                  },
+                },
+              },
+              {
+                name: 'OIDC_TOKEN_URL',
+                value: 'https://auth.walnuts.dev/oauth/v2/token',
+              },
+              {
+                name: 'OIDC_CLIENT_ID',
+                value: 'thermohygrometer-sample',
+              },
+              {
+                name: 'OIDC_CLIENT_SECRET',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 'oidc_client_secret',
+                  },
+                },
+              },
+              {
+                name: 'OIDC_SCOPES',
+                value: 'openid urn:zitadel:iam:org:project:id:' + projectID + ':aud urn:zitadel:iam:org:project:role:thermohygrometer.read',
+              },
+              {
+                name: 'OIDC_AUDIENCE',
+                value: projectID,
+              },
+              {
+                name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
+                value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317',
+              },
+              {
+                name: 'OTEL_EXPORTER_OTLP_INSECURE',
+                value: 'true',
+              },
+              {
+                name: 'LOG_LEVEL',
+                value: 'info',
+              },
+              {
+                name: 'LOG_TYPE',
+                value: 'json',
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
+}
