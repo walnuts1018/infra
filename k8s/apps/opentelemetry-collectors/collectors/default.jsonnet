@@ -106,7 +106,6 @@ function(
             ],
             exporters: [
               // 'otlphttp/prometheus',
-              'prometheusremotewrite',
               // 'otlp/mackerel',
               'prometheusremotewrite/victoriametrics',
             ],

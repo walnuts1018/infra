@@ -218,7 +218,6 @@ function(
               'resource/cluster_name',
             ],
             exporters: [
-              'prometheusremotewrite',
               'prometheusremotewrite/victoriametrics',
             ],
           },
