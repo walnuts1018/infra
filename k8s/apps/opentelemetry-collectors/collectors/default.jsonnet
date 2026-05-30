@@ -90,7 +90,7 @@ function(
             exporters: [
               'otlp/tempo',
               'spanmetrics',
-              'otlphttp/vaxila',
+              // 'otlphttp/vaxila',
             ],
           },
           metrics: {
