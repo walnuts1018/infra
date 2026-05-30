@@ -35,7 +35,7 @@
             env: [
               {
                 name: 'FETCH_INTERVAL',
-                value: '60s',
+                value: '30s',
               },
               {
                 name: 'DEVICE_URL',
