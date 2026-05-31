@@ -2,7 +2,7 @@
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
   chart: 'grafana',
-  repoURL: 'https://grafana.github.io/helm-charts',
-  targetRevision: '10.5.15',
+  repoURL: 'https://grafana-community.github.io/helm-charts',
+  targetRevision: '12.4.1',
   values: (importstr 'values.yaml'),
 }
