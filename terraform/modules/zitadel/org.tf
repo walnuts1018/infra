@@ -4,8 +4,9 @@ resource "zitadel_org" "ZITADEL" {
 }
 
 resource "zitadel_domain" "walnuts_dev" {
-  org_id = zitadel_org.ZITADEL.id
-  name   = "walnuts.dev"
+  org_id     = zitadel_org.ZITADEL.id
+  name       = "walnuts.dev"
+  is_primary = true
 }
 
 resource "zitadel_domain" "kmc_gr_jp" {
