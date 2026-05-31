@@ -87,11 +87,7 @@ function(
           limit_mib: 2000,
           spike_limit_percentage: 15,
         },
-        batch: {
-          send_batch_size: 10000,
-          timeout: '10s',
-        },
-        k8sattributes: {
+        k8s_attributes: {
           auth_type: 'serviceAccount',
           filter: {
             node_from_env_var: 'K8S_NODE_NAME',
@@ -182,12 +178,11 @@ function(
             ],
             processors: [
               'memory_limiter',
-              'batch',
-              'k8sattributes',
+              'k8s_attributes',
               'resource/cluster_name',
             ],
             exporters: [
-              'otlphttp/loki',
+              'otlp_http/loki',
             ],
           },
           'logs/journald': {
@@ -196,13 +191,12 @@ function(
             ],
             processors: [
               'memory_limiter',
-              'batch',
-              'k8sattributes',
+              'k8s_attributes',
               'resource/journald',
               'resource/cluster_name',
             ],
             exporters: [
-              'otlphttp/loki',
+              'otlp_http/loki',
             ],
           },
           metrics: {
@@ -212,8 +206,7 @@ function(
             ],
             processors: [
               'memory_limiter',
-              'batch',
-              'k8sattributes',
+              'k8s_attributes',
               'resourcedetection',
               'resource/cluster_name',
             ],

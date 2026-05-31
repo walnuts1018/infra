@@ -21,30 +21,58 @@ function(
       },
       exporters: {
 
-        'otlp/tempo': {
+        'otlp_grpc/tempo': {
           endpoint: 'tempo-gateway.tempo.svc.cluster.local:4317',
           tls: {
             insecure: true,
           },
+          sending_queue: {
+            batch: {
+              flush_timeout: '10s',
+              min_size: 5000,
+              max_size: 5000,
+            },
+          },
         },
-        'otlphttp/loki': {
+        'otlp_http/loki': {
           endpoint: 'http://loki-gateway.loki.svc.cluster.local/otlp',
           tls: {
             insecure: true,
           },
+          sending_queue: {
+            batch: {
+              flush_timeout: '10s',
+              min_size: 5000,
+              max_size: 5000,
+            },
+          },
         },
-        'otlphttp/vaxila': {
+        'otlp_http/vaxila': {
           endpoint: 'https://otlp-vaxila.mackerelio.com',
           headers: {
             Accept: '*/*',
             'Mackerel-Api-Key': '${env:MACKEREL_APIKEY}',
           },
+          sending_queue: {
+            batch: {
+              flush_timeout: '10s',
+              min_size: 5000,
+              max_size: 5000,
+            },
+          },
         },
-        'otlp/mackerel': {
+        'otlp_grpc/mackerel': {
           endpoint: 'otlp.mackerelio.com:4317',
           compression: 'gzip',
           headers: {
             'Mackerel-Api-Key': '${env:MACKEREL_APIKEY}',
+          },
+          sending_queue: {
+            batch: {
+              flush_timeout: '10s',
+              min_size: 5000,
+              max_size: 5000,
+            },
           },
         },
         'prometheusremotewrite/victoriametrics': {
@@ -52,11 +80,25 @@ function(
           resource_to_telemetry_conversion: {
             enabled: true,
           },
+          sending_queue: {
+            batch: {
+              flush_timeout: '10s',
+              min_size: 5000,
+              max_size: 5000,
+            },
+          },
         },
         'otlp_grpc/pyroscope': {
           endpoint: 'http://pyroscope.pyroscope.svc.cluster.local:4317',
           tls: {
             insecure: true,
+          },
+          sending_queue: {
+            batch: {
+              flush_timeout: '10s',
+              min_size: 5000,
+              max_size: 5000,
+            },
           },
         },
         file: {

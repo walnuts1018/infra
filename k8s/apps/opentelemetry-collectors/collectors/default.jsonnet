@@ -10,7 +10,7 @@ function(
     mode: 'deployment',
     config: {
       receivers: {
-        otlp: {
+        otlp_grpc: {
           protocols: {
             grpc: {
               max_recv_msg_size_mib: 100,
@@ -25,7 +25,7 @@ function(
           limit_mib: 2000,
           spike_limit_percentage: 15,
         },
-        k8sattributes: {
+        k8s_attributes: {
           auth_type: 'serviceAccount',
           extract: {
             metadata: [
@@ -33,14 +33,9 @@ function(
             ],
           },
         },
-        batch: {
-          send_batch_size: 5000,
-          send_batch_max_size: 5000,
-          timeout: '10s',
-        },
       },
       connectors: {
-        spanmetrics: {
+        span_metrics: {
           histogram: {
             explicit: {
               buckets: [
@@ -79,49 +74,46 @@ function(
         pipelines: {
           traces: {
             receivers: [
-              'otlp',
+              'otlp_grpc',
             ],
             processors: [
               'memory_limiter',
-              'batch',
-              'k8sattributes',
+              'k8s_attributes',
               'resource/cluster_name',
             ],
             exporters: [
-              'otlp/tempo',
-              'spanmetrics',
-              // 'otlphttp/vaxila',
+              'otlp_grpc/tempo',
+              'span_metrics',
+              // 'otlp_http/vaxila',
             ],
           },
           metrics: {
             receivers: [
-              'otlp',
-              'spanmetrics',
+              'otlp_grpc',
+              'span_metrics',
             ],
             processors: [
               'memory_limiter',
-              'batch',
-              'k8sattributes',
+              'k8s_attributes',
               'resource/cluster_name',
             ],
             exporters: [
-              // 'otlphttp/prometheus',
-              // 'otlp/mackerel',
+              // 'otlp_http/prometheus',
+              // 'otlp_grpc/mackerel',
               'prometheusremotewrite/victoriametrics',
             ],
           },
           logs: {
             receivers: [
-              'otlp',
+              'otlp_grpc',
             ],
             processors: [
               'memory_limiter',
-              'batch',
-              'k8sattributes',
+              'k8s_attributes',
               'resource/cluster_name',
             ],
             exporters: [
-              'otlphttp/loki',
+              'otlp_http/loki',
             ],
           },
         },
