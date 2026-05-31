@@ -115,9 +115,7 @@ datasources:
       type: loki
       url: http://loki-gateway.loki.svc.cluster.local
       access: proxy
-      isDefault: false
     - name: Tempo
       type: tempo
       url: http://tempo-gateway.tempo.svc.cluster.local
       access: proxy
-      isDefault: false
