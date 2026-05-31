@@ -48,6 +48,8 @@ grafana.ini:
     root_url: https://grafana.walnuts.dev/
   # log:
   #   level: debug
+  security:
+    secret_key: $__file{/etc/secrets/secret_key}
   auth:
     disable_login_form: true
     oauth_auto_login: true

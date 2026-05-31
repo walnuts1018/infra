@@ -37,5 +37,19 @@
         property: 'api-key',
       },
     },
+    {
+      secretKey: 'secret_key',
+      remoteRef: {
+        key: 'grafana',
+        property: 'secret_key',
+      },
+    },
+    {
+      secretKey: 'github_token',
+      remoteRef: {
+        key: 'grafana',
+        property: 'github_token',
+      },
+    },
   ],
 }
