@@ -9,12 +9,12 @@ import {
 }
 
 import {
-  to = module.zitadel.zitadel_organization_domain.walnuts_dev
+  to = module.zitadel.zitadel_domain.walnuts_dev
   id = "walnuts.dev:237477062321897835"
 }
 
 import {
-  to = module.zitadel.zitadel_organization_domain.kmc_gr_jp
+  to = module.zitadel.zitadel_domain.kmc_gr_jp
   id = "kmc.gr.jp:237477062321897835"
 }
 
@@ -95,197 +95,197 @@ import {
 
 import {
   to = module.zitadel.zitadel_project_role.ipu_viewer
-  id = "viewer:326185042176901521:237477062321897835"
+  id = "326185042176901521:viewer:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.minio_biscuit_console_admin
-  id = "minio-consoleAdmin:340410924558975368:237477062321897835"
+  id = "340410924558975368:minio-consoleAdmin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.terrakube_admin
-  id = "admin:349881613179420909:237477062321897835"
+  id = "349881613179420909:admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_admin
-  id = "admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_nextcloud_admin
-  id = "nextcloud-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:nextcloud-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_longhorn_admin
-  id = "longhorn-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:longhorn-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_victoria_metrics
-  id = "victoria-metrics:237477822715658605:237477062321897835"
+  id = "237477822715658605:victoria-metrics:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_sweets_rebellion
-  id = "sweets-rebellion:237477822715658605:237477062321897835"
+  id = "237477822715658605:sweets-rebellion:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_nextcloud_pro
-  id = "nextcloud-pro:237477822715658605:237477062321897835"
+  id = "237477822715658605:nextcloud-pro:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_oekaki_admin
-  id = "oekaki-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:oekaki-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_hedgedoc_user
-  id = "hedgedoc-user:237477822715658605:237477062321897835"
+  id = "237477822715658605:hedgedoc-user:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_dashy
-  id = "dashy:237477822715658605:237477062321897835"
+  id = "237477822715658605:dashy:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_grafana_editor
-  id = "grafana-editor:237477822715658605:237477062321897835"
+  id = "237477822715658605:grafana-editor:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_grafana_viewer
-  id = "grafana-viewer:237477822715658605:237477062321897835"
+  id = "237477822715658605:grafana-viewer:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_kibana_admin
-  id = "kibana-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:kibana-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_zalando_admin
-  id = "zalando-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:zalando-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_ac_hacking_admin
-  id = "ac-hacking-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:ac-hacking-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_archivebox
-  id = "archivebox:237477822715658605:237477062321897835"
+  id = "237477822715658605:archivebox:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_prometheus_admin
-  id = "prometheus-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:prometheus-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_minio_console_admin
-  id = "minio-consoleAdmin:237477822715658605:237477062321897835"
+  id = "237477822715658605:minio-consoleAdmin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_hubble_admin
-  id = "hubble-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:hubble-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_argocd_admin
-  id = "argocd-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:argocd-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_openclarity_admin
-  id = "openclarity-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:openclarity-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_teddy_admin
-  id = "teddy-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:teddy-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_teddy_ryokohbato
-  id = "teddy-ryokohbato:237477822715658605:237477062321897835"
+  id = "237477822715658605:teddy-ryokohbato:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_teddy_segre
-  id = "teddy-segre:237477822715658605:237477062321897835"
+  id = "237477822715658605:teddy-segre:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_teddy_crash
-  id = "teddy-crash:237477822715658605:237477062321897835"
+  id = "237477822715658605:teddy-crash:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_teddy_akikaze
-  id = "teddy-akikaze:237477822715658605:237477062321897835"
+  id = "237477822715658605:teddy-akikaze:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_teddy_cicada
-  id = "teddy-cicada:237477822715658605:237477062321897835"
+  id = "237477822715658605:teddy-cicada:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_warrior
-  id = "warrior:237477822715658605:237477062321897835"
+  id = "237477822715658605:warrior:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_adguard_admin
-  id = "adguard-admin:237477822715658605:237477062321897835"
+  id = "237477822715658605:adguard-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.walnuts_dev_argocd_viewer
-  id = "argocd-viewer:237477822715658605:237477062321897835"
+  id = "237477822715658605:argocd-viewer:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.pomerium_longhorn_admin
-  id = "longhorn-admin:356681781363081691:237477062321897835"
+  id = "356681781363081691:longhorn-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.pomerium_warrior_user
-  id = "warrior-user:356681781363081691:237477062321897835"
+  id = "356681781363081691:warrior-user:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.pomerium_hubble_user
-  id = "hubble-user:356681781363081691:237477062321897835"
+  id = "356681781363081691:hubble-user:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.pomerium_prometheus_user
-  id = "prometheus-user:356681781363081691:237477062321897835"
+  id = "356681781363081691:prometheus-user:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.pomerium_oekaki_admin
-  id = "oekaki-admin:356681781363081691:237477062321897835"
+  id = "356681781363081691:oekaki-admin:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_role.thermohygrometer_read
-  id = "thermohygrometer.read:375241036420612774:237477062321897835"
+  id = "375241036420612774:thermohygrometer.read:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_project_member.walnuts_dev_zitadel_admin
-  id = "237477062321963371:237477822715658605:237477062321897835"
+  id = "237477822715658605:237477062321963371:237477062321897835"
 }
 
 import {
@@ -405,17 +405,17 @@ import {
 
 import {
   to = module.zitadel.zitadel_machine_user.terraform
-  id = "293475111627915658:237477062321897835"
+  id = "293475111627915658:false:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_machine_user.thermohygrometer_exporter
-  id = "375322474050486927:237477062321897835"
+  id = "375322474050486927:false:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_machine_user.kurumi
-  id = "353148243216957761:237477062321897835"
+  id = "353148243216957761:false:237477062321897835"
 }
 
 import {
@@ -430,12 +430,12 @@ import {
 
 import {
   to = module.zitadel.zitadel_org_member.zitadel_admin
-  id = "237477062321897835:237477062321963371"
+  id = "237477062321963371:237477062321897835"
 }
 
 import {
   to = module.zitadel.zitadel_org_member.walnuts
-  id = "237477062321897835:237477703714865517"
+  id = "237477703714865517:237477062321897835"
 }
 
 import {
