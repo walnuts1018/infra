@@ -104,7 +104,6 @@ plugins:
 - knightss27-weathermap-panel
 - grafana-github-datasource
 - volkovlabs-echarts-panel
-- grafana-googlesheets-datasource
 datasources:
   datasources.yaml:
     apiVersion: 1
