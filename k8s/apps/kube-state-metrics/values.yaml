@@ -1,3 +1,11 @@
 prometheus:
   monitor:
     enabled: true
+rbac:
+  extraRules:
+  - nonResourceURLs:
+    - /livez
+    - /healthz
+    - /readyz
+    verbs:
+    - get
