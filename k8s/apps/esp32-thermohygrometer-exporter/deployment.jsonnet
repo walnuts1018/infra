@@ -19,7 +19,7 @@
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'esp32-thermohygrometer-exporter',
-            image: 'ghcr.io/walnuts1018/esp32-thermohygrometer-exporter:v0.0.17',
+            image: 'ghcr.io/walnuts1018/esp32-thermohygrometer-exporter:v0.0.20',
             imagePullPolicy: 'IfNotPresent',
             resources: {
               requests: {
@@ -46,10 +46,6 @@
                 },
               },
               {
-                name: 'OIDC_TOKEN_URL',
-                value: 'https://auth.walnuts.dev/oauth/v2/token',
-              },
-              {
                 name: 'OIDC_PRIVATE_KEY_JSON',
                 valueFrom: {
                   secretKeyRef: {
@@ -64,7 +60,7 @@
                 value: 'openid urn:zitadel:iam:org:project:id:' + projectID + ':aud urn:zitadel:iam:org:project:role:thermohygrometer.read',
               },
               {
-                name: 'OIDC_AUDIENCE',
+                name: 'OIDC_ISSUER',
                 value: 'https://auth.walnuts.dev',
               },
               {
