@@ -51,5 +51,12 @@
         property: 'github_token',
       },
     },
+    {
+      secretKey: 'influxdb_token',
+      remoteRef: {
+        key: 'grafana',
+        property: 'influxdb_token',
+      },
+    },
   ],
 }
