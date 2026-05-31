@@ -240,7 +240,6 @@ resource "zitadel_application_oidc" "walnuts_dev_komga" {
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
   post_logout_redirect_uris   = []
-  additional_origins          = ["https://komga.walnuts.dev"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false
@@ -260,7 +259,6 @@ resource "zitadel_application_oidc" "walnuts_dev_longhorn" {
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
   post_logout_redirect_uris   = ["https://longhorn.walnuts.dev/"]
-  additional_origins          = ["https://longhorn.walnuts.dev"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false
@@ -279,14 +277,10 @@ resource "zitadel_application_oidc" "walnuts_dev_teddy" {
     "http://localhost:3000/api/auth/callback/zitadel",
     "https://teddy.walnuts.dev/api/auth/callback/zitadel",
   ]
-  response_types            = ["OIDC_RESPONSE_TYPE_CODE"]
-  grant_types               = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
-  auth_method_type          = "OIDC_AUTH_METHOD_TYPE_BASIC"
-  post_logout_redirect_uris = []
-  additional_origins = [
-    "http://localhost:3000",
-    "https://teddy.walnuts.dev",
-  ]
+  response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
+  grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
+  auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
+  post_logout_redirect_uris   = []
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = true
@@ -306,7 +300,6 @@ resource "zitadel_application_oidc" "walnuts_dev_test" {
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
   post_logout_redirect_uris   = []
-  additional_origins          = ["https://meisai.local.hatena.sh"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false
@@ -326,7 +319,6 @@ resource "zitadel_application_oidc" "walnuts_dev_openclarity" {
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
   post_logout_redirect_uris   = []
-  additional_origins          = ["https://openclarity.walnuts.dev"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false
@@ -356,11 +348,6 @@ resource "zitadel_application_oidc" "walnuts_dev_openchokin_legacy" {
     "https://openchokin.walnuts.dev",
     "http://192.168.0.13:3000/",
   ]
-  additional_origins = [
-    "http://192.168.0.13:3000",
-    "https://openchokin.walnuts.dev",
-    "http://localhost:3000",
-  ]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false
@@ -380,7 +367,6 @@ resource "zitadel_application_oidc" "walnuts_dev_warrior" {
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
   post_logout_redirect_uris   = []
-  additional_origins          = ["https://warrior.walnuts.dev"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false
@@ -400,7 +386,6 @@ resource "zitadel_application_oidc" "walnuts_dev_adguard" {
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
   post_logout_redirect_uris   = []
-  additional_origins          = ["https://private-dns.walnuts.dev"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false
@@ -439,15 +424,10 @@ resource "zitadel_application_oidc" "walnuts_dev_argocd" {
     "https://argocd-biscuit.walnuts.dev/auth/callback",
     "https://argocd.local.walnuts.dev/auth/callback",
   ]
-  response_types            = ["OIDC_RESPONSE_TYPE_CODE"]
-  grant_types               = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
-  auth_method_type          = "OIDC_AUTH_METHOD_TYPE_BASIC"
-  post_logout_redirect_uris = []
-  additional_origins = [
-    "https://argocd.walnuts.dev",
-    "https://argocd-biscuit.walnuts.dev",
-    "https://argocd.local.walnuts.dev",
-  ]
+  response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
+  grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
+  auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
+  post_logout_redirect_uris   = []
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false

@@ -18,7 +18,6 @@ resource "zitadel_application_oidc" "ipxe_manager_front" {
   ]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_NONE"
   post_logout_redirect_uris   = []
-  additional_origins          = ["https://pxe-manager.walnuts.dev"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false
@@ -33,5 +32,5 @@ resource "zitadel_application_api" "ipxe_manager_api_server" {
   project_id = zitadel_project.ipxe_manager.id
   name       = "API Server"
 
-  auth_method_type = "API_AUTH_METHOD_TYPE_PRIVATE_KEY_JWT"
+  auth_method_type = "API_AUTH_METHOD_TYPE_BASIC"
 }

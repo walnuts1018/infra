@@ -22,7 +22,6 @@ resource "zitadel_application_oidc" "terrakube_ui" {
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
   post_logout_redirect_uris   = []
-  additional_origins          = ["https://terrakube-api.walnuts.dev"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false

@@ -55,7 +55,6 @@ resource "zitadel_application_oidc" "pomerium_app" {
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
   post_logout_redirect_uris   = ["https://pomerium.walnuts.dev/.pomerium/signed_out"]
-  additional_origins          = ["https://pomerium.walnuts.dev"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false

@@ -14,14 +14,10 @@ resource "zitadel_application_oidc" "openchokin_frontend" {
     "https://openchokin.walnuts.dev",
     "https://openchokin.local.walnuts.dev",
   ]
-  response_types            = ["OIDC_RESPONSE_TYPE_CODE"]
-  grant_types               = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
-  auth_method_type          = "OIDC_AUTH_METHOD_TYPE_NONE"
-  post_logout_redirect_uris = []
-  additional_origins = [
-    "https://openchokin.walnuts.dev",
-    "https://openchokin.local.walnuts.dev",
-  ]
+  response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
+  grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
+  auth_method_type            = "OIDC_AUTH_METHOD_TYPE_NONE"
+  post_logout_redirect_uris   = []
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false
