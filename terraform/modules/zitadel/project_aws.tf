@@ -1,4 +1,3 @@
-
 resource "zitadel_project" "aws" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "AWS"

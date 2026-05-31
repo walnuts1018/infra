@@ -1,4 +1,3 @@
-
 resource "zitadel_human_user" "zitadel_admin" {
   org_id             = zitadel_org.ZITADEL.id
   user_name          = "zitadel-admin@zitadel.auth.walnuts.dev"

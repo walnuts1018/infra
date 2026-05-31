@@ -1,4 +1,3 @@
-
 resource "zitadel_project" "openchokin" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "OpenChokin"

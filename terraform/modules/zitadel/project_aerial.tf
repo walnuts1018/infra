@@ -1,4 +1,3 @@
-
 resource "zitadel_project" "aerial" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "aerial"

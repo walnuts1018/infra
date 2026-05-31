@@ -1,4 +1,3 @@
-
 resource "zitadel_project" "terraform_cloud" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "Terraform Cloud"

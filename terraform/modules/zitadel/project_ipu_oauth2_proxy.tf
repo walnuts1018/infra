@@ -1,4 +1,3 @@
-
 resource "zitadel_project" "ipu_oauth2_proxy" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "IPU OAuth2-Proxy"

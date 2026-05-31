@@ -1,4 +1,3 @@
-
 resource "zitadel_action" "flat_roles" {
   org_id          = zitadel_org.ZITADEL.id
   name            = "flatRoles"

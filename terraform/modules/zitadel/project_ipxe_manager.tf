@@ -1,4 +1,3 @@
-
 resource "zitadel_project" "ipxe_manager" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "iPXE Manager"

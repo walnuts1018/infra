@@ -1,4 +1,3 @@
-
 resource "zitadel_project" "thermohygrometer" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "thermohygrometer"

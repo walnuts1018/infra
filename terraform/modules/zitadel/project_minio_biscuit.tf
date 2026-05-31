@@ -1,4 +1,3 @@
-
 resource "zitadel_project" "minio_biscuit" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "MinIO biscuit"
