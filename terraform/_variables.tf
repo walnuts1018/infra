@@ -33,8 +33,8 @@ variable "zitadel_google_idp_client_secret" {
   description = "Google IDP OAuth2 Client Secret for ZITADEL"
 }
 
-variable "zitadel_github_idp_client_secret" {
-  type        = string
-  sensitive   = true
-  description = "GitHub IDP OAuth2 Client Secret for ZITADEL"
-}
+# variable "zitadel_github_idp_client_secret" {
+#   type        = string
+#   sensitive   = true
+#   description = "GitHub IDP OAuth2 Client Secret for ZITADEL"
+# }

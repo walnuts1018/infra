@@ -36,7 +36,7 @@ resource "zitadel_login_policy" "default" {
   disable_login_with_phone      = true
   idps = [
     zitadel_idp_google.google.id,
-    zitadel_org_idp_github.github.id,
+    # zitadel_org_idp_github.github.id,
   ]
 }
 
