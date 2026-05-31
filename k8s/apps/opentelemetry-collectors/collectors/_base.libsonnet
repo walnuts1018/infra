@@ -80,13 +80,6 @@ function(
           resource_to_telemetry_conversion: {
             enabled: true,
           },
-          sending_queue: {
-            batch: {
-              flush_timeout: '10s',
-              min_size: 5000,
-              max_size: 5000,
-            },
-          },
         },
         'otlp_grpc/pyroscope': {
           endpoint: 'http://pyroscope.pyroscope.svc.cluster.local:4317',

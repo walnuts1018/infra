@@ -10,7 +10,7 @@ function(
     mode: 'deployment',
     config: {
       receivers: {
-        otlp_grpc: {
+        otlp: {
           protocols: {
             grpc: {
               max_recv_msg_size_mib: 100,
@@ -74,7 +74,7 @@ function(
         pipelines: {
           traces: {
             receivers: [
-              'otlp_grpc',
+              'otlp',
             ],
             processors: [
               'memory_limiter',
@@ -89,7 +89,7 @@ function(
           },
           metrics: {
             receivers: [
-              'otlp_grpc',
+              'otlp',
               'span_metrics',
             ],
             processors: [
@@ -105,7 +105,7 @@ function(
           },
           logs: {
             receivers: [
-              'otlp_grpc',
+              'otlp',
             ],
             processors: [
               'memory_limiter',
