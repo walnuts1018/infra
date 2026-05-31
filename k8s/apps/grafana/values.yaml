@@ -123,16 +123,3 @@ datasources:
       url: http://tempo-gateway.tempo.svc.cluster.local
       access: proxy
       isDefault: false
-    - name: influxdb
-      type: influxdb
-      url: http://influxdb-influxdb2.databases.svc.cluster.local
-      access: proxy
-      isDefault: false
-      user: admin
-      jsonData:
-        httpMode: POST
-        organization: influxdata
-        pdcInjected: false
-        version: Flux
-      secureJsonData:
-        token: $__file{/etc/secrets/influxdb_token}
