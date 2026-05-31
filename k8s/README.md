@@ -87,14 +87,16 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **blackbox-exporter**
 - **caretta**
 - **ephemeral-storage-metrics**
+- **grafana**
+- **kube-state-metrics**
 - **loki**
 - **metrics-server**
 - **opencost**
 - **opentelemetry-collectors**
 - **opentelemetry-instrumentations**
 - **opentelemetry-operator**
+- **prometheus-node-exporter**
 - **prometheus-operator-crds**
-- **prometheus-stack**
 - **pyroscope**
 - **smartctl-exporter**
 - **snmp-exporter**

@@ -1,0 +1,16 @@
+prometheus:
+  monitor:
+    enabled: true
+    relabelings:
+    - sourceLabels: [ __meta_kubernetes_pod_node_name ]
+      separator: ;
+      regex: ^(.*)$
+      targetLabel: node
+      replacement: $1
+      action: replace
+resources:
+  requests:
+    cpu: 1m
+    memory: 20Mi
+  limits:
+    memory: 512Mi

@@ -20,18 +20,7 @@ function(
         },
       },
       exporters: {
-        'otlphttp/prometheus': {
-          endpoint: 'http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/otlp',
-          tls: {
-            insecure: true,
-          },
-        },
-        prometheusremotewrite: {
-          endpoint: 'http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090/api/v1/write',
-          resource_to_telemetry_conversion: {
-            enabled: true,
-          },
-        },
+
         'otlp/tempo': {
           endpoint: 'tempo-gateway.tempo.svc.cluster.local:4317',
           tls: {

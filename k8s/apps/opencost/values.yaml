@@ -46,11 +46,10 @@ opencost:
 
   prometheus:
     internal:
+      enabled: false
+    external:
       enabled: true
-      serviceName: prometheus-operated
-      namespaceName: monitoring
-      port: 9090
-      scheme: http
+      url: "http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus"
 
   ui:
     enabled: false
