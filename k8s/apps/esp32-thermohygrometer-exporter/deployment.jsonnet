@@ -64,6 +64,15 @@
                 },
               },
               {
+                name: 'OIDC_PRIVATE_KEY_JSON',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 'private_key_json',
+                  },
+                },
+              },
+              {
                 name: 'OIDC_SCOPES',
                 value: 'openid urn:zitadel:iam:org:project:id:' + projectID + ':aud urn:zitadel:iam:org:project:role:thermohygrometer.read',
               },

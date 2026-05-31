@@ -15,5 +15,12 @@
         property: 'oidc_client_secret',
       },
     },
+    {
+      secretKey: 'private_key_json',
+      remoteRef: {
+        key: 'esp32_thermohygrometer_exporter',
+        property: 'private_key_json',
+      },
+    },
   ],
 }
