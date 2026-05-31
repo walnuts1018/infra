@@ -51,19 +51,6 @@
                 value: 'https://auth.walnuts.dev/oauth/v2/token',
               },
               {
-                name: 'OIDC_CLIENT_ID',
-                value: 'thermohygrometer-sample',
-              },
-              {
-                name: 'OIDC_CLIENT_SECRET',
-                valueFrom: {
-                  secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').spec.target.name,
-                    key: 'oidc_client_secret',
-                  },
-                },
-              },
-              {
                 name: 'OIDC_PRIVATE_KEY_JSON',
                 valueFrom: {
                   secretKeyRef: {
