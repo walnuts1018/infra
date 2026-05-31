@@ -92,7 +92,6 @@ sidecar:
     enabled: true
   datasources:
     enabled: true
-    isDefaultDatasource: false
   resources:
     requests:
       cpu: 1m
