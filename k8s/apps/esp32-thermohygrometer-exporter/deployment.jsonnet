@@ -31,6 +31,35 @@
                 memory: '128Mi',
               },
             },
+            livenessProbe: {
+              httpGet: {
+                path: '/livez',
+                port: 8080,
+              },
+              initialDelaySeconds: 0,
+              periodSeconds: 10,
+              timeoutSeconds: 1,
+              failureThreshold: 3,
+            },
+            readinessProbe: {
+              httpGet: {
+                path: '/readyz',
+                port: 8080,
+              },
+              initialDelaySeconds: 0,
+              periodSeconds: 5,
+              timeoutSeconds: 1,
+              failureThreshold: 3,
+            },
+            startupProbe: {
+              httpGet: {
+                path: '/livez',
+                port: 8080,
+              },
+              periodSeconds: 1,
+              timeoutSeconds: 1,
+              failureThreshold: 30,
+            },
             env: [
               {
                 name: 'FETCH_INTERVAL',
