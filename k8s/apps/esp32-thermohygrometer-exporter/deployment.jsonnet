@@ -31,7 +31,6 @@
                 memory: '128Mi',
               },
             },
-            local projectID = '375241036420612774',
             env: [
               {
                 name: 'FETCH_INTERVAL',
@@ -60,12 +59,13 @@
                 },
               },
               {
+                local projectID = '375241036420612774',
                 name: 'OIDC_SCOPES',
                 value: 'openid urn:zitadel:iam:org:project:id:' + projectID + ':aud urn:zitadel:iam:org:project:role:thermohygrometer.read',
               },
               {
                 name: 'OIDC_AUDIENCE',
-                value: projectID,
+                value: 'https://auth.walnuts.dev',
               },
               {
                 name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
