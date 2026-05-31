@@ -1,0 +1,50 @@
+[tools]
+dyff = "1.12.0"
+kubeconform = "0.7.0"
+terraform = "1.14.9"
+go-jsonnet = "0.22.0"
+tanka = "0.37.2"
+jsonnet-bundler = "0.6.0"
+
+[tasks.build-infrautil]
+description = "Build infrautil"
+dir = "scripts/infrautil"
+run = "go build -o infrautil ."
+
+[tasks.namespace]
+description = "Generate namespaces.json5"
+depends = ["build-infrautil"]
+run = "scripts/infrautil/infrautil namespace -d ./k8s/apps -o ./k8s/namespaces/namespaces.json5"
+
+[tasks.snapshot]
+description = "Take snapshots"
+depends = ["app-snapshot", "helm-snapshot"]
+
+[tasks.app-snapshot]
+description = "Take app snapshot"
+depends = ["build-infrautil"]
+run = "scripts/infrautil/infrautil snapshot -d ./k8s/apps -o ./k8s/snapshots/apps"
+
+[tasks.helm-snapshot]
+description = "Take helm snapshot"
+depends = ["app-snapshot"]
+run = "scripts/infrautil/infrautil helm-snapshot -d ./k8s/snapshots/apps -o ./k8s/snapshots/helm"
+
+[tasks.jsonnet-fmt]
+description = "Format Jsonnet files"
+run = """
+echo "Formatting Jsonnet files..."
+find k8s \\( -name '*.jsonnet' -o -name '*.libsonnet' \\) -type f | xargs jsonnetfmt -i
+"""
+
+[tasks.jsonnet-fmt-check]
+description = "Check Jsonnet format"
+run = """
+echo "Checking Jsonnet format..."
+find k8s \\( -name '*.jsonnet' -o -name '*.libsonnet' \\) -type f | xargs jsonnetfmt --test
+"""
+
+[tasks.lint]
+description = "Lint k8s apps"
+depends = ["snapshot"]
+run = "kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps"
