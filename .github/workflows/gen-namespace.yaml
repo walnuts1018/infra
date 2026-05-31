@@ -21,7 +21,7 @@ jobs:
           go-version-file: "scripts/infrautil/go.mod"
           cache-dependency-path: "scripts/infrautil/go.sum"
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
       - name: run namespace
         run: |
           mise run namespace
@@ -31,7 +31,7 @@ jobs:
         run: |
           echo "diff=$(git diff --name-only | wc -l)" >> $GITHUB_OUTPUT
 
-      - uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: generate_token
         if: steps.check-diff.outputs.diff > 0
         with:
