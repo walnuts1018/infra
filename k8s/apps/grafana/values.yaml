@@ -91,7 +91,7 @@ sidecar:
   plugins:
     enabled: true
   datasources:
-    enabled: false
+    enabled: true
   resources:
     requests:
       cpu: 1m
@@ -102,6 +102,7 @@ plugins:
 - knightss27-weathermap-panel
 - grafana-github-datasource
 - volkovlabs-echarts-panel
+- grafana-googlesheets-datasource
 datasources:
   datasources.yaml:
     apiVersion: 1
@@ -115,7 +116,9 @@ datasources:
       type: loki
       url: http://loki-gateway.loki.svc.cluster.local
       access: proxy
+      isDefault: false
     - name: Tempo
       type: tempo
       url: http://tempo-gateway.tempo.svc.cluster.local
       access: proxy
+      isDefault: false
