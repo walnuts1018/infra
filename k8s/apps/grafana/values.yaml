@@ -91,7 +91,7 @@ sidecar:
   plugins:
     enabled: true
   datasources:
-    enabled: true
+    enabled: false
   resources:
     requests:
       cpu: 1m
