@@ -39,19 +39,6 @@ resource "cloudflare_dns_record" "blog_walnuts_dev" {
   }
 }
 
-resource "cloudflare_dns_record" "www_walnuts_dev" {
-  content = "91a955e4-033a-4329-9cf2-882170b10dd4.cfargotunnel.com"
-  name    = "www.walnuts.dev"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = cloudflare_zone.walnuts_dev.id
-  settings = {
-    flatten_cname = false
-  }
-}
-
-
 resource "cloudflare_dns_record" "visual_studio_marketplace_walnuts_dev" {
   content = "\"81a38dcc-dcaf-4c0c-b029-b215d8a3c67c\""
   name    = "_visual-studio-marketplace-walnuts1018.walnuts.dev"
