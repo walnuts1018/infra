@@ -64,6 +64,10 @@
                 value: 'openid urn:zitadel:iam:org:project:id:' + projectID + ':aud urn:zitadel:iam:org:project:role:thermohygrometer.read',
               },
               {
+                name: 'OIDC_AUDIENCE',
+                value: 'https://auth.walnuts.dev',
+              },
+              {
                 name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
                 value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317',
               },
