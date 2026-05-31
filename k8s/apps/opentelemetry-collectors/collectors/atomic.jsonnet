@@ -108,7 +108,7 @@ function(
       processors: {
         memory_limiter: {
           check_interval: '1s',
-          limit_mib: 2000,
+          limit_mib: 3000,
           spike_limit_percentage: 15,
         },
         batch: {
@@ -203,7 +203,7 @@ function(
     resources: {
       requests: {
         cpu: '550m',
-        memory: '1.3Gi',
+        memory: '2Gi',
       },
       limits: {
         cpu: '1',
