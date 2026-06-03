@@ -7,7 +7,7 @@ function(
     name: 'prometheus',
   },
   spec: {
-    replicas: 3,
+    replicas: 2,
     mode: 'statefulset',
     targetAllocator: {
       enabled: true,
