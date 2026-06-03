@@ -108,7 +108,7 @@ function(
       processors: {
         memory_limiter: {
           check_interval: '1s',
-          limit_mib: 3600,
+          limit_mib: 4600,
           spike_limit_mib: 600,
         },
         k8s_attributes: {
@@ -197,11 +197,11 @@ function(
     resources: {
       requests: {
         cpu: '550m',
-        memory: '3Gi',
+        memory: '4Gi',
       },
       limits: {
         cpu: '1',
-        memory: '4Gi',
+        memory: '5Gi',
       },
     },
     tolerations: [

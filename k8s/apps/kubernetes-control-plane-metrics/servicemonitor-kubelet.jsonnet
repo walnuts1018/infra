@@ -53,7 +53,7 @@ local app = import 'app.json5';
         bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
         honorLabels: true,
         honorTimestamps: true,
-        interval: '10s',
+        interval: '30s',
         metricRelabelings: [
           {
             action: 'drop',
