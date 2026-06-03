@@ -16,7 +16,7 @@ local app = import 'app.json5';
     },
     selector: {
       matchLabels: {
-        app: 'kubernetes-coredns',
+        app: 'coredns-metrics',
       },
     },
     endpoints: [

@@ -5,10 +5,10 @@ local app = import 'app.json5';
   apiVersion: 'v1',
   kind: 'Service',
   metadata: {
-    name: 'kubernetes-coredns',
+    name: 'coredns-metrics',
     namespace: 'kube-system',
     labels: labels(app.name) + {
-      app: 'kubernetes-coredns',
+      app: 'coredns-metrics',
       jobLabel: 'kubernetes-coredns',
     },
   },

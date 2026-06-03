@@ -16,7 +16,7 @@ local app = import 'app.json5';
     },
     selector: {
       matchLabels: {
-        app: 'kube-controller-manager',
+        app: 'kube-controller-manager-metrics-proxy',
       },
     },
     endpoints: [

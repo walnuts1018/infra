@@ -16,7 +16,7 @@ local app = import 'app.json5';
     },
     selector: {
       matchLabels: {
-        'app.kubernetes.io/name': 'kubelet',
+        'app.kubernetes.io/name': 'kubelet-metrics-proxy',
         'k8s-app': 'kubelet',
       },
     },

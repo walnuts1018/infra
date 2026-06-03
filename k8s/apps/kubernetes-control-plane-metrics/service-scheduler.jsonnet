@@ -5,10 +5,10 @@ local app = import 'app.json5';
   apiVersion: 'v1',
   kind: 'Service',
   metadata: {
-    name: 'kube-scheduler',
+    name: 'kube-scheduler-metrics-proxy',
     namespace: 'kube-system',
     labels: labels(app.name) + {
-      app: 'kube-scheduler',
+      app: 'kube-scheduler-metrics-proxy',
       jobLabel: 'kube-scheduler',
     },
   },

@@ -16,7 +16,7 @@ local app = import 'app.json5';
     },
     selector: {
       matchLabels: {
-        app: 'kube-scheduler',
+        app: 'kube-scheduler-metrics-proxy',
       },
     },
     endpoints: [

@@ -5,10 +5,10 @@ local app = import 'app.json5';
   apiVersion: 'v1',
   kind: 'Service',
   metadata: {
-    name: 'kubelet',
+    name: 'kubelet-metrics-proxy',
     namespace: 'kube-system',
     labels: labels(app.name) + {
-      'app.kubernetes.io/name': 'kubelet',
+      'app.kubernetes.io/name': 'kubelet-metrics-proxy',
       'k8s-app': 'kubelet',
     },
   },

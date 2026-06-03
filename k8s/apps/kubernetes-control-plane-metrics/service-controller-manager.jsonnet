@@ -5,10 +5,10 @@ local app = import 'app.json5';
   apiVersion: 'v1',
   kind: 'Service',
   metadata: {
-    name: 'kube-controller-manager',
+    name: 'kube-controller-manager-metrics-proxy',
     namespace: 'kube-system',
     labels: labels(app.name) + {
-      app: 'kube-controller-manager',
+      app: 'kube-controller-manager-metrics-proxy',
       jobLabel: 'kube-controller-manager',
     },
   },
