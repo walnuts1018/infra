@@ -78,6 +78,15 @@
               runAsGroup: 1000,
               readOnlyRootFilesystem: true,
               runAsNonRoot: true,
+              allowPrivilegeEscalation: false,
+              capabilities: {
+                add: [
+                  'NET_ADMIN',
+                ],
+                drop: [
+                  'all',
+                ],
+              },
               seccompProfile: {
                 type: 'RuntimeDefault',
               },
