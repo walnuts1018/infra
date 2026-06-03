@@ -45,11 +45,11 @@
                 resources: {
                   requests: {
                     cpu: '400m',
-                    memory: '1Gi',
+                    memory: '2Gi',
                   },
                   limits: {
                     cpu: '500m',
-                    memory: '4Gi',
+                    memory: '8Gi',
                   },
                 },
                 local branch_prefix = 'renovate/',
