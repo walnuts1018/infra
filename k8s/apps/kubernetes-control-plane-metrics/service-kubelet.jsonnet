@@ -14,21 +14,14 @@ local app = import 'app.json5';
   },
   spec: {
     clusterIP: 'None',
+    selector: {
+      app: 'kubelet-metrics-proxy',
+    },
     ports: [
       {
         name: 'https-metrics',
-        port: 10250,
-        targetPort: 10250,
-      },
-      {
-        name: 'cadvisor',
-        port: 4194,
-        targetPort: 4194,
-      },
-      {
-        name: 'http-metrics',
-        port: 10255,
-        targetPort: 10255,
+        port: 11050,
+        targetPort: 11050,
       },
     ],
   },

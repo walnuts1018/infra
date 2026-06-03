@@ -15,13 +15,13 @@ local app = import 'app.json5';
   spec: {
     clusterIP: 'None',
     selector: {
-      component: 'kube-scheduler',
+      app: 'kubernetes-control-plane-metrics-proxy',
     },
     ports: [
       {
         name: 'http-metrics',
-        port: 10259,
-        targetPort: 10259,
+        port: 11059,
+        targetPort: 11059,
       },
     ],
   },

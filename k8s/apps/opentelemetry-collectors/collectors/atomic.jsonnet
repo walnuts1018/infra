@@ -108,8 +108,8 @@ function(
       processors: {
         memory_limiter: {
           check_interval: '1s',
-          limit_mib: 3000,
-          spike_limit_percentage: 15,
+          limit_mib: 3600,
+          spike_limit_mib: 600,
         },
         k8s_attributes: {
           auth_type: 'serviceAccount',
@@ -197,7 +197,7 @@ function(
     resources: {
       requests: {
         cpu: '550m',
-        memory: '2Gi',
+        memory: '3Gi',
       },
       limits: {
         cpu: '1',

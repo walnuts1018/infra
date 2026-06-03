@@ -15,13 +15,13 @@ local app = import 'app.json5';
   spec: {
     clusterIP: 'None',
     selector: {
-      component: 'etcd',
+      app: 'kubernetes-control-plane-metrics-proxy',
     },
     ports: [
       {
         name: 'http-metrics',
-        port: 2381,
-        targetPort: 2381,
+        port: 12381,
+        targetPort: 12381,
       },
     ],
   },

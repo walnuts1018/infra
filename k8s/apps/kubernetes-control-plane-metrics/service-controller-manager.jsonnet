@@ -15,13 +15,13 @@ local app = import 'app.json5';
   spec: {
     clusterIP: 'None',
     selector: {
-      component: 'kube-controller-manager',
+      app: 'kubernetes-control-plane-metrics-proxy',
     },
     ports: [
       {
         name: 'http-metrics',
-        port: 10257,
-        targetPort: 10257,
+        port: 11057,
+        targetPort: 11057,
       },
     ],
   },
