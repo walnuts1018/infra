@@ -1,0 +1,4 @@
+{
+  name: "kubernetes-control-plane-metrics",
+  namespace: "monitoring",
+}

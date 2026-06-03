@@ -219,6 +219,15 @@ function(
           },
         },
       },
+      {
+        name: 'MACKEREL_APIKEY',
+        valueFrom: {
+          secretKeyRef: {
+            name: (import '../external-secret.jsonnet').spec.target.name,
+            key: 'mackerel-api-key',
+          },
+        },
+      },
     ],
   },
 })

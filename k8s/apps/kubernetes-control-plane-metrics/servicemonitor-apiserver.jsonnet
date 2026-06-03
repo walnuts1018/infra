@@ -1,0 +1,46 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+
+{
+  apiVersion: 'monitoring.coreos.com/v1',
+  kind: 'ServiceMonitor',
+  metadata: {
+    name: 'kube-apiserver',
+    namespace: app.namespace,
+    labels: labels(app.name),
+  },
+  spec: {
+    jobLabel: 'component',
+    namespaceSelector: {
+      matchNames: ['default'],
+    },
+    selector: {
+      matchLabels: {
+        component: 'apiserver',
+        provider: 'kubernetes',
+      },
+    },
+    endpoints: [
+      {
+        bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+        metricRelabelings: [
+          {
+            action: 'drop',
+            regex: '(etcd_request|apiserver_request_slo|apiserver_request_sli|apiserver_request)_duration_seconds_bucket;(0\\.15|0\\.2|0\\.3|0\\.35|0\\.4|0\\.45|0\\.6|0\\.7|0\\.8|0\\.9|1\\.25|1\\.5|1\\.75|2|3|3\\.5|4|4\\.5|6|7|8|9|15|20|40|45|50)(\\.0)?',
+            sourceLabels: [
+              '__name__',
+              'le',
+            ],
+          },
+        ],
+        port: 'https',
+        scheme: 'https',
+        tlsConfig: {
+          caFile: '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt',
+          insecureSkipVerify: false,
+          serverName: 'kubernetes',
+        },
+      },
+    ],
+  },
+}
