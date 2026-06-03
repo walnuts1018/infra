@@ -117,7 +117,7 @@ function(
     resources: {
       requests: {
         cpu: '550m',
-        memory: '2.2Gi',
+        memory: '2.3Gi',
       },
       limits: {
         cpu: '1500m',
