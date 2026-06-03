@@ -14,6 +14,8 @@ local app = import 'app.json5';
   },
   spec: {
     clusterIP: 'None',
+    ipFamilies: ['IPv4'],
+    ipFamilyPolicy: 'SingleStack',
     selector: {
       app: 'kubelet-metrics-proxy',
     },
