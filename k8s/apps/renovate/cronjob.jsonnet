@@ -49,7 +49,7 @@
                   },
                   limits: {
                     cpu: '500m',
-                    memory: '3Gi',
+                    memory: '4Gi',
                   },
                 },
                 local branch_prefix = 'renovate/',
