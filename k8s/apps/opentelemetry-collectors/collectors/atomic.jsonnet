@@ -162,7 +162,7 @@ function(
       },
       limits: {
         cpu: '500m',
-        memory: '1Gi',
+        memory: '2Gi',
       },
     },
     tolerations: [
