@@ -59,6 +59,14 @@
                     value: 'debug',
                   },
                   {
+                    name: 'RENOVATE_PLATFORM',
+                    value: 'github',
+                  },
+                  {
+                    name: 'RENOVATE_CONFIG_FILE',
+                    value: '/config/config.js',
+                  },
+                  {
                     name: 'RENOVATE_AUTODISCOVER',
                     value: 'true',
                   },
@@ -75,15 +83,33 @@
                     value: branch_prefix,
                   },
                   {
-                    name: 'RENOVATE_GIT_AUTHOR',
-                    value: 'renovate[bot] <renovate[bot]@users.noreply.github.com>',
+                    name: 'RENOVATE_IGNORE_PR_AUTHOR',
+                    value: 'true',
                   },
                   {
-                    name: 'RENOVATE_TOKEN',
+                    name: 'GITHUB_APP_ID',
                     valueFrom: {
                       secretKeyRef: {
                         name: (import 'external-secret.jsonnet').spec.target.name,
-                        key: 'github-token',
+                        key: 'github-app-id',
+                      },
+                    },
+                  },
+                  {
+                    name: 'GITHUB_APP_INSTALLATION_ID',
+                    valueFrom: {
+                      secretKeyRef: {
+                        name: (import 'external-secret.jsonnet').spec.target.name,
+                        key: 'github-app-installation-id',
+                      },
+                    },
+                  },
+                  {
+                    name: 'GITHUB_APP_PRIVATE_KEY',
+                    valueFrom: {
+                      secretKeyRef: {
+                        name: (import 'external-secret.jsonnet').spec.target.name,
+                        key: 'github-app-private-key',
                       },
                     },
                   },
@@ -92,6 +118,11 @@
                   {
                     name: 'renovate',
                     mountPath: '/tmp/renovate',
+                  },
+                  {
+                    name: 'config',
+                    mountPath: '/config',
+                    readOnly: true,
                   },
                 ],
               },
@@ -107,6 +138,12 @@
                 name: 'renovate',
                 persistentVolumeClaim: {
                   claimName: 'renovate',
+                },
+              },
+              {
+                name: 'config',
+                configMap: {
+                  name: (import 'configmap-config.jsonnet').metadata.name,
                 },
               },
             ],
