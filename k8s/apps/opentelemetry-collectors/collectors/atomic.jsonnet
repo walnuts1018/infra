@@ -9,45 +9,6 @@ function(
   spec: {
     replicas: 1,
     mode: 'statefulset',
-    targetAllocator: {
-      enabled: true,
-      serviceAccount: (import '../sa.jsonnet').metadata.name,
-      prometheusCR: {
-        enabled: true,
-        serviceMonitorSelector: {
-          matchExpressions: [
-            {
-              key: 'walnuts.dev/scraped-by',
-              operator: 'NotIn',
-              values: [
-                'prometheus',
-              ],
-            },
-          ],
-        },
-        podMonitorSelector: {
-          matchExpressions: [
-            {
-              key: 'walnuts.dev/scraped-by',
-              operator: 'NotIn',
-              values: [
-                'prometheus',
-              ],
-            },
-          ],
-        },
-      },
-      resources: {
-        requests: {
-          cpu: '26m',
-          memory: '167Mi',
-        },
-        limits: {
-          cpu: '2',
-          memory: '3Gi',
-        },
-      },
-    },
     config: {
       receivers: {
         k8s_cluster: {
@@ -108,8 +69,8 @@ function(
       processors: {
         memory_limiter: {
           check_interval: '1s',
-          limit_mib: 4600,
-          spike_limit_mib: 600,
+          limit_mib: 1800,
+          spike_limit_mib: 400,
         },
         k8s_attributes: {
           auth_type: 'serviceAccount',
@@ -197,11 +158,11 @@ function(
     resources: {
       requests: {
         cpu: '550m',
-        memory: '4Gi',
+        memory: '1Gi',
       },
       limits: {
         cpu: '1',
-        memory: '5Gi',
+        memory: '2Gi',
       },
     },
     tolerations: [
