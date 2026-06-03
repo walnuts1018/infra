@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'grafana',
   repoURL: 'https://grafana-community.github.io/helm-charts',
-  targetRevision: '12.4.1',
+  targetRevision: '12.4.2',
   values: (importstr 'values.yaml'),
 }
