@@ -22,6 +22,19 @@
       apiGroups: [
         '',
       ],
+      resources: [
+        'events',
+      ],
+      verbs: [
+        'get',
+        'create',
+        'patch',
+      ],
+    },
+    {
+      apiGroups: [
+        '',
+      ],
       resourceNames: [
         'tailscale',
       ],

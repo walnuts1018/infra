@@ -31,6 +31,26 @@
                 value: 'tailscale',
               },
               {
+                name: 'POD_NAME',
+                valueFrom: {
+                  fieldRef: {
+                    fieldPath: 'metadata.name',
+                  },
+                },
+              },
+              {
+                name: 'POD_UID',
+                valueFrom: {
+                  fieldRef: {
+                    fieldPath: 'metadata.uid',
+                  },
+                },
+              },
+              {
+                name: 'XDG_CACHE_HOME',
+                value: '/tmp/.cache',
+              },
+              {
                 name: 'TS_USERSPACE',
                 value: 'true',
               },
@@ -73,6 +93,10 @@
                 mountPath: '/tmp',
                 name: 'tmp',
               },
+              {
+                mountPath: '/var/run/tailscale',
+                name: 'var-run-tailscale',
+              },
             ],
           },
         ],
@@ -81,6 +105,10 @@
           {
             emptyDir: {},
             name: 'tmp',
+          },
+          {
+            emptyDir: {},
+            name: 'var-run-tailscale',
           },
         ],
       },
