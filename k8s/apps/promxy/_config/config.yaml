@@ -1,0 +1,27 @@
+global:
+  evaluation_interval: 30s
+
+promxy:
+  server_groups:
+  - static_configs:
+    - targets:
+      - victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481
+    scheme: http
+    path_prefix: /select/0/prometheus
+    anti_affinity: 30s
+    relative_time_range:
+      start: -744h # 31 days
+      end: 0s
+      truncate: true
+    ignore_error: false
+
+  - static_configs:
+    - targets:
+      - victoria-metrics-longterm-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481
+    scheme: http
+    path_prefix: /select/0/prometheus
+    anti_affinity: 10m
+    relative_time_range:
+      end: -720h # 30 days
+      truncate: true
+    ignore_error: false

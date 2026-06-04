@@ -1,0 +1,7 @@
+{
+  name: "promxy",
+  namespace: "victoria-metrics",
+  clusters: {
+    kurumi: {},
+  },
+}
