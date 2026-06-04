@@ -1,0 +1,52 @@
+replicaCount: 1
+
+deployment:
+  spec:
+    strategy:
+      type: Recreate
+
+config:
+  scrape_configs: []
+
+service:
+  enabled: true
+  type: ClusterIP
+  servicePort: 8429
+
+serviceMonitor:
+  enabled: true
+
+persistentVolume:
+  enabled: true
+  storageClassName: "local-path"
+  size: 16Gi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+
+remoteWrite:
+- url: http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write
+  maxDiskUsagePerURL: 8GiB
+- url: http://victoria-metrics-longterm-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write
+  maxDiskUsagePerURL: 8GiB
+  streamAggr.config: /config/stream-aggr-longterm.yaml
+  streamAggr.dropInput: true
+
+extraArgs:
+  remoteWrite.tmpDataPath: /tmpData
+  remoteWrite.showURL: "true"
+
+extraVolumes:
+- name: stream-aggr
+  configMap:
+    name: vmagent-victoria-metrics-stream-aggr
+
+extraVolumeMounts:
+- name: stream-aggr
+  mountPath: /config
+  readOnly: true
