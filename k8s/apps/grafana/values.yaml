@@ -110,7 +110,7 @@ datasources:
     datasources:
     - name: VictoriaMetrics
       type: prometheus
-      url: http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus
+      url: http://promxy.victoria-metrics.svc.cluster.local:8082
       access: proxy
       isDefault: true
     - name: Loki
