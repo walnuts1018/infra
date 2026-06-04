@@ -50,6 +50,7 @@ vminsert:
 
 vmstorage:
   enabled: true
+  fullnameOverride: vm-lt-vmstorage
   replicaCount: 1
   retentionPeriod: 100y
   extraArgs:
