@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'qdrant',
   repoURL: 'https://qdrant.github.io/qdrant-helm',
-  targetRevision: '1.18.1',
+  targetRevision: '1.18.2',
   values: (importstr 'values.yaml'),
 }
