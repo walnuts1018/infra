@@ -23,7 +23,7 @@
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'next',
-            image: 'ghcr.io/walnuts1018/walnuk-frontend:v0.0.151',
+            image: 'ghcr.io/walnuts1018/walnuk-frontend:v0.0.152',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
