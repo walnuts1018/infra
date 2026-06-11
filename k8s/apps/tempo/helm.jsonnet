@@ -4,6 +4,6 @@
 
   chart: 'tempo-distributed',
   repoURL: 'https://grafana-community.github.io/helm-charts',
-  targetRevision: '2.25.0',
+  targetRevision: '2.25.1',
   values: (importstr 'values.yaml'),
 }
