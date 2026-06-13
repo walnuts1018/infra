@@ -1,7 +1,0 @@
-{
-  name: "picca-ai-prototype",
-  namespace: "picca-ai-prototype",
-  clusters: {
-    kurumi: {},
-  },
-}
