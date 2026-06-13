@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   chart: 'kube-state-metrics',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '7.4.0',
+  targetRevision: '7.4.1',
   values: (importstr 'values.yaml'),
 }
