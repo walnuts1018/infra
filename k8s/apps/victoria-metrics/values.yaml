@@ -80,4 +80,3 @@ vmstorage:
     enabled: true
   extraArgs:
     search.maxUniqueTimeseries: "5000000"
-    search.maxSeries: "5000000"
