@@ -82,6 +82,8 @@ hubble:
     dashboards:
       enabled: true
 envoy:
+  log:
+    accessLogBufferSize: 16384 # Envoy: Discarded truncated access log message - increase buffer size via --envoy-access-log-buffer-size って言われるので増やす
   prometheus:
     enabled: true
     serviceMonitor:
