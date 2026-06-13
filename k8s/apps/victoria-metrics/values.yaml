@@ -22,10 +22,6 @@ vmselect:
       memory: 1Gi
   serviceMonitor:
     enabled: true
-  extraArgs:
-    search.maxUniqueTimeseries: "5000000"
-    search.maxDeleteSeries: "5000000"
-    search.maxSeries: "5000000"
 
 vminsert:
   enabled: true
@@ -66,7 +62,7 @@ vmstorage:
       memory: 980Mi
     limits:
       cpu: "2"
-      memory: 16Gi
+      memory: 2Gi
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: 'kubernetes.io/hostname'
@@ -78,5 +74,3 @@ vmstorage:
         app.kubernetes.io/name: victoria-metrics-cluster
   serviceMonitor:
     enabled: true
-  extraArgs:
-    search.maxUniqueTimeseries: "5000000"
