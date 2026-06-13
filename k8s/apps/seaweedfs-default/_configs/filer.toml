@@ -13,7 +13,7 @@ ssl_key_path = "/etc/seaweedfs/scylladb-client/tls.key"
 localDC = "iwakura"
 
 [postgres2.loki_chunks]
-enabled = true
+enabled = false
 location = "/buckets/loki-chunks"
 createTable = """
   CREATE TABLE IF NOT EXISTS "%s" (
