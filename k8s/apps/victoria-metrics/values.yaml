@@ -23,7 +23,7 @@ vmselect:
   serviceMonitor:
     enabled: true
   extraArgs:
-    search.maxUniqueTimeseries: 2000000
+    search.maxUniqueTimeseries: "2000000"
 
 vminsert:
   enabled: true
@@ -77,4 +77,4 @@ vmstorage:
   serviceMonitor:
     enabled: true
   extraArgs:
-    search.maxUniqueTimeseries: 2000000
+    search.maxUniqueTimeseries: "2000000"
