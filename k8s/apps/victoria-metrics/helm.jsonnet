@@ -4,6 +4,6 @@
 
   chart: 'victoria-metrics-cluster',
   repoURL: 'https://victoriametrics.github.io/helm-charts/',
-  targetRevision: '0.44.0',
+  targetRevision: '0.44.1',
   values: (importstr 'values.yaml'),
 }
