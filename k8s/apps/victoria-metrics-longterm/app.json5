@@ -1,7 +1,0 @@
-{
-  name: "victoria-metrics-longterm",
-  namespace: "victoria-metrics",
-  clusters: {
-    kurumi: {},
-  },
-}
