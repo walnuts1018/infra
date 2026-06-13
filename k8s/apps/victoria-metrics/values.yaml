@@ -23,7 +23,7 @@ vmselect:
   serviceMonitor:
     enabled: true
   extraArgs:
-    search.maxUniqueTimeseries: "2000000"
+    search.maxUniqueTimeseries: "5000000"
 
 vminsert:
   enabled: true
@@ -64,7 +64,7 @@ vmstorage:
       memory: 980Mi
     limits:
       cpu: "2"
-      memory: 2Gi
+      memory: 16Gi
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: 'kubernetes.io/hostname'
@@ -77,4 +77,4 @@ vmstorage:
   serviceMonitor:
     enabled: true
   extraArgs:
-    search.maxUniqueTimeseries: "2000000"
+    search.maxUniqueTimeseries: "5000000"
