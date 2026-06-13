@@ -65,7 +65,7 @@ controller:
       memory: 1268Mi
     limits:
       cpu: "2"
-      memory: 2Gi
+      memory: 4Gi
 dex:
   metrics:
     enabled: true
@@ -144,8 +144,8 @@ applicationSet:
       cpu: 15m
       memory: 64Mi
     limits:
-      cpu: 200m
-      memory: 128Mi
+      cpu: 500m
+      memory: 512Mi
 
 notifications:
   argocdUrl: "https://argocd.walnuts.dev"
