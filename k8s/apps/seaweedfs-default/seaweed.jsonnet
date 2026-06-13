@@ -118,7 +118,7 @@
         {
           name: 'scylla-db-client-cert',
           secret: {
-            secretName: 'scylla-cluster-local-client-ca',  // database namespaceから手動コピーしてるけどいい方法を考えないといけない
+            secretName: 'scylla-cluster-local-client-ca',  // TODO: database namespaceから手動コピーしてるけどいい方法を考えないといけない
             items: [
               {
                 key: 'tls.crt',

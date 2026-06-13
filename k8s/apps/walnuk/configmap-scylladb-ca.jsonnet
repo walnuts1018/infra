@@ -3,6 +3,6 @@
   namespace: (import 'app.json5').namespace,
   labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
   data: {
-    'ca.crt': (importstr './_config/ca.crt'),  // database namespaceから撮ってきたけど良い方法を考えないといけない
+    'ca.crt': (importstr './_config/ca.crt'),  // TODO: database namespaceから撮ってきたけど良い方法を考えないといけない
   },
 }
