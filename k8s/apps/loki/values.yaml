@@ -211,8 +211,8 @@ distributor:
     targetMemoryUtilizationPercentage: 100
   resources:
     requests:
-      cpu: 15m
-      memory: 256Mi
+      cpu: 20m
+      memory: 128Mi
     limits:
       cpu: 1
       memory: 1Gi
