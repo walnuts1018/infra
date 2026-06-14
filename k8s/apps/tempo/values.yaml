@@ -139,7 +139,7 @@ queryFrontend:
   resources:
     requests:
       cpu: 2m
-      memory: 50Mi
+      memory: 32Mi
     limits:
       cpu: 500m
       memory: 512Mi
