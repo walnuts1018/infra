@@ -33,6 +33,17 @@ local secret = (import './external-secret.jsonnet');
         'urn:zitadel:iam:org:projects:roles',
       ],
     },
+    jwt: {
+      providers: [
+        {
+          name: 'zitadel',
+          issuer: 'https://auth.walnuts.dev',
+          remoteJWKS: {
+            uri: 'https://auth.walnuts.dev/oauth/v2/keys',
+          },
+        },
+      ],
+    },
     authorization: {
       defaultAction: 'Deny',
       rules: [
@@ -40,6 +51,7 @@ local secret = (import './external-secret.jsonnet');
           action: 'Allow',
           principal: {
             jwt: {
+              provider: 'zitadel',
               claims: [
                 {
                   name: 'urn:zitadel:iam:org:project:377362576134111938:roles',
