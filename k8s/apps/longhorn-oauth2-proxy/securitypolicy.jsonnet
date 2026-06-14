@@ -21,7 +21,7 @@ local secret = (import './external-secret.jsonnet');
       provider: {
         issuer: 'https://auth.walnuts.dev',
       },
-      clientId: 'TODO_REPLACE_WITH_LONGHORN_CLIENT_ID',
+      clientId: '377362576486433474',
       clientSecret: {
         name: secret.spec.target.name,
       },
@@ -42,7 +42,7 @@ local secret = (import './external-secret.jsonnet');
             jwt: {
               claims: [
                 {
-                  name: 'urn:zitadel:iam:org:project:356681781363081691:roles',
+                  name: 'urn:zitadel:iam:org:project:377362576134111938:roles',
                   valueType: 'StringArray',
                   value: 'longhorn-admin',
                 },
