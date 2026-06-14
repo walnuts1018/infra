@@ -112,7 +112,7 @@
             },
             resources: {
               requests: {
-                cpu: '96m',
+                cpu: '196m',
                 memory: '512Mi',
               },
               limits: {
