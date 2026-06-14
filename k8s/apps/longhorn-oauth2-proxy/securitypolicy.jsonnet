@@ -33,6 +33,7 @@ local secret = (import './external-secret.jsonnet');
         'urn:zitadel:iam:org:projects:roles',
       ],
       forwardAccessToken: true,
+      logoutPath: '/oauth2/logout',
     },
     jwt: {
       providers: [
