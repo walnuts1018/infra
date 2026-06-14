@@ -33,3 +33,12 @@ metrics:
 
 defaultBackupStore:
   backupTarget: "s3://longhorn-backup@ap-northeast-1/"
+
+longhornManager:
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 2
+      memory: 4Gi
