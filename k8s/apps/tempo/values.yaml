@@ -123,7 +123,7 @@ querier:
   resources:
     requests:
       cpu: 4m
-      memory: 64Mi
+      memory: 48Mi
     limits:
       cpu: 500m
       memory: 512Mi
