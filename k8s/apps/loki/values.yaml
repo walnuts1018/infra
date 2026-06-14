@@ -270,7 +270,7 @@ queryFrontend:
   resources:
     requests:
       cpu: 10m
-      memory: 128Mi
+      memory: 40Mi
     limits:
       cpu: 1
       memory: 1Gi
