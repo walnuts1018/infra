@@ -1,7 +1,7 @@
 resources:
   requests:
-    cpu: 2m
-    memory: 51Mi
+    cpu: 3m
+    memory: 48Mi
   limits:
     memory: 1Gi
 topologySpreadConstraints:
