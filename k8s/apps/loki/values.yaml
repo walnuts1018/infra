@@ -351,8 +351,8 @@ compactor:
           topologyKey: "kubernetes.io/hostname"
   resources:
     requests:
-      cpu: 30m
-      memory: 256Mi
+      cpu: 15m
+      memory: 128Mi
     limits:
       cpu: 1
       memory: 1Gi
