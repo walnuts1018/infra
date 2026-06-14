@@ -446,11 +446,11 @@ patternIngester:
   replicas: 1
   resources:
     requests:
-      cpu: 12m
-      memory: 228Mi
+      cpu: 72m
+      memory: 600Mi
     limits:
       cpu: 1
-      memory: 1Gi
+      memory: 1.5Gi
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: "kubernetes.io/hostname"
