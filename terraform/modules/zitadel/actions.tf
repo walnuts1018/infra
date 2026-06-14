@@ -49,3 +49,13 @@ resource "zitadel_trigger_actions" "pre_userinfo_creation" {
     zitadel_action.flat_minio_roles.id,
   ]
 }
+
+resource "zitadel_trigger_actions" "pre_access_token_creation" {
+  org_id       = zitadel_org.ZITADEL.id
+  flow_type    = "FLOW_TYPE_CUSTOMISE_TOKEN"
+  trigger_type = "TRIGGER_TYPE_PRE_ACCESS_TOKEN_CREATION"
+  action_ids = [
+    zitadel_action.flat_roles.id,
+    zitadel_action.flat_minio_roles.id,
+  ]
+}

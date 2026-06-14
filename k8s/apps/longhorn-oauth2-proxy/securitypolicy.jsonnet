@@ -55,9 +55,9 @@ local secret = (import './external-secret.jsonnet');
               provider: 'zitadel',
               claims: [
                 {
-                  name: 'urn:zitadel:iam:org:project:377362576134111938:roles',
+                  name: 'my:zitadel:grants',
                   valueType: 'StringArray',
-                  values: ['longhorn-admin'],
+                  values: ['377362576134111938:longhorn-admin'],
                 },
               ],
             },
