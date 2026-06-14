@@ -26,12 +26,6 @@ resource "zitadel_project_role" "walnuts_dev_nextcloud_admin" {
   group        = "nextcloud"
 }
 
-resource "zitadel_project_role" "walnuts_dev_longhorn_admin" {
-  org_id       = zitadel_org.ZITADEL.id
-  project_id   = zitadel_project.walnuts_dev.id
-  role_key     = "longhorn-admin"
-  display_name = "longhorn-admin"
-}
 
 resource "zitadel_project_role" "walnuts_dev_victoria_metrics" {
   org_id       = zitadel_org.ZITADEL.id
@@ -248,24 +242,6 @@ resource "zitadel_application_oidc" "walnuts_dev_komga" {
   id_token_userinfo_assertion = false
 }
 
-resource "zitadel_application_oidc" "walnuts_dev_longhorn" {
-  org_id     = zitadel_org.ZITADEL.id
-  project_id = zitadel_project.walnuts_dev.id
-  name       = "longhorn"
-
-  redirect_uris               = ["https://longhorn.walnuts.dev/oauth2/callback"]
-  response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
-  grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
-  auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
-  post_logout_redirect_uris   = ["https://longhorn.walnuts.dev/"]
-  version                     = "OIDC_VERSION_1_0"
-  clock_skew                  = "0s"
-  dev_mode                    = false
-  access_token_type           = "OIDC_TOKEN_TYPE_BEARER"
-  access_token_role_assertion = false
-  id_token_role_assertion     = false
-  id_token_userinfo_assertion = false
-}
 
 resource "zitadel_application_oidc" "walnuts_dev_teddy" {
   org_id     = zitadel_org.ZITADEL.id
@@ -464,7 +440,6 @@ resource "zitadel_user_grant" "walnuts_walnuts_dev" {
   role_keys = [
     "admin",
     "nextcloud-admin",
-    "longhorn-admin",
     "victoria-metrics",
     "oekaki-admin",
     "hedgedoc-user",

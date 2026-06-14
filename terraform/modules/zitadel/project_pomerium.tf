@@ -4,13 +4,6 @@ resource "zitadel_project" "pomerium" {
   project_role_assertion = true
 }
 
-resource "zitadel_project_role" "pomerium_longhorn_admin" {
-  org_id       = zitadel_org.ZITADEL.id
-  project_id   = zitadel_project.pomerium.id
-  role_key     = "longhorn-admin"
-  display_name = "Longhorn Admin"
-  group        = "Longhorn"
-}
 
 resource "zitadel_project_role" "pomerium_warrior_user" {
   org_id       = zitadel_org.ZITADEL.id
@@ -68,7 +61,6 @@ resource "zitadel_user_grant" "walnuts_pomerium" {
   project_id = zitadel_project.pomerium.id
   user_id    = local.zitadel_human_user_ids.walnuts
   role_keys = [
-    "longhorn-admin",
     "warrior-user",
     "hubble-user",
     "prometheus-user",
