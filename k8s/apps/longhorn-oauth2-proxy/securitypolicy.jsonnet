@@ -32,6 +32,7 @@ local secret = (import './external-secret.jsonnet');
         'offline_access',
         'urn:zitadel:iam:org:projects:roles',
       ],
+      forwardAccessToken: true,
     },
     jwt: {
       providers: [
