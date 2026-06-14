@@ -293,7 +293,7 @@ queryScheduler:
   resources:
     requests:
       cpu: 10m
-      memory: 64Mi
+      memory: 32Mi
     limits:
       cpu: 1
       memory: 1Gi
