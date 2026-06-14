@@ -14,8 +14,8 @@ function(loadBalancerIP='192.168.0.138') {
           container: {
             resources: {
               requests: {
-                cpu: '5m',
-                memory: '64Mi',
+                cpu: '6m',
+                memory: '96Mi',
               },
               limits: {
                 memory: '1Gi',
