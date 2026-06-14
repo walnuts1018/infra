@@ -470,7 +470,7 @@ ruler:
   resources:
     requests:
       cpu: 10m
-      memory: 128Mi
+      memory: 64Mi
     limits:
       cpu: 1
       memory: 1Gi
