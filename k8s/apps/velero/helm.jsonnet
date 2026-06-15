@@ -3,7 +3,7 @@
   namespace: (import 'app.json5').namespace,
   chart: 'velero',
   repoURL: 'https://vmware-tanzu.github.io/helm-charts',
-  targetRevision: '12.0.2',
+  targetRevision: '12.0.3',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'), {
       configuration: {
