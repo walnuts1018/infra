@@ -12,7 +12,7 @@
   },
   spec: {
     replicas: 1,
-    image: 'rabbitmq:4.3.1-management',
+    image: 'rabbitmq:4.3.2-management',
     persistence: {
       storage: '10Gi',
     },
