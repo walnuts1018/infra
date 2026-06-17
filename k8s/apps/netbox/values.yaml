@@ -41,6 +41,14 @@ valkey:
   auth:
     existingSecret: "netbox"
     existingSecretPasswordKey: valkey_password
+  primary:
+    persistence:
+      storageClass: "longhorn-local"
+      size: 2Gi
+  replica:
+    persistence:
+      storageClass: "longhorn-local"
+      size: 2Gi
 
 autoscaling:
   enabled: false
