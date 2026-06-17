@@ -34,14 +34,6 @@
           property: 'netbox',
         },
       },
-      // Redis password
-      {
-        secretKey: 'redis-password',
-        remoteRef: {
-          key: 'redis',
-          property: 'password',
-        },
-      },
       // SMTP password
       {
         secretKey: 'smtp-password',
@@ -59,8 +51,6 @@
       secret_key: '{{ .secret-key }}',
       // Database password
       'db-password': '{{ .db-password }}',
-      // Redis password
-      'redis-password': '{{ .redis-password }}',
       // SMTP password
       'smtp-password': '{{ .smtp-password }}',
     },
