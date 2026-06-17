@@ -56,6 +56,11 @@
                             "claim": "sub",
                             "value": "system:serviceaccount:pyroscope:pyroscope",
                             "role": "arn:aws:iam::role/pyroscope"
+                        },
+                        {
+                            "claim": "sub",
+                            "value": "system:serviceaccount:netbox:netbox",
+                            "role": "arn:aws:iam::role/netbox"
                         }
                     ],
                     "defaultRole": "arn:aws:iam::role/S3DenyAllRole"
@@ -246,6 +251,26 @@
                         "Resource": [
                             "arn:aws:s3:::pyroscope",
                             "arn:aws:s3:::pyroscope/*"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "netbox",
+            "document": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                            "s3:*"
+                        ],
+                        "Resource": [
+                            "arn:aws:s3:::netbox-media",
+                            "arn:aws:s3:::netbox-media/*",
+                            "arn:aws:s3:::netbox-scripts",
+                            "arn:aws:s3:::netbox-scripts/*"
                         ]
                     }
                 ]
@@ -466,6 +491,32 @@
             "roleArn": "arn:aws:iam::role/pyroscope",
             "attachedPolicies": [
                 "pyroscope"
+            ],
+            "trustPolicy": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Federated": "*"
+                        },
+                        "Action": [
+                            "sts:AssumeRoleWithWebIdentity"
+                        ],
+                        "Condition": {
+                            "StringEquals": {
+                                "oidc:iss": "https://192.168.0.17:16443"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "roleName": "netbox",
+            "roleArn": "arn:aws:iam::role/netbox",
+            "attachedPolicies": [
+                "netbox"
             ],
             "trustPolicy": {
                 "Version": "2012-10-17",
