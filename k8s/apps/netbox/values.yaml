@@ -54,6 +54,7 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 3
+  targetMemoryUtilizationPercentage: 100
 
 housekeeping:
   enabled: true
