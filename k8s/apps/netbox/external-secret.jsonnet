@@ -20,7 +20,7 @@
       },
       // Application secret key (used by existingSecret)
       {
-        secretKey: 'secret-key',
+        secretKey: 'secret_key',
         remoteRef: {
           key: 'netbox',
           property: 'secret-key',
@@ -28,7 +28,7 @@
       },
       // Database password
       {
-        secretKey: 'db-password',
+        secretKey: 'db_password',
         remoteRef: {
           key: 'postgres_passwords',
           property: 'netbox',
@@ -36,7 +36,7 @@
       },
       // SMTP password
       {
-        secretKey: 'smtp-password',
+        secretKey: 'smtp_password',
         remoteRef: {
           key: 'resend',
           property: 'api-key',
@@ -48,11 +48,11 @@
       password: '{{ .superuser-password }}',
       api_token: '{{ .superuser-api-token }}',
       // NetBox application secret key (expected by existingSecret)
-      secret_key: '{{ .secret-key }}',
+      secret_key: '{{ .secret_key }}',
       // Database password
-      'db-password': '{{ .db-password }}',
+      'db-password': '{{ .db_password }}',
       // SMTP password
-      'smtp-password': '{{ .smtp-password }}',
+      'smtp-password': '{{ .smtp_password }}',
     },
   },
   (import '../../components/external-secret.libsonnet') {
