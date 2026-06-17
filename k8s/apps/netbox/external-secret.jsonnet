@@ -25,7 +25,7 @@
         },
       },
       {
-        secretKey: 'api_token_peppers',
+        secretKey: 'api_token_peppers1',
         remoteRef: {
           key: 'netbox',
           property: 'api_token_peppers',
@@ -52,7 +52,7 @@
       password: '{{ .superuser_password }}',
       api_token: '{{ .superuser_api_token }}',
       secret_key: '{{ .secret_key }}',
-      api_token_peppers: '{{ .api_token_peppers }}',
+      api_token_peppers: '{"1": "{{ .api_token_peppers1 }}"}',
       'db-password': '{{ .db_password }}',
       'smtp-password': '{{ .smtp_password }}',
     },
