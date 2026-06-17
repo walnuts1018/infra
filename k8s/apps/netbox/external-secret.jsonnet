@@ -85,7 +85,7 @@
       },
     ],
     template_data: {
-      'oidc.yaml': "SOCIAL_AUTH_OIDC_KEY: '{{ .client_id }}'\nSOCIAL_AUTH_OIDC_SECRET: '{{ .client_secret }}'\nSOCIAL_AUTH_OIDC_OIDC_ENDPOINT: 'https://auth.walnuts.dev'",
+      'oidc.py': "SOCIAL_AUTH_OIDC_KEY = '{{ .client_id }}'\nSOCIAL_AUTH_OIDC_SECRET = '{{ .client_secret }}'\nSOCIAL_AUTH_OIDC_OIDC_ENDPOINT = 'https://auth.walnuts.dev'\n",
     },
   },
 ]
