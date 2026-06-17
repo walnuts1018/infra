@@ -5,14 +5,14 @@
     data: [
       // Superuser credentials (keys must match what NetBox chart expects)
       {
-        secretKey: 'superuser-password',
+        secretKey: 'superuser_password',
         remoteRef: {
           key: 'netbox',
           property: 'superuser-password',
         },
       },
       {
-        secretKey: 'superuser-api-token',
+        secretKey: 'superuser_api_token',
         remoteRef: {
           key: 'netbox',
           property: 'superuser-api-token',
@@ -45,8 +45,8 @@
     ],
     template_data: {
       // Superuser fields expected by NetBox chart's superuser.existingSecret
-      password: '{{ .superuser-password }}',
-      api_token: '{{ .superuser-api-token }}',
+      password: '{{ .superuser_password }}',
+      api_token: '{{ .superuser_api_token }}',
       // NetBox application secret key (expected by existingSecret)
       secret_key: '{{ .secret_key }}',
       // Database password
@@ -60,14 +60,14 @@
     use_suffix: false,
     data: [
       {
-        secretKey: 'client-id',
+        secretKey: 'client_id',
         remoteRef: {
           key: 'netbox',
           property: 'oidc-client-id',
         },
       },
       {
-        secretKey: 'client-secret',
+        secretKey: 'client_secret',
         remoteRef: {
           key: 'netbox',
           property: 'oidc-client-secret',
@@ -75,7 +75,7 @@
       },
     ],
     template_data: {
-      'oidc.yaml': "SOCIAL_AUTH_OIDC_KEY: '{{ .client-id }}'\nSOCIAL_AUTH_OIDC_SECRET: '{{ .client-secret }}'\nSOCIAL_AUTH_OIDC_OIDC_ENDPOINT: 'https://auth.walnuts.dev'",
+      'oidc.yaml': "SOCIAL_AUTH_OIDC_KEY: '{{ .client_id }}'\nSOCIAL_AUTH_OIDC_SECRET: '{{ .client_secret }}'\nSOCIAL_AUTH_OIDC_OIDC_ENDPOINT: 'https://auth.walnuts.dev'",
     },
   },
 ]
