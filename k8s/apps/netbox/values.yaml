@@ -36,6 +36,12 @@ externalDatabase:
   existingSecretName: "netbox"
   existingSecretKey: db-password
 
+valkey:
+  enabled: true
+  auth:
+    existingSecret: "netbox"
+    existingSecretPasswordKey: valkey_password
+
 autoscaling:
   enabled: false
   minReplicas: 1

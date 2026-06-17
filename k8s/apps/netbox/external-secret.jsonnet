@@ -45,6 +45,13 @@
           property: 'api-key',
         },
       },
+      {
+        secretKey: 'valkey_password',
+        remoteRef: {
+          key: 'valkey',
+          property: 'valkey_password',
+        },
+      },
     ],
     template_data: {
       username: 'netbox-admin',
@@ -55,6 +62,7 @@
       api_token_peppers: '{"1": "{{ .api_token_peppers1 }}"}',
       'db-password': '{{ .db_password }}',
       'smtp-password': '{{ .smtp_password }}',
+      valkey_password: '{{ .valkey_password }}',
     },
   },
   (import '../../components/external-secret.libsonnet') {
