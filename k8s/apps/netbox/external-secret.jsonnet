@@ -3,7 +3,6 @@
     name: 'netbox',
     use_suffix: false,
     data: [
-      // Superuser credentials (keys must match what NetBox chart expects)
       {
         secretKey: 'superuser_password',
         remoteRef: {
@@ -18,15 +17,20 @@
           property: 'superuser-api-token',
         },
       },
-      // Application secret key (used by existingSecret)
       {
         secretKey: 'secret_key',
         remoteRef: {
           key: 'netbox',
-          property: 'secret-key',
+          property: 'secret_key',
         },
       },
-      // Database password
+      {
+        secretKey: 'api_token_peppers',
+        remoteRef: {
+          key: 'netbox',
+          property: 'api_token_peppers',
+        },
+      },
       {
         secretKey: 'db_password',
         remoteRef: {
@@ -34,7 +38,6 @@
           property: 'netbox',
         },
       },
-      // SMTP password
       {
         secretKey: 'smtp_password',
         remoteRef: {
@@ -45,14 +48,11 @@
     ],
     template_data: {
       username: 'netbox-admin',
-      // Superuser fields expected by NetBox chart's superuser.existingSecret
       password: '{{ .superuser_password }}',
       api_token: '{{ .superuser_api_token }}',
-      // NetBox application secret key (expected by existingSecret)
       secret_key: '{{ .secret_key }}',
-      // Database password
+      api_token_peppers: '{{ .api_token_peppers }}',
       'db-password': '{{ .db_password }}',
-      // SMTP password
       'smtp-password': '{{ .smtp_password }}',
     },
   },
