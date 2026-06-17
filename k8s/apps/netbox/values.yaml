@@ -1,14 +1,11 @@
-## Superuser credentials - use existingSecret
 superuser:
   name: admin
   email: admin@walnuts.dev
   existingSecret: "netbox"
 
-## Allowed hosts
 allowedHosts:
 - "netbox.walnuts.dev"
 
-## CSRF trusted origins
 csrf:
   trustedOrigins:
   - "https://netbox.walnuts.dev"
@@ -17,10 +14,8 @@ csrf:
 loginRequired: true
 loginPersistence: true
 
-## Time zone
 timeZone: Asia/Tokyo
 
-## Email settings
 email:
   server: smtp.resend.com
   port: 587
@@ -30,10 +25,8 @@ email:
   existingSecretName: "netbox"
   existingSecretKey: smtp-password
 
-## Secret key - use existingSecret
 existingSecret: "netbox"
 
-## External PostgreSQL
 postgresql:
   enabled: false
 
