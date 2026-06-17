@@ -48,7 +48,7 @@
       {
         secretKey: 'valkey_password',
         remoteRef: {
-          key: 'valkey',
+          key: 'netbox',
           property: 'valkey_password',
         },
       },
