@@ -109,18 +109,20 @@ serviceAccount:
 
 resources:
   requests:
-    cpu: 50m
-    memory: 256Mi
+    cpu: 150m
+    memory: 750Mi
   limits:
-    memory: 1Gi
+    cpu: "1"
+    memory: 2Gi
 
 worker:
   resources:
     requests:
-      cpu: 20m
-      memory: 128Mi
+      cpu: 5m
+      memory: 233Mi
     limits:
-      memory: 512Mi
+      cpu: "1"
+      memory: 1Gi
 
 replicaCount: 1
 
