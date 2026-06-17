@@ -1,6 +1,4 @@
 superuser:
-  name: admin
-  email: admin@walnuts.dev
   existingSecret: "netbox"
 
 allowedHosts:

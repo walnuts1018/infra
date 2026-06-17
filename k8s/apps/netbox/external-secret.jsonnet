@@ -48,6 +48,7 @@
     ],
     template_data: {
       username: 'netbox-admin',
+      email: 'netbox-admin@walnuts.dev',
       password: '{{ .superuser_password }}',
       api_token: '{{ .superuser_api_token }}',
       secret_key: '{{ .secret_key }}',
