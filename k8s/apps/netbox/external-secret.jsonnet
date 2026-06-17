@@ -44,6 +44,7 @@
       },
     ],
     template_data: {
+      username: 'netbox-admin',
       // Superuser fields expected by NetBox chart's superuser.existingSecret
       password: '{{ .superuser_password }}',
       api_token: '{{ .superuser_api_token }}',
