@@ -4,7 +4,7 @@
 
   chart: 'trivy-operator',
   repoURL: 'https://aquasecurity.github.io/helm-charts/',
-  targetRevision: '0.33.1',
+  targetRevision: '0.33.2',
   valuesObject: std.mergePatch(std.parseYaml(importstr 'values.yaml'), {
   }),
 }
