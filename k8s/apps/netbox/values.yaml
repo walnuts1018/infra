@@ -155,4 +155,4 @@ topologySpreadConstraints:
   whenUnsatisfiable: 'ScheduleAnyway'
   labelSelector:
     matchLabels:
-      app.kubernetes.io/name: external-dns
+      app.kubernetes.io/name: netbox
