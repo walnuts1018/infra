@@ -108,8 +108,8 @@ jobs:
           context: ${{ matrix.image.context }}
           platforms: ${{ matrix.platform.platform }}
           outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image.name }},push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image.name }}-cache:${{ matrix.platform.key }}
-          cache-to: type=registry,mode=max,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image.name }}-cache:${{ matrix.platform.key }}
+          cache-from: type=gha,scope=${{ matrix.image.name }}-${{ matrix.platform.key }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image.name }}-${{ matrix.platform.key }}
 
       - name: Export digest
         run: |
