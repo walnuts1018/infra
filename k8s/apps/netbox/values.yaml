@@ -1,7 +1,7 @@
 image:
   registry: ghcr.io
   repository: walnuts1018/infra/netbox
-  tag: v1.0.3
+  tag: v4.6.3
 
 superuser:
   existingSecret: "netbox"
