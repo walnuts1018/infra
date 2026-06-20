@@ -21,17 +21,56 @@ jobs:
       contents: read
     outputs:
       images: ${{ steps.discover.outputs.images }}
+      has_images: ${{ steps.discover.outputs.has_images }}
     steps:
       - name: Check out
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
 
       - name: Discover image metadata
         id: discover
         run: |
           set -euo pipefail
 
+          workflow_file=".github/workflows/images.yaml"
+          changed_files="$(mktemp)"
+          all_images=false
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            all_images=true
+          elif [ -z "${{ github.event.before }}" ] || printf '%s' "${{ github.event.before }}" | grep -Eq '^0+$'; then
+            all_images=true
+          else
+            git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" > "$changed_files"
+            if grep -Fxq "$workflow_file" "$changed_files"; then
+              all_images=true
+            fi
+          fi
+
+          if [ "$all_images" = "true" ]; then
+            dockerfiles="$(find images -mindepth 2 -maxdepth 2 -name Dockerfile -print | sort)"
+          else
+            app_dirs="$(awk -F/ '$1 == "images" && NF >= 2 {print $1 "/" $2}' "$changed_files" | sort -u)"
+            dockerfiles="$(
+              if [ -n "$app_dirs" ]; then
+                printf '%s\n' "$app_dirs" | while read -r app_dir; do
+                  if [ -f "${app_dir}/Dockerfile" ]; then
+                    printf '%s/Dockerfile\n' "$app_dir"
+                  fi
+                done
+              fi
+            )"
+          fi
+
+          if [ -z "$dockerfiles" ]; then
+            echo "images=[]" >> "$GITHUB_OUTPUT"
+            echo "has_images=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           images="$(
-            find images -mindepth 2 -maxdepth 2 -name Dockerfile -print | sort | while read -r dockerfile; do
+            printf '%s\n' "$dockerfiles" | while read -r dockerfile; do
               app_dir="$(dirname "$dockerfile")"
               app="$(basename "$app_dir")"
               meta="${app_dir}/meta.json"
@@ -60,17 +99,14 @@ jobs:
             done | jq -cs .
           )"
 
-          if [ "$images" = "[]" ]; then
-            echo "::error::No images/*/Dockerfile entries found"
-            exit 1
-          fi
-
           echo "images=${images}" >> "$GITHUB_OUTPUT"
+          echo "has_images=true" >> "$GITHUB_OUTPUT"
 
   build:
     name: Build ${{ matrix.image.app }} ${{ matrix.platform.key }}
     runs-on: ${{ matrix.platform.os }}
     needs: discover
+    if: needs.discover.outputs.has_images == 'true'
     permissions:
       contents: read
       packages: write
@@ -133,6 +169,7 @@ jobs:
     needs:
       - discover
       - build
+    if: needs.discover.outputs.has_images == 'true'
     permissions:
       contents: read
       packages: write
