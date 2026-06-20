@@ -1,3 +1,8 @@
+image:
+  registry: ghcr.io
+  repository: walnuts1018/infra/netbox
+  tag: v4.6.3
+
 superuser:
   existingSecret: "netbox"
 
@@ -156,3 +161,14 @@ topologySpreadConstraints:
   labelSelector:
     matchLabels:
       app.kubernetes.io/name: netbox
+
+plugins:
+- netbox_diode_plugin
+pluginsConfig:
+  netbox_diode_plugin:
+    # Diode gRPC target for communication with Diode server
+    diode_target_override: "grpc://localhost:8080/diode"
+    # Username associated with changes applied via plugin
+    diode_username: "diode"
+    # netbox-to-diode client_secret created during diode bootstrap.
+    netbox_to_diode_client_secret: ".."
