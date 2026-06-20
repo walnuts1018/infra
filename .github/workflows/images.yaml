@@ -41,22 +41,22 @@ jobs:
                 exit 1
               fi
 
-              image="$(jq -r '.image // empty' "$meta")"
-              if [ -z "$image" ]; then
-                echo "::error file=${meta}::meta.json must define a non-empty .image"
+              name="$(jq -r '.name // empty' "$meta")"
+              if [ -z "$name" ]; then
+                echo "::error file=${meta}::meta.json must define a non-empty .name"
                 exit 1
               fi
 
-              if ! printf '%s' "$image" | grep -Eq '^[a-z0-9]+([._-][a-z0-9]+)*$'; then
-                echo "::error file=${meta}::.image must be a valid lowercase container image name component"
+              if ! printf '%s' "$name" | grep -Eq '^[a-z0-9]+([._-][a-z0-9]+)*$'; then
+                echo "::error file=${meta}::.name must be a valid lowercase container image name component"
                 exit 1
               fi
 
               jq -cn \
                 --arg app "$app" \
-                --arg image "$image" \
+                --arg name "$name" \
                 --arg context "$app_dir" \
-                '{app: $app, image: $image, context: $context}'
+                '{app: $app, name: $name, context: $context}'
             done | jq -cs .
           )"
 
@@ -107,9 +107,9 @@ jobs:
         with:
           context: ${{ matrix.image.context }}
           platforms: ${{ matrix.platform.platform }}
-          outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image.image }},push-by-digest=true,name-canonical=true,push=true
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image.image }}-cache:${{ matrix.platform.key }}
-          cache-to: type=registry,mode=max,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image.image }}-cache:${{ matrix.platform.key }}
+          outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image.name }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image.name }}-cache:${{ matrix.platform.key }}
+          cache-to: type=registry,mode=max,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image.name }}-cache:${{ matrix.platform.key }}
 
       - name: Export digest
         run: |
@@ -122,7 +122,7 @@ jobs:
       - name: Upload digest
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: digests-${{ matrix.image.image }}-${{ matrix.platform.key }}
+          name: digests-${{ matrix.image.name }}-${{ matrix.platform.key }}
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
@@ -145,7 +145,7 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           path: /tmp/digests
-          pattern: digests-${{ matrix.image.image }}-*
+          pattern: digests-${{ matrix.image.name }}-*
           merge-multiple: true
 
       - name: Set up Docker Buildx
@@ -167,6 +167,6 @@ jobs:
 
           # shellcheck disable=SC2046
           docker buildx imagetools create \
-            -t "${REGISTRY}/${IMAGE_NAMESPACE}/${{ matrix.image.image }}:latest" \
-            -t "${REGISTRY}/${IMAGE_NAMESPACE}/${{ matrix.image.image }}:${IMAGE_TAG}" \
-            $(printf "${REGISTRY}/${IMAGE_NAMESPACE}/${{ matrix.image.image }}@sha256:%s " *)
+            -t "${REGISTRY}/${IMAGE_NAMESPACE}/${{ matrix.image.name }}:latest" \
+            -t "${REGISTRY}/${IMAGE_NAMESPACE}/${{ matrix.image.name }}:${IMAGE_TAG}" \
+            $(printf "${REGISTRY}/${IMAGE_NAMESPACE}/${{ matrix.image.name }}@sha256:%s " *)
