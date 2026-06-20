@@ -3,4 +3,5 @@ FROM ghcr.io/netbox-community/netbox:v4.6.3@sha256:7fc399e59ceaac1c58adfdc0c0f28
 RUN --mount=type=cache,target=/root/.cache/uv \
     /usr/local/bin/uv pip install \
     netbox-bgp \
-    netbox-topology-views
+    netbox-topology-views \
+    netboxlabs-diode-netbox-plugin
