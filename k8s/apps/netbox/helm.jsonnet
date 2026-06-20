@@ -2,6 +2,6 @@
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,
   ociChartURL: 'ghcr.io/netbox-community/netbox-chart/netbox',
-  targetRevision: '8.3.16',
+  targetRevision: '8.3.18',
   values: (importstr 'values.yaml'),
 }
