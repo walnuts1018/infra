@@ -8,6 +8,5 @@
   },
   data: {
     'snmp-policy.yaml': (importstr './_config/snmp-policy.yaml'),
-    'device-policy.yaml': (importstr './_config/device-policy.yaml'),
   },
 }
