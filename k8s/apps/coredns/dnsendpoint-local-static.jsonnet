@@ -1,0 +1,53 @@
+local app = import 'app.json5';
+{
+  apiVersion: 'externaldns.k8s.io/v1alpha1',
+  kind: 'DNSEndpoint',
+  metadata: {
+    name: app.name + '-local-static',
+    namespace: app.namespace,
+  },
+  spec: {
+    endpoints: [
+      {
+        dnsName: 'minio-biscuit.local.walnuts.dev',
+        recordTTL: 60,
+        recordType: 'A',
+        targets: [
+          '192.168.0.159',
+        ],
+      },
+      {
+        dnsName: 'minio-biscuit-console.local.walnuts.dev',
+        recordTTL: 60,
+        recordType: 'A',
+        targets: [
+          '192.168.0.159',
+        ],
+      },
+      {
+        dnsName: 'sts-minio.local.walnuts.dev',
+        recordTTL: 60,
+        recordType: 'A',
+        targets: [
+          '192.168.0.138',
+        ],
+      },
+      {
+        dnsName: 'shutdown-manager.local.walnuts.dev',
+        recordTTL: 60,
+        recordType: 'A',
+        targets: [
+          '192.168.0.158',
+        ],
+      },
+      {
+        dnsName: 'tart.local.walnuts.dev',
+        recordTTL: 60,
+        recordType: 'A',
+        targets: [
+          '192.168.0.14',
+        ],
+      },
+    ],
+  },
+}

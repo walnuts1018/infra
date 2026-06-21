@@ -139,7 +139,7 @@ ingress:
 httpRoute:
   enabled: true
   annotations:
-    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+    external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied: "true"
   parentRefs:
   - name: envoy-gateway
     namespace: envoy-gateway-system

@@ -20,16 +20,17 @@ sources:
 - gateway-tlsroute
 - gateway-tcproute
 - gateway-udproute
-policy: upsert-only
-registry: txt
-excludeDomains:
+- crd
+policy: sync
+registry: noop
+domainFilters:
 - "local.walnuts.dev"
-
+annotationPrefix: "external-dns-local.alpha.kubernetes.io/"
 provider:
-  name: cloudflare
+  name: coredns
 env:
-- name: CF_API_TOKEN
-  valueFrom:
-    secretKeyRef:
-      name: external-dns
-      key: cloudflare_api_token
+- name: ETCD_URLS
+  value: "http://coredns-etcd.coredns.svc.cluster.local:2379"
+extraArgs:
+  crd-source-apiversion: externaldns.k8s.io/v1alpha1
+  crd-source-kind: DNSEndpoint

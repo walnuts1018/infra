@@ -33,7 +33,9 @@
 
 local.walnuts.dev {
     import base
-    hosts /etc/coredns/local.walnuts.dev {
+    etcd {
+        path /skydns
+        endpoint http://coredns-etcd.coredns.svc.cluster.local:2379
         fallthrough
     }
     forward . 1.1.1.1 1.0.0.1 {
