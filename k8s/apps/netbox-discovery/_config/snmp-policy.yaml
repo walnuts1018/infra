@@ -28,10 +28,10 @@ policies:
           type: "lag"
     scope:
       targets:
-      - host: "192.168.0.2"
-        override_defaults:
-          role: "switch"
-          tags: [ "netbox-discovery", "snmp", "aruba-2530" ]
+      # - host: "192.168.0.2"
+      #   override_defaults:
+      #     role: "switch"
+      #     tags: [ "netbox-discovery", "snmp", "aruba-2530" ]
       - host: "192.168.0.1"
         override_defaults:
           role: "router"
