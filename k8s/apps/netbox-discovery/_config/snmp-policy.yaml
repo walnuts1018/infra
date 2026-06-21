@@ -37,5 +37,5 @@ policies:
           role: "router"
           tags: [ "netbox-discovery", "snmp", "vyos" ]
       authentication:
-        protocol_version: "v2c"
+        protocol_version: "SNMPv2c"
         community: "${SNMP_COMMUNITY}"
