@@ -29,7 +29,7 @@ local app = import 'app.json5';
             containers: [
               std.mergePatch(container {
                 name: 'device-discovery',
-                image: 'hcr.io/walnuts1018/infra/device-discovery:v1.0.9@sha256:f2df17ae07e72ef4bba6e6a93fb915f4b2d31289203b1c8b9ed1df8b7e717881',
+                image: 'ghcr.io/walnuts1018/infra/device-discovery:v1.0.9@sha256:f2df17ae07e72ef4bba6e6a93fb915f4b2d31289203b1c8b9ed1df8b7e717881',
                 imagePullPolicy: 'IfNotPresent',
                 command: [
                   '/bin/sh',
