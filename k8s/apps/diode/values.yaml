@@ -34,6 +34,10 @@ hydra:
   secret:
     enabled: false # 自動生成しない
     nameOverride: diode-hydra-secret
+  hydra:
+    automigration:
+      enabled: true
+      type: initContainer
   deployment:
     resources:
       requests:
