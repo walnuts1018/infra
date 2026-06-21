@@ -32,6 +32,7 @@ diodeAuth:
 
 hydra:
   secret:
+    enabled: false
     nameOverride: diode-hydra-secret
   deployment:
     resources:
