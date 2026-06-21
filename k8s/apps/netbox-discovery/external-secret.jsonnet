@@ -7,7 +7,7 @@
       secretKey: 'diode_ingest_client_secret',
       remoteRef: {
         key: 'diode',
-        property: 'diode-ingest-client-secret',
+        property: 'diode_ingest_client_secret',
       },
     },
     {
