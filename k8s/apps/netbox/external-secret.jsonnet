@@ -88,20 +88,4 @@
       'oidc.py': (importstr './_config/oidc.py'),
     },
   },
-  (import '../../components/external-secret.libsonnet') {
-    name: 'netbox-diode-config',
-    use_suffix: false,
-    data: [
-      {
-        secretKey: 'netbox_to_diode_client_secret',
-        remoteRef: {
-          key: 'diode',
-          property: 'netbox_to_diode_client_secret',
-        },
-      },
-    ],
-    template_data: {
-      'diode.yaml': (importstr './_config/diode.yaml'),
-    },
-  },
 ]
