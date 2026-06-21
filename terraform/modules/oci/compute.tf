@@ -3,8 +3,8 @@ resource "oci_core_instance" "orange" {
   compartment_id      = data.oci_identity_availability_domains.ads.compartment_id
   shape               = "VM.Standard.A1.Flex"
   shape_config {
-    ocpus         = 4
-    memory_in_gbs = 24
+    ocpus         = 2
+    memory_in_gbs = 12
   }
 
   source_details {
