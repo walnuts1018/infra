@@ -4,7 +4,7 @@ set -eu
 device-discovery \
   -s 127.0.0.1 \
   -p 8072 \
-  -t 'grpc://diode-ingester.netbox.svc.cluster.local:8081/diode' \
+  -t 'grpc://diode-gateway.netbox.svc.cluster.local/diode' \
   -c '${DIODE_CLIENT_ID}' \
   -k '${DIODE_CLIENT_SECRET}' \
   -a 'netbox-discovery' &
