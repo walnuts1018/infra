@@ -1,3 +1,9 @@
+image:
+  registry: ghcr.io
+  repository: walnuts1018/infra/netbox
+  tag: v4.6.3
+  digest: sha256:7ff0d96fa52ccffc5d0f1241d9a40c5dbda168d69e67477ee3627dc93551629b
+
 superuser:
   existingSecret: "netbox"
 
@@ -156,3 +162,14 @@ topologySpreadConstraints:
   labelSelector:
     matchLabels:
       app.kubernetes.io/name: netbox
+
+plugins:
+- netbox_diode_plugin
+pluginsConfig:
+  netbox_diode_plugin:
+    diode_target_override: "grpc://diode-gateway.netbox.svc.cluster.local/diode"
+    diode_username: "diode"
+
+extraConfig:
+- secret:
+    secretName: "netbox-diode-config"
