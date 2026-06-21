@@ -116,8 +116,8 @@ serviceAccount:
 
 resources:
   requests:
-    cpu: 150m
-    memory: 800Mi
+    cpu: 50m
+    memory: 1Gi
   limits:
     cpu: "1"
     memory: 2Gi
