@@ -1,0 +1,106 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+
+{
+  apiVersion: 'batch/v1',
+  kind: 'CronJob',
+  metadata: {
+    name: app.name + '-device',
+    namespace: app.namespace,
+    labels: labels(app.name),
+  },
+  spec: {
+    schedule: '43 */6 * * *',
+    timeZone: 'Asia/Tokyo',
+    concurrencyPolicy: 'Forbid',
+    successfulJobsHistoryLimit: 1,
+    failedJobsHistoryLimit: 3,
+    jobTemplate: {
+      spec: {
+        backoffLimit: 0,
+        activeDeadlineSeconds: 900,
+        template: {
+          metadata: {
+            labels: labels(app.name),
+          },
+          spec: {
+            restartPolicy: 'Never',
+            containers: [
+              std.mergePatch(container {
+                name: 'device-discovery',
+                image: 'ghcr.io/walnuts1018/infra/device-discovery:latest',
+                imagePullPolicy: 'IfNotPresent',
+                command: [
+                  '/bin/sh',
+                  '/scripts/device-discovery.sh',
+                ],
+                env: [
+                  {
+                    name: 'PYTHONDONTWRITEBYTECODE',
+                    value: '1',
+                  },
+                ],
+                envFrom: [
+                  {
+                    secretRef: {
+                      name: (import 'external-secret.jsonnet').spec.target.name,
+                    },
+                  },
+                ],
+                resources: {
+                  requests: {
+                    cpu: '20m',
+                    memory: '128Mi',
+                  },
+                  limits: {
+                    cpu: '500m',
+                    memory: '768Mi',
+                  },
+                },
+                volumeMounts: [
+                  {
+                    name: 'policies',
+                    mountPath: '/policies',
+                    readOnly: true,
+                  },
+                  {
+                    name: 'scripts',
+                    mountPath: '/scripts',
+                    readOnly: true,
+                  },
+                  {
+                    name: 'tmp',
+                    mountPath: '/tmp',
+                  },
+                ],
+              }, {
+                securityContext: {
+                  readOnlyRootFilesystem: false,
+                },
+              }),
+            ],
+            volumes: [
+              {
+                name: 'policies',
+                configMap: {
+                  name: (import 'configmap-policy.jsonnet').metadata.name,
+                },
+              },
+              {
+                name: 'scripts',
+                configMap: {
+                  name: (import 'configmap-script.jsonnet').metadata.name,
+                },
+              },
+              {
+                name: 'tmp',
+                emptyDir: {},
+              },
+            ],
+          },
+        },
+      },
+    },
+  },
+}

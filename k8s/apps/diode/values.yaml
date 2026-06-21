@@ -1,0 +1,74 @@
+diode:
+  environment: production
+
+postgresql:
+  enabled: false
+
+externalPostgresql:
+  hostname: postgresql-default-rw.databases.svc.cluster.local
+  port: 5432
+  database: diode
+  username: diode
+  existingSecretName: diode
+  existingSecretKey: db-password
+
+redis:
+  enabled: true
+  auth:
+    existingSecret: diode
+    existingSecretPasswordKey: redis-password
+  persistence:
+    enabled: true
+    size: 1Gi
+
+diodeAuth:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+hydra:
+  deployment:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+ingressNginx:
+  enabled: false
+  controller:
+    enabled: false
+
+certManager:
+  enabled: false
+
+diodeIngester:
+  existingSecret: diode
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+diodeReconciler:
+  existingSecret: diode
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  config:
+    netboxDiodePluginApiBaseUrl: http://netbox.netbox.svc.cluster.local/netbox/api/plugins/diode
+    netboxDiodePluginSkipTlsVerify: false
+    autoApplyChangesets: "true"
+    diodeToNetBoxClientId: diode-to-netbox

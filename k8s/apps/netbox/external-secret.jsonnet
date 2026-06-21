@@ -85,7 +85,23 @@
       },
     ],
     template_data: {
-      'oidc.py': "SOCIAL_AUTH_OIDC_KEY = '{{ .client_id }}'\nSOCIAL_AUTH_OIDC_SECRET = '{{ .client_secret }}'\nSOCIAL_AUTH_OIDC_OIDC_ENDPOINT = 'https://auth.walnuts.dev'\n",
+      'oidc.py': (importstr './_config/oidc.py'),
+    },
+  },
+  (import '../../components/external-secret.libsonnet') {
+    name: 'netbox-diode-config',
+    use_suffix: false,
+    data: [
+      {
+        secretKey: 'netbox_to_diode_client_secret',
+        remoteRef: {
+          key: 'diode',
+          property: 'netbox_to_diode_client_secret',
+        },
+      },
+    ],
+    template_data: {
+      'diode.yaml': (importstr './_config/diode.yaml'),
     },
   },
 ]

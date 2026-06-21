@@ -1,0 +1,7 @@
+{
+  name: "netbox-discovery",
+  namespace: "netbox",
+  clusters: {
+    kurumi: {},
+  },
+}
