@@ -23,6 +23,7 @@ sources:
 - crd
 policy: sync
 registry: noop
+txtOwnerId: external-dns-coredns
 domainFilters:
 - "local.walnuts.dev"
 annotationPrefix: "external-dns-local.alpha.kubernetes.io/"
@@ -32,5 +33,6 @@ env:
 - name: ETCD_URLS
   value: "http://coredns-etcd.coredns.svc.cluster.local:2379"
 extraArgs:
+  coredns-strictly-owned: true
   crd-source-apiversion: externaldns.k8s.io/v1alpha1
   crd-source-kind: DNSEndpoint
