@@ -167,7 +167,7 @@ plugins:
 - netbox_diode_plugin
 pluginsConfig:
   netbox_diode_plugin:
-    diode_target_override: "grpc://diode-ingester.netbox.svc.cluster.local:8081/diode"
+    diode_target_override: "grpc://diode-gateway.netbox.svc.cluster.local/diode"
     diode_username: "diode"
 
 extraConfig:

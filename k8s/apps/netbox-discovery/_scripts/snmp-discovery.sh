@@ -19,9 +19,24 @@ for _ in $(seq 1 60); do
   sleep 1
 done
 
-wget -qO- \
-  --header 'Content-Type: application/x-yaml' \
-  --post-file /policies/snmp-policy.yaml \
-  http://127.0.0.1:8070/api/v1/policies
+python -c 'import os
+policy = open("/policies/snmp-policy.yaml").read()
+for key in ("SNMP_COMMUNITY",):
+    policy = policy.replace("${" + key + "}", os.environ[key])
+open("/tmp/snmp-policy.yaml", "w").write(policy)'
+
+python -c 'import sys, urllib.error, urllib.request
+data = open("/tmp/snmp-policy.yaml", "rb").read()
+req = urllib.request.Request(
+    "http://127.0.0.1:8070/api/v1/policies",
+    data=data,
+    headers={"Content-Type": "application/x-yaml"},
+    method="POST",
+)
+try:
+    print(urllib.request.urlopen(req, timeout=30).read().decode())
+except urllib.error.HTTPError as exc:
+    sys.stderr.write(exc.read().decode(errors="replace"))
+    raise'
 
 sleep 300

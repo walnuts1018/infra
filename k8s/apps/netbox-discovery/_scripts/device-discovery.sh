@@ -22,8 +22,14 @@ for _ in range(60):
 else:
     raise SystemExit("device-discovery did not become ready")'
 
+python -c 'import os
+policy = open("/policies/device-policy.yaml").read()
+for key in ("NAPALM_USERNAME", "NAPALM_PASSWORD"):
+    policy = policy.replace("${" + key + "}", os.environ[key])
+open("/tmp/device-policy.yaml", "w").write(policy)'
+
 python -c 'import urllib.request
-data = open("/policies/device-policy.yaml", "rb").read()
+data = open("/tmp/device-policy.yaml", "rb").read()
 req = urllib.request.Request(
     "http://127.0.0.1:8072/api/v1/policies",
     data=data,
