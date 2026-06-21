@@ -11,7 +11,7 @@ policies:
         discovery_drivers: [ "nxos" ]
     scope:
     - driver: nxos
-      hostname: "192.168.0.4"
+      hostname: "192.168.0.2"
       username: "${NAPALM_USERNAME}"
       password: "${NAPALM_PASSWORD}"
       # optional_args:
