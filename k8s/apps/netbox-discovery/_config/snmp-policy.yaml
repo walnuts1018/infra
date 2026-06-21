@@ -7,12 +7,7 @@ policies:
       retries: 2
       defaults:
         tags: [ "netbox-discovery", "snmp" ]
-        site: "home"
-        role: "network"
-        ip_address:
-          role: "management"
-        interface:
-          if_type: "other"
+        site: "kawasaki"
         device:
           comments: "Discovered by NetBox SNMP Discovery"
         interface_patterns:
