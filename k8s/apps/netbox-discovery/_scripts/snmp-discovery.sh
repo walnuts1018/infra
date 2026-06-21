@@ -19,24 +19,21 @@ for _ in $(seq 1 60); do
   sleep 1
 done
 
-python -c 'import os
-policy = open("/policies/snmp-policy.yaml").read()
-for key in ("SNMP_COMMUNITY",):
-    policy = policy.replace("${" + key + "}", os.environ[key])
-open("/tmp/snmp-policy.yaml", "w").write(policy)'
+escape_sed_replacement() {
+  printf '%s' "$1" | sed 's/[\/&]/\\&/g'
+}
 
-python -c 'import sys, urllib.error, urllib.request
-data = open("/tmp/snmp-policy.yaml", "rb").read()
-req = urllib.request.Request(
-    "http://127.0.0.1:8070/api/v1/policies",
-    data=data,
-    headers={"Content-Type": "application/x-yaml"},
-    method="POST",
-)
-try:
-    print(urllib.request.urlopen(req, timeout=30).read().decode())
-except urllib.error.HTTPError as exc:
-    sys.stderr.write(exc.read().decode(errors="replace"))
-    raise'
+snmp_community_escaped="$(escape_sed_replacement "$SNMP_COMMUNITY")"
+sed "s/\${SNMP_COMMUNITY}/$snmp_community_escaped/g" \
+  /policies/snmp-policy.yaml > /tmp/snmp-policy.yaml
+
+if ! wget -qO /tmp/snmp-policy-response \
+  --header 'Content-Type: application/x-yaml' \
+  --post-file /tmp/snmp-policy.yaml \
+  http://127.0.0.1:8070/api/v1/policies; then
+  cat /tmp/snmp-policy-response >&2 || true
+  exit 1
+fi
+cat /tmp/snmp-policy-response
 
 sleep 300

@@ -63,6 +63,10 @@ local app = import 'app.json5';
                     mountPath: '/scripts',
                     readOnly: true,
                   },
+                  {
+                    name: 'tmp',
+                    mountPath: '/tmp',
+                  },
                 ],
               }, {
                 securityContext: {
@@ -82,6 +86,10 @@ local app = import 'app.json5';
                 configMap: {
                   name: (import 'configmap-script.jsonnet').metadata.name,
                 },
+              },
+              {
+                name: 'tmp',
+                emptyDir: {},
               },
             ],
           },

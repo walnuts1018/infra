@@ -6,8 +6,9 @@
   },
   spec: {
     selector: {
-      'app.kubernetes.io/component': 'collector',
-      'app.kubernetes.io/name': 'vyos-collector',
+      'app.kubernetes.io/component': 'opentelemetry-collector',
+      'app.kubernetes.io/instance': 'opentelemetry-collector.vyos',
+      'app.kubernetes.io/part-of': 'opentelemetry',
     },
     ports: [
       {
