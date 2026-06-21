@@ -50,7 +50,7 @@ function(
               add_attributes: true,
               one_log_per_packet: true,
             },
-            protocol: 'rfc3164',
+            protocol: 'rfc5424',
             location: 'Asia/Tokyo',
             resource: {
               'service.name': 'vyos-syslog',
