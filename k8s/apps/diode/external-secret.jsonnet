@@ -35,6 +35,39 @@
     },
   },
   (import '../../components/external-secret.libsonnet') {
+    name: 'diode-hydra-secret',
+    namespace: (import 'app.json5').namespace,
+    use_suffix: false,
+    data: [
+      {
+        secretKey: 'db_password',
+        remoteRef: {
+          key: 'postgres_passwords',
+          property: 'diode',
+        },
+      },
+      {
+        secretKey: 'hydra_secrets_system',
+        remoteRef: {
+          key: 'diode',
+          property: 'hydra_secrets_system',
+        },
+      },
+      {
+        secretKey: 'hydra_secrets_cookie',
+        remoteRef: {
+          key: 'diode',
+          property: 'hydra_secrets_cookie',
+        },
+      },
+    ],
+    template_data: {
+      dsn: 'postgres://diode:{{ .db_password | urlquery }}@postgresql-default-rw.databases.svc.cluster.local:5432/diode?sslmode=disable',
+      secretsSystem: '{{ .hydra_secrets_system }}',
+      secretsCookie: '{{ .hydra_secrets_cookie }}',
+    },
+  },
+  (import '../../components/external-secret.libsonnet') {
     name: 'diode-auth-oauth2-secret',
     namespace: (import 'app.json5').namespace,
     use_suffix: false,
