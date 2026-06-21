@@ -59,8 +59,4 @@
     db_name: 'netbox',
     user_name: 'netbox',
   },
-  {
-    db_name: 'diode',
-    user_name: 'diode',
-  },
 ]
