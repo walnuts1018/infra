@@ -31,6 +31,9 @@ diodeAuth:
       memory: 512Mi
 
 hydra:
+  secret:
+    enabled: false
+    nameOverride: diode-hydra-secret
   deployment:
     resources:
       requests:
