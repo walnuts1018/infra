@@ -47,9 +47,9 @@ local peerHost(ordinal) =
               '--name=$(POD_NAME)',
               '--data-dir=/var/lib/etcd',
               '--listen-client-urls=http://0.0.0.0:2379',
-              '--advertise-client-urls=http://$POD_NAME.coredns-etcd-headless.$POD_NAMESPACE.svc.cluster.local:2379',
+              '--advertise-client-urls=http://$(POD_NAME).coredns-etcd-headless.$(POD_NAMESPACE).svc.cluster.local:2379',
               '--listen-peer-urls=http://0.0.0.0:2380',
-              '--initial-advertise-peer-urls=http://$POD_NAME.coredns-etcd-headless.$POD_NAMESPACE.svc.cluster.local:2380',
+              '--initial-advertise-peer-urls=http://$(POD_NAME).coredns-etcd-headless.$(POD_NAMESPACE).svc.cluster.local:2380',
               '--initial-cluster=' + std.join(',', [
                 'coredns-etcd-%d=http://%s:2380' % [ordinal, peerHost(ordinal)]
                 for ordinal in std.range(0, 2)
