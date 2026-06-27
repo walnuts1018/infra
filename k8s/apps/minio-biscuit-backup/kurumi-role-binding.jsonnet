@@ -11,7 +11,6 @@ local kurumiRole = import 'kurumi-role.jsonnet';
   subjects: [
     {
       kind: 'User',
-      local sa = (sa),
       name: 'https://192.168.0.17:16443#system:serviceaccount:' + sa.metadata.namespace + ':' + sa.metadata.name,
       apiGroup: 'rbac.authorization.k8s.io',
     },
