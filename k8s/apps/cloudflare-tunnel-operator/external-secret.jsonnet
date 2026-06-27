@@ -1,7 +1,8 @@
+local app = import 'app.json5';
 (import '../../components/external-secret.libsonnet') {
   use_suffix: false,
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+  name: app.name,
+  namespace: app.namespace,
   data: [
     {
       secretKey: 'cloudflareAPIToken',

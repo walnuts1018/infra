@@ -1,10 +1,13 @@
+local container = import '../../components/container.libsonnet';
+local app = import 'app.json5';
+local externalSecret = import 'external-secret.jsonnet';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
     schedule: '*/5 * * * *',
@@ -19,7 +22,7 @@
             },
             restartPolicy: 'Never',
             initContainers: [
-              (import '../../components/container.libsonnet') {
+              (container) {
                 name: 'disk-cleaner',
                 image: 'debian:13.5-slim',
                 command: [
@@ -39,7 +42,7 @@
               },
             ],
             containers: [
-              (import '../../components/container.libsonnet') {
+              (container) {
                 name: 'renovate',
                 image: 'ghcr.io/renovatebot/renovate:43.232.1',
                 resources: {
@@ -90,7 +93,7 @@
                     name: 'GITHUB_APP_ID',
                     valueFrom: {
                       secretKeyRef: {
-                        name: (import 'external-secret.jsonnet').spec.target.name,
+                        name: externalSecret.spec.target.name,
                         key: 'github-app-id',
                       },
                     },
@@ -99,7 +102,7 @@
                     name: 'GITHUB_APP_INSTALLATION_ID',
                     valueFrom: {
                       secretKeyRef: {
-                        name: (import 'external-secret.jsonnet').spec.target.name,
+                        name: externalSecret.spec.target.name,
                         key: 'github-app-installation-id',
                       },
                     },
@@ -108,7 +111,7 @@
                     name: 'GITHUB_APP_PRIVATE_KEY',
                     valueFrom: {
                       secretKeyRef: {
-                        name: (import 'external-secret.jsonnet').spec.target.name,
+                        name: externalSecret.spec.target.name,
                         key: 'github-app-private-key',
                       },
                     },

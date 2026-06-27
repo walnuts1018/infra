@@ -1,5 +1,8 @@
+local externalSecret = import '../../components/external-secret.libsonnet';
+local oidc = importstr './_config/oidc.py';
+local diode = importstr './_config/diode.yaml';
 [
-  (import '../../components/external-secret.libsonnet') {
+  (externalSecret) {
     name: 'netbox',
     use_suffix: false,
     data: [
@@ -65,7 +68,7 @@
       valkey_password: '{{ .valkey_password }}',
     },
   },
-  (import '../../components/external-secret.libsonnet') {
+  (externalSecret) {
     name: 'netbox-oidc-config',
     use_suffix: false,
     data: [
@@ -85,10 +88,10 @@
       },
     ],
     template_data: {
-      'oidc.py': (importstr './_config/oidc.py'),
+      'oidc.py': (oidc),
     },
   },
-  (import '../../components/external-secret.libsonnet') {
+  (externalSecret) {
     name: 'netbox-diode-config',
     use_suffix: false,
     data: [
@@ -101,7 +104,7 @@
       },
     ],
     template_data: {
-      'diode.yaml': (importstr './_config/diode.yaml'),
+      'diode.yaml': (diode),
     },
   },
 ]

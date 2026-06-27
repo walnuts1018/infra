@@ -1,10 +1,12 @@
+local service = import './back/service.jsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'Ingress',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (import '../../components/labels.libsonnet')(app.name),
     annotations: {
       'nginx.ingress.kubernetes.io/proxy-body-size': '10G',
     },
@@ -21,7 +23,7 @@
               pathType: 'Prefix',
               backend: {
                 service: {
-                  name: (import './back/service.jsonnet').metadata.name,
+                  name: service.metadata.name,
                   port: {
                     number: 8080,
                   },

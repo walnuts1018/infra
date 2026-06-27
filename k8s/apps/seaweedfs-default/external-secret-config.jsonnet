@@ -1,6 +1,7 @@
+local app = import 'app.json5';
 (import '../../components/external-secret.libsonnet') {
-  name: (import 'app.json5').name + '-filer-config',
-  namespace: (import 'app.json5').namespace,
+  name: app.name + '-filer-config',
+  namespace: app.namespace,
   data: [
     {
       secretKey: 'scylladb_password',

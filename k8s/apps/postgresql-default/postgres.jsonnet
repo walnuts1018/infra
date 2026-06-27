@@ -1,8 +1,9 @@
+local app = import 'app.json5';
 {
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'Cluster',
   metadata: {
-    name: (import 'app.json5').name,
+    name: app.name,
   },
   spec: {
     instances: 3,

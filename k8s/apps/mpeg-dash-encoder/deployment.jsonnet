@@ -1,19 +1,22 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local externalSecret = import 'external-secret.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (labels)(app.name),
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+        labels: (labels)(app.name),
       },
       spec: {
         containers: [
@@ -43,7 +46,7 @@
                 name: 'ADMIN_TOKEN',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'admin_token',
                   },
                 },
@@ -52,7 +55,7 @@
                 name: 'JWT_SIGN_SECRET',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'jwt_sign_secret',
                   },
                 },
@@ -69,7 +72,7 @@
                 name: 'MINIO_SECRET_KEY',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'minio_secret_key',
                   },
                 },

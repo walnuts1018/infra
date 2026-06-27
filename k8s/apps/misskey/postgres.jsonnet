@@ -1,8 +1,9 @@
+local app = import 'app.json5';
 {
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'Cluster',
   metadata: {
-    name: (import 'app.json5').name + '-postgresql',
+    name: app.name + '-postgresql',
   },
   spec: {
     instances: 2,
@@ -38,7 +39,7 @@
     //       name: 'barman-cloud.cloudnative-pg.io',
     //       parameters: {
     //         barmanObjectName: 'seaweedfs-store',
-    //         serverName: (import 'app.json5').name + '-postgresql-backup2',
+    //         serverName: app.name + '-postgresql-backup2',
     //       },
     //     },
     //   },

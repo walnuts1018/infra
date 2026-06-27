@@ -1,3 +1,4 @@
+local app = import 'app.json5';
 // https://www.pomerium.com/docs/internals/configuration
 {
   apiVersion: 'ingress.pomerium.io/v1',
@@ -9,7 +10,7 @@
     authenticate: {
       url: 'https://pomerium.walnuts.dev',
     },
-    secrets: (import 'app.json5').namespace + '/' + 'bootstrap',
+    secrets: app.namespace + '/' + 'bootstrap',
     identityProvider: {
       provider: 'oidc',
       scopes: [
@@ -17,7 +18,7 @@
         'email',
         'profile',
       ],
-      secret: (import 'app.json5').namespace + '/' + (import 'external-secret.jsonnet').spec.target.name,
+      secret: app.namespace + '/' + (import 'external-secret.jsonnet').spec.target.name,
       url: 'https://auth.walnuts.dev',
     },
   },
