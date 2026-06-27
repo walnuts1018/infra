@@ -1,9 +1,14 @@
+local gateway = import '../envoy-gateway-class/gateway.jsonnet';
+local app = import 'app.json5';
+local httpRouteFilter = import 'http-route-filter.jsonnet';
+local serviceBackend = import 'service-backend.jsonnet';
+local serviceFrontend = import 'service-frontend.jsonnet';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
+    name: app.name,
+    namespace: app.namespace,
     annotations: {
       'external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied': 'true',
     },
@@ -11,8 +16,8 @@
   spec: {
     parentRefs: [
       {
-        name: (import '../envoy-gateway-class/gateway.jsonnet').metadata.name,
-        namespace: (import '../envoy-gateway-class/gateway.jsonnet').metadata.namespace,
+        name: gateway.metadata.name,
+        namespace: gateway.metadata.namespace,
       },
     ],
     hostnames: [
@@ -23,7 +28,7 @@
         backendRefs: [
           {
             kind: 'Service',
-            name: (import 'service-backend.jsonnet').metadata.name,
+            name: serviceBackend.metadata.name,
             port: 8080,
             weight: 1,
           },
@@ -52,7 +57,7 @@
             extensionRef: {
               group: 'gateway.envoyproxy.io',
               kind: 'HTTPRouteFilter',
-              name: (import 'http-route-filter.jsonnet').metadata.name,
+              name: httpRouteFilter.metadata.name,
             },
           },
         ],
@@ -61,7 +66,7 @@
         backendRefs: [
           {
             kind: 'Service',
-            name: (import 'service-frontend.jsonnet').metadata.name,
+            name: serviceFrontend.metadata.name,
             port: 3000,
             weight: 1,
           },

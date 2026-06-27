@@ -1,9 +1,11 @@
+local letsencryptProd = import '../clusterissuer/letsencrypt-prod.jsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'cert-manager.io/v1',
   kind: 'Certificate',
   metadata: {
     name: 'envoy-gateway',
-    namespace: (import 'app.json5').namespace,
+    namespace: app.namespace,
   },
   spec: {
     dnsNames: [
@@ -15,7 +17,7 @@
     issuerRef: {
       group: 'cert-manager.io',
       kind: 'ClusterIssuer',
-      name: (import '../clusterissuer/letsencrypt-prod.jsonnet').metadata.name,
+      name: letsencryptProd.metadata.name,
     },
     secretName: 'envoy-gateway-cert',
   },

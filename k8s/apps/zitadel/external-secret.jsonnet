@@ -1,10 +1,13 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local configmap = import 'configmap.jsonnet';
 {
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     secretStoreRef: {
@@ -21,7 +24,7 @@
           {
             target: 'Data',
             configMap: {
-              name: (import 'configmap.jsonnet').metadata.name,
+              name: configmap.metadata.name,
               items: [
                 {
                   key: 'config.yaml',

@@ -1,6 +1,9 @@
 local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
+local configmapPolicy = import 'configmap-policy.jsonnet';
+local configmapScript = import 'configmap-script.jsonnet';
+local externalSecret = import 'external-secret.jsonnet';
 
 {
   apiVersion: 'batch/v1',
@@ -38,7 +41,7 @@ local app = import 'app.json5';
                 envFrom: [
                   {
                     secretRef: {
-                      name: (import 'external-secret.jsonnet').spec.target.name,
+                      name: externalSecret.spec.target.name,
                     },
                   },
                 ],
@@ -78,13 +81,13 @@ local app = import 'app.json5';
               {
                 name: 'policies',
                 configMap: {
-                  name: (import 'configmap-policy.jsonnet').metadata.name,
+                  name: configmapPolicy.metadata.name,
                 },
               },
               {
                 name: 'scripts',
                 configMap: {
-                  name: (import 'configmap-script.jsonnet').metadata.name,
+                  name: configmapScript.metadata.name,
                 },
               },
               {

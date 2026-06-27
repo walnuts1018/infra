@@ -1,9 +1,11 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'v1',
   kind: 'PersistentVolume',
   metadata: {
-    name: (import 'app.json5').name + '-pv',
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name + '-pv',
+    labels: (labels)(app.name),
   },
   spec: {
     storageClassName: 'manual-minio-hostpath',

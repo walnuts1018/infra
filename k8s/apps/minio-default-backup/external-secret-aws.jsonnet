@@ -1,6 +1,9 @@
-std.mergePatch((import '../../components/external-secret.libsonnet') {
-  name: (import 'app.json5').name + '-aws-' + std.md5(std.toString($.data) + (importstr './_config/aws-credentials.tmpl'))[0:6],
-  namespace: (import 'app.json5').namespace,
+local externalSecret = import '../../components/external-secret.libsonnet';
+local app = import 'app.json5';
+local awsCredentials = importstr './_config/aws-credentials.tmpl';
+std.mergePatch((externalSecret) {
+  name: app.name + '-aws-' + std.md5(std.toString($.data) + (awsCredentials))[0:6],
+  namespace: app.namespace,
   use_suffix: false,
   data: [
     {
@@ -18,7 +21,7 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
         engineVersion: 'v2',
         type: 'Opaque',
         data: {
-          credentials: (importstr './_config/aws-credentials.tmpl'),
+          credentials: (awsCredentials),
         },
       },
     },

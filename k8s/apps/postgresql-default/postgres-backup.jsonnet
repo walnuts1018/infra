@@ -1,12 +1,14 @@
+local app = import 'app.json5';
+local postgres = import 'postgres.jsonnet';
 {
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'ScheduledBackup',
   metadata: {
-    name: (import 'app.json5').name + '-postgresql-backup',
+    name: app.name + '-postgresql-backup',
   },
   spec: {
     cluster: {
-      name: (import 'postgres.jsonnet').metadata.name,
+      name: postgres.metadata.name,
     },
     schedule: '0 0 19 */7 * *',
     backupOwnerReference: 'self',

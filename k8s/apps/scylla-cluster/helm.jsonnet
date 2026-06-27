@@ -1,6 +1,9 @@
-function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+local helm = import '../../components/helm.libsonnet';
+local app = import 'app.json5';
+local configmapScyllaConfig = import 'configmap-scylla-config.jsonnet';
+function(enableServiceMonitor=true) (helm) {
+  name: app.name,
+  namespace: app.namespace,
   chart: 'scylla',
   repoURL: 'https://scylla-operator-charts.storage.googleapis.com/stable',
   targetRevision: 'v1.21.0',
@@ -14,7 +17,7 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
     racks: [
       {
         name: 'iwakura-a',
-        scyllaConfig: (import 'configmap-scylla-config.jsonnet').metadata.name,
+        scyllaConfig: configmapScyllaConfig.metadata.name,
         members: 3,
         storage: {
           storageClassName: 'local-path',

@@ -1,14 +1,16 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'rabbitmq.com/v1beta1',
   kind: 'RabbitmqCluster',
   metadata: {
     name: 'default',
-    namespace: (import 'app.json5').namespace,
+    namespace: app.namespace,
     annotations: {
       'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
       'rabbitmq.com/topology-allowed-namespaces': 'picca-ai-prototype',
     },
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    labels: (labels)(app.name),
   },
   spec: {
     replicas: 1,

@@ -1,7 +1,10 @@
-(import '../../components/configmap.libsonnet') {
+local configmap = import '../../components/configmap.libsonnet';
+local app = import 'app.json5';
+local setup = importstr './_scripts/setup.sh';
+(configmap) {
   name: 'scylla-setup',
-  namespace: (import 'app.json5').namespace,
+  namespace: app.namespace,
   data: {
-    'setup.sh': (importstr './_scripts/setup.sh'),
+    'setup.sh': (setup),
   },
 }

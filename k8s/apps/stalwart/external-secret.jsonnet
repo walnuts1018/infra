@@ -1,5 +1,8 @@
-(import '../../components/external-secret.libsonnet') {
-  name: (import 'app.json5').name,
+local externalSecret = import '../../components/external-secret.libsonnet';
+local app = import 'app.json5';
+local config = importstr '_config/config.toml';
+(externalSecret) {
+  name: app.name,
   data: [
     {
       secretKey: 'postgres_password',
@@ -24,6 +27,6 @@
     },
   ],
   template_data: {
-    'config.toml': importstr '_config/config.toml',
+    'config.toml': config,
   },
 }

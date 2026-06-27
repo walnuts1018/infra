@@ -1,27 +1,32 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local externalSecret = import 'external-secret.jsonnet';
+local sa = import 'sa.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (labels)(app.name),
     },
     template: {
       metadata: {
         annotations: {
           'k8s.v1.cni.cncf.io/networks': '[{"name": "tailscale-bridge", "ips": ["192.168.0.24/24"]}]',
         },
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+        labels: (labels)(app.name),
       },
       spec: {
-        serviceAccountName: (import 'sa.jsonnet').metadata.name,
+        serviceAccountName: sa.metadata.name,
         containers: [
-          (import '../../components/container.libsonnet') {
+          (container) {
             name: 'tailscale',
             imagePullPolicy: 'IfNotPresent',
             image: 'ghcr.io/tailscale/tailscale:v1.98.4',
@@ -58,7 +63,7 @@
                 name: 'TS_AUTH_KEY',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'TS_AUTH_KEY',
                     optional: true,
                   },

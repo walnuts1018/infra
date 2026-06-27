@@ -1,8 +1,12 @@
-(import '../../components/configmap.libsonnet') {
-  name: (import 'app.json5').name + '-scylladb-ca-cert',
-  namespace: (import 'app.json5').namespace,
-  labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+local configmap = import '../../components/configmap.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local ca = importstr './_config/ca.crt';
+(configmap) {
+  name: app.name + '-scylladb-ca-cert',
+  namespace: app.namespace,
+  labels: (labels)(app.name),
   data: {
-    'ca.crt': (importstr './_config/ca.crt'),  // TODO: database namespaceから撮ってきたけど良い方法を考えないといけない
+    'ca.crt': (ca),  // TODO: database namespaceから撮ってきたけど良い方法を考えないといけない
   },
 }

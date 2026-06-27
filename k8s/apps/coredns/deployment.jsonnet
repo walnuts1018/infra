@@ -1,23 +1,27 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local configmap = import 'configmap.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (labels)(app.name),
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+        labels: (labels)(app.name),
       },
       spec: {
         containers: [
-          std.mergePatch((import '../../components/container.libsonnet'), {
+          std.mergePatch((container), {
             name: 'coredns',
             image: 'coredns/coredns:1.14.4',
             args: [
@@ -99,7 +103,7 @@
           {
             name: 'corefile',
             configMap: {
-              name: (import 'configmap.jsonnet').metadata.name,
+              name: configmap.metadata.name,
             },
           },
         ],
@@ -115,7 +119,7 @@
                         key: 'app',
                         operator: 'In',
                         values: [
-                          (import 'app.json5').name,
+                          app.name,
                         ],
                       },
                     ],

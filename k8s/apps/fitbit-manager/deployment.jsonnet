@@ -1,19 +1,23 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local env = import 'env.libsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (labels)(app.name),
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+        labels: (labels)(app.name),
       },
       spec: {
         securityContext: {
@@ -21,7 +25,7 @@
           runAsGroup: 65532,
         },
         containers: [
-          (import '../../components/container.libsonnet') {
+          (container) {
             name: 'fitbit-manager',
             image: 'ghcr.io/walnuts1018/fitbit-manager:1.0.5',
             imagePullPolicy: 'IfNotPresent',
@@ -40,7 +44,7 @@
                 memory: '300Mi',
               },
             },
-            env: (import 'env.libsonnet').env,
+            env: env.env,
           },
         ],
       },

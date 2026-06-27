@@ -1,20 +1,31 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local externalSecret = import 'external-secret.jsonnet';
+local pvcBooks = import 'pvc-books.jsonnet';
+local pvcCameraRoll = import 'pvc-camera-roll.jsonnet';
+local pvcMega = import 'pvc-mega.jsonnet';
+local pvcMovies = import 'pvc-movies.jsonnet';
+local pvcMusics = import 'pvc-musics.jsonnet';
+local pvcRoot = import 'pvc-root.jsonnet';
+local service = import 'service.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'StatefulSet',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (labels)(app.name),
     },
-    serviceName: (import 'service.jsonnet').metadata.name,
+    serviceName: service.metadata.name,
     replicas: 1,
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+        labels: (labels)(app.name),
       },
       spec: {
         securityContext: {
@@ -22,7 +33,7 @@
           fsGroupChangePolicy: 'OnRootMismatch',
         },
         containers: [
-          (import '../../components/container.libsonnet') {
+          (container) {
             image: 'ghcr.io/servercontainers/samba:a3.24.1-s4.23.8-r0',
             imagePullPolicy: 'IfNotPresent',
             name: 'samba',
@@ -31,7 +42,7 @@
                 name: 'ACCOUNT_samba',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'account-samba',
                   },
                 },
@@ -117,37 +128,37 @@
           {
             name: 'root',
             persistentVolumeClaim: {
-              claimName: (import 'pvc-root.jsonnet').metadata.name,
+              claimName: pvcRoot.metadata.name,
             },
           },
           {
             name: 'books',
             persistentVolumeClaim: {
-              claimName: (import 'pvc-books.jsonnet').metadata.name,
+              claimName: pvcBooks.metadata.name,
             },
           },
           {
             name: 'camera-roll',
             persistentVolumeClaim: {
-              claimName: (import 'pvc-camera-roll.jsonnet').metadata.name,
+              claimName: pvcCameraRoll.metadata.name,
             },
           },
           {
             name: 'mega',
             persistentVolumeClaim: {
-              claimName: (import 'pvc-mega.jsonnet').metadata.name,
+              claimName: pvcMega.metadata.name,
             },
           },
           {
             name: 'movies',
             persistentVolumeClaim: {
-              claimName: (import 'pvc-movies.jsonnet').metadata.name,
+              claimName: pvcMovies.metadata.name,
             },
           },
           {
             name: 'musics',
             persistentVolumeClaim: {
-              claimName: (import 'pvc-musics.jsonnet').metadata.name,
+              claimName: pvcMusics.metadata.name,
             },
           },
         ],

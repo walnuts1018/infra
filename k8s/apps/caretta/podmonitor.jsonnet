@@ -1,10 +1,12 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'monitoring.coreos.com/v1',
   kind: 'PodMonitor',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     podMetricsEndpoints: [
@@ -14,9 +16,9 @@
     ],
     selector: {
       matchLabels: {
-        app: (import 'app.json5').name,
-        'app.kubernetes.io/name': (import 'app.json5').name,
-        'app.kubernetes.io/instance': (import 'app.json5').name,
+        app: app.name,
+        'app.kubernetes.io/name': app.name,
+        'app.kubernetes.io/instance': app.name,
       },
     },
   },

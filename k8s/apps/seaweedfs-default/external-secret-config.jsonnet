@@ -1,6 +1,11 @@
-(import '../../components/external-secret.libsonnet') {
-  name: (import 'app.json5').name + '-filer-config',
-  namespace: (import 'app.json5').namespace,
+local externalSecret = import '../../components/external-secret.libsonnet';
+local app = import 'app.json5';
+local filer = importstr '_configs/filer.toml';
+local iam = importstr '_configs/iam.json';
+local seaweedfsS3Config = importstr '_configs/seaweedfs_s3_config.json';
+(externalSecret) {
+  name: app.name + '-filer-config',
+  namespace: app.namespace,
   data: [
     {
       secretKey: 'scylladb_password',
@@ -53,8 +58,8 @@
     },
   ],
   template_data: {
-    'filer.toml': (importstr '_configs/filer.toml'),
-    'iam.json': (importstr '_configs/iam.json'),
-    'seaweedfs_s3_config.json': (importstr '_configs/seaweedfs_s3_config.json'),
+    'filer.toml': (filer),
+    'iam.json': (iam),
+    'seaweedfs_s3_config.json': (seaweedfsS3Config),
   },
 }

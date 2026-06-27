@@ -1,6 +1,9 @@
-std.mergePatch((import '../../components/external-secret.libsonnet') {
+local externalSecret = import '../../components/external-secret.libsonnet';
+local app = import 'app.json5';
+local configmap = import 'configmap.jsonnet';
+std.mergePatch((externalSecret) {
   use_suffix: false,
-  name: (import 'app.json5').name + '-' + std.md5(std.toString($.data) + std.toString((import 'configmap.jsonnet').data))[0:6],
+  name: app.name + '-' + std.md5(std.toString($.data) + std.toString(configmap.data))[0:6],
   data: [
     {
       secretKey: 'dbPassword',
@@ -31,7 +34,7 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
           {
             target: 'Data',
             configMap: {
-              name: (import 'configmap.jsonnet').metadata.name,
+              name: configmap.metadata.name,
               items: [
                 {
                   key: 'default.yml',

@@ -1,8 +1,11 @@
-function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+local helm = import '../../components/helm.libsonnet';
+local app = import 'app.json5';
+local values = importstr 'values.yaml';
+function(enableServiceMonitor=true) (helm) {
+  name: app.name,
+  namespace: app.namespace,
   chart: 'scylla-manager',
   repoURL: 'https://scylla-operator-charts.storage.googleapis.com/stable',
   targetRevision: 'v1.21.0',
-  values: (importstr 'values.yaml'),
+  values: (values),
 }

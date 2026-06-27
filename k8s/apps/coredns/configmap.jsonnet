@@ -1,8 +1,12 @@
-(import '../../components/configmap.libsonnet') {
-  name: (import 'app.json5').name + '-config',
-  namespace: (import 'app.json5').namespace,
-  labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+local configmap = import '../../components/configmap.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local Corefile = importstr './_configs/Corefile';
+(configmap) {
+  name: app.name + '-config',
+  namespace: app.namespace,
+  labels: (labels)(app.name),
   data: {
-    Corefile: (importstr './_configs/Corefile'),
+    Corefile: (Corefile),
   },
 }

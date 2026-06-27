@@ -1,10 +1,14 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local env = import 'env.libsonnet';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     schedule: '*/15 * * * *',
@@ -20,7 +24,7 @@
               runAsGroup: 65532,
             },
             containers: [
-              (import '../../components/container.libsonnet') {
+              (container) {
                 name: 'fitbit-manager',
                 image: 'ghcr.io/walnuts1018/fitbit-manager:1.0.5',
                 command: [
@@ -42,7 +46,7 @@
                     memory: '300Mi',
                   },
                 },
-                env: (import 'env.libsonnet').env,
+                env: env.env,
               },
             ],
             tolerations: [

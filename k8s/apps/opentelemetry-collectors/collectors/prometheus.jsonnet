@@ -1,6 +1,8 @@
+local sa = import '../sa.jsonnet';
+local base = import '_base.libsonnet';
 function(
   clusterName='kurumi',
-) std.mergePatch((import '_base.libsonnet')(
+) std.mergePatch((base)(
   clusterName,
 ), {
   metadata: {
@@ -11,7 +13,7 @@ function(
     mode: 'statefulset',
     targetAllocator: {
       enabled: true,
-      serviceAccount: (import '../sa.jsonnet').metadata.name,
+      serviceAccount: sa.metadata.name,
       prometheusCR: {
         enabled: true,
         serviceMonitorSelector: {

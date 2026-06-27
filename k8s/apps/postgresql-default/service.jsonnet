@@ -1,9 +1,10 @@
+local app = import 'app.json5';
 {
   apiVersion: 'v1',
   kind: 'Service',
   metadata: {
-    name: (import 'app.json5').name + '-rw-expose',
-    namespace: (import 'app.json5').namespace,
+    name: app.name + '-rw-expose',
+    namespace: app.namespace,
     labels: {
       'cnpg.io/cluster': 'postgresql-default',
     },

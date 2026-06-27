@@ -1,8 +1,17 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local localBundle = import '../clusterissuer/local-bundle.jsonnet';
+local app = import 'app.json5';
+local configmapAws = import 'configmap-aws.jsonnet';
+local configmapRclone = import 'configmap-rclone.jsonnet';
+local configmapScript = import 'configmap-script.jsonnet';
+local externalSecretB2 = import 'external-secret-b2.jsonnet';
+local sa = import 'sa.jsonnet';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
   metadata: {
-    name: (import 'app.json5').name,
+    name: app.name,
   },
   spec: {
     schedule: '10 3 * * *',  // 適当
@@ -13,13 +22,13 @@
       spec: {
         template: {
           metadata: {
-            labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+            labels: (labels)(app.name),
           },
           spec: {
-            serviceAccountName: (import 'sa.jsonnet').metadata.name,
+            serviceAccountName: sa.metadata.name,
             restartPolicy: 'OnFailure',
             initContainers: [
-              (import '../../components/container.libsonnet') {
+              (container) {
                 name: 'copy-rclone',
                 image: 'ghcr.io/rclone/rclone:1.74.3',
                 command: [
@@ -46,7 +55,7 @@
                   },
                 ],
               },
-              std.mergePatch((import '../../components/container.libsonnet') {
+              std.mergePatch((container) {
                 name: 'inject-secret-to-config',
                 image: 'ghcr.io/hairyhenderson/gomplate:v4.3.3-alpine',
                 command: [
@@ -59,7 +68,7 @@
                 envFrom: [
                   {
                     secretRef: {
-                      name: (import 'external-secret-b2.jsonnet').spec.target.name,
+                      name: externalSecretB2.spec.target.name,
                     },
                   },
                 ],
@@ -103,7 +112,7 @@
             ],
             containers: [
               std.mergePatch(
-                (import '../../components/container.libsonnet') {
+                (container) {
                   name: 'backuper',
                   image: 'public.ecr.aws/aws-cli/aws-cli:2.35.8',
                   command: [
@@ -186,7 +195,7 @@
               {
                 name: 'rclone-config-template',
                 configMap: {
-                  name: (import 'configmap-rclone.jsonnet').metadata.name,
+                  name: configmapRclone.metadata.name,
                   items: [
                     {
                       key: 'rclone.conf.template',
@@ -198,7 +207,7 @@
               {
                 name: 'aws-config',
                 configMap: {
-                  name: (import 'configmap-aws.jsonnet').metadata.name,
+                  name: configmapAws.metadata.name,
                   items: [
                     {
                       key: 'config',
@@ -223,13 +232,13 @@
               {
                 name: 'local-ca-bundle',
                 configMap: {
-                  name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
+                  name: localBundle.metadata.name,
                 },
               },
               {
                 name: 'scripts',
                 configMap: {
-                  name: (import 'configmap-script.jsonnet').metadata.name,
+                  name: configmapScript.metadata.name,
                 },
               },
               {

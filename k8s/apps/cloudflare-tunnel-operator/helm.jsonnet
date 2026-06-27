@@ -1,13 +1,17 @@
-(import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+local helm = import '../../components/helm.libsonnet';
+local app = import 'app.json5';
+local values = importstr 'values.yaml';
+local externalSecret = import 'external-secret.jsonnet';
+(helm) {
+  name: app.name,
+  namespace: app.namespace,
 
   chart: 'cloudflare-tunnel-operator',
   repoURL: 'https://walnuts1018.github.io/cloudflare-tunnel-operator/',
   targetRevision: '1.6.2',
-  valuesObject: std.mergePatch(std.parseYaml(importstr 'values.yaml'), {
+  valuesObject: std.mergePatch(std.parseYaml(values), {
     cloudflareToken: {
-      existingSecret: (import 'external-secret.jsonnet').spec.target.name,
+      existingSecret: externalSecret.spec.target.name,
     },
   }),
 }

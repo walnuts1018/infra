@@ -1,8 +1,11 @@
-(import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+local helm = import '../../components/helm.libsonnet';
+local app = import 'app.json5';
+local values = importstr 'values.yaml';
+(helm) {
+  name: app.name,
+  namespace: app.namespace,
   chart: 'rabbitmq-cluster-operator',
   repoURL: 'https://klicktipp.github.io/helm-charts/',
   targetRevision: '0.4.0',
-  values: (importstr 'values.yaml'),
+  values: (values),
 }

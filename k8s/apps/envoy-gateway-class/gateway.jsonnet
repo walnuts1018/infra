@@ -1,16 +1,19 @@
+local certificate = import './certificate.jsonnet';
+local app = import 'app.json5';
+local gatewayClass = import 'gateway-class.jsonnet';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'Gateway',
   metadata: {
     name: 'envoy-gateway',
-    namespace: (import 'app.json5').namespace,
+    namespace: app.namespace,
     annotations: {
       'external-dns-cloudflare.alpha.kubernetes.io/target': '111.100.165.117',
       'external-dns-local.alpha.kubernetes.io/target': '192.168.0.138',
     },
   },
   spec: {
-    gatewayClassName: (import 'gateway-class.jsonnet').metadata.name,
+    gatewayClassName: gatewayClass.metadata.name,
     listeners: [
       {
         name: 'http',
@@ -36,7 +39,7 @@
           certificateRefs: [
             {
               kind: 'Secret',
-              name: (import './certificate.jsonnet').spec.secretName,
+              name: certificate.spec.secretName,
               group: '',
             },
           ],

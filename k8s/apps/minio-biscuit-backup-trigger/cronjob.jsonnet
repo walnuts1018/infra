@@ -1,8 +1,13 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local configmapScript = import 'configmap-script.jsonnet';
+local sa = import 'sa.jsonnet';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
   metadata: {
-    name: (import 'app.json5').name,
+    name: app.name,
   },
   spec: {
     schedule: '10 3 * * *',  // AM 3:10
@@ -14,13 +19,13 @@
         backoffLimit: 0,
         template: {
           metadata: {
-            labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+            labels: (labels)(app.name),
           },
           spec: {
-            serviceAccountName: (import 'sa.jsonnet').metadata.name,
+            serviceAccountName: sa.metadata.name,
             restartPolicy: 'Never',
             initContainers: [
-              (import '../../components/container.libsonnet') {
+              (container) {
                 name: 'wait-minio-default-backup',
                 image: 'debian:13.5-slim',
                 command: [
@@ -60,7 +65,7 @@
             ],
             containers: [
               std.mergePatch(
-                (import '../../components/container.libsonnet') {
+                (container) {
                   name: 'trigger-and-wait-minio-biscuit-backup',
                   image: 'debian:13.5-slim',
                   command: [
@@ -112,7 +117,7 @@
               {
                 name: 'scripts',
                 configMap: {
-                  name: (import 'configmap-script.jsonnet').metadata.name,
+                  name: configmapScript.metadata.name,
                 },
               },
               {

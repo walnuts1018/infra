@@ -1,6 +1,9 @@
-std.mergePatch((import '../../components/external-secret.libsonnet') {
-  name: (import 'app.json5').name + '-storage-config-' + std.md5(std.toString($.data) + (importstr './config/storage-configuration.tmpl'))[0:6],
-  namespace: (import 'app.json5').namespace,
+local externalSecret = import '../../components/external-secret.libsonnet';
+local app = import 'app.json5';
+local storageConfiguration = importstr './config/storage-configuration.tmpl';
+std.mergePatch((externalSecret) {
+  name: app.name + '-storage-config-' + std.md5(std.toString($.data) + (storageConfiguration))[0:6],
+  namespace: app.namespace,
   use_suffix: false,
   data: [
     {
@@ -32,7 +35,7 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
         engineVersion: 'v2',
         type: 'Opaque',
         data: {
-          'config.env': (importstr './config/storage-configuration.tmpl'),
+          'config.env': (storageConfiguration),
         },
       },
     },

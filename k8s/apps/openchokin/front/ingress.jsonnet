@@ -1,10 +1,13 @@
+local labels = import '../../../components/labels.libsonnet';
+local app = import '../app.json5';
+local service = import './service.jsonnet';
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'Ingress',
   metadata: {
-    name: (import '../app.json5').name + '-front',
-    namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+    name: app.name + '-front',
+    namespace: app.namespace,
+    labels: (labels)(app.name + '-front'),
   },
   spec: {
     ingressClassName: 'cilium',
@@ -18,7 +21,7 @@
               pathType: 'Prefix',
               backend: {
                 service: {
-                  name: (import './service.jsonnet').metadata.name,
+                  name: service.metadata.name,
                   port: {
                     number: 3000,
                   },

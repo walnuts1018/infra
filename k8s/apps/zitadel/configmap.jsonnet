@@ -1,12 +1,15 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local config = importstr './config/config.yaml';
 {
   apiVersion: 'v1',
   kind: 'ConfigMap',
   metadata: {
-    name: (import 'app.json5').name + '-config',
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name + '-config',
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   data: {
-    'config.yaml': (importstr './config/config.yaml'),
+    'config.yaml': (config),
   },
 }

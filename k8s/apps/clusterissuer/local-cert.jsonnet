@@ -1,9 +1,11 @@
+local app = import 'app.json5';
+local selfsigned = import 'selfsigned.jsonnet';
 {
   apiVersion: 'cert-manager.io/v1',
   kind: 'Certificate',
   metadata: {
     name: 'local-ca-cert',
-    namespace: (import 'app.json5').namespace,
+    namespace: app.namespace,
   },
   spec: {
     isCA: true,
@@ -15,7 +17,7 @@
       size: 256,
     },
     issuerRef: {
-      name: (import 'selfsigned.jsonnet').metadata.name,
+      name: selfsigned.metadata.name,
       kind: 'ClusterIssuer',
       group: 'cert-manager.io',
     },

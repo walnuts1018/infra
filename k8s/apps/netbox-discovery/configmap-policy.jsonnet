@@ -1,12 +1,15 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local snmpPolicy = importstr './_config/snmp-policy.yaml';
 {
   apiVersion: 'v1',
   kind: 'ConfigMap',
   metadata: {
-    name: (import 'app.json5').name + '-policy',
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name + '-policy',
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   data: {
-    'snmp-policy.yaml': (importstr './_config/snmp-policy.yaml'),
+    'snmp-policy.yaml': (snmpPolicy),
   },
 }

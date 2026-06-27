@@ -1,4 +1,5 @@
-(import '../../components/external-secret.libsonnet') {
+local externalSecret = import '../../components/external-secret.libsonnet';
+(externalSecret) {
   name: 'grafana',
   use_suffix: false,
   data: [

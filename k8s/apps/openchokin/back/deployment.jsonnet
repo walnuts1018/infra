@@ -1,23 +1,27 @@
+local container = import '../../../components/container.libsonnet';
+local labels = import '../../../components/labels.libsonnet';
+local app = import '../app.json5';
+local externalSecret = import '../external-secret.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import '../app.json5').name + '-back',
-    namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-back'),
+    name: app.name + '-back',
+    namespace: app.namespace,
+    labels: (labels)(app.name + '-back'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-back'),
+      matchLabels: (labels)(app.name + '-back'),
     },
     template: {
       metadata: {
-        labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-back'),
+        labels: (labels)(app.name + '-back'),
       },
       spec: {
         containers: [
-          (import '../../../components/container.libsonnet') {
+          (container) {
             name: 'openchokin-back',
             image: 'ghcr.io/walnuts1018/openchokin-back:v0.0.0-cd205cba77a922ba01009c04203a0e4b962a31d8-97',
             imagePullPolicy: 'IfNotPresent',
@@ -39,7 +43,7 @@
                 name: 'POSTGRES_ADMIN_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import '../external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'postgres-admin-password',
                   },
                 },
@@ -52,7 +56,7 @@
                 name: 'POSTGRES_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import '../external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'postgres-user-password',
                   },
                 },

@@ -1,19 +1,24 @@
+local container = import '../../../components/container.libsonnet';
+local labels = import '../../../components/labels.libsonnet';
+local getEndpointFromService = import '../../../utils/get-endpoint-from-service.libsonnet';
+local app = import '../app.json5';
+local service = import '../back/service.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import '../app.json5').name + '-front',
-    namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+    name: app.name + '-front',
+    namespace: app.namespace,
+    labels: (labels)(app.name + '-front'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+      matchLabels: (labels)(app.name + '-front'),
     },
     template: {
       metadata: {
-        labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+        labels: (labels)(app.name + '-front'),
       },
       spec: {
         imagePullSecrets: [
@@ -22,7 +27,7 @@
           },
         ],
         containers: [
-          (import '../../../components/container.libsonnet') {
+          (container) {
             name: 'oekaki-dengon-game-front',
             image: 'ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-10b57aae4bfe56124907ac1b03bc822a635e173f-95',
             imagePullPolicy: 'IfNotPresent',
@@ -34,7 +39,7 @@
             env: [
               {
                 name: 'API_URL',
-                value: 'http://' + (import '../../../utils/get-endpoint-from-service.libsonnet')(import '../back/service.jsonnet') + ':8080/api',
+                value: 'http://' + (getEndpointFromService)(service) + ':8080/api',
               },
             ],
             resources: {

@@ -1,15 +1,19 @@
+local standard = import '../cloudnative-pg-image-catalog/standard.jsonnet';
+local app = import 'app.json5';
+local postgresBackupObjectstore = import 'postgres-backup-objectstore.jsonnet';
+local postgresPassword = import 'postgres-password.jsonnet';
 {
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'Cluster',
   metadata: {
-    name: (import 'app.json5').name + '-postgresql',
+    name: app.name + '-postgresql',
   },
   spec: {
     instances: 2,
     imageCatalogRef: {
       apiGroup: 'postgresql.cnpg.io',
       kind: 'ClusterImageCatalog',
-      name: (import '../cloudnative-pg-image-catalog/standard.jsonnet').metadata.name,
+      name: standard.metadata.name,
       major: 17,
     },
     storage: {
@@ -24,7 +28,7 @@
         database: 'misskey',
         owner: 'misskey',
         secret: {
-          name: (import 'postgres-password.jsonnet').spec.target.name,
+          name: postgresPassword.spec.target.name,
         },
       },
       // recovery: {
@@ -38,7 +42,7 @@
     //       name: 'barman-cloud.cloudnative-pg.io',
     //       parameters: {
     //         barmanObjectName: 'seaweedfs-store',
-    //         serverName: (import 'app.json5').name + '-postgresql-backup2',
+    //         serverName: app.name + '-postgresql-backup2',
     //       },
     //     },
     //   },
@@ -58,7 +62,7 @@
         name: 'barman-cloud.cloudnative-pg.io',
         isWALArchiver: true,
         parameters: {
-          barmanObjectName: (import 'postgres-backup-objectstore.jsonnet').metadata.name,
+          barmanObjectName: postgresBackupObjectstore.metadata.name,
         },
       },
     ],

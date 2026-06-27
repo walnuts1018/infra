@@ -1,23 +1,26 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (labels)(app.name),
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+        labels: (labels)(app.name),
       },
       spec: {
         containers: [
-          (import '../../components/container.libsonnet') {
+          (container) {
             name: 'http-dump',
             image: 'ghcr.io/walnuts1018/http-dump:2940b4a2f1f5f4fdfd6c41e6dd2d8c456837f3e1-46',
             ports: [

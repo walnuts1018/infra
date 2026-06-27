@@ -1,10 +1,13 @@
+local labels = import '../../../components/labels.libsonnet';
+local app = import '../app.json5';
+local externalSecret = import '../external-secret.jsonnet';
 [
   {
     apiVersion: 'redis.redis.opstreelabs.in/v1beta2',
     kind: 'RedisReplication',
     metadata: {
-      name: (import '../app.json5').name + '-front-redis',
-      labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front-redis'),
+      name: app.name + '-front-redis',
+      labels: (labels)(app.name + '-front-redis'),
     },
     spec: {
       clusterSize: 2,
@@ -12,7 +15,7 @@
         image: 'quay.io/opstree/redis:v7.4.8',
         imagePullPolicy: 'IfNotPresent',
         redisSecret: {
-          name: (import '../external-secret.jsonnet').spec.target.name,
+          name: externalSecret.spec.target.name,
           key: 'redis-password',
         },
         resources: {
@@ -50,8 +53,8 @@
     apiVersion: 'redis.redis.opstreelabs.in/v1beta2',
     kind: 'RedisSentinel',
     metadata: {
-      name: (import '../app.json5').name + '-front-redis',
-      labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front-redis'),
+      name: app.name + '-front-redis',
+      labels: (labels)(app.name + '-front-redis'),
     },
     spec: {
       clusterSize: 3,
@@ -68,7 +71,7 @@
         image: 'quay.io/opstree/redis-sentinel:v7.4.8',
         imagePullPolicy: 'IfNotPresent',
         redisSecret: {
-          name: (import '../external-secret.jsonnet').spec.target.name,
+          name: externalSecret.spec.target.name,
           key: 'redis-password',
         },
         resources: {

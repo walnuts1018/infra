@@ -1,19 +1,23 @@
+local container = import '../../../components/container.libsonnet';
+local labels = import '../../../components/labels.libsonnet';
+local app = import '../app.json5';
+local externalSecret = import '../external-secret.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import '../app.json5').name + '-back',
-    namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-back'),
+    name: app.name + '-back',
+    namespace: app.namespace,
+    labels: (labels)(app.name + '-back'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-back'),
+      matchLabels: (labels)(app.name + '-back'),
     },
     template: {
       metadata: {
-        labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-back'),
+        labels: (labels)(app.name + '-back'),
       },
       spec: {
         imagePullSecrets: [
@@ -22,7 +26,7 @@
           },
         ],
         containers: [
-          (import '../../../components/container.libsonnet') {
+          (container) {
             name: 'oekaki-dengon-game-back',
             image: 'ghcr.io/kmc-jp/oekaki-dengon-game-back:v0.0.0-a6d6d6e7d66e6d0dfafbf416b462be908b208489-13',
             imagePullPolicy: 'IfNotPresent',
@@ -44,7 +48,7 @@
                 name: 'POSTGRES_ADMIN_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import '../external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'postgres-admin-password',
                   },
                 },
@@ -57,7 +61,7 @@
                 name: 'POSTGRES_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import '../external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'postgres-user-password',
                   },
                 },
@@ -86,7 +90,7 @@
                 name: 'MINIO_SECRET_KEY',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import '../external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'minio-secret-key',
                   },
                 },

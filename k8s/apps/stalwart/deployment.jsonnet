@@ -1,15 +1,20 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local externalSecret = import 'external-secret.jsonnet';
+local sa = import 'sa.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     replicas: 2,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (labels)(app.name),
     },
     strategy: {
       type: 'RollingUpdate',
@@ -20,22 +25,22 @@
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+        labels: (labels)(app.name),
       },
       spec: {
-        serviceAccountName: (import 'sa.jsonnet').metadata.name,
+        serviceAccountName: sa.metadata.name,
         topologySpreadConstraints: [
           {
             maxSkew: 1,
             topologyKey: 'kubernetes.io/hostname',
             whenUnsatisfiable: 'ScheduleAnyway',
             labelSelector: {
-              matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+              matchLabels: (labels)(app.name),
             },
           },
         ],
         containers: [
-          (import '../../components/container.libsonnet') {
+          (container) {
             name: 'stalwart',
             image: 'docker.io/stalwartlabs/stalwart:v0.16.11',
             imagePullPolicy: 'IfNotPresent',
@@ -115,7 +120,7 @@
           {
             name: 'stalwart-config',
             secret: {
-              secretName: (import 'external-secret.jsonnet').spec.target.name,
+              secretName: externalSecret.spec.target.name,
               items: [
                 {
                   key: 'config.toml',

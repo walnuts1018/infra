@@ -1,19 +1,22 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     replicas: 2,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (labels)(app.name),
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+        labels: (labels)(app.name),
       },
       spec: {
         securityContext: {
@@ -21,7 +24,7 @@
           runAsGroup: 65534,
         },
         containers: [
-          std.mergePatch((import '../../components/container.libsonnet') {
+          std.mergePatch((container) {
             name: 'walnuts-dev',
             image: 'ghcr.io/walnuts1018/walnuts.dev:93d6595bcbd2ecaf3f53e073c5c9ad31f14b00dd-707',
             imagePullPolicy: 'IfNotPresent',
@@ -88,7 +91,7 @@
                         key: 'app',
                         operator: 'In',
                         values: [
-                          (import 'app.json5').name,
+                          app.name,
                         ],
                       },
                     ],

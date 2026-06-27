@@ -1,8 +1,12 @@
-(import '../../../components/configmap.libsonnet') {
-  name: (import '../app.json5').name + '-oauth2-proxy',
-  namespace: (import '../app.json5').namespace,
-  labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name),
+local configmap = import '../../../components/configmap.libsonnet';
+local labels = import '../../../components/labels.libsonnet';
+local app = import '../app.json5';
+local robots = importstr './_config/robots.txt';
+(configmap) {
+  name: app.name + '-oauth2-proxy',
+  namespace: app.namespace,
+  labels: (labels)(app.name),
   data: {
-    'robots.txt': (importstr './_config/robots.txt'),
+    'robots.txt': (robots),
   },
 }

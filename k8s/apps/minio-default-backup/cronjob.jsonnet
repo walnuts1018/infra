@@ -1,10 +1,19 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local localBundle = import '../clusterissuer/local-bundle.jsonnet';
+local app = import 'app.json5';
+local configmapAws = import 'configmap-aws.jsonnet';
+local configmapRclone = import 'configmap-rclone.jsonnet';
+local configmapScript = import 'configmap-script.jsonnet';
+local externalSecretAws = import 'external-secret-aws.jsonnet';
+local sa = import 'sa.jsonnet';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     schedule: '10 2 * * *',  // AM 2:10
@@ -15,14 +24,14 @@
       spec: {
         template: {
           metadata: {
-            labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+            labels: (labels)(app.name),
           },
           spec: {
-            serviceAccountName: (import 'sa.jsonnet').metadata.name,
+            serviceAccountName: sa.metadata.name,
             restartPolicy: 'OnFailure',
             containers: [
               std.mergePatch(
-                (import '../../components/container.libsonnet') {
+                (container) {
                   name: 'rclone',
                   image: 'public.ecr.aws/aws-cli/aws-cli:2.35.8',
                   command: [
@@ -123,13 +132,13 @@
               {
                 name: 'local-ca-bundle',
                 configMap: {
-                  name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
+                  name: localBundle.metadata.name,
                 },
               },
               {
                 name: 'rclone-config',
                 configMap: {
-                  name: (import 'configmap-rclone.jsonnet').metadata.name,
+                  name: configmapRclone.metadata.name,
                   items: [
                     {
                       key: 'rclone.conf',
@@ -141,7 +150,7 @@
               {
                 name: 'aws-config',
                 configMap: {
-                  name: (import 'configmap-aws.jsonnet').metadata.name,
+                  name: configmapAws.metadata.name,
                   items: [
                     {
                       key: 'config',
@@ -153,7 +162,7 @@
               {
                 name: 'aws-credentials',
                 secret: {
-                  secretName: (import 'external-secret-aws.jsonnet').spec.target.name,
+                  secretName: externalSecretAws.spec.target.name,
                   items: [
                     {
                       key: 'credentials',
@@ -165,7 +174,7 @@
               {
                 name: 'backup-script',
                 configMap: {
-                  name: (import 'configmap-script.jsonnet').metadata.name,
+                  name: configmapScript.metadata.name,
                 },
               },
               {

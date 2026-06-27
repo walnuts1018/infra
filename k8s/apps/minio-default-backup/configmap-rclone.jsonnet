@@ -1,8 +1,12 @@
-(import '../../components/configmap.libsonnet') {
-  name: (import 'app.json5').name + '-rclone',
-  namespace: (import 'app.json5').namespace,
-  labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+local configmap = import '../../components/configmap.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local rclone = importstr './_config/rclone.conf';
+(configmap) {
+  name: app.name + '-rclone',
+  namespace: app.namespace,
+  labels: (labels)(app.name),
   data: {
-    'rclone.conf': (importstr './_config/rclone.conf'),
+    'rclone.conf': (rclone),
   },
 }

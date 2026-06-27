@@ -1,9 +1,11 @@
+local app = import 'app.json5';
+local localIssuer = import 'local-issuer.jsonnet';
 {
   apiVersion: 'trust.cert-manager.io/v1alpha1',
   kind: 'Bundle',
   metadata: {
     name: 'local-ca-bundle',
-    namespace: (import 'app.json5').namespace,
+    namespace: app.namespace,
   },
   spec: {
     sources: [
@@ -12,7 +14,7 @@
       },
       {
         secret: {
-          name: (import 'local-issuer.jsonnet').spec.ca.secretName,
+          name: localIssuer.spec.ca.secretName,
           key: 'tls.crt',
         },
       },

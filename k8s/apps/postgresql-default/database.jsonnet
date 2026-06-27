@@ -1,4 +1,6 @@
-local databases = (import 'databases.libsonnet');
+local databases = import 'databases.libsonnet';
+local postgres = import 'postgres.jsonnet';
+local databases = (databases);
 local gen = function(database) {
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'Database',
@@ -9,7 +11,7 @@ local gen = function(database) {
     name: database.db_name,
     owner: database.user_name,
     cluster: {
-      name: (import 'postgres.jsonnet').metadata.name,
+      name: postgres.metadata.name,
     },
     // localeCollate: 'ja_JP.UTF-8',
     // localeCType: 'ja_JP.UTF-8',

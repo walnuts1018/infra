@@ -1,10 +1,13 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local deploymentFrontend = import 'deployment-frontend.jsonnet';
 {
   apiVersion: 'autoscaling/v2',
   kind: 'HorizontalPodAutoscaler',
   metadata: {
-    name: (import 'app.json5').appname.frontend,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
+    name: app.appname.frontend,
+    namespace: app.namespace,
+    labels: (labels)(app.appname.frontend),
   },
   spec: {
     minReplicas: 2,
@@ -24,7 +27,7 @@
     scaleTargetRef: {
       apiVersion: 'apps/v1',
       kind: 'Deployment',
-      name: (import 'deployment-frontend.jsonnet').metadata.name,
+      name: deploymentFrontend.metadata.name,
     },
   },
 }

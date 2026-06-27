@@ -1,15 +1,19 @@
+local gateway = import '../../pomerium-global/gateway.jsonnet';
+local app = import '../app.json5';
+local policyFilterPublic = import 'policy-filter-public.jsonnet';
+local policyFilter = import 'policy-filter.jsonnet';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
   metadata: {
-    name: (import '../app.json5').name,
-    namespace: (import '../app.json5').namespace,
+    name: app.name,
+    namespace: app.namespace,
   },
   spec: {
     parentRefs: [
       {
-        name: (import '../../pomerium-global/gateway.jsonnet').metadata.name,
-        namespace: (import '../../pomerium-global/gateway.jsonnet').metadata.namespace,
+        name: gateway.metadata.name,
+        namespace: gateway.metadata.namespace,
       },
     ],
     hostnames: [
@@ -71,7 +75,7 @@
             extensionRef: {
               group: 'gateway.pomerium.io',
               kind: 'PolicyFilter',
-              name: (import 'policy-filter-public.jsonnet').metadata.name,
+              name: policyFilterPublic.metadata.name,
             },
           },
         ],
@@ -99,7 +103,7 @@
             extensionRef: {
               group: 'gateway.pomerium.io',
               kind: 'PolicyFilter',
-              name: (import 'policy-filter.jsonnet').metadata.name,
+              name: policyFilter.metadata.name,
             },
           },
         ],

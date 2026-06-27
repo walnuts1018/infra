@@ -1,9 +1,10 @@
+local app = import 'app.json5';
 {
   apiVersion: 'barmancloud.cnpg.io/v1',
   kind: 'ObjectStore',
   metadata: {
     name: 'seaweedfs-store',
-    namespace: (import 'app.json5').namespace,
+    namespace: app.namespace,
   },
   spec: {
     configuration: {

@@ -1,6 +1,9 @@
-(import '../../components/external-secret.libsonnet') {
+local externalSecret = import '../../components/external-secret.libsonnet';
+local app = import 'app.json5';
+local migrations = importstr '_configs/migrations.cql';
+(externalSecret) {
   name: 'scylla-cluster-migrations',
-  namespace: (import 'app.json5').namespace,
+  namespace: app.namespace,
   data: [
     {
       secretKey: 'admin_password',
@@ -34,6 +37,6 @@
   template_data: {
     admin_username: 'cassandra',
     admin_password: '{{ .admin_password }}',
-    'migrations.cql': (importstr '_configs/migrations.cql'),
+    'migrations.cql': (migrations),
   },
 }

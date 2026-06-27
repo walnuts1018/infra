@@ -1,22 +1,26 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local externalSecret = import 'external-secret.jsonnet';
+local sa = import 'sa.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (labels)(app.name),
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+        labels: (labels)(app.name),
       },
       spec: {
-        serviceAccountName: (import 'sa.jsonnet').metadata.name,
+        serviceAccountName: sa.metadata.name,
         securityContext: {
           fsGroup: 101,
           fsGroupChangePolicy: 'OnRootMismatch',
@@ -34,7 +38,7 @@
                 name: 'SESSION_SECRET',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'session-secret',
                   },
                 },
@@ -47,7 +51,7 @@
                 name: 'OIDC_CLIENT_ID',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'client-id',
                   },
                 },
@@ -56,7 +60,7 @@
                 name: 'OIDC_CLIENT_SECRET',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'client-secret',
                   },
                 },
