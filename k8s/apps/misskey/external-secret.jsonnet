@@ -1,7 +1,6 @@
-local externalSecret = import '../../components/external-secret.libsonnet';
 local app = import 'app.json5';
 local configmap = import 'configmap.jsonnet';
-std.mergePatch((externalSecret) {
+std.mergePatch((import '../../components/external-secret.libsonnet') {
   use_suffix: false,
   name: app.name + '-' + std.md5(std.toString($.data) + std.toString(configmap.data))[0:6],
   data: [

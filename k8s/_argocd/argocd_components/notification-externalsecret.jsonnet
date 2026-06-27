@@ -1,6 +1,5 @@
-local externalSecret = import '../../components/external-secret.libsonnet';
 local app = import 'app.json5';
-(externalSecret) {
+(import '../../components/external-secret.libsonnet') {
   name: 'argocd-notifications-secret',
   use_suffix: false,
   namespace: app.namespace,

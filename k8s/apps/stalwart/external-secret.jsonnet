@@ -1,7 +1,6 @@
-local externalSecret = import '../../components/external-secret.libsonnet';
 local app = import 'app.json5';
 local config = importstr '_config/config.toml';
-(externalSecret) {
+(import '../../components/external-secret.libsonnet') {
   name: app.name,
   data: [
     {

@@ -1,7 +1,6 @@
-local externalSecret = import '../../components/external-secret.libsonnet';
 local app = import 'app.json5';
 local awsCredentials = importstr './_config/aws-credentials.tmpl';
-std.mergePatch((externalSecret) {
+std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: app.name + '-aws-' + std.md5(std.toString($.data) + (awsCredentials))[0:6],
   namespace: app.namespace,
   use_suffix: false,

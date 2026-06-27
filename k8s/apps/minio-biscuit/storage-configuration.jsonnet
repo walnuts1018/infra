@@ -1,7 +1,6 @@
-local externalSecret = import '../../components/external-secret.libsonnet';
 local app = import 'app.json5';
 local storageConfiguration = importstr './config/storage-configuration.tmpl';
-std.mergePatch((externalSecret) {
+std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: app.name + '-storage-config-' + std.md5(std.toString($.data) + (storageConfiguration))[0:6],
   namespace: app.namespace,
   use_suffix: false,

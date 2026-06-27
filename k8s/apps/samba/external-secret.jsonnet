@@ -1,5 +1,4 @@
-local externalSecret = import '../../components/external-secret.libsonnet';
-(externalSecret) {
+(import '../../components/external-secret.libsonnet') {
   name: 'samba-secret',
   data: [
     {

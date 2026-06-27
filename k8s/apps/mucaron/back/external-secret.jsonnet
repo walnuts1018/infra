@@ -1,6 +1,5 @@
-local externalSecret = import '../../../components/external-secret.libsonnet';
 local app = import '../app.json5';
-(externalSecret) {
+(import '../../components/external-secret.libsonnet') {
   name: app.name,
   data: [
     {

@@ -1,7 +1,6 @@
-local externalSecret = import '../../components/external-secret.libsonnet';
 local app = import 'app.json5';
 local credentialsToml = importstr './_config/credentials.toml.tmpl';
-std.mergePatch((externalSecret) {
+std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: app.name + '-minio-biscuit-' + std.md5(std.toString($.data) + (credentialsToml))[0:6],
   namespace: app.namespace,
   use_suffix: false,

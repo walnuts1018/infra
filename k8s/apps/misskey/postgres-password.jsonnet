@@ -1,6 +1,5 @@
-local externalSecret = import '../../components/external-secret.libsonnet';
 local app = import 'app.json5';
-std.mergePatch((externalSecret) {
+std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: app.name + '-db-password',
   data: [
     {

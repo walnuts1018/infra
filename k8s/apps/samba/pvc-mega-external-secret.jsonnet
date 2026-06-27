@@ -1,6 +1,5 @@
-local externalSecret = import '../../components/external-secret.libsonnet';
 local pvcMega = import 'pvc-mega.jsonnet';
-std.mergePatch((externalSecret) {
+std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: pvcMega.metadata.name,
   namespace: pvcMega.metadata.namespace,
   use_suffix: false,

@@ -1,6 +1,5 @@
-local externalSecret = import '../../components/external-secret.libsonnet';
 local app = import 'app.json5';
-std.mergePatch((externalSecret) {
+std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: 'cloudflare-origin-cert',
   namespace: app.namespace,
   use_suffix: false,
