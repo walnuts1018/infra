@@ -1,9 +1,7 @@
 local container = import '../../components/container.libsonnet';
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local etcdServiceHeadless = import 'etcd-service-headless.jsonnet';
-local app = (app);
-local labels = (labels)('coredns-etcd');
+local labels = (import '../../components/labels.libsonnet')('coredns-etcd');
 local peerHost(ordinal) =
   'coredns-etcd-%d.coredns-etcd-headless.%s.svc.cluster.local' % [ordinal, app.namespace];
 
