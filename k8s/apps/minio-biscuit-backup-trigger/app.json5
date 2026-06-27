@@ -1,7 +1,0 @@
-{
-  name: "minio-biscuit-backup-trigger",
-  namespace: "minio-biscuit",
-  clusters: {
-    kurumi: {},
-  },
-}

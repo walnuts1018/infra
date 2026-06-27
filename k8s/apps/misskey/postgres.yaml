@@ -1,0 +1,40 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: misskey-postgresql
+spec:
+  bootstrap:
+    initdb:
+      database: misskey
+      owner: misskey
+      secret:
+        name: misskey-db-password-0bfec8
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ClusterImageCatalog
+    major: 17
+    name: standard
+  instances: 2
+  plugins:
+    - isWALArchiver: true
+      name: barman-cloud.cloudnative-pg.io
+      parameters:
+        barmanObjectName: seaweedfs-store
+  projectedVolumeTemplate:
+    sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 86400
+          path: sts.seaweedfs.com/serviceaccount/token
+  resources:
+    limits:
+      cpu: "2"
+      memory: 4Gi
+    requests:
+      cpu: 12m
+      memory: 662Mi
+  storage:
+    size: 10Gi
+    storageClass: local-path
+  superuserSecret:
+    name: superuser-secret

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: github-readme-stats
+    app.kubernetes.io/name: github-readme-stats
+  name: github-readme-stats
+  namespace: github-readme-stats
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: github-readme-stats.walnuts.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: github-readme-stats
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix

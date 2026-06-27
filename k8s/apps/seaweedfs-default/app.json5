@@ -1,7 +1,0 @@
-{
-  name: "seaweedfs-default",
-  namespace: "seaweedfs",
-  clusters: {
-    kurumi: {},
-  },
-}

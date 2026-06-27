@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: ipu
+    app.kubernetes.io/name: ipu
+  name: ipu
+  namespace: ipu
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: ipu.walnuts.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: ipu
+                port:
+                  name: http
+            path: /
+            pathType: Prefix

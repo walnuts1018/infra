@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: mpeg-dash-encoder
+    app.kubernetes.io/name: mpeg-dash-encoder
+  name: mpeg-dash-encoder
+  namespace: mpeg-dash-encoder
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: mpeg-dash-encoder.walnuts.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: mpeg-dash-encoder
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix

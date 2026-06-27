@@ -1,0 +1,178 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: vyos
+spec:
+  config:
+    exporters:
+      debug:
+        verbosity: detailed
+      file:
+        format: json
+        path: /tmp/debug.json
+      otlp_grpc/mackerel:
+        compression: gzip
+        endpoint: otlp.mackerelio.com:4317
+        headers:
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+        sending_queue:
+          batch:
+            flush_timeout: 10s
+            max_size: 5000
+            min_size: 5000
+      otlp_grpc/pyroscope:
+        endpoint: http://pyroscope.pyroscope.svc.cluster.local:4317
+        sending_queue:
+          batch:
+            flush_timeout: 10s
+            max_size: 5000
+            min_size: 5000
+        tls:
+          insecure: true
+      otlp_grpc/tempo:
+        endpoint: tempo-gateway.tempo.svc.cluster.local:4317
+        sending_queue:
+          batch:
+            flush_timeout: 10s
+            max_size: 5000
+            min_size: 5000
+        tls:
+          insecure: true
+      otlp_http/loki:
+        endpoint: http://loki-gateway.loki.svc.cluster.local/otlp
+        sending_queue:
+          batch:
+            flush_timeout: 10s
+            max_size: 5000
+            min_size: 5000
+        tls:
+          insecure: true
+      otlp_http/vaxila:
+        endpoint: https://otlp-vaxila.mackerelio.com
+        headers:
+          Accept: '*/*'
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+        sending_queue:
+          batch:
+            flush_timeout: 10s
+            max_size: 5000
+            min_size: 5000
+      prometheusremotewrite/victoriametrics:
+        endpoint: http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write
+        resource_to_telemetry_conversion:
+          enabled: true
+        timeout: 30s
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 512
+        spike_limit_percentage: 15
+      resource/cluster_name:
+        attributes:
+          - action: upsert
+            key: k8s.cluster.name
+            value: kurumi
+      resource/netflow:
+        attributes:
+          - action: upsert
+            key: service.name
+            value: vyos-netflow
+          - action: upsert
+            key: host.name
+            value: vyos
+          - action: upsert
+            key: host.ip
+            value: 192.168.0.1
+      resource/vyos:
+        attributes:
+          - action: upsert
+            key: service.name
+            value: vyos
+          - action: upsert
+            key: host.name
+            value: vyos
+          - action: upsert
+            key: host.ip
+            value: 192.168.0.1
+    receivers:
+      netflow:
+        hostname: 0.0.0.0
+        port: 2055
+        scheme: netflow
+        sockets: 2
+        workers: 4
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: vyos-telegraf
+              scrape_interval: 30s
+              static_configs:
+                - labels:
+                    device: vyos
+                    instance: vyos
+                  targets:
+                    - 192.168.0.1:9273
+      syslog:
+        location: Asia/Tokyo
+        protocol: rfc5424
+        resource:
+          host.ip: 192.168.0.1
+          host.name: vyos
+          service.name: vyos-syslog
+        udp:
+          add_attributes: true
+          listen_address: 0.0.0.0:5514
+          one_log_per_packet: true
+    service:
+      pipelines:
+        logs/netflow:
+          exporters:
+            - otlp_http/loki
+          processors:
+            - memory_limiter
+            - resource/netflow
+            - resource/cluster_name
+          receivers:
+            - netflow
+        logs/syslog:
+          exporters:
+            - otlp_http/loki
+          processors:
+            - memory_limiter
+            - resource/cluster_name
+          receivers:
+            - syslog
+        metrics:
+          exporters:
+            - prometheusremotewrite/victoriametrics
+          processors:
+            - memory_limiter
+            - resource/vyos
+            - resource/cluster_name
+          receivers:
+            - prometheus
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.154.0
+  managementState: managed
+  mode: deployment
+  ports:
+    - name: syslog-udp
+      port: 5514
+      protocol: UDP
+    - name: netflow-udp
+      port: 2055
+      protocol: UDP
+  replicas: 1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1Gi
+    requests:
+      cpu: 20m
+      memory: 128Mi
+  serviceAccount: opentelemetry-collectors
+  volumeMounts:
+    - mountPath: /tmp
+      name: tmp
+  volumes:
+    - emptyDir: {}
+      name: tmp

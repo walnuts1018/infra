@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: kubelet-metrics-proxy
+    app.kubernetes.io/name: kubernetes-control-plane-metrics
+  name: kubelet-metrics-proxy
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: kubelet-metrics-proxy
+  template:
+    metadata:
+      labels:
+        app: kubelet-metrics-proxy
+        app.kubernetes.io/name: kubernetes-control-plane-metrics
+    spec:
+      containers:
+        - args:
+            - -d
+            - -d
+            - TCP-LISTEN:11050,fork,reuseaddr,bind=0.0.0.0
+            - TCP:127.0.0.1:10250
+          image: docker.io/alpine/socat:1.8.1.3
+          name: kubelet
+          ports:
+            - containerPort: 11050
+              hostPort: 11050
+              name: https-metrics
+          resources:
+            limits:
+              cpu: 50m
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 48Mi
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      tolerations:
+        - operator: Exists

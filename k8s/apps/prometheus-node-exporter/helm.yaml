@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prometheus-node-exporter-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: prometheus-node-exporter
+    helm:
+      releaseName: prometheus-node-exporter
+      values: |
+        prometheus:
+          monitor:
+            enabled: true
+            relabelings:
+            - sourceLabels: [ __meta_kubernetes_pod_node_name ]
+              separator: ;
+              regex: ^(.*)$
+              targetLabel: node
+              replacement: $1
+              action: replace
+        resources:
+          requests:
+            cpu: 1m
+            memory: 20Mi
+          limits:
+            memory: 512Mi
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 4.55.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

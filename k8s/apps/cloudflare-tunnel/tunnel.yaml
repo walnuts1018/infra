@@ -1,0 +1,30 @@
+apiVersion: cf-tunnel-operator.walnuts.dev/v1beta1
+kind: CloudflareTunnel
+metadata:
+  labels:
+    app: cloudflare-tunnel
+    app.kubernetes.io/name: cloudflare-tunnel
+  name: cloudflare-tunnel
+  namespace: network-exporter
+spec:
+  argsOverride:
+    - --no-autoupdate
+    - --protocol
+    - http2
+    - --metrics=0.0.0.0:60123
+    - tunnel
+    - run
+  default: true
+  enableServiceMonitor: true
+  replicas: 3
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1Gi
+    requests:
+      cpu: 10m
+      memory: 30Mi
+  securityContext:
+    privileged: true
+  settings:
+    nameOverride: ""

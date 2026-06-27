@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: openchokin-back
+    app.kubernetes.io/name: openchokin-back
+  name: openchokin-back
+  namespace: openchokin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openchokin-back
+      app.kubernetes.io/name: openchokin-back
+  template:
+    metadata:
+      labels:
+        app: openchokin-back
+        app.kubernetes.io/name: openchokin-back
+    spec:
+      containers:
+        - env:
+            - name: GIN_MODE
+              value: release
+            - name: POSTGRES_ADMIN_USER
+              value: postgres
+            - name: POSTGRES_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgres-admin-password
+                  name: openchokin-5b8e1f
+            - name: POSTGRES_USER
+              value: openchokin
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgres-user-password
+                  name: openchokin-5b8e1f
+            - name: POSTGRES_DB
+              value: openchokin
+            - name: POSTGRES_HOST
+              value: postgresql-default-rw.databases.svc.cluster.local
+            - name: POSTGRES_PORT
+              value: "5432"
+          image: ghcr.io/walnuts1018/openchokin-back:v0.0.0-cd205cba77a922ba01009c04203a0e4b962a31d8-97
+          imagePullPolicy: IfNotPresent
+          name: openchokin-back
+          ports:
+            - containerPort: 8080
+          resources:
+            limits: {}
+            requests:
+              memory: 10Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault

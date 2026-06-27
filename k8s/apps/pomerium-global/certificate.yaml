@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: pomerium-gateway
+  namespace: pomerium
+spec:
+  dnsNames:
+    - '*.local.walnuts.dev'
+    - '*.walnuts.dev'
+    - walnuts.dev
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  secretName: pomerium-gateway-cert

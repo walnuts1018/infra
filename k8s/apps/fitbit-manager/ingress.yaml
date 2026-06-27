@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: fitbit-manager
+    app.kubernetes.io/name: fitbit-manager
+  name: fitbit-manager
+  namespace: fitbit-manager
+spec:
+  ingressClassName: cilium
+  rules:
+    - host: fitbit.walnuts.dev
+      http:
+        paths:
+          - backend:
+              service:
+                name: fitbit-manager
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix

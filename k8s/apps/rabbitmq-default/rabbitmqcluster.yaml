@@ -1,0 +1,23 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    rabbitmq.com/topology-allowed-namespaces: picca-ai-prototype
+  labels:
+    app: rabbitmq-default
+    app.kubernetes.io/name: rabbitmq-default
+  name: default
+  namespace: rabbitmq
+spec:
+  image: rabbitmq:4.3.2-management
+  persistence:
+    storage: 10Gi
+  replicas: 1
+  resources:
+    limits:
+      cpu: "2"
+      memory: 2Gi
+    requests:
+      cpu: 100m
+      memory: 512Mi

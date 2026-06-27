@@ -1,0 +1,16 @@
+apiVersion: ingress.pomerium.io/v1
+kind: Pomerium
+metadata:
+  name: global
+spec:
+  authenticate:
+    url: https://pomerium.walnuts.dev
+  identityProvider:
+    provider: oidc
+    scopes:
+      - openid
+      - email
+      - profile
+    secret: pomerium/pomerium-global-807db1
+    url: https://auth.walnuts.dev
+  secrets: pomerium/bootstrap

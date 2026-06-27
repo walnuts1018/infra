@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: envoy-gateway-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: envoy-gateway-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: gateway-helm
+    helm:
+      releaseName: envoy-gateway
+      valuesObject:
+        config:
+          envoyGateway:
+            extensionApis:
+              enableBackend: true
+              enableEnvoyPatchPolicy: true
+            provider:
+              kubernetes:
+                rateLimitDeployment:
+                  container:
+                    env:
+                      - name: REDIS_TLS
+                        value: "false"
+                    resources:
+                      limits:
+                        cpu: 500m
+                        memory: 512Mi
+                      requests:
+                        cpu: 2m
+                        memory: 20Mi
+            rateLimit:
+              backend:
+                redis:
+                  url: envoy-gateway-redis-leader.envoy-gateway-system.svc.cluster.local:6379
+                type: Redis
+        deployment:
+          envoyGateway:
+            resources:
+              limits:
+                memory: 1Gi
+              requests:
+                cpu: 2m
+                memory: 51Mi
+    repoURL: docker.io/envoyproxy
+    targetRevision: 1.6.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

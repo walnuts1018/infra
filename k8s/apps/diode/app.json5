@@ -1,7 +1,0 @@
-{
-  name: "diode",
-  namespace: "netbox",
-  clusters: {
-    kurumi: {},
-  },
-}

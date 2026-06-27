@@ -1,0 +1,22 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: zitadel
+    app.kubernetes.io/name: zitadel
+  name: zitadel
+  namespace: zitadel
+spec:
+  maxReplicas: 4
+  metrics:
+    - resource:
+        name: memory
+        target:
+          averageUtilization: 100
+          type: Utilization
+      type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: zitadel
