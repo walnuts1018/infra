@@ -1,7 +1,6 @@
 local externalSecret = import './external-secret.jsonnet';
 local httproute = import './httproute.jsonnet';
 local app = import 'app.json5';
-local app = (app);
 local httproute = (httproute);
 local secret = (externalSecret);
 
