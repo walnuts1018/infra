@@ -6,6 +6,6 @@ function() (helm) {
   ociChartURL: 'docker.io/envoyproxy/gateway-helm',
   targetRevision: '1.6.1',
   valuesObject: std.mergePatch(
-    std.parseYaml((importstr 'values.yaml')), {}
+    std.parseYaml(importstr 'values.yaml'), {}
   ),
 }

@@ -1,5 +1,4 @@
 local container = import '../../components/container.libsonnet';
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local externalSecret = import 'external-secret.jsonnet';
 {
@@ -8,7 +7,7 @@ local externalSecret = import 'external-secret.jsonnet';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
     schedule: '*/5 * * * *',

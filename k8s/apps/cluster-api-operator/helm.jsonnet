@@ -5,5 +5,5 @@ local app = import 'app.json5';
   chart: 'cluster-api-operator',
   repoURL: 'https://kubernetes-sigs.github.io/cluster-api-operator',
   targetRevision: '0.27.0',
-  valuesObject: std.parseYaml((importstr 'values.yaml')),
+  valuesObject: std.parseYaml(importstr 'values.yaml'),
 }

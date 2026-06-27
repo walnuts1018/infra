@@ -1,5 +1,4 @@
 local container = import '../../components/container.libsonnet';
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'batch/v1',
@@ -16,7 +15,7 @@ local app = import 'app.json5';
       spec: {
         template: {
           metadata: {
-            labels: (labels)(app.name),
+            labels: (import '../../components/labels.libsonnet')(app.name),
           },
           spec: {
             serviceAccountName: (import 'sa.jsonnet').metadata.name,

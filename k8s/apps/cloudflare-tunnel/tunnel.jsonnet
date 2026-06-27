@@ -1,4 +1,3 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 function(nameOverride='', replicas=3, enableServiceMonitor=true) {
   apiVersion: 'cf-tunnel-operator.walnuts.dev/v1beta1',
@@ -6,7 +5,7 @@ function(nameOverride='', replicas=3, enableServiceMonitor=true) {
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
     replicas: replicas,

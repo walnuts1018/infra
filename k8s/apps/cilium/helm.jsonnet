@@ -16,7 +16,7 @@ function(
   repoURL: 'https://helm.cilium.io/',
   targetRevision: '1.19.5',
   valuesObject: std.mergePatch(
-    std.parseYaml((importstr 'values.yaml')), {
+    std.parseYaml(importstr 'values.yaml'), {
       k8sServiceHost: k8sServiceHost,
       k8sServicePort: k8sServicePort,
       ingressController: {

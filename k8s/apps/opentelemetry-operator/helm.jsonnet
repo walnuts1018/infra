@@ -1,12 +1,10 @@
-local helm = import '../../components/helm.libsonnet';
 local app = import 'app.json5';
-local values = importstr 'values.yaml';
-(helm) {
+(import '../../components/helm.libsonnet') {
   name: app.name,
   namespace: app.namespace,
 
   chart: 'opentelemetry-operator',
   repoURL: 'https://open-telemetry.github.io/opentelemetry-helm-charts',
   targetRevision: '0.115.0',
-  values: (values),
+  values: (importstr 'values.yaml'),
 }

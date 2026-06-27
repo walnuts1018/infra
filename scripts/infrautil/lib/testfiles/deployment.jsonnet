@@ -19,7 +19,7 @@ local labels = import 'components/labels.libsonnet';
       },
       spec: {
         containers: [
-          ((import 'components/container.libsonnet')) {
+          (import 'components/container.libsonnet') {
             name: 'http-dump',
             image: 'ghcr.io/walnuts1018/http-dump:629824cedeccfb239b7d490f2f6dffb70f12a5f7-24',
             ports: [

@@ -1,13 +1,11 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local env = import 'env.libsonnet';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
     schedule: '*/15 * * * *',
@@ -45,7 +43,7 @@ local env = import 'env.libsonnet';
                     memory: '300Mi',
                   },
                 },
-                env: env.env,
+                env: (import 'env.libsonnet').env,
               },
             ],
             tolerations: [

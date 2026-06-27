@@ -6,7 +6,7 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
   repoURL: 'https://charts.jetstack.io',
   targetRevision: 'v0.22.1',
   valuesObject: std.mergePatch(
-    std.parseYaml((importstr 'values.yaml')), {
+    std.parseYaml(importstr 'values.yaml'), {
       app: {
         metrics: {
           service: {

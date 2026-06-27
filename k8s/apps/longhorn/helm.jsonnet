@@ -6,7 +6,7 @@ local app = import 'app.json5';
   repoURL: 'https://charts.longhorn.io',
   targetRevision: '1.12.0',
   valuesObject: std.mergePatch(
-    std.parseYaml((importstr 'values.yaml')),
+    std.parseYaml(importstr 'values.yaml'),
     {
       defaultBackupStore: {
         backupTargetCredentialSecret: (import 'external-secret.jsonnet').spec.target.name,

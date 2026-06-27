@@ -1,7 +1,5 @@
 local container = import '../../components/container.libsonnet';
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local sa = import 'sa.jsonnet';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
@@ -18,10 +16,10 @@ local sa = import 'sa.jsonnet';
         backoffLimit: 0,
         template: {
           metadata: {
-            labels: (labels)(app.name),
+            labels: (import '../../components/labels.libsonnet')(app.name),
           },
           spec: {
-            serviceAccountName: sa.metadata.name,
+            serviceAccountName: (import 'sa.jsonnet').metadata.name,
             restartPolicy: 'Never',
             initContainers: [
               (container) {

@@ -1,10 +1,9 @@
-local labels = import '../../components/labels.libsonnet';
 {
   apiVersion: 'redis.redis.opstreelabs.in/v1beta2',
   kind: 'RedisCluster',
   metadata: {
     name: (import 'app.json5').name + '-redis',
-    labels: (labels)($.metadata.name),
+    labels: (import '../../components/labels.libsonnet')($.metadata.name),
   },
   spec: {
     clusterSize: 3,

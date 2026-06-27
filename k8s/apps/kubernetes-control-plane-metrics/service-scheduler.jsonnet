@@ -1,5 +1,3 @@
-local labels = import '../../components/labels.libsonnet';
-local app = import 'app.json5';
 
 {
   apiVersion: 'v1',
@@ -7,7 +5,7 @@ local app = import 'app.json5';
   metadata: {
     name: 'kube-scheduler-metrics-proxy',
     namespace: 'kube-system',
-    labels: labels(app.name) + {
+    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name) + {
       app: 'kube-scheduler-metrics-proxy',
       jobLabel: 'kube-scheduler',
     },

@@ -1,14 +1,13 @@
-local helm = import '../../components/helm.libsonnet';
 local app = import 'app.json5';
 local externalSecret = import 'external-secret.jsonnet';
-(helm) {
+(import '../../components/helm.libsonnet') {
   name: app.name,
   namespace: app.namespace,
   chart: 'velero',
   repoURL: 'https://vmware-tanzu.github.io/helm-charts',
   targetRevision: '12.0.3',
   valuesObject: std.mergePatch(
-    std.parseYaml((importstr 'values.yaml')), {
+    std.parseYaml(importstr 'values.yaml'), {
       configuration: {
         backupStorageLocation: [
           {

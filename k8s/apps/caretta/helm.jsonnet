@@ -6,6 +6,6 @@ local app = import 'app.json5';
   chart: 'caretta',
   repoURL: 'https://helm.groundcover.com/',
   targetRevision: '0.0.16',
-  valuesObject: std.mergePatch(std.parseYaml((importstr 'values.yaml')), {
+  valuesObject: std.mergePatch(std.parseYaml(importstr 'values.yaml'), {
   }),
 }

@@ -1,4 +1,3 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'autoscaling/v2',
@@ -6,7 +5,7 @@ local app = import 'app.json5';
   metadata: {
     name: app.appname.frontend,
     namespace: app.namespace,
-    labels: (labels)(app.appname.frontend),
+    labels: (import '../../components/labels.libsonnet')(app.appname.frontend),
   },
   spec: {
     minReplicas: 2,

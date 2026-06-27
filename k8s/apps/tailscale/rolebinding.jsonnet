@@ -1,4 +1,3 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'rbac.authorization.k8s.io/v1',
@@ -6,7 +5,7 @@ local app = import 'app.json5';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   subjects: [
     {

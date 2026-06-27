@@ -1,4 +1,3 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'rabbitmq.com/v1beta1',
@@ -10,7 +9,7 @@ local app = import 'app.json5';
       'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
       'rabbitmq.com/topology-allowed-namespaces': 'picca-ai-prototype',
     },
-    labels: (labels)(app.name),
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
     replicas: 1,

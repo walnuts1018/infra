@@ -1,6 +1,5 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local env = import 'env.libsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -43,7 +42,7 @@ local env = import 'env.libsonnet';
                 memory: '300Mi',
               },
             },
-            env: env.env,
+            env: (import 'env.libsonnet').env,
           },
         ],
       },

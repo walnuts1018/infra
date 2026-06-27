@@ -1,7 +1,5 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local helm = import 'helm.jsonnet';
-local helmname = helm.spec.source.helm.releaseName;
+local helmname = (import 'helm.jsonnet').spec.source.helm.releaseName;
 
 {
   apiVersion: 'monitoring.coreos.com/v1',
@@ -9,7 +7,7 @@ local helmname = helm.spec.source.helm.releaseName;
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
     selector: {

@@ -1,6 +1,5 @@
-local helm = import '../../components/helm.libsonnet';
 local app = import 'app.json5';
-(helm) {
+(import '../../components/helm.libsonnet') {
   name: app.name,
   namespace: app.namespace,
 

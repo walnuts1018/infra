@@ -1,4 +1,3 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local service = import 'service.jsonnet';
 {
@@ -7,7 +6,7 @@ local service = import 'service.jsonnet';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
     ingressClassName: 'cilium',

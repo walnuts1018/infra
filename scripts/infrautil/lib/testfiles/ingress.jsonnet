@@ -1,5 +1,4 @@
 local app = import 'app.json5';
-local labels = import 'components/labels.libsonnet';
 local service = import 'service.jsonnet';
 {
   apiVersion: 'networking.k8s.io/v1',
@@ -7,7 +6,7 @@ local service = import 'service.jsonnet';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: (import 'components/labels.libsonnet')(app.name),
   },
   spec: {
     ingressClassName: 'cilium',

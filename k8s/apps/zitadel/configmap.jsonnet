@@ -1,4 +1,3 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local config = importstr './config/config.yaml';
 {
@@ -7,7 +6,7 @@ local config = importstr './config/config.yaml';
   metadata: {
     name: app.name + '-config',
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   data: {
     'config.yaml': (config),
