@@ -1,5 +1,4 @@
-local externalSecret = import '../../components/external-secret.libsonnet';
-std.mergePatch((externalSecret) {
+std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: 'postgres-superuser-password',
   data: [
     {
