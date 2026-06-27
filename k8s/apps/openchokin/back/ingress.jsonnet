@@ -1,10 +1,11 @@
+local app = import '../app.json5';
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'Ingress',
   metadata: {
-    name: (import '../app.json5').name + '-back',
-    namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-back'),
+    name: app.name + '-back',
+    namespace: app.namespace,
+    labels: (import '../../../components/labels.libsonnet')(app.name + '-back'),
   },
   spec: {
     ingressClassName: 'cilium',

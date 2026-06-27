@@ -1,3 +1,4 @@
+local config = importstr '_config/config.toml';
 (import '../../components/external-secret.libsonnet') {
   name: (import 'app.json5').name,
   data: [
@@ -24,6 +25,6 @@
     },
   ],
   template_data: {
-    'config.toml': importstr '_config/config.toml',
+    'config.toml': config,
   },
 }

@@ -1,9 +1,10 @@
+local app = import '../app.json5';
 {
   apiVersion: 'gateway.pomerium.io/v1alpha1',
   kind: 'PolicyFilter',
   metadata: {
-    name: (import '../app.json5').name + '-public',
-    namespace: (import '../app.json5').namespace,
+    name: app.name + '-public',
+    namespace: app.namespace,
   },
   spec: {
     ppl: |||

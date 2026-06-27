@@ -1,7 +1,7 @@
+local app = import 'app.json5';
 (import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
-
+  name: app.name,
+  namespace: app.namespace,
   chart: 'descheduler',
   repoURL: 'https://kubernetes-sigs.github.io/descheduler/',
   targetRevision: '0.36.0',

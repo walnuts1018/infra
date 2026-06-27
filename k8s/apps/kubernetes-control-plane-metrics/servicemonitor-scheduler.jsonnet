@@ -1,4 +1,3 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 
 {
@@ -7,7 +6,7 @@ local app = import 'app.json5';
   metadata: {
     name: 'kube-scheduler',
     namespace: app.namespace,
-    labels: labels(app.name),
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
     jobLabel: 'jobLabel',

@@ -1,15 +1,17 @@
+local gateway = import '../../pomerium-global/gateway.jsonnet';
+local app = import '../app.json5';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
   metadata: {
-    name: (import '../app.json5').name,
-    namespace: (import '../app.json5').namespace,
+    name: app.name,
+    namespace: app.namespace,
   },
   spec: {
     parentRefs: [
       {
-        name: (import '../../pomerium-global/gateway.jsonnet').metadata.name,
-        namespace: (import '../../pomerium-global/gateway.jsonnet').metadata.namespace,
+        name: gateway.metadata.name,
+        namespace: gateway.metadata.namespace,
       },
     ],
     hostnames: [

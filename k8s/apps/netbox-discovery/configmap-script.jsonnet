@@ -1,7 +1,8 @@
+local app = import 'app.json5';
 (import '../../components/configmap.libsonnet') {
-  name: (import 'app.json5').name + '-script',
-  namespace: (import 'app.json5').namespace,
-  labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+  name: app.name + '-script',
+  namespace: app.namespace,
+  labels: (import '../../components/labels.libsonnet')(app.name),
   data: {
     'snmp-discovery.sh': (importstr './_scripts/snmp-discovery.sh'),
   },

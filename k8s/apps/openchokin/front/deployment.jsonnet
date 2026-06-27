@@ -1,19 +1,22 @@
+local labels = import '../../../components/labels.libsonnet';
+local app = import '../app.json5';
+local externalSecret = import '../external-secret.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import '../app.json5').name + '-front',
-    namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+    name: app.name + '-front',
+    namespace: app.namespace,
+    labels: (labels)(app.name + '-front'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+      matchLabels: (labels)(app.name + '-front'),
     },
     template: {
       metadata: {
-        labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+        labels: (labels)(app.name + '-front'),
       },
       spec: {
         containers: [
@@ -45,7 +48,7 @@
                 name: 'ZITADEL_CLIENT_ID',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import '../external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'zitade-client-id',
                   },
                 },
@@ -54,7 +57,7 @@
                 name: 'ZITADEL_CLIENT_SECRET',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import '../external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'zitadel-client-secret',
                   },
                 },
@@ -63,7 +66,7 @@
                 name: 'NEXTAUTH_SECRET',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import '../external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'nextauth-secret',
                   },
                 },
@@ -84,7 +87,7 @@
                 name: 'REDIS_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import '../external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'redis-password',
                   },
                 },
@@ -93,7 +96,7 @@
                 name: 'CACHE_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import '../external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'cache-password',
                   },
                 },

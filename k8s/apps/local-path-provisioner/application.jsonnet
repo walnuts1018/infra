@@ -1,14 +1,15 @@
+local app = import 'app.json5';
 {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'Application',
   metadata: {
-    name: (import 'app.json5').name + '-external',
+    name: app.name + '-external',
     namespace: 'argocd',
   },
   spec: {
     project: 'default',
     destination: {
-      namespace: (import 'app.json5').namespace,
+      namespace: app.namespace,
       server: 'https://kubernetes.default.svc',
     },
     source: {

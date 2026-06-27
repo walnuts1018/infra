@@ -1,19 +1,21 @@
+local labels = import '../../../components/labels.libsonnet';
+local app = import '../app.json5';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import '../app.json5').name + '-front',
-    namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+    name: app.name + '-front',
+    namespace: app.namespace,
+    labels: (labels)(app.name + '-front'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+      matchLabels: (labels)(app.name + '-front'),
     },
     template: {
       metadata: {
-        labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+        labels: (labels)(app.name + '-front'),
       },
       spec: {
         containers: [

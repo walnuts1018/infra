@@ -1,19 +1,21 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').appname.frontend,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
+    name: app.appname.frontend,
+    namespace: app.namespace,
+    labels: (labels)(app.appname.frontend),
   },
   spec: {
     replicas: 2,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
+      matchLabels: (labels)(app.appname.frontend),
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
+        labels: (labels)(app.appname.frontend),
       },
       spec: {
         securityContext: {
@@ -47,7 +49,7 @@
               },
               {
                 name: 'API_ENDPOINT',
-                value: 'http://' + (import 'service-backend.jsonnet').metadata.name + '.' + (import 'app.json5').namespace + '.svc.cluster.local:8080',
+                value: 'http://' + (import 'service-backend.jsonnet').metadata.name + '.' + app.namespace + '.svc.cluster.local:8080',
               },
             ],
             livenessProbe: {
@@ -82,7 +84,7 @@
             topologyKey: 'kubernetes.io/hostname',
             whenUnsatisfiable: 'ScheduleAnyway',
             labelSelector: {
-              matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
+              matchLabels: (labels)(app.appname.frontend),
             },
           },
         ],

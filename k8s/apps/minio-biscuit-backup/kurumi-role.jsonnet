@@ -1,9 +1,10 @@
+local app = import 'app.json5';
 {
   apiVersion: 'rbac.authorization.k8s.io/v1',
   kind: 'Role',
   metadata: {
-    name: (import 'app.json5').name + '-kurumi-role',
-    namespace: (import 'app.json5').namespace,
+    name: app.name + '-kurumi-role',
+    namespace: app.namespace,
   },
   rules: [
     {

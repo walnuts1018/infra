@@ -1,9 +1,12 @@
+local app = import 'app.json5';
+local backup = importstr './_scripts/backup.sh';
+local assumerole = importstr './_scripts/assumerole.sh';
 (import '../../components/configmap.libsonnet') {
-  name: (import 'app.json5').name + '-script',
-  namespace: (import 'app.json5').namespace,
-  labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+  name: app.name + '-script',
+  namespace: app.namespace,
+  labels: (import '../../components/labels.libsonnet')(app.name),
   data: {
-    'backup.sh': (importstr './_scripts/backup.sh'),
-    'assumerole.sh': (importstr './_scripts/assumerole.sh'),
+    'backup.sh': (backup),
+    'assumerole.sh': (assumerole),
   },
 }

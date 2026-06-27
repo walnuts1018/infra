@@ -1,10 +1,11 @@
+local app = import 'app.json5';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
     schedule: '*/15 * * * *',

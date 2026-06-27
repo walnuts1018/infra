@@ -1,4 +1,3 @@
-local labels = import '../../components/labels.libsonnet';
 local gateway = import '../envoy-gateway-class/gateway.jsonnet';
 local app = import 'app.json5';
 
@@ -8,7 +7,7 @@ local app = import 'app.json5';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: labels(app.name),
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
     parentRefs: [

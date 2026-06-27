@@ -1,10 +1,12 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'v1',
   kind: 'Service',
   metadata: {
-    name: (import 'app.json5').appname.backend,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.backend),
+    name: app.appname.backend,
+    namespace: app.namespace,
+    labels: (labels)(app.appname.backend),
   },
   spec: {
     ports: [
@@ -14,7 +16,7 @@
         targetPort: 8080,
       },
     ],
-    selector: (import '../../components/labels.libsonnet')((import 'app.json5').appname.backend),
+    selector: (labels)(app.appname.backend),
     type: 'ClusterIP',
   },
 }

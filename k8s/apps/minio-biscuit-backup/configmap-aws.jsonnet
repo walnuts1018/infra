@@ -1,7 +1,8 @@
+local app = import 'app.json5';
 (import '../../components/configmap.libsonnet') {
-  name: (import 'app.json5').name + '-aws',
-  namespace: (import 'app.json5').namespace,
-  labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+  name: app.name + '-aws',
+  namespace: app.namespace,
+  labels: (import '../../components/labels.libsonnet')(app.name),
   data: {
     config: (importstr './_config/aws-config'),
   },

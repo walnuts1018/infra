@@ -1,13 +1,14 @@
+local app = import 'app.json5';
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'NetworkPolicy',
   metadata: {
-    name: (import 'app.json5').appname.backend,
-    namespace: (import 'app.json5').namespace,
+    name: app.appname.backend,
+    namespace: app.namespace,
   },
   spec: {
     podSelector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.backend),
+      matchLabels: (import '../../components/labels.libsonnet')(app.appname.backend),
     },
     policyTypes: [
       'Egress',
