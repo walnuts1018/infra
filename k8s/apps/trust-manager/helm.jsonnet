@@ -4,7 +4,7 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
   namespace: app.namespace,
   chart: 'trust-manager',
   repoURL: 'https://charts.jetstack.io',
-  targetRevision: 'v0.22.1',
+  targetRevision: 'v0.23.0',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'), {
       app: {
