@@ -1,8 +1,6 @@
 local externalSecret = import './external-secret.jsonnet';
 local httproute = import './httproute.jsonnet';
 local app = import 'app.json5';
-local httproute = (httproute);
-local secret = (externalSecret);
 
 {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
@@ -25,7 +23,7 @@ local secret = (externalSecret);
       },
       clientID: '377362576486433474',
       clientSecret: {
-        name: secret.spec.target.name,
+        name: externalSecret.spec.target.name,
       },
       scopes: [
         'openid',

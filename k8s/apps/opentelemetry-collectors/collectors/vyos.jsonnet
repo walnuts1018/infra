@@ -1,8 +1,7 @@
-local base = import '_base.libsonnet';
 function(
   clusterName='kurumi',
 )
-  local base = (base)(clusterName);
+  local base = (import '_base.libsonnet')(clusterName);
   std.mergePatch(base, {
     metadata: {
       name: 'vyos',

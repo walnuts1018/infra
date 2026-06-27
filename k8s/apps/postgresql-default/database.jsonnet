@@ -1,6 +1,5 @@
 local databases = import 'databases.libsonnet';
 local postgres = import 'postgres.jsonnet';
-local databases = (databases);
 local gen = function(database) {
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'Database',
