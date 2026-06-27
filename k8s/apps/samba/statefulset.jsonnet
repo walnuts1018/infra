@@ -1,14 +1,5 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local externalSecret = import 'external-secret.jsonnet';
-local pvcBooks = import 'pvc-books.jsonnet';
-local pvcCameraRoll = import 'pvc-camera-roll.jsonnet';
-local pvcMega = import 'pvc-mega.jsonnet';
-local pvcMovies = import 'pvc-movies.jsonnet';
-local pvcMusics = import 'pvc-musics.jsonnet';
-local pvcRoot = import 'pvc-root.jsonnet';
-local service = import 'service.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'StatefulSet',
@@ -21,7 +12,7 @@ local service = import 'service.jsonnet';
     selector: {
       matchLabels: (labels)(app.name),
     },
-    serviceName: service.metadata.name,
+    serviceName: (import 'service.jsonnet').metadata.name,
     replicas: 1,
     template: {
       metadata: {
@@ -33,7 +24,7 @@ local service = import 'service.jsonnet';
           fsGroupChangePolicy: 'OnRootMismatch',
         },
         containers: [
-          (container) {
+          (import '../../components/container.libsonnet') {
             image: 'ghcr.io/servercontainers/samba:a3.24.1-s4.23.8-r0',
             imagePullPolicy: 'IfNotPresent',
             name: 'samba',
@@ -42,7 +33,7 @@ local service = import 'service.jsonnet';
                 name: 'ACCOUNT_samba',
                 valueFrom: {
                   secretKeyRef: {
-                    name: externalSecret.spec.target.name,
+                    name: (import 'external-secret.jsonnet').spec.target.name,
                     key: 'account-samba',
                   },
                 },
@@ -128,37 +119,37 @@ local service = import 'service.jsonnet';
           {
             name: 'root',
             persistentVolumeClaim: {
-              claimName: pvcRoot.metadata.name,
+              claimName: (import 'pvc-root.jsonnet').metadata.name,
             },
           },
           {
             name: 'books',
             persistentVolumeClaim: {
-              claimName: pvcBooks.metadata.name,
+              claimName: (import 'pvc-books.jsonnet').metadata.name,
             },
           },
           {
             name: 'camera-roll',
             persistentVolumeClaim: {
-              claimName: pvcCameraRoll.metadata.name,
+              claimName: (import 'pvc-camera-roll.jsonnet').metadata.name,
             },
           },
           {
             name: 'mega',
             persistentVolumeClaim: {
-              claimName: pvcMega.metadata.name,
+              claimName: (import 'pvc-mega.jsonnet').metadata.name,
             },
           },
           {
             name: 'movies',
             persistentVolumeClaim: {
-              claimName: pvcMovies.metadata.name,
+              claimName: (import 'pvc-movies.jsonnet').metadata.name,
             },
           },
           {
             name: 'musics',
             persistentVolumeClaim: {
-              claimName: pvcMusics.metadata.name,
+              claimName: (import 'pvc-musics.jsonnet').metadata.name,
             },
           },
         ],

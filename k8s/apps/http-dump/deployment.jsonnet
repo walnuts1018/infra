@@ -1,4 +1,3 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
@@ -20,7 +19,7 @@ local app = import 'app.json5';
       },
       spec: {
         containers: [
-          (container) {
+          (import '../../components/container.libsonnet') {
             name: 'http-dump',
             image: 'ghcr.io/walnuts1018/http-dump:2940b4a2f1f5f4fdfd6c41e6dd2d8c456837f3e1-46',
             ports: [

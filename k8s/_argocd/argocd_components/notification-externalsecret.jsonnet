@@ -1,8 +1,7 @@
-local app = import 'app.json5';
 (import '../../components/external-secret.libsonnet') {
   name: 'argocd-notifications-secret',
   use_suffix: false,
-  namespace: app.namespace,
+  namespace: (import 'app.json5').namespace,
   data: [
     {
       secretKey: 'slack-token',

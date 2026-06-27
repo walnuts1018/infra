@@ -1,6 +1,5 @@
-local app = import 'app.json5';
 std.mergePatch((import '../../components/external-secret.libsonnet') {
-  name: app.name + '-backupstore-credential',
+  name: (import 'app.json5').name + '-backupstore-credential',
   data: [
     {
       secretKey: 'AWS_SECRET_ACCESS_KEY',

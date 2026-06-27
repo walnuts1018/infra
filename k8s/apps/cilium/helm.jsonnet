@@ -1,6 +1,5 @@
 local helm = import '../../components/helm.libsonnet';
 local app = import 'app.json5';
-local values = importstr 'values.yaml';
 function(
   clusterID=1,
   clusterName='kurumi',
@@ -17,7 +16,7 @@ function(
   repoURL: 'https://helm.cilium.io/',
   targetRevision: '1.19.5',
   valuesObject: std.mergePatch(
-    std.parseYaml(values), {
+    std.parseYaml((importstr 'values.yaml')), {
       k8sServiceHost: k8sServiceHost,
       k8sServicePort: k8sServicePort,
       ingressController: {

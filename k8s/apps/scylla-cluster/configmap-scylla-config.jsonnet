@@ -1,9 +1,7 @@
-local configmap = import '../../components/configmap.libsonnet';
-local app = import 'app.json5';
 local scylla = importstr './_configs/scylla.yaml';
-(configmap) {
+(import '../../components/configmap.libsonnet') {
   name: 'scylla-config',
-  namespace: app.namespace,
+  namespace: (import 'app.json5').namespace,
   data: {
     'scylla.yaml': (scylla),
   },

@@ -1,10 +1,9 @@
-local app = import 'app.json5';
 {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'AppProject',
   metadata: {
     name: 'default',
-    namespace: app.namespace,
+    namespace: (import 'app.json5').namespace,
     annotations: {
       local slackChannel = 'argocd',
       'notifications.argoproj.io/subscribe.on-deleted.slack': slackChannel,

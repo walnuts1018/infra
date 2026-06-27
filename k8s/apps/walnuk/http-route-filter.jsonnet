@@ -1,10 +1,9 @@
-local app = import 'app.json5';
 {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'HTTPRouteFilter',
   metadata: {
     name: 'admin-auth-filter',
-    namespace: app.namespace,
+    namespace: (import 'app.json5').namespace,
   },
   spec: {
     directResponse: {

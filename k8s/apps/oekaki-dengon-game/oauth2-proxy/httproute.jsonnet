@@ -1,7 +1,5 @@
 local gateway = import '../../pomerium-global/gateway.jsonnet';
 local app = import '../app.json5';
-local policyFilterPublic = import 'policy-filter-public.jsonnet';
-local policyFilter = import 'policy-filter.jsonnet';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
@@ -75,7 +73,7 @@ local policyFilter = import 'policy-filter.jsonnet';
             extensionRef: {
               group: 'gateway.pomerium.io',
               kind: 'PolicyFilter',
-              name: policyFilterPublic.metadata.name,
+              name: (import 'policy-filter-public.jsonnet').metadata.name,
             },
           },
         ],
@@ -103,7 +101,7 @@ local policyFilter = import 'policy-filter.jsonnet';
             extensionRef: {
               group: 'gateway.pomerium.io',
               kind: 'PolicyFilter',
-              name: policyFilter.metadata.name,
+              name: (import 'policy-filter.jsonnet').metadata.name,
             },
           },
         ],

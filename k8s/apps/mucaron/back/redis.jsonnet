@@ -1,4 +1,3 @@
-local externalSecret = import 'external-secret.jsonnet';
 {
   apiVersion: 'redis.redis.opstreelabs.in/v1beta2',
   kind: 'Redis',
@@ -13,7 +12,7 @@ local externalSecret = import 'external-secret.jsonnet';
       image: 'quay.io/opstree/redis:v7.4.8',
       imagePullPolicy: 'IfNotPresent',
       redisSecret: {
-        name: externalSecret.spec.target.name,
+        name: (import 'external-secret.jsonnet').spec.target.name,
         key: 'redis_password',
       },
     },

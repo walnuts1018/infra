@@ -1,6 +1,5 @@
 local helm = import '../../components/helm.libsonnet';
 local app = import 'app.json5';
-local values = importstr 'values.yaml';
 local externalSecret = import 'external-secret.jsonnet';
 (helm) {
   name: app.name,
@@ -9,7 +8,7 @@ local externalSecret = import 'external-secret.jsonnet';
   repoURL: 'https://vmware-tanzu.github.io/helm-charts',
   targetRevision: '12.0.3',
   valuesObject: std.mergePatch(
-    std.parseYaml(values), {
+    std.parseYaml((importstr 'values.yaml')), {
       configuration: {
         backupStorageLocation: [
           {

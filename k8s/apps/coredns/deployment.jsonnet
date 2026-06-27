@@ -1,7 +1,5 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local configmap = import 'configmap.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -21,7 +19,7 @@ local configmap = import 'configmap.jsonnet';
       },
       spec: {
         containers: [
-          std.mergePatch((container), {
+          std.mergePatch((import '../../components/container.libsonnet'), {
             name: 'coredns',
             image: 'coredns/coredns:1.14.4',
             args: [
@@ -103,7 +101,7 @@ local configmap = import 'configmap.jsonnet';
           {
             name: 'corefile',
             configMap: {
-              name: configmap.metadata.name,
+              name: (import 'configmap.jsonnet').metadata.name,
             },
           },
         ],
@@ -130,7 +128,6 @@ local configmap = import 'configmap.jsonnet';
             ],
           },
         },
-
       },
     },
   },

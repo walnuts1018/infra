@@ -1,8 +1,5 @@
 local gateway = import '../envoy-gateway-class/gateway.jsonnet';
 local app = import 'app.json5';
-local httpRouteFilter = import 'http-route-filter.jsonnet';
-local serviceBackend = import 'service-backend.jsonnet';
-local serviceFrontend = import 'service-frontend.jsonnet';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
@@ -28,7 +25,7 @@ local serviceFrontend = import 'service-frontend.jsonnet';
         backendRefs: [
           {
             kind: 'Service',
-            name: serviceBackend.metadata.name,
+            name: (import 'service-backend.jsonnet').metadata.name,
             port: 8080,
             weight: 1,
           },
@@ -57,7 +54,7 @@ local serviceFrontend = import 'service-frontend.jsonnet';
             extensionRef: {
               group: 'gateway.envoyproxy.io',
               kind: 'HTTPRouteFilter',
-              name: httpRouteFilter.metadata.name,
+              name: (import 'http-route-filter.jsonnet').metadata.name,
             },
           },
         ],
@@ -66,7 +63,7 @@ local serviceFrontend = import 'service-frontend.jsonnet';
         backendRefs: [
           {
             kind: 'Service',
-            name: serviceFrontend.metadata.name,
+            name: (import 'service-frontend.jsonnet').metadata.name,
             port: 3000,
             weight: 1,
           },

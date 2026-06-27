@@ -1,7 +1,6 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local externalSecret = import 'external-secret.jsonnet';
-local sa = import 'sa.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -20,7 +19,7 @@ local sa = import 'sa.jsonnet';
         labels: (labels)(app.name),
       },
       spec: {
-        serviceAccountName: sa.metadata.name,
+        serviceAccountName: (import 'sa.jsonnet').metadata.name,
         securityContext: {
           fsGroup: 101,
           fsGroupChangePolicy: 'OnRootMismatch',

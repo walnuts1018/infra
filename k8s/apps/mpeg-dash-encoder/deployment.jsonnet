@@ -1,4 +1,3 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local externalSecret = import 'external-secret.jsonnet';
@@ -21,7 +20,7 @@ local externalSecret = import 'external-secret.jsonnet';
       },
       spec: {
         containers: [
-          std.mergePatch((container) {
+          std.mergePatch((import '../../components/container.libsonnet') {
             name: 'mpeg-dash-encoder',
             image: 'ghcr.io/walnuts1018/mpeg-dash-encoder:52054e17d80858a0d2c515601db0a6f189352cf4-14',
             ports: [

@@ -1,5 +1,4 @@
 local app = import 'app.json5';
-local externalSecret = import 'external-secret.jsonnet';
 // https://www.pomerium.com/docs/internals/configuration
 {
   apiVersion: 'ingress.pomerium.io/v1',
@@ -19,7 +18,7 @@ local externalSecret = import 'external-secret.jsonnet';
         'email',
         'profile',
       ],
-      secret: app.namespace + '/' + externalSecret.spec.target.name,
+      secret: app.namespace + '/' + (import 'external-secret.jsonnet').spec.target.name,
       url: 'https://auth.walnuts.dev',
     },
   },

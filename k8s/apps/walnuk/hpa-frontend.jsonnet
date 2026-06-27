@@ -1,6 +1,5 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local deploymentFrontend = import 'deployment-frontend.jsonnet';
 {
   apiVersion: 'autoscaling/v2',
   kind: 'HorizontalPodAutoscaler',
@@ -27,7 +26,7 @@ local deploymentFrontend = import 'deployment-frontend.jsonnet';
     scaleTargetRef: {
       apiVersion: 'apps/v1',
       kind: 'Deployment',
-      name: deploymentFrontend.metadata.name,
+      name: (import 'deployment-frontend.jsonnet').metadata.name,
     },
   },
 }

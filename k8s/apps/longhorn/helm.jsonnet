@@ -1,18 +1,15 @@
-local helm = import '../../components/helm.libsonnet';
 local app = import 'app.json5';
-local values = importstr 'values.yaml';
-local externalSecret = import 'external-secret.jsonnet';
-(helm) {
+(import '../../components/helm.libsonnet') {
   name: app.name,
   namespace: app.namespace,
   chart: 'longhorn',
   repoURL: 'https://charts.longhorn.io',
   targetRevision: '1.12.0',
   valuesObject: std.mergePatch(
-    std.parseYaml(values),
+    std.parseYaml((importstr 'values.yaml')),
     {
       defaultBackupStore: {
-        backupTargetCredentialSecret: externalSecret.spec.target.name,
+        backupTargetCredentialSecret: (import 'external-secret.jsonnet').spec.target.name,
       },
     }
   ),

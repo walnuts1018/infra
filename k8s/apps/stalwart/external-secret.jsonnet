@@ -1,7 +1,6 @@
-local app = import 'app.json5';
 local config = importstr '_config/config.toml';
 (import '../../components/external-secret.libsonnet') {
-  name: app.name,
+  name: (import 'app.json5').name,
   data: [
     {
       secretKey: 'postgres_password',

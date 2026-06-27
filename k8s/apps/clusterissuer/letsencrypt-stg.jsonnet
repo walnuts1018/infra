@@ -1,4 +1,3 @@
-local externalSecret = import 'external-secret.jsonnet';
 {
   apiVersion: 'cert-manager.io/v1',
   kind: 'ClusterIssuer',
@@ -17,7 +16,7 @@ local externalSecret = import 'external-secret.jsonnet';
           dns01: {
             cloudflare: {
               apiTokenSecretRef: {
-                name: externalSecret.spec.target.name,
+                name: (import 'external-secret.jsonnet').spec.target.name,
                 key: 'api-token',
               },
             },

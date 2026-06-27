@@ -1,6 +1,5 @@
 local helm = import '../../components/helm.libsonnet';
 local app = import 'app.json5';
-local values = importstr 'values.yaml';
 function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
   name: app.name,
   namespace: app.namespace,
@@ -8,7 +7,7 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
   repoURL: 'https://argoproj.github.io/argo-helm',
   targetRevision: '9.5.22',
   valuesObject: std.mergePatch(
-    std.parseYaml(values),
+    std.parseYaml((importstr 'values.yaml')),
     {
       global: {
         domain: domain,

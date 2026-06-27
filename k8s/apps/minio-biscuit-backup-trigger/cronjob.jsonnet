@@ -1,7 +1,6 @@
 local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local configmapScript = import 'configmap-script.jsonnet';
 local sa = import 'sa.jsonnet';
 {
   apiVersion: 'batch/v1',
@@ -117,7 +116,7 @@ local sa = import 'sa.jsonnet';
               {
                 name: 'scripts',
                 configMap: {
-                  name: configmapScript.metadata.name,
+                  name: (import 'configmap-script.jsonnet').metadata.name,
                 },
               },
               {

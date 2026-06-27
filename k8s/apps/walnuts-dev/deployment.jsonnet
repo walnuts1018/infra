@@ -1,4 +1,3 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
@@ -24,7 +23,7 @@ local app = import 'app.json5';
           runAsGroup: 65534,
         },
         containers: [
-          std.mergePatch((container) {
+          std.mergePatch((import '../../components/container.libsonnet') {
             name: 'walnuts-dev',
             image: 'ghcr.io/walnuts1018/walnuts.dev:93d6595bcbd2ecaf3f53e073c5c9ad31f14b00dd-707',
             imagePullPolicy: 'IfNotPresent',

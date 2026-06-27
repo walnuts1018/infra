@@ -1,8 +1,4 @@
-local standard = import '../cloudnative-pg-image-catalog/standard.jsonnet';
 local app = import 'app.json5';
-local databases = import 'databases.libsonnet';
-local postgresBackupObjectstore = import 'postgres-backup-objectstore.jsonnet';
-local postgresSuperuserPassword = import 'postgres-superuser-password.jsonnet';
 {
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'Cluster',
@@ -14,7 +10,7 @@ local postgresSuperuserPassword = import 'postgres-superuser-password.jsonnet';
     imageCatalogRef: {
       apiGroup: 'postgresql.cnpg.io',
       kind: 'ClusterImageCatalog',
-      name: standard.metadata.name,
+      name: (import '../cloudnative-pg-image-catalog/standard.jsonnet').metadata.name,
       major: 17,
     },
     storage: {
@@ -22,7 +18,7 @@ local postgresSuperuserPassword = import 'postgres-superuser-password.jsonnet';
       storageClass: 'local-path',
     },
     superuserSecret: {
-      name: postgresSuperuserPassword.spec.target.name,
+      name: (import 'postgres-superuser-password.jsonnet').spec.target.name,
     },
     enableSuperuserAccess: true,
     bootstrap: {
@@ -56,7 +52,7 @@ local postgresSuperuserPassword = import 'postgres-superuser-password.jsonnet';
         passwordSecret: {
           name: std.strReplace(database.user_name + '-db-password', '_', '-'),
         },
-      } for database in (databases)],
+      } for database in (import 'databases.libsonnet')],
     },
     resources: {
       requests: {
@@ -69,7 +65,7 @@ local postgresSuperuserPassword = import 'postgres-superuser-password.jsonnet';
         name: 'barman-cloud.cloudnative-pg.io',
         isWALArchiver: true,
         parameters: {
-          barmanObjectName: postgresBackupObjectstore.metadata.name,
+          barmanObjectName: (import 'postgres-backup-objectstore.jsonnet').metadata.name,
         },
       },
     ],

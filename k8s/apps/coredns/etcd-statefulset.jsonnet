@@ -1,10 +1,7 @@
-local container = import '../../components/container.libsonnet';
 local app = import 'app.json5';
-local etcdServiceHeadless = import 'etcd-service-headless.jsonnet';
 local labels = (import '../../components/labels.libsonnet')('coredns-etcd');
 local peerHost(ordinal) =
   'coredns-etcd-%d.coredns-etcd-headless.%s.svc.cluster.local' % [ordinal, app.namespace];
-
 {
   apiVersion: 'apps/v1',
   kind: 'StatefulSet',
@@ -15,7 +12,7 @@ local peerHost(ordinal) =
   },
   spec: {
     replicas: 3,
-    serviceName: etcdServiceHeadless.metadata.name,
+    serviceName: (import 'etcd-service-headless.jsonnet').metadata.name,
     selector: {
       matchLabels: labels,
     },
@@ -40,7 +37,7 @@ local peerHost(ordinal) =
           },
         },
         containers: [
-          std.mergePatch((container), {
+          std.mergePatch((import '../../components/container.libsonnet'), {
             name: 'etcd',
             image: 'quay.io/coreos/etcd:v3.5.18',
             command: [

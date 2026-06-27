@@ -1,11 +1,10 @@
-local minioDefaultBackupApp = import '../minio-default-backup/app.json5';
 local app = import 'app.json5';
 {
   apiVersion: 'rbac.authorization.k8s.io/v1',
   kind: 'Role',
   metadata: {
     name: app.name,
-    namespace: minioDefaultBackupApp.namespace,
+    namespace: (import '../minio-default-backup/app.json5').namespace,
   },
   rules: [
     {

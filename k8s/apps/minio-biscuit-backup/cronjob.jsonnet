@@ -1,12 +1,6 @@
 local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
-local localBundle = import '../clusterissuer/local-bundle.jsonnet';
 local app = import 'app.json5';
-local configmapAws = import 'configmap-aws.jsonnet';
-local configmapRclone = import 'configmap-rclone.jsonnet';
-local configmapScript = import 'configmap-script.jsonnet';
-local externalSecretB2 = import 'external-secret-b2.jsonnet';
-local sa = import 'sa.jsonnet';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
@@ -25,7 +19,7 @@ local sa = import 'sa.jsonnet';
             labels: (labels)(app.name),
           },
           spec: {
-            serviceAccountName: sa.metadata.name,
+            serviceAccountName: (import 'sa.jsonnet').metadata.name,
             restartPolicy: 'OnFailure',
             initContainers: [
               (container) {
@@ -68,7 +62,7 @@ local sa = import 'sa.jsonnet';
                 envFrom: [
                   {
                     secretRef: {
-                      name: externalSecretB2.spec.target.name,
+                      name: (import 'external-secret-b2.jsonnet').spec.target.name,
                     },
                   },
                 ],
@@ -195,7 +189,7 @@ local sa = import 'sa.jsonnet';
               {
                 name: 'rclone-config-template',
                 configMap: {
-                  name: configmapRclone.metadata.name,
+                  name: (import 'configmap-rclone.jsonnet').metadata.name,
                   items: [
                     {
                       key: 'rclone.conf.template',
@@ -207,7 +201,7 @@ local sa = import 'sa.jsonnet';
               {
                 name: 'aws-config',
                 configMap: {
-                  name: configmapAws.metadata.name,
+                  name: (import 'configmap-aws.jsonnet').metadata.name,
                   items: [
                     {
                       key: 'config',
@@ -232,13 +226,13 @@ local sa = import 'sa.jsonnet';
               {
                 name: 'local-ca-bundle',
                 configMap: {
-                  name: localBundle.metadata.name,
+                  name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
                 },
               },
               {
                 name: 'scripts',
                 configMap: {
-                  name: configmapScript.metadata.name,
+                  name: (import 'configmap-script.jsonnet').metadata.name,
                 },
               },
               {

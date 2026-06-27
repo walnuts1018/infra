@@ -1,11 +1,9 @@
-local certificate = import './certificate.jsonnet';
-local app = import 'app.json5';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'Gateway',
   metadata: {
     name: 'pomerium-gateway',
-    namespace: app.namespace,
+    namespace: (import 'app.json5').namespace,
   },
   spec: {
     gatewayClassName: 'pomerium-gateway',
@@ -24,7 +22,7 @@ local app = import 'app.json5';
           certificateRefs: [
             {
               kind: 'Secret',
-              name: certificate.spec.secretName,
+              name: (import './certificate.jsonnet').spec.secretName,
               group: '',
             },
           ],

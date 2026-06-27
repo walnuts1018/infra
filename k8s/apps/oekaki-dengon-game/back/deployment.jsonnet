@@ -1,4 +1,3 @@
-local container = import '../../../components/container.libsonnet';
 local labels = import '../../../components/labels.libsonnet';
 local app = import '../app.json5';
 local externalSecret = import '../external-secret.jsonnet';
@@ -26,7 +25,7 @@ local externalSecret = import '../external-secret.jsonnet';
           },
         ],
         containers: [
-          (container) {
+          (import '../../../components/container.libsonnet') {
             name: 'oekaki-dengon-game-back',
             image: 'ghcr.io/kmc-jp/oekaki-dengon-game-back:v0.0.0-a6d6d6e7d66e6d0dfafbf416b462be908b208489-13',
             imagePullPolicy: 'IfNotPresent',

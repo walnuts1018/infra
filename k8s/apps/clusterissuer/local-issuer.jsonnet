@@ -1,4 +1,3 @@
-local localCert = import 'local-cert.jsonnet';
 {
   apiVersion: 'cert-manager.io/v1',
   kind: 'ClusterIssuer',
@@ -7,7 +6,7 @@ local localCert = import 'local-cert.jsonnet';
   },
   spec: {
     ca: {
-      secretName: localCert.spec.secretName,
+      secretName: (import 'local-cert.jsonnet').spec.secretName,
     },
   },
 }

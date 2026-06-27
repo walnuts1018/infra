@@ -1,7 +1,4 @@
-local standard = import '../cloudnative-pg-image-catalog/standard.jsonnet';
 local app = import 'app.json5';
-local postgresBackupObjectstore = import 'postgres-backup-objectstore.jsonnet';
-local postgresPassword = import 'postgres-password.jsonnet';
 {
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'Cluster',
@@ -13,7 +10,7 @@ local postgresPassword = import 'postgres-password.jsonnet';
     imageCatalogRef: {
       apiGroup: 'postgresql.cnpg.io',
       kind: 'ClusterImageCatalog',
-      name: standard.metadata.name,
+      name: (import '../cloudnative-pg-image-catalog/standard.jsonnet').metadata.name,
       major: 17,
     },
     storage: {
@@ -28,7 +25,7 @@ local postgresPassword = import 'postgres-password.jsonnet';
         database: 'misskey',
         owner: 'misskey',
         secret: {
-          name: postgresPassword.spec.target.name,
+          name: (import 'postgres-password.jsonnet').spec.target.name,
         },
       },
       // recovery: {
@@ -62,7 +59,7 @@ local postgresPassword = import 'postgres-password.jsonnet';
         name: 'barman-cloud.cloudnative-pg.io',
         isWALArchiver: true,
         parameters: {
-          barmanObjectName: postgresBackupObjectstore.metadata.name,
+          barmanObjectName: (import 'postgres-backup-objectstore.jsonnet').metadata.name,
         },
       },
     ],

@@ -1,4 +1,3 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local env = import 'env.libsonnet';
@@ -25,7 +24,7 @@ local env = import 'env.libsonnet';
           runAsGroup: 65532,
         },
         containers: [
-          (container) {
+          (import '../../components/container.libsonnet') {
             name: 'fitbit-manager',
             image: 'ghcr.io/walnuts1018/fitbit-manager:1.0.5',
             imagePullPolicy: 'IfNotPresent',

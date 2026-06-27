@@ -1,6 +1,5 @@
 local labels = import '../../components/labels.libsonnet';
 local service = import './back/service.jsonnet';
-local frontService = import './front/service.jsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'networking.k8s.io/v1',
@@ -37,7 +36,7 @@ local app = import 'app.json5';
               pathType: 'Prefix',
               backend: {
                 service: {
-                  name: frontService.metadata.name,
+                  name: (import './front/service.jsonnet').metadata.name,
                   port: {
                     number: 3000,
                   },

@@ -1,4 +1,3 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'networking.k8s.io/v1',
@@ -9,7 +8,7 @@ local app = import 'app.json5';
   },
   spec: {
     podSelector: {
-      matchLabels: (labels)(app.appname.backend),
+      matchLabels: (import '../../components/labels.libsonnet')(app.appname.backend),
     },
     policyTypes: [
       'Egress',

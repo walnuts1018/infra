@@ -1,4 +1,3 @@
-local container = import '../../../components/container.libsonnet';
 local labels = import '../../../components/labels.libsonnet';
 local app = import '../app.json5';
 local externalSecret = import '../external-secret.jsonnet';
@@ -21,7 +20,7 @@ local externalSecret = import '../external-secret.jsonnet';
       },
       spec: {
         containers: [
-          (container) {
+          (import '../../../components/container.libsonnet') {
             name: 'openchokin-front',
             image: 'ghcr.io/walnuts1018/openchokin-front:v0.0.0-805921b42b330190ff496e2d810ec3846947162a-66',
             imagePullPolicy: 'IfNotPresent',

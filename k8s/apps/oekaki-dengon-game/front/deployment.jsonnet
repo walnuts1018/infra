@@ -1,6 +1,4 @@
-local container = import '../../../components/container.libsonnet';
 local labels = import '../../../components/labels.libsonnet';
-local getEndpointFromService = import '../../../utils/get-endpoint-from-service.libsonnet';
 local app = import '../app.json5';
 local service = import '../back/service.jsonnet';
 {
@@ -27,7 +25,7 @@ local service = import '../back/service.jsonnet';
           },
         ],
         containers: [
-          (container) {
+          (import '../../../components/container.libsonnet') {
             name: 'oekaki-dengon-game-front',
             image: 'ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-10b57aae4bfe56124907ac1b03bc822a635e173f-95',
             imagePullPolicy: 'IfNotPresent',
@@ -39,7 +37,7 @@ local service = import '../back/service.jsonnet';
             env: [
               {
                 name: 'API_URL',
-                value: 'http://' + (getEndpointFromService)(service) + ':8080/api',
+                value: 'http://' + (import '../../../utils/get-endpoint-from-service.libsonnet')(service) + ':8080/api',
               },
             ],
             resources: {

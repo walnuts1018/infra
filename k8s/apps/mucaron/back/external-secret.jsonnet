@@ -1,6 +1,5 @@
-local app = import '../app.json5';
-(import '../../components/external-secret.libsonnet') {
-  name: app.name,
+(import '../../../components/external-secret.libsonnet') {
+  name: (import '../app.json5').name,
   data: [
     {
       secretKey: 'postgres_password',

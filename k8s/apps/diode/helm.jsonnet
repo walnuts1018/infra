@@ -1,7 +1,6 @@
-local helm = import '../../components/helm.libsonnet';
 local values = importstr 'values.yaml';
 local app = import 'app.json5';
-(helm) {
+(import '../../components/helm.libsonnet') {
   name: app.name,
   namespace: app.namespace,
   chart: 'diode',

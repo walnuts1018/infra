@@ -1,7 +1,5 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local serviceBackend = import 'service-backend.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -25,7 +23,7 @@ local serviceBackend = import 'service-backend.jsonnet';
           runAsGroup: 65534,
         },
         containers: [
-          std.mergePatch((container) {
+          std.mergePatch((import '../../components/container.libsonnet') {
             name: 'next',
             image: 'ghcr.io/walnuts1018/walnuk-frontend:v0.0.157',
             imagePullPolicy: 'IfNotPresent',
@@ -51,7 +49,7 @@ local serviceBackend = import 'service-backend.jsonnet';
               },
               {
                 name: 'API_ENDPOINT',
-                value: 'http://' + serviceBackend.metadata.name + '.' + app.namespace + '.svc.cluster.local:8080',
+                value: 'http://' + (import 'service-backend.jsonnet').metadata.name + '.' + app.namespace + '.svc.cluster.local:8080',
               },
             ],
             livenessProbe: {

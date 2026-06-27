@@ -1,6 +1,5 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local configmap = import 'configmap.jsonnet';
 {
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
@@ -24,7 +23,7 @@ local configmap = import 'configmap.jsonnet';
           {
             target: 'Data',
             configMap: {
-              name: configmap.metadata.name,
+              name: (import 'configmap.jsonnet').metadata.name,
               items: [
                 {
                   key: 'config.yaml',

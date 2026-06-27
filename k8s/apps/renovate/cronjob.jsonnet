@@ -1,7 +1,6 @@
 local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local configmapConfig = import 'configmap-config.jsonnet';
 local externalSecret = import 'external-secret.jsonnet';
 {
   apiVersion: 'batch/v1',
@@ -148,7 +147,7 @@ local externalSecret = import 'external-secret.jsonnet';
               {
                 name: 'config',
                 configMap: {
-                  name: configmapConfig.metadata.name,
+                  name: (import 'configmap-config.jsonnet').metadata.name,
                 },
               },
             ],

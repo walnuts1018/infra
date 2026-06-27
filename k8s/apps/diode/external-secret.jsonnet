@@ -1,6 +1,5 @@
 local externalSecret = import '../../components/external-secret.libsonnet';
 local app = import 'app.json5';
-local clientCredentials = importstr './_config/client-credentials.json';
 [
   (externalSecret) {
     name: 'diode',
@@ -98,7 +97,7 @@ local clientCredentials = importstr './_config/client-credentials.json';
       },
     ],
     template_data: {
-      'client-credentials.json': (clientCredentials),
+      'client-credentials.json': (importstr './_config/client-credentials.json'),
     },
   },
 ]

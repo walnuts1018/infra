@@ -1,10 +1,9 @@
-local app = import 'app.json5';
 {
   apiVersion: 'v1',
   kind: 'PersistentVolumeClaim',
   metadata: {
     name: 'mega',
-    namespace: app.namespace,
+    namespace: (import 'app.json5').namespace,
   },
   spec: {
     storageClassName: 'longhorn-single-encrypted',

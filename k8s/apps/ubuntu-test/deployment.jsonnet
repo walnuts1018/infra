@@ -1,6 +1,4 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
-local localBundle = import '../clusterissuer/local-bundle.jsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'apps/v1',
@@ -21,7 +19,7 @@ local app = import 'app.json5';
       },
       spec: {
         containers: [
-          (container) {
+          (import '../../components/container.libsonnet') {
             name: 'ubuntu-debug',
             image: 'ghcr.io/cybozu/ubuntu-debug:24.04',
             securityContext:: null,
@@ -48,7 +46,7 @@ local app = import 'app.json5';
           {
             name: 'local-ca-bundle',
             configMap: {
-              name: localBundle.metadata.name,
+              name: (import '../clusterissuer/local-bundle.jsonnet').metadata.name,
             },
           },
         ],

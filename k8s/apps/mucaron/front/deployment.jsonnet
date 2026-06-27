@@ -1,4 +1,3 @@
-local container = import '../../../components/container.libsonnet';
 local labels = import '../../../components/labels.libsonnet';
 local app = import '../app.json5';
 {
@@ -20,7 +19,7 @@ local app = import '../app.json5';
       },
       spec: {
         containers: [
-          (container) {
+          (import '../../../components/container.libsonnet') {
             name: 'mucaron-front',
             image: 'ghcr.io/walnuts1018/mucaron-frontend:6815d5031e94f24ff1027f8616f7a8315a082f66-64',
             ports: [

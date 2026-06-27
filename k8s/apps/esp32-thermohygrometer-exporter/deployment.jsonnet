@@ -1,4 +1,3 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local externalSecret = import 'external-secret.jsonnet';
@@ -21,7 +20,7 @@ local externalSecret = import 'external-secret.jsonnet';
       },
       spec: {
         containers: [
-          (container) {
+          (import '../../components/container.libsonnet') {
             name: 'esp32-thermohygrometer-exporter',
             image: 'ghcr.io/walnuts1018/esp32-thermohygrometer-exporter:v0.0.25',
             imagePullPolicy: 'IfNotPresent',

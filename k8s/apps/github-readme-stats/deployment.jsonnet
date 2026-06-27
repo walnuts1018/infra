@@ -1,7 +1,5 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local externalSecret = import 'external-secret.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -21,7 +19,7 @@ local externalSecret = import 'external-secret.jsonnet';
       },
       spec: {
         containers: [
-          (container) {
+          (import '../../components/container.libsonnet') {
             name: 'github-readme-stats',
             image: 'ghcr.io/walnuts1018/github-readme-stats:v1.0.3',
             imagePullPolicy: 'IfNotPresent',
@@ -41,7 +39,7 @@ local externalSecret = import 'external-secret.jsonnet';
                 name: 'PAT_1',
                 valueFrom: {
                   secretKeyRef: {
-                    name: externalSecret.spec.target.name,
+                    name: (import 'external-secret.jsonnet').spec.target.name,
                     key: 'github-token',
                   },
                 },

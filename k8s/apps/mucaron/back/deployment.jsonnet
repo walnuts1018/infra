@@ -1,8 +1,6 @@
-local container = import '../../../components/container.libsonnet';
 local labels = import '../../../components/labels.libsonnet';
 local app = import '../app.json5';
 local externalSecret = import 'external-secret.jsonnet';
-local pvc = import 'pvc.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -22,7 +20,7 @@ local pvc = import 'pvc.jsonnet';
       },
       spec: {
         containers: [
-          (container) {
+          (import '../../../components/container.libsonnet') {
             name: 'mucaron-backend',
             image: 'ghcr.io/walnuts1018/mucaron-backend:c8675c77b41b7155943b6316448ae856beea214f-88',
             ports: [
@@ -181,7 +179,7 @@ local pvc = import 'pvc.jsonnet';
           {
             name: 'tmp',
             persistentVolumeClaim: {
-              claimName: pvc.metadata.name,
+              claimName: (import 'pvc.jsonnet').metadata.name,
             },
           },
         ],

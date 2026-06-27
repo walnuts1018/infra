@@ -1,7 +1,6 @@
-local app = import 'app.json5';
 (import '../../components/external-secret.libsonnet') {
   name: 'scylla-cluster-migrations',
-  namespace: app.namespace,
+  namespace: (import 'app.json5').namespace,
   data: [
     {
       secretKey: 'admin_password',

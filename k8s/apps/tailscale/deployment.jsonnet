@@ -1,8 +1,5 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local externalSecret = import 'external-secret.jsonnet';
-local sa = import 'sa.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -24,9 +21,9 @@ local sa = import 'sa.jsonnet';
         labels: (labels)(app.name),
       },
       spec: {
-        serviceAccountName: sa.metadata.name,
+        serviceAccountName: (import 'sa.jsonnet').metadata.name,
         containers: [
-          (container) {
+          (import '../../components/container.libsonnet') {
             name: 'tailscale',
             imagePullPolicy: 'IfNotPresent',
             image: 'ghcr.io/tailscale/tailscale:v1.98.4',
@@ -63,7 +60,7 @@ local sa = import 'sa.jsonnet';
                 name: 'TS_AUTH_KEY',
                 valueFrom: {
                   secretKeyRef: {
-                    name: externalSecret.spec.target.name,
+                    name: (import 'external-secret.jsonnet').spec.target.name,
                     key: 'TS_AUTH_KEY',
                     optional: true,
                   },

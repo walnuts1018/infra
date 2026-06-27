@@ -1,6 +1,5 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local configmapScylladbCa = import 'configmap-scylladb-ca.jsonnet';
 local externalSecretConfig = import 'external-secret-config.jsonnet';
 {
   apiVersion: 'seaweed.seaweedfs.com/v1',
@@ -110,7 +109,7 @@ local externalSecretConfig = import 'external-secret-config.jsonnet';
         {
           name: 'scylla-db-ca-cert',
           configMap: {
-            name: configmapScylladbCa.metadata.name,
+            name: (import 'configmap-scylladb-ca.jsonnet').metadata.name,
             items: [
               {
                 key: 'ca.crt',

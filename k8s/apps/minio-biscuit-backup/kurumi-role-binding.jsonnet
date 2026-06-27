@@ -1,6 +1,5 @@
 local sa = import '../minio-biscuit-backup-trigger/sa.jsonnet';
 local app = import 'app.json5';
-local kurumiRole = import 'kurumi-role.jsonnet';
 {
   apiVersion: 'rbac.authorization.k8s.io/v1',
   kind: 'RoleBinding',
@@ -18,6 +17,6 @@ local kurumiRole = import 'kurumi-role.jsonnet';
   roleRef: {
     apiGroup: 'rbac.authorization.k8s.io',
     kind: 'Role',
-    name: kurumiRole.metadata.name,
+    name: (import 'kurumi-role.jsonnet').metadata.name,
   },
 }

@@ -1,6 +1,5 @@
 local gateway = import '../envoy-gateway-class/gateway.jsonnet';
 local app = import 'app.json5';
-local service = import 'service.jsonnet';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
@@ -23,7 +22,7 @@ local service = import 'service.jsonnet';
         backendRefs: [
           {
             kind: 'Service',
-            name: service.metadata.name,
+            name: (import 'service.jsonnet').metadata.name,
             port: 8080,
             weight: 1,
           },

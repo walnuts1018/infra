@@ -1,7 +1,5 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local role = import 'role.jsonnet';
-local sa = import 'sa.jsonnet';
 {
   apiVersion: 'rbac.authorization.k8s.io/v1',
   kind: 'RoleBinding',
@@ -13,12 +11,12 @@ local sa = import 'sa.jsonnet';
   subjects: [
     {
       kind: 'ServiceAccount',
-      name: sa.metadata.name,
+      name: (import 'sa.jsonnet').metadata.name,
     },
   ],
   roleRef: {
     kind: 'Role',
-    name: role.metadata.name,
+    name: (import 'role.jsonnet').metadata.name,
     apiGroup: 'rbac.authorization.k8s.io',
   },
 }

@@ -1,6 +1,4 @@
 local app = import 'app.json5';
-local clusterRole = import 'cluster-role.jsonnet';
-local sa = import 'sa.jsonnet';
 {
   apiVersion: 'rbac.authorization.k8s.io/v1',
   kind: 'ClusterRoleBinding',
@@ -10,13 +8,13 @@ local sa = import 'sa.jsonnet';
   subjects: [
     {
       kind: 'ServiceAccount',
-      name: sa.metadata.name,
+      name: (import 'sa.jsonnet').metadata.name,
       namespace: app.namespace,
     },
   ],
   roleRef: {
     kind: 'ClusterRole',
-    name: clusterRole.metadata.name,
+    name: (import 'cluster-role.jsonnet').metadata.name,
     apiGroup: 'rbac.authorization.k8s.io',
   },
 }

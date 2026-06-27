@@ -1,6 +1,5 @@
 local gateway = import '../envoy-gateway-class/gateway.jsonnet';
 local app = import 'app.json5';
-local backend = import 'backend.jsonnet';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
@@ -24,7 +23,7 @@ local backend = import 'backend.jsonnet';
           {
             group: 'gateway.envoyproxy.io',
             kind: 'Backend',
-            name: (backend.metadata.name),
+            name: ((import 'backend.jsonnet').metadata.name),
           },
         ],
         matches: [

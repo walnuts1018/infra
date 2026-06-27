@@ -1,10 +1,5 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local configmapPolicy = import 'configmap-policy.jsonnet';
-local configmapScript = import 'configmap-script.jsonnet';
-local externalSecret = import 'external-secret.jsonnet';
-
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
@@ -30,7 +25,7 @@ local externalSecret = import 'external-secret.jsonnet';
           spec: {
             restartPolicy: 'Never',
             containers: [
-              std.mergePatch(container {
+              std.mergePatch((import '../../components/container.libsonnet') {
                 name: 'snmp-discovery',
                 image: 'docker.io/netboxlabs/snmp-discovery:1.32.0',
                 imagePullPolicy: 'IfNotPresent',
@@ -41,7 +36,7 @@ local externalSecret = import 'external-secret.jsonnet';
                 envFrom: [
                   {
                     secretRef: {
-                      name: externalSecret.spec.target.name,
+                      name: (import 'external-secret.jsonnet').spec.target.name,
                     },
                   },
                 ],
@@ -81,13 +76,13 @@ local externalSecret = import 'external-secret.jsonnet';
               {
                 name: 'policies',
                 configMap: {
-                  name: configmapPolicy.metadata.name,
+                  name: (import 'configmap-policy.jsonnet').metadata.name,
                 },
               },
               {
                 name: 'scripts',
                 configMap: {
-                  name: configmapScript.metadata.name,
+                  name: (import 'configmap-script.jsonnet').metadata.name,
                 },
               },
               {

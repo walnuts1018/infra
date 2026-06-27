@@ -1,8 +1,5 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local externalSecret = import 'external-secret.jsonnet';
-local sa = import 'sa.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -28,7 +25,7 @@ local sa = import 'sa.jsonnet';
         labels: (labels)(app.name),
       },
       spec: {
-        serviceAccountName: sa.metadata.name,
+        serviceAccountName: (import 'sa.jsonnet').metadata.name,
         topologySpreadConstraints: [
           {
             maxSkew: 1,
@@ -40,7 +37,7 @@ local sa = import 'sa.jsonnet';
           },
         ],
         containers: [
-          (container) {
+          (import '../../components/container.libsonnet') {
             name: 'stalwart',
             image: 'docker.io/stalwartlabs/stalwart:v0.16.11',
             imagePullPolicy: 'IfNotPresent',
@@ -120,7 +117,7 @@ local sa = import 'sa.jsonnet';
           {
             name: 'stalwart-config',
             secret: {
-              secretName: externalSecret.spec.target.name,
+              secretName: (import 'external-secret.jsonnet').spec.target.name,
               items: [
                 {
                   key: 'config.toml',

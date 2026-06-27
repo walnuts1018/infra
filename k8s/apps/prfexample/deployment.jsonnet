@@ -1,7 +1,5 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local configmapScylladbCa = import 'configmap-scylladb-ca.jsonnet';
 local externalSecret = import 'external-secret.jsonnet';
 {
   apiVersion: 'apps/v1',
@@ -27,7 +25,7 @@ local externalSecret = import 'external-secret.jsonnet';
           },
         ],
         containers: [
-          std.mergePatch((container) {
+          std.mergePatch((import '../../components/container.libsonnet') {
             name: 'apiserver',
             image: 'ghcr.io/walnuts1018/prfexample/server:0.0.63',
             imagePullPolicy: 'IfNotPresent',
@@ -136,7 +134,7 @@ local externalSecret = import 'external-secret.jsonnet';
           {
             name: 'scylla-db-ca-cert',
             configMap: {
-              name: configmapScylladbCa.metadata.name,
+              name: (import 'configmap-scylladb-ca.jsonnet').metadata.name,
               items: [
                 {
                   key: 'ca.crt',

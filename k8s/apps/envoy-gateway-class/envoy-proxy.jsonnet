@@ -1,10 +1,9 @@
-local app = import 'app.json5';
 function(loadBalancerIP='192.168.0.138') {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'EnvoyProxy',
   metadata: {
     name: 'custom-config',
-    namespace: app.namespace,
+    namespace: (import 'app.json5').namespace,
   },
   spec: {
     provider: {

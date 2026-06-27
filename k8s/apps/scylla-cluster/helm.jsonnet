@@ -1,7 +1,5 @@
-local helm = import '../../components/helm.libsonnet';
 local app = import 'app.json5';
-local configmapScyllaConfig = import 'configmap-scylla-config.jsonnet';
-function(enableServiceMonitor=true) (helm) {
+function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
   name: app.name,
   namespace: app.namespace,
   chart: 'scylla',
@@ -17,7 +15,7 @@ function(enableServiceMonitor=true) (helm) {
     racks: [
       {
         name: 'iwakura-a',
-        scyllaConfig: configmapScyllaConfig.metadata.name,
+        scyllaConfig: (import 'configmap-scylla-config.jsonnet').metadata.name,
         members: 3,
         storage: {
           storageClassName: 'local-path',

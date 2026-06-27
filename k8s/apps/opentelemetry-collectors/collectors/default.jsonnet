@@ -1,8 +1,6 @@
-local externalSecret = import '../external-secret.jsonnet';
-local base = import '_base.libsonnet';
 function(
   clusterName='kurumi',
-) std.mergePatch((base)(
+) std.mergePatch((import '_base.libsonnet')(
   clusterName,
 ), {
   metadata: {
@@ -157,7 +155,7 @@ function(
         name: 'MACKEREL_APIKEY',
         valueFrom: {
           secretKeyRef: {
-            name: externalSecret.spec.target.name,
+            name: (import '../external-secret.jsonnet').spec.target.name,
             key: 'mackerel-api-key',
           },
         },
