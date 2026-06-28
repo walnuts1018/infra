@@ -100,10 +100,18 @@ compactor:
           expirationSeconds: 3600
           path: token
   livenessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+      scheme: HTTP
     initialDelaySeconds: 300
     periodSeconds: 10
     failureThreshold: 6
   readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+      scheme: HTTP
     initialDelaySeconds: 30
     periodSeconds: 10
     failureThreshold: 3
