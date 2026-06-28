@@ -6,6 +6,9 @@ local app = import '../app.json5';
   metadata: {
     name: app.name,
     namespace: app.namespace,
+    annotations: {
+      'external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied': 'true',
+    },
   },
   spec: {
     parentRefs: [
