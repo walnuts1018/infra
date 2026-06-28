@@ -1,8 +1,9 @@
+local app = import 'app.json5';
 {
   apiVersion: 'gateway.networking.k8s.io/v1beta1',
   kind: 'ReferenceGrant',
   metadata: {
-    name: (import 'app.json5').name,
+    name: app.name,
     namespace: (import '../seaweedfs-default/app.json5').namespace,
   },
   spec: {
@@ -10,7 +11,7 @@
       {
         group: 'gateway.networking.k8s.io',
         kind: 'HTTPRoute',
-        namespace: (import 'app.json5').namespace,
+        namespace: app.namespace,
       },
     ],
     to: [

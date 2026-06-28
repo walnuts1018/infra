@@ -1,10 +1,11 @@
+local app = import 'app.json5';
 {
   apiVersion: 'autoscaling/v2',
   kind: 'HorizontalPodAutoscaler',
   metadata: {
-    name: (import 'app.json5').appname.frontend,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').appname.frontend),
+    name: app.appname.frontend,
+    namespace: app.namespace,
+    labels: (import '../../components/labels.libsonnet')(app.appname.frontend),
   },
   spec: {
     minReplicas: 2,

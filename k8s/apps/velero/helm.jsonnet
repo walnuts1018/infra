@@ -1,6 +1,8 @@
+local app = import 'app.json5';
+local externalSecret = import 'external-secret.jsonnet';
 (import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+  name: app.name,
+  namespace: app.namespace,
   chart: 'velero',
   repoURL: 'https://vmware-tanzu.github.io/helm-charts',
   targetRevision: '12.0.3',
@@ -19,7 +21,7 @@
               s3ForcePathStyle: 'true',
             },
             credential: {
-              name: (import 'external-secret.jsonnet').spec.target.name,
+              name: externalSecret.spec.target.name,
               key: 'credentials',
             },
           },
@@ -34,7 +36,7 @@
               s3ForcePathStyle: 'true',
             },
             credential: {
-              name: (import 'external-secret.jsonnet').spec.target.name,
+              name: externalSecret.spec.target.name,
               key: 'credentials',
             },
           },

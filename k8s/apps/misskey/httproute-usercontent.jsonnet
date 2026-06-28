@@ -1,18 +1,21 @@
+local gateway = import '../envoy-gateway-class/gateway.jsonnet';
+local seaweed = import '../seaweedfs-default/seaweed.jsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
   metadata: {
-    name: (import 'app.json5').name + '-usercontent',
-    namespace: (import 'app.json5').namespace,
+    name: app.name + '-usercontent',
+    namespace: app.namespace,
     annotations: {
-      'external-dns.alpha.kubernetes.io/cloudflare-proxied': 'true',
+      'external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied': 'true',
     },
   },
   spec: {
     parentRefs: [
       {
-        name: (import '../envoy-gateway-class/gateway.jsonnet').metadata.name,
-        namespace: (import '../envoy-gateway-class/gateway.jsonnet').metadata.namespace,
+        name: gateway.metadata.name,
+        namespace: gateway.metadata.namespace,
       },
     ],
     hostnames: [
@@ -53,8 +56,8 @@
         backendRefs: [
           {
             kind: 'Service',
-            name: (import '../seaweedfs-default/seaweed.jsonnet').metadata.name + '-filer',
-            namespace: (import '../seaweedfs-default/seaweed.jsonnet').metadata.namespace,
+            name: seaweed.metadata.name + '-filer',
+            namespace: seaweed.metadata.namespace,
             port: 8333,
             weight: 1,
           },

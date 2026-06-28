@@ -1,6 +1,7 @@
+local app = import 'app.json5';
 (import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+  name: app.name,
+  namespace: app.namespace,
   chart: 'cluster-api-operator',
   repoURL: 'https://kubernetes-sigs.github.io/cluster-api-operator',
   targetRevision: '0.27.0',

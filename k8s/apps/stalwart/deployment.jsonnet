@@ -1,15 +1,17 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     replicas: 2,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (labels)(app.name),
     },
     strategy: {
       type: 'RollingUpdate',
@@ -20,7 +22,7 @@
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+        labels: (labels)(app.name),
       },
       spec: {
         serviceAccountName: (import 'sa.jsonnet').metadata.name,
@@ -30,14 +32,14 @@
             topologyKey: 'kubernetes.io/hostname',
             whenUnsatisfiable: 'ScheduleAnyway',
             labelSelector: {
-              matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+              matchLabels: (labels)(app.name),
             },
           },
         ],
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'stalwart',
-            image: 'docker.io/stalwartlabs/stalwart:v0.16.9',
+            image: 'docker.io/stalwartlabs/stalwart:v0.16.11',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {

@@ -1,10 +1,12 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     schedule: '10 2 * * *',  // AM 2:10
@@ -15,7 +17,7 @@
       spec: {
         template: {
           metadata: {
-            labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+            labels: (labels)(app.name),
           },
           spec: {
             serviceAccountName: (import 'sa.jsonnet').metadata.name,
@@ -24,7 +26,7 @@
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'rclone',
-                  image: 'public.ecr.aws/aws-cli/aws-cli:2.35.5',
+                  image: 'public.ecr.aws/aws-cli/aws-cli:2.35.8',
                   command: [
                     '/usr/bin/bash',
                     '-c',

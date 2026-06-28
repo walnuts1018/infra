@@ -1,0 +1,36 @@
+resources:
+  requests:
+    cpu: 3m
+    memory: 48Mi
+  limits:
+    memory: 1Gi
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: 'kubernetes.io/hostname'
+  whenUnsatisfiable: 'ScheduleAnyway'
+  labelSelector:
+    matchLabels:
+      app.kubernetes.io/name: external-dns
+serviceMonitor:
+  enabled: true
+triggerLoopOnEvent: true
+sources:
+- gateway-httproute
+- gateway-grpcroute
+- gateway-tlsroute
+- gateway-tcproute
+- gateway-udproute
+policy: upsert-only
+registry: txt
+excludeDomains:
+- "local.walnuts.dev"
+annotationPrefix: "external-dns-cloudflare.alpha.kubernetes.io/"
+
+provider:
+  name: cloudflare
+env:
+- name: CF_API_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: external-dns-cloudflare
+      key: cloudflare_api_token

@@ -1,7 +1,7 @@
+local app = import 'app.json5';
 (import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
-
+  name: app.name,
+  namespace: app.namespace,
   chart: 'metrics-server',
   repoURL: 'https://kubernetes-sigs.github.io/metrics-server/',
   targetRevision: '3.13.1',

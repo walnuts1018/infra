@@ -1,9 +1,11 @@
-function(domain, ingressClassName='cilium', enableHPA=true) (import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+local helm = import '../../components/helm.libsonnet';
+local app = import 'app.json5';
+function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
+  name: app.name,
+  namespace: app.namespace,
   chart: 'argo-cd',
   repoURL: 'https://argoproj.github.io/argo-helm',
-  targetRevision: '9.5.21',
+  targetRevision: '9.5.22',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'),
     {
@@ -15,7 +17,17 @@ function(domain, ingressClassName='cilium', enableHPA=true) (import '../../compo
       },
       server: {
         ingress: {
-          ingressClassName: ingressClassName,
+          enabled: false,
+        },
+        httproute: {
+          enabled: true,
+          parentRefs: [
+            {
+              name: 'envoy-gateway',
+              namespace: 'envoy-gateway-system',
+            },
+          ],
+          hostnames: [domain],
         },
         autoscaling: {
           enabled: enableHPA,

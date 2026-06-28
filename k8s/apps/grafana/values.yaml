@@ -21,7 +21,7 @@ downloadDashboards:
       cpu: "1"
       memory: 1Gi
 ingress:
-  enabled: true
+  enabled: false
   hosts:
   - grafana.walnuts.dev
   ingressClassName: cilium
@@ -136,3 +136,14 @@ datasources:
         version: Flux
       secureJsonData:
         token: $__file{/etc/secrets/influxdb_token}
+
+route:
+  main:
+    enabled: true
+    annotations:
+      external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied: "true"
+    hostnames:
+      - grafana.walnuts.dev
+    parentRefs:
+      - name: envoy-gateway
+        namespace: envoy-gateway-system

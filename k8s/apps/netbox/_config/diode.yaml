@@ -1,0 +1,3 @@
+PLUGINS_CONFIG:
+  netbox_diode_plugin:
+    netbox_to_diode_client_secret: "{{ .netbox_to_diode_client_secret }}"

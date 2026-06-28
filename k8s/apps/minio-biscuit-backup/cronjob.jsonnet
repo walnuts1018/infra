@@ -1,8 +1,10 @@
+local container = import '../../components/container.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
   metadata: {
-    name: (import 'app.json5').name,
+    name: app.name,
   },
   spec: {
     schedule: '10 3 * * *',  // 適当
@@ -13,13 +15,13 @@
       spec: {
         template: {
           metadata: {
-            labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+            labels: (import '../../components/labels.libsonnet')(app.name),
           },
           spec: {
             serviceAccountName: (import 'sa.jsonnet').metadata.name,
             restartPolicy: 'OnFailure',
             initContainers: [
-              (import '../../components/container.libsonnet') {
+              (container) {
                 name: 'copy-rclone',
                 image: 'ghcr.io/rclone/rclone:1.74.3',
                 command: [
@@ -46,7 +48,7 @@
                   },
                 ],
               },
-              std.mergePatch((import '../../components/container.libsonnet') {
+              std.mergePatch((container) {
                 name: 'inject-secret-to-config',
                 image: 'ghcr.io/hairyhenderson/gomplate:v4.3.3-alpine',
                 command: [
@@ -103,9 +105,9 @@
             ],
             containers: [
               std.mergePatch(
-                (import '../../components/container.libsonnet') {
+                (container) {
                   name: 'backuper',
-                  image: 'public.ecr.aws/aws-cli/aws-cli:2.35.5',
+                  image: 'public.ecr.aws/aws-cli/aws-cli:2.35.8',
                   command: [
                     '/usr/bin/bash',
                     '-c',

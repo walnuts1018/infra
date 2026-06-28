@@ -39,7 +39,7 @@ local app = import 'app.json5';
         containers: [
           {
             name: 'controller-manager',
-            image: 'docker.io/alpine/socat:1.8.1.1',
+            image: 'docker.io/alpine/socat:1.8.1.3',
             args: [
               '-d',
               '-d',
@@ -66,7 +66,7 @@ local app = import 'app.json5';
           },
           {
             name: 'scheduler',
-            image: 'docker.io/alpine/socat:1.8.1.1',
+            image: 'docker.io/alpine/socat:1.8.1.3',
             args: [
               '-d',
               '-d',
@@ -93,7 +93,7 @@ local app = import 'app.json5';
           },
           {
             name: 'etcd',
-            image: 'docker.io/alpine/socat:1.8.1.1',
+            image: 'docker.io/alpine/socat:1.8.1.3',
             args: [
               '-d',
               '-d',

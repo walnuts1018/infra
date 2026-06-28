@@ -48,3 +48,6 @@ find k8s \\( -name '*.jsonnet' -o -name '*.libsonnet' \\) -type f | xargs jsonne
 description = "Lint k8s apps"
 depends = ["snapshot"]
 run = "kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps"
+
+[tasks.terraform]
+run = "terraform -chdir=terraform"

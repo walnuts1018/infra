@@ -1,18 +1,20 @@
+local gateway = import '../envoy-gateway-class/gateway.jsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
+    name: app.name,
+    namespace: app.namespace,
     annotations: {
-      'external-dns.alpha.kubernetes.io/cloudflare-proxied': 'true',
+      'external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied': 'true',
     },
   },
   spec: {
     parentRefs: [
       {
-        name: (import '../envoy-gateway-class/gateway.jsonnet').metadata.name,
-        namespace: (import '../envoy-gateway-class/gateway.jsonnet').metadata.namespace,
+        name: gateway.metadata.name,
+        namespace: gateway.metadata.namespace,
       },
     ],
     hostnames: [

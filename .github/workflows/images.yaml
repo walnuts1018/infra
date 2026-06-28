@@ -1,0 +1,238 @@
+name: Build Images
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/images.yaml"
+      - "images/**"
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAMESPACE: walnuts1018/infra
+
+jobs:
+  discover:
+    name: Discover images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      images: ${{ steps.discover.outputs.images }}
+      has_images: ${{ steps.discover.outputs.has_images }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Discover image metadata
+        id: discover
+        run: |
+          set -euo pipefail
+
+          workflow_file=".github/workflows/images.yaml"
+          changed_files="$(mktemp)"
+          all_images=false
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            all_images=true
+          elif [ -z "${{ github.event.before }}" ] || printf '%s' "${{ github.event.before }}" | grep -Eq '^0+$'; then
+            all_images=true
+          else
+            git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" > "$changed_files"
+            if grep -Fxq "$workflow_file" "$changed_files"; then
+              all_images=true
+            fi
+          fi
+
+          if [ "$all_images" = "true" ]; then
+            dockerfiles="$(find images -mindepth 2 -maxdepth 2 -name Dockerfile -print | sort)"
+          else
+            app_dirs="$(awk -F/ '$1 == "images" && NF >= 2 {print $1 "/" $2}' "$changed_files" | sort -u)"
+            dockerfiles="$(
+              if [ -n "$app_dirs" ]; then
+                printf '%s\n' "$app_dirs" | while read -r app_dir; do
+                  if [ -f "${app_dir}/Dockerfile" ]; then
+                    printf '%s/Dockerfile\n' "$app_dir"
+                  fi
+                done
+              fi
+            )"
+          fi
+
+          if [ -z "$dockerfiles" ]; then
+            echo "images=[]" >> "$GITHUB_OUTPUT"
+            echo "has_images=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          images="$(
+            printf '%s\n' "$dockerfiles" | while read -r dockerfile; do
+              app_dir="$(dirname "$dockerfile")"
+              app="$(basename "$app_dir")"
+              meta="${app_dir}/meta.json"
+
+              if [ ! -f "$meta" ]; then
+                echo "::error file=${meta}::images/${app}/meta.json is required"
+                exit 1
+              fi
+
+              name="$(jq -r '.name // empty' "$meta")"
+              if [ -z "$name" ]; then
+                echo "::error file=${meta}::meta.json must define a non-empty .name"
+                exit 1
+              fi
+
+              if ! printf '%s' "$name" | grep -Eq '^[a-z0-9]+([._-][a-z0-9]+)*$'; then
+                echo "::error file=${meta}::.name must be a valid lowercase container image name component"
+                exit 1
+              fi
+
+              tag_strategy="$(jq -r '.tag_strategy // "from"' "$meta")"
+              case "$tag_strategy" in
+                from)
+                  from_ref="$(awk 'toupper($1) == "FROM" { if ($2 ~ /^--platform=/) print $3; else print $2; exit }' "$dockerfile")"
+                  from_ref_without_digest="${from_ref%@*}"
+                  from_name="${from_ref_without_digest##*/}"
+
+                  if ! printf '%s' "$from_name" | grep -q ':'; then
+                    echo "::error file=${dockerfile}::FROM image must include a tag when tag_strategy is from"
+                    exit 1
+                  fi
+
+                  tag="${from_name##*:}"
+                  ;;
+                run_number)
+                  tag="v1.0.${{ github.run_number }}"
+                  ;;
+                *)
+                  echo "::error file=${meta}::.tag_strategy must be either from or run_number"
+                  exit 1
+                  ;;
+              esac
+
+              if ! printf '%s' "$tag" | grep -Eq '^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$'; then
+                echo "::error file=${meta}::resolved image tag is not a valid container image tag"
+                exit 1
+              fi
+
+              jq -cn \
+                --arg app "$app" \
+                --arg name "$name" \
+                --arg context "$app_dir" \
+                --arg tag_strategy "$tag_strategy" \
+                --arg tag "$tag" \
+                '{app: $app, name: $name, context: $context, tag_strategy: $tag_strategy, tag: $tag}'
+            done | jq -cs .
+          )"
+
+          echo "images=${images}" >> "$GITHUB_OUTPUT"
+          echo "has_images=true" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build ${{ matrix.image.app }} ${{ matrix.platform.key }}
+    runs-on: ${{ matrix.platform.os }}
+    needs: discover
+    if: needs.discover.outputs.has_images == 'true'
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{ fromJSON(needs.discover.outputs.images) }}
+        platform:
+          - key: linux-amd64
+            os: ubuntu-latest
+            platform: linux/amd64
+          - key: linux-arm64
+            os: ubuntu-24.04-arm
+            platform: linux/arm64
+    steps:
+      - name: Check out
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Login to GHCR
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+        with:
+          version: latest
+
+      - name: Build and push image by digest
+        id: build
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+        with:
+          context: ${{ matrix.image.context }}
+          platforms: ${{ matrix.platform.platform }}
+          outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image.name }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ matrix.image.name }}-${{ matrix.platform.key }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image.name }}-${{ matrix.platform.key }}
+
+      - name: Export digest
+        run: |
+          set -euo pipefail
+
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: digests-${{ matrix.image.name }}-${{ matrix.platform.key }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    name: Merge ${{ matrix.image.app }}
+    runs-on: ubuntu-latest
+    needs:
+      - discover
+      - build
+    if: needs.discover.outputs.has_images == 'true'
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{ fromJSON(needs.discover.outputs.images) }}
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: /tmp/digests
+          pattern: digests-${{ matrix.image.name }}-*
+          merge-multiple: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+        with:
+          version: latest
+
+      - name: Login to GHCR
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          set -euo pipefail
+
+          # shellcheck disable=SC2046
+          docker buildx imagetools create \
+            -t "${REGISTRY}/${IMAGE_NAMESPACE}/${{ matrix.image.name }}:latest" \
+            -t "${REGISTRY}/${IMAGE_NAMESPACE}/${{ matrix.image.name }}:${{ matrix.image.tag }}" \
+            $(printf "${REGISTRY}/${IMAGE_NAMESPACE}/${{ matrix.image.name }}@sha256:%s " *)

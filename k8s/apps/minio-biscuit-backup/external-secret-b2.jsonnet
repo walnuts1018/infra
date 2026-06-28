@@ -1,6 +1,7 @@
+local app = import 'app.json5';
 (import '../../components/external-secret.libsonnet') {
-  name: (import 'app.json5').name + '-rclone',
-  namespace: (import 'app.json5').namespace,
+  name: app.name + '-rclone',
+  namespace: app.namespace,
   data: [
     {
       secretKey: 'B2_APPLICATION_KEY',

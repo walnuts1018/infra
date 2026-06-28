@@ -1,28 +1,39 @@
+local app = import 'app.json5';
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'NetworkPolicy',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
+    name: app.name,
+    namespace: app.namespace,
   },
   spec: {
     podSelector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (import '../../components/labels.libsonnet')(app.name),
     },
     policyTypes: [
       'Ingress',
+      'Egress',
     ],
     ingress: [
       {
         from: [
           {
             ipBlock: {
-              cidr: '0.0.0.0/0',
-              except: [
-                '192.168.0.0/16',
-              ],
+              cidr: '192.168.100.0/24',
             },
           },
+        ],
+        ports: [
+          {
+            protocol: 'TCP',
+            port: 10445,
+          },
+        ],
+      },
+    ],
+    egress: [
+      {
+        to: [
           {
             namespaceSelector: {
               matchLabels: {
@@ -34,6 +45,16 @@
                 'k8s-app': 'kube-dns',
               },
             },
+          },
+        ],
+        ports: [
+          {
+            protocol: 'UDP',
+            port: 53,
+          },
+          {
+            protocol: 'TCP',
+            port: 53,
           },
         ],
       },

@@ -1,10 +1,13 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local externalSecretConfig = import 'external-secret-config.jsonnet';
 {
   apiVersion: 'seaweed.seaweedfs.com/v1',
   kind: 'Seaweed',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     image: 'chrislusf/seaweedfs:4.34_large_disk',
@@ -78,7 +81,7 @@
       s3: {
         enabled: true,
         configSecret: {
-          name: (import 'external-secret-config.jsonnet').spec.target.name,
+          name: externalSecretConfig.spec.target.name,
           key: 'seaweedfs_s3_config.json',
         },
       },
@@ -100,7 +103,7 @@
         {
           name: 'filer-config-custom',
           secret: {
-            secretName: (import 'external-secret-config.jsonnet').spec.target.name,
+            secretName: externalSecretConfig.spec.target.name,
           },
         },
         {
