@@ -14,32 +14,6 @@ resource "zitadel_organization_domain" "kmc_gr_jp" {
   validation_type = "DOMAIN_VALIDATION_TYPE_UNSPECIFIED"
 }
 
-removed {
-  from = zitadel_domain.walnuts_dev
-
-  lifecycle {
-    destroy = false
-  }
-}
-
-removed {
-  from = zitadel_domain.kmc_gr_jp
-
-  lifecycle {
-    destroy = false
-  }
-}
-
-import {
-  to = zitadel_organization_domain.walnuts_dev
-  id = "walnuts.dev:237477062321897835"
-}
-
-import {
-  to = zitadel_organization_domain.kmc_gr_jp
-  id = "kmc.gr.jp:237477062321897835"
-}
-
 resource "zitadel_login_policy" "default" {
   org_id                        = zitadel_org.ZITADEL.id
   user_login                    = true
