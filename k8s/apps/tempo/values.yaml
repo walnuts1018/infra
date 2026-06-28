@@ -99,6 +99,14 @@ compactor:
           audience: sts.seaweedfs.com
           expirationSeconds: 3600
           path: token
+  livenessProbe:
+    initialDelaySeconds: 300
+    periodSeconds: 10
+    failureThreshold: 6
+  readinessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 3
 
 querier:
   replicas: 2
