@@ -57,7 +57,7 @@ local app = import '../app.json5';
                 {
                   name: 'my:zitadel:grants',
                   valueType: 'StringArray',
-                  values: ['TODO_PROJECT_ID:oekaki-admin'],
+                  values: ['379396091163967530:oekaki-admin'],
                 },
               ],
             },
