@@ -1,4 +1,4 @@
-local gateway = import '../pomerium-global/gateway.jsonnet';
+local gateway = import '../envoy-gateway-class/gateway.jsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
@@ -25,16 +25,6 @@ local app = import 'app.json5';
             name: 'warrior',
             port: 8001,
             weight: 1,
-          },
-        ],
-        filters: [
-          {
-            type: 'ExtensionRef',
-            extensionRef: {
-              group: 'gateway.pomerium.io',
-              kind: 'PolicyFilter',
-              name: (import 'policy-filter.jsonnet').metadata.name,
-            },
           },
         ],
       },
