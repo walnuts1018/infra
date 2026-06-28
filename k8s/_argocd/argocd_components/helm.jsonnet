@@ -17,7 +17,17 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
       },
       server: {
         ingress: {
-          ingressClassName: ingressClassName,
+          enabled: false,
+        },
+        httproute: {
+          enabled: true,
+          parentRefs: [
+            {
+              name: 'envoy-gateway',
+              namespace: 'envoy-gateway-system',
+            },
+          ],
+          hostnames: [domain],
         },
         autoscaling: {
           enabled: enableHPA,

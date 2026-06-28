@@ -15,24 +15,42 @@ local app = import 'app.json5';
       },
     ],
     hostnames: [
-      'httptest.walnuts.dev',
+      'mucaron.walnuts.dev',
     ],
     rules: [
       {
+        matches: [
+          {
+            path: {
+              type: 'PathPrefix',
+              value: '/api',
+            },
+          },
+        ],
         backendRefs: [
           {
             kind: 'Service',
-            name: (import 'service.jsonnet').metadata.name,
+            name: (import './back/service.jsonnet').metadata.name,
             port: 8080,
             weight: 1,
           },
         ],
+      },
+      {
         matches: [
           {
             path: {
               type: 'PathPrefix',
               value: '/',
             },
+          },
+        ],
+        backendRefs: [
+          {
+            kind: 'Service',
+            name: (import './front/service.jsonnet').metadata.name,
+            port: 3000,
+            weight: 1,
           },
         ],
       },

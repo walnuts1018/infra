@@ -15,15 +15,15 @@ local app = import 'app.json5';
       },
     ],
     hostnames: [
-      'httptest.walnuts.dev',
+      'influxdb.walnuts.dev',
     ],
     rules: [
       {
         backendRefs: [
           {
             kind: 'Service',
-            name: (import 'service.jsonnet').metadata.name,
-            port: 8080,
+            name: 'influxdb-influxdb2',
+            port: 80,
             weight: 1,
           },
         ],

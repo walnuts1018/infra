@@ -6,6 +6,9 @@ local app = import 'app.json5';
   metadata: {
     name: app.name,
     namespace: app.namespace,
+    annotations: {
+      'external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied': 'true',
+    },
   },
   spec: {
     parentRefs: [
@@ -15,7 +18,7 @@ local app = import 'app.json5';
       },
     ],
     hostnames: [
-      'httptest.walnuts.dev',
+      'github-readme-stats.walnuts.dev',
     ],
     rules: [
       {
@@ -23,7 +26,7 @@ local app = import 'app.json5';
           {
             kind: 'Service',
             name: (import 'service.jsonnet').metadata.name,
-            port: 8080,
+            port: 80,
             weight: 1,
           },
         ],

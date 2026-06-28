@@ -93,7 +93,7 @@ redis:
 
 server:
   ingress:
-    enabled: true
+    enabled: false
     controller: generic
     ingressClassName: "cilium"
     tls: false

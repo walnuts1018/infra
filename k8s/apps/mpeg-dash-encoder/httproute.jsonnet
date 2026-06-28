@@ -15,7 +15,7 @@ local app = import 'app.json5';
       },
     ],
     hostnames: [
-      'httptest.walnuts.dev',
+      'mpeg-dash-encoder.walnuts.dev',
     ],
     rules: [
       {

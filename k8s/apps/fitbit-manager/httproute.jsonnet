@@ -15,7 +15,7 @@ local app = import 'app.json5';
       },
     ],
     hostnames: [
-      'httptest.walnuts.dev',
+      'fitbit.walnuts.dev',
     ],
     rules: [
       {

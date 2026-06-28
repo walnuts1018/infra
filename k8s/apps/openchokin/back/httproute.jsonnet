@@ -1,10 +1,10 @@
-local gateway = import '../envoy-gateway-class/gateway.jsonnet';
-local app = import 'app.json5';
+local gateway = import '../../envoy-gateway-class/gateway.jsonnet';
+local app = import '../app.json5';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
   metadata: {
-    name: app.name,
+    name: app.name + '-back',
     namespace: app.namespace,
   },
   spec: {
@@ -15,14 +15,14 @@ local app = import 'app.json5';
       },
     ],
     hostnames: [
-      'httptest.walnuts.dev',
+      'api-openchokin.walnuts.dev',
     ],
     rules: [
       {
         backendRefs: [
           {
             kind: 'Service',
-            name: (import 'service.jsonnet').metadata.name,
+            name: (import './service.jsonnet').metadata.name,
             port: 8080,
             weight: 1,
           },

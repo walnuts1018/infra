@@ -15,7 +15,7 @@ local app = import 'app.json5';
       },
     ],
     hostnames: [
-      'httptest.walnuts.dev',
+      'ipu.walnuts.dev',
     ],
     rules: [
       {
