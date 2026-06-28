@@ -1,7 +1,4 @@
-local app = (import 'app.json5');
-local httproute = (import './httproute.jsonnet');
-local secret = (import './external-secret.jsonnet');
-
+local app = import 'app.json5';
 {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'SecurityPolicy',
@@ -14,7 +11,7 @@ local secret = (import './external-secret.jsonnet');
       {
         group: 'gateway.networking.k8s.io',
         kind: 'HTTPRoute',
-        name: httproute.metadata.name,
+        name: (import './httproute.jsonnet').metadata.name,
       },
     ],
     oidc: {
@@ -23,7 +20,7 @@ local secret = (import './external-secret.jsonnet');
       },
       clientID: '377362576486433474',
       clientSecret: {
-        name: secret.spec.target.name,
+        name: (import './external-secret.jsonnet').spec.target.name,
       },
       scopes: [
         'openid',

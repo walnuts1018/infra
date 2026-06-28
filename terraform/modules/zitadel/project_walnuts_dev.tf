@@ -416,7 +416,7 @@ resource "zitadel_user_grant" "zitadel_admin_walnuts_dev_admin" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.walnuts_dev.id
   user_id    = zitadel_human_user.zitadel_admin.id
-  role_keys  = ["admin"]
+  role_keys  = [zitadel_project_role.walnuts_dev_admin.role_key]
 }
 
 resource "zitadel_user_grant" "rh_98_walnuts_dev" {
@@ -438,24 +438,24 @@ resource "zitadel_user_grant" "walnuts_walnuts_dev" {
   project_id = zitadel_project.walnuts_dev.id
   user_id    = local.zitadel_human_user_ids.walnuts
   role_keys = [
-    "admin",
-    "nextcloud-admin",
-    "victoria-metrics",
-    "oekaki-admin",
-    "hedgedoc-user",
-    "dashy",
-    "kibana-admin",
-    "zalando-admin",
-    "ac-hacking-admin",
-    "archivebox",
-    "prometheus-admin",
-    "minio-consoleAdmin",
-    "hubble-admin",
-    "argocd-admin",
-    "openclarity-admin",
-    "teddy-admin",
-    "warrior",
-    "adguard-admin",
+    zitadel_project_role.walnuts_dev_admin.role_key,
+    zitadel_project_role.walnuts_dev_nextcloud_admin.role_key,
+    zitadel_project_role.walnuts_dev_victoria_metrics.role_key,
+    zitadel_project_role.walnuts_dev_oekaki_admin.role_key,
+    zitadel_project_role.walnuts_dev_hedgedoc_user.role_key,
+    zitadel_project_role.walnuts_dev_dashy.role_key,
+    zitadel_project_role.walnuts_dev_kibana_admin.role_key,
+    zitadel_project_role.walnuts_dev_zalando_admin.role_key,
+    zitadel_project_role.walnuts_dev_ac_hacking_admin.role_key,
+    zitadel_project_role.walnuts_dev_archivebox.role_key,
+    zitadel_project_role.walnuts_dev_prometheus_admin.role_key,
+    zitadel_project_role.walnuts_dev_minio_console_admin.role_key,
+    zitadel_project_role.walnuts_dev_hubble_admin.role_key,
+    zitadel_project_role.walnuts_dev_argocd_admin.role_key,
+    zitadel_project_role.walnuts_dev_openclarity_admin.role_key,
+    zitadel_project_role.walnuts_dev_teddy_admin.role_key,
+    zitadel_project_role.walnuts_dev_warrior.role_key,
+    zitadel_project_role.walnuts_dev_adguard_admin.role_key,
   ]
 }
 
@@ -463,12 +463,18 @@ resource "zitadel_user_grant" "tawara_ryota_walnuts_dev" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.walnuts_dev.id
   user_id    = local.zitadel_human_user_ids.tawara_ryota
-  role_keys  = ["grafana-viewer", "argocd-viewer"]
+  role_keys  = [
+    zitadel_project_role.walnuts_dev_grafana_viewer.role_key,
+    zitadel_project_role.walnuts_dev_argocd_viewer.role_key,
+  ]
 }
 
 resource "zitadel_user_grant" "junya_walnuts_dev" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.walnuts_dev.id
   user_id    = local.zitadel_human_user_ids.junya
-  role_keys  = ["grafana-viewer", "argocd-viewer"]
+  role_keys  = [
+    zitadel_project_role.walnuts_dev_grafana_viewer.role_key,
+    zitadel_project_role.walnuts_dev_argocd_viewer.role_key,
+  ]
 }

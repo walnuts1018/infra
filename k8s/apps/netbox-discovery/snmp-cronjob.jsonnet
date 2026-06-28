@@ -1,7 +1,5 @@
-local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
@@ -27,7 +25,7 @@ local app = import 'app.json5';
           spec: {
             restartPolicy: 'Never',
             containers: [
-              std.mergePatch(container {
+              std.mergePatch((import '../../components/container.libsonnet') {
                 name: 'snmp-discovery',
                 image: 'docker.io/netboxlabs/snmp-discovery:1.32.0',
                 imagePullPolicy: 'IfNotPresent',

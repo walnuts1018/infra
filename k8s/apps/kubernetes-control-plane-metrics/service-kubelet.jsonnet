@@ -1,4 +1,3 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 
 {
@@ -7,7 +6,7 @@ local app = import 'app.json5';
   metadata: {
     name: 'kubelet-metrics-proxy',
     namespace: 'kube-system',
-    labels: labels(app.name) + {
+    labels: (import '../../components/labels.libsonnet')(app.name) + {
       'app.kubernetes.io/name': 'kubelet-metrics-proxy',
       'k8s-app': 'kubelet',
     },

@@ -72,8 +72,6 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **longhorn-oauth2-proxy**: Longhorn UI の OAuth2 Proxy
 - **mcs-api**
 - **nvidia-gpu-operator**
-- **pomerium-controller**
-- **pomerium-global**
 - **priorities**: Pod 優先度クラスの設定
 - **redis-operator**
 - **renovate**: Self-hosted Renovate

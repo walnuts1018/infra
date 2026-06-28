@@ -1,15 +1,16 @@
+local app = import 'app.json5';
 [
   {
     apiVersion: 'argoproj.io/v1alpha1',
     kind: 'Application',
     metadata: {
-      name: (import 'app.json5').name + '-kustomize-crd',
+      name: app.name + '-kustomize-crd',
       namespace: 'argocd',
     },
     spec: {
       project: 'default',
       destination: {
-        namespace: (import 'app.json5').namespace,
+        namespace: app.namespace,
         server: 'https://kubernetes.default.svc',
       },
       source: {
@@ -29,13 +30,13 @@
     apiVersion: 'argoproj.io/v1alpha1',
     kind: 'Application',
     metadata: {
-      name: (import 'app.json5').name + '-kustomize-snapshot-controller',
+      name: app.name + '-kustomize-snapshot-controller',
       namespace: 'argocd',
     },
     spec: {
       project: 'default',
       destination: {
-        namespace: (import 'app.json5').namespace,
+        namespace: app.namespace,
         server: 'https://kubernetes.default.svc',
       },
       source: {

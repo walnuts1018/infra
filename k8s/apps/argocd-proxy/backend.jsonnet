@@ -1,9 +1,10 @@
+local app = import 'app.json5';
 {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'Backend',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
+    name: app.name,
+    namespace: app.namespace,
   },
   spec: {
     endpoints: [
