@@ -2,15 +2,26 @@ resource "zitadel_org" "ZITADEL" {
   name = "ZITADEL"
 }
 
-resource "zitadel_domain" "walnuts_dev" {
-  org_id     = zitadel_org.ZITADEL.id
-  name       = "walnuts.dev"
-  is_primary = true
+resource "zitadel_organization_domain" "walnuts_dev" {
+  organization_id = zitadel_org.ZITADEL.id
+  domain          = "walnuts.dev"
+  validation_type = "DOMAIN_VALIDATION_TYPE_UNSPECIFIED"
 }
 
-resource "zitadel_domain" "kmc_gr_jp" {
-  org_id = zitadel_org.ZITADEL.id
-  name   = "kmc.gr.jp"
+resource "zitadel_organization_domain" "kmc_gr_jp" {
+  organization_id = zitadel_org.ZITADEL.id
+  domain          = "kmc.gr.jp"
+  validation_type = "DOMAIN_VALIDATION_TYPE_UNSPECIFIED"
+}
+
+moved {
+  from = zitadel_domain.walnuts_dev
+  to   = zitadel_organization_domain.walnuts_dev
+}
+
+moved {
+  from = zitadel_domain.kmc_gr_jp
+  to   = zitadel_organization_domain.kmc_gr_jp
 }
 
 resource "zitadel_login_policy" "default" {

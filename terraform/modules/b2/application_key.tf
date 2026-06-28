@@ -23,5 +23,12 @@ resource "b2_application_key" "minio_biscuit_backup" {
 }
 
 output "application_key" {
-  value = b2_application_key.minio_biscuit_backup
+  value = {
+    application_key_id = b2_application_key.minio_biscuit_backup.application_key_id
+    application_key    = b2_application_key.minio_biscuit_backup.application_key
+    key_name           = b2_application_key.minio_biscuit_backup.key_name
+    bucket_ids         = b2_application_key.minio_biscuit_backup.bucket_ids
+    capabilities       = b2_application_key.minio_biscuit_backup.capabilities
+  }
+  sensitive = true
 }
