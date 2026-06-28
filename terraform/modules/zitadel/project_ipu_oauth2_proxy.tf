@@ -34,5 +34,5 @@ resource "zitadel_user_grant" "walnuts_ipu_viewer" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.ipu_oauth2_proxy.id
   user_id    = local.zitadel_human_user_ids.walnuts
-  role_keys  = ["viewer"]
+  role_keys  = [zitadel_project_role.ipu_viewer.role_key]
 }

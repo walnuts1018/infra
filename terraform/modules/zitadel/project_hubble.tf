@@ -34,5 +34,5 @@ resource "zitadel_user_grant" "walnuts_hubble" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.hubble.id
   user_id    = local.zitadel_human_user_ids.walnuts
-  role_keys  = ["hubble-user"]
+  role_keys  = [zitadel_project_role.hubble_user.role_key]
 }

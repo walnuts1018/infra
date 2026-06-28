@@ -34,5 +34,5 @@ resource "zitadel_user_grant" "walnuts_oekaki" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.oekaki.id
   user_id    = local.zitadel_human_user_ids.walnuts
-  role_keys  = ["oekaki-admin"]
+  role_keys  = [zitadel_project_role.oekaki_admin.role_key]
 }

@@ -15,5 +15,5 @@ resource "zitadel_user_grant" "thermohygrometer_exporter_grant" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.thermohygrometer.id
   user_id    = zitadel_machine_user.thermohygrometer_exporter.id
-  role_keys  = ["thermohygrometer.read"]
+  role_keys  = [zitadel_project_role.thermohygrometer_read.role_key]
 }

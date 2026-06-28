@@ -15,5 +15,5 @@ resource "zitadel_user_grant" "walnuts_minio_biscuit_console_admin" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.minio_biscuit.id
   user_id    = local.zitadel_human_user_ids.walnuts
-  role_keys  = ["minio-consoleAdmin"]
+  role_keys  = [zitadel_project_role.minio_biscuit_console_admin.role_key]
 }

@@ -34,5 +34,5 @@ resource "zitadel_user_grant" "walnuts_warrior" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.warrior.id
   user_id    = local.zitadel_human_user_ids.walnuts
-  role_keys  = ["warrior-user"]
+  role_keys  = [zitadel_project_role.warrior_user.role_key]
 }

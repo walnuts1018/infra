@@ -34,7 +34,7 @@ resource "zitadel_user_grant" "walnuts_netbox" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.netbox.id
   user_id    = local.zitadel_human_user_ids.walnuts
-  role_keys  = ["netbox-admin"]
+  role_keys  = [zitadel_project_role.netbox_admin.role_key]
 }
 
 output "netbox_oidc_client_id" {
