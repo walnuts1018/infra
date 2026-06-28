@@ -1,13 +1,15 @@
+local labels = import '../../../components/labels.libsonnet';
+local app = import '../app.json5';
 {
   kind: 'Service',
   apiVersion: 'v1',
   metadata: {
-    name: (import '../app.json5').name + '-front',
-    namespace: (import '../app.json5').namespace,
-    labels: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+    name: app.name + '-front',
+    namespace: app.namespace,
+    labels: (labels)(app.name + '-front'),
   },
   spec: {
-    selector: (import '../../../components/labels.libsonnet')((import '../app.json5').name + '-front'),
+    selector: (labels)(app.name + '-front'),
     ports: [
       {
         protocol: 'TCP',

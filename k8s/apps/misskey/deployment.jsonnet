@@ -1,22 +1,26 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local externalSecret = import 'external-secret.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (labels)(app.name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+      matchLabels: (labels)(app.name),
     },
     strategy: {
       type: 'Recreate',
     },
     template: {
       metadata: {
-        labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+        labels: (labels)(app.name),
       },
       spec: {
         securityContext: {
@@ -24,7 +28,7 @@
           fsGroupChangePolicy: 'OnRootMismatch',
         },
         initContainers: [
-          (import '../../components/container.libsonnet') {
+          (container) {
             name: 'misskey-init',
             image: 'misskey/misskey:2025.12.2',
             imagePullPolicy: 'IfNotPresent',
@@ -51,7 +55,7 @@
           },
         ],
         containers: [
-          (import '../../components/container.libsonnet') {
+          (container) {
             name: 'misskey',
             image: 'misskey/misskey:2025.12.2',
             imagePullPolicy: 'IfNotPresent',
@@ -88,7 +92,7 @@
                 name: 'POSTGRES_PASSWORD',
                 valueFrom: {
                   secretKeyRef: {
-                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    name: externalSecret.spec.target.name,
                     key: 'dbPassword',
                   },
                 },
@@ -130,7 +134,7 @@
           {
             name: 'misskey-config',
             secret: {
-              secretName: (import 'external-secret.jsonnet').spec.target.name,
+              secretName: externalSecret.spec.target.name,
             },
           },
           {

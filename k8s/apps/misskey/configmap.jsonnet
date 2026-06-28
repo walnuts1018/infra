@@ -1,12 +1,14 @@
+local app = import 'app.json5';
+local default = importstr './config/default.yml';
 {
   apiVersion: 'v1',
   kind: 'ConfigMap',
   metadata: {
-    name: (import 'app.json5').name,
-    namespace: (import 'app.json5').namespace,
-    labels: (import '../../components/labels.libsonnet')((import 'app.json5').name),
+    name: app.name,
+    namespace: app.namespace,
+    labels: (import '../../components/labels.libsonnet')(app.name),
   },
   data: {
-    'default.yml': (importstr './config/default.yml'),
+    'default.yml': (default),
   },
 }

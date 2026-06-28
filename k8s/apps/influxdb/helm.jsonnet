@@ -1,6 +1,8 @@
-(import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+local helm = import '../../components/helm.libsonnet';
+local app = import 'app.json5';
+(helm) {
+  name: app.name,
+  namespace: app.namespace,
 
   chart: 'influxdb2',
   repoURL: 'https://helm.influxdata.com/',

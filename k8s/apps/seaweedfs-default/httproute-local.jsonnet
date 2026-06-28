@@ -1,15 +1,17 @@
+local gateway = import '../envoy-gateway-class/gateway.jsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
   metadata: {
-    name: (import 'app.json5').name + '-local',
-    namespace: (import 'app.json5').namespace,
+    name: app.name + '-local',
+    namespace: app.namespace,
   },
   spec: {
     parentRefs: [
       {
-        name: (import '../envoy-gateway-class/gateway.jsonnet').metadata.name,
-        namespace: (import '../envoy-gateway-class/gateway.jsonnet').metadata.namespace,
+        name: gateway.metadata.name,
+        namespace: gateway.metadata.namespace,
       },
     ],
     hostnames: [

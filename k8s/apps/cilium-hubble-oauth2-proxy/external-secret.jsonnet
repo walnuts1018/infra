@@ -1,17 +1,18 @@
+local app = import 'app.json5';
 (import '../../components/external-secret.libsonnet') {
-  name: (import 'app.json5').name,
+  name: app.name + '-secret',
   data: [
     {
-      secretKey: 'client_id',
+      secretKey: 'client-id',
       remoteRef: {
-        key: 'pomerium',
+        key: app.name,
         property: 'client_id',
       },
     },
     {
-      secretKey: 'client_secret',
+      secretKey: 'client-secret',
       remoteRef: {
-        key: 'pomerium',
+        key: app.name,
         property: 'client_secret',
       },
     },

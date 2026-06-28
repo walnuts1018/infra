@@ -1,8 +1,7 @@
-local app = (import 'app.json5');
+local app = import 'app.json5';
 local labels = (import '../../components/labels.libsonnet')('coredns-etcd');
 local peerHost(ordinal) =
   'coredns-etcd-%d.coredns-etcd-headless.%s.svc.cluster.local' % [ordinal, app.namespace];
-
 {
   apiVersion: 'apps/v1',
   kind: 'StatefulSet',

@@ -1,9 +1,10 @@
+local app = import 'app.json5';
 (import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+  name: app.name,
+  namespace: app.namespace,
 
   chart: 'prometheus-blackbox-exporter',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '11.12.0',
+  targetRevision: '11.13.0',
   values: (importstr 'values.yaml'),
 }

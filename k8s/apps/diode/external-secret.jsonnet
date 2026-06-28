@@ -1,7 +1,9 @@
+local externalSecret = import '../../components/external-secret.libsonnet';
+local app = import 'app.json5';
 [
-  (import '../../components/external-secret.libsonnet') {
+  (externalSecret) {
     name: 'diode',
-    namespace: (import 'app.json5').namespace,
+    namespace: app.namespace,
     use_suffix: false,
     data: [
       {
@@ -34,9 +36,9 @@
       DIODE_TO_NETBOX_CLIENT_SECRET: '{{ .diode_to_netbox_client_secret }}',
     },
   },
-  (import '../../components/external-secret.libsonnet') {
+  (externalSecret) {
     name: 'diode-hydra-secret',
-    namespace: (import 'app.json5').namespace,
+    namespace: app.namespace,
     use_suffix: false,
     data: [
       {
@@ -67,9 +69,9 @@
       secretsCookie: '{{ .hydra_secrets_cookie }}',
     },
   },
-  (import '../../components/external-secret.libsonnet') {
+  (externalSecret) {
     name: 'diode-auth-oauth2-secret',
-    namespace: (import 'app.json5').namespace,
+    namespace: app.namespace,
     use_suffix: false,
     data: [
       {

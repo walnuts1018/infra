@@ -1,3 +1,5 @@
+local helm = import '../../components/helm.libsonnet';
+local app = import 'app.json5';
 function(
   clusterID=1,
   clusterName='kurumi',
@@ -7,9 +9,9 @@ function(
   enableServiceMonitor=true,
   operatorReplicas=2,
   usek3s=false,
-) (import '../../components/helm.libsonnet') {
-  name: (import 'app.json5').name,
-  namespace: (import 'app.json5').namespace,
+) (helm) {
+  name: app.name,
+  namespace: app.namespace,
   chart: 'cilium',
   repoURL: 'https://helm.cilium.io/',
   targetRevision: '1.19.5',
