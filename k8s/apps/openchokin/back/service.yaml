@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: openchokin-back
+    app.kubernetes.io/name: openchokin-back
+  name: openchokin-back
+  namespace: openchokin
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: openchokin-back
+    app.kubernetes.io/name: openchokin-back
+  type: ClusterIP

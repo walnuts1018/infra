@@ -1,0 +1,22 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: walnuts-dev
+    app.kubernetes.io/name: walnuts-dev
+  name: walnuts-dev
+  namespace: walnuts-dev
+spec:
+  maxReplicas: 5
+  metrics:
+    - resource:
+        name: memory
+        target:
+          averageUtilization: 100
+          type: Utilization
+      type: Resource
+  minReplicas: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: walnuts-dev

@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+  robots.txt: |
+    User-agent: *
+    Disallow： /
+    Allow: /public
+    Allow: /public/
+    Allow: /_next/
+    Allow: /static/
+    Allow: /favicon.ico
+    Allow: /manifest.json
+    Allow: /robots.txt
+    Allow: /sitemap.xml
+
+
+    Host: https://oekaki.walnuts.dev
+kind: ConfigMap
+metadata:
+  labels:
+    app: oekaki-dengon-game
+    app.kubernetes.io/name: oekaki-dengon-game
+  name: oekaki-dengon-game-oauth2-proxy-6181a5
+  namespace: oekaki-dengon-game

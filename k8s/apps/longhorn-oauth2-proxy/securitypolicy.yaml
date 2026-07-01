@@ -1,0 +1,42 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: longhorn-oauth2-proxy
+  namespace: longhorn-system
+spec:
+  authorization:
+    defaultAction: Deny
+    rules:
+      - action: Allow
+        principal:
+          jwt:
+            claims:
+              - name: my:zitadel:grants
+                valueType: StringArray
+                values:
+                  - 377362576134111938:longhorn-admin
+            provider: zitadel
+  jwt:
+    providers:
+      - issuer: https://auth.walnuts.dev
+        name: zitadel
+        remoteJWKS:
+          uri: https://auth.walnuts.dev/oauth/v2/keys
+  oidc:
+    clientID: "377362576486433474"
+    clientSecret:
+      name: longhorn-oauth2-proxy-secret-76c292
+    forwardAccessToken: true
+    logoutPath: /oauth2/logout
+    provider:
+      issuer: https://auth.walnuts.dev
+    scopes:
+      - openid
+      - email
+      - profile
+      - offline_access
+      - urn:zitadel:iam:org:projects:roles
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: longhorn-oauth2-proxy

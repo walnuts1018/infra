@@ -1,0 +1,40 @@
+apiVersion: v1
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIFITCCAwmgAwIBAgIRAIKt5RN1QQspKFcXT8UxovIwDQYJKoZIhvcNAQENBQAw
+    KjEoMCYGA1UEAxMfc2N5bGxhLWNsdXN0ZXItbG9jYWwtc2VydmluZy1jYTAeFw0y
+    NTEyMTUwMjA3MDlaFw0zNTEyMTMwMjA3MTBaMCoxKDAmBgNVBAMTH3NjeWxsYS1j
+    bHVzdGVyLWxvY2FsLXNlcnZpbmctY2EwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAw
+    ggIKAoICAQCzOrot6lkztBRZTLwymGp8vX+fbuogJbJqoDBuu3HMKhE29XC4jVQh
+    P7AjJva4MKBQRIQb/Y2cW5av2lgQZ5hzaCBAYrzXpngbWmtsHB6tHRYiAYbmT5ty
+    b2b1Jm77LrYVNVsx10QCGCOQKsW6g0JpDEZKG/EzZZTw+iI3OqWvD9wpIMG0ZthL
+    7cDByxB0IvK+5t45ioypl1mqa/LQmukCa9Ik9b2mG3OvLyG4Ila+AEeRePsH+9H+
+    xeFimJp+Yuuv2bIVN89nxTL0voZlaD2QKJdDqhHqKUPr5XYTkoccdysnqhFoZfob
+    PypNxoQi11zrEdvff5BfLT2Jg74s1m3O2MYrMmNej8p2855ApDrt2lxSSHqCRP7x
+    9jTk2W4f6bbSQdhxxNCOjqPtppIbFv2XUdMjG92JgkCOLKgYHpydfMHMrXcs+Yvs
+    ZZMPQQwsvrQm4gWXQg+xtczyF8zEPdje1rxjo0iNkq2HyYqoJkVgSfaep39NFhFr
+    fo2ACpCCJNbRmE+h51i+1Qf/+Lpa0xnu4gPpEBunpjQ6IJHbb2EEk+9VAtmDCSa4
+    5bPoHGsaPAp+BbSdznEj43b+NWdJUJQbx4sGUpJSR4eobTFEYFKFU8myC5lvpeMK
+    tKMCwRRy0tTQrRlkKv4msjjHFfKErYLLro+AY3DKb8NuUcDq2KhgkwIDAQABo0Iw
+    QDAOBgNVHQ8BAf8EBAMCAqQwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUu2J3
+    ad9P0EKhE/LsLFKhHd/lXfgwDQYJKoZIhvcNAQENBQADggIBAG3CyTn64/uPPJCI
+    2veQBCfzzfzZX02eTlzPrDP0wEG6Y6tCfKdSF7ivTFt8wB5TiK78hTyftSe2Me/V
+    Dyz5sRmZZXIF5gfjExFRXQW37i9I8owFG5SeD1AT4R3W8vL2SXaT1wDstNYcpD1D
+    s/ajC5CYIo6uZ5GFEHniLFzr0VCgAFA7rNQDjdRdr/1lPPHDtBh74ADk6WyndJh0
+    dLZFA2kXzijwSusbBoHd81gyQ2moLThHwjUubqx5e06y6y0FGiFowG4PWn+HzW69
+    GtnK8Ts10/iXNkg2Dy1sX1SFhNS+D6riT2urLyI0yLLABrDHba3FRvf5h3+x1Uar
+    GxgVgDWxhaL6P805RpfD6PYwdZaDHJtRIRG83nCcxhb6TptmmYPHGLtX1nDGIDao
+    Vlnl2ARf1zG1+QhWfYoPm8jyRu4TI4E1vvd537osmfIdN9faiU1UA5ghTNfI2XnC
+    Z7vUQb566qtnhQehl5hqjcVkCwVViKCZWYE8E97VlMAcFz8l2sdhrXNHgBwCQm/V
+    m94EMyjcZGyA0NZ5HOFz2r4JwjObm7govZPfcMVCpexJJRLBJ4IlaP1MLSD6CNib
+    IidnORsgZpYNHxD6C65CP3DI2FWDCHuoPVB2q0DmtilUTppnbRHs2uuQ8sufVAEl
+    AX3hT8tcSVSeRknuGfYmTNEcxI9H
+    -----END CERTIFICATE-----
+kind: ConfigMap
+metadata:
+  labels:
+    app: seaweedfs-default
+    app.kubernetes.io/name: seaweedfs-default
+  name: seaweedfs-default-scylladb-ca-cert-c0f830
+  namespace: seaweedfs

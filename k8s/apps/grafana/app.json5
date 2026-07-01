@@ -1,7 +1,0 @@
-{
-  name: "grafana",
-  namespace: "monitoring",
-  clusters: {
-    kurumi: {},
-  },
-}

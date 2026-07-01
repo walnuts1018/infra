@@ -1,7 +1,0 @@
-{
-  name: "external-dns-coredns",
-  namespace: "external-dns-coredns",
-  clusters: {
-    kurumi: {},
-  },
-}

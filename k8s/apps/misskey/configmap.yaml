@@ -1,0 +1,38 @@
+apiVersion: v1
+data:
+  default.yml: |
+    url: https://misskey.walnuts.dev
+    port: 3000
+    db:
+      host: misskey-postgresql-rw
+      port: 5432
+      db: misskey
+      user: misskey
+      pass: "{{ .dbPassword }}"
+    dbReplications: false
+    # dbSlaves:
+    # - host: misskey-postgresql-r
+    #   port: 5432
+    #   db: misskey
+    #   user: misskey
+    #   pass: "{{ .dbPassword }}"
+    redis:
+      host: misskey-redis
+      port: 6379
+      pass: "{{ .redisPassword }}"
+    id: 'aidx'
+    proxyBypassHosts:
+    - api.deepl.com
+    - api-free.deepl.com
+    - www.recaptcha.net
+    - hcaptcha.com
+    - challenges.cloudflare.com
+    proxyRemoteFiles: true
+    signToActivityPubGet: true
+kind: ConfigMap
+metadata:
+  labels:
+    app: misskey
+    app.kubernetes.io/name: misskey
+  name: misskey
+  namespace: misskey

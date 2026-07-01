@@ -1,0 +1,148 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: prometheus
+spec:
+  config:
+    exporters:
+      debug:
+        verbosity: detailed
+      file:
+        format: json
+        path: /tmp/debug.json
+      otlp_grpc/mackerel:
+        compression: gzip
+        endpoint: otlp.mackerelio.com:4317
+        headers:
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+        sending_queue:
+          batch:
+            flush_timeout: 10s
+            max_size: 5000
+            min_size: 5000
+      otlp_grpc/pyroscope:
+        endpoint: http://pyroscope.pyroscope.svc.cluster.local:4317
+        sending_queue:
+          batch:
+            flush_timeout: 10s
+            max_size: 5000
+            min_size: 5000
+        tls:
+          insecure: true
+      otlp_grpc/tempo:
+        endpoint: tempo-gateway.tempo.svc.cluster.local:4317
+        sending_queue:
+          batch:
+            flush_timeout: 10s
+            max_size: 5000
+            min_size: 5000
+        tls:
+          insecure: true
+      otlp_http/loki:
+        endpoint: http://loki-gateway.loki.svc.cluster.local/otlp
+        sending_queue:
+          batch:
+            flush_timeout: 10s
+            max_size: 5000
+            min_size: 5000
+        tls:
+          insecure: true
+      otlp_http/vaxila:
+        endpoint: https://otlp-vaxila.mackerelio.com
+        headers:
+          Accept: '*/*'
+          Mackerel-Api-Key: ${env:MACKEREL_APIKEY}
+        sending_queue:
+          batch:
+            flush_timeout: 10s
+            max_size: 5000
+            min_size: 5000
+      prometheusremotewrite/victoriametrics:
+        endpoint: http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write
+        resource_to_telemetry_conversion:
+          enabled: true
+        timeout: 30s
+    processors:
+      k8s_attributes:
+        auth_type: serviceAccount
+        extract:
+          metadata:
+            - k8s.cluster.uid
+        pod_association:
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.ip
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.uid
+          - sources:
+              - from: connection
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 3500
+        spike_limit_mib: 200
+      resource/cluster_name:
+        attributes:
+          - action: upsert
+            key: k8s.cluster.name
+            value: kurumi
+    receivers:
+      prometheus:
+        config:
+          scrape_configs: []
+    service:
+      pipelines:
+        metrics:
+          exporters:
+            - prometheusremotewrite/victoriametrics
+          processors:
+            - memory_limiter
+            - k8s_attributes
+            - resource/cluster_name
+          receivers:
+            - prometheus
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.154.0
+  managementState: managed
+  mode: statefulset
+  replicas: 2
+  resources:
+    limits:
+      cpu: 1500m
+      memory: 4Gi
+    requests:
+      cpu: 450m
+      memory: 1Gi
+  serviceAccount: opentelemetry-collectors
+  targetAllocator:
+    enabled: true
+    prometheusCR:
+      enabled: true
+      podMonitorSelector:
+        matchExpressions:
+          - key: walnuts.dev/scraped-by
+            operator: NotIn
+            values:
+              - prometheus
+      serviceMonitorSelector:
+        matchExpressions:
+          - key: walnuts.dev/scraped-by
+            operator: NotIn
+            values:
+              - prometheus
+    resources:
+      limits:
+        cpu: "2"
+        memory: 3Gi
+      requests:
+        cpu: 26m
+        memory: 167Mi
+    serviceAccount: opentelemetry-collectors
+  tolerations:
+    - key: node.walnuts.dev/untrusted
+      operator: Exists
+  volumeMounts:
+    - mountPath: /tmp
+      name: tmp
+  volumes:
+    - emptyDir: {}
+      name: tmp

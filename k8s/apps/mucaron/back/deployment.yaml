@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mucaron-back
+    app.kubernetes.io/name: mucaron-back
+  name: mucaron-back
+  namespace: mucaron
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mucaron-back
+      app.kubernetes.io/name: mucaron-back
+  template:
+    metadata:
+      labels:
+        app: mucaron-back
+        app.kubernetes.io/name: mucaron-back
+    spec:
+      containers:
+        - env:
+            - name: SERVER_ENDPOINT
+              value: https://mucaron.walnuts.dev
+            - name: PSQL_HOST
+              value: postgresql-default-rw.databases.svc.cluster.local
+            - name: PSQL_PORT
+              value: "5432"
+            - name: PSQL_DATABASE
+              value: mucaron
+            - name: PSQL_USER
+              value: mucaron
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: PSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgres_password
+                  name: mucaron-2290e1
+            - name: PSQL_SSLMODE
+              value: disable
+            - name: MINIO_ENDPOINT
+              value: minio.walnuts.dev
+            - name: MINIO_ACCESS_KEY
+              value: 4SYRxLsspRxsvXvaddkz
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: minio_secret_key
+                  name: mucaron-2290e1
+            - name: MINIO_BUCKET
+              value: mucaron
+            - name: MINIO_REGION
+              value: ap-northeast-1
+            - name: MINIO_USE_SSL
+              value: "true"
+            - name: REDIS_HOST
+              value: mucaron-redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redis_password
+                  name: mucaron-2290e1
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: session_secret
+                  name: mucaron-2290e1
+          image: ghcr.io/walnuts1018/mucaron-backend:c8675c77b41b7155943b6316448ae856beea214f-88
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          name: mucaron-backend
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "2"
+              memory: 2Gi
+            requests:
+              cpu: 10m
+              memory: 10Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /var/log/mucaron
+              name: mucaron-log
+            - mountPath: /tmp
+              name: tmp
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      volumes:
+        - emptyDir: {}
+          name: mucaron-log
+        - name: tmp
+          persistentVolumeClaim:
+            claimName: mucaron-encode-tmp

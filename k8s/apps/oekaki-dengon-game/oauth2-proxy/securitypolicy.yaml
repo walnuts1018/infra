@@ -1,0 +1,43 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: oekaki-dengon-game
+  namespace: oekaki-dengon-game
+spec:
+  authorization:
+    defaultAction: Deny
+    rules:
+      - action: Allow
+        principal:
+          jwt:
+            claims:
+              - name: my:zitadel:grants
+                valueType: StringArray
+                values:
+                  - 379396091163967530:oekaki-admin
+            provider: zitadel
+  jwt:
+    providers:
+      - issuer: https://auth.walnuts.dev
+        name: zitadel
+        remoteJWKS:
+          uri: https://auth.walnuts.dev/oauth/v2/keys
+  oidc:
+    clientIDRef:
+      name: oekaki-dengon-game-secret-ed8d10
+    clientSecret:
+      name: oekaki-dengon-game-secret-ed8d10
+    forwardAccessToken: true
+    logoutPath: /oauth2/logout
+    provider:
+      issuer: https://auth.walnuts.dev
+    scopes:
+      - openid
+      - email
+      - profile
+      - offline_access
+      - urn:zitadel:iam:org:projects:roles
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: oekaki-dengon-game
