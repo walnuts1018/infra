@@ -90,16 +90,6 @@
         'docker',
       ],
       matchPackageNames: [
-        'renovate/renovate',
-      ],
-      automerge: true,
-      minimumReleaseAge: '1 days',
-    },
-    {
-      matchDatasources: [
-        'docker',
-      ],
-      matchPackageNames: [
         'ghcr.io/renovatebot/renovate',
       ],
       matchUpdateTypes: [
@@ -108,7 +98,7 @@
         'patch',
       ],
       automerge: true,
-      minimumReleaseAge: '1 days',
+      minimumReleaseAge: '3 days',
     },
     {
       matchPackageNames: [
