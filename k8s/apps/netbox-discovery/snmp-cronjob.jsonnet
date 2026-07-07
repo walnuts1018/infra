@@ -27,7 +27,7 @@ local app = import 'app.json5';
             containers: [
               std.mergePatch((import '../../components/container.libsonnet') {
                 name: 'snmp-discovery',
-                image: 'docker.io/netboxlabs/snmp-discovery:1.32.0',
+                image: 'docker.io/netboxlabs/snmp-discovery:1.33.0',
                 imagePullPolicy: 'IfNotPresent',
                 command: [
                   '/bin/sh',
