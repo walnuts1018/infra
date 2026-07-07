@@ -5,6 +5,6 @@ local app = import 'app.json5';
 
   chart: 'zitadel',
   repoURL: 'https://charts.zitadel.com',
-  targetRevision: '10.0.2',
+  targetRevision: '10.0.4',
   values: (importstr 'values.yaml'),
 }
