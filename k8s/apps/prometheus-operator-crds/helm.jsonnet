@@ -5,5 +5,5 @@ local app = import 'app.json5';
 
   chart: 'prometheus-operator-crds',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '30.0.1',
+  targetRevision: '30.0.0',
 }
