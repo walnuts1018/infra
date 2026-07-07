@@ -5,6 +5,6 @@ function(enableServiceMonitor=true) (helm) {
   namespace: app.namespace,
   chart: 'gpu-operator',
   repoURL: 'https://helm.ngc.nvidia.com/nvidia',
-  targetRevision: 'v26.3.3',
+  targetRevision: 'v26.3.2',
   values: (importstr 'values.yaml'),
 }
