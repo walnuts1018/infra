@@ -51,6 +51,17 @@
     {
       customType: 'regex',
       managerFilePatterns: [
+        '/^k8s/apps/netbox/values\\.yaml$/',
+      ],
+      matchStrings: [
+        "registry:\\s+[\"']?(?<registry>[^\\s'\"]+)[\"']?\\r?\\n\\s*repository:\\s+[\"']?(?<repository>[^\\s'\"]+)[\"']?\\r?\\n\\s*tag:\\s+[\"']?(?<currentValue>[^\\s'\"]+)[\"']?(?:\\r?\\n\\s*digest:\\s+[\"']?(?<currentDigest>[^\\s'\"]+)[\"']?)?",
+      ],
+      datasourceTemplate: 'docker',
+      packageNameTemplate: '{{{registry}}}/{{{repository}}}',
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
         '/^k8s/.*/.+\\.jsonnet$/',
         '/^k8s/.*/.+\\.libsonnet$/',
         '/^k8s/.*/.+\\.yaml$/',
