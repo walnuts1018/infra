@@ -5,7 +5,7 @@ local externalSecret = import 'external-secret.jsonnet';
   namespace: app.namespace,
   chart: 'velero',
   repoURL: 'https://vmware-tanzu.github.io/helm-charts',
-  targetRevision: '12.0.3',
+  targetRevision: '12.1.0',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'), {
       configuration: {
