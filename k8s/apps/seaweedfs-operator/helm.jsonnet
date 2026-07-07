@@ -4,6 +4,6 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
   namespace: app.namespace,
   chart: 'seaweedfs-operator',
   repoURL: 'https://seaweedfs.github.io/seaweedfs-operator/',
-  targetRevision: '0.1.34',
+  targetRevision: '0.1.29',
   values: (importstr 'values.yaml'),
 }
