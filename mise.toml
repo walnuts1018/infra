@@ -3,7 +3,7 @@ dyff = "1.12.0"
 kubeconform = "0.8.0"
 terraform = "1.15.7"
 go-jsonnet = "0.22.0"
-tanka = "0.37.4"
+tanka = "0.37.5"
 jsonnet-bundler = "0.6.0"
 
 [tasks.build-infrautil]
