@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'opencost',
   repoURL: 'https://opencost.github.io/opencost-helm-chart',
-  targetRevision: '2.5.23',
+  targetRevision: '2.5.26',
   values: (importstr 'values.yaml'),
 }
