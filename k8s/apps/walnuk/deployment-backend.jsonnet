@@ -26,7 +26,7 @@ local externalSecret = import 'external-secret.jsonnet';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'apiserver',
-            image: 'ghcr.io/walnuts1018/walnuk-backend:v0.0.158',
+            image: 'ghcr.io/walnuts1018/walnuk-backend:v0.0.159',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
