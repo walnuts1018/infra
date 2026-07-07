@@ -47,11 +47,11 @@ local externalSecret = import 'external-secret.jsonnet';
                 image: 'ghcr.io/renovatebot/renovate:43.255.0',
                 resources: {
                   requests: {
-                    cpu: '400m',
+                    cpu: '1',
                     memory: '2Gi',
                   },
                   limits: {
-                    cpu: '500m',
+                    cpu: '1.5',
                     memory: '8Gi',
                   },
                 },
