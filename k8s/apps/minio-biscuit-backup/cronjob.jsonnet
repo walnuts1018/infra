@@ -107,7 +107,7 @@ local app = import 'app.json5';
               std.mergePatch(
                 (container) {
                   name: 'backuper',
-                  image: 'public.ecr.aws/aws-cli/aws-cli:2.35.19',
+                  image: 'public.ecr.aws/aws-cli/aws-cli:2.35.20',
                   command: [
                     '/usr/bin/bash',
                     '-c',
