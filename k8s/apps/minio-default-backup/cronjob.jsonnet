@@ -26,7 +26,7 @@ local app = import 'app.json5';
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'rclone',
-                  image: 'public.ecr.aws/aws-cli/aws-cli:2.35.18',
+                  image: 'public.ecr.aws/aws-cli/aws-cli:2.35.19',
                   command: [
                     '/usr/bin/bash',
                     '-c',
