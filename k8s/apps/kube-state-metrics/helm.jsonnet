@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'kube-state-metrics',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '7.5.2',
+  targetRevision: '7.5.3',
   values: (importstr 'values.yaml'),
 }
