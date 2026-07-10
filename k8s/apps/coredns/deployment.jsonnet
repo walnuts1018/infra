@@ -21,7 +21,7 @@ local app = import 'app.json5';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet'), {
             name: 'coredns',
-            image: 'coredns/coredns:1.14.4',
+            image: 'coredns/coredns:1.14.6',
             args: [
               '-conf',
               '/etc/coredns/Corefile',
