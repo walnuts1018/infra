@@ -39,7 +39,7 @@ local app = import 'app.json5';
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'stalwart',
-            image: 'docker.io/stalwartlabs/stalwart:v0.16.12',
+            image: 'docker.io/stalwartlabs/stalwart:v0.16.13',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
