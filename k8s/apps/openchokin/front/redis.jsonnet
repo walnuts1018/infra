@@ -68,7 +68,7 @@ local externalSecret = import '../external-secret.jsonnet';
         downAfterMilliseconds: '30000',
       },
       kubernetesConfig: {
-        image: 'quay.io/opstree/redis-sentinel:v7.4.8',
+        image: 'quay.io/opstree/redis-sentinel:v8.4.2',
         imagePullPolicy: 'IfNotPresent',
         redisSecret: {
           name: externalSecret.spec.target.name,
