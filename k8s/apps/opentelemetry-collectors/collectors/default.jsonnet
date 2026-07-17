@@ -116,6 +116,20 @@ function(
               'otlp_http/loki',
             ],
           },
+          'logs/mackerel': {
+            receivers: [
+              'otlp',
+            ],
+            processors: [
+              'memory_limiter',
+              'k8s_attributes',
+              'resource/cluster_name',
+              'probabilistic_sampler/mackerel',
+            ],
+            exporters: [
+              'otlp_http/mackerel',
+            ],
+          },
         },
       },
     },
