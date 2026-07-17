@@ -34,6 +34,7 @@ local labels = import '../../components/labels.libsonnet';
           ],
           volumeMounts: [
             { name: 'config', mountPath: '/etc/akvorado' },
+            { name: 'snmp-config', mountPath: '/etc/akvorado/snmp.yaml', subPath: 'snmp.yaml' },
           ],
           resources: {
             requests: { cpu: '100m', memory: '128Mi' },
@@ -52,6 +53,7 @@ local labels = import '../../components/labels.libsonnet';
         }],
         volumes: [
           { name: 'config', configMap: { name: 'akvorado-config' } },
+          { name: 'snmp-config', secret: { secretName: 'akvorado-snmp' } },
         ],
       },
     },

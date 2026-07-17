@@ -1,19 +1,14 @@
 flow:
   inputs:
-    - type: udp
-      decoder: netflow
-      listen: :2055
-      workers: 2
-    - type: udp
-      decoder: sflow
-      listen: :6343
-      workers: 2
-snmp:
-  # VyOSルーターのSNMPポーリングでIF名を取得
-  communities:
-    - targets:
-        - 192.168.0.1
-      community: public
+  - type: udp
+    decoder: netflow
+    listen: :2055
+    workers: 2
+  - type: udp
+    decoder: sflow
+    listen: :6343
+    workers: 2
+snmp: !include "snmp.yaml"
 routing:
   provider: static
   asns:
