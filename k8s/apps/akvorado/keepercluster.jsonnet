@@ -2,37 +2,22 @@ local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'clickhouse.com/v1alpha1',
-  kind: 'ClickHouseCluster',
+  kind: 'KeeperCluster',
   metadata: {
-    name: 'akvorado-clickhouse',
+    name: 'akvorado-keeper',
     namespace: app.namespace,
     annotations: {
       'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
     },
-    labels: labels('akvorado-clickhouse'),
+    labels: labels('akvorado-keeper'),
   },
   spec: {
-    keeperClusterRef: {
-      name: 'akvorado-keeper',
-    },
     replicas: 1,
     dataVolumeClaimSpec: {
       accessModes: ['ReadWriteOnce'],
       resources: {
         requests: {
-          storage: '32Gi',
-        },
-      },
-    },
-    containerTemplate: {
-      resources: {
-        requests: {
-          cpu: '100m',
-          memory: '512Mi',
-        },
-        limits: {
-          cpu: '2',
-          memory: '4Gi',
+          storage: '5Gi',
         },
       },
     },
