@@ -2,18 +2,18 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.terraform.io/backblaze/b2" {
-  version = "0.13.0"
+  version = "0.13.1"
   hashes = [
-    "h1:9aynKYr2dD4Pw8tH/onopvO8g0+tfWa5YaCypm/Otzw=",
-    "h1:IKPv+usGf0FSikzWROxmIaRWNNWUcW2twQ55lKdeQGs=",
-    "h1:UAp6AlVVPMCmc7RjsCXPvnZGH0J2q3IUJ9BXcXB9Hfg=",
-    "h1:kvgxjm0bdcyAYrrLbzIs1Dz2IA4dbYC3CM5mXn2+A2g=",
-    "h1:w9AmI7jZlIL7LvZ2wAwc6E6ouqNtFRDpdEPmA1riEbc=",
-    "zh:06ac57cbd50026f69156f91d3979928e49363092f93cb3c3b8aa21f2ea632843",
-    "zh:31f668e12cd0375301a61455fde3c2126b0c4fb41dfc03c9645c7901a0b30b37",
-    "zh:87a869ffa2d02c474710ceaa85475c89617bb922ea46bbb088b46eabb131201e",
-    "zh:b16f3299cebd6f8bc3ca6f7a40e8f5078a437efb37e9fac69d3dce4500d8a342",
-    "zh:f7c7ca77f15b7832424bfe37e03aa4001f239e710505f6e4e987c525b41efd8b",
+    "h1:EzFvlZbga2AmrJMRJPfN0TwRozKCxsWJSCJbXFY2S1M=",
+    "h1:HcwbhTAZKXqz+WtrrZ/YEyqhli1CE3j6SeGa21DWras=",
+    "h1:Y+wku11muzAv46c/R+F/aRZJ2Avvixl2bT+y1d8dtuc=",
+    "h1:dMsfvu7an9H59WNlx4CIeo5dU9ZjrdHGAZ+lo+NMvwQ=",
+    "h1:pG4FacUyGSToRM68EkwaH8qBHHP6GLHKYzersA8wW0I=",
+    "zh:10a82dbadd26ff3401b4be0216e2334ce054855b21b35aac3b73d87344007f61",
+    "zh:313a455e2e66433944b4189672b511040003d4c8f9baf5ef9b555433bd26b160",
+    "zh:72addf06d7e70423bbfcbb2fed8e112054a0084141776744c9a32938dca00f9d",
+    "zh:9f1e3509ea5778e61fda5d9eddf3e0cc0e0bd940241a2a3bc76a02aac5c15423",
+    "zh:a7c98cc368d60d35ec419a634a50714a6ac967ad2a6b3dd168b269798da36d1d",
   ]
 }
 
