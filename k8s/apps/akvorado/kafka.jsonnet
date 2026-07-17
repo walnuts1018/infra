@@ -47,13 +47,13 @@ local app = import 'app.json5';
       userOperator: {
         resources: {
           requests: {
-            cpu: '4m',
-            memory: '232Mi',
+            cpu: '7m',
+            memory: '233Mi',
           },
-        },
-        limits: {
-          cpu: '100m',
-          memory: '1Gi',
+          limits: {
+            cpu: '100m',
+            memory: '1Gi',
+          },
         },
       },
     },
