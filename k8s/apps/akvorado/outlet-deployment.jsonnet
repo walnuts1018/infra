@@ -26,13 +26,23 @@ local app = import 'app.json5';
         containers: [{
           name: 'outlet',
           image: 'quay.io/akvorado/akvorado:2.4.1',
-          args: ['outlet', '--http', '0.0.0.0:8080', 'http://akvorado-orchestrator:8080'],
+          args: ['outlet', 'http://akvorado-orchestrator:8080'],
           ports: [
             { name: 'http', containerPort: 8080, protocol: 'TCP' },
           ],
           volumeMounts: [
             { name: 'config', mountPath: '/etc/akvorado' },
-            { name: 'snmp-config', mountPath: '/etc/akvorado-secrets', readOnly: true },
+          ],
+          env: [
+            {
+              name: 'AKVORADO_CFG_INLET_SNMP_COMMUNITIES_0_COMMUNITY',
+              valueFrom: {
+                secretKeyRef: {
+                  name: (import 'external-secret-snmp.jsonnet').metadata.name,
+                  key: 'snmp_community',
+                },
+              },
+            },
           ],
           resources: {
             requests: { cpu: '50m', memory: '64Mi' },
@@ -51,7 +61,6 @@ local app = import 'app.json5';
         }],
         volumes: [
           { name: 'config', configMap: { name: (import 'configmap.jsonnet').metadata.name } },
-          { name: 'snmp-config', secret: { secretName: (import 'external-secret-snmp.jsonnet').spec.target.name } },
         ],
       },
     },

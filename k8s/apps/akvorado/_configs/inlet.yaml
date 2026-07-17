@@ -1,3 +1,5 @@
+http:
+  listen: :8080
 flow:
   inputs:
   - type: udp
@@ -8,7 +10,13 @@ flow:
     decoder: sflow
     listen: :6343
     workers: 2
-snmp: !include "/etc/akvorado-secrets/snmp.yaml"
+snmp:
+  communities:
+    - targets:
+        - 192.168.0.1
+        - 192.168.4.2
+        - 192.168.4.3
+        - 192.168.4.4
 routing:
   provider: static
   asns:

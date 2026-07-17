@@ -11,15 +11,4 @@ local app = import 'app.json5';
       },
     },
   ],
-  template_data: {
-    'snmp.yaml': |||
-      communities:
-        - targets:
-            - 192.168.0.1
-            - 192.168.4.2
-            - 192.168.4.3
-            - 192.168.4.4
-          community: "{{ .snmp_community }}"
-    |||,
-  },
 }
