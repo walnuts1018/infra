@@ -11,4 +11,13 @@ local app = import 'app.json5';
       },
     },
   ],
+  template_data: {
+    'snmp.yaml': |||
+      - type: snmp
+        credentials:
+          ::/0:
+            communities:
+              - "{{ .snmp_community }}"
+    |||,
+  },
 }

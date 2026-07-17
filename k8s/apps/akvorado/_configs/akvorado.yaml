@@ -10,6 +10,8 @@ clickhousedb:
     - akvorado-clickhouse-0.akvorado-clickhouse-headless.akvorado.svc.cluster.local:9000
 clickhouse:
   orchestrator-url: http://akvorado-orchestrator:8080
+  asns:
+    65000: "Home Network"
 inlet: !include "inlet.yaml"
 outlet: !include "outlet.yaml"
 console: !include "console.yaml"

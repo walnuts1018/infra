@@ -35,17 +35,6 @@ local app = import 'app.json5';
           volumeMounts: [
             { name: 'config', mountPath: '/etc/akvorado' },
           ],
-          env: [
-            {
-              name: 'AKVORADO_CFG_OUTLET_SNMP_COMMUNITIES_0_COMMUNITY',
-              valueFrom: {
-                secretKeyRef: {
-                  name: (import 'external-secret-snmp.jsonnet').metadata.name,
-                  key: 'snmp_community',
-                },
-              },
-            },
-          ],
           resources: {
             requests: { cpu: '100m', memory: '128Mi' },
             limits: { cpu: '2', memory: '1Gi' },
