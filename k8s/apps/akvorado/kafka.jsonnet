@@ -39,7 +39,7 @@ local app = import 'app.json5';
             memory: '232Mi',
           },
           limits: {
-            cpu: '100m',
+            cpu: '500m',
             memory: '1Gi',
           },
         },
@@ -51,7 +51,7 @@ local app = import 'app.json5';
             memory: '233Mi',
           },
           limits: {
-            cpu: '100m',
+            cpu: '500m',
             memory: '1Gi',
           },
         },
