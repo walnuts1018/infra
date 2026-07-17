@@ -31,8 +31,11 @@ local app = import 'app.json5';
             { name: 'http', containerPort: 8080, protocol: 'TCP' },
           ],
           volumeMounts: [
-            { name: 'config', mountPath: '/etc/akvorado' },
-            { name: 'snmp-config', mountPath: '/etc/akvorado-secrets', readOnly: true },
+            { name: 'config', mountPath: '/etc/akvorado/akvorado.yaml', subPath: 'akvorado.yaml', readOnly: true },
+            { name: 'config', mountPath: '/etc/akvorado/inlet.yaml', subPath: 'inlet.yaml', readOnly: true },
+            { name: 'config', mountPath: '/etc/akvorado/outlet.yaml', subPath: 'outlet.yaml', readOnly: true },
+            { name: 'config', mountPath: '/etc/akvorado/console.yaml', subPath: 'console.yaml', readOnly: true },
+            { name: 'snmp-config', mountPath: '/etc/akvorado-secrets/snmp.yaml', subPath: 'snmp.yaml', readOnly: true },
           ],
           resources: {
             requests: { cpu: '50m', memory: '64Mi' },

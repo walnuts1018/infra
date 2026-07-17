@@ -30,9 +30,7 @@ local app = import 'app.json5';
           ports: [
             { name: 'http', containerPort: 8080, protocol: 'TCP' },
           ],
-          volumeMounts: [
-            { name: 'config', mountPath: '/etc/akvorado' },
-          ],
+          volumeMounts: [],
           resources: {
             requests: { cpu: '50m', memory: '64Mi' },
             limits: { cpu: '500m', memory: '512Mi' },
@@ -48,9 +46,7 @@ local app = import 'app.json5';
             periodSeconds: 10,
           },
         }],
-        volumes: [
-          { name: 'config', configMap: { name: (import 'configmap.jsonnet').metadata.name } },
-        ],
+        volumes: [],
       },
     },
   },

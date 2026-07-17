@@ -32,9 +32,7 @@ local app = import 'app.json5';
             { name: 'netflow', containerPort: 2055, protocol: 'UDP' },
             { name: 'sflow', containerPort: 6343, protocol: 'UDP' },
           ],
-          volumeMounts: [
-            { name: 'config', mountPath: '/etc/akvorado' },
-          ],
+          volumeMounts: [],
           resources: {
             requests: { cpu: '100m', memory: '128Mi' },
             limits: { cpu: '2', memory: '1Gi' },
@@ -50,9 +48,7 @@ local app = import 'app.json5';
             periodSeconds: 10,
           },
         }],
-        volumes: [
-          { name: 'config', configMap: { name: (import 'configmap.jsonnet').metadata.name } },
-        ],
+        volumes: [],
       },
     },
   },
