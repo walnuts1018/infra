@@ -10,7 +10,7 @@ function(
     mode: 'daemonset',
     config: {
       receivers: {
-        filelog: {
+        file_log: {
           include_file_path: true,
           include: [
             '/var/log/pods/*/*/*.log',
@@ -22,7 +22,7 @@ function(
             },
           ],
         },
-        hostmetrics: {
+        host_metrics: {
           collection_interval: '10s',
           scrapers: {
             cpu: {
@@ -55,7 +55,7 @@ function(
             },
           },
         },
-        kubeletstats: {
+        kubelet_stats: {
           collection_interval: '10s',
           auth_type: 'serviceAccount',
           endpoint: '${env:K8S_NODE_IP}:10250',
@@ -137,7 +137,7 @@ function(
             },
           ],
         },
-        resourcedetection: {
+        resource_detection: {
           detectors: [
             'env',
           ],
@@ -174,7 +174,7 @@ function(
         pipelines: {
           logs: {
             receivers: [
-              'filelog',
+              'file_log',
             ],
             processors: [
               'memory_limiter',
@@ -187,7 +187,7 @@ function(
           },
           'logs/mackerel': {
             receivers: [
-              'filelog',
+              'file_log',
             ],
             processors: [
               'memory_limiter',
@@ -230,17 +230,17 @@ function(
           },
           metrics: {
             receivers: [
-              'hostmetrics',
-              'kubeletstats',
+              'host_metrics',
+              'kubelet_stats',
             ],
             processors: [
               'memory_limiter',
               'k8s_attributes',
-              'resourcedetection',
+              'resource_detection',
               'resource/cluster_name',
             ],
             exporters: [
-              'prometheusremotewrite/victoriametrics',
+              'prometheus_remote_write/victoriametrics',
             ],
           },
         },

@@ -135,7 +135,7 @@ function(
               'resource/cluster_name',
             ],
             exporters: [
-              'prometheusremotewrite/victoriametrics',
+              'prometheus_remote_write/victoriametrics',
             ],
           },
           logs: {

@@ -100,7 +100,7 @@ function(
             exporters: [
               // 'otlp_http/prometheus',
               // 'otlp_grpc/mackerel',
-              'prometheusremotewrite/victoriametrics',
+              'prometheus_remote_write/victoriametrics',
             ],
           },
           logs: {

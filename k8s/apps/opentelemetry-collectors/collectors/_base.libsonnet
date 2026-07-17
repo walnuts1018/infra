@@ -76,7 +76,7 @@ function(
             },
           },
         },
-        'prometheusremotewrite/victoriametrics': {
+        'prometheus_remote_write/victoriametrics': {
           endpoint: 'http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write',
           timeout: '30s',
           resource_to_telemetry_conversion: {
