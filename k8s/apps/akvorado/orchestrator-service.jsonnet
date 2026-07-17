@@ -11,6 +11,7 @@ local labels = import '../../components/labels.libsonnet';
     },
   },
   spec: {
+    publishNotReadyAddresses: true,
     selector: {
       'app.kubernetes.io/name': 'akvorado',
       'app.kubernetes.io/component': 'orchestrator',
