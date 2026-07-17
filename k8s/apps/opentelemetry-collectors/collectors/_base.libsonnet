@@ -58,7 +58,7 @@ function(
           sending_queue: {
             batch: {
               sizer: 'bytes',
-              max_size: 3500000,
+              max_size: 5000,
             },
           },
         },
