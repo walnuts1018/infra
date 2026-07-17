@@ -84,7 +84,7 @@ function(
             exporters: [
               'otlp_grpc/tempo',
               'span_metrics',
-              // 'otlp_http/vaxila',
+              // 'otlp_http/mackerel',
             ],
           },
           metrics: {

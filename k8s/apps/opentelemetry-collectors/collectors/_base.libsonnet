@@ -20,7 +20,6 @@ function(
         },
       },
       exporters: {
-
         'otlp_grpc/tempo': {
           endpoint: 'tempo-gateway.tempo.svc.cluster.local:4317',
           tls: {
@@ -47,7 +46,7 @@ function(
             },
           },
         },
-        'otlp_http/vaxila': {
+        'otlp_http/mackerel': {
           endpoint: 'https://otlp-vaxila.mackerelio.com',
           headers: {
             Accept: '*/*',
@@ -55,9 +54,8 @@ function(
           },
           sending_queue: {
             batch: {
-              flush_timeout: '10s',
-              min_size: 5000,
-              max_size: 5000,
+              sizer: 'bytes',
+              max_size: 3500000,
             },
           },
         },
