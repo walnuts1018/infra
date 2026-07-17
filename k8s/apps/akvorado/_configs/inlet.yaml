@@ -10,14 +10,4 @@ flow:
     decoder: sflow
     listen: :6343
     workers: 2
-snmp:
-  communities:
-    - targets:
-        - 192.168.0.1
-        - 192.168.4.2
-        - 192.168.4.3
-        - 192.168.4.4
-routing:
-  provider: static
-  asns:
-    65000: "Home Network"
+

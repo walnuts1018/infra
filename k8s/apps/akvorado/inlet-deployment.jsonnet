@@ -37,7 +37,7 @@ local app = import 'app.json5';
           ],
           env: [
             {
-              name: 'AKVORADO_CFG_INLET_SNMP_COMMUNITIES_0_COMMUNITY',
+              name: 'AKVORADO_CFG_OUTLET_SNMP_COMMUNITIES_0_COMMUNITY',
               valueFrom: {
                 secretKeyRef: {
                   name: (import 'external-secret-snmp.jsonnet').metadata.name,
