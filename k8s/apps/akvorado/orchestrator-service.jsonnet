@@ -1,5 +1,5 @@
-local app = import 'app.json5';
 local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'v1',
   kind: 'Service',
@@ -11,7 +11,6 @@ local labels = import '../../components/labels.libsonnet';
     },
   },
   spec: {
-    publishNotReadyAddresses: true,
     selector: {
       'app.kubernetes.io/name': 'akvorado',
       'app.kubernetes.io/component': 'orchestrator',
