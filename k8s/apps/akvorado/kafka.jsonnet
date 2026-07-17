@@ -35,8 +35,8 @@ local app = import 'app.json5';
       topicOperator: {
         resources: {
           requests: {
-            cpu: '3m',
-            memory: '222Mi',
+            cpu: '4m',
+            memory: '232Mi',
           },
           limits: {
             cpu: '100m',
@@ -48,7 +48,7 @@ local app = import 'app.json5';
         resources: {
           requests: {
             cpu: '4m',
-            memory: '222Mi',
+            memory: '232Mi',
           },
         },
         limits: {

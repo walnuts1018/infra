@@ -33,7 +33,7 @@ local app = import 'app.json5';
           ],
           volumeMounts: [],
           resources: {
-            requests: { cpu: '2m', memory: '11Mi' },
+            requests: { cpu: '2m', memory: '14Mi' },
             limits: { cpu: '2', memory: '1Gi' },
           },
           livenessProbe: {

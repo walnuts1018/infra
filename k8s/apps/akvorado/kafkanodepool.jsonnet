@@ -23,8 +23,8 @@ local labels = import '../../components/labels.libsonnet';
     },
     resources: {
       requests: {
-        cpu: '29m',
-        memory: '459Mi',
+        cpu: '14m',
+        memory: '537Mi',
       },
       limits: {
         cpu: '2',
