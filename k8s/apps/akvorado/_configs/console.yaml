@@ -2,4 +2,4 @@ http:
   listen: :8080
   cache:
     type: redis
-    server: akvorado-valkey-headless:6379
+    server: valkey-akvorado-valkey:6379

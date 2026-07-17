@@ -7,7 +7,7 @@ kafka:
     replication-factor: 1
 clickhousedb:
   servers:
-    - akvorado-clickhouse-0.akvorado-clickhouse-headless.akvorado.svc.cluster.local:9000
+    - akvorado-clickhouse-clickhouse-0-0-0.akvorado-clickhouse-clickhouse-headless.akvorado.svc.cluster.local:9000
 clickhouse:
   orchestrator-url: http://akvorado-orchestrator:8080
   asns:
