@@ -8,7 +8,7 @@ flow:
     decoder: sflow
     listen: :6343
     workers: 2
-snmp: !include "snmp.yaml"
+snmp: !include "/etc/akvorado-secrets/snmp.yaml"
 routing:
   provider: static
   asns:

@@ -32,7 +32,7 @@ local app = import 'app.json5';
           ],
           volumeMounts: [
             { name: 'config', mountPath: '/etc/akvorado' },
-            { name: 'snmp-config', mountPath: '/etc/akvorado/snmp.yaml', subPath: 'snmp.yaml' },
+            { name: 'snmp-config', mountPath: '/etc/akvorado-secrets', readOnly: true },
           ],
           resources: {
             requests: { cpu: '50m', memory: '64Mi' },
