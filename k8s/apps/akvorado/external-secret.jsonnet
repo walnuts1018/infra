@@ -4,7 +4,7 @@
     {
       secretKey: 'client-secret',
       remoteRef: {
-        key: 'akvorado-oidc',
+        key: 'akvorado',
         property: 'client_secret',
       },
     },

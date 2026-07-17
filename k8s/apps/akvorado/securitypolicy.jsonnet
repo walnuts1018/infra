@@ -18,8 +18,7 @@ local app = import 'app.json5';
       provider: {
         issuer: 'https://auth.walnuts.dev',
       },
-      // TODO: Replace with the actual client_id after running `terraform apply`
-      clientID: '<PLACEHOLDER_CLIENT_ID>',
+      clientID: '382195580392177834',
       clientSecret: {
         name: (import './external-secret.jsonnet').spec.target.name,
       },
@@ -56,8 +55,7 @@ local app = import 'app.json5';
                 {
                   name: 'my:zitadel:grants',
                   valueType: 'StringArray',
-                  // TODO: Replace <PLACEHOLDER_PROJECT_ID> with the actual project ID after terraform apply
-                  values: ['<PLACEHOLDER_PROJECT_ID>:akvorado-admin'],
+                  values: ['382195579570094250:akvorado-admin'],
                 },
               ],
             },
