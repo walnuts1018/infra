@@ -4,7 +4,7 @@ local labels = import '../../components/labels.libsonnet';
   apiVersion: 'kafka.strimzi.io/v1',
   kind: 'KafkaTopic',
   metadata: {
-    name: 'flows',
+    name: 'flows-v5',
     namespace: app.namespace,
     annotations: {
       'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
