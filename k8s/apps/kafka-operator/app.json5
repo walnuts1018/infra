@@ -1,0 +1,7 @@
+{
+  name: "kafka-operator",
+  namespace: "strimzi-system",
+  clusters: {
+    kurumi: {},
+  },
+}
