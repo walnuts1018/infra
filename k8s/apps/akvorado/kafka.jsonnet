@@ -14,7 +14,7 @@ local app = import 'app.json5';
   },
   spec: {
     kafka: {
-      version: '3.9.0',
+      version: '4.3.0',
       listeners: [
         {
           name: 'plain',
@@ -29,7 +29,6 @@ local app = import 'app.json5';
         'transaction.state.log.min.isr': 1,
         'default.replication.factor': 1,
         'min.insync.replicas': 1,
-        'inter.broker.protocol.version': '3.9',
       },
     },
     entityOperator: {
