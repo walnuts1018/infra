@@ -42,12 +42,12 @@ local app = import 'app.json5';
             limits: { cpu: '500m', memory: '256Mi' },
           },
           livenessProbe: {
-            httpGet: { path: '/api/v0/healthz', port: 8080 },
+            httpGet: { path: '/api/v0/healthcheck', port: 8080 },
             initialDelaySeconds: 30,
             periodSeconds: 30,
           },
           readinessProbe: {
-            httpGet: { path: '/api/v0/healthz', port: 8080 },
+            httpGet: { path: '/api/v0/healthcheck', port: 8080 },
             initialDelaySeconds: 10,
             periodSeconds: 10,
           },
