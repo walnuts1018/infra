@@ -9,7 +9,6 @@ local app = import 'app.json5';
     labels: labels('akvorado'),
   },
   spec: {
-    replicas: 1,
     selector: {
       matchLabels: {
         'app.kubernetes.io/name': 'akvorado',
