@@ -2,7 +2,7 @@ local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'apps/v1',
-  kind: 'Deployment',
+  kind: 'DaemonSet',
   metadata: {
     name: 'akvorado-inlet',
     namespace: app.namespace,
