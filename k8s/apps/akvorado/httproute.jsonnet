@@ -25,7 +25,7 @@ local app = import 'app.json5';
         backendRefs: [
           {
             kind: 'Service',
-            name: 'akvorado-console',
+            name: (import 'console-service.jsonnet').metadata.name,
             port: 8080,
             weight: 1,
           },
