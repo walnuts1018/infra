@@ -15,7 +15,6 @@ local app = import 'app.json5';
     shards: 1,
     replicas: 1,
     persistence: {
-      enabled: true,
       size: '1Gi',
     },
     resources: {

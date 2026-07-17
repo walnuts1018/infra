@@ -21,14 +21,16 @@ local app = import 'app.json5';
         },
       },
     },
-    resources: {
-      requests: {
-        cpu: '100m',
-        memory: '512Mi',
-      },
-      limits: {
-        cpu: '2',
-        memory: '4Gi',
+    containerTemplate: {
+      resources: {
+        requests: {
+          cpu: '100m',
+          memory: '512Mi',
+        },
+        limits: {
+          cpu: '2',
+          memory: '4Gi',
+        },
       },
     },
   },

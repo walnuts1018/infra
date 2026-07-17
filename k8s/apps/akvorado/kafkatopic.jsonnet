@@ -1,7 +1,7 @@
 local app = import 'app.json5';
 local labels = import '../../components/labels.libsonnet';
 {
-  apiVersion: 'kafka.strimzi.io/v1beta2',
+  apiVersion: 'kafka.strimzi.io/v1',
   kind: 'KafkaTopic',
   metadata: {
     name: 'flows',

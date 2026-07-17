@@ -1,7 +1,7 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
-  apiVersion: 'kafka.strimzi.io/v1beta2',
+  apiVersion: 'kafka.strimzi.io/v1',
   kind: 'Kafka',
   metadata: {
     name: 'akvorado-kafka',
