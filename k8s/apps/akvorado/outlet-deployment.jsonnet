@@ -1,5 +1,5 @@
-local app = import 'app.json5';
 local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -25,7 +25,7 @@ local labels = import '../../components/labels.libsonnet';
       spec: {
         containers: [{
           name: 'outlet',
-          image: 'quay.io/akvorado/akvorado:v2.4.1',
+          image: 'quay.io/akvorado/akvorado:2.4.1',
           args: ['outlet', '--http', '0.0.0.0:8080', 'http://akvorado-orchestrator:8080'],
           ports: [
             { name: 'http', containerPort: 8080, protocol: 'TCP' },
