@@ -51,7 +51,7 @@ local app = import 'app.json5';
         }],
         volumes: [
           { name: 'config', configMap: { name: 'akvorado-config' } },
-          { name: 'snmp-config', secret: { secretName: 'akvorado-snmp' } },
+          { name: 'snmp-config', secret: { secretName: (import 'external-secret-snmp.jsonnet').spec.target.name } },
         ],
       },
     },
