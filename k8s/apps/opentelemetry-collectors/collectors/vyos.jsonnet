@@ -54,6 +54,7 @@ function(
             location: 'Asia/Tokyo',
             resource: {
               'service.name': 'vyos-syslog',
+              'service.namespace': 'vyos',
               'host.name': 'vyos',
               'host.ip': '192.168.0.1',
             },
@@ -80,6 +81,11 @@ function(
                 value: 'vyos',
               },
               {
+                key: 'service.namespace',
+                action: 'upsert',
+                value: 'vyos',
+              },
+              {
                 key: 'host.name',
                 action: 'upsert',
                 value: 'vyos',
@@ -97,6 +103,11 @@ function(
                 key: 'service.name',
                 action: 'upsert',
                 value: 'vyos-netflow',
+              },
+              {
+                key: 'service.namespace',
+                action: 'upsert',
+                value: 'vyos',
               },
               {
                 key: 'host.name',

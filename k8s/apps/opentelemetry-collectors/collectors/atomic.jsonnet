@@ -112,6 +112,11 @@ function(
               key: 'service.name',
               value: 'k8s-events-receiver',
             },
+            {
+              action: 'upsert',
+              key: 'service.namespace',
+              value: 'k8s-events-receiver',
+            },
           ],
         },
       },
