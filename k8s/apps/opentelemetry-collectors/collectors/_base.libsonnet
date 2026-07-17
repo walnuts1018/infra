@@ -57,7 +57,8 @@ function(
           },
           sending_queue: {
             batch: {
-              sizer: 'bytes',
+              flush_timeout: '10s',
+              min_size: 5000,
               max_size: 5000,
             },
           },
