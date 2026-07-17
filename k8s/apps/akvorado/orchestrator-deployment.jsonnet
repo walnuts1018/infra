@@ -35,7 +35,7 @@ local app = import 'app.json5';
             { name: 'config', mountPath: '/etc/akvorado/inlet.yaml', subPath: 'inlet.yaml', readOnly: true },
             { name: 'config', mountPath: '/etc/akvorado/outlet.yaml', subPath: 'outlet.yaml', readOnly: true },
             { name: 'config', mountPath: '/etc/akvorado/console.yaml', subPath: 'console.yaml', readOnly: true },
-            { name: 'snmp-config', mountPath: '/etc/akvorado-secrets/snmp.yaml', subPath: 'snmp.yaml', readOnly: true },
+            { name: 'snmp-config', mountPath: '/etc/akvorado/snmp.yaml', subPath: 'snmp.yaml', readOnly: true },
           ],
           resources: {
             requests: { cpu: '50m', memory: '64Mi' },

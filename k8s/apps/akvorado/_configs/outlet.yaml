@@ -1,4 +1,4 @@
 http:
   listen: :8080
 metadata:
-  providers: !include "../akvorado-secrets/snmp.yaml"
+  providers: !include "snmp.yaml"
