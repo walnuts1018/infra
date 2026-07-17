@@ -32,8 +32,22 @@ local app = import 'app.json5';
       },
     },
     entityOperator: {
-      topicOperator: {},
-      userOperator: {},
+      topicOperator: {
+        resources: {
+          requests: {
+            cpu: '3m',
+            memory: '222Mi',
+          },
+        },
+      },
+      userOperator: {
+        resources: {
+          requests: {
+            cpu: '4m',
+            memory: '222Mi',
+          },
+        },
+      },
     },
   },
 }

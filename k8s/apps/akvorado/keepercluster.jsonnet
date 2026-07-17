@@ -13,6 +13,14 @@ local app = import 'app.json5';
   },
   spec: {
     replicas: 1,
+    containerTemplate: {
+      resources: {
+        requests: {
+          cpu: '67m',
+          memory: '98Mi',
+        },
+      },
+    },
     dataVolumeClaimSpec: {
       accessModes: ['ReadWriteOnce'],
       resources: {
