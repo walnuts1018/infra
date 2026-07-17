@@ -38,6 +38,10 @@ local app = import 'app.json5';
             cpu: '3m',
             memory: '222Mi',
           },
+          limits: {
+            cpu: '100m',
+            memory: '1Gi',
+          },
         },
       },
       userOperator: {
@@ -46,6 +50,10 @@ local app = import 'app.json5';
             cpu: '4m',
             memory: '222Mi',
           },
+        },
+        limits: {
+          cpu: '100m',
+          memory: '1Gi',
         },
       },
     },
