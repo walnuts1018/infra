@@ -15,11 +15,6 @@ function(
           port: 5514,
           protocol: 'UDP',
         },
-        {
-          name: 'netflow-udp',
-          port: 2055,
-          protocol: 'UDP',
-        },
       ],
       config: {
         receivers: {
@@ -59,13 +54,6 @@ function(
               'host.ip': '192.168.0.1',
             },
           },
-          netflow: {
-            scheme: 'netflow',
-            hostname: '0.0.0.0',
-            port: 2055,
-            sockets: 2,
-            workers: 4,
-          },
         },
         processors: {
           memory_limiter: {
@@ -79,30 +67,6 @@ function(
                 key: 'service.name',
                 action: 'upsert',
                 value: 'vyos',
-              },
-              {
-                key: 'service.namespace',
-                action: 'upsert',
-                value: 'vyos',
-              },
-              {
-                key: 'host.name',
-                action: 'upsert',
-                value: 'vyos',
-              },
-              {
-                key: 'host.ip',
-                action: 'upsert',
-                value: '192.168.0.1',
-              },
-            ],
-          },
-          'resource/netflow': {
-            attributes: [
-              {
-                key: 'service.name',
-                action: 'upsert',
-                value: 'vyos-netflow',
               },
               {
                 key: 'service.namespace',
@@ -143,19 +107,6 @@ function(
               ],
               processors: [
                 'memory_limiter',
-                'resource/cluster_name',
-              ],
-              exporters: [
-                'otlp_http/loki',
-              ],
-            },
-            'logs/netflow': {
-              receivers: [
-                'netflow',
-              ],
-              processors: [
-                'memory_limiter',
-                'resource/netflow',
                 'resource/cluster_name',
               ],
               exporters: [

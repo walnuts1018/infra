@@ -1,0 +1,15 @@
+kafka:
+  topic: flows
+  brokers:
+    - akvorado-kafka-kafka-bootstrap:9092
+  topic-configuration:
+    num-partitions: 2
+    replication-factor: 1
+clickhousedb:
+  servers:
+    - akvorado-clickhouse-0.akvorado-clickhouse-headless.akvorado.svc.cluster.local:9000
+clickhouse:
+  orchestrator-url: http://akvorado-orchestrator:8080
+inlet: !include "inlet.yaml"
+outlet: !include "outlet.yaml"
+console: !include "console.yaml"

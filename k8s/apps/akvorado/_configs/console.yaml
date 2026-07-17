@@ -1,0 +1,4 @@
+http:
+  cache:
+    type: redis
+    server: akvorado-valkey-headless:6379
