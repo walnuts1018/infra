@@ -167,6 +167,11 @@ function(
               action: 'upsert',
               value: 'journald',
             },
+            {
+              key: 'service.namespace',
+              action: 'upsert',
+              value: 'journald',
+            },
           ],
         },
       },
