@@ -12,41 +12,34 @@ clickhouse:
   orchestrator-url: http://akvorado-orchestrator:8080
   asns:
     65000: "Home Network"
-networks:
-- name: server
   networks:
-  - 192.168.0.0/24
-  - fd7e:bc2d:5f4a:100::/64
-  role: server
-  site: kawasaki
-  region: ap-japan-kanto
-- name: user
-  networks:
-  - 192.168.100.0/24
-  - fd7e:bc2d:5f4a:200::/64
-  role: client
-  site: kawasaki
-  region: ap-japan-kanto
-- name: management
-  networks:
-  - 192.168.4.0/24
-  role: management
-  site: kawasaki
-  region: ap-japan-kanto
-- name: transit
-  networks:
-  - 192.168.252.0/30
-  - 192.168.252.4/30
-  role: transit
-  site: kawasaki
-  region: ap-japan-kanto
-exporters-classifiers:
-- name: vanilla
-  agents:
-  - 192.168.0.1
-  role: router
-  site: kawasaki
-  region: ap-japan-kanto
+  - name: server
+    networks:
+    - 192.168.0.0/24
+    - fd7e:bc2d:5f4a:100::/64
+    role: server
+    site: kawasaki
+    region: ap-japan-kanto
+  - name: user
+    networks:
+    - 192.168.100.0/24
+    - fd7e:bc2d:5f4a:200::/64
+    role: client
+    site: kawasaki
+    region: ap-japan-kanto
+  - name: management
+    networks:
+    - 192.168.4.0/24
+    role: management
+    site: kawasaki
+    region: ap-japan-kanto
+  - name: transit
+    networks:
+    - 192.168.252.0/30
+    - 192.168.252.4/30
+    role: transit
+    site: kawasaki
+    region: ap-japan-kanto
 inlet: !include "inlet.yaml"
 outlet: !include "outlet.yaml"
 console: !include "console.yaml"

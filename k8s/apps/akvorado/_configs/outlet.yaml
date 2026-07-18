@@ -2,3 +2,11 @@ http:
   listen: :8080
 metadata:
   providers: !include "snmp.yaml"
+core:
+  exporterclassifiers:
+  - name: vanilla
+    agents:
+    - 192.168.0.1
+    role: router
+    site: kawasaki
+    region: ap-japan-kanto
