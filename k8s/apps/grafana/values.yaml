@@ -104,6 +104,7 @@ plugins:
 - knightss27-weathermap-panel
 - grafana-github-datasource
 - volkovlabs-echarts-panel
+- ovhcloud-akvorado-datasource
 datasources:
   datasources.yaml:
     apiVersion: 1
@@ -143,7 +144,7 @@ route:
     annotations:
       external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied: "true"
     hostnames:
-      - grafana.walnuts.dev
+    - grafana.walnuts.dev
     parentRefs:
-      - name: envoy-gateway
-        namespace: envoy-gateway-system
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
