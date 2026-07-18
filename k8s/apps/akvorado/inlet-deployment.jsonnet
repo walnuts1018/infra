@@ -2,13 +2,14 @@ local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'apps/v1',
-  kind: 'DaemonSet',
+  kind: 'Deployment',
   metadata: {
     name: 'akvorado-inlet',
     namespace: app.namespace,
     labels: labels('akvorado'),
   },
   spec: {
+    replicas: 1,
     selector: {
       matchLabels: {
         'app.kubernetes.io/name': 'akvorado',
@@ -48,6 +49,9 @@ local app = import 'app.json5';
           },
         }],
         volumes: [],
+        nodeSelector: {
+          'kubernetes.io/hostname': 'cake',
+        },
       },
     },
   },
