@@ -4,4 +4,4 @@ metadata:
   providers: !include "snmp.yaml"
 core:
   exporterclassifiers:
-  - Exporter.IP == "192.168.0.1" && ClassifyName("vanilla") && ClassifyRole("router") && ClassifySite("kawasaki") && ClassifyRegion("ap-japan-kanto")
+  - Exporter.IP == "192.168.0.1" && ClassifyRole("router") && ClassifySite("kawasaki") && ClassifyRegion("ap-japan-kanto")
