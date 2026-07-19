@@ -22,6 +22,12 @@ local app = import 'app.json5';
         {
           containerName: '*',
           controlledResources: ['memory'],
+          minAllowed: {
+            memory: '64Mi',
+          },
+          maxAllowed: {
+            memory: '256Mi',
+          },
         },
       ],
     },
