@@ -20,8 +20,14 @@ local app = import '../app.json5';
     resourcePolicy: {
       containerPolicies: [
         {
-          containerName: '*',
+          containerName: 'oekaki-dengon-game-front',
           controlledResources: ['memory'],
+          minAllowed: {
+            memory: '64Mi',
+          },
+          maxAllowed: {
+            memory: '256Mi',
+          },
         },
       ],
     },

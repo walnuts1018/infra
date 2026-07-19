@@ -20,8 +20,14 @@ local app = import '../app.json5';
     resourcePolicy: {
       containerPolicies: [
         {
-          containerName: '*',
+          containerName: 'openchokin-front',
           controlledResources: ['memory'],
+          minAllowed: {
+            memory: '10Mi',
+          },
+          maxAllowed: {
+            memory: '256Mi',
+          },
         },
       ],
     },

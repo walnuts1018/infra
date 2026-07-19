@@ -37,8 +37,7 @@ local app = import 'app.json5';
                 memory: '250Mi',
               },
               limits: {
-                cpu: '500m',
-                memory: '768Mi',
+                memory: '1Gi',
               },
             },
             env: [

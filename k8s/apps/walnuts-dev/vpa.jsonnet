@@ -20,8 +20,14 @@ local app = import 'app.json5';
     resourcePolicy: {
       containerPolicies: [
         {
-          containerName: '*',
+          containerName: 'walnuts-dev',
           controlledResources: ['memory'],
+          minAllowed: {
+            memory: '128Mi',
+          },
+          maxAllowed: {
+            memory: '1Gi',
+          },
         },
       ],
     },
