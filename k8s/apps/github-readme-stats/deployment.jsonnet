@@ -29,9 +29,13 @@ local app = import 'app.json5';
               },
             ],
             resources: {
-              limits: {},
+              limits: {
+                cpu: '100m',
+                memory: '256Mi',
+              },
               requests: {
-                memory: '32Mi',
+                cpu: '1m',
+                memory: '50Mi',
               },
             },
             env: [

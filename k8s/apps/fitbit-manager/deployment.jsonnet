@@ -35,11 +35,11 @@ local app = import 'app.json5';
             resources: {
               requests: {
                 cpu: '1m',
-                memory: '10Mi',
+                memory: '35Mi',
               },
               limits: {
                 cpu: '100m',
-                memory: '300Mi',
+                memory: '128Mi',
               },
             },
             env: (import 'env.libsonnet').env,

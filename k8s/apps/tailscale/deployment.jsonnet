@@ -95,9 +95,13 @@ local app = import 'app.json5';
             },
             resources: {
               requests: {
-                memory: '40Mi',
+                cpu: '20m',
+                memory: '80Mi',
               },
-              limits: {},
+              limits: {
+                cpu: '500m',
+                memory: '256Mi',
+              },
             },
             volumeMounts: [
               {

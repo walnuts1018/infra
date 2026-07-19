@@ -119,8 +119,8 @@ gateway:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: null
-    targetMemoryUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: 95
+    targetMemoryUtilizationPercentage: null
   resources:
     requests:
       cpu: 5m
@@ -176,15 +176,15 @@ ingester:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: null
-    targetMemoryUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: 95
+    targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 25m
-      memory: 512Mi
+      cpu: 20m
+      memory: 630Mi
     limits:
       cpu: 1
-      memory: 1Gi
+      memory: 2Gi
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: "kubernetes.io/hostname"
@@ -207,14 +207,14 @@ distributor:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: null
-    targetMemoryUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: 95
+    targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 20m
-      memory: 128Mi
+      cpu: 70m
+      memory: 260Mi
     limits:
-      cpu: 1
+      cpu: 2
       memory: 1Gi
   topologySpreadConstraints:
   - maxSkew: 1
@@ -236,14 +236,14 @@ querier:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: null
-    targetMemoryUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: 95
+    targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 14m
-      memory: 105Mi
+      cpu: 15m
+      memory: 455Mi
     limits:
-      cpu: 1
+      cpu: 2
       memory: 1Gi
   topologySpreadConstraints:
   - maxSkew: 1
@@ -265,15 +265,15 @@ queryFrontend:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: null
-    targetMemoryUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: 95
+    targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 10m
-      memory: 40Mi
+      cpu: 5m
+      memory: 120Mi
     limits:
       cpu: 1
-      memory: 1Gi
+      memory: 512Mi
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: "kubernetes.io/hostname"
@@ -316,10 +316,10 @@ indexGateway:
   resources:
     requests:
       cpu: 10m
-      memory: 64Mi
+      memory: 45Mi
     limits:
       cpu: 1
-      memory: 1Gi
+      memory: 256Mi
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: "kubernetes.io/hostname"
@@ -351,11 +351,11 @@ compactor:
           topologyKey: "kubernetes.io/hostname"
   resources:
     requests:
-      cpu: 15m
-      memory: 128Mi
+      cpu: 10m
+      memory: 95Mi
     limits:
       cpu: 1
-      memory: 1Gi
+      memory: 512Mi
   persistence:
     enabled: false
     type: ephemeral # TODO: enableStatefulSetAutoDeletePVCをtrueにして、pvcにしてもいい
@@ -378,10 +378,10 @@ bloomGateway:
   resources:
     requests:
       cpu: 3m
-      memory: 40Mi
+      memory: 32Mi
     limits:
       cpu: 500m
-      memory: 1Gi
+      memory: 256Mi
 
 bloomPlanner:
   enabled: true
@@ -401,10 +401,10 @@ bloomPlanner:
   resources:
     requests:
       cpu: 4m
-      memory: 40Mi
+      memory: 45Mi
     limits:
       cpu: 500m
-      memory: 1Gi
+      memory: 256Mi
 
 bloomBuilder:
   enabled: true
@@ -414,15 +414,15 @@ bloomBuilder:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: null
-    targetMemoryUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: 95
+    targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 2m
-      memory: 36Mi
+      cpu: 3m
+      memory: 95Mi
     limits:
       cpu: 1
-      memory: 1Gi
+      memory: 512Mi
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: "kubernetes.io/hostname"
@@ -446,11 +446,11 @@ patternIngester:
   replicas: 1
   resources:
     requests:
-      cpu: 72m
-      memory: 600Mi
+      cpu: 30m
+      memory: 535Mi
     limits:
-      cpu: 1
-      memory: 1.5Gi
+      cpu: 2
+      memory: 2Gi
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: "kubernetes.io/hostname"
@@ -470,10 +470,10 @@ ruler:
   resources:
     requests:
       cpu: 10m
-      memory: 64Mi
+      memory: 65Mi
     limits:
       cpu: 1
-      memory: 1Gi
+      memory: 512Mi
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: "kubernetes.io/hostname"

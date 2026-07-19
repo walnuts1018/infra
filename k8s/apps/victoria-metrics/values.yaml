@@ -8,15 +8,15 @@ vmselect:
     maxReplicas: 5
     metrics:
     - resource:
-        name: memory
+        name: cpu
         target:
-          averageUtilization: 100
+          averageUtilization: 80
           type: Utilization
       type: Resource
   resources:
     requests:
       cpu: 5m
-      memory: 100Mi
+      memory: 115Mi
     limits:
       cpu: "1"
       memory: 1Gi
@@ -33,15 +33,15 @@ vminsert:
     maxReplicas: 5
     metrics:
     - resource:
-        name: memory
+        name: cpu
         target:
-          averageUtilization: 100
+          averageUtilization: 80
           type: Utilization
       type: Resource
   resources:
     requests:
-      cpu: 60m
-      memory: 240Mi
+      cpu: 45m
+      memory: 470Mi
     limits:
       cpu: "2"
       memory: 2Gi
@@ -58,8 +58,8 @@ vmstorage:
     size: 10Gi
   resources:
     requests:
-      cpu: 35m
-      memory: 980Mi
+      cpu: 50m
+      memory: 1600Mi
     limits:
       cpu: "2"
       memory: 2Gi

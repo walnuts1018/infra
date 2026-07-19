@@ -1,11 +1,11 @@
-local app = import 'app.json5';
+local app = import '../app.json5';
 {
   apiVersion: 'keda.sh/v1alpha1',
   kind: 'ScaledObject',
   metadata: {
-    name: app.name,
+    name: (import 'deployment.jsonnet').metadata.name,
     namespace: app.namespace,
-    labels: (import '../../components/labels.libsonnet')(app.name),
+    labels: (import '../../../components/labels.libsonnet')(app.name + '-back'),
   },
   spec: {
     minReplicaCount: 1,

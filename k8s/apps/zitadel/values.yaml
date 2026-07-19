@@ -43,9 +43,10 @@ metrics:
     enabled: true
 resources:
   requests:
-    cpu: 10m
-    memory: 196Mi
+    cpu: 30m
+    memory: 350Mi
   limits:
+    cpu: "1"
     memory: 1Gi
 affinity:
   nodeAffinity:

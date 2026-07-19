@@ -9,7 +9,6 @@ local app = import '../app.json5';
     labels: (labels)(app.name + '-front'),
   },
   spec: {
-    replicas: 1,
     selector: {
       matchLabels: (labels)(app.name + '-front'),
     },
@@ -33,8 +32,8 @@ local app = import '../app.json5';
                 memory: '512Mi',
               },
               requests: {
-                cpu: '10m',
-                memory: '100Mi',
+                cpu: '1m',
+                memory: '95Mi',
               },
             },
             volumeMounts: [

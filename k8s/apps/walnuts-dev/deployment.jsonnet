@@ -9,7 +9,6 @@ local app = import 'app.json5';
     labels: (labels)(app.name),
   },
   spec: {
-    replicas: 2,
     selector: {
       matchLabels: (labels)(app.name),
     },
@@ -34,12 +33,12 @@ local app = import 'app.json5';
             ],
             resources: {
               requests: {
-                cpu: '8m',
-                memory: '160Mi',
+                cpu: '15m',
+                memory: '250Mi',
               },
               limits: {
                 cpu: '500m',
-                memory: '512Mi',
+                memory: '768Mi',
               },
             },
             env: [

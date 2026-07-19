@@ -10,7 +10,6 @@ local externalSecret = import 'external-secret.jsonnet';
     labels: (labels)(app.name + '-back'),
   },
   spec: {
-    replicas: 1,
     selector: {
       matchLabels: (labels)(app.name + '-back'),
     },
@@ -30,12 +29,12 @@ local externalSecret = import 'external-secret.jsonnet';
             ],
             resources: {
               requests: {
-                cpu: '10m',
-                memory: '10Mi',
+                cpu: '1m',
+                memory: '12Mi',
               },
               limits: {
-                cpu: '2',
-                memory: '2Gi',
+                cpu: '500m',
+                memory: '512Mi',
               },
             },
             env: [

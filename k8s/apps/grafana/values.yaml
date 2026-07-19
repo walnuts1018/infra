@@ -3,12 +3,12 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 5
-  targetCPU: ""
-  targetMemory: "100"
+  targetCPU: "80"
+  targetMemory: ""
 resources:
   requests:
-    cpu: 80m
-    memory: 330Mi
+    cpu: 65m
+    memory: 560Mi
   limits:
     cpu: 500m
     memory: 2Gi

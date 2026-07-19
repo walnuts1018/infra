@@ -9,20 +9,18 @@ local app = import 'app.json5';
   },
   spec: {
     minReplicaCount: 2,
-    maxReplicaCount: 4,
+    maxReplicaCount: 3,
     scaleTargetRef: {
       apiVersion: 'apps/v1',
       kind: 'Deployment',
-      name: 'zitadel',
+      name: (import 'deployment.jsonnet').metadata.name,
     },
     triggers: [
       {
-        type: 'prometheus',
+        type: 'cpu',
+        metricType: 'Utilization',
         metadata: {
-          serverAddress: 'http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus',
-          metricName: 'http_server_request_count_total_zitadel',
-          query: 'sum(rate(http_server_request_count_total{namespace="zitadel", service_name="zitadel"}[2m]))',
-          threshold: '10',
+          value: '80',
         },
       },
     ],

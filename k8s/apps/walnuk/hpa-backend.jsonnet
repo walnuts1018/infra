@@ -1,31 +1,30 @@
 local app = import 'app.json5';
 {
-  apiVersion: 'autoscaling/v2',
-  kind: 'HorizontalPodAutoscaler',
+  apiVersion: 'keda.sh/v1alpha1',
+  kind: 'ScaledObject',
   metadata: {
     name: app.appname.backend,
     namespace: app.namespace,
     labels: (import '../../components/labels.libsonnet')(app.appname.backend),
   },
   spec: {
-    minReplicas: 2,
-    maxReplicas: 5,
-    metrics: [
-      {
-        resource: {
-          name: 'memory',
-          target: {
-            averageUtilization: 100,
-            type: 'Utilization',
-          },
-        },
-        type: 'Resource',
-      },
-    ],
+    minReplicaCount: 2,
+    maxReplicaCount: 5,
     scaleTargetRef: {
       apiVersion: 'apps/v1',
       kind: 'Deployment',
       name: (import 'deployment-backend.jsonnet').metadata.name,
     },
+    triggers: [
+      {
+        type: 'prometheus',
+        metadata: {
+          serverAddress: 'http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus',
+          metricName: 'envoy_cluster_upstream_rq_total_backend',
+          query: 'sum(rate(cluster_upstream_rq_total{envoy_cluster_name="httproute/walnuk/walnuk/rule/0"}[2m]))',
+          threshold: '15',
+        },
+      },
+    ],
   },
 }

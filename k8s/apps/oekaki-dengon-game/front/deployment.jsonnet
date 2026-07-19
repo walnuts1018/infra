@@ -10,7 +10,6 @@ local service = import '../back/service.jsonnet';
     labels: (labels)(app.name + '-front'),
   },
   spec: {
-    replicas: 1,
     selector: {
       matchLabels: (labels)(app.name + '-front'),
     },
@@ -41,9 +40,13 @@ local service = import '../back/service.jsonnet';
               },
             ],
             resources: {
-              limits: {},
               requests: {
-                memory: '80Mi',
+                cpu: '100m',
+                memory: '256Mi',
+              },
+              limits: {
+                cpu: '400m',
+                memory: '512Mi',
               },
             },
           },

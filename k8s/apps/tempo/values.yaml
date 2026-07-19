@@ -16,11 +16,11 @@ ingester:
   replicas: 3
   resources:
     requests:
-      cpu: 6m
-      memory: 100Mi
+      cpu: 5m
+      memory: 520Mi
     limits:
       cpu: "1"
-      memory: 1Gi
+      memory: 2Gi
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
@@ -48,15 +48,15 @@ distributor:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: null
-    targetMemoryUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: 95
+    targetMemoryUtilizationPercentage: null
   resources:
     requests:
       cpu: 3m
-      memory: 40Mi
+      memory: 36Mi
     limits:
       cpu: 500m
-      memory: 1Gi
+      memory: 256Mi
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
@@ -78,15 +78,15 @@ compactor:
     maxReplicas: 3
     hpa:
       enabled: true
-      targetCPUUtilizationPercentage: null
-      targetMemoryUtilizationPercentage: 100
+      targetCPUUtilizationPercentage: 95
+      targetMemoryUtilizationPercentage: null
   resources:
     requests:
       cpu: 5m
-      memory: 96Mi
+      memory: 210Mi
     limits:
       cpu: "1"
-      memory: 2Gi
+      memory: 1Gi
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
@@ -122,8 +122,15 @@ querier:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: null
-    targetMemoryUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: 95
+    targetMemoryUtilizationPercentage: null
+  resources:
+    requests:
+      cpu: 4m
+      memory: 32Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
@@ -136,13 +143,6 @@ querier:
           audience: sts.seaweedfs.com
           expirationSeconds: 3600
           path: token
-  resources:
-    requests:
-      cpu: 4m
-      memory: 48Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
 
 queryFrontend:
   replicas: 2
@@ -150,15 +150,15 @@ queryFrontend:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: null
-    targetMemoryUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: 95
+    targetMemoryUtilizationPercentage: null
   resources:
     requests:
       cpu: 2m
-      memory: 32Mi
+      memory: 22Mi
     limits:
       cpu: 500m
-      memory: 512Mi
+      memory: 256Mi
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
@@ -218,16 +218,16 @@ gateway:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: null
-    targetMemoryUtilizationPercentage: 100
+    targetCPUUtilizationPercentage: 95
+    targetMemoryUtilizationPercentage: null
   verboseLogging: true
   resources:
     requests:
       cpu: 2m
-      memory: 30Mi
+      memory: 15Mi
     limits:
       cpu: 500m
-      memory: 512Mi
+      memory: 256Mi
 
 provisioner:
   enabled: false

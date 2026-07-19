@@ -60,7 +60,7 @@ autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 3
-  targetMemoryUtilizationPercentage: 100
+  targetCPUUtilizationPercentage: 95
 
 housekeeping:
   enabled: true
@@ -116,11 +116,11 @@ serviceAccount:
 
 resources:
   requests:
-    cpu: 50m
-    memory: 1Gi
+    cpu: 95m
+    memory: 1300Mi
   limits:
-    cpu: "1"
-    memory: 2Gi
+    cpu: "2"
+    memory: 3Gi
 
 worker:
   resources:

@@ -26,8 +26,8 @@ local externalSecret = import 'external-secret.jsonnet';
             imagePullPolicy: 'IfNotPresent',
             resources: {
               requests: {
-                cpu: '2m',
-                memory: '10Mi',
+                cpu: '1m',
+                memory: '30Mi',
               },
               limits: {
                 cpu: '100m',
