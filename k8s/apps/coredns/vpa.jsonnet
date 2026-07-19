@@ -20,7 +20,7 @@ local app = import 'app.json5';
     resourcePolicy: {
       containerPolicies: [
         {
-          containerName: '*',
+          containerName: 'coredns',
           controlledResources: ['memory'],
           minAllowed: {
             memory: '64Mi',

@@ -20,8 +20,14 @@ local app = import 'app.json5';
     resourcePolicy: {
       containerPolicies: [
         {
-          containerName: '*',
+          containerName: 'misskey',
           controlledResources: ['memory'],
+          minAllowed: {
+            memory: '256Mi',
+          },
+          maxAllowed: {
+            memory: '2Gi',
+          },
         },
       ],
     },
