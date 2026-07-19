@@ -54,9 +54,13 @@ function(loadBalancerIP='192.168.0.138') {
     // },
     telemetry: {
       metrics: {
-        providers: [
+        sinks: [
           {
-            type: 'Prometheus',
+            type: 'OpenTelemetry',
+            openTelemetry: {
+              host: 'default-collector.opentelemetry-collector.svc.cluster.local',
+              port: 4317,
+            },
           },
         ],
       },
