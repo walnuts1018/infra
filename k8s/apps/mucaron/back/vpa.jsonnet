@@ -20,8 +20,14 @@ local app = import '../app.json5';
     resourcePolicy: {
       containerPolicies: [
         {
-          containerName: '*',
+          containerName: 'mucaron-backend',
           controlledResources: ['memory'],
+          minAllowed: {
+            memory: '8Mi',
+          },
+          maxAllowed: {
+            memory: '512Mi',
+          },
         },
       ],
     },
