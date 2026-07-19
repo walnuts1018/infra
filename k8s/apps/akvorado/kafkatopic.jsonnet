@@ -1,5 +1,5 @@
-local app = import 'app.json5';
 local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
 {
   apiVersion: 'kafka.strimzi.io/v1',
   kind: 'KafkaTopic',
