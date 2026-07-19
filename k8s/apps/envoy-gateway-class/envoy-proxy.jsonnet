@@ -53,6 +53,13 @@ function(loadBalancerIP='192.168.0.138') {
     //   },
     // },
     telemetry: {
+      metrics: {
+        providers: [
+          {
+            type: 'Prometheus',
+          },
+        ],
+      },
       tracing: {
         samplingRate: 100,
         provider: {
