@@ -11,7 +11,7 @@ recommender:
       memory: 1000Mi
 
 updater:
-  enabled: false
+  enabled: true
   replicas: 1
   resources:
     requests:
