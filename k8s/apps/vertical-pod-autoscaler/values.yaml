@@ -1,0 +1,19 @@
+recommender:
+  enabled: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 500Mi
+    limits:
+      memory: 1000Mi
+
+updater:
+  enabled: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 500Mi
+    limits:
+      memory: 1000Mi
