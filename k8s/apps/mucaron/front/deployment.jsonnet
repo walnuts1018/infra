@@ -27,13 +27,13 @@ local app = import '../app.json5';
               },
             ],
             resources: {
-              limits: {
-                cpu: '500m',
-                memory: '512Mi',
-              },
               requests: {
                 cpu: '1m',
                 memory: '95Mi',
+              },
+              limits: {
+                cpu: '500m',
+                memory: '512Mi',
               },
             },
             volumeMounts: [
