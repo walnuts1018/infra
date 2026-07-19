@@ -8,6 +8,18 @@
   spec: {
     replicas: (import 'cluster.json5').controlPlaneMachineCount,
     version: (import 'cluster.json5').kubernetesVersion,
+    kubeadmConfigSpec: {
+      initConfiguration: {
+        nodeRegistration: {
+          taints: [],
+        },
+      },
+      joinConfiguration: {
+        nodeRegistration: {
+          taints: [],
+        },
+      },
+    },
     machineTemplate: {
       spec: {
         infrastructureRef: {

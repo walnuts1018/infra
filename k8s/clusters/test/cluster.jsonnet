@@ -11,14 +11,14 @@
   spec: {
     clusterNetwork: {
       pods: {
-        cidrBlocks: ['10.0.0.0/16'],
+        cidrBlocks: ['10.244.0.0/16'],
       },
       services: {
         cidrBlocks: ['10.96.0.0/12'],
       },
     },
     controlPlaneEndpoint: {
-      host: '192.168.0.15',
+      host: '192.168.0.20',
       port: 6443,
     },
     controlPlaneRef: {

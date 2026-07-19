@@ -1,5 +1,5 @@
 {
-  apiVersion: 'infrastructure.cluster.x-k8s.io/v1alpha1',
+  apiVersion: 'infrastructure.cluster.x-k8s.io/v1beta1',
   kind: 'TartCluster',
   metadata: {
     name: (import 'cluster.json5').name,
@@ -8,5 +8,9 @@
       'cluster.x-k8s.io/cluster-name': (import 'cluster.json5').name,
     },
   },
-  spec: {},
+  spec: {
+    artifactPolicy: {
+      allowedRegistries: ['ghcr.io'],
+    },
+  },
 }
