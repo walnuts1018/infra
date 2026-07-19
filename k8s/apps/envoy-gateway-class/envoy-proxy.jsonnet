@@ -58,8 +58,13 @@ function(loadBalancerIP='192.168.0.138') {
           {
             type: 'OpenTelemetry',
             openTelemetry: {
-              host: 'default-collector.opentelemetry-collector.svc.cluster.local',
-              port: 4317,
+              backendRefs: [
+                {
+                  name: 'default-collector',
+                  namespace: 'opentelemetry-collector',
+                  port: 4317,
+                },
+              ],
             },
           },
         ],
