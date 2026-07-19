@@ -30,7 +30,7 @@ local app = import 'app.json5';
           ports: [
             { name: 'http', containerPort: 8080, protocol: 'TCP' },
             { name: 'netflow', containerPort: 2055, protocol: 'UDP' },
-            // Cilium BGPを用いたLBにしたら、hostPortやめれるかも
+            // TODO: Cilium BGPを用いたLBにしたら、hostPortやめれるかも
             { name: 'sflow', containerPort: 6343, hostPort: 6343, protocol: 'UDP' },
           ],
           volumeMounts: [],
