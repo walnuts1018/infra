@@ -21,7 +21,7 @@ local app = import 'app.json5';
         metadata: {
           serverAddress: 'http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus',
           metricName: 'envoy_cluster_upstream_rq_total_walnuts_dev',
-          query: 'sum(rate(cluster_upstream_rq_total{envoy_cluster_name="httproute/walnuts-dev/walnuts-dev/rule/0", envoy_response_code=~"2..|5.."}[2m]))',
+          query: 'sum(rate(cluster_upstream_rq_total{envoy_cluster_name="httproute/walnuts-dev/walnuts-dev/rule/0",envoy_response_code=~"2..|5.."}[2m]))',
           threshold: '20',
         },
       },
