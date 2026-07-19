@@ -1,6 +1,8 @@
 recommender:
   enabled: true
   replicas: 1
+  extraArgs:
+  - "--pod-recommendation-min-memory-mb=10"
   resources:
     requests:
       cpu: 50m
