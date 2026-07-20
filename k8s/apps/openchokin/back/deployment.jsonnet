@@ -21,6 +21,16 @@ local externalSecret = import '../external-secret.jsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'openchokin-back',
+            resizePolicy: [
+              {
+                resourceName: 'cpu',
+                restartPolicy: 'NotRequired',
+              },
+              {
+                resourceName: 'memory',
+                restartPolicy: 'RestartContainer',
+              },
+            ],
             image: 'ghcr.io/walnuts1018/openchokin-back:v0.0.0-cd205cba77a922ba01009c04203a0e4b962a31d8-97',
             imagePullPolicy: 'IfNotPresent',
             ports: [

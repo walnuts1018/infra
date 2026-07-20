@@ -20,6 +20,16 @@ local app = import '../app.json5';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'mucaron-front',
+            resizePolicy: [
+              {
+                resourceName: 'cpu',
+                restartPolicy: 'NotRequired',
+              },
+              {
+                resourceName: 'memory',
+                restartPolicy: 'RestartContainer',
+              },
+            ],
             image: 'ghcr.io/walnuts1018/mucaron-frontend:6815d5031e94f24ff1027f8616f7a8315a082f66-64',
             ports: [
               {

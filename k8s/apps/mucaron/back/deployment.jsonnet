@@ -21,6 +21,16 @@ local externalSecret = import 'external-secret.jsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'mucaron-backend',
+            resizePolicy: [
+              {
+                resourceName: 'cpu',
+                restartPolicy: 'NotRequired',
+              },
+              {
+                resourceName: 'memory',
+                restartPolicy: 'RestartContainer',
+              },
+            ],
             image: 'ghcr.io/walnuts1018/mucaron-backend:c8675c77b41b7155943b6316448ae856beea214f-88',
             ports: [
               {

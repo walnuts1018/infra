@@ -24,6 +24,16 @@ local app = import 'app.json5';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'walnuts-dev',
+            resizePolicy: [
+              {
+                resourceName: 'cpu',
+                restartPolicy: 'NotRequired',
+              },
+              {
+                resourceName: 'memory',
+                restartPolicy: 'RestartContainer',
+              },
+            ],
             image: 'ghcr.io/walnuts1018/walnuts.dev:b2f915ed7559d1f5bcb724134a6ff71633a4cdde-717',
             imagePullPolicy: 'IfNotPresent',
             ports: [

@@ -26,6 +26,16 @@ local externalSecret = import '../external-secret.jsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'oekaki-dengon-game-back',
+            resizePolicy: [
+              {
+                resourceName: 'cpu',
+                restartPolicy: 'NotRequired',
+              },
+              {
+                resourceName: 'memory',
+                restartPolicy: 'RestartContainer',
+              },
+            ],
             image: 'ghcr.io/kmc-jp/oekaki-dengon-game-back:v0.0.0-a6d6d6e7d66e6d0dfafbf416b462be908b208489-13',
             imagePullPolicy: 'IfNotPresent',
             ports: [

@@ -56,6 +56,16 @@ local externalSecret = import 'external-secret.jsonnet';
         containers: [
           (container) {
             name: 'misskey',
+            resizePolicy: [
+              {
+                resourceName: 'cpu',
+                restartPolicy: 'NotRequired',
+              },
+              {
+                resourceName: 'memory',
+                restartPolicy: 'RestartContainer',
+              },
+            ],
             image: 'misskey/misskey:2026.6.0',
             imagePullPolicy: 'IfNotPresent',
             ports: [

@@ -26,6 +26,16 @@ local service = import '../back/service.jsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'oekaki-dengon-game-front',
+            resizePolicy: [
+              {
+                resourceName: 'cpu',
+                restartPolicy: 'NotRequired',
+              },
+              {
+                resourceName: 'memory',
+                restartPolicy: 'RestartContainer',
+              },
+            ],
             image: 'ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-10b57aae4bfe56124907ac1b03bc822a635e173f-95',
             imagePullPolicy: 'IfNotPresent',
             ports: [

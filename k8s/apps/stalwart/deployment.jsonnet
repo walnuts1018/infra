@@ -38,6 +38,16 @@ local app = import 'app.json5';
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'stalwart',
+            resizePolicy: [
+              {
+                resourceName: 'cpu',
+                restartPolicy: 'NotRequired',
+              },
+              {
+                resourceName: 'memory',
+                restartPolicy: 'RestartContainer',
+              },
+            ],
             image: 'docker.io/stalwartlabs/stalwart:v0.16.13',
             imagePullPolicy: 'IfNotPresent',
             ports: [
