@@ -39,7 +39,7 @@ function(
       },
       resources: {
         requests: {
-          cpu: '26m',
+          cpu: '10m',
           memory: '167Mi',
         },
         limits: {
@@ -116,7 +116,7 @@ function(
     },
     resources: {
       requests: {
-        cpu: '450m',
+        cpu: '250m',
         memory: '1Gi',
       },
       limits: {
