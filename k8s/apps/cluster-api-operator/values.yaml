@@ -14,9 +14,9 @@ controlPlane:
       url: https://github.com/k3s-io/cluster-api-k3s/releases/v0.4.0/control-plane-components.yaml
 infrastructure:
   tart:
-    version: v0.1.4
+    version: v0.1.5
     fetchConfig:
-      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.1.4/infrastructure-components.yaml
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.1.5/infrastructure-components.yaml
 resources:
   manager: {}
 enableHelmHook: false # これをつけないと、毎回Syncする時にnamespaceごと消える
