@@ -54,20 +54,23 @@ function(loadBalancerIP='192.168.0.138') {
     // },
     telemetry: {
       metrics: {
-        sinks: [
-          {
-            type: 'OpenTelemetry',
-            openTelemetry: {
-              backendRefs: [
-                {
-                  name: 'default-collector',
-                  namespace: 'opentelemetry-collector',
-                  port: 4317,
-                },
-              ],
-            },
-          },
-        ],
+        // TODO:  OpenTelemetryを使うと、複数のPodのメトリクスを区別できない
+        // https://github.com/envoyproxy/gateway/issues/9093 が実装されたら、resource attributeにPod名を付与するようにする
+        //
+        // sinks: [
+        //   {
+        //     type: 'OpenTelemetry',
+        //     openTelemetry: {
+        //       backendRefs: [
+        //         {
+        //           name: 'default-collector',
+        //           namespace: 'opentelemetry-collector',
+        //           port: 4317,
+        //         },
+        //       ],
+        //     },
+        //   },
+        // ],
       },
       tracing: {
         samplingRate: 100,
