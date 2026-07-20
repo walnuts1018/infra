@@ -66,6 +66,14 @@ affinity:
           values:
           - donut
 
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: 'kubernetes.io/hostname'
+  whenUnsatisfiable: 'ScheduleAnyway'
+  labelSelector:
+    matchLabels:
+      app.kubernetes.io/name: zitadel
+
 # extraVolumes:
 # - name: zitadel-tls
 #   secret:
