@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: esp32-thermohygrometer-exporter
+    app.kubernetes.io/name: esp32-thermohygrometer-exporter
+  name: esp32-thermohygrometer-exporter
+  namespace: esp32-thermohygrometer-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: esp32-thermohygrometer-exporter
+      app.kubernetes.io/name: esp32-thermohygrometer-exporter
+  template:
+    metadata:
+      labels:
+        app: esp32-thermohygrometer-exporter
+        app.kubernetes.io/name: esp32-thermohygrometer-exporter
+    spec:
+      containers:
+        - env:
+            - name: FETCH_INTERVAL
+              value: 30s
+            - name: DEVICE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: device_url
+                  name: esp32-thermohygrometer-exporter-db2bfc
+            - name: OIDC_PRIVATE_KEY_JSON
+              valueFrom:
+                secretKeyRef:
+                  key: private_key_json
+                  name: esp32-thermohygrometer-exporter-db2bfc
+            - name: OIDC_SCOPES
+              value: openid urn:zitadel:iam:org:project:id:375241036420612774:aud urn:zitadel:iam:org:project:role:thermohygrometer.read
+            - name: OIDC_ISSUER
+              value: https://auth.walnuts.dev
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: LOG_LEVEL
+              value: info
+            - name: LOG_TYPE
+              value: json
+          image: ghcr.io/walnuts1018/esp32-thermohygrometer-exporter:v0.0.25
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /livez
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 1
+          name: esp32-thermohygrometer-exporter
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /readyz
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 1m
+              memory: 30Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /livez
+              port: 8080
+            periodSeconds: 1
+            timeoutSeconds: 1

@@ -1,0 +1,395 @@
+---
+# Source: pyroscope/templates/deployments-statefulsets.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: pyroscope
+  namespace: pyroscope
+  labels:
+    helm.sh/chart: pyroscope-2.0.1
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/version: "2.0.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "all"
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pyroscope
+      app.kubernetes.io/instance: pyroscope
+      app.kubernetes.io/component: "all"
+---
+# Source: pyroscope/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pyroscope
+  namespace: pyroscope
+  labels:
+    helm.sh/chart: pyroscope-2.0.1
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/version: "2.0.1"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: pyroscope/templates/configmap-overrides.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pyroscope-overrides-config
+  namespace: pyroscope
+  labels:
+    helm.sh/chart: pyroscope-2.0.1
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/version: "2.0.1"
+    app.kubernetes.io/managed-by: Helm
+data:
+  overrides.yaml: |
+    overrides:
+      {}
+---
+# Source: pyroscope/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pyroscope-config
+  namespace: pyroscope
+  labels:
+    helm.sh/chart: pyroscope-2.0.1
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/version: "2.0.1"
+    app.kubernetes.io/managed-by: Helm
+data:
+  config.yaml: |
+    storage:
+      backend: s3
+      s3:
+        bucket_name: pyroscope
+        endpoint: seaweedfs.local.walnuts.dev
+        force_path_style: true
+        native_aws_auth_enabled: true
+        region: us-east-1
+---
+# Source: pyroscope/templates/rbac-discovery.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pyroscope-discovery
+  labels:
+    helm.sh/chart: pyroscope-2.0.1
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/version: "2.0.1"
+    app.kubernetes.io/managed-by: Helm
+rules:
+- apiGroups:
+  - ""
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  - endpoints
+  - services
+  - pods
+  verbs:
+  - get
+  - watch
+  - list
+---
+# Source: pyroscope/templates/rbac-discovery.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pyroscope-discovery
+  labels:
+    helm.sh/chart: pyroscope-2.0.1
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/version: "2.0.1"
+    app.kubernetes.io/managed-by: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pyroscope-discovery
+subjects:
+- kind: ServiceAccount
+  name: pyroscope
+  namespace: pyroscope
+---
+# Source: pyroscope/templates/memberlist-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: pyroscope-memberlist
+  namespace: pyroscope
+  labels:
+    helm.sh/chart: pyroscope-2.0.1
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/version: "2.0.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: memberlist
+      port: 7946
+      protocol: TCP
+      targetPort: 7946
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    # TODO: Ensure only services that offer memberlist register
+    # pyroscope.grafana.com/memberlist: "true"
+---
+# Source: pyroscope/templates/services.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: pyroscope
+  namespace: pyroscope
+  labels:
+    helm.sh/chart: pyroscope-2.0.1
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/version: "2.0.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "all"
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4040
+      targetPort: http2
+      protocol: TCP
+      name: http2
+    - port: 9095
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+    - port: 9099
+      targetPort: raft
+      protocol: TCP
+      name: raft
+  selector:
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/component: "all"
+---
+# Source: pyroscope/templates/services.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: pyroscope-headless
+  namespace: pyroscope
+  labels:
+    helm.sh/chart: pyroscope-2.0.1
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/version: "2.0.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "all"
+  annotations:
+    prometheus.io/service-monitor: "false"
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 4040
+      targetPort: http2
+      protocol: TCP
+      name: http2
+    - port: 9095
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+    - port: 9099
+      targetPort: raft
+      protocol: TCP
+      name: raft
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/component: "all"
+---
+# Source: pyroscope/templates/deployments-statefulsets.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pyroscope
+  namespace: pyroscope
+  labels:
+    helm.sh/chart: pyroscope-2.0.1
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/version: "2.0.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "all"
+spec:
+  serviceName: pyroscope-headless
+  podManagementPolicy: Parallel
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pyroscope
+      app.kubernetes.io/instance: pyroscope
+      app.kubernetes.io/component: "all"
+  template:
+    metadata:
+      annotations:
+        checksum/config: d9233ab2fae06d8b52d015adcc818fd069322e8ec192bdaf9fb50782ac6baaa1
+        profiles.grafana.com/service_repository: "https://github.com/grafana/pyroscope"
+        profiles.grafana.com/service_git_ref: "v2.0.1"
+        profiles.grafana.com/cpu.port_name: http2
+        profiles.grafana.com/cpu.scrape: "true"
+        profiles.grafana.com/goroutine.port_name: http2
+        profiles.grafana.com/goroutine.scrape: "true"
+        profiles.grafana.com/memory.port_name: http2
+        profiles.grafana.com/memory.scrape: "true"
+      labels:
+        app.kubernetes.io/name: pyroscope
+        app.kubernetes.io/instance: pyroscope
+        app.kubernetes.io/component: "all"
+        name: "pyroscope"
+    spec:
+      serviceAccountName: pyroscope
+      securityContext:
+        fsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+      dnsPolicy: ClusterFirst
+      containers:
+        - name: "pyroscope"
+          securityContext:
+            {}
+          image: "grafana/pyroscope:2.0.1"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-target=all"
+            - "-self-profiling.disable-push=true"
+            - "-server.http-listen-port=4040"
+            - "-memberlist.cluster-label=pyroscope-pyroscope"
+            - "-memberlist.join=dns+pyroscope-memberlist.pyroscope.svc.cluster.local.:7946"
+            - "-config.file=/etc/pyroscope/config.yaml"
+            - "-runtime-config.file=/etc/pyroscope/overrides/overrides.yaml"
+            - "-log.level=info"
+            - "-query-backend.address=dns:///_grpc._tcp.pyroscope-headless.$(NAMESPACE_FQDN):9095"
+            - "-metastore.address=kubernetes:///pyroscope-headless.$(NAMESPACE_FQDN):9095"
+            - "-metastore.data-dir=./data-metastore/data"
+            - "-metastore.raft.dir=./data-metastore/raft"
+            - "-metastore.raft.snapshots-dir=./data-metastore/raft"
+            - "-metastore.raft.bind-address=:9099"
+            - "-metastore.raft.server-id=$(POD_NAME).$(PYROSCOPE_METASTORE_SERVICE)"
+            - "-metastore.raft.advertise-address=$(POD_NAME).$(PYROSCOPE_METASTORE_SERVICE)"
+            - "-metastore.raft.bootstrap-peers=dnssrvnoa+_raft._tcp.$(PYROSCOPE_METASTORE_SERVICE)"
+            - "-architecture.storage=v2"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE_FQDN
+              value: "pyroscope.svc.cluster.local."
+            - name: PYROSCOPE_METASTORE_SERVICE
+              value: "pyroscope-headless.pyroscope.svc.cluster.local.:9099"
+            - name: AWS_ENDPOINT_URL_STS
+              value: "https://seaweedfs.walnuts.dev"
+            - name: AWS_ROLE_ARN
+              value: "arn:aws:iam::role/pyroscope"
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: "/var/run/secrets/sts.seaweedfs.com/serviceaccount/token"
+          ports:
+            - name: http2
+              containerPort: 4040
+              protocol: TCP
+            - name: memberlist
+              containerPort: 7946
+              protocol: TCP
+            - name: grpc
+              containerPort: 9095
+              protocol: TCP
+            - name: raft
+              containerPort: 9099
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http2
+              scheme: HTTP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/pyroscope/config.yaml
+              subPath: config.yaml
+            - name: overrides-config
+              mountPath: /etc/pyroscope/overrides/
+            - name: data
+              mountPath: /data
+            - name: data
+              mountPath: /data-metastore
+              subPath: .metastore
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/component: all
+              app.kubernetes.io/instance: pyroscope
+              app.kubernetes.io/name: pyroscope
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                audience: sts.seaweedfs.com
+                expirationSeconds: 3600
+                path: token
+        - name: config
+          configMap:
+            name: pyroscope-config
+        - name: overrides-config
+          configMap:
+            name: pyroscope-overrides-config
+        - name: data
+          emptyDir: {}
+---
+# Source: pyroscope/templates/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: pyroscope
+  namespace: pyroscope
+  labels:
+    helm.sh/chart: pyroscope-2.0.1
+    app.kubernetes.io/name: pyroscope
+    app.kubernetes.io/instance: pyroscope
+    app.kubernetes.io/version: "2.0.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: "all"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pyroscope
+      app.kubernetes.io/instance: pyroscope
+      app.kubernetes.io/component: "all"
+    matchExpressions:
+      - key: prometheus.io/service-monitor
+        operator: NotIn
+        values:
+          - "false"
+  endpoints:
+    - port: http2
+      scheme: http

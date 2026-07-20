@@ -1,0 +1,110 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keda-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: keda
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: keda
+    helm:
+      releaseName: keda
+      valuesObject:
+        clusterName: kurumi
+        enableServiceLinks: false
+        logging:
+          metricServer:
+            zapEncoder: json
+            zapLevel: info
+            zapTimeEncoding: rfc3339
+          operator:
+            format: json
+            level: info
+            stackTracesEnabled: false
+            timeEncoding: rfc3339
+          webhooks:
+            format: json
+            level: info
+            timeEncoding: rfc3339
+        metricsServer:
+          replicaCount: 1
+        operator:
+          replicaCount: 1
+        prometheus:
+          metricServer:
+            enabled: true
+            podMonitor:
+              enabled: true
+            serviceMonitor:
+              enabled: true
+          operator:
+            enabled: true
+            podMonitor:
+              enabled: true
+            serviceMonitor:
+              enabled: true
+          webhooks:
+            enabled: true
+            serviceMonitor:
+              enabled: true
+        resources:
+          metricServer:
+            limits:
+              cpu: 1
+              memory: 1000Mi
+            requests:
+              cpu: 50m
+              memory: 100Mi
+          operator:
+            limits:
+              cpu: 1
+              memory: 1000Mi
+            requests:
+              cpu: 50m
+              memory: 100Mi
+          webhooks:
+            limits:
+              cpu: 1
+              memory: 1000Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+        topologySpreadConstraints:
+          metricsServer:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: keda-operator
+                  app.kubernetes.io/name: keda-operator-metrics-apiserver
+              maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
+          operator:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: keda-operator
+                  app.kubernetes.io/name: keda-operator
+              maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
+          webhooks:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: keda-operator
+                  app.kubernetes.io/name: keda-admission-webhooks
+              maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
+        webhooks:
+          replicaCount: 1
+    repoURL: https://kedacore.github.io/charts
+    targetRevision: 2.20.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

@@ -1,7 +1,0 @@
-{
-  name: "influxdb",
-  namespace: "databases",
-  clusters: {
-    kurumi: {},
-  },
-}

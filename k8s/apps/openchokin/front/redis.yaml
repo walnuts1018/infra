@@ -1,0 +1,70 @@
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: RedisReplication
+metadata:
+  labels:
+    app: openchokin-front-redis
+    app.kubernetes.io/name: openchokin-front-redis
+  name: openchokin-front-redis
+spec:
+  clusterSize: 2
+  kubernetesConfig:
+    image: quay.io/opstree/redis:v7.4.8
+    imagePullPolicy: IfNotPresent
+    redisSecret:
+      key: redis-password
+      name: openchokin-5b8e1f
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 4m
+        memory: 4Mi
+  podSecurityContext:
+    fsGroup: 1000
+    runAsUser: 1000
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: RedisSentinel
+metadata:
+  labels:
+    app: openchokin-front-redis
+    app.kubernetes.io/name: openchokin-front-redis
+  name: openchokin-front-redis
+spec:
+  clusterSize: 3
+  kubernetesConfig:
+    image: quay.io/opstree/redis-sentinel:v7.4.8
+    imagePullPolicy: IfNotPresent
+    redisSecret:
+      key: redis-password
+      name: openchokin-5b8e1f
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 4m
+        memory: 4Mi
+  podSecurityContext:
+    fsGroup: 1000
+    runAsUser: 1000
+  redisSentinelConfig:
+    downAfterMilliseconds: "30000"
+    failoverTimeout: "180000"
+    masterGroupName: mymaster
+    parallelSyncs: "1"
+    quorum: "2"
+    redisPort: "6379"
+    redisReplicationName: openchokin-front-redis
+  tolerations:
+    - key: node.walnuts.dev/low-performance
+      operator: Exists

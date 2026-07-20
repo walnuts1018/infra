@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: walnuts-dev
+    app.kubernetes.io/name: walnuts-dev
+  name: walnuts-dev
+  namespace: walnuts-dev
+spec:
+  selector:
+    matchLabels:
+      app: walnuts-dev
+      app.kubernetes.io/name: walnuts-dev
+  template:
+    metadata:
+      labels:
+        app: walnuts-dev
+        app.kubernetes.io/name: walnuts-dev
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - preference:
+                matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+              weight: 100
+            - preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values:
+                      - donut
+              weight: 10
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - walnuts-dev
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      containers:
+        - env:
+            - name: NEXT_PUBLIC_GA_ID
+              value: G-NB6F68ZQ9P
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+          image: ghcr.io/walnuts1018/walnuts.dev:b2f915ed7559d1f5bcb724134a6ff71633a4cdde-717
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+          name: walnuts-dev
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+          resizePolicy:
+            - resourceName: cpu
+              restartPolicy: NotRequired
+            - resourceName: memory
+              restartPolicy: RestartContainer
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 15m
+              memory: 250Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /app/.next/cache
+              name: next-cache
+      priorityClassName: high
+      securityContext:
+        runAsGroup: 65534
+        runAsUser: 10001
+      volumes:
+        - emptyDir: {}
+          name: next-cache

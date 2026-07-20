@@ -1,0 +1,53 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: clickhouse-operator-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: clickhouse-operator-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: clickhouse-operator-helm
+    helm:
+      releaseName: clickhouse-operator
+      values: |
+        manager:
+          replicas: 1
+
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 128Mi
+
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: 'kubernetes.io/hostname'
+            whenUnsatisfiable: 'ScheduleAnyway'
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: clickhouse-operator
+                app.kubernetes.io/instance: clickhouse-operator
+
+        certManager:
+          enabled: true
+
+        metrics:
+          enabled: true
+
+        prometheus:
+          # ServiceMonitorを有効化
+          enabled: true
+    repoURL: ghcr.io/clickhouse
+    targetRevision: 0.0.6
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

@@ -1,0 +1,20 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  labels:
+    app: openchokin-back
+    app.kubernetes.io/name: openchokin-back
+  name: openchokin-back
+  namespace: openchokin
+spec:
+  maxReplicaCount: 2
+  minReplicaCount: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: openchokin-back
+  triggers:
+    - metadata:
+        value: "95"
+      metricType: Utilization
+      type: cpu

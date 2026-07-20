@@ -1,0 +1,46 @@
+apiVersion: v1
+data:
+  snmp-policy.yaml: |
+    policies:
+      network_inventory_snmp:
+        config:
+          timeout: 300
+          snmp_timeout: 15
+          snmp_probe_timeout: 2
+          retries: 2
+          defaults:
+            tags: [ "netbox-discovery", "snmp" ]
+            site: "kawasaki"
+            device:
+              comments: "Discovered by NetBox SNMP Discovery"
+            interface_patterns:
+            - match: "^mgmt"
+              type: "1000base-t"
+            - match: "^Vlan"
+              type: "virtual"
+            - match: "^vlan"
+              type: "virtual"
+            - match: "^lo"
+              type: "virtual"
+            - match: "^bond"
+              type: "lag"
+        scope:
+          targets:
+          - host: "192.168.0.2"
+            override_defaults:
+              role: "switch"
+              tags: [ "netbox-discovery", "snmp", "nxos" ]
+          - host: "192.168.0.1"
+            override_defaults:
+              role: "router"
+              tags: [ "netbox-discovery", "snmp", "vyos" ]
+          authentication:
+            protocol_version: "SNMPv2c"
+            community: "${SNMP_COMMUNITY}"
+kind: ConfigMap
+metadata:
+  labels:
+    app: netbox-discovery
+    app.kubernetes.io/name: netbox-discovery
+  name: netbox-discovery-policy
+  namespace: netbox

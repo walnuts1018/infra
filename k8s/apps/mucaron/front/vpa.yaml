@@ -1,0 +1,26 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  labels:
+    app: mucaron-front
+    app.kubernetes.io/name: mucaron-front
+  name: mucaron-front
+  namespace: mucaron
+spec:
+  resourcePolicy:
+    containerPolicies:
+      - containerName: mucaron-front
+        controlledResources:
+          - memory
+        maxAllowed:
+          cpu: 500m
+          memory: 512Mi
+        minAllowed:
+          cpu: 1m
+          memory: 64Mi
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mucaron-front
+  updatePolicy:
+    updateMode: Auto

@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: akvorado
+    app.kubernetes.io/name: akvorado
+  name: akvorado-orchestrator
+  namespace: akvorado
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: orchestrator
+      app.kubernetes.io/name: akvorado
+  template:
+    metadata:
+      labels:
+        app: akvorado
+        app.kubernetes.io/component: orchestrator
+        app.kubernetes.io/name: akvorado
+    spec:
+      containers:
+        - args:
+            - orchestrator
+            - /etc/akvorado/akvorado.yaml
+          image: quay.io/akvorado/akvorado:2.4.1
+          livenessProbe:
+            httpGet:
+              path: /api/v0/healthcheck
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          name: orchestrator
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /api/v0/healthcheck
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 2m
+              memory: 11Mi
+          volumeMounts:
+            - mountPath: /etc/akvorado/akvorado.yaml
+              name: config
+              readOnly: true
+              subPath: akvorado.yaml
+            - mountPath: /etc/akvorado/inlet.yaml
+              name: config
+              readOnly: true
+              subPath: inlet.yaml
+            - mountPath: /etc/akvorado/outlet.yaml
+              name: config
+              readOnly: true
+              subPath: outlet.yaml
+            - mountPath: /etc/akvorado/console.yaml
+              name: config
+              readOnly: true
+              subPath: console.yaml
+            - mountPath: /etc/akvorado/snmp.yaml
+              name: snmp-config
+              readOnly: true
+              subPath: snmp.yaml
+      volumes:
+        - configMap:
+            name: akvorado-config-eddf43
+          name: config
+        - name: snmp-config
+          secret:
+            secretName: akvorado-snmp-b9ac04

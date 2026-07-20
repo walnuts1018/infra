@@ -1,0 +1,91 @@
+apiVersion: v1
+data:
+  akvorado.yaml: |
+    kafka:
+      topic: flows
+      brokers:
+      - akvorado-kafka-kafka-bootstrap:9092
+      topic-configuration:
+        num-partitions: 2
+        replication-factor: 1
+    clickhousedb:
+      servers:
+      - akvorado-clickhouse-clickhouse-0-0-0.akvorado-clickhouse-clickhouse-headless.akvorado.svc.cluster.local:9000
+    clickhouse:
+      orchestrator-url: http://akvorado-orchestrator:8080
+      asns:
+        65000: "Home Network"
+      networks:
+        192.168.0.0/24:
+          name: server
+          role: server
+          site: kawasaki
+          region: ap-japan-kanto
+        fd7e:bc2d:5f4a:100::/64:
+          name: server
+          role: server
+          site: kawasaki
+          region: ap-japan-kanto
+        192.168.100.0/24:
+          name: user
+          role: client
+          site: kawasaki
+          region: ap-japan-kanto
+        fd7e:bc2d:5f4a:200::/64:
+          name: user
+          role: client
+          site: kawasaki
+          region: ap-japan-kanto
+        192.168.4.0/24:
+          name: management
+          role: management
+          site: kawasaki
+          region: ap-japan-kanto
+        192.168.252.0/30:
+          name: transit
+          role: transit
+          site: kawasaki
+          region: ap-japan-kanto
+        192.168.252.4/30:
+          name: transit
+          role: transit
+          site: kawasaki
+          region: ap-japan-kanto
+    inlet: !include "inlet.yaml"
+    outlet: !include "outlet.yaml"
+    console: !include "console.yaml"
+  console.yaml: |
+    http:
+      listen: :8080
+      cache:
+        type: redis
+        server: valkey-akvorado-valkey:6379
+  inlet.yaml: |+
+    http:
+      listen: :8080
+    flow:
+      inputs:
+      - type: udp
+        decoder: netflow
+        listen: :2055
+        workers: 2
+      - type: udp
+        decoder: sflow
+        listen: :6343
+        workers: 2
+
+  outlet.yaml: |
+    http:
+      listen: :8080
+    metadata:
+      providers: !include "snmp.yaml"
+    core:
+      exporterclassifiers:
+      - Exporter.IP == "192.168.0.1" && ClassifyRole("router") && ClassifySite("kawasaki") && ClassifyRegion("ap-japan-kanto")
+kind: ConfigMap
+metadata:
+  labels:
+    app: akvorado-config
+    app.kubernetes.io/name: akvorado-config
+  name: akvorado-config-eddf43
+  namespace: akvorado

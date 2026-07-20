@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kafka-operator-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: strimzi-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: strimzi-kafka-operator
+    helm:
+      releaseName: kafka-operator
+      values: |
+        replicas: 1
+
+        watchAnyNamespace: true
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+    repoURL: https://strimzi.io/charts/
+    targetRevision: 1.1.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

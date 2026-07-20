@@ -1,0 +1,105 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: diode-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: netbox
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: diode
+    helm:
+      releaseName: diode
+      values: |
+        diode:
+          environment: production
+
+        postgresql:
+          enabled: false
+
+        externalPostgresql:
+          hostname: postgresql-default-rw.databases.svc.cluster.local
+          port: 5432
+          database: diode
+          username: diode
+          existingSecretName: diode
+          existingSecretKey: db-password
+
+        redis:
+          enabled: true
+          auth:
+            existingSecret: diode
+            existingSecretPasswordKey: redis-password
+          persistence:
+            enabled: true
+            size: 1Gi
+
+        diodeAuth:
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+        hydra:
+          secret:
+            enabled: false # 自動生成しない
+            nameOverride: diode-hydra-secret
+          hydra:
+            automigration:
+              enabled: true
+              type: initContainer
+          deployment:
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+
+        ingressNginx:
+          enabled: false
+          controller:
+            enabled: false
+
+        certManager:
+          enabled: false
+
+        diodeIngester:
+          existingSecret: diode
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+        diodeReconciler:
+          existingSecret: diode
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          config:
+            netboxDiodePluginApiBaseUrl: http://netbox.netbox.svc.cluster.local/netbox/api/plugins/diode
+            netboxDiodePluginSkipTlsVerify: false
+            autoApplyChangesets: "true"
+            diodeToNetBoxClientId: diode-to-netbox
+    repoURL: https://netboxlabs.github.io/diode/charts
+    targetRevision: 1.14.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

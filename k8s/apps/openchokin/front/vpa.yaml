@@ -1,0 +1,26 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  labels:
+    app: openchokin-front
+    app.kubernetes.io/name: openchokin-front
+  name: openchokin-front
+  namespace: openchokin
+spec:
+  resourcePolicy:
+    containerPolicies:
+      - containerName: openchokin-front
+        controlledResources:
+          - memory
+        maxAllowed:
+          cpu: 500m
+          memory: 256Mi
+        minAllowed:
+          cpu: 10m
+          memory: 10Mi
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: openchokin-front
+  updatePolicy:
+    updateMode: Auto

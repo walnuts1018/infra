@@ -1,0 +1,28 @@
+apiVersion: clickhouse.com/v1alpha1
+kind: ClickHouseCluster
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app: akvorado-clickhouse
+    app.kubernetes.io/name: akvorado-clickhouse
+  name: akvorado-clickhouse
+  namespace: akvorado
+spec:
+  containerTemplate:
+    resources:
+      limits:
+        cpu: "2"
+        memory: 4Gi
+      requests:
+        cpu: 116m
+        memory: 593Mi
+  dataVolumeClaimSpec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 32Gi
+  keeperClusterRef:
+    name: akvorado-keeper
+  replicas: 1

@@ -1,0 +1,43 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: warrior
+  namespace: warrior
+spec:
+  authorization:
+    defaultAction: Deny
+    rules:
+      - action: Allow
+        principal:
+          jwt:
+            claims:
+              - name: my:zitadel:grants
+                valueType: StringArray
+                values:
+                  - 379396091180745141:warrior-user
+            provider: zitadel
+  jwt:
+    providers:
+      - issuer: https://auth.walnuts.dev
+        name: zitadel
+        remoteJWKS:
+          uri: https://auth.walnuts.dev/oauth/v2/keys
+  oidc:
+    clientIDRef:
+      name: warrior-secret-0d336d
+    clientSecret:
+      name: warrior-secret-0d336d
+    forwardAccessToken: true
+    logoutPath: /oauth2/logout
+    provider:
+      issuer: https://auth.walnuts.dev
+    scopes:
+      - openid
+      - email
+      - profile
+      - offline_access
+      - urn:zitadel:iam:org:projects:roles
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: warrior

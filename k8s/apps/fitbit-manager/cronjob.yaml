@@ -1,0 +1,97 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    app: fitbit-manager
+    app.kubernetes.io/name: fitbit-manager
+  name: fitbit-manager
+  namespace: fitbit-manager
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - command:
+                - /app/fitbit-manager-job
+              env:
+                - name: USER_ID
+                  value: B84M2S
+                - name: SERVER_URL
+                  value: https://fitbit.walnuts.dev/
+                - name: CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      key: client_id
+                      name: fitbit-manager-3ddd96
+                - name: CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      key: client_secret
+                      name: fitbit-manager-3ddd96
+                - name: COOKIE_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      key: cookie_secret
+                      name: fitbit-manager-3ddd96
+                - name: PSQL_HOST
+                  value: postgresql-default-rw.databases.svc.cluster.local
+                - name: PSQL_PORT
+                  value: "5432"
+                - name: PSQL_DATABASE
+                  value: fitbit_manager
+                - name: PSQL_USER
+                  value: fitbit_manager
+                - name: PSQL_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: postgres_password
+                      name: fitbit-manager-3ddd96
+                - name: INFLUXDB_ENDPOINT
+                  value: http://influxdb-influxdb2.databases.svc.cluster.local
+                - name: INFLUXDB_AUTH_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      key: influxdb_auth_token
+                      name: fitbit-manager-3ddd96
+                - name: INFLUXDB_ORG
+                  value: influxdata
+                - name: INFLUXDB_BUCKET
+                  value: fitbit_manager
+                - name: OTEL_EXPORTER_OTLP_ENDPOINT
+                  value: http://default-collector.opentelemetry-collector.svc.cluster.local:4317
+                - name: OTEL_EXPORTER_OTLP_INSECURE
+                  value: "true"
+                - name: RECORD_START_DATETIME
+                  value: "2022-11-01T00:00:00Z"
+              image: ghcr.io/walnuts1018/fitbit-manager:1.0.5
+              imagePullPolicy: IfNotPresent
+              name: fitbit-manager
+              ports:
+                - containerPort: 8080
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 300Mi
+                requests:
+                  cpu: 1m
+                  memory: 10Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+          restartPolicy: OnFailure
+          securityContext:
+            runAsGroup: 65532
+            runAsUser: 65532
+          tolerations:
+            - key: node.walnuts.dev/low-performance
+              operator: Exists
+  schedule: '*/15 * * * *'
+  startingDeadlineSeconds: 12000

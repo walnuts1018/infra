@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vertical-pod-autoscaler-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: vertical-pod-autoscaler
+    helm:
+      releaseName: vertical-pod-autoscaler
+      valuesObject:
+        recommender:
+          enabled: true
+          extraArgs:
+            - --pod-recommendation-min-cpu-millicores=1
+            - --pod-recommendation-min-memory-mb=10
+          replicas: 1
+          resources:
+            limits:
+              memory: 1000Mi
+            requests:
+              cpu: 50m
+              memory: 500Mi
+        updater:
+          enabled: true
+          replicas: 1
+          resources:
+            limits:
+              memory: 1000Mi
+            requests:
+              cpu: 50m
+              memory: 500Mi
+    repoURL: https://kubernetes.github.io/autoscaler
+    targetRevision: 0.10.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

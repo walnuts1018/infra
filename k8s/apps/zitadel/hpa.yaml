@@ -1,0 +1,22 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  labels:
+    app: zitadel
+    app.kubernetes.io/name: zitadel
+  name: zitadel
+  namespace: zitadel
+spec:
+  maxReplicaCount: 4
+  minReplicaCount: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: zitadel
+  triggers:
+    - metadata:
+        metricName: http_server_request_count_total_zitadel
+        query: sum(rate(http_server_request_count_total{namespace="zitadel", service_name="zitadel"}[2m]))
+        serverAddress: http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus
+        threshold: "10"
+      type: prometheus

@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nvidia-gpu-operator-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: nvidia-gpu-operator
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: gpu-operator
+    helm:
+      releaseName: nvidia-gpu-operator
+      values: |
+        nfd:
+          enabled: true
+          nodefeaturerules: false
+
+        psa:
+          enabled: false
+
+        cdi:
+          enabled: true
+          nriPluginEnabled: false
+
+        operator:
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 500m
+              memory: 350Mi
+
+        driver:
+          enabled: true
+          kernelModuleType: "proprietary"
+          # version: "580.159.04"
+    repoURL: https://helm.ngc.nvidia.com/nvidia
+    targetRevision: v26.3.3
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

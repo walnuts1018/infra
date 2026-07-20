@@ -1,0 +1,1761 @@
+---
+# Source: netbox/charts/valkey/templates/networkpolicy.yaml
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: netbox-valkey
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/part-of: valkey
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: netbox
+      app.kubernetes.io/name: valkey
+  policyTypes:
+    - Ingress
+    - Egress
+  egress:
+    - {}
+  ingress:
+    # Allow inbound connections
+    - ports:
+        - port: 6379
+---
+# Source: netbox/charts/valkey/templates/primary/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: netbox-valkey-primary
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/component: primary
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: netbox
+      app.kubernetes.io/name: valkey
+      app.kubernetes.io/component: primary
+---
+# Source: netbox/charts/valkey/templates/replicas/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: netbox-valkey-replicas
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/component: replica
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: netbox
+      app.kubernetes.io/name: valkey
+      app.kubernetes.io/component: replica
+---
+# Source: netbox/charts/valkey/templates/primary/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+automountServiceAccountToken: false
+metadata:
+  name: netbox-valkey-primary
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/part-of: valkey
+---
+# Source: netbox/charts/valkey/templates/replicas/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+automountServiceAccountToken: false
+metadata:
+  name: netbox-valkey-replica
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/part-of: valkey
+---
+# Source: netbox/charts/valkey/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netbox-valkey-configuration
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/part-of: valkey
+data:
+  valkey.conf: |-
+    # User-supplied common configuration:
+    # Enable AOF https://valkey.io/docs/topics/persistence.html
+    appendonly yes
+    # Disable RDB persistence, AOF persistence already enabled.
+    save ""
+    # End of common configuration
+  primary.conf: |-
+    dir /data
+    # User-supplied primary configuration:
+    rename-command FLUSHDB ""
+    rename-command FLUSHALL ""
+    # End of primary configuration
+  replica.conf: |-
+    dir /data
+    # User-supplied replica configuration:
+    rename-command FLUSHDB ""
+    rename-command FLUSHALL ""
+    # End of replica configuration
+---
+# Source: netbox/charts/valkey/templates/health-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netbox-valkey-health
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+data:
+  ping_readiness_local.sh: |-
+    #!/bin/bash
+
+    timeout=$1
+    run_valkey_command() {
+        local args=("-p" "$VALKEY_PORT")
+        timeout -s 15 $timeout valkey-cli "${args[@]}" "$@"
+    }
+
+    [[ -f $VALKEY_PASSWORD_FILE ]] && export VALKEY_PASSWORD="$(< "${VALKEY_PASSWORD_FILE}")"
+    [[ -n "$VALKEY_PASSWORD" ]] && export REDISCLI_AUTH="$VALKEY_PASSWORD"
+    response=$(run_valkey_command ping)
+    if [ "$?" -eq "124" ]; then
+      echo "Timed out"
+      exit 1
+    fi
+    if [ "$response" != "PONG" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_liveness_local.sh: |-
+    #!/bin/bash
+
+    [[ -f $VALKEY_PASSWORD_FILE ]] && export VALKEY_PASSWORD="$(< "${VALKEY_PASSWORD_FILE}")"
+    [[ -n "$VALKEY_PASSWORD" ]] && export REDISCLI_AUTH="$VALKEY_PASSWORD"
+    response=$(
+      timeout -s 15 $1 \
+      valkey-cli \
+        -h localhost \
+        -p $VALKEY_PORT \
+        ping
+    )
+    if [ "$?" -eq "124" ]; then
+      echo "Timed out"
+      exit 1
+    fi
+    responseFirstWord=$(echo $response | head -n1 | awk '{print $1;}')
+    if [ "$response" != "PONG" ] && [ "$responseFirstWord" != "LOADING" ] && [ "$responseFirstWord" != "MASTERDOWN" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_readiness_primary.sh: |-
+    #!/bin/bash
+
+    [[ -f $VALKEY_PRIMARY_PASSWORD_FILE ]] && export VALKEY_PRIMARY_PASSWORD="$(< "${VALKEY_PRIMARY_PASSWORD_FILE}")"
+    [[ -n "$VALKEY_PRIMARY_PASSWORD" ]] && export REDISCLI_AUTH="$VALKEY_PRIMARY_PASSWORD"
+    response=$(
+      timeout -s 15 $1 \
+      valkey-cli \
+        -h $VALKEY_PRIMARY_HOST \
+        -p $VALKEY_PRIMARY_PORT_NUMBER \
+        ping
+    )
+    if [ "$?" -eq "124" ]; then
+      echo "Timed out"
+      exit 1
+    fi
+    if [ "$response" != "PONG" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_liveness_primary.sh: |-
+    #!/bin/bash
+
+    [[ -f $VALKEY_PRIMARY_PASSWORD_FILE ]] && export VALKEY_PRIMARY_PASSWORD="$(< "${VALKEY_PRIMARY_PASSWORD_FILE}")"
+    [[ -n "$VALKEY_PRIMARY_PASSWORD" ]] && export REDISCLI_AUTH="$VALKEY_PRIMARY_PASSWORD"
+    response=$(
+      timeout -s 15 $1 \
+      valkey-cli \
+        -h $VALKEY_PRIMARY_HOST \
+        -p $VALKEY_PRIMARY_PORT_NUMBER \
+        ping
+    )
+    if [ "$?" -eq "124" ]; then
+      echo "Timed out"
+      exit 1
+    fi
+    responseFirstWord=$(echo $response | head -n1 | awk '{print $1;}')
+    if [ "$response" != "PONG" ] && [ "$responseFirstWord" != "LOADING" ]; then
+      echo "$response"
+      exit 1
+    fi
+  ping_readiness_local_and_primary.sh: |-
+    script_dir="$(dirname "$0")"
+    exit_status=0
+    "$script_dir/ping_readiness_local.sh" $1 || exit_status=$?
+    "$script_dir/ping_readiness_primary.sh" $1 || exit_status=$?
+    exit $exit_status
+  ping_liveness_local_and_primary.sh: |-
+    script_dir="$(dirname "$0")"
+    exit_status=0
+    "$script_dir/ping_liveness_local.sh" $1 || exit_status=$?
+    "$script_dir/ping_liveness_primary.sh" $1 || exit_status=$?
+    exit $exit_status
+---
+# Source: netbox/charts/valkey/templates/scripts-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netbox-valkey-scripts
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/part-of: valkey
+data:
+  start-primary.sh: |
+    #!/bin/bash
+
+    [[ -f $VALKEY_PASSWORD_FILE ]] && export VALKEY_PASSWORD="$(< "${VALKEY_PASSWORD_FILE}")"
+    if [[ -f /opt/bitnami/valkey/mounted-etc/primary.conf ]];then
+        cp /opt/bitnami/valkey/mounted-etc/primary.conf /opt/bitnami/valkey/etc/primary.conf
+    fi
+    if [[ -f /opt/bitnami/valkey/mounted-etc/valkey.conf ]];then
+        cp /opt/bitnami/valkey/mounted-etc/valkey.conf /opt/bitnami/valkey/etc/valkey.conf
+    fi
+    ARGS=("--port" "${VALKEY_PORT}")
+    VALKEY_AUTH_CONF="$(mktemp /tmp/valkey-auth-XXXXXX.conf)"
+    chmod 600 "${VALKEY_AUTH_CONF}"
+    printf "requirepass %s\nprimaryauth %s\n" "${VALKEY_PASSWORD}" "${VALKEY_PASSWORD}" > "${VALKEY_AUTH_CONF}"
+    ARGS+=("--include" "${VALKEY_AUTH_CONF}")
+    ARGS+=("--include" "/opt/bitnami/valkey/etc/valkey.conf")
+    ARGS+=("--include" "/opt/bitnami/valkey/etc/primary.conf")
+    exec valkey-server "${ARGS[@]}"
+  start-replica.sh: |
+    #!/bin/bash
+
+    get_port() {
+        hostname="$1"
+        type="$2"
+
+        port_var=$(echo "${hostname^^}_SERVICE_PORT_$type" | sed "s/-/_/g")
+        port=${!port_var}
+
+        if [ -z "$port" ]; then
+            case $type in
+                "SENTINEL")
+                    echo 26379
+                    ;;
+                "VALKEY")
+                    echo 6379
+                    ;;
+            esac
+        else
+            echo $port
+        fi
+    }
+
+    get_full_hostname() {
+        hostname="$1"
+        full_hostname="${hostname}.${HEADLESS_SERVICE}"
+        echo "${full_hostname}"
+    }
+
+    VALKEYPORT=$(get_port "$HOSTNAME" "VALKEY")
+    HEADLESS_SERVICE="netbox-valkey-headless.netbox.svc.cluster.local"
+
+    [[ -f $VALKEY_PASSWORD_FILE ]] && export VALKEY_PASSWORD="$(< "${VALKEY_PASSWORD_FILE}")"
+    [[ -f $VALKEY_PRIMARY_PASSWORD_FILE ]] && export VALKEY_PRIMARY_PASSWORD="$(< "${VALKEY_PRIMARY_PASSWORD_FILE}")"
+    if [[ -f /opt/bitnami/valkey/mounted-etc/replica.conf ]];then
+        cp /opt/bitnami/valkey/mounted-etc/replica.conf /opt/bitnami/valkey/etc/replica.conf
+    fi
+    if [[ -f /opt/bitnami/valkey/mounted-etc/valkey.conf ]];then
+        cp /opt/bitnami/valkey/mounted-etc/valkey.conf /opt/bitnami/valkey/etc/valkey.conf
+    fi
+
+    echo "" >> /opt/bitnami/valkey/etc/replica.conf
+    echo "replica-announce-port $VALKEYPORT" >> /opt/bitnami/valkey/etc/replica.conf
+    echo "replica-announce-ip $(get_full_hostname "$HOSTNAME")" >> /opt/bitnami/valkey/etc/replica.conf
+    ARGS=("--port" "${VALKEY_PORT}")
+    ARGS+=("--replicaof" "${VALKEY_PRIMARY_HOST}" "${VALKEY_PRIMARY_PORT_NUMBER}")
+    VALKEY_AUTH_CONF="$(mktemp /tmp/valkey-auth-XXXXXX.conf)"
+    chmod 600 "${VALKEY_AUTH_CONF}"
+    printf "requirepass %s\nprimaryauth %s\n" "${VALKEY_PASSWORD}" "${VALKEY_PRIMARY_PASSWORD}" > "${VALKEY_AUTH_CONF}"
+    ARGS+=("--include" "${VALKEY_AUTH_CONF}")
+    ARGS+=("--include" "/opt/bitnami/valkey/etc/valkey.conf")
+    ARGS+=("--include" "/opt/bitnami/valkey/etc/replica.conf")
+    exec valkey-server "${ARGS[@]}"
+---
+# Source: netbox/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: netbox
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/version: v4.6.3
+    helm.sh/chart: netbox-8.3.18
+data:
+  configuration.py: |-
+    
+    """
+    This file serves as a base configuration for Netbox
+    https://netboxlabs.com/docs/netbox/en/stable/configuration/
+    """
+    
+    import json
+    import os
+    import re
+    from pathlib import Path
+    
+    import yaml
+    
+    
+    def _deep_merge(source, destination):
+        """Inspired by https://stackoverflow.com/a/20666342"""
+        for key, value in source.items():
+            dst_value = destination.get(key)
+    
+            if isinstance(value, dict) and isinstance(dst_value, dict):
+                _deep_merge(value, dst_value)
+            else:
+                destination[key] = value
+    
+        return destination
+    
+    
+    def _load_yaml() -> None:
+        """Load YAML from files"""
+        extra_config_base = Path("/run/config/extra")
+        config_files = [Path("/run/config/netbox/netbox.yaml")]
+    
+        config_files.extend(sorted(extra_config_base.glob("*/*.yaml")))
+    
+        for config_file in config_files:
+            with open(config_file, "r", encoding="utf-8") as f:
+                config = yaml.safe_load(f)
+            _deep_merge(config, globals())
+    
+    
+    def _read_secret(secret_name: str, secret_key: str, default: str | None = None) -> str | None:
+        """Read secret from file"""
+        try:
+            secret = open(
+                f"/run/secrets/{secret_name}/{secret_key}",
+                "r",
+                encoding="utf-8",
+            )
+        except EnvironmentError:
+            return default
+        with secret:
+            return secret.read().strip()
+    
+    
+    CORS_ORIGIN_REGEX_WHITELIST = []
+    DATABASES = {}
+    EMAIL = {}
+    REDIS = {}
+    
+    _load_yaml()
+    
+    provided_secret_name = os.getenv("SECRET_NAME", "netbox")
+    
+    DATABASES["default"]["PASSWORD"] = _read_secret(provided_secret_name, "db_password")
+    EMAIL["PASSWORD"] = _read_secret(provided_secret_name, "email_password")
+    REDIS["tasks"]["PASSWORD"] = _read_secret(provided_secret_name, "tasks_password")
+    REDIS["caching"]["PASSWORD"] = _read_secret(provided_secret_name, "cache_password")
+    SECRET_KEY = _read_secret(provided_secret_name, "secret_key")
+    
+    # Read API token peppers from secret (JSON with integer or string keys)
+    _peppers_raw = _read_secret(provided_secret_name, "api_token_peppers")
+    if _peppers_raw:
+        try:
+            API_TOKEN_PEPPERS = {int(k): v for k, v in json.loads(_peppers_raw).items()}
+        except (json.JSONDecodeError, ValueError, TypeError) as exc:
+            raise ValueError(
+                f"Invalid api_token_peppers secret: expected a JSON object mapping numeric "
+                f'string keys to string values, e.g. {{"1": "random-string..."}}. '
+                f"Keys are converted to integers at load time. Error: {exc}"
+            ) from exc
+    
+    # Post-process certain values
+    CORS_ORIGIN_REGEX_WHITELIST = [re.compile(r) for r in CORS_ORIGIN_REGEX_WHITELIST]
+    if "SENTINELS" in REDIS["tasks"]:
+        REDIS["tasks"]["SENTINELS"] = [tuple(x.split(r":")) for x in REDIS["tasks"]["SENTINELS"]]
+    if "SENTINELS" in REDIS["caching"]:
+        REDIS["caching"]["SENTINELS"] = [tuple(x.split(r":")) for x in REDIS["caching"]["SENTINELS"]]
+    if ALLOWED_HOSTS_INCLUDES_POD_ID:
+        ALLOWED_HOSTS.append(os.getenv("POD_IP"))
+    
+
+  netbox.yaml: |-
+    ALLOWED_HOSTS: ["netbox.walnuts.dev"]
+    ALLOWED_HOSTS_INCLUDES_POD_ID: true
+
+    DATABASES:
+      default:
+        HOST: "postgresql-default-rw.databases.svc.cluster.local"
+        USER: "netbox"
+        NAME: "netbox"
+        PORT: 5432
+        ENGINE: "django.db.backends.postgresql"
+        OPTIONS:
+          sslmode: prefer
+          target_session_attrs: read-write
+        CONN_MAX_AGE: 300
+        DISABLE_SERVER_SIDE_CURSORS: false
+
+    ADMINS: []
+    ALLOW_TOKEN_RETRIEVAL: false
+    AUTH_PASSWORD_VALIDATORS: []
+    ALLOWED_URL_SCHEMES: ["file","ftp","ftps","http","https","irc","mailto","sftp","ssh","tel","telnet","tftp","vnc","xmpp"]
+    BANNER_BOTTOM: ""
+    BANNER_LOGIN: ""
+    BANNER_TOP: ""
+    BASE_PATH: ""
+    CHANGELOG_RETENTION: 90
+    CUSTOM_VALIDATORS: {}
+    DEFAULT_USER_PREFERENCES: {}
+    CORS_ORIGIN_ALLOW_ALL: false
+    CORS_ORIGIN_WHITELIST: []
+    CORS_ORIGIN_REGEX_WHITELIST: []
+    CSRF_TRUSTED_ORIGINS: ["https://netbox.walnuts.dev"]
+    DATA_UPLOAD_MAX_MEMORY_SIZE: 2621440
+    DEBUG: false
+    DEFAULT_LANGUAGE: "en-us"
+
+    EMAIL:
+      SERVER: "smtp.resend.com"
+      PORT: 587
+      USERNAME: "resend"
+      USE_SSL: false
+      USE_TLS: true
+      SSL_CERTFILE: ""
+      SSL_KEYFILE: ""
+      TIMEOUT: 10
+      FROM_EMAIL: "netbox@resend.walnuts.dev"
+
+    ENFORCE_GLOBAL_UNIQUE: true
+    EXEMPT_VIEW_PERMISSIONS: []
+    FIELD_CHOICES: {}
+    FILE_UPLOAD_MAX_MEMORY_SIZE: 2621440
+    GRAPHQL_ENABLED: true
+    HTTP_PROXIES: {}
+    INTERNAL_IPS: ["127.0.0.1","::1"]
+    JOB_RETENTION: 90
+    LOGGING: {}
+    LOGIN_PERSISTENCE: true
+    LOGIN_REQUIRED: true
+    LOGIN_TIMEOUT: 1209600
+    LOGOUT_REDIRECT_URL: "home"
+    MAINTENANCE_MODE: false
+    MAPS_URL: "https://maps.google.com/?q="
+    MAX_PAGE_SIZE: 1000
+    MEDIA_ROOT: /opt/netbox/netbox/media
+    STORAGES: {"default":{"BACKEND":"storages.backends.s3boto3.S3Boto3Storage","OPTIONS":{"addressing_style":"path","bucket_name":"netbox-media","default_acl":"private","endpoint_url":"https://seaweedfs.local.walnuts.dev"}},"scripts":{"BACKEND":"storages.backends.s3boto3.S3Boto3Storage","OPTIONS":{"addressing_style":"path","bucket_name":"netbox-scripts","default_acl":"private","endpoint_url":"https://seaweedfs.local.walnuts.dev"}}}
+    METRICS_ENABLED: false
+    PAGINATE_COUNT: 50
+    PLUGINS: ["netbox_diode_plugin"]
+    PLUGINS_CONFIG: {"netbox_diode_plugin":{"diode_target_override":"grpc://diode-gateway.netbox.svc.cluster.local/diode","diode_username":"diode"}}
+    POWERFEED_DEFAULT_AMPERAGE: 15
+    POWERFEED_DEFAULT_MAX_UTILIZATION: 80
+    POWERFEED_DEFAULT_VOLTAGE: 120
+    PREFER_IPV4: false
+    RACK_ELEVATION_DEFAULT_UNIT_HEIGHT: 22
+    RACK_ELEVATION_DEFAULT_UNIT_WIDTH: 220
+    REMOTE_AUTH_ENABLED: true
+    REMOTE_AUTH_BACKEND: ["social_core.backends.open_id_connect.OpenIdConnectAuth"]
+    REMOTE_AUTH_HEADER: "HTTP_REMOTE_USER"
+    REMOTE_AUTH_USER_FIRST_NAME: "HTTP_REMOTE_USER_FIRST_NAME"
+    REMOTE_AUTH_USER_LAST_NAME: "HTTP_REMOTE_USER_LAST_NAME"
+    REMOTE_AUTH_USER_EMAIL: "HTTP_REMOTE_USER_EMAIL"
+    REMOTE_AUTH_AUTO_CREATE_USER: true
+    REMOTE_AUTH_AUTO_CREATE_GROUPS: false
+    REMOTE_AUTH_DEFAULT_GROUPS: []
+    REMOTE_AUTH_DEFAULT_PERMISSIONS: {}
+    REMOTE_AUTH_GROUP_SYNC_ENABLED: false
+    REMOTE_AUTH_GROUP_HEADER: "HTTP_REMOTE_USER_GROUP"
+    REMOTE_AUTH_SUPERUSER_GROUPS: []
+    REMOTE_AUTH_SUPERUSERS: []
+    REMOTE_AUTH_STAFF_GROUPS: []
+    REMOTE_AUTH_STAFF_USERS: []
+    REMOTE_AUTH_GROUP_SEPARATOR: "|"
+    RELEASE_CHECK_URL: ""
+
+    REDIS:
+      tasks:
+        HOST: "netbox-valkey-primary"
+        PORT: 6379
+        USERNAME: ""
+        DATABASE: 0
+        SSL: false
+        INSECURE_SKIP_TLS_VERIFY: false
+        CA_CERT_PATH: ""
+      caching:
+        HOST: "netbox-valkey-primary"
+        PORT: 6379
+        USERNAME: ""
+        DATABASE: 1
+        SSL: false
+        INSECURE_SKIP_TLS_VERIFY: false
+        CA_CERT_PATH: ""
+
+    REPORTS_ROOT: /opt/netbox/netbox/reports
+    RQ_DEFAULT_TIMEOUT: 300
+    SCRIPTS_ROOT: /opt/netbox/netbox/scripts
+    CSRF_COOKIE_NAME: "csrftoken"
+    SESSION_COOKIE_NAME: sessionid
+    TRANSLATION_ENABLED: true
+    TIME_ZONE: "Asia/Tokyo"
+    DATE_FORMAT: "N j, Y"
+    SHORT_DATE_FORMAT: "Y-m-d"
+    TIME_FORMAT: "g:i a"
+    SHORT_TIME_FORMAT: "H:i:s"
+    DATETIME_FORMAT: "N j, Y g:i a"
+    SHORT_DATETIME_FORMAT: "Y-m-d H:i"
+---
+# Source: netbox/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: netbox
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/version: v4.6.3
+    helm.sh/chart: netbox-8.3.18
+  namespace: "netbox"
+rules:
+  - apiGroups:
+      - apps
+    resources:
+      - statefulsets
+      - deployments
+      - replicasets
+    verbs:
+      - get
+      - list
+      - watch
+---
+# Source: netbox/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: netbox
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/version: v4.6.3
+    helm.sh/chart: netbox-8.3.18
+  namespace: "netbox"
+roleRef:
+  kind: Role
+  name: netbox
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: netbox
+    namespace: "netbox"
+---
+# Source: netbox/charts/valkey/templates/headless-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: netbox-valkey-headless
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/part-of: valkey
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: tcp-redis
+      port:  6379
+      targetPort: redis
+  selector:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/name: valkey
+---
+# Source: netbox/charts/valkey/templates/primary/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: netbox-valkey-primary
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/part-of: valkey
+spec:
+  type: ClusterIP
+  internalTrafficPolicy: Cluster
+  ports:
+    - name: tcp-redis
+      port: 6379
+      targetPort: redis
+      nodePort: null
+  selector:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/component: primary
+---
+# Source: netbox/charts/valkey/templates/replicas/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: netbox-valkey-replicas
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/component: replica
+    app.kubernetes.io/part-of: valkey
+spec:
+  type: ClusterIP
+  internalTrafficPolicy: Cluster
+  ports:
+    - name: tcp-redis
+      port: 6379
+      targetPort: redis
+      nodePort: null
+  selector:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/component: replica
+---
+# Source: netbox/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: netbox
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/version: v4.6.3
+    helm.sh/chart: netbox-8.3.18
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+    nodePort: null
+  selector:
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/component: netbox
+  sessionAffinity: None
+---
+# Source: netbox/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbox
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/version: v4.6.3
+    helm.sh/chart: netbox-8.3.18
+    app.kubernetes.io/component: netbox
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: netbox
+      app.kubernetes.io/name: netbox
+      app.kubernetes.io/component: netbox
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: 4d9a742810d16035578773819c742fff0503bda8aa6a77d432370da30c55eb7d
+      labels:
+        app.kubernetes.io/instance: netbox
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: netbox
+        app.kubernetes.io/version: v4.6.3
+        helm.sh/chart: netbox-8.3.18
+        app.kubernetes.io/component: netbox
+    spec:
+      
+      serviceAccountName: netbox
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: Always
+        supplementalGroups: []
+        sysctls: []
+      initContainers:
+      - name: init-dirs
+        image: "docker.io/busybox:1.38.0"
+        imagePullPolicy: "IfNotPresent"
+        command: [/bin/sh, -c, mkdir -p /opt/unit/state /opt/unit/tmp]
+        resources:
+          limits:
+            cpu: 150m
+            ephemeral-storage: 2Gi
+            memory: 192Mi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 50Mi
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seLinuxOptions: {}
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - name: optunit
+          mountPath: /opt/unit
+      containers:
+      - name: netbox
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seLinuxOptions: {}
+          seccompProfile:
+            type: RuntimeDefault
+        image: "ghcr.io/walnuts1018/infra/netbox@sha256:cedb2a249f8b71302be7b5a9613c8279e4f0d3fc2a2dbdbdfd0074d000204cb3"
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SUPERUSER_NAME
+          valueFrom:
+            secretKeyRef:
+              name: netbox
+              key: username
+        - name: SUPERUSER_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: netbox
+              key: email
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+          tcpSocket:
+            port: http
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+          httpGet:
+            path: /login/
+            port: http
+            httpHeaders:
+            - name: Host
+              value: "netbox.walnuts.dev"
+        startupProbe:
+          failureThreshold: 100
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+          httpGet:
+            path: /login/
+            port: http
+            httpHeaders:
+            - name: Host
+              value: "netbox.walnuts.dev"
+        volumeMounts:
+        - name: config
+          mountPath: /etc/netbox/config/configuration.py
+          subPath: configuration.py
+          readOnly: true
+        - name: config
+          mountPath: /run/config/netbox
+          readOnly: true
+        - name: secrets
+          mountPath: /run/secrets/netbox
+          readOnly: true
+        
+        - name: "extra-config-0"
+          mountPath: /run/config/extra/0
+          readOnly: true
+        - name: netbox-tmp
+          mountPath: /tmp
+        - name: media
+          mountPath: /opt/netbox/netbox/media
+          subPath: ""
+        - name: optunit
+          mountPath: /opt/unit
+        - name: secrets
+          mountPath: /run/secrets/superuser_password
+          subPath: superuser_password
+          readOnly: true
+        - name: secrets
+          mountPath: /run/secrets/superuser_api_token
+          subPath: superuser_api_token
+          readOnly: true
+        - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+          name: seaweedfs-sa-token
+          readOnly: true
+        resources:
+          limits:
+            cpu: "2"
+            memory: 3Gi
+          requests:
+            cpu: 95m
+            memory: 1300Mi
+      volumes:
+      - name: config
+        configMap:
+          name: netbox
+      - name: secrets
+        projected:
+          sources:
+          - secret:
+              name: netbox
+              items:
+              - key: secret_key
+                path: secret_key
+          - secret:
+              name: netbox
+              optional: true
+              items:
+              - key: api_token_peppers
+                path: api_token_peppers
+          - secret:
+              name: netbox
+              items:
+              - key: "smtp-password"
+                path: email_password
+          - secret:
+              name: netbox
+              items:
+              - key: password
+                path: superuser_password
+              - key: api_token
+                path: superuser_api_token
+          - secret:
+              name: "netbox"
+              items:
+              - key: "db-password"
+                path: db_password
+          - secret:
+              name: "netbox"
+              items:
+              - key: "valkey_password"
+                path: tasks_password
+          - secret:
+              name: "netbox"
+              items:
+              - key: "valkey_password"
+                path: cache_password
+      
+      - name: "extra-config-0"
+        secret:
+          secretName: netbox-diode-config
+      - name: netbox-tmp
+        emptyDir:
+          medium: Memory
+      - name: optunit
+        emptyDir:
+          medium: Memory
+      - name: media
+        emptyDir: {}
+      - name: seaweedfs-sa-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              audience: sts.seaweedfs.com
+              expirationSeconds: 86400
+              path: token
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: netbox
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+---
+# Source: netbox/templates/worker/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netbox-worker
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/version: v4.6.3
+    helm.sh/chart: netbox-8.3.18
+    app.kubernetes.io/component: worker
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: netbox
+      app.kubernetes.io/name: netbox
+      app.kubernetes.io/component: worker
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: 9741bbf59438a8d6dffb983e01fb3569c47111a6a1bca401712ae722a0eb3b21
+      labels:
+        app.kubernetes.io/instance: netbox
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: netbox
+        app.kubernetes.io/version: v4.6.3
+        helm.sh/chart: netbox-8.3.18
+        app.kubernetes.io/component: worker
+    spec:
+      
+      serviceAccountName: netbox
+      automountServiceAccountToken: true
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: Always
+        supplementalGroups: []
+        sysctls: []
+      initContainers:
+        - name: wait-for-backend
+          image: docker.io/rancher/kubectl:v1.36.1
+          imagePullPolicy: "IfNotPresent"
+          command:
+          - /bin/kubectl
+          args:
+          - rollout
+          - status
+          - deployment
+          - $(DEPLOYMENT_NAME)
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: {}
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              cpu: 150m
+              ephemeral-storage: 2Gi
+              memory: 192Mi
+            requests:
+              cpu: 100m
+              ephemeral-storage: 50Mi
+              memory: 128Mi
+          env:
+            - name: DEPLOYMENT_NAME
+              value: netbox
+      containers:
+      - name: netbox-worker
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seLinuxOptions: {}
+          seccompProfile:
+            type: RuntimeDefault
+        image: "ghcr.io/walnuts1018/infra/netbox@sha256:cedb2a249f8b71302be7b5a9613c8279e4f0d3fc2a2dbdbdfd0074d000204cb3"
+        imagePullPolicy: IfNotPresent
+        command:
+          - /opt/netbox/venv/bin/python
+          - /opt/netbox/netbox/manage.py
+          - rqworker
+        volumeMounts:
+        - name: config
+          mountPath: /etc/netbox/config/configuration.py
+          subPath: configuration.py
+          readOnly: true
+        - name: config
+          mountPath: /run/config/netbox
+          readOnly: true
+        - name: secrets
+          mountPath: /run/secrets/netbox
+          readOnly: true
+        
+        - name: "extra-config-0"
+          mountPath: /run/config/extra/0
+          readOnly: true
+        - name: netbox-tmp
+          mountPath: /tmp
+        - name: media
+          mountPath: /opt/netbox/netbox/media
+          subPath: ""
+          readOnly: false
+        resources: 
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: 5m
+            memory: 233Mi
+      volumes:
+      - name: config
+        configMap:
+          name: netbox
+      - name: secrets
+        projected:
+          sources:
+          - secret:
+              name: netbox
+              items:
+              - key: secret_key
+                path: secret_key
+          - secret:
+              name: netbox
+              optional: true
+              items:
+              - key: api_token_peppers
+                path: api_token_peppers
+          - secret:
+              name: netbox
+              items:
+              - key: "smtp-password"
+                path: email_password
+          - secret:
+              name: netbox
+              items:
+              - key: password
+                path: superuser_password
+              - key: api_token
+                path: superuser_api_token
+          - secret:
+              name: "netbox"
+              items:
+              - key: "db-password"
+                path: db_password
+          - secret:
+              name: "netbox"
+              items:
+              - key: "valkey_password"
+                path: tasks_password
+          - secret:
+              name: "netbox"
+              items:
+              - key: "valkey_password"
+                path: cache_password
+      
+      - name: "extra-config-0"
+        secret:
+          secretName: netbox-diode-config
+      - name: netbox-tmp
+        emptyDir:
+          medium: Memory
+      - name: media
+        emptyDir: {}
+---
+# Source: netbox/templates/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: netbox
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/version: v4.6.3
+    helm.sh/chart: netbox-8.3.18
+    app.kubernetes.io/component: netbox
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: netbox
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 95
+---
+# Source: netbox/charts/valkey/templates/primary/application.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: netbox-valkey-primary
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/part-of: valkey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: netbox
+      app.kubernetes.io/name: valkey
+      app.kubernetes.io/component: primary
+  serviceName: netbox-valkey-headless
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: netbox
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: valkey
+        app.kubernetes.io/version: 9.1.0
+        helm.sh/chart: valkey-6.1.9
+        app.kubernetes.io/component: primary
+      annotations:
+        checksum/configmap: c8cdc0c4c772ac3192446a08bf401c29f1e39f33614657d36e4bb1692e34b39f
+        checksum/health: 30ef46e920ea5e36fb842c2ed1175c90b698bdb5a18a244ee061ab6fad0deb34
+        checksum/scripts: bc83dc410dbe1127b0ac262a548fdacbc3f302b361f8b36b83521589d7b59351
+    spec:
+      
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+        supplementalGroups: []
+        sysctls: []
+      serviceAccountName: netbox-valkey-primary
+      automountServiceAccountToken: false
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: netbox
+                    app.kubernetes.io/name: valkey
+                    app.kubernetes.io/component: primary
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      enableServiceLinks: true
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: valkey
+          image: registry-1.docker.io/bitnami/valkey:latest
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: {}
+            seccompProfile:
+              type: RuntimeDefault
+          command:
+            - /bin/bash
+          args:
+            - -c
+            - /opt/bitnami/scripts/start-scripts/start-primary.sh
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: VALKEY_REPLICATION_MODE
+              value: primary
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "no"
+            - name: VALKEY_PASSWORD_FILE
+              value: "/opt/bitnami/valkey/secrets/valkey-password"
+            - name: OPENSSL_FIPS
+              value: "yes"
+            - name: VALKEY_TLS_ENABLED
+              value: "no"
+            - name: VALKEY_PORT
+              value: "6379"
+          ports:
+            - name: redis
+              containerPort: 6379
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            # One second longer than command timeout should prevent generation of zombie processes.
+            timeoutSeconds: 6
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_liveness_local.sh 5
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_readiness_local.sh 1
+          resources:
+            limits:
+              cpu: 150m
+              ephemeral-storage: 2Gi
+              memory: 192Mi
+            requests:
+              cpu: 100m
+              ephemeral-storage: 50Mi
+              memory: 128Mi
+          volumeMounts:
+            - name: start-scripts
+              mountPath: /opt/bitnami/scripts/start-scripts
+            - name: health
+              mountPath: /health
+            - name: valkey-password
+              mountPath: /opt/bitnami/valkey/secrets/
+            - name: valkey-data
+              mountPath: /data
+            - name: config
+              mountPath: /opt/bitnami/valkey/mounted-etc
+            - name: empty-dir
+              mountPath: /opt/bitnami/valkey/etc/
+              subPath: app-conf-dir
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: tmp-dir
+      volumes:
+        - name: start-scripts
+          configMap:
+            name: netbox-valkey-scripts
+            defaultMode: 0755
+        - name: health
+          configMap:
+            name: netbox-valkey-health
+            defaultMode: 0755
+        - name: valkey-password
+          
+          secret:
+            secretName: netbox
+            items:
+            - key: valkey_password
+              path: valkey-password
+        - name: config
+          configMap:
+            name: netbox-valkey-configuration
+        - name: empty-dir
+          emptyDir: {}
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: valkey-data
+        labels:
+          app.kubernetes.io/instance: netbox
+          app.kubernetes.io/name: valkey
+          app.kubernetes.io/component: primary
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "2Gi"
+        storageClassName: longhorn-local
+---
+# Source: netbox/charts/valkey/templates/replicas/application.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: netbox-valkey-replicas
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-6.1.9
+    app.kubernetes.io/component: replica
+    app.kubernetes.io/part-of: valkey
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: netbox
+      app.kubernetes.io/name: valkey
+      app.kubernetes.io/component: replica
+  serviceName: netbox-valkey-headless
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: netbox
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: valkey
+        app.kubernetes.io/version: 9.1.0
+        helm.sh/chart: valkey-6.1.9
+        app.kubernetes.io/component: replica
+      annotations:
+        checksum/configmap: c8cdc0c4c772ac3192446a08bf401c29f1e39f33614657d36e4bb1692e34b39f
+        checksum/health: 30ef46e920ea5e36fb842c2ed1175c90b698bdb5a18a244ee061ab6fad0deb34
+        checksum/scripts: bc83dc410dbe1127b0ac262a548fdacbc3f302b361f8b36b83521589d7b59351
+    spec:
+      
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+        supplementalGroups: []
+        sysctls: []
+      serviceAccountName: netbox-valkey-replica
+      automountServiceAccountToken: false
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: netbox
+                    app.kubernetes.io/name: valkey
+                    app.kubernetes.io/component: replica
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      enableServiceLinks: true
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: valkey
+          image: registry-1.docker.io/bitnami/valkey:latest
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: {}
+            seccompProfile:
+              type: RuntimeDefault
+          command:
+            - /bin/bash
+          args:
+            - -c
+            - /opt/bitnami/scripts/start-scripts/start-replica.sh
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: VALKEY_REPLICATION_MODE
+              value: replica
+            - name: VALKEY_PRIMARY_HOST
+              value: netbox-valkey-primary-0.netbox-valkey-headless.netbox.svc.cluster.local
+            - name: VALKEY_PRIMARY_PORT_NUMBER
+              value: "6379"
+            - name: OPENSSL_FIPS
+              value: "yes"
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "no"
+            - name: VALKEY_PASSWORD_FILE
+              value: "/opt/bitnami/valkey/secrets/valkey-password"
+            - name: VALKEY_PRIMARY_PASSWORD_FILE
+              value: "/opt/bitnami/valkey/secrets/valkey-password"
+            - name: VALKEY_TLS_ENABLED
+              value: "no"
+            - name: VALKEY_PORT
+              value: "6379"
+          ports:
+            - name: redis
+              containerPort: 6379
+          startupProbe:
+            failureThreshold: 22
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            tcpSocket:
+              port: redis
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 6
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_liveness_local_and_primary.sh 5
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 5
+            exec:
+              command:
+                - sh
+                - -c
+                - /health/ping_readiness_local_and_primary.sh 1
+          resources:
+            limits:
+              cpu: 150m
+              ephemeral-storage: 2Gi
+              memory: 192Mi
+            requests:
+              cpu: 100m
+              ephemeral-storage: 50Mi
+              memory: 128Mi
+          volumeMounts:
+            - name: start-scripts
+              mountPath: /opt/bitnami/scripts/start-scripts
+            - name: health
+              mountPath: /health
+            - name: valkey-password
+              mountPath: /opt/bitnami/valkey/secrets/
+            - name: valkey-data
+              mountPath: /data
+            - name: config
+              mountPath: /opt/bitnami/valkey/mounted-etc
+            - name: empty-dir
+              mountPath: /opt/bitnami/valkey/etc
+              subPath: app-conf-dir
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: tmp-dir
+      volumes:
+        - name: start-scripts
+          configMap:
+            name: netbox-valkey-scripts
+            defaultMode: 0755
+        - name: health
+          configMap:
+            name: netbox-valkey-health
+            defaultMode: 0755
+        - name: valkey-password
+          
+          secret:
+            secretName: netbox
+            items:
+            - key: valkey_password
+              path: valkey-password
+        - name: config
+          configMap:
+            name: netbox-valkey-configuration
+        - name: empty-dir
+          emptyDir: {}
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: valkey-data
+        labels:
+          app.kubernetes.io/instance: netbox
+          app.kubernetes.io/name: valkey
+          app.kubernetes.io/component: replica
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "2Gi"
+        storageClassName: longhorn-local
+---
+# Source: netbox/templates/cronjob.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: netbox-housekeeping
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/version: v4.6.3
+    helm.sh/chart: netbox-8.3.18
+    app.kubernetes.io/component: housekeeping
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  schedule: "0 0 * * *"
+  successfulJobsHistoryLimit: 5
+  suspend: false
+  timeZone: Asia/Tokyo
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: netbox
+        helm.sh/chart: netbox-8.3.18
+        app.kubernetes.io/instance: netbox
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "v4.6.3"
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/instance: netbox
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: netbox
+            app.kubernetes.io/version: v4.6.3
+            helm.sh/chart: netbox-8.3.18
+            app.kubernetes.io/component: housekeeping
+        spec:
+          
+          serviceAccountName: netbox
+          automountServiceAccountToken: false
+          securityContext:
+            fsGroup: 1000
+            fsGroupChangePolicy: Always
+            supplementalGroups: []
+            sysctls: []
+          containers:
+          - name: netbox-housekeeping
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+              privileged: false
+              readOnlyRootFilesystem: true
+              runAsGroup: 1000
+              runAsNonRoot: true
+              runAsUser: 1000
+              seLinuxOptions: {}
+              seccompProfile:
+                type: RuntimeDefault
+            image: "ghcr.io/walnuts1018/infra/netbox@sha256:cedb2a249f8b71302be7b5a9613c8279e4f0d3fc2a2dbdbdfd0074d000204cb3"
+            imagePullPolicy: IfNotPresent
+            command:
+              - /opt/netbox/venv/bin/python
+              - /opt/netbox/netbox/manage.py
+              - housekeeping
+            volumeMounts:
+            - name: config
+              mountPath: /etc/netbox/config/configuration.py
+              subPath: configuration.py
+              readOnly: true
+            - name: config
+              mountPath: /run/config/netbox
+              readOnly: true
+            - name: secrets
+              mountPath: /run/secrets/netbox
+              readOnly: true
+            
+            - name: "extra-config-0"
+              mountPath: /run/config/extra/0
+              readOnly: true
+            - name: netbox-tmp
+              mountPath: /tmp
+            - name: media
+              mountPath: /opt/netbox/netbox/media
+              subPath: ""
+              readOnly: false
+          volumes:
+          - name: config
+            configMap:
+              name: netbox
+          - name: secrets
+            projected:
+              sources:
+              - secret:
+                  name: netbox
+                  items:
+                  - key: secret_key
+                    path: secret_key
+              - secret:
+                  name: netbox
+                  optional: true
+                  items:
+                  - key: api_token_peppers
+                    path: api_token_peppers
+              - secret:
+                  name: netbox
+                  items:
+                  - key: "smtp-password"
+                    path: email_password
+              - secret:
+                  name: "netbox"
+                  items:
+                  - key: "db-password"
+                    path: db_password
+              - secret:
+                  name: "netbox"
+                  items:
+                  - key: "valkey_password"
+                    path: tasks_password
+              - secret:
+                  name: "netbox"
+                  items:
+                  - key: "valkey_password"
+                    path: cache_password
+          
+          - name: "extra-config-0"
+            secret:
+              secretName: netbox-diode-config
+          - name: netbox-tmp
+            emptyDir:
+              medium: Memory
+          - name: media
+            emptyDir: {}
+          restartPolicy: OnFailure
+---
+# Source: netbox/templates/httproute.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: netbox
+  namespace: "netbox"
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/version: v4.6.3
+    helm.sh/chart: netbox-8.3.18
+  annotations:
+    external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied: "true"
+spec:
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  hostnames:
+    - netbox.walnuts.dev
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: netbox
+          port: 80
+---
+# Source: netbox/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: netbox-test-connection
+  labels:
+    app.kubernetes.io/instance: netbox
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/version: v4.6.3
+    helm.sh/chart: netbox-8.3.18
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+  - name: wget
+    image: "busybox:1.38.0"
+    imagePullPolicy: IfNotPresent
+    command: ['wget']
+    args: ['netbox:80']
+    resources:
+      limits:
+        cpu: 150m
+        ephemeral-storage: 2Gi
+        memory: 192Mi
+      requests:
+        cpu: 100m
+        ephemeral-storage: 50Mi
+        memory: 128Mi
+  restartPolicy: Never
