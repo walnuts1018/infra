@@ -35,7 +35,7 @@ vminsert:
     - resource:
         name: cpu
         target:
-          averageUtilization: 80
+          averageUtilization: 95
           type: Utilization
       type: Resource
   resources:
