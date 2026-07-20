@@ -48,7 +48,7 @@ local app = import 'app.json5';
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'docker.io/stalwartlabs/stalwart:v0.16.13',
+            image: 'docker.io/stalwartlabs/stalwart:v0.16.14',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
