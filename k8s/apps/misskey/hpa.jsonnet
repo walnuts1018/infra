@@ -8,7 +8,7 @@ local app = import 'app.json5';
     labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
-    minReplicaCount: 2,
+    minReplicaCount: 1,
     maxReplicaCount: 3,
     scaleTargetRef: {
       apiVersion: 'apps/v1',
