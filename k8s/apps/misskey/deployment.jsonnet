@@ -119,7 +119,6 @@ local externalSecret = import 'external-secret.jsonnet';
                 memory: '800Mi',
               },
               limits: {
-                cpu: '1.5',
                 memory: '2Gi',
               },
             },

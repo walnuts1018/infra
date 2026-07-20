@@ -21,11 +21,13 @@ local app = import 'app.json5';
       containerPolicies: [
         {
           containerName: 'coredns',
-          controlledResources: ['memory'],
+          controlledResources: ['cpu', 'memory'],
           minAllowed: {
+            cpu: '1m',
             memory: '64Mi',
           },
           maxAllowed: {
+            cpu: '100m',
             memory: '256Mi',
           },
         },

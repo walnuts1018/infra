@@ -21,7 +21,7 @@ local app = import '../app.json5';
       containerPolicies: [
         {
           containerName: 'mucaron-front',
-          controlledResources: ['memory'],
+          controlledResources: ['cpu', 'memory'],
           minAllowed: {
             memory: '64Mi',
           },

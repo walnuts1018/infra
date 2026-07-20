@@ -21,7 +21,7 @@ local app = import 'app.json5';
       containerPolicies: [
         {
           containerName: 'apiserver',
-          controlledResources: ['memory'],
+          controlledResources: ['cpu', 'memory'],
           minAllowed: {
             memory: '10Mi',
           },
