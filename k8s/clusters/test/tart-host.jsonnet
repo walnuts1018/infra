@@ -28,7 +28,7 @@
         name: 'rusk-bmc',
       },
       redfish: {
-        endpoint: 'https://192.168.4.101/redfish/v1',
+        endpoint: 'https://192.168.4.101',
         caBundleSecretRef: {
           name: 'rusk-bmc-ca',
         },
