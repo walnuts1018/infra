@@ -106,7 +106,7 @@ server:
     minReplicas: 1
     maxReplicas: 5
     targetCPUUtilizationPercentage: 100
-    targetMemoryUtilizationPercentage: 100
+    targetMemoryUtilizationPercentage: 10000 # memoryによるHPAを無効化するために大きな値を設定
   resources:
     requests:
       cpu: 10m
@@ -125,7 +125,7 @@ repoServer:
     minReplicas: 1
     maxReplicas: 5
     targetCPUUtilizationPercentage: 100
-    targetMemoryUtilizationPercentage: 100
+    targetMemoryUtilizationPercentage: 10000 # memoryによるHPAを無効化するために大きな値を設定
   resources:
     requests:
       cpu: 100m
