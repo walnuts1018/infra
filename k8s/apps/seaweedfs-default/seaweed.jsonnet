@@ -10,7 +10,7 @@ local externalSecretConfig = import 'external-secret-config.jsonnet';
     labels: (labels)(app.name),
   },
   spec: {
-    image: 'chrislusf/seaweedfs:4.39_large_disk',
+    image: 'chrislusf/seaweedfs:4.40_large_disk',
     master: {
       replicas: 3,
       volumeSizeLimitMB: 1024,
