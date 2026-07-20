@@ -21,7 +21,7 @@ local app = import 'app.json5';
       containerPolicies: [
         {
           containerName: 'stalwart',
-          controlledResources: ['cpu', 'memory'],
+          controlledResources: ['memory'],
           minAllowed: {
             cpu: '10m',
             memory: '10Mi',

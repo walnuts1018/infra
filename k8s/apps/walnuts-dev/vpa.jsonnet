@@ -21,7 +21,7 @@ local app = import 'app.json5';
       containerPolicies: [
         {
           containerName: 'walnuts-dev',
-          controlledResources: ['cpu', 'memory'],
+          controlledResources: ['memory'],
           minAllowed: {
             cpu: '100m',
             memory: '128Mi',

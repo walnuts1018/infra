@@ -21,7 +21,7 @@ local app = import 'app.json5';
       containerPolicies: [
         {
           containerName: 'misskey',
-          controlledResources: ['cpu', 'memory'],
+          controlledResources: ['memory'],
           minAllowed: {
             cpu: '50m',
             memory: '256Mi',
