@@ -17,12 +17,10 @@ local app = import 'app.json5';
     },
     triggers: [
       {
-        type: 'prometheus',
+        type: 'cpu',
+        metricType: 'Utilization',
         metadata: {
-          serverAddress: 'http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus',
-          metricName: 'envoy_cluster_upstream_rq_total_backend',
-          query: 'sum(rate(envoy_cluster_upstream_rq_total{envoy_cluster_name="httproute/walnuk/walnuk/rule/0",envoy_response_code=~"2..|5.."}[2m]))',
-          threshold: '15',
+          value: '95',
         },
       },
     ],

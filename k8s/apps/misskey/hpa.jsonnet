@@ -20,7 +20,7 @@ local app = import 'app.json5';
         type: 'cpu',
         metricType: 'Utilization',
         metadata: {
-          value: '80',
+          value: '95',
         },
       },
     ],
