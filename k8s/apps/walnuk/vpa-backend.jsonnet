@@ -23,9 +23,11 @@ local app = import 'app.json5';
           containerName: 'apiserver',
           controlledResources: ['cpu', 'memory'],
           minAllowed: {
+            cpu: '5m',
             memory: '10Mi',
           },
           maxAllowed: {
+            cpu: '500m',
             memory: '256Mi',
           },
         },

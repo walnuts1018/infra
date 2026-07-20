@@ -23,9 +23,11 @@ local app = import '../app.json5';
           containerName: 'oekaki-dengon-game-back',
           controlledResources: ['cpu', 'memory'],
           minAllowed: {
+            cpu: '1m',
             memory: '64Mi',
           },
           maxAllowed: {
+            cpu: '500m',
             memory: '256Mi',
           },
         },

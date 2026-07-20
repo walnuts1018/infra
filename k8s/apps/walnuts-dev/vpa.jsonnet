@@ -23,9 +23,11 @@ local app = import 'app.json5';
           containerName: 'walnuts-dev',
           controlledResources: ['cpu', 'memory'],
           minAllowed: {
+            cpu: '100m',
             memory: '128Mi',
           },
           maxAllowed: {
+            cpu: '500m',
             memory: '1Gi',
           },
         },

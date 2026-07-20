@@ -23,9 +23,11 @@ local app = import 'app.json5';
           containerName: 'next',
           controlledResources: ['cpu', 'memory'],
           minAllowed: {
+            cpu: '10m',
             memory: '64Mi',
           },
           maxAllowed: {
+            cpu: '500m',
             memory: '512Mi',
           },
         },

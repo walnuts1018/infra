@@ -23,9 +23,11 @@ local app = import '../app.json5';
           containerName: 'openchokin-back',
           controlledResources: ['cpu', 'memory'],
           minAllowed: {
+            cpu: '1m',
             memory: '10Mi',
           },
           maxAllowed: {
+            cpu: '500m',
             memory: '128Mi',
           },
         },
