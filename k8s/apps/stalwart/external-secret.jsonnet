@@ -8,5 +8,12 @@
         property: 'stalwart',
       },
     },
+    {
+      secretKey: 's3_secret_access_key',
+      remoteRef: {
+        key: 'seaweedfs',
+        property: 'stalwart_secretkey',
+      },
+    },
   ],
 }

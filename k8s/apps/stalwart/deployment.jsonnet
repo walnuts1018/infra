@@ -79,6 +79,19 @@ local configMap = import 'configmap.jsonnet';
                 value: 'trace',
               },
               {
+                name: 'AWS_ACCESS_KEY_ID',
+                value: 'stalwart',
+              },
+              {
+                name: 'AWS_SECRET_ACCESS_KEY',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 's3_secret_access_key',
+                  },
+                },
+              },
+              {
                 name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
                 value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
               },
