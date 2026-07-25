@@ -61,6 +61,7 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **external-dns**
 - **external-secrets**
 - **external-secrets-store**: External Secrets のOnePassword プロバイダー
+- **eck-operator**: Elastic 公式の Elastic Cloud on Kubernetes Operator
 - **external-snapshotter**
 - **ghcr-login-secret**
 - **kube-virt**
@@ -123,6 +124,7 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **scylla-operator**
 - **seaweedfs-default**
 - **seaweedfs-operator**
+- **stalwart-search**: Stalwart の全文検索用 Elasticsearch クラスター
 
 ### アプリケーション
 
