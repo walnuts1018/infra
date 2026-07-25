@@ -13,7 +13,7 @@ local app = import 'app.json5';
   },
   spec: {
     shards: 1,
-    replicas: 0,
+    replicas: 2,
     persistence: {
       size: '1Gi',
     },
