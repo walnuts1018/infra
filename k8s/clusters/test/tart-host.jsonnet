@@ -11,7 +11,7 @@
   spec: {
     identifiers: {
       systemUUID: '34373737-3632-504A-5436-30374452504E',
-      bootMACAddress: '94:57:a5:c4:98:4b',
+      bootMACAddress: '28:80:23:b6:fa:e8',
     },
     architecture: 'amd64',
     firmware: 'UEFI',
