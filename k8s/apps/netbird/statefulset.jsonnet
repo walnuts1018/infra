@@ -2,7 +2,7 @@ local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'apps/v1',
-  kind: 'Deployment',
+  kind: 'StatefulSet',
   metadata: {
     name: app.name,
     namespace: app.namespace,
@@ -10,9 +10,7 @@ local app = import 'app.json5';
   },
   spec: {
     replicas: 1,
-    strategy: {
-      type: 'Recreate',
-    },
+    serviceName: (import 'headless-service.jsonnet').metadata.name,
     selector: {
       matchLabels: labels(app.name),
     },
@@ -78,7 +76,7 @@ local app = import 'app.json5';
             },
             volumeMounts: [
               {
-                name: 'netbird-state',
+                name: 'state',
                 mountPath: '/var/lib/netbird',
               },
               {
@@ -90,10 +88,6 @@ local app = import 'app.json5';
         ],
         volumes: [
           {
-            name: 'netbird-state',
-            emptyDir: {},
-          },
-          {
             name: 'tun',
             hostPath: {
               path: '/dev/net/tun',
@@ -103,5 +97,21 @@ local app = import 'app.json5';
         ],
       },
     },
+    volumeClaimTemplates: [
+      {
+        metadata: {
+          name: 'state',
+        },
+        spec: {
+          accessModes: ['ReadWriteOnce'],
+          storageClassName: 'longhorn',
+          resources: {
+            requests: {
+              storage: '64Mi',
+            },
+          },
+        },
+      },
+    ],
   },
 }
