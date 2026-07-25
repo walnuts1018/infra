@@ -10,6 +10,7 @@ local configMap = import 'configmap.jsonnet';
     labels: labels(app.name),
   },
   spec: {
+    replicas: 1,
     selector: {
       matchLabels: labels(app.name),
     },
