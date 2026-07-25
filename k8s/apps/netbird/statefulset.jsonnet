@@ -47,6 +47,14 @@ local app = import 'app.json5';
                   },
                 },
               },
+              {
+                name: 'NB_HOSTNAME',
+                valueFrom: {
+                  fieldRef: {
+                    fieldPath: 'metadata.name',
+                  },
+                },
+              },
             ],
             securityContext: {
               readOnlyRootFilesystem: false,
