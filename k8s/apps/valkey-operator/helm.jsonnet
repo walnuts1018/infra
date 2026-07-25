@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'valkey-operator',
   repoURL: 'https://valkey.io/valkey-helm/',
-  targetRevision: '0.3.2',
+  targetRevision: '0.4.0',
   values: (importstr 'values.yaml'),
 }
