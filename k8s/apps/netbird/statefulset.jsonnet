@@ -28,6 +28,16 @@ local app = import 'app.json5';
         hostNetwork: true,
         dnsPolicy: 'ClusterFirstWithHostNet',
         automountServiceAccountToken: false,
+        topologySpreadConstraints: [
+          {
+            maxSkew: 1,
+            topologyKey: 'kubernetes.io/hostname',
+            whenUnsatisfiable: 'ScheduleAnyway',
+            labelSelector: {
+              matchLabels: (labels)(app.name),
+            },
+          },
+        ],
         containers: [
           {
             name: 'netbird',
