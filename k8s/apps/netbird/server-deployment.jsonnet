@@ -46,9 +46,6 @@ local app = import 'app.json5';
             },
           ],
           readinessProbe: {
-            // Relay のヘルスエンドポイントは公開 Relay URL を検証する。ここで使うと、
-            // Ready でない Pod にはその URL に到達する Service endpoint がなく、
-            // 依存関係が循環する。
             tcpSocket: {
               port: 'http',
             },

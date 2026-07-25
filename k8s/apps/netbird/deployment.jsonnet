@@ -21,10 +21,12 @@ local app = import 'app.json5';
         labels: labels(app.name),
       },
       spec: {
-        // ピアが両方のサブネットへ到達するには、ノードの LAN ルーティングテーブルを使う必要がある。
-        // TODO: 配置候補となる全ノードに /etc/sysctl.d/99-netbird.conf を設定する。
-        // hostNetwork はノードのネットワーク名前空間を共有するが、コンテナから
-        // net.ipv4.conf.all.src_valid_mark=1 と net.ipv6.conf.all.forwarding=1 を永続化できない。
+        /*
+          TODO: 全てのNodeに
+          net.ipv4.conf.all.src_valid_mark=1
+          net.ipv6.conf.all.forwarding=1
+          という内容の /etc/sysctl.d/99-netbird.conf を手動で配置する
+        */
         hostNetwork: true,
         dnsPolicy: 'ClusterFirstWithHostNet',
         automountServiceAccountToken: false,
