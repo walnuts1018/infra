@@ -18,5 +18,6 @@ output "netbird_oidc_client_secret" {
 
 output "stalwart_oidc_client_id" {
   value       = module.zitadel.stalwart_oidc_client_id
+  sensitive   = true
   description = "Client ID for Stalwart's ZITADEL OpenID Connect directory"
 }
