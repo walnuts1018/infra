@@ -1,5 +1,5 @@
-local app = import 'app.json5';
 local gateway = import '../envoy-gateway-class/gateway.jsonnet';
+local app = import 'app.json5';
 local service = import 'service.jsonnet';
 local routes = [
   { listener: 'smtp', port: 25 },

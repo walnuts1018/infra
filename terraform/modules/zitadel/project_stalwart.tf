@@ -1,7 +1,14 @@
 resource "zitadel_project" "stalwart" {
-  org_id                 = zitadel_org.ZITADEL.id
-  name                   = "Stalwart"
-  project_role_assertion = false
+  org_id             = zitadel_org.ZITADEL.id
+  name               = "Stalwart"
+  project_role_check = true
+}
+
+resource "zitadel_project_role" "stalwart_user" {
+  org_id       = zitadel_org.ZITADEL.id
+  project_id   = zitadel_project.stalwart.id
+  role_key     = "user"
+  display_name = "User"
 }
 
 resource "zitadel_application_oidc" "stalwart" {
@@ -18,6 +25,13 @@ resource "zitadel_application_oidc" "stalwart" {
   clock_skew                = "0s"
   dev_mode                  = false
   access_token_type         = "OIDC_TOKEN_TYPE_JWT"
+}
+
+resource "zitadel_user_grant" "walnuts_stalwart_user" {
+  org_id     = zitadel_org.ZITADEL.id
+  project_id = zitadel_project.stalwart.id
+  user_id    = local.zitadel_human_user_ids.walnuts
+  role_keys  = [zitadel_project_role.stalwart_user.role_key]
 }
 
 output "stalwart_oidc_client_id" {
