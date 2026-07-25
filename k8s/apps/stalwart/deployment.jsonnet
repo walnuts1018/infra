@@ -71,6 +71,14 @@ local configMap = import 'configmap.jsonnet';
                 value: 'admin:YourNewPassword123',
               },
               {
+                name: 'STALWART_RECOVERY_MODE',
+                value: 'true',
+              },
+              {
+                name: 'STALWART_RECOVERY_MODE_LOG_LEVEL',
+                value: 'trace',
+              },
+              {
                 name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
                 value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
               },
