@@ -21,4 +21,4 @@ server:
   store:
     engine: "postgres"
     dsn: "host=postgresql-default-rw.databases.svc.cluster.local port=5432 user=netbird password={{ .postgres_password }} dbname=netbird sslmode=disable"
-    encryptionKey: "{{ .store_encryption_key }}"
+    encryptionKey: "{{ .store_encryption_key | b64enc }}"

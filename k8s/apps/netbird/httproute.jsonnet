@@ -28,13 +28,11 @@ local app = import 'app.json5';
               value: '/management.ManagementService/',
             },
           },
-          {
-            path: {
-              type: 'PathPrefix',
-              value: '/management.ProxyService/',
-            },
-          },
         ],
+        timeouts: {
+          request: '0s',
+          backendRequest: '0s',
+        },
         backendRefs: [{
           name: (import 'server-service.jsonnet').metadata.name,
           port: 81,
@@ -54,6 +52,14 @@ local app = import 'app.json5';
               value: '/oauth2',
             },
           },
+        ],
+        backendRefs: [{
+          name: (import 'server-service.jsonnet').metadata.name,
+          port: 80,
+        }],
+      },
+      {
+        matches: [
           {
             path: {
               type: 'PathPrefix',
@@ -67,6 +73,10 @@ local app = import 'app.json5';
             },
           },
         ],
+        timeouts: {
+          request: '0s',
+          backendRequest: '0s',
+        },
         backendRefs: [{
           name: (import 'server-service.jsonnet').metadata.name,
           port: 80,
