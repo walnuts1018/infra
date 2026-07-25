@@ -8,6 +8,9 @@ local configMap = import 'configmap.jsonnet';
     name: app.name,
     namespace: app.namespace,
     labels: labels(app.name),
+    annotations: {
+      'reloader.stakater.com/auto': 'true',
+    },
   },
   spec: {
     replicas: 1,
@@ -117,6 +120,11 @@ local configMap = import 'configmap.jsonnet';
                 name: 'tmp',
                 mountPath: '/tmp',
               },
+              {
+                name: 'tls',
+                mountPath: '/var/run/stalwart/tls',
+                readOnly: true,
+              },
             ],
             livenessProbe: {
               httpGet: {
@@ -172,6 +180,12 @@ local configMap = import 'configmap.jsonnet';
           {
             name: 'tmp',
             emptyDir: {},
+          },
+          {
+            name: 'tls',
+            secret: {
+              secretName: (import 'certificate.jsonnet').spec.secretName,
+            },
           },
         ],
       },
