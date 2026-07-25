@@ -10,14 +10,21 @@ server:
   authSecret: "{{ .auth_secret }}"
   dataDir: "/var/lib/netbird"
   auth:
-    issuer: "https://auth.walnuts.dev"
-    localAuthDisabled: true
+    issuer: "https://netbird.walnuts.dev/oauth2"
+    localAuthDisabled: false # TODO: trueにする
     signKeyRefreshEnabled: true
     dashboardRedirectURIs:
     - "https://netbird.walnuts.dev/auth"
     - "https://netbird.walnuts.dev/silent-auth"
+    dashboardPostLogoutRedirectURIs:
+    - "https://netbird.walnuts.dev/"
     cliRedirectURIs:
     - "http://localhost:53000/"
+  reverseProxy:
+    trustedPeers:
+    - "10.0.0.0/24"
+    - "10.0.1.0/24"
+    - "10.0.3.0/24"
   store:
     engine: "postgres"
     dsn: "host=postgresql-default-rw.databases.svc.cluster.local port=5432 user=netbird password={{ .postgres_password }} dbname=netbird sslmode=disable"

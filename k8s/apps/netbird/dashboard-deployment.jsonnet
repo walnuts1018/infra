@@ -28,34 +28,15 @@ local app = import 'app.json5';
             },
             {
               name: 'AUTH_AUDIENCE',
-              valueFrom: {
-                secretKeyRef: {
-                  name: (import 'external-secret.jsonnet').spec.target.name,
-                  key: 'AUTH_AUDIENCE',
-                },
-              },
+              value: 'netbird-dashboard',
             },
             {
               name: 'AUTH_CLIENT_ID',
-              valueFrom: {
-                secretKeyRef: {
-                  name: (import 'external-secret.jsonnet').spec.target.name,
-                  key: 'AUTH_CLIENT_ID',
-                },
-              },
-            },
-            {
-              name: 'AUTH_CLIENT_SECRET',
-              valueFrom: {
-                secretKeyRef: {
-                  name: (import 'external-secret.jsonnet').spec.target.name,
-                  key: 'AUTH_CLIENT_SECRET',
-                },
-              },
+              value: 'netbird-dashboard',
             },
             {
               name: 'AUTH_AUTHORITY',
-              value: 'https://auth.walnuts.dev',
+              value: 'https://netbird.walnuts.dev/oauth2',
             },
             {
               name: 'USE_AUTH0',

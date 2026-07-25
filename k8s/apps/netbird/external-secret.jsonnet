@@ -25,13 +25,6 @@ local app = import 'app.json5';
       },
     },
     {
-      secretKey: 'oidc_client_id',
-      remoteRef: {
-        key: 'netbird',
-        property: 'oidc-client-id',
-      },
-    },
-    {
       secretKey: 'postgres_password',
       remoteRef: {
         key: 'postgres_passwords',
@@ -41,9 +34,6 @@ local app = import 'app.json5';
   ],
   template_data: {
     'config.yaml': (importstr './_config/config.yaml'),
-    AUTH_AUDIENCE: '{{ .oidc_client_id }}',
-    AUTH_CLIENT_ID: '{{ .oidc_client_id }}',
-    AUTH_CLIENT_SECRET: '',
     NB_SETUP_KEY: '{{ .NB_SETUP_KEY }}',
   },
 }
