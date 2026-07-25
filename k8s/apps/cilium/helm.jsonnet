@@ -5,7 +5,7 @@ function(
   clusterName='kurumi',
   k8sServiceHost='192.168.0.17',
   k8sServicePort=16443,
-  ingressLoadBalancerIP='192.168.0.129',
+  ingressLoadBalancerIP='192.168.12.129',
   enableServiceMonitor=true,
   operatorReplicas=2,
   usek3s=false,

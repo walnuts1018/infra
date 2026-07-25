@@ -6,7 +6,7 @@
     namespace: (import 'app.json5').namespace,
     annotations: {
       'external-dns-cloudflare.alpha.kubernetes.io/target': '111.100.165.117',
-      'external-dns-local.alpha.kubernetes.io/target': '192.168.0.138',
+      'external-dns-local.alpha.kubernetes.io/target': '192.168.12.138',
     },
   },
   spec: {

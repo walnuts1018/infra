@@ -1,4 +1,4 @@
-function(loadBalancerIP='192.168.0.138') {
+function(loadBalancerIP='192.168.12.138') {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'EnvoyProxy',
   metadata: {

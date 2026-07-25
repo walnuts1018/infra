@@ -19,9 +19,9 @@ spec:
       jsonnet:
         tlas:
         - name: 'start'
-          value: '192.168.0.157'
+          value: '192.168.16.0'
         - name: 'stop'
-          value: '192.168.0.162'
+          value: '192.168.16.255'
   syncPolicy:
     automated:
       selfHeal: true

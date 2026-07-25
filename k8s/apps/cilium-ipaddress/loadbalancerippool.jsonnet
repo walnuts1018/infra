@@ -1,5 +1,5 @@
-function(start='192.168.0.128', stop='192.168.0.155') {
-  apiVersion: 'cilium.io/v2alpha1',
+function(start='192.168.12.0', stop='192.168.12.255') {
+  apiVersion: 'cilium.io/v2',
   kind: 'CiliumLoadBalancerIPPool',
   metadata: {
     name: 'default',

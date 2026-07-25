@@ -9,7 +9,7 @@ local app = import 'app.json5';
   },
   spec: {
     type: 'LoadBalancer',
-    loadBalancerIP: '192.168.0.142',
+    loadBalancerIP: '192.168.12.142',
     selector: labels(app.name + '-server'),
     ports: [{
       name: 'stun',

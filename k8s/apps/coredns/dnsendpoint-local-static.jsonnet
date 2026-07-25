@@ -13,7 +13,7 @@ local app = import 'app.json5';
         recordTTL: 60,
         recordType: 'A',
         targets: [
-          '192.168.0.159',
+          '192.168.16.159',
         ],
       },
       {
@@ -21,7 +21,7 @@ local app = import 'app.json5';
         recordTTL: 60,
         recordType: 'A',
         targets: [
-          '192.168.0.159',
+          '192.168.16.159',
         ],
       },
       {
@@ -29,7 +29,7 @@ local app = import 'app.json5';
         recordTTL: 60,
         recordType: 'A',
         targets: [
-          '192.168.0.138',
+          '192.168.12.138',
         ],
       },
       {
@@ -37,7 +37,7 @@ local app = import 'app.json5';
         recordTTL: 60,
         recordType: 'A',
         targets: [
-          '192.168.0.158',
+          '192.168.16.158',
         ],
       },
       {

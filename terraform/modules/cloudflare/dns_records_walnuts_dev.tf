@@ -1,5 +1,5 @@
 resource "cloudflare_dns_record" "samba_walnuts_dev" {
-  content = "192.168.0.132"
+  content = "192.168.12.132"
   name    = "samba.walnuts.dev"
   proxied = false
   ttl     = 1

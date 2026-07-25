@@ -18,6 +18,6 @@ local app = import 'app.json5';
     ],
     selector: (labels)(app.name),
     type: 'LoadBalancer',
-    loadBalancerIP: '192.168.0.132',
+    loadBalancerIP: '192.168.12.132',
   },
 }

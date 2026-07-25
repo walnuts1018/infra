@@ -19,6 +19,6 @@
       },
     ],
     type: 'LoadBalancer',
-    loadBalancerIP: '192.168.0.136',
+    loadBalancerIP: '192.168.12.136',
   },
 }

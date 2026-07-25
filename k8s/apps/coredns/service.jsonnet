@@ -36,7 +36,7 @@ local app = import 'app.json5';
         targetPort: 'dns-over-https',
       },
     ],
-    loadBalancerIP: '192.168.0.135',
+    loadBalancerIP: '192.168.12.135',
     type: 'LoadBalancer',
   },
 }

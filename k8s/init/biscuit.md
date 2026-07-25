@@ -60,7 +60,7 @@ cd ~/ghq/github.com/walnuts1018/infra/k8s/apps/cilium
 ```
 
 ```bash
-jsonnet helm.jsonnet --tla-str k8sServiceHost="192.168.0.15" --tla-code k8sServicePort=6443 --tla-str loadBalancerIP="192.168.0.159" --tla-code enableServiceMonitor=false --tla-code operatorReplicas=1 --tla-code usek3s=true | jq .spec.source.helm.valuesObject > values.json
+jsonnet helm.jsonnet --tla-str k8sServiceHost="192.168.0.15" --tla-code k8sServicePort=6443 --tla-str ingressLoadBalancerIP="192.168.16.159" --tla-code enableServiceMonitor=false --tla-code operatorReplicas=1 --tla-code usek3s=true | jq .spec.source.helm.valuesObject > values.json
 ```
 
 ```bash
