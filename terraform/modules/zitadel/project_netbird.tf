@@ -14,7 +14,7 @@ resource "zitadel_project_role" "netbird_user" {
 // ZITADEL returns an OIDC client secret only when the application is created.
 // Recreate the application once to restore the missing secret in Terraform state.
 resource "terraform_data" "netbird_oidc_application_recreate" {
-  input = "restore-netbird-oidc-client-secret"
+  input = "restore-netbird-oidc-client-secret-v2"
 }
 
 resource "zitadel_application_oidc" "netbird" {
