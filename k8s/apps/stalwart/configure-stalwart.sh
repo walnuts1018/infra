@@ -64,7 +64,6 @@ jq -cn \
         secretKey: {"@type": "None"},
         securityToken: {"@type": "None"},
         sessionToken: {"@type": "None"},
-        timeout: "30s",
         maxRetries: 3,
         allowInvalidCerts: false,
         verifyAfterWrite: true
@@ -76,7 +75,7 @@ jq -cn \
       value: {
         "@type": "Redis",
         url: "redis://valkey-stalwart-valkey.stalwart.svc.cluster.local:6379",
-        timeout: "15s",
+        timeout: 15000,
         poolMaxConnections: 16
       }
     },
@@ -92,7 +91,6 @@ jq -cn \
           secret: {"@type": "Value", secret: $elasticsearch_password}
         },
         httpHeaders: {},
-        timeout: "30s",
         allowInvalidCerts: true,
         numShards: 1,
         numReplicas: 0,
@@ -106,8 +104,8 @@ jq -cn \
         openTelemetry: {
           "@type": "Grpc",
           endpoint: "http://default-collector.opentelemetry-collector.svc.cluster.local:4317",
-          interval: "1m",
-          timeout: "10s"
+          interval: 60000,
+          timeout: 10000
         }
       }
     },
@@ -135,8 +133,8 @@ jq -cn \
       object: "MtaOutboundStrategy",
       value: {
         route: {
-          match: [{if: "is_local_domain(rcpt_domain)", then: "'local'"}],
-          else: "'ses'"
+          match: {"0": {if: "is_local_domain(rcpt_domain)", then: "\u0027local\u0027"}},
+          else: "\u0027ses\u0027"
         }
       }
     }
