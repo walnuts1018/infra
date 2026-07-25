@@ -16,6 +16,8 @@ local app = import 'app.json5';
     ],
     hostnames: [
       'stalwart.local.walnuts.dev',
+      'autoconfig.walnuts.dev',
+      'autodiscover.walnuts.dev',
     ],
     rules: [
       {

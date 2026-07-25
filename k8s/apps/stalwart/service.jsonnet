@@ -36,6 +36,12 @@ local app = import 'app.json5';
         targetPort: 'smtps',
       },
       {
+        name: 'submission',
+        protocol: 'TCP',
+        port: 587,
+        targetPort: 'submission',
+      },
+      {
         name: 'imaps',
         protocol: 'TCP',
         port: 993,

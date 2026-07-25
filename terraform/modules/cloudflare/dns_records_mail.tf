@@ -86,6 +86,39 @@ resource "cloudflare_dns_record" "mx_walnuts_dev" {
   proxied  = false
 }
 
+resource "cloudflare_dns_record" "stalwart_autoconfig" {
+  zone_id = cloudflare_zone.walnuts_dev.id
+  name    = "autoconfig.walnuts.dev"
+  content = "mx.walnuts.dev"
+  type    = "CNAME"
+  ttl     = 600
+  proxied = false
+}
+
+resource "cloudflare_dns_record" "stalwart_autodiscover" {
+  zone_id = cloudflare_zone.walnuts_dev.id
+  name    = "autodiscover.walnuts.dev"
+  content = "mx.walnuts.dev"
+  type    = "CNAME"
+  ttl     = 600
+  proxied = false
+}
+
+resource "cloudflare_dns_record" "srv_imap" {
+  zone_id  = cloudflare_zone.walnuts_dev.id
+  name     = "_imap._tcp.walnuts.dev"
+  type     = "SRV"
+  ttl      = 600
+  priority = 10
+  proxied  = false
+  data = {
+    priority = 10
+    weight   = 10
+    port     = 143
+    target   = "mx.walnuts.dev"
+  }
+}
+
 resource "cloudflare_dns_record" "srv_imaps" {
   zone_id  = cloudflare_zone.walnuts_dev.id
   name     = "_imaps._tcp.walnuts.dev"
@@ -112,6 +145,21 @@ resource "cloudflare_dns_record" "srv_submission" {
     priority = 10
     weight   = 10
     port     = 587
+    target   = "mx.walnuts.dev"
+  }
+}
+
+resource "cloudflare_dns_record" "srv_submissions" {
+  zone_id  = cloudflare_zone.walnuts_dev.id
+  name     = "_submissions._tcp.walnuts.dev"
+  type     = "SRV"
+  ttl      = 600
+  priority = 10
+  proxied  = false
+  data = {
+    priority = 10
+    weight   = 10
+    port     = 465
     target   = "mx.walnuts.dev"
   }
 }

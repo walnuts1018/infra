@@ -42,6 +42,46 @@
           ],
         },
       },
+      {
+        name: 'smtp',
+        protocol: 'TCP',
+        port: 25,
+        allowedRoutes: {
+          namespaces: {
+            from: 'All',
+          },
+        },
+      },
+      {
+        name: 'smtps',
+        protocol: 'TCP',
+        port: 465,
+        allowedRoutes: {
+          namespaces: {
+            from: 'All',
+          },
+        },
+      },
+      {
+        name: 'submission',
+        protocol: 'TCP',
+        port: 587,
+        allowedRoutes: {
+          namespaces: {
+            from: 'All',
+          },
+        },
+      },
+      {
+        name: 'imaps',
+        protocol: 'TCP',
+        port: 993,
+        allowedRoutes: {
+          namespaces: {
+            from: 'All',
+          },
+        },
+      },
     ],
   },
 }

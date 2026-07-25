@@ -101,6 +101,10 @@ local configMap = import 'configmap.jsonnet';
                 containerPort: 465,
               },
               {
+                name: 'submission',
+                containerPort: 587,
+              },
+              {
                 name: 'imaps',
                 containerPort: 993,
               },
