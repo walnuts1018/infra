@@ -15,15 +15,15 @@
           addresses: [
             'LoadBalancerIP',
           ],
-          selector: {
-            matchExpressions: [
-              {
-                key: 'somekey',
-                operator: 'NotIn',
-                values: ['never-used-value'],
-              },
-            ],
-          },
+        },
+        selector: {
+          matchExpressions: [
+            {
+              key: 'somekey',
+              operator: 'NotIn',
+              values: ['never-used-value'],
+            },
+          ],
         },
       },
     ],
