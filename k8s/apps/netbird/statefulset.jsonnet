@@ -9,7 +9,7 @@ local app = import 'app.json5';
     labels: labels(app.name),
   },
   spec: {
-    replicas: 1,
+    replicas: 2,
     serviceName: (import 'headless-service.jsonnet').metadata.name,
     selector: {
       matchLabels: labels(app.name),
