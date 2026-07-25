@@ -11,7 +11,6 @@ resource "zitadel_application_oidc" "netbird" {
   redirect_uris = [
     "https://netbird.walnuts.dev/auth",
     "https://netbird.walnuts.dev/silent-auth",
-    "http://localhost:53000",
   ]
   response_types            = ["OIDC_RESPONSE_TYPE_CODE"]
   grant_types               = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE", "OIDC_GRANT_TYPE_REFRESH_TOKEN"]
