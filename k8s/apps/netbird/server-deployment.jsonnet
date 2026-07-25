@@ -10,23 +10,56 @@ local app = import 'app.json5';
   },
   spec: {
     replicas: 1,
-    strategy: { type: 'Recreate' },
-    selector: { matchLabels: labels(app.name + '-server') },
+    strategy: {
+      type: 'Recreate',
+    },
+    selector: {
+      matchLabels: labels(app.name + '-server'),
+    },
     template: {
-      metadata: { labels: labels(app.name + '-server') },
+      metadata: {
+        labels: labels(app.name + '-server'),
+      },
       spec: {
         containers: [{
           name: 'netbird-server',
           image: 'netbirdio/netbird-server:0.75.0',
-          args: ['--config', '/etc/netbird/config.yaml'],
-          ports: [
-            { name: 'http', containerPort: 80, protocol: 'TCP' },
-            { name: 'metrics', containerPort: 9090, protocol: 'TCP' },
-            { name: 'health', containerPort: 9000, protocol: 'TCP' },
+          args: [
+            '--config',
+            '/etc/netbird/config.yaml',
           ],
-          readinessProbe: { httpGet: { path: '/health', port: 9000 } },
-          livenessProbe: { httpGet: { path: '/health', port: 9000 } },
-          securityContext: { readOnlyRootFilesystem: false },
+          ports: [
+            {
+              name: 'http',
+              containerPort: 80,
+              protocol: 'TCP',
+            },
+            {
+              name: 'metrics',
+              containerPort: 9090,
+              protocol: 'TCP',
+            },
+            {
+              name: 'health',
+              containerPort: 9000,
+              protocol: 'TCP',
+            },
+          ],
+          readinessProbe: {
+            httpGet: {
+              path: '/health',
+              port: 9000,
+            },
+          },
+          livenessProbe: {
+            httpGet: {
+              path: '/health',
+              port: 9000,
+            },
+          },
+          securityContext: {
+            readOnlyRootFilesystem: false,
+          },
           resources: {
             requests: {
               cpu: '50m',
@@ -44,18 +77,24 @@ local app = import 'app.json5';
               subPath: 'config.yaml',
               readOnly: true,
             },
-            { name:
-              'data', mountPath: '/var/lib/netbird' },
+            {
+              name: 'data',
+              mountPath: '/var/lib/netbird',
+            },
           ],
         }],
         volumes: [
           {
             name: 'config',
-            secret: { secretName: (import 'external-secret.jsonnet').spec.target.name },
+            secret: {
+              secretName: (import 'external-secret.jsonnet').spec.target.name,
+            },
           },
           {
             name: 'data',
-            persistentVolumeClaim: { claimName: (import 'server-pvc.jsonnet').metadata.name },
+            persistentVolumeClaim: {
+              claimName: (import 'server-pvc.jsonnet').metadata.name,
+            },
           },
         ],
       },

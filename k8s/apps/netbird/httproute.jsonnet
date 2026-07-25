@@ -36,7 +36,7 @@ local app = import 'app.json5';
           },
         ],
         backendRefs: [{
-          name: app.name + '-server',
+          name: (import 'server-service.jsonnet').metadata.name,
           port: 81,
         }],
       },
