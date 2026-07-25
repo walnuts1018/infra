@@ -46,15 +46,16 @@ local app = import 'app.json5';
             },
           ],
           readinessProbe: {
-            httpGet: {
-              path: '/health',
-              port: 9000,
+            // The relay health endpoint verifies the public relay URL. Using it
+            // here creates a dependency cycle because an unready Pod has no
+            // Service endpoint through which that URL can be reached.
+            tcpSocket: {
+              port: 'http',
             },
           },
           livenessProbe: {
-            httpGet: {
-              path: '/health',
-              port: 9000,
+            tcpSocket: {
+              port: 'http',
             },
           },
           securityContext: {
