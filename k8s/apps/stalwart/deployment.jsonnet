@@ -136,7 +136,7 @@ local configMap = import 'configmap.jsonnet';
                 port: 8080,
               },
               periodSeconds: 10,
-              failureThreshold: 10,
+              failureThreshold: 20,
             },
             readinessProbe: {
               httpGet: {
