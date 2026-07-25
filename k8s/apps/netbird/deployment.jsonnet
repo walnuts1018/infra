@@ -21,10 +21,10 @@ local app = import 'app.json5';
         labels: labels(app.name),
       },
       spec: {
-        // The peer must use the node's LAN routing table to reach both subnets.
-        // TODO: Provision /etc/sysctl.d/99-netbird.conf on every eligible node.
-        // hostNetwork shares the node network namespace, but the container cannot
-        // persist net.ipv4.conf.all.src_valid_mark=1 or net.ipv6.conf.all.forwarding=1.
+        // ピアが両方のサブネットへ到達するには、ノードの LAN ルーティングテーブルを使う必要がある。
+        // TODO: 配置候補となる全ノードに /etc/sysctl.d/99-netbird.conf を設定する。
+        // hostNetwork はノードのネットワーク名前空間を共有するが、コンテナから
+        // net.ipv4.conf.all.src_valid_mark=1 と net.ipv6.conf.all.forwarding=1 を永続化できない。
         hostNetwork: true,
         dnsPolicy: 'ClusterFirstWithHostNet',
         automountServiceAccountToken: false,

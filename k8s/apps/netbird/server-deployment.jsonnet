@@ -46,9 +46,9 @@ local app = import 'app.json5';
             },
           ],
           readinessProbe: {
-            // The relay health endpoint verifies the public relay URL. Using it
-            // here creates a dependency cycle because an unready Pod has no
-            // Service endpoint through which that URL can be reached.
+            // Relay のヘルスエンドポイントは公開 Relay URL を検証する。ここで使うと、
+            // Ready でない Pod にはその URL に到達する Service endpoint がなく、
+            // 依存関係が循環する。
             tcpSocket: {
               port: 'http',
             },
