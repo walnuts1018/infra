@@ -11,12 +11,6 @@ resource "zitadel_project_role" "netbird_user" {
   display_name = "User"
 }
 
-// ZITADEL returns an OIDC client secret only when the application is created.
-// Recreate the application once to restore the missing secret in Terraform state.
-resource "terraform_data" "netbird_oidc_application_recreate" {
-  input = "restore-netbird-oidc-client-secret-v2"
-}
-
 resource "zitadel_application_oidc" "netbird" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.netbird.id
@@ -32,9 +26,6 @@ resource "zitadel_application_oidc" "netbird" {
   dev_mode                  = false
   access_token_type         = "OIDC_TOKEN_TYPE_JWT"
 
-  lifecycle {
-    replace_triggered_by = [terraform_data.netbird_oidc_application_recreate]
-  }
 }
 
 resource "zitadel_user_grant" "walnuts_netbird_user" {
