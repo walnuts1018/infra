@@ -23,6 +23,12 @@ local app = import 'app.json5';
         protocol: 'TCP',
         appProtocol: 'kubernetes.io/h2c',
       },
+      {
+        name: 'metrics',
+        port: 9090,
+        targetPort: 'metrics',
+        protocol: 'TCP',
+      },
     ],
   },
 }
