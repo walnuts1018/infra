@@ -33,6 +33,8 @@ variable "zitadel_google_idp_client_secret" {
   description = "Google IDP OAuth2 Client Secret for ZITADEL"
 }
 
+// https://netbird.walnuts.dev/team/user?id=418e3381-31bb-4f63-be81-43d00fc69532&service_user=true で作る
+// TODO: netbirdのPATは30〜365日で期限切れになるので困ってる
 variable "netbird_management_token" {
   type        = string
   sensitive   = true
