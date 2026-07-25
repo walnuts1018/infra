@@ -63,4 +63,8 @@
     db_name: 'diode',
     user_name: 'diode',
   },
+  {
+    db_name: 'netbird',
+    user_name: 'netbird',
+  },
 ]

@@ -1,0 +1,64 @@
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+{
+  apiVersion: 'apps/v1',
+  kind: 'Deployment',
+  metadata: {
+    name: app.name + '-server',
+    namespace: app.namespace,
+    labels: labels(app.name + '-server'),
+  },
+  spec: {
+    replicas: 1,
+    strategy: { type: 'Recreate' },
+    selector: { matchLabels: labels(app.name + '-server') },
+    template: {
+      metadata: { labels: labels(app.name + '-server') },
+      spec: {
+        containers: [{
+          name: 'netbird-server',
+          image: 'netbirdio/netbird-server:0.75.0',
+          args: ['--config', '/etc/netbird/config.yaml'],
+          ports: [
+            { name: 'http', containerPort: 80, protocol: 'TCP' },
+            { name: 'metrics', containerPort: 9090, protocol: 'TCP' },
+            { name: 'health', containerPort: 9000, protocol: 'TCP' },
+          ],
+          readinessProbe: { httpGet: { path: '/health', port: 9000 } },
+          livenessProbe: { httpGet: { path: '/health', port: 9000 } },
+          securityContext: { readOnlyRootFilesystem: false },
+          resources: {
+            requests: {
+              cpu: '50m',
+              memory: '256Mi',
+            },
+            limits: {
+              cpu: '1',
+              memory: '1Gi',
+            },
+          },
+          volumeMounts: [
+            {
+              name: 'config',
+              mountPath: '/etc/netbird/config.yaml',
+              subPath: 'config.yaml',
+              readOnly: true,
+            },
+            { name:
+              'data', mountPath: '/var/lib/netbird' },
+          ],
+        }],
+        volumes: [
+          {
+            name: 'config',
+            secret: { secretName: (import 'external-secret.jsonnet').spec.target.name },
+          },
+          {
+            name: 'data',
+            persistentVolumeClaim: { claimName: (import 'server-pvc.jsonnet').metadata.name },
+          },
+        ],
+      },
+    },
+  },
+}
