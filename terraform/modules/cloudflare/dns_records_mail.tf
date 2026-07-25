@@ -93,7 +93,12 @@ resource "cloudflare_dns_record" "srv_imaps" {
   ttl      = 600
   priority = 10
   proxied  = false
-  content  = "10 10 993 mx.walnuts.dev"
+  data = {
+    priority = 10
+    weight   = 10
+    port     = 993
+    target   = "mx.walnuts.dev"
+  }
 }
 
 resource "cloudflare_dns_record" "srv_submission" {
@@ -103,7 +108,12 @@ resource "cloudflare_dns_record" "srv_submission" {
   ttl      = 600
   priority = 10
   proxied  = false
-  content  = "10 10 587 mx.walnuts.dev"
+  data = {
+    priority = 10
+    weight   = 10
+    port     = 587
+    target   = "mx.walnuts.dev"
+  }
 }
 
 resource "cloudflare_dns_record" "srv_smtps" {
@@ -113,5 +123,10 @@ resource "cloudflare_dns_record" "srv_smtps" {
   ttl      = 600
   priority = 10
   proxied  = false
-  content  = "10 10 465 mx.walnuts.dev"
+  data = {
+    priority = 10
+    weight   = 10
+    port     = 465
+    target   = "mx.walnuts.dev"
+  }
 }
