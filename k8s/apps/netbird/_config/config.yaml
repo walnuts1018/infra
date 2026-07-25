@@ -11,7 +11,7 @@ server:
   dataDir: "/var/lib/netbird"
   auth:
     issuer: "https://netbird.walnuts.dev/oauth2"
-    localAuthDisabled: false
+    localAuthDisabled: true # zitade loginを強制する。netbird-adminでログインする必要があれば一時的にfalseにすること
     signKeyRefreshEnabled: true
     dashboardRedirectURIs:
     - "https://netbird.walnuts.dev/auth"
