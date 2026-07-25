@@ -17,6 +17,6 @@ output "netbird_oidc_client_secret" {
 }
 
 output "stalwart_oidc_client_id" {
-  value       = nonsensitive(module.zitadel.stalwart_oidc_client_id)
+  value       = nonsensitive(module.zitadel.stalwart_oidc_client_id) // client_idは公開しても問題ない
   description = "Client ID for Stalwart's ZITADEL OpenID Connect directory"
 }
