@@ -7,5 +7,11 @@ module "zitadel" {
 
 output "netbird_oidc_client_id" {
   value       = module.zitadel.netbird_oidc_client_id
-  description = "Store in 1Password as netbird.oidc-client-id"
+  description = "Client ID for NetBird's ZITADEL identity-provider connector"
+}
+
+output "netbird_oidc_client_secret" {
+  value       = module.zitadel.netbird_oidc_client_secret
+  sensitive   = true
+  description = "Client secret for NetBird's ZITADEL identity-provider connector"
 }
