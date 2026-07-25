@@ -463,7 +463,7 @@ resource "zitadel_user_grant" "tawara_ryota_walnuts_dev" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.walnuts_dev.id
   user_id    = local.zitadel_human_user_ids.tawara_ryota
-  role_keys  = [
+  role_keys = [
     zitadel_project_role.walnuts_dev_grafana_viewer.role_key,
     zitadel_project_role.walnuts_dev_argocd_viewer.role_key,
   ]
@@ -473,7 +473,7 @@ resource "zitadel_user_grant" "junya_walnuts_dev" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.walnuts_dev.id
   user_id    = local.zitadel_human_user_ids.junya
-  role_keys  = [
+  role_keys = [
     zitadel_project_role.walnuts_dev_grafana_viewer.role_key,
     zitadel_project_role.walnuts_dev_argocd_viewer.role_key,
   ]
