@@ -50,6 +50,7 @@ local app = import 'app.json5';
               capabilities: {
                 add: [
                   'NET_ADMIN',
+                  'NET_BIND_SERVICE',
                   'NET_RAW',
                   'SYS_ADMIN',
                   'SYS_RESOURCE',
