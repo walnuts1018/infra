@@ -70,15 +70,6 @@ local configMap = import 'configmap.jsonnet';
                 name: 'STALWART_RECOVERY_ADMIN',
                 value: 'admin:YourNewPassword123',
               },
-              {
-                name: 'STALWART_ELASTICSEARCH_PASSWORD',
-                valueFrom: {
-                  secretKeyRef: {
-                    name: 'stalwart-search-es-elastic-user',
-                    key: 'elastic',
-                  },
-                },
-              },
             ],
             ports: [
               {

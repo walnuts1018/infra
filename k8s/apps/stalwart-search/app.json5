@@ -1,7 +1,0 @@
-{
-  name: 'stalwart-search',
-  namespace: 'stalwart',
-  clusters: {
-    kurumi: {},
-  },
-}

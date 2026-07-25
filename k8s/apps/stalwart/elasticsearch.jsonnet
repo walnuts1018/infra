@@ -45,10 +45,10 @@ local app = import 'app.json5';
             },
             spec: {
               accessModes: ['ReadWriteOnce'],
-              storageClassName: 'longhorn-local',
+              storageClassName: 'longhorn',
               resources: {
                 requests: {
-                  storage: '10Gi',
+                  storage: '4Gi',
                 },
               },
             },
