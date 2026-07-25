@@ -11,6 +11,7 @@ local externalSecret = import 'external-secret.jsonnet';
     labels: (labels)(app.name),
   },
   spec: {
+    replicas: 1,
     selector: {
       matchLabels: (labels)(app.name),
     },
