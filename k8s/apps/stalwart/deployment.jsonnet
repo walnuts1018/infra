@@ -70,6 +70,18 @@ local configMap = import 'configmap.jsonnet';
                 name: 'STALWART_RECOVERY_ADMIN',
                 value: 'admin:YourNewPassword123',
               },
+              {
+                name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
+                value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
+              },
+              {
+                name: 'AWS_ROLE_ARN',
+                value: 'arn:aws:iam::role/stalwart',
+              },
+              {
+                name: 'AWS_ENDPOINT_URL_STS',
+                value: 'https://seaweedfs.local.walnuts.dev',
+              },
             ],
             ports: [
               {
@@ -103,6 +115,11 @@ local configMap = import 'configmap.jsonnet';
               {
                 name: 'tmp',
                 mountPath: '/tmp',
+              },
+              {
+                name: 'seaweedfs-sts-token',
+                mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
+                readOnly: true,
               },
             ],
             livenessProbe: {
@@ -159,6 +176,20 @@ local configMap = import 'configmap.jsonnet';
           {
             name: 'tmp',
             emptyDir: {},
+          },
+          {
+            name: 'seaweedfs-sts-token',
+            projected: {
+              sources: [
+                {
+                  serviceAccountToken: {
+                    audience: 'sts.seaweedfs.com',
+                    expirationSeconds: 3600,
+                    path: 'token',
+                  },
+                },
+              ],
+            },
           },
         ],
       },

@@ -61,6 +61,11 @@
                             "claim": "sub",
                             "value": "system:serviceaccount:netbox:netbox",
                             "role": "arn:aws:iam::role/netbox"
+                        },
+                        {
+                            "claim": "sub",
+                            "value": "system:serviceaccount:stalwart:stalwart",
+                            "role": "arn:aws:iam::role/stalwart"
                         }
                     ],
                     "defaultRole": "arn:aws:iam::role/S3DenyAllRole"
@@ -271,6 +276,24 @@
                             "arn:aws:s3:::netbox-media/*",
                             "arn:aws:s3:::netbox-scripts",
                             "arn:aws:s3:::netbox-scripts/*"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "stalwart",
+            "document": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Action": [
+                            "s3:*"
+                        ],
+                        "Resource": [
+                            "arn:aws:s3:::stalwart",
+                            "arn:aws:s3:::stalwart/*"
                         ]
                     }
                 ]
@@ -517,6 +540,32 @@
             "roleArn": "arn:aws:iam::role/netbox",
             "attachedPolicies": [
                 "netbox"
+            ],
+            "trustPolicy": {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Federated": "*"
+                        },
+                        "Action": [
+                            "sts:AssumeRoleWithWebIdentity"
+                        ],
+                        "Condition": {
+                            "StringEquals": {
+                                "oidc:iss": "https://192.168.0.17:16443"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "roleName": "stalwart",
+            "roleArn": "arn:aws:iam::role/stalwart",
+            "attachedPolicies": [
+                "stalwart"
             ],
             "trustPolicy": {
                 "Version": "2012-10-17",
