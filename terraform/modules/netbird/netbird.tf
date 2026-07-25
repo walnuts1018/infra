@@ -43,15 +43,24 @@ resource "netbird_network_resource" "node_lan" {
 resource "netbird_network_resource" "management_lan" {
   network_id  = netbird_network.kubernetes_lan.id
   name        = "management-lan"
-  description = "Management subnet reachable through the Kubernetes routing peer"
+  description = "Management subnet"
   address     = "192.168.4.0/24"
+  groups      = [netbird_group.kubernetes_lan_resources.id]
+  enabled     = true
+}
+
+resource "netbird_network_resource" "kubernetes_load_balancer_lan" {
+  network_id  = netbird_network.kubernetes_lan.id
+  name        = "kubernetes-load-balancer-lan"
+  description = "Kubernetes LoadBalancer service subnet"
+  address     = "192.168.12.0/24"
   groups      = [netbird_group.kubernetes_lan_resources.id]
   enabled     = true
 }
 
 resource "netbird_policy" "remote_clients_to_kubernetes_lan" {
   name        = "remote-clients-to-kubernetes-lan"
-  description = "Allow remote NetBird clients to reach both routed LANs"
+  description = "Allow remote NetBird clients to reach the routed Kubernetes LANs"
   enabled     = true
 
   rule {
