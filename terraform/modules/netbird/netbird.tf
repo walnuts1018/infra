@@ -1,3 +1,11 @@
+resource "netbird_identity_provider" "zitadel" {
+  name          = "ZITADEL"
+  type          = "zitadel"
+  issuer        = "https://auth.walnuts.dev"
+  client_id     = var.zitadel_client_id
+  client_secret = var.zitadel_client_secret
+}
+
 resource "netbird_group" "kubernetes_routers" {
   name = "kubernetes-routers"
 }
