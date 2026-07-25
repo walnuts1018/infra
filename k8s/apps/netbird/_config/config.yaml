@@ -11,7 +11,7 @@ server:
   dataDir: "/var/lib/netbird"
   auth:
     issuer: "https://netbird.walnuts.dev/oauth2"
-    localAuthDisabled: false # TODO: trueにする
+    localAuthDisabled: true
     signKeyRefreshEnabled: true
     dashboardRedirectURIs:
     - "https://netbird.walnuts.dev/auth"
