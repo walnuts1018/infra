@@ -1,5 +1,6 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
+local configMap = import 'configmap.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -140,8 +141,8 @@ local app = import 'app.json5';
         volumes: [
           {
             name: 'stalwart-config',
-            secret: {
-              secretName: (import 'external-secret.jsonnet').spec.target.name,
+            configMap: {
+              name: configMap.metadata.name,
               items: [
                 {
                   key: 'config.json',
