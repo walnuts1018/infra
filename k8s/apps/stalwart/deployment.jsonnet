@@ -79,24 +79,17 @@ local configMap = import 'configmap.jsonnet';
                 value: 'trace',
               },
               {
-                name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-                value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
+                name: 'STALWART_S3_ACCESS_KEY',
+                value: 'stalwart',
               },
               {
-                name: 'AWS_ROLE_ARN',
-                value: 'arn:aws:iam::role/stalwart',
-              },
-              {
-                name: 'AWS_REGION',
-                value: 'us-east-1',
-              },
-              {
-                name: 'AWS_DEFAULT_REGION',
-                value: 'us-east-1',
-              },
-              {
-                name: 'AWS_ENDPOINT_URL_STS',
-                value: 'https://seaweedfs.local.walnuts.dev',
+                name: 'STALWART_S3_SECRET_KEY',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 's3_secret_access_key',
+                  },
+                },
               },
             ],
             ports: [
@@ -135,11 +128,6 @@ local configMap = import 'configmap.jsonnet';
               {
                 name: 'tmp',
                 mountPath: '/tmp',
-              },
-              {
-                name: 'seaweedfs-sts-token',
-                mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-                readOnly: true,
               },
             ],
             livenessProbe: {
@@ -196,20 +184,6 @@ local configMap = import 'configmap.jsonnet';
           {
             name: 'tmp',
             emptyDir: {},
-          },
-          {
-            name: 'seaweedfs-sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 3600,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
           },
         ],
       },
