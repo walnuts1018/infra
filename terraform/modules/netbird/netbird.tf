@@ -1,9 +1,19 @@
+// The provider cannot read back an OIDC client secret, so the existing remote
+// connector can drift to an empty secret without Terraform detecting it.
+resource "terraform_data" "zitadel_identity_provider_recreate" {
+  input = "restore-zitadel-client-secret"
+}
+
 resource "netbird_identity_provider" "zitadel" {
   name          = "ZITADEL"
   type          = "zitadel"
   issuer        = "https://auth.walnuts.dev"
   client_id     = var.zitadel_client_id
   client_secret = var.zitadel_client_secret
+
+  lifecycle {
+    replace_triggered_by = [terraform_data.zitadel_identity_provider_recreate]
+  }
 }
 
 resource "netbird_group" "kubernetes_routers" {
