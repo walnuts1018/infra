@@ -6,11 +6,11 @@ local app = import 'app.json5';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: labels(app.name),
   },
   spec: {
     selector: {
-      matchLabels: (labels)(app.name),
+      matchLabels: labels(app.name),
     },
     strategy: {
       type: 'RollingUpdate',
@@ -21,7 +21,7 @@ local app = import 'app.json5';
     },
     template: {
       metadata: {
-        labels: (labels)(app.name),
+        labels: labels(app.name),
       },
       spec: {
         serviceAccountName: (import 'sa.jsonnet').metadata.name,
@@ -31,7 +31,7 @@ local app = import 'app.json5';
             topologyKey: 'kubernetes.io/hostname',
             whenUnsatisfiable: 'ScheduleAnyway',
             labelSelector: {
-              matchLabels: (labels)(app.name),
+              matchLabels: labels(app.name),
             },
           },
         ],
@@ -50,6 +50,21 @@ local app = import 'app.json5';
             ],
             image: 'docker.io/stalwartlabs/stalwart:v0.16.14',
             imagePullPolicy: 'IfNotPresent',
+            args: [
+              '--config',
+              '/opt/stalwart/etc/config.json',
+            ],
+            env: [
+              {
+                name: 'STALWART_DB_PASSWORD',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: (import 'external-secret.jsonnet').spec.target.name,
+                    key: 'postgres_password',
+                  },
+                },
+              },
+            ],
             ports: [
               {
                 name: 'http',
@@ -75,8 +90,8 @@ local app = import 'app.json5';
             volumeMounts: [
               {
                 name: 'stalwart-config',
-                mountPath: '/opt/stalwart/etc/config.toml',
-                subPath: 'config.toml',
+                mountPath: '/opt/stalwart/etc/config.json',
+                subPath: 'config.json',
                 readOnly: true,
               },
               {
@@ -129,8 +144,8 @@ local app = import 'app.json5';
               secretName: (import 'external-secret.jsonnet').spec.target.name,
               items: [
                 {
-                  key: 'config.toml',
-                  path: 'config.toml',
+                  key: 'config.json',
+                  path: 'config.json',
                 },
               ],
             },

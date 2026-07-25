@@ -1,4 +1,4 @@
-local config = importstr '_config/config.toml';
+local config = importstr '_config/config.json';
 (import '../../components/external-secret.libsonnet') {
   name: (import 'app.json5').name,
   data: [
@@ -9,22 +9,8 @@ local config = importstr '_config/config.toml';
         property: 'stalwart',
       },
     },
-    {
-      secretKey: 'hashed_admin_secret',
-      remoteRef: {
-        key: 'stalwart',
-        property: 'hashed_admin_secret',
-      },
-    },
-    {
-      secretKey: 's3_secret_key',
-      remoteRef: {
-        key: 'seaweedfs',
-        property: 'stalwart_secretkey',
-      },
-    },
   ],
   template_data: {
-    'config.toml': config,
+    'config.json': config,
   },
 }
