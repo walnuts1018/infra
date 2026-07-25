@@ -20,7 +20,7 @@ resource "zitadel_application_oidc" "netbird" {
 }
 
 output "netbird_oidc_client_id" {
-  value       = zitadel_application_oidc.netbird.client_id
+  value       = nonsensitive(zitadel_application_oidc.netbird.client_id) // client_idは公開しても問題ない
   description = "Client ID for NetBird's ZITADEL identity-provider connector"
 }
 
