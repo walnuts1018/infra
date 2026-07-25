@@ -15,3 +15,8 @@ output "netbird_oidc_client_secret" {
   sensitive   = true
   description = "Client secret for NetBird's ZITADEL identity-provider connector"
 }
+
+output "stalwart_oidc_client_id" {
+  value       = module.zitadel.stalwart_oidc_client_id
+  description = "Client ID for Stalwart's ZITADEL OpenID Connect directory"
+}

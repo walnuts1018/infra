@@ -20,11 +20,13 @@ mkdir -p "$config_dir"
 
 ses_username=$(terraform -chdir="$repo_dir/terraform" output -raw stalwart_ses_smtp_username)
 ses_password=$(terraform -chdir="$repo_dir/terraform" output -raw stalwart_ses_smtp_password)
+zitadel_client_id=$(terraform -chdir="$repo_dir/terraform" output -raw stalwart_oidc_client_id)
 elasticsearch_password=$(kubectl get secret -n stalwart stalwart-es-elastic-user -o jsonpath='{.data.elastic}' | base64 -d)
 
 jq -cn \
   --arg ses_username "$ses_username" \
   --arg ses_password "$ses_password" \
+  --arg zitadel_client_id "$zitadel_client_id" \
   --arg elasticsearch_password "$elasticsearch_password" \
   '
   [
@@ -37,8 +39,7 @@ jq -cn \
           "@type": "Oidc",
           description: "ZITADEL",
           issuerUrl: "https://auth.walnuts.dev",
-          requireAudience: "stalwart",
-          requireScopes: ["openid", "email"],
+          requireAudience: $zitadel_client_id,
           claimUsername: "preferred_username",
           claimName: "name"
         }
