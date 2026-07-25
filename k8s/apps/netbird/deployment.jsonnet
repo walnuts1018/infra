@@ -22,6 +22,9 @@ local app = import 'app.json5';
       },
       spec: {
         // The peer must use the node's LAN routing table to reach both subnets.
+        // TODO: Provision /etc/sysctl.d/99-netbird.conf on every eligible node.
+        // hostNetwork shares the node network namespace, but the container cannot
+        // persist net.ipv4.conf.all.src_valid_mark=1 or net.ipv6.conf.all.forwarding=1.
         hostNetwork: true,
         dnsPolicy: 'ClusterFirstWithHostNet',
         automountServiceAccountToken: false,
