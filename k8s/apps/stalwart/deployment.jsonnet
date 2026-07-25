@@ -67,7 +67,7 @@ local configMap = import 'configmap.jsonnet';
                 },
               },
               {
-                name: 'STALWART_RECOVERY_ADMIN_PASSWORD',
+                name: 'STALWART_RECOVERY_ADMIN',
                 value: 'admin:YourNewPassword123',
               },
             ],
