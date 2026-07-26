@@ -27,13 +27,17 @@ local externalSecret = import 'external-secret.jsonnet';
                 image: 'debian:13.6-slim',
                 command: [
                   'sh',
-                  '-c',
-                  "USE=$(df /tmp/renovate | awk 'NR==2{print $5}'); IUSE=$(df -i /tmp/renovate | awk 'NR==2{print $5}'); echo \"Disk usage: $USE, Inode usage: $IUSE\"; if [ \"${USE%?}\" -gt 75 ] || [ \"${IUSE%?}\" -gt 75 ]; then echo \"Cleaning cache...\"; rm -rf /tmp/renovate/cache; fi",
+                  '/scripts/disk-cleaner.sh',
                 ],
                 volumeMounts: [
                   {
                     name: 'renovate',
                     mountPath: '/tmp/renovate',
+                  },
+                  {
+                    name: 'scripts',
+                    mountPath: '/scripts',
+                    readOnly: true,
                   },
                 ],
                 securityContext: {
@@ -147,6 +151,12 @@ local externalSecret = import 'external-secret.jsonnet';
                 name: 'config',
                 configMap: {
                   name: (import 'configmap-config.jsonnet').metadata.name,
+                },
+              },
+              {
+                name: 'scripts',
+                configMap: {
+                  name: (import 'configmap-scripts.jsonnet').metadata.name,
                 },
               },
             ],
