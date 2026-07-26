@@ -1,5 +1,5 @@
-local app = import '../app.json5';
 local labels = import '../../../components/labels.libsonnet';
+local app = import '../app.json5';
 
 {
   apiVersion: 'networking.k8s.io/v1',
