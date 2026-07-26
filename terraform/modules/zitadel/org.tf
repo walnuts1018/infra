@@ -24,20 +24,10 @@ resource "zitadel_organization_domain" "walnuts_dev" {
   validation_type = "DOMAIN_VALIDATION_TYPE_UNSPECIFIED"
 }
 
-import {
-  to = zitadel_organization_domain.walnuts_dev
-  id = "237477062321897835:walnuts.dev"
-}
-
 resource "zitadel_organization_domain" "kmc_gr_jp" {
   organization_id = zitadel_org.ZITADEL.id
   domain          = "kmc.gr.jp"
   validation_type = "DOMAIN_VALIDATION_TYPE_UNSPECIFIED"
-}
-
-import {
-  to = zitadel_organization_domain.kmc_gr_jp
-  id = "237477062321897835:kmc.gr.jp"
 }
 
 resource "zitadel_login_policy" "default" {
