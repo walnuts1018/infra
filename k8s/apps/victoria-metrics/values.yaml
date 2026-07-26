@@ -15,7 +15,7 @@ vmselect:
       type: Resource
   resources:
     requests:
-      cpu: 5m
+      cpu: 20m
       memory: 115Mi
     limits:
       cpu: "1"
