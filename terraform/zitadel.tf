@@ -20,3 +20,8 @@ output "stalwart_oidc_client_id" {
   value       = nonsensitive(module.zitadel.stalwart_oidc_client_id) // client_idは公開しても問題ない
   description = "Client ID for Stalwart's ZITADEL OpenID Connect directory"
 }
+
+output "terraform_cloud_saml_metadata_url" {
+  value       = module.zitadel.terraform_cloud_saml_metadata_url
+  description = "Zitadel SAML metadata URL for Terraform Cloud"
+}
