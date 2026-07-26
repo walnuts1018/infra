@@ -26,10 +26,10 @@ resource "zitadel_application_saml" "terraform_cloud_app" {
 
   metadata_xml = <<-EOT
     <?xml version="1.0"?>
-    <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://app.terraform.io/sso/saml/samlconf-pHh5rrHntezixv1C3oDgRzMuGc8rmF/metadata">
+    <md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://app.terraform.io/sso/saml/samlconf-Ka4XQL65v8fwvSwuWCkGM7U3AGaroS/metadata">
         <md:SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol">
             <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
-            <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://app.terraform.io/sso/saml/samlconf-pHh5rrHntezixv1C3oDgRzMuGc8rmF/acs" index="0"/>
+            <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://app.terraform.io/sso/saml/samlconf-Ka4XQL65v8fwvSwuWCkGM7U3AGaroS/acs" index="0"/>
         </md:SPSSODescriptor>
     </md:EntityDescriptor>
   EOT
