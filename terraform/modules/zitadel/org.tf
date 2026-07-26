@@ -2,22 +2,6 @@ resource "zitadel_org" "ZITADEL" {
   name = "ZITADEL"
 }
 
-removed {
-  from = zitadel_domain.walnuts_dev
-
-  lifecycle {
-    destroy = false
-  }
-}
-
-removed {
-  from = zitadel_domain.kmc_gr_jp
-
-  lifecycle {
-    destroy = false
-  }
-}
-
 resource "zitadel_organization_domain" "walnuts_dev" {
   organization_id = zitadel_org.ZITADEL.id
   domain          = "walnuts.dev"
