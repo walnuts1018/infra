@@ -28,7 +28,7 @@ local externalSecret = import 'external-secret.jsonnet';
                 command: [
                   'sh',
                   '-c',
-                  'findmnt /tmp/renovate -n -o USE% | awk \'{if( int($1) > 75 ){ system("rm -rf /tmp/renovate/cache") }}\'',
+                  'findmnt /tmp/renovate -n -o USE% | awk \'{print "Disk usage: " $1; if( int($1) > 75 ){ system("rm -rf /tmp/renovate/cache") }}\'',
                 ],
                 volumeMounts: [
                   {
