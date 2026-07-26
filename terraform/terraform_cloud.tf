@@ -47,7 +47,7 @@ import {
 
 import {
   to = module.terraform_cloud.tfe_workspace_variable_set.aws_iam
-  id = "walnuts-dev/ws-feVzA68c4v9PiFDK/AWS IAM"
+  id = "walnuts-dev/infra/AWS IAM"
 }
 
 import {
@@ -62,35 +62,35 @@ import {
 
 import {
   to = module.terraform_cloud.tfe_variable.b2_application_key
-  id = "walnuts-dev/ws-feVzA68c4v9PiFDK/var-srC7qBuFcNEDJGLV"
+  id = "walnuts-dev/infra/var-srC7qBuFcNEDJGLV"
 }
 
 import {
   to = module.terraform_cloud.tfe_variable.cloudflare_api_token
-  id = "walnuts-dev/ws-feVzA68c4v9PiFDK/var-dDDrn8W4ijTmiW57"
+  id = "walnuts-dev/infra/var-dDDrn8W4ijTmiW57"
 }
 
 import {
   to = module.terraform_cloud.tfe_variable.netbird_management_token
-  id = "walnuts-dev/ws-feVzA68c4v9PiFDK/var-pLdyVcgB2B896Vdt"
+  id = "walnuts-dev/infra/var-pLdyVcgB2B896Vdt"
 }
 
 import {
   to = module.terraform_cloud.tfe_variable.oci_private_key
-  id = "walnuts-dev/ws-feVzA68c4v9PiFDK/var-fr7PTPmEQqhr6cSB"
+  id = "walnuts-dev/infra/var-fr7PTPmEQqhr6cSB"
 }
 
 import {
   to = module.terraform_cloud.tfe_variable.seaweedfs_secret_key
-  id = "walnuts-dev/ws-feVzA68c4v9PiFDK/var-AxVvUy4EnnaJdotr"
+  id = "walnuts-dev/infra/var-AxVvUy4EnnaJdotr"
 }
 
 import {
   to = module.terraform_cloud.tfe_variable.zitadel_google_idp_client_secret
-  id = "walnuts-dev/ws-feVzA68c4v9PiFDK/var-WPCPeeSrE1r4sxf4"
+  id = "walnuts-dev/infra/var-WPCPeeSrE1r4sxf4"
 }
 
 import {
   to = module.terraform_cloud.tfe_variable.zitadel_jwt_profile_json
-  id = "walnuts-dev/ws-feVzA68c4v9PiFDK/var-chRukYvQPXvq4gWC"
+  id = "walnuts-dev/infra/var-chRukYvQPXvq4gWC"
 }
