@@ -33,8 +33,8 @@
     {
       secretKey: 'smtp_password',
       remoteRef: {
-        key: 'resend',
-        property: 'api-key',
+        key: 'grafana',
+        property: 'smtp_password',
       },
     },
     {

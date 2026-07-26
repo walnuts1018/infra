@@ -76,9 +76,9 @@ grafana.ini:
     kubernetesDashboards: true
   smtp:
     enabled: true
-    from_address: grafana@resend.walnuts.dev
-    host: smtp.resend.com:587
-    user: "resend"
+    from_address: grafana@walnuts.dev
+    host: mx.walnuts.dev:465
+    user: grafana@walnuts.dev
     password: $__file{/etc/secrets/smtp_password}
   database:
     type: postgres
