@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "stalwart_ses_smtp" {
   statement {
     actions = ["ses:SendRawEmail"]
 
-    resources = [aws_ses_domain_identity.walnuts_dev.arn]
+    resources = ["*"]
 
     condition {
       test     = "StringLike"
