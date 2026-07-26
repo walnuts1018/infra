@@ -53,7 +53,7 @@ local configMap = import 'configmap.jsonnet';
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'docker.io/stalwartlabs/stalwart:v0.16.14',
+            image: 'docker.io/stalwartlabs/stalwart:v0.16.15',
             imagePullPolicy: 'IfNotPresent',
             args: [
               '--config',
