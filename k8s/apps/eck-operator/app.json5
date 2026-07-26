@@ -1,6 +1,6 @@
 {
-  name: 'eck-operator',
-  namespace: 'elasticsearch',
+  name: "eck-operator",
+  namespace: "elasticsearch",
   clusters: {
     kurumi: {},
   },
