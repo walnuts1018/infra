@@ -1,0 +1,148 @@
+resource "tfe_organization" "walnuts_dev" {
+  name  = "walnuts-dev"
+  email = "r.juglans.1018@gmail.com"
+
+  aggregated_commit_status_enabled                        = true
+  allow_force_delete_workspaces                           = false
+  assessments_enforced                                    = false
+  max_ttl_enabled                                         = false
+  send_passing_statuses_for_untriggered_speculative_plans = false
+  speculative_plan_management_enabled                     = true
+  stacks_enabled                                          = false
+  user_tokens_enabled                                     = true
+}
+
+resource "tfe_project" "default" {
+  organization = tfe_organization.walnuts_dev.name
+  name         = "Default Project"
+}
+
+resource "tfe_organization_default_settings" "walnuts_dev" {
+  organization           = tfe_organization.walnuts_dev.name
+  default_execution_mode = "remote"
+}
+
+resource "tfe_workspace" "infra" {
+  organization = tfe_organization.walnuts_dev.name
+  project_id   = tfe_project.default.id
+  name         = "infra"
+
+  allow_destroy_plan            = true
+  auto_apply                    = true
+  auto_apply_run_trigger        = true
+  file_triggers_enabled         = true
+  queue_all_runs                = false
+  speculative_enabled           = true
+  structured_run_output_enabled = true
+  terraform_version             = "~>1.15.0"
+  trigger_patterns              = ["terraform/*", "terraform/**/*"]
+  working_directory             = "terraform"
+
+  vcs_repo {
+    github_app_installation_id = "ghain-otUXZF8BAGagh2Vn"
+    identifier                 = "walnuts1018/infra"
+    ingress_submodules         = false
+  }
+}
+
+resource "tfe_workspace_settings" "infra" {
+  workspace_id        = tfe_workspace.infra.id
+  global_remote_state = false
+}
+
+resource "tfe_variable_set" "aws_iam" {
+  organization = tfe_organization.walnuts_dev.name
+  name         = "AWS IAM"
+  description  = ""
+  global       = false
+  priority     = false
+}
+
+resource "tfe_project_variable_set" "aws_iam" {
+  project_id      = tfe_project.default.id
+  variable_set_id = tfe_variable_set.aws_iam.id
+}
+
+resource "tfe_workspace_variable_set" "aws_iam" {
+  workspace_id    = tfe_workspace.infra.id
+  variable_set_id = tfe_variable_set.aws_iam.id
+}
+
+resource "tfe_variable" "aws_provider_auth" {
+  variable_set_id = tfe_variable_set.aws_iam.id
+  key             = "TFC_AWS_PROVIDER_AUTH"
+  value           = "true"
+  category        = "env"
+  hcl             = false
+}
+
+resource "tfe_variable" "aws_run_role_arn" {
+  variable_set_id = tfe_variable_set.aws_iam.id
+  key             = "TFC_AWS_RUN_ROLE_ARN"
+  value           = "arn:aws:iam::412381771768:role/terraform-cloud-admin"
+  category        = "env"
+  hcl             = false
+}
+
+resource "tfe_variable" "b2_application_key" {
+  workspace_id = tfe_workspace.infra.id
+  key          = "b2_application_key"
+  value        = var.b2_application_key
+  category     = "terraform"
+  sensitive    = true
+  hcl          = false
+}
+
+resource "tfe_variable" "cloudflare_api_token" {
+  workspace_id = tfe_workspace.infra.id
+  key          = "cloudflare_api_token"
+  value        = var.cloudflare_api_token
+  category     = "terraform"
+  sensitive    = true
+  hcl          = false
+}
+
+resource "tfe_variable" "netbird_management_token" {
+  workspace_id = tfe_workspace.infra.id
+  key          = "netbird_management_token"
+  value        = var.netbird_management_token
+  category     = "terraform"
+  sensitive    = true
+  hcl          = false
+}
+
+resource "tfe_variable" "oci_private_key" {
+  workspace_id = tfe_workspace.infra.id
+  key          = "oci_private_key"
+  value        = var.oci_private_key
+  category     = "terraform"
+  sensitive    = true
+  hcl          = false
+}
+
+resource "tfe_variable" "seaweedfs_secret_key" {
+  workspace_id = tfe_workspace.infra.id
+  key          = "seaweedfs_secret_key"
+  value        = var.seaweedfs_secret_key
+  category     = "terraform"
+  sensitive    = true
+  hcl          = false
+}
+
+resource "tfe_variable" "zitadel_google_idp_client_secret" {
+  workspace_id = tfe_workspace.infra.id
+  key          = "zitadel_google_idp_client_secret"
+  value        = var.zitadel_google_idp_client_secret
+  category     = "terraform"
+  sensitive    = true
+  hcl          = false
+}
+
+resource "tfe_variable" "zitadel_jwt_profile_json" {
+  workspace_id = tfe_workspace.infra.id
+  key          = "zitadel_jwt_profile_json"
+  value        = var.zitadel_jwt_profile_json
+  category     = "terraform"
+  sensitive    = true
+  hcl          = false
+}
