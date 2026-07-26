@@ -13,7 +13,7 @@ local app = import 'app.json5';
   },
   spec: {
     replicas: 1,
-    image: 'rabbitmq:4.3.2-management',
+    image: 'rabbitmq:4.3.4-management',
     persistence: {
       storage: '10Gi',
     },
