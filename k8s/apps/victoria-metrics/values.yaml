@@ -10,7 +10,7 @@ vmselect:
     - resource:
         name: cpu
         target:
-          averageUtilization: 80
+          averageUtilization: 95
           type: Utilization
       type: Resource
   resources:
@@ -40,8 +40,8 @@ vminsert:
       type: Resource
   resources:
     requests:
-      cpu: 45m
-      memory: 470Mi
+      cpu: 50m
+      memory: 256Mi
     limits:
       cpu: "2"
       memory: 2Gi
