@@ -52,7 +52,7 @@ distributor:
     targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 3m
+      cpu: 10m
       memory: 36Mi
     limits:
       cpu: 500m
