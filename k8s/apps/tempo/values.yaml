@@ -82,7 +82,7 @@ compactor:
       targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 5m
+      cpu: 10m
       memory: 210Mi
     limits:
       cpu: "1"
