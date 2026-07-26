@@ -26,7 +26,7 @@ resource "zitadel_organization_domain" "walnuts_dev" {
 
 import {
   to = zitadel_organization_domain.walnuts_dev
-  id = "${zitadel_org.ZITADEL.id}:walnuts.dev"
+  id = "237477062321897835:walnuts.dev"
 }
 
 resource "zitadel_organization_domain" "kmc_gr_jp" {
@@ -37,7 +37,7 @@ resource "zitadel_organization_domain" "kmc_gr_jp" {
 
 import {
   to = zitadel_organization_domain.kmc_gr_jp
-  id = "${zitadel_org.ZITADEL.id}:kmc.gr.jp"
+  id = "237477062321897835:kmc.gr.jp"
 }
 
 resource "zitadel_login_policy" "default" {
