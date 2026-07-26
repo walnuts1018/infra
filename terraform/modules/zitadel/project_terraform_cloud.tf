@@ -2,6 +2,21 @@ resource "zitadel_project" "terraform_cloud" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "Terraform Cloud"
   project_role_assertion = true
+  project_role_check     = true
+}
+
+resource "zitadel_project_role" "terraform_cloud_user" {
+  org_id       = zitadel_org.ZITADEL.id
+  project_id   = zitadel_project.terraform_cloud.id
+  role_key     = "terraform_cloud_user"
+  display_name = "Terraform Cloud User"
+}
+
+resource "zitadel_user_grant" "walnuts_terraform_cloud_user" {
+  org_id     = zitadel_org.ZITADEL.id
+  project_id = zitadel_project.terraform_cloud.id
+  user_id    = local.zitadel_human_user_ids.walnuts
+  role_keys  = [zitadel_project_role.terraform_cloud_user.role_key]
 }
 
 resource "zitadel_application_saml" "terraform_cloud_app" {
