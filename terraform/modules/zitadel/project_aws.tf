@@ -2,6 +2,21 @@ resource "zitadel_project" "aws" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "AWS"
   project_role_assertion = false
+  project_role_check     = true
+}
+
+resource "zitadel_project_role" "aws_user" {
+  org_id       = zitadel_org.ZITADEL.id
+  project_id   = zitadel_project.aws.id
+  role_key     = "aws_user"
+  display_name = "AWS User"
+}
+
+resource "zitadel_user_grant" "walnuts_aws_user" {
+  org_id     = zitadel_org.ZITADEL.id
+  project_id = zitadel_project.aws.id
+  user_id    = local.zitadel_human_user_ids.walnuts
+  role_keys  = [zitadel_project_role.aws_user.role_key]
 }
 
 resource "zitadel_application_saml" "aws_iam_identity_center" {
