@@ -126,7 +126,7 @@ querier:
     targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 4m
+      cpu: 10m
       memory: 32Mi
     limits:
       cpu: 500m
