@@ -2,7 +2,7 @@ image:
   registry: ghcr.io
   repository: walnuts1018/infra/netbox
   tag: v4.6.5
-  digest: sha256:425980e9eeba7c732f368d76b0142b064ea3367bc32b928d4b1d449d2c084297
+  digest: sha256:b4ac41d330690e6210a44ceb63cb0adaa49aded09400b63348cd5ad951d7b92f
 
 superuser:
   existingSecret: "netbox"
