@@ -6,14 +6,14 @@ local app = import 'app.json5';
     {
       secretKey: 'client-id',
       remoteRef: {
-        key: app.name,
+        key: 'shumoku',
         property: 'client_id',
       },
     },
     {
       secretKey: 'client-secret',
       remoteRef: {
-        key: app.name,
+        key: 'shumoku',
         property: 'client_secret',
       },
     },
