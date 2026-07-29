@@ -21,6 +21,17 @@ output "stalwart_oidc_client_id" {
   description = "Client ID for Stalwart's ZITADEL OpenID Connect directory"
 }
 
+output "shumoku_oidc_client_id" {
+  value       = nonsensitive(module.zitadel.shumoku_oidc_client_id)
+  description = "Client ID for Shumoku's Envoy Gateway OIDC policy"
+}
+
+output "shumoku_oidc_client_secret" {
+  value       = module.zitadel.shumoku_oidc_client_secret
+  sensitive   = true
+  description = "Store this in 1Password item shumoku as client_secret"
+}
+
 output "terraform_cloud_saml_metadata_url" {
   value       = module.zitadel.terraform_cloud_saml_metadata_url
   description = "Zitadel SAML metadata URL for Terraform Cloud"
