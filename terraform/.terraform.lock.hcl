@@ -44,7 +44,7 @@ provider "registry.terraform.io/cloudflare/cloudflare" {
 
 provider "registry.terraform.io/hashicorp/aws" {
   version     = "6.56.0"
-  constraints = "6.55.0, ~> 6.56.0"
+  constraints = "6.56.0, ~> 6.56.0"
   hashes = [
     "h1:+gQCTlHACI1TDHT9nvKKGT4KTLrF2O4m3vrfBvqL++s=",
     "h1:3ZVUVjID6VEEGwlikDXrPkuUhm5fnnk4xf5B8tfKq9I=",
@@ -58,6 +58,7 @@ provider "registry.terraform.io/hashicorp/aws" {
     "h1:WpeKsfS1hn9z9ZWTqsLbiG3cM3C617kIXnW+hGyKiME=",
     "h1:aHe02pMirvaTqX3nGrdOOg9Iz7m4h/7N058YY74qBqg=",
     "h1:gFOXtatLSEFB4HoEVBvB6+D19117VzVP81aZTMc4lkU=",
+    "h1:gSTd4VOv0lEjCGP5deZ4hRMBZhIOUbtS4AlCML+3gIo=",
     "h1:iWz9BgFQaDPA1ChVGYvgI3MlUnx3wSQCA2ggYqDPcz8=",
     "h1:p7bn2w0fV5w8bGYHn+Hzn/STI3qzUp6B/94R7gou1wU=",
     "h1:vqC911lCEoiBOtv05dI5FYSc95LBTKrRBT87ju+MPhA=",
