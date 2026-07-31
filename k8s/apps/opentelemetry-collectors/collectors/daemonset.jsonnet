@@ -219,21 +219,6 @@ function(
               'otlp_http/loki',
             ],
           },
-          'logs/mackerel/journald': {
-            receivers: [
-              'journald',
-            ],
-            processors: [
-              'memory_limiter',
-              'k8s_attributes',
-              'resource/journald',
-              'resource/cluster_name',
-              'probabilistic_sampler/mackerel',
-            ],
-            exporters: [
-              'otlp_http/mackerel',
-            ],
-          },
           metrics: {
             receivers: [
               'host_metrics',
