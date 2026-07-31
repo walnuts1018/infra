@@ -198,11 +198,10 @@ function(
               'memory_limiter',
               'k8s_attributes',
               'resource/cluster_name',
-              // 'probabilistic_sampler/mackerel',
+              'probabilistic_sampler/mackerel',
             ],
             exporters: [
               'otlp_http/mackerel',
-              'file',
             ],
           },
           'logs/journald': {

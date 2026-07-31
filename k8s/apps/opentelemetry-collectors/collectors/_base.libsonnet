@@ -19,7 +19,7 @@ function(
           ],
         },
         'probabilistic_sampler/mackerel': {
-          sampling_percentage: 5,
+          sampling_percentage: 100,
         },
       },
       exporters: {
