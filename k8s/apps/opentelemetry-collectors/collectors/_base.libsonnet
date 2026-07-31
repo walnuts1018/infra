@@ -25,7 +25,7 @@ function(
           ],
         },
         'probabilistic_sampler/mackerel': {
-          sampling_percentage: 5,
+          sampling_percentage: 1,
           mode: 'hash_seed',
           attribute_source: 'record',
           from_attribute: '_sample_key',
