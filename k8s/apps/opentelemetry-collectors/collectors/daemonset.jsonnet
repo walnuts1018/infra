@@ -344,6 +344,10 @@ function(
           type: 'Directory',
         },
       },
+      {
+        name: 'tmp',
+        emptyDir: {},
+      },
     ],
     volumeMounts: [
       {
@@ -380,6 +384,10 @@ function(
         name: 'lib64',
         mountPath: '/lib64',
         readOnly: true,
+      },
+      {
+        name: 'tmp',
+        mountPath: '/tmp',
       },
     ],
     securityContext: {
