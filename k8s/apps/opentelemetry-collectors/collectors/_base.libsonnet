@@ -19,10 +19,12 @@ function(
           ],
         },
         'probabilistic_sampler/mackerel': {
-          sampling_percentage: 5,
+          sampling_percentage: 10,
+          mode: 'hash_seed',
           attribute_source: 'record',
           from_attribute: '_sample_key',
           hash_seed: 1018,
+          fail_closed: true,
         },
       },
       exporters: {
