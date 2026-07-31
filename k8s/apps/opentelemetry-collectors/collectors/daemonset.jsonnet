@@ -202,6 +202,7 @@ function(
             ],
             exporters: [
               'otlp_http/mackerel',
+              'file',
             ],
           },
           'logs/journald': {
