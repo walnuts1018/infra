@@ -198,7 +198,9 @@ function(
               'memory_limiter',
               'k8s_attributes',
               'resource/cluster_name',
+              'transform/add_sample_key',
               'probabilistic_sampler/mackerel',
+              'transform/remove_sample_key',
             ],
             exporters: [
               'otlp_http/mackerel',

@@ -18,13 +18,25 @@ function(
             },
           ],
         },
+        'transform/add_sample_key': {
+          error_mode: 'ignore',
+          log_statements: [
+            'set(log.attributes["_sample_key"], UUID())',
+          ],
+        },
         'probabilistic_sampler/mackerel': {
-          sampling_percentage: 10,
+          sampling_percentage: 5,
           mode: 'hash_seed',
           attribute_source: 'record',
           from_attribute: '_sample_key',
           hash_seed: 1018,
           fail_closed: true,
+        },
+        'transform/remove_sample_key': {
+          error_mode: 'ignore',
+          log_statements: [
+            'delete_key(log.attributes, "_sample_key")',
+          ],
         },
       },
       exporters: {
