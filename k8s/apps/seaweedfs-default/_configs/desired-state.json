@@ -1,0 +1,479 @@
+{
+  "bucketDefaults": {
+    "adoptExisting": true,
+    "objectLock": false,
+    "reclaimPolicy": "Retain",
+    "versioning": "Off"
+  },
+  "buckets": [
+    {
+      "name": "cloudnative-pg-backup",
+      "publicRead": []
+    },
+    {
+      "name": "ipu",
+      "publicRead": []
+    },
+    {
+      "name": "iso",
+      "publicRead": [
+        "*"
+      ]
+    },
+    {
+      "name": "loki-admin",
+      "publicRead": []
+    },
+    {
+      "name": "loki-chunks",
+      "publicRead": []
+    },
+    {
+      "name": "loki-ruler",
+      "publicRead": []
+    },
+    {
+      "name": "misskey",
+      "publicRead": [
+        "files/*"
+      ]
+    },
+    {
+      "name": "netbox-media",
+      "publicRead": []
+    },
+    {
+      "name": "netbox-scripts",
+      "publicRead": []
+    },
+    {
+      "name": "oekaki-dengon-game",
+      "publicRead": [
+        "*"
+      ]
+    },
+    {
+      "name": "picca-ai-prototype",
+      "publicRead": []
+    },
+    {
+      "name": "pyroscope",
+      "publicRead": []
+    },
+    {
+      "name": "stalwart",
+      "publicRead": []
+    },
+    {
+      "name": "tempo",
+      "publicRead": []
+    }
+  ],
+  "accessKeyIdentities": [
+    {
+      "name": "terraform",
+      "accessKey": "terraform",
+      "secretKeyProperty": "terraform_secretkey",
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "Admin"
+          ],
+          "resources": [
+            "*"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "misskey",
+      "accessKey": "misskey",
+      "secretKeyProperty": "misskey_secretkey",
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "Read",
+            "Write",
+            "List",
+            "Tagging"
+          ],
+          "buckets": [
+            "misskey"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "oekaki_dengon_game",
+      "accessKey": "oekaki_dengon_game",
+      "secretKeyProperty": "oekaki_dengon_game_secretkey",
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "Read",
+            "Write",
+            "List",
+            "Tagging"
+          ],
+          "buckets": [
+            "oekaki-dengon-game"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stalwart",
+      "accessKey": "stalwart",
+      "secretKeyProperty": "stalwart_secretkey",
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "Read",
+            "Write",
+            "List",
+            "Tagging"
+          ],
+          "buckets": [
+            "stalwart"
+          ]
+        }
+      ]
+    }
+  ],
+  "sts": {
+    "tokenDuration": "1h",
+    "maxSessionLength": "12h",
+    "issuer": "seaweedfs-sts",
+    "signingKeyProperty": "sts_signing_key",
+    "providers": [
+      {
+        "name": "k8s",
+        "type": "oidc",
+        "issuer": "https://192.168.0.17:16443",
+        "clientId": "sts.seaweedfs.com",
+        "jwksUri": "https://kubernetes.default.svc/openid/v1/jwks",
+        "tlsCaCert": "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
+        "defaultRole": "S3DenyAllRole",
+        "mappings": [
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:loki:loki",
+            "role": "loki"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:ipu:ipu",
+            "role": "ipu"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:picca-ai-prototype:picca-ai-prototype-gateway",
+            "role": "picca-ai-prototype-gateway"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:picca-ai-prototype:picca-ai-prototype-debug-web",
+            "role": "picca-ai-prototype-debug-web"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:misskey:misskey-postgresql",
+            "role": "cloudnative-pg-backup"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:databases:postgresql-default",
+            "role": "cloudnative-pg-backup"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:tempo:tempo",
+            "role": "tempo"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:pyroscope:pyroscope",
+            "role": "pyroscope"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:netbox:netbox",
+            "role": "netbox"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:stalwart:stalwart",
+            "role": "stalwart"
+          }
+        ]
+      },
+      {
+        "name": "terraform_cloud",
+        "type": "oidc",
+        "issuer": "https://app.terraform.io",
+        "clientId": "aws.workload.identity",
+        "jwksUri": "https://app.terraform.io/.well-known/jwks",
+        "defaultRole": "S3DenyAllRole",
+        "mappings": [
+          {
+            "claim": "aud",
+            "value": "aws.workload.identity",
+            "role": "TerraformCloud"
+          }
+        ]
+      }
+    ],
+    "policies": [
+      {
+        "name": "DenyAllPolicy",
+        "statements": [
+          {
+            "effect": "Deny",
+            "actions": [
+              "s3:*"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "cloudnative-pg-backup",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:*"
+            ],
+            "buckets": [
+              "cloudnative-pg-backup"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "ipu",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:Get*",
+              "s3:List*"
+            ],
+            "buckets": [
+              "ipu"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "loki",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:*"
+            ],
+            "buckets": [
+              "loki-admin",
+              "loki-chunks",
+              "loki-ruler"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "netbox",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:*"
+            ],
+            "buckets": [
+              "netbox-media",
+              "netbox-scripts"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "picca-ai-prototype-debug-web",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:ListBucket"
+            ],
+            "resources": [
+              "picca-ai-prototype"
+            ]
+          },
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:GetObject",
+              "s3:PutObject"
+            ],
+            "resources": [
+              "picca-ai-prototype",
+              "picca-ai-prototype/*"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "picca-ai-prototype-gateway",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:ListBucket"
+            ],
+            "resources": [
+              "picca-ai-prototype"
+            ]
+          },
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:GetObject"
+            ],
+            "resources": [
+              "picca-ai-prototype",
+              "picca-ai-prototype/*"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "pyroscope",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:*"
+            ],
+            "buckets": [
+              "pyroscope"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "stalwart",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:*"
+            ],
+            "buckets": [
+              "stalwart"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "tempo",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:*"
+            ],
+            "buckets": [
+              "tempo"
+            ]
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "name": "S3DenyAllRole",
+        "policies": [
+          "DenyAllPolicy"
+        ]
+      },
+      {
+        "name": "TerraformCloud",
+        "policies": [
+          "AmazonS3FullAccess"
+        ],
+        "provider": "terraform_cloud",
+        "subjectPatterns": [
+          "organization:walnuts-dev:project:*:workspace:*:run_phase:*"
+        ]
+      },
+      {
+        "name": "loki",
+        "policies": [
+          "loki"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "ipu",
+        "policies": [
+          "ipu"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "cloudnative-pg-backup",
+        "policies": [
+          "cloudnative-pg-backup"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "picca-ai-prototype-gateway",
+        "policies": [
+          "picca-ai-prototype-gateway"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "picca-ai-prototype-debug-web",
+        "policies": [
+          "picca-ai-prototype-debug-web"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "tempo",
+        "policies": [
+          "tempo"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "pyroscope",
+        "policies": [
+          "pyroscope"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "netbox",
+        "policies": [
+          "netbox"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "stalwart",
+        "policies": [
+          "stalwart"
+        ],
+        "provider": "k8s"
+      }
+    ]
+  }
+}

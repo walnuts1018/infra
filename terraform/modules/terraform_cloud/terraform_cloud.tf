@@ -35,8 +35,12 @@ resource "tfe_workspace" "infra" {
   speculative_enabled           = true
   structured_run_output_enabled = true
   terraform_version             = "~>1.15.0"
-  trigger_patterns              = ["terraform/*", "terraform/**/*"]
-  working_directory             = "terraform"
+  trigger_patterns = [
+    "k8s/apps/seaweedfs-default/_configs/desired-state.json",
+    "terraform/*",
+    "terraform/**/*",
+  ]
+  working_directory = "terraform"
 
   vcs_repo {
     github_app_installation_id = "ghain-otUXZF8BAGagh2Vn"
