@@ -23,7 +23,7 @@ local app = import 'app.json5';
       spec: {
         containers: [{
           name: 'netbird-server',
-          image: 'netbirdio/netbird-server:0.75.1',
+          image: 'netbirdio/netbird-server:0.76.1',
           args: [
             '--config',
             '/etc/netbird/config.yaml',
