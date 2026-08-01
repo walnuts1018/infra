@@ -1,20 +1,22 @@
 local app = import 'app.json5';
-local s3 = import 's3-resources.libsonnet';
+local config = import 'config.libsonnet';
 [
   {
     apiVersion: 'seaweed.seaweedfs.com/v1',
     kind: 'Bucket',
     metadata: {
-      name: bucket,
+      name: bucket.name,
       namespace: app.namespace,
     },
     spec: {
       clusterRef: {
         name: app.name,
       },
-      adoptExisting: true,
-      reclaimPolicy: 'Retain',
+      adoptExisting: bucket.adoptExisting,
+      objectLock: bucket.objectLock,
+      reclaimPolicy: bucket.reclaimPolicy,
+      versioning: bucket.versioning,
     },
   }
-  for bucket in s3.buckets
+  for bucket in config.buckets
 ]

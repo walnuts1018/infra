@@ -1,6 +1,6 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local externalSecretConfig = import 'external-secret-config.jsonnet';
+local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
 {
   apiVersion: 'seaweed.seaweedfs.com/v1',
   kind: 'Seaweed',

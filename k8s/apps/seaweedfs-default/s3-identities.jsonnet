@@ -1,5 +1,5 @@
 local app = import 'app.json5';
-local s3 = import 's3-resources.libsonnet';
+local config = import 'config.libsonnet';
 [
   {
     apiVersion: 'seaweed.seaweedfs.com/v1',
@@ -16,5 +16,5 @@ local s3 = import 's3-resources.libsonnet';
       reclaimPolicy: 'Retain',
     },
   }
-  for identity in s3.identities
+  for identity in config.identities
 ]

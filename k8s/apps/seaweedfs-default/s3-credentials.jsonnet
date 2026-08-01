@@ -1,6 +1,6 @@
 local app = import 'app.json5';
-local credentialsSecret = (import 'external-secret-s3-credentials.jsonnet').spec.target.name;
-local s3 = import 's3-resources.libsonnet';
+local config = import 'config.libsonnet';
+local credentialsSecret = (import 'external-secrets.libsonnet').s3Credentials.spec.target.name;
 [
   {
     apiVersion: 'seaweed.seaweedfs.com/v1',
@@ -18,11 +18,11 @@ local s3 = import 's3-resources.libsonnet';
       },
       secretRef: {
         name: credentialsSecret,
-        accessKeyField: identity.name + '_accesskey',
-        secretKeyField: identity.name + '_secretkey',
+        accessKeyField: identity.accessKeyField,
+        secretKeyField: identity.secretKeyField,
       },
       reclaimPolicy: 'Retain',
     },
   }
-  for identity in s3.identities
+  for identity in config.identities
 ]
