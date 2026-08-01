@@ -34,3 +34,11 @@ resources:
     memory: 200Mi
   limits:
     memory: 512Mi
+
+startupProbe:
+  enabled: true
+  path: /health
+  initialDelaySeconds: 0
+  periodSeconds: 5
+  timeoutSeconds: 1
+  failureThreshold: 90
