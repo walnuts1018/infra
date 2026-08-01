@@ -8,7 +8,7 @@
     template: {
       spec: {
         image: {
-          ref: 'oci://ghcr.io/walnuts1018/cluster-api-provider-tart-os-ubuntu-26.04-amd64-kubeadm:v0.1.13',
+          ref: 'oci://ghcr.io/walnuts1018/cluster-api-provider-tart-os-ubuntu-26.04-amd64-kubeadm:v0.1.15',
         },
         platformProfile: 'amd64-uefi-ab-ubuntu-26.04-kubeadm/v1',
         updatePolicy: {
