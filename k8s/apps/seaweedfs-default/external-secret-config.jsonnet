@@ -1,4 +1,5 @@
 local app = import 'app.json5';
+local iam = import 'iam.libsonnet';
 (import '../../components/external-secret.libsonnet') {
   name: app.name + '-filer-config',
   namespace: app.namespace,
@@ -24,38 +25,9 @@ local app = import 'app.json5';
         property: 'sts_signing_key',
       },
     },
-    {
-      secretKey: 'terraform_secretkey',
-      remoteRef: {
-        key: 'seaweedfs',
-        property: 'terraform_secretkey',
-      },
-    },
-    {
-      secretKey: 'misskey_secretkey',
-      remoteRef: {
-        key: 'seaweedfs',
-        property: 'misskey_secretkey',
-      },
-    },
-    {
-      secretKey: 'oekaki_dengon_game_secretkey',
-      remoteRef: {
-        key: 'seaweedfs',
-        property: 'oekaki_dengon_game_secretkey',
-      },
-    },
-    {
-      secretKey: 'stalwart_secretkey',
-      remoteRef: {
-        key: 'seaweedfs',
-        property: 'stalwart_secretkey',
-      },
-    },
   ],
   template_data: {
     'filer.toml': (importstr '_configs/filer.toml'),
-    'iam.json': (importstr '_configs/iam.json'),
-    'seaweedfs_s3_config.json': (importstr '_configs/seaweedfs_s3_config.json'),
+    'iam.json': std.manifestJson(iam),
   },
 }

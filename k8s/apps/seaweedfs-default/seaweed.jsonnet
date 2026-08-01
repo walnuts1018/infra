@@ -80,10 +80,6 @@ local externalSecretConfig = import 'external-secret-config.jsonnet';
       replicas: 2,
       s3: {
         enabled: true,
-        configSecret: {
-          name: externalSecretConfig.spec.target.name,
-          key: 'seaweedfs_s3_config.json',
-        },
       },
       requests: {
         cpu: '10m',
