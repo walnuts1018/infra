@@ -6,7 +6,6 @@ module "netbird" {
 }
 
 output "netbird_kubernetes_router_setup_key" {
-  value       = module.netbird.kubernetes_router_setup_key
-  sensitive   = true
-  description = "Store in 1Password as netbird.setup-key and sync to Kubernetes"
+  value     = module.netbird.kubernetes_router_setup_key
+  sensitive = true
 }
