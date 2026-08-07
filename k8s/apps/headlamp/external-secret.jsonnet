@@ -1,0 +1,28 @@
+local app = import 'app.json5';
+
+(import '../../components/external-secret.libsonnet') {
+  name: app.name + '-oidc',
+  use_suffix: false,
+  data: [
+    {
+      secretKey: 'OIDC_CLIENT_ID',
+      remoteRef: {
+        key: app.name,
+        property: 'client_id',
+      },
+    },
+    {
+      secretKey: 'OIDC_CLIENT_SECRET',
+      remoteRef: {
+        key: app.name,
+        property: 'client_secret',
+      },
+    },
+  ],
+  template_data: {
+    OIDC_ISSUER_URL: 'https://auth.walnuts.dev',
+    OIDC_SCOPES: 'openid,email,profile',
+    OIDC_CALLBACK_URL: 'https://headlamp.walnuts.dev/oidc-callback',
+    OIDC_USE_PKCE: 'true',
+  },
+}

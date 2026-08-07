@@ -1,0 +1,44 @@
+replicaCount: 1
+
+config:
+  inCluster: true
+  inClusterContextName: main
+  oidc:
+    secret:
+      create: false
+    externalSecret:
+      enabled: true
+      name: headlamp-oidc
+      hasScopes: true
+    callbackURL: https://headlamp.walnuts.dev/oidc-callback
+    usePKCE: true
+  sessionTTL: 86400
+
+service:
+  type: ClusterIP
+  port: 80
+
+httpRoute:
+  enabled: true
+  parentRefs:
+  - name: envoy-gateway
+    namespace: envoy-gateway-system
+  hostnames:
+  - headlamp.walnuts.dev
+
+clusterRoleBinding:
+  create: true
+  clusterRoleName: cluster-admin
+
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: kubernetes.io/hostname
+  whenUnsatisfiable: ScheduleAnyway
+priorityClassName: low
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    memory: 512Mi
