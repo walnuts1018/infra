@@ -57,7 +57,7 @@ local app = import 'app.json5';
                 {
                   name: 'my:zitadel:grants',
                   valueType: 'StringArray',
-                  values: ['377362576134111938:longhorn-admin'],
+                  values: ['385243484069560521:longhorn-admin'],
                 },
               ],
             },
