@@ -7,14 +7,14 @@ local app = import 'app.json5';
     {
       secretKey: 'OIDC_CLIENT_ID',
       remoteRef: {
-        key: app.name,
+        key: 'headlamp',
         property: 'client_id',
       },
     },
     {
       secretKey: 'OIDC_CLIENT_SECRET',
       remoteRef: {
-        key: app.name,
+        key: 'headlamp',
         property: 'client_secret',
       },
     },
