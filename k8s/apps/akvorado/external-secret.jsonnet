@@ -2,10 +2,17 @@
   name: (import 'app.json5').name + '-secret',
   data: [
     {
+      secretKey: 'client-id',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'akvorado-client-id',
+      },
+    },
+    {
       secretKey: 'client-secret',
       remoteRef: {
-        key: 'akvorado',
-        property: 'client_secret',
+        key: 'terraform-external-secrets',
+        property: 'akvorado-client-secret',
       },
     },
   ],

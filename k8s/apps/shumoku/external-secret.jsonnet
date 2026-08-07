@@ -6,15 +6,15 @@ local app = import 'app.json5';
     {
       secretKey: 'client-id',
       remoteRef: {
-        key: 'shumoku',
-        property: 'client_id',
+        key: 'terraform-external-secrets',
+        property: 'shumoku-client-id',
       },
     },
     {
       secretKey: 'client-secret',
       remoteRef: {
-        key: 'shumoku',
-        property: 'client_secret',
+        key: 'terraform-external-secrets',
+        property: 'shumoku-client-secret',
       },
     },
   ],
