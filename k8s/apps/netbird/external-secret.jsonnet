@@ -6,8 +6,8 @@ local app = import 'app.json5';
     {
       secretKey: 'NB_SETUP_KEY',
       remoteRef: {
-        key: 'terraform-external-secrets',
-        property: 'netbird-setup-key',
+        key: 'netbird',
+        property: 'setup-key',
       },
     },
     {

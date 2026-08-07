@@ -5,15 +5,15 @@ local app = import '../app.json5';
     {
       secretKey: 'client-id',
       remoteRef: {
-        key: 'terraform-external-secrets',
-        property: 'oekaki-client-id',
+        key: app.name,
+        property: 'client_id',
       },
     },
     {
       secretKey: 'client-secret',
       remoteRef: {
-        key: 'terraform-external-secrets',
-        property: 'oekaki-client-secret',
+        key: app.name,
+        property: 'client_secret',
       },
     },
   ],

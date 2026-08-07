@@ -75,15 +75,15 @@ local diode = importstr './_config/diode.yaml';
       {
         secretKey: 'client_id',
         remoteRef: {
-          key: 'terraform-external-secrets',
-          property: 'netbox-oidc-client-id',
+          key: 'netbox',
+          property: 'oidc-client-id',
         },
       },
       {
         secretKey: 'client_secret',
         remoteRef: {
-          key: 'terraform-external-secrets',
-          property: 'netbox-oidc-client-secret',
+          key: 'netbox',
+          property: 'oidc-client-secret',
         },
       },
     ],

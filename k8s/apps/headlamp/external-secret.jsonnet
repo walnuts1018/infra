@@ -7,15 +7,15 @@ local app = import 'app.json5';
     {
       secretKey: 'OIDC_CLIENT_ID',
       remoteRef: {
-        key: 'terraform-external-secrets',
-        property: 'headlamp-client-id',
+        key: 'headlamp',
+        property: 'client_id',
       },
     },
     {
       secretKey: 'OIDC_CLIENT_SECRET',
       remoteRef: {
-        key: 'terraform-external-secrets',
-        property: 'headlamp-client-secret',
+        key: 'headlamp',
+        property: 'client_secret',
       },
     },
   ],
