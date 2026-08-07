@@ -1,4 +1,4 @@
-local app = import 'app.json5';
+local app = import '../pinniped/app.json5';
 
 {
   apiVersion: 'v1',

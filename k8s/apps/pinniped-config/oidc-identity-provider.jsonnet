@@ -1,4 +1,4 @@
-local app = import 'app.json5';
+local app = import '../pinniped/app.json5';
 local clientSecret = import 'external-secret.jsonnet';
 
 {
@@ -7,6 +7,9 @@ local clientSecret = import 'external-secret.jsonnet';
   metadata: {
     name: 'zitadel',
     namespace: app.namespace,
+    annotations: {
+      'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
+    },
   },
   spec: {
     issuer: 'https://auth.walnuts.dev',

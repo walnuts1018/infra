@@ -1,4 +1,4 @@
-local app = import 'app.json5';
+local app = import '../pinniped/app.json5';
 
 (import '../../components/external-secret.libsonnet') {
   name: app.name + '-zitadel-oidc',

@@ -1,4 +1,4 @@
-local app = import 'app.json5';
+local app = import '../pinniped/app.json5';
 local certificate = import 'certificate.jsonnet';
 
 {
@@ -7,6 +7,9 @@ local certificate = import 'certificate.jsonnet';
   metadata: {
     name: app.name,
     namespace: app.namespace,
+    annotations: {
+      'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
+    },
   },
   spec: {
     issuer: 'https://kurumi-pinniped.local.walnuts.dev',
