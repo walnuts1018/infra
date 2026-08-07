@@ -1,7 +1,0 @@
-{
-  name: 'pinniped',
-  namespace: 'pinniped-supervisor',
-  clusters: {
-    kurumi: {},
-  },
-}
