@@ -6,8 +6,8 @@ local app = import 'app.json5';
     {
       secretKey: 'B2_APPLICATION_KEY',
       remoteRef: {
-        key: 'b2',
-        property: 'application_key',
+        key: 'terraform-external-secrets',
+        property: 'b2-application-key',
       },
     },
     {

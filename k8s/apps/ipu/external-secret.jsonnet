@@ -4,15 +4,15 @@
     {
       secretKey: 'client-id',
       remoteRef: {
-        key: 'ipu-oauth2-proxy',
-        property: 'client-id',
+        key: 'terraform-external-secrets',
+        property: 'ipu-client-id',
       },
     },
     {
       secretKey: 'client-secret',
       remoteRef: {
-        key: 'ipu-oauth2-proxy',
-        property: 'client-secret',
+        key: 'terraform-external-secrets',
+        property: 'ipu-client-secret',
       },
     },
     {

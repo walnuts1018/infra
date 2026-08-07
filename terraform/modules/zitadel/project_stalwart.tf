@@ -35,6 +35,6 @@ resource "zitadel_user_grant" "walnuts_stalwart_user" {
 }
 
 output "stalwart_oidc_client_id" {
-  value       = zitadel_application_oidc.stalwart.client_id
+  value       = nonsensitive(zitadel_application_oidc.stalwart.client_id)
   description = "Client ID for Stalwart's ZITADEL OpenID Connect directory"
 }

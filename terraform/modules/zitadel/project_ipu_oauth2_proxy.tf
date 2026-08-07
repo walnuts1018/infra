@@ -36,3 +36,12 @@ resource "zitadel_user_grant" "walnuts_ipu_viewer" {
   user_id    = local.zitadel_human_user_ids.walnuts
   role_keys  = [zitadel_project_role.ipu_viewer.role_key]
 }
+
+output "ipu_oauth2_proxy_client_id" {
+  value = nonsensitive(zitadel_application_oidc.ipu_oauth2_proxy_app.client_id)
+}
+
+output "ipu_oauth2_proxy_client_secret" {
+  value     = zitadel_application_oidc.ipu_oauth2_proxy_app.client_secret
+  sensitive = true
+}

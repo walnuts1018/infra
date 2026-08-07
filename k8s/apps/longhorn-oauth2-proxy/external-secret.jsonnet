@@ -2,10 +2,17 @@
   name: (import 'app.json5').name + '-secret',
   data: [
     {
+      secretKey: 'client-id',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'longhorn-client-id',
+      },
+    },
+    {
       secretKey: 'client-secret',
       remoteRef: {
-        key: 'longhorn-oauth2-proxy',
-        property: 'client_secret',
+        key: 'terraform-external-secrets',
+        property: 'longhorn-client-secret',
       },
     },
   ],

@@ -38,7 +38,7 @@ resource "zitadel_user_grant" "walnuts_netbox" {
 }
 
 output "netbox_oidc_client_id" {
-  value       = zitadel_application_oidc.netbox.client_id
+  value       = nonsensitive(zitadel_application_oidc.netbox.client_id)
   description = "Set this as clientID in k8s/apps/netbox/securitypolicy.jsonnet"
 }
 
