@@ -38,7 +38,12 @@ resource "zitadel_user_grant" "walnuts_akvorado" {
 }
 
 output "akvorado_oidc_client_id" {
-  value = zitadel_application_oidc.akvorado.client_id
+  value = nonsensitive(zitadel_application_oidc.akvorado.client_id)
+}
+
+output "akvorado_oidc_client_secret" {
+  value     = zitadel_application_oidc.akvorado.client_secret
+  sensitive = true
 }
 
 output "akvorado_project_id" {

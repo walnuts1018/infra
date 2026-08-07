@@ -36,3 +36,12 @@ resource "zitadel_user_grant" "walnuts_oekaki" {
   user_id    = local.zitadel_human_user_ids.walnuts
   role_keys  = [zitadel_project_role.oekaki_admin.role_key]
 }
+
+output "oekaki_oidc_client_id" {
+  value = nonsensitive(zitadel_application_oidc.oekaki.client_id)
+}
+
+output "oekaki_oidc_client_secret" {
+  value     = zitadel_application_oidc.oekaki.client_secret
+  sensitive = true
+}

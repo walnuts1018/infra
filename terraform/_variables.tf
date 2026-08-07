@@ -41,6 +41,17 @@ variable "netbird_management_token" {
   description = "NetBird Management API admin PAT used by Terraform"
 }
 
+variable "onepassword_vault" {
+  type        = string
+  description = "UUID of the 1Password vault that External Secrets reads from"
+}
+
+variable "onepassword_service_account_token" {
+  type        = string
+  sensitive   = true
+  description = "1Password service account token with access to the External Secrets vault"
+}
+
 # variable "zitadel_github_idp_client_secret" {
 #   type        = string
 #   sensitive   = true

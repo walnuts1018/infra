@@ -18,7 +18,9 @@ local app = import 'app.json5';
       provider: {
         issuer: 'https://auth.walnuts.dev',
       },
-      clientID: '377362576486433474',
+      clientIDRef: {
+        name: (import './external-secret.jsonnet').spec.target.name,
+      },
       clientSecret: {
         name: (import './external-secret.jsonnet').spec.target.name,
       },

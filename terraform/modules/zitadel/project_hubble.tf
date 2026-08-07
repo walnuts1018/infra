@@ -36,3 +36,12 @@ resource "zitadel_user_grant" "walnuts_hubble" {
   user_id    = local.zitadel_human_user_ids.walnuts
   role_keys  = [zitadel_project_role.hubble_user.role_key]
 }
+
+output "hubble_oidc_client_id" {
+  value = nonsensitive(zitadel_application_oidc.hubble.client_id)
+}
+
+output "hubble_oidc_client_secret" {
+  value     = zitadel_application_oidc.hubble.client_secret
+  sensitive = true
+}

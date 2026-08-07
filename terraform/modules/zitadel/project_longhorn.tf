@@ -36,3 +36,12 @@ resource "zitadel_user_grant" "walnuts_longhorn" {
   user_id    = local.zitadel_human_user_ids.walnuts
   role_keys  = [zitadel_project_role.longhorn_admin.role_key]
 }
+
+output "longhorn_oidc_client_id" {
+  value = nonsensitive(zitadel_application_oidc.longhorn.client_id)
+}
+
+output "longhorn_oidc_client_secret" {
+  value     = zitadel_application_oidc.longhorn.client_secret
+  sensitive = true
+}
