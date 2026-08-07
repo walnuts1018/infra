@@ -22,6 +22,8 @@ resource "onepassword_item" "external_secret" {
         "netbox-oidc-client-secret" = { type = "CONCEALED", value = var.netbox_client_secret }
         "oekaki-client-id"          = { type = "STRING", value = var.oekaki_client_id }
         "oekaki-client-secret"      = { type = "CONCEALED", value = var.oekaki_client_secret }
+        "pinniped-client-id"        = { type = "STRING", value = var.pinniped_client_id }
+        "pinniped-client-secret"    = { type = "CONCEALED", value = var.pinniped_client_secret }
         "shumoku-client-id"         = { type = "STRING", value = var.shumoku_client_id }
         "shumoku-client-secret"     = { type = "CONCEALED", value = var.shumoku_client_secret }
       }
