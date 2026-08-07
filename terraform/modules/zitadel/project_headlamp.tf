@@ -1,26 +1,26 @@
-resource "zitadel_project" "headlamp" {
+resource "zitadel_project" "kubernetes" {
   org_id                 = zitadel_org.ZITADEL.id
-  name                   = "Headlamp"
+  name                   = "Kubernetes"
   project_role_assertion = true
 }
 
-resource "zitadel_project_role" "headlamp_user" {
+resource "zitadel_project_role" "kubernetes_cluster_admin" {
   org_id       = zitadel_org.ZITADEL.id
-  project_id   = zitadel_project.headlamp.id
-  role_key     = "headlamp-user"
-  display_name = "Headlamp User"
+  project_id   = zitadel_project.kubernetes.id
+  role_key     = "cluster-admin"
+  display_name = "Kubernetes Cluster Administrator"
 }
 
-resource "zitadel_user_grant" "walnuts_headlamp" {
+resource "zitadel_user_grant" "walnuts_kubernetes_cluster_admin" {
   org_id     = zitadel_org.ZITADEL.id
-  project_id = zitadel_project.headlamp.id
+  project_id = zitadel_project.kubernetes.id
   user_id    = local.zitadel_human_user_ids.walnuts
-  role_keys  = [zitadel_project_role.headlamp_user.role_key]
+  role_keys  = [zitadel_project_role.kubernetes_cluster_admin.role_key]
 }
 
 resource "zitadel_application_oidc" "headlamp" {
   org_id     = zitadel_org.ZITADEL.id
-  project_id = zitadel_project.headlamp.id
+  project_id = zitadel_project.kubernetes.id
   name       = "headlamp"
 
   redirect_uris               = ["https://headlamp.walnuts.dev/oidc-callback"]
@@ -32,7 +32,7 @@ resource "zitadel_application_oidc" "headlamp" {
   clock_skew                  = "0s"
   dev_mode                    = false
   access_token_type           = "OIDC_TOKEN_TYPE_JWT"
-  access_token_role_assertion = false
+  access_token_role_assertion = true
   id_token_role_assertion     = false
   id_token_userinfo_assertion = false
 }
@@ -40,6 +40,26 @@ resource "zitadel_application_oidc" "headlamp" {
 output "headlamp_oidc_client_id" {
   value       = nonsensitive(zitadel_application_oidc.headlamp.client_id)
   description = "Client ID for Headlamp's OIDC login"
+}
+
+output "kubernetes_oidc_audience" {
+  value       = nonsensitive(zitadel_project.kubernetes.id)
+  description = "Project audience accepted by kube-oidc-proxy"
+}
+
+moved {
+  from = zitadel_project.headlamp
+  to   = zitadel_project.kubernetes
+}
+
+moved {
+  from = zitadel_project_role.headlamp_user
+  to   = zitadel_project_role.kubernetes_cluster_admin
+}
+
+moved {
+  from = zitadel_user_grant.walnuts_headlamp
+  to   = zitadel_user_grant.walnuts_kubernetes_cluster_admin
 }
 
 output "headlamp_oidc_client_secret" {

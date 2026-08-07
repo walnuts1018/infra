@@ -43,15 +43,9 @@ output "headlamp_oidc_client_secret" {
   description = "Store this in 1Password item headlamp as client_secret"
 }
 
-output "pinniped_oidc_client_id" {
-  value       = nonsensitive(module.zitadel.pinniped_oidc_client_id)
-  description = "Client ID for Pinniped Supervisor's ZITADEL upstream OIDC client"
-}
-
-output "pinniped_oidc_client_secret" {
-  value       = module.zitadel.pinniped_oidc_client_secret
-  sensitive   = true
-  description = "Client secret for Pinniped Supervisor's ZITADEL upstream OIDC client"
+output "kubernetes_oidc_audience" {
+  value       = module.zitadel.kubernetes_oidc_audience
+  description = "ZITADEL project audience accepted by kube-oidc-proxy"
 }
 
 output "terraform_cloud_saml_metadata_url" {

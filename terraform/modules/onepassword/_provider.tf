@@ -69,11 +69,6 @@ variable "oekaki_client_secret" {
   type      = string
   sensitive = true
 }
-variable "pinniped_client_id" { type = string }
-variable "pinniped_client_secret" {
-  type      = string
-  sensitive = true
-}
 variable "shumoku_client_id" { type = string }
 variable "shumoku_client_secret" {
   type      = string

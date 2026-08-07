@@ -1,7 +1,7 @@
 replicaCount: 1
 
 config:
-  inCluster: true
+  inCluster: false
   inClusterContextName: main
   watchPlugins: true
   staticPlugins:
@@ -14,6 +14,7 @@ config:
       name: headlamp-oidc
       hasScopes: true
     callbackURL: https://headlamp.walnuts.dev/oidc-callback
+    useAccessToken: true
     usePKCE: true
   sessionTTL: 86400
 
@@ -66,8 +67,32 @@ httpRoute:
   - headlamp.walnuts.dev
 
 clusterRoleBinding:
-  create: true
-  clusterRoleName: cluster-admin
+  create: false
+
+automountServiceAccountToken: false
+
+env:
+- name: KUBECONFIG
+  value: /home/headlamp/.config/Headlamp/kubeconfigs/config
+
+volumeMounts:
+- name: kubeconfig
+  mountPath: /home/headlamp/.config/Headlamp/kubeconfigs
+  readOnly: true
+- name: kube-oidc-proxy-ca
+  mountPath: /etc/kube-oidc-proxy
+  readOnly: true
+
+volumes:
+- name: kubeconfig
+  configMap:
+    name: headlamp-kubeconfig
+- name: kube-oidc-proxy-ca
+  configMap:
+    name: local-ca-bundle
+    items:
+    - key: trust-bundle.pem
+      path: trust-bundle.pem
 
 topologySpreadConstraints:
 - maxSkew: 1
