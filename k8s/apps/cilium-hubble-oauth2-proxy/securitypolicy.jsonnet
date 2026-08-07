@@ -57,7 +57,7 @@ local app = import 'app.json5';
                 {
                   name: 'my:zitadel:grants',
                   valueType: 'StringArray',
-                  values: ['379396091163967925:hubble-user'],
+                  values: ['385243484187001257:hubble-user'],
                 },
               ],
             },

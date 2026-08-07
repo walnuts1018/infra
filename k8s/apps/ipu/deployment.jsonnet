@@ -70,7 +70,7 @@ local externalSecret = import 'external-secret.jsonnet';
               },
               {
                 name: 'OIDC_ALLOWED_GROUPS',
-                value: '326185042176901521:viewer',
+                value: '385244306220253385:viewer',
               },
               {
                 name: 'OIDC_GROUP_CLAIM',

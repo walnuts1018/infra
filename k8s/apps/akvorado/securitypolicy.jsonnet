@@ -57,7 +57,7 @@ local app = import 'app.json5';
                 {
                   name: 'my:zitadel:grants',
                   valueType: 'StringArray',
-                  values: ['382195579570094250:akvorado-admin'],
+                  values: ['385243484086337737:akvorado-admin'],
                 },
               ],
             },
