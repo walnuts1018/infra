@@ -4,5 +4,5 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'reloader',
   repoURL: 'https://stakater.github.io/stakater-charts',
-  targetRevision: '2.2.14',
+  targetRevision: '2.2.15',
 }
