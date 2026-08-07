@@ -82,6 +82,7 @@
       matchDatasources: [
         'helm',
       ],
+      platformAutomerge: false,
       minimumReleaseAge: '3 days',
     },
     {
@@ -97,6 +98,7 @@
         'patch',
       ],
       automerge: true,
+      platformAutomerge: false,
       minimumReleaseAge: '3 days',
     },
     {
