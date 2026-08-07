@@ -3,6 +3,9 @@ replicaCount: 1
 config:
   inCluster: true
   inClusterContextName: main
+  watchPlugins: true
+  staticPlugins:
+    enabled: true
   oidc:
     secret:
       create: false
@@ -13,6 +16,42 @@ config:
     callbackURL: https://headlamp.walnuts.dev/oidc-callback
     usePKCE: true
   sessionTTL: 86400
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+pluginsManager:
+  enabled: true
+  baseImage: node:24.14.1-alpine
+  version: 0.1.1
+  configContent: |
+    plugins:
+    - name: cert-manager
+      source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_cert-manager
+      version: 0.1.1
+    - name: keda
+      source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_keda
+      version: 0.1.2
+    installOptions:
+      parallel: true
+      maxConcurrent: 2
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    runAsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:
+      type: RuntimeDefault
 
 service:
   type: ClusterIP
