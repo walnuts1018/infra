@@ -24,7 +24,7 @@ local service = import 'service.jsonnet';
           name: 'local-ca-bundle',
         },
       ],
-      hostname: app.name + '.' + app.namespace + '.svc.cluster.local',
+      hostname: service.metadata.name + '.' + service.metadata.namespace + '.svc.cluster.local',
     },
   },
 }
