@@ -18,8 +18,11 @@ config:
     usePKCE: true
   sessionTTL: 86400
 
+extraArgs:
+- -kubeconfig=/etc/headlamp/config
+
 podSecurityContext:
-  fsGroup: 1000
+  fsGroup: 101
   fsGroupChangePolicy: OnRootMismatch
 
 pluginsManager:
@@ -48,9 +51,9 @@ pluginsManager:
     capabilities:
       drop:
       - ALL
-    runAsGroup: 1000
+    runAsGroup: 101
     runAsNonRoot: true
-    runAsUser: 1000
+    runAsUser: 100
     seccompProfile:
       type: RuntimeDefault
 
