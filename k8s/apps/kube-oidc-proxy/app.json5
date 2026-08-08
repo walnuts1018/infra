@@ -5,6 +5,6 @@
     kurumi: {},
   },
   params: {
-    zitadelProjectId: "385225927988084784",
+    oidcIssuerAudience: "385225927988084784",
   }
 }

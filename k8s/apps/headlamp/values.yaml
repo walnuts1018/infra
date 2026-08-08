@@ -1,7 +1,7 @@
 replicaCount: 1
 
 config:
-  inCluster: false
+  inCluster: true
   inClusterContextName: main
   watchPlugins: true
   staticPlugins:
@@ -73,11 +73,11 @@ automountServiceAccountToken: false
 
 env:
 - name: KUBECONFIG
-  value: /home/headlamp/.config/Headlamp/kubeconfigs/config
+  value: /etc/headlamp/config
 
 volumeMounts:
 - name: kubeconfig
-  mountPath: /home/headlamp/.config/Headlamp/kubeconfigs
+  mountPath: /etc/headlamp
   readOnly: true
 - name: kube-oidc-proxy-ca
   mountPath: /etc/kube-oidc-proxy

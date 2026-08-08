@@ -43,9 +43,9 @@ output "headlamp_oidc_client_secret" {
   description = "Store this in 1Password item headlamp as client_secret"
 }
 
-output "kubernetes_oidc_audience" {
-  value       = module.zitadel.kubernetes_oidc_audience
-  description = "ZITADEL project audience accepted by kube-oidc-proxy"
+output "kubernetes_oidc_issuer_audience" {
+  value       = module.zitadel.kubernetes_oidc_issuer_audience
+  description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy (passed to --oidc-client-id)"
 }
 
 output "terraform_cloud_saml_metadata_url" {

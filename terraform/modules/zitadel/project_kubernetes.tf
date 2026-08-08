@@ -18,6 +18,11 @@ resource "zitadel_user_grant" "walnuts_kubernetes_cluster_admin" {
   role_keys  = [zitadel_project_role.kubernetes_cluster_admin.role_key]
 }
 
+output "kubernetes_oidc_issuer_audience" {
+  value       = nonsensitive(zitadel_project.kubernetes.id)
+  description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy (passed to --oidc-client-id)"
+}
+
 resource "zitadel_application_oidc" "headlamp" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.kubernetes.id
@@ -42,9 +47,10 @@ output "headlamp_oidc_client_id" {
   description = "Client ID for Headlamp's OIDC login"
 }
 
-output "kubernetes_oidc_audience" {
-  value       = nonsensitive(zitadel_project.kubernetes.id)
-  description = "Project audience accepted by kube-oidc-proxy"
+output "headlamp_oidc_client_secret" {
+  value       = zitadel_application_oidc.headlamp.client_secret
+  sensitive   = true
+  description = "Store this in 1Password item headlamp as client_secret"
 }
 
 moved {
@@ -60,10 +66,4 @@ moved {
 moved {
   from = zitadel_user_grant.walnuts_headlamp
   to   = zitadel_user_grant.walnuts_kubernetes_cluster_admin
-}
-
-output "headlamp_oidc_client_secret" {
-  value       = zitadel_application_oidc.headlamp.client_secret
-  sensitive   = true
-  description = "Store this in 1Password item headlamp as client_secret"
 }
