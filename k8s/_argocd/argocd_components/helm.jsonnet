@@ -38,6 +38,7 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
             },
           ],
           hostnames: [domain],
+          rules: [{}],
         },
         autoscaling: {
           enabled: enableHPA,
