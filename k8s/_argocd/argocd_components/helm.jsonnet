@@ -29,6 +29,16 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
           ],
           hostnames: [domain],
         },
+        grpcroute: {
+          enabled: true,
+          parentRefs: [
+            {
+              name: 'envoy-gateway',
+              namespace: 'envoy-gateway-system',
+            },
+          ],
+          hostnames: [domain],
+        },
         autoscaling: {
           enabled: enableHPA,
         },
