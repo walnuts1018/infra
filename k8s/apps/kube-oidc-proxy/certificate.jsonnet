@@ -1,5 +1,6 @@
 local issuer = import '../clusterissuer/local-issuer.jsonnet';
 local app = import 'app.json5';
+local service = import 'service.jsonnet';
 
 {
   apiVersion: 'cert-manager.io/v1',
@@ -10,10 +11,10 @@ local app = import 'app.json5';
   },
   spec: {
     dnsNames: [
-      app.name,
-      app.name + '.' + app.namespace,
-      app.name + '.' + app.namespace + '.svc',
-      app.name + '.' + app.namespace + '.svc.cluster.local',
+      service.metadata.name,
+      service.metadata.name + '.' + service.metadata.namespace,
+      service.metadata.name + '.' + service.metadata.namespace + '.svc',
+      service.metadata.name + '.' + service.metadata.namespace + '.svc.cluster.local',
     ],
     issuerRef: {
       group: 'cert-manager.io',
