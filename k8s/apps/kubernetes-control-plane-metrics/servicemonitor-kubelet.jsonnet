@@ -38,6 +38,11 @@ local app = import 'app.json5';
         relabelings: [
           {
             action: 'replace',
+            sourceLabels: ['__meta_kubernetes_endpointslice_endpoint_node_name'],
+            targetLabel: 'node',
+          },
+          {
+            action: 'replace',
             sourceLabels: ['__metrics_path__'],
             targetLabel: 'metrics_path',
           },
@@ -109,6 +114,11 @@ local app = import 'app.json5';
         relabelings: [
           {
             action: 'replace',
+            sourceLabels: ['__meta_kubernetes_endpointslice_endpoint_node_name'],
+            targetLabel: 'node',
+          },
+          {
+            action: 'replace',
             sourceLabels: ['__metrics_path__'],
             targetLabel: 'metrics_path',
           },
@@ -127,6 +137,11 @@ local app = import 'app.json5';
         path: '/metrics/probes',
         port: 'https-metrics',
         relabelings: [
+          {
+            action: 'replace',
+            sourceLabels: ['__meta_kubernetes_endpointslice_endpoint_node_name'],
+            targetLabel: 'node',
+          },
           {
             action: 'replace',
             sourceLabels: ['__metrics_path__'],
