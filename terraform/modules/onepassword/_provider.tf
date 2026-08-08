@@ -34,9 +34,14 @@ variable "b2_application_key" {
   sensitive = true
 }
 
-variable "headlamp_client_id" { type = string }
+variable "openunison_client_id" { type = string }
 
-variable "headlamp_client_secret" {
+variable "openunison_client_secret" {
+  type      = string
+  sensitive = true
+}
+
+variable "openunison_keystore_password" {
   type      = string
   sensitive = true
 }

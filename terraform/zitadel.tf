@@ -32,20 +32,20 @@ output "shumoku_oidc_client_secret" {
   description = "Store this in 1Password item shumoku as client_secret"
 }
 
-output "headlamp_oidc_client_id" {
-  value       = nonsensitive(module.zitadel.headlamp_oidc_client_id)
-  description = "Client ID for Headlamp's ZITADEL OIDC login"
+output "openunison_oidc_client_id" {
+  value       = nonsensitive(module.zitadel.openunison_oidc_client_id)
+  description = "Client ID for OpenUnison's ZITADEL login"
 }
 
-output "headlamp_oidc_client_secret" {
-  value       = module.zitadel.headlamp_oidc_client_secret
+output "openunison_oidc_client_secret" {
+  value       = module.zitadel.openunison_oidc_client_secret
   sensitive   = true
-  description = "Store this in 1Password item headlamp as client_secret"
+  description = "Client secret for OpenUnison's ZITADEL login"
 }
 
-output "kubernetes_oidc_audience" {
-  value       = module.zitadel.kubernetes_oidc_audience
-  description = "ZITADEL project audience accepted by kube-oidc-proxy"
+output "kubernetes_project_id" {
+  value       = module.zitadel.kubernetes_project_id
+  description = "ZITADEL project ID used in Kubernetes group claims"
 }
 
 output "terraform_cloud_saml_metadata_url" {
