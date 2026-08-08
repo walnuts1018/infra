@@ -1,5 +1,5 @@
 local app = import 'app.json5';
-local service = import 'service.jsonnet';
+local routes = import 'tcproutes.jsonnet';
 
 {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
@@ -9,11 +9,14 @@ local service = import 'service.jsonnet';
     namespace: app.namespace,
   },
   spec: {
-    targetRef: {
-      group: '',
-      kind: 'Service',
-      name: service.metadata.name,
-    },
+    targetRefs: [
+      {
+        group: 'gateway.networking.k8s.io',
+        kind: 'TCPRoute',
+        name: route.metadata.name,
+      }
+      for route in routes
+    ],
     proxyProtocol: {
       version: 'V2',
     },
