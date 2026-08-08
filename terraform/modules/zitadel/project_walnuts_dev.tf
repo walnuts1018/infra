@@ -398,6 +398,7 @@ resource "zitadel_application_oidc" "walnuts_dev_argocd" {
     "https://argocd.walnuts.dev/auth/callback",
     "https://argocd-biscuit.walnuts.dev/auth/callback",
     "https://argocd.local.walnuts.dev/auth/callback",
+    "http://localhost:8085/auth/callback",
   ]
   response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
