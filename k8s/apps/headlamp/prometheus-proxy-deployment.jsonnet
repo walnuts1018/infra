@@ -19,9 +19,6 @@ local labels = {
     },
     template: {
       metadata: {
-        annotations: {
-          'checksum/config': std.md5(configMap.data['nginx.conf']),
-        },
         labels: labels,
       },
       spec: {
