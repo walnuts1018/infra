@@ -1,0 +1,12 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: stalwart-proxy-protocol
+  namespace: stalwart
+spec:
+  proxyProtocol:
+    version: V2
+  targetRef:
+    group: ""
+    kind: Service
+    name: stalwart

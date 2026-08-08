@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: akvorado
+    app.kubernetes.io/name: akvorado
+  name: akvorado-outlet
+  namespace: akvorado
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: outlet
+      app.kubernetes.io/name: akvorado
+  template:
+    metadata:
+      labels:
+        app: akvorado
+        app.kubernetes.io/component: outlet
+        app.kubernetes.io/name: akvorado
+    spec:
+      containers:
+        - args:
+            - outlet
+            - --debug
+            - http://akvorado-orchestrator:8080
+          image: quay.io/akvorado/akvorado:2.4.1
+          livenessProbe:
+            httpGet:
+              path: /api/v0/healthcheck
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          name: outlet
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /api/v0/healthcheck
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 2m
+              memory: 13Mi
+          volumeMounts: []
+      volumes: []

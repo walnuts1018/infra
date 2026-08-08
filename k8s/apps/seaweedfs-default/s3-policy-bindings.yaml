@@ -1,0 +1,59 @@
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3PolicyBinding
+metadata:
+  name: terraform
+  namespace: seaweedfs
+spec:
+  policyRef:
+    name: terraform-access-key
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+  subjects:
+    - kind: S3Identity
+      name: terraform
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3PolicyBinding
+metadata:
+  name: misskey
+  namespace: seaweedfs
+spec:
+  policyRef:
+    name: misskey-access-key
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+  subjects:
+    - kind: S3Identity
+      name: misskey
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3PolicyBinding
+metadata:
+  name: oekaki-dengon-game
+  namespace: seaweedfs
+spec:
+  policyRef:
+    name: oekaki-dengon-game-access-key
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+  subjects:
+    - kind: S3Identity
+      name: oekaki-dengon-game
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3PolicyBinding
+metadata:
+  name: stalwart
+  namespace: seaweedfs
+spec:
+  policyRef:
+    name: stalwart-access-key
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+  subjects:
+    - kind: S3Identity
+      name: stalwart

@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: kubernetes-control-plane-metrics-proxy
+    app.kubernetes.io/name: kubernetes-control-plane-metrics
+  name: kubernetes-control-plane-metrics-proxy
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: kubernetes-control-plane-metrics-proxy
+  template:
+    metadata:
+      labels:
+        app: kubernetes-control-plane-metrics-proxy
+        app.kubernetes.io/name: kubernetes-control-plane-metrics
+    spec:
+      containers:
+        - args:
+            - -d
+            - -d
+            - TCP-LISTEN:11057,fork,reuseaddr,bind=0.0.0.0
+            - TCP:127.0.0.1:10257
+          image: docker.io/alpine/socat:1.8.1.3
+          name: controller-manager
+          ports:
+            - containerPort: 11057
+              hostPort: 11057
+              name: controller
+          resources:
+            limits:
+              cpu: 50m
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+        - args:
+            - -d
+            - -d
+            - TCP-LISTEN:11059,fork,reuseaddr,bind=0.0.0.0
+            - TCP:127.0.0.1:10259
+          image: docker.io/alpine/socat:1.8.1.3
+          name: scheduler
+          ports:
+            - containerPort: 11059
+              hostPort: 11059
+              name: scheduler
+          resources:
+            limits:
+              cpu: 50m
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+        - args:
+            - -d
+            - -d
+            - TCP-LISTEN:12381,fork,reuseaddr,bind=0.0.0.0
+            - TCP:127.0.0.1:2381
+          image: docker.io/alpine/socat:1.8.1.3
+          name: etcd
+          ports:
+            - containerPort: 12381
+              hostPort: 12381
+              name: etcd
+          resources:
+            limits:
+              cpu: 50m
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      nodeSelector:
+        node-role.kubernetes.io/control-plane: ""
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Exists

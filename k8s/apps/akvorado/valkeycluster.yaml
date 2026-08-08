@@ -1,0 +1,22 @@
+apiVersion: valkey.io/v1alpha1
+kind: ValkeyCluster
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app: akvorado-valkey
+    app.kubernetes.io/name: akvorado-valkey
+  name: akvorado-valkey
+  namespace: akvorado
+spec:
+  persistence:
+    size: 1Gi
+  replicas: 1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 256Mi
+    requests:
+      cpu: 6m
+      memory: 13Mi
+  shards: 1

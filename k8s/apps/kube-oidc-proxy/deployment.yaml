@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-oidc-proxy
+  namespace: kube-oidc-proxy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-oidc-proxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kube-oidc-proxy
+    spec:
+      automountServiceAccountToken: true
+      containers:
+        - args:
+            - --secure-port=8443
+            - --tls-cert-file=/etc/kube-oidc-proxy/tls.crt
+            - --tls-private-key-file=/etc/kube-oidc-proxy/tls.key
+            - --tls-min-version=VersionTLS12
+            - --oidc-client-id=385225927988084784
+            - --oidc-issuer-url=https://auth.walnuts.dev
+            - --oidc-username-claim=email
+            - '--oidc-username-prefix=zitadel:'
+            - --oidc-groups-claim=my:zitadel:grants
+            - '--oidc-groups-prefix=zitadel:'
+            - --oidc-signing-algs=RS256
+            - --oidc-ca-file=/etc/kube-oidc-proxy-ca/trust-bundle.pem
+            - --v=9
+          command:
+            - kube-oidc-proxy
+          image: ghcr.io/tremolosecurity/kube-oidc-proxy:1.0.12@sha256:d7747f308042216acd31eb48af4baefb2f508afc2023736451931b2d323907e9
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: health
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          name: kube-oidc-proxy
+          ports:
+            - containerPort: 8443
+              name: https
+              protocol: TCP
+            - containerPort: 8080
+              name: health
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: health
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /etc/kube-oidc-proxy
+              name: tls
+              readOnly: true
+            - mountPath: /etc/kube-oidc-proxy-ca
+              name: ca
+              readOnly: true
+      serviceAccountName: kube-oidc-proxy
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: kube-oidc-proxy
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: tls
+          secret:
+            secretName: kube-oidc-proxy-tls
+        - configMap:
+            items:
+              - key: trust-bundle.pem
+                path: trust-bundle.pem
+            name: local-ca-bundle
+          name: ca

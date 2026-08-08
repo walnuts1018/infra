@@ -1,0 +1,102 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: victoria-metrics-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: victoria-metrics
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: victoria-metrics-cluster
+    helm:
+      releaseName: victoria-metrics
+      values: |
+        vmselect:
+          enabled: true
+          mode: deployment
+          replicaCount: 1
+          horizontalPodAutoscaler:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 5
+            metrics:
+            - resource:
+                name: cpu
+                target:
+                  averageUtilization: 95
+                  type: Utilization
+              type: Resource
+          resources:
+            requests:
+              cpu: 20m
+              memory: 115Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          serviceMonitor:
+            enabled: true
+
+        vminsert:
+          enabled: true
+          mode: deployment
+          replicaCount: 1
+          horizontalPodAutoscaler:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 5
+            metrics:
+            - resource:
+                name: cpu
+                target:
+                  averageUtilization: 95
+                  type: Utilization
+              type: Resource
+          resources:
+            requests:
+              cpu: 80m
+              memory: 256Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          serviceMonitor:
+            enabled: true
+
+        vmstorage:
+          enabled: true
+          replicaCount: 2
+          retentionPeriod: 1y
+          persistentVolume:
+            enabled: true
+            storageClassName: "local-path"
+            size: 10Gi
+          resources:
+            requests:
+              cpu: 50m
+              memory: 1600Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: 'kubernetes.io/hostname'
+            whenUnsatisfiable: 'ScheduleAnyway'
+            labelSelector:
+              matchLabels:
+                app: vmstorage
+                app.kubernetes.io/instance: victoria-metrics
+                app.kubernetes.io/name: victoria-metrics-cluster
+          serviceMonitor:
+            enabled: true
+    repoURL: https://victoriametrics.github.io/helm-charts/
+    targetRevision: 0.48.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

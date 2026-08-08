@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: shumoku
+    app.kubernetes.io/name: shumoku
+  name: shumoku
+  namespace: netbox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shumoku
+      app.kubernetes.io/name: shumoku
+  template:
+    metadata:
+      labels:
+        app: shumoku
+        app.kubernetes.io/name: shumoku
+    spec:
+      containers:
+        - env:
+            - name: PORT
+              value: "8080"
+            - name: HOST
+              value: 0.0.0.0
+            - name: DATA_DIR
+              value: /data
+            - name: SHUMOKU_DEPLOYMENT
+              value: kubernetes
+          image: ghcr.io/konoe-akitoshi/shumoku:0.1.5-beta.5
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            timeoutSeconds: 3
+          name: shumoku
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /tmp
+              name: tmp
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsUser: 1000
+      serviceAccountName: shumoku
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: shumoku
+        - emptyDir: {}
+          name: tmp
