@@ -1,0 +1,19 @@
+local app = import 'app.json5';
+{
+  apiVersion: 'gateway.envoyproxy.io/v1alpha1',
+  kind: 'BackendTrafficPolicy',
+  metadata: {
+    name: 'argocd-server-h2c',
+    namespace: app.namespace,
+  },
+  spec: {
+    targetRefs: [
+      {
+        group: 'gateway.networking.k8s.io',
+        kind: 'GRPCRoute',
+        name: 'argocd-server-grpc',
+      },
+    ],
+    http2: {},
+  },
+}
