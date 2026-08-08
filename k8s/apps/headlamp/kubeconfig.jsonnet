@@ -30,6 +30,7 @@ local app = import 'app.json5';
             config:
               idp-issuer-url: "https://auth.walnuts.dev"
               client-id: "385327433634611259"
+              client-secret: "JN4jineghKmqbgeFkPztPahqEIj3LhlGhfDaMTgdiE02s7UIOJRpv6xysZp3O1c0"
     |||,
   },
 }
