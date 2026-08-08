@@ -23,6 +23,7 @@ certManager:
 
 metrics:
   enabled: true
+  secure: false
 
 prometheus:
   # ServiceMonitorを有効化
