@@ -27,7 +27,7 @@ local app = import 'app.json5';
     OIDC_SCOPES: 'openid,email,profile,urn:zitadel:iam:org:project:id:' + kubeoidcProxyApp.params.oidcIssuerAudience + ':aud',
     OIDC_CALLBACK_URL: 'https://headlamp.walnuts.dev/oidc-callback',
     OIDC_USE_PKCE: 'true',
-    OIDC_USE_ACCESS_TOKEN: 'true',
+    OIDC_USE_ACCESS_TOKEN: 'false',
     config: |||
       apiVersion: v1
       kind: Config
