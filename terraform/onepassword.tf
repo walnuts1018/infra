@@ -20,6 +20,8 @@ module "onepassword" {
   netbox_client_secret   = module.zitadel.netbox_oidc_client_secret
   oekaki_client_id       = module.zitadel.oekaki_oidc_client_id
   oekaki_client_secret   = module.zitadel.oekaki_oidc_client_secret
+  opencost_client_id     = module.zitadel.opencost_oidc_client_id
+  opencost_client_secret = module.zitadel.opencost_oidc_client_secret
   shumoku_client_id      = module.zitadel.shumoku_oidc_client_id
   shumoku_client_secret  = module.zitadel.shumoku_oidc_client_secret
 }

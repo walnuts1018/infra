@@ -52,7 +52,20 @@ opencost:
       url: "http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus"
 
   ui:
-    enabled: false
+    enabled: true
+    httpRoute:
+      enabled: true
+      parentRefs:
+        - name: envoy-gateway
+          namespace: envoy-gateway-system
+      hostnames:
+        - opencost.walnuts.dev
+    resources:
+      requests:
+        cpu: 10m
+        memory: 55Mi
+      limits:
+        memory: 1Gi
 
 podAnnotations:
   instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
