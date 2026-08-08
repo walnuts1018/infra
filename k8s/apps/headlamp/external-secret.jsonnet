@@ -1,5 +1,5 @@
 local app = import 'app.json5';
-local kubeoidcProxyApp = import 'kube-oidc-proxy/app.json5';
+local kubeoidcProxyApp = import '../kube-oidc-proxy/app.json5';
 
 (import '../../components/external-secret.libsonnet') {
   name: app.name + '-oidc',
