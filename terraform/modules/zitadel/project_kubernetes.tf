@@ -38,8 +38,8 @@ resource "zitadel_application_oidc" "headlamp" {
   dev_mode                    = false
   access_token_type           = "OIDC_TOKEN_TYPE_JWT"
   access_token_role_assertion = true
-  id_token_role_assertion     = false
-  id_token_userinfo_assertion = false
+  id_token_role_assertion     = true
+  id_token_userinfo_assertion = true
 }
 
 output "headlamp_oidc_client_id" {
