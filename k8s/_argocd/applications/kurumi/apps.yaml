@@ -4,6 +4,8 @@ metadata:
   name: apps
   namespace: argocd
 spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: false
   goTemplate: true
   generators:
   - matrix:
@@ -25,8 +27,6 @@ spec:
   template:
     metadata:
       name: '{{.name}}'
-      finalizers:
-      - resources-finalizer.argocd.argoproj.io
       # annotations:
       #   argocd.argoproj.io/manifest-generate-paths: .;../components
     spec:
