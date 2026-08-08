@@ -11,11 +11,6 @@ function(domain) {
     targetRefs: [
       {
         group: 'gateway.networking.k8s.io',
-        kind: 'HTTPRoute',
-        name: 'argocd-server',
-      },
-      {
-        group: 'gateway.networking.k8s.io',
         kind: 'GRPCRoute',
         name: 'argocd-server-grpc',
       },
