@@ -12,10 +12,24 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
       global: {
         domain: domain,
       },
+      configs: {
+        params: {
+          'server.insecure': false,
+        },
+      },
       notifications: {
         argocdUrl: 'https://' + domain,
       },
       server: {
+        certificate: {
+          enabled: true,
+          domain: domain,
+          issuer: {
+            group: 'cert-manager.io',
+            kind: 'ClusterIssuer',
+            name: 'letsencrypt-prod',
+          },
+        },
         ingress: {
           enabled: false,
         },
@@ -28,6 +42,10 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
             },
           ],
           hostnames: [domain],
+          validation: {
+            hostname: domain,
+            wellKnownCACertificates: 'System',
+          },
         },
         grpcroute: {
           enabled: true,
@@ -39,6 +57,10 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
           ],
           hostnames: [domain],
           rules: [{}],
+          validation: {
+            hostname: domain,
+            wellKnownCACertificates: 'System',
+          },
         },
         autoscaling: {
           enabled: enableHPA,
