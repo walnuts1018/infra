@@ -27,6 +27,9 @@ local app = import 'app.json5';
         user:
           auth-provider:
             name: oidc
+            config:
+              idp-issuer-url: "https://auth.walnuts.dev"
+              client-id: "385327433634611259"
     |||,
   },
 }
