@@ -149,7 +149,7 @@ assert std.all([
     policies: [
       {
         name: policy.name,
-        content: std.manifestJson(policyDocument(policy.statements)),
+        document: policyDocument(policy.statements),
       }
       for policy in desired.sts.policies
     ],
