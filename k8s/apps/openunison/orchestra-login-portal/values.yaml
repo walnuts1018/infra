@@ -1,0 +1,50 @@
+headlamp:
+  enabled: true
+  service_name: headlamp
+  namespace_api:
+    test:
+      enabled: false
+    all_namespaces:
+      enabled: true
+    no_namespaces:
+      enabled: false
+
+oidc:
+  client_id_is_secret: true
+  issuer: https://auth.walnuts.dev
+  user_in_idtoken: true
+  domain: ""
+  scopes: openid email profile urn:zitadel:iam:org:project:id:385225927988084784:aud
+  claims:
+    sub: sub
+    email: email
+    given_name: given_name
+    family_name: family_name
+    display_name: name
+    groups: my:zitadel:grants
+
+services:
+  enable_tokenrequest: true
+  token_request_audience: https://kubernetes.default.svc.cluster.local
+  token_request_expiration_seconds: 600
+  node_selectors: {}
+  tolerations: []
+  resources:
+    requests:
+      cpu: 100m
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+
+openunison:
+  replicas: 1
+  non_secret_data:
+    K8S_DB_SSO: oidc
+    SHOW_PORTAL_ORGS: "false"
+  secrets: []
+  enable_provisioning: false
+  use_standard_jit_workflow: true
+  az_groups:
+  - 385225927988084784:cluster-admin
+  groups:
+    areJson: "false"

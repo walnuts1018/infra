@@ -23,11 +23,11 @@ resource "zitadel_application_oidc" "openunison" {
   project_id = zitadel_project.kubernetes.id
   name       = "OpenUnison"
 
-  redirect_uris               = ["https://kubernetes.walnuts.dev/auth/oidc"]
+  redirect_uris               = ["https://k8s-openunison.local.walnuts.dev/auth/oidc"]
   response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
-  post_logout_redirect_uris   = ["https://kubernetes.walnuts.dev/"]
+  post_logout_redirect_uris   = ["https://k8s-openunison.local.walnuts.dev/"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false

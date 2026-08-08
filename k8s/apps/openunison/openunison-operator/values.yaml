@@ -1,0 +1,3 @@
+services:
+  tolerations: []
+  node_selectors: {}
