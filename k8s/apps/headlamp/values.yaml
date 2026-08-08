@@ -77,6 +77,8 @@ automountServiceAccountToken: false
 env:
 - name: KUBECONFIG
   value: /etc/headlamp/config
+- name: HEADLAMP_CONFIG_LOG_LEVEL
+  value: debug
 
 volumeMounts:
 - name: kubeconfig
