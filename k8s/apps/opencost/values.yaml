@@ -27,18 +27,17 @@ opencost:
   customPricing:
     enabled: true
     provider: custom
-    # -- More information about these values here: https://www.opencost.io/docs/configuration/on-prem#custom-pricing-using-the-opencost-helm-chart
     costModel:
       description: Modified pricing configuration.
-      CPU: 1.25
-      spotCPU: 0.006655
-      RAM: 0.50
-      spotRAM: 0.000892
-      GPU: 0.95
-      storage: 0.25
+      CPU: 0.0483
+      spotCPU: 0.0483
+      RAM: 0.0039375
+      spotRAM: 0.0039375
+      GPU: 0.8564
+      storage: 0.096
       zoneNetworkEgress: 0.01
       regionNetworkEgress: 0.01
-      internetNetworkEgress: 0.12
+      internetNetworkEgress: 0.114
 
   metrics:
     serviceMonitor:
@@ -56,10 +55,10 @@ opencost:
     httpRoute:
       enabled: true
       parentRefs:
-        - name: envoy-gateway
-          namespace: envoy-gateway-system
+      - name: envoy-gateway
+        namespace: envoy-gateway-system
       hostnames:
-        - opencost.walnuts.dev
+      - opencost.walnuts.dev
     resources:
       requests:
         cpu: 10m
