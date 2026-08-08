@@ -1,5 +1,10 @@
 local app = import 'app.json5';
 local routes = import 'tcproutes.jsonnet';
+local proxyProtocolRoutes = [
+  route
+  for route in routes
+  if route.metadata.name == 'stalwart-smtp' || route.metadata.name == 'stalwart-smtps'
+];
 
 {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
@@ -15,7 +20,7 @@ local routes = import 'tcproutes.jsonnet';
         kind: 'TCPRoute',
         name: route.metadata.name,
       }
-      for route in routes
+      for route in proxyProtocolRoutes
     ],
     proxyProtocol: {
       version: 'V2',
