@@ -1,0 +1,108 @@
+replicaCount: 1
+
+config:
+  inCluster: false
+  inClusterContextName: main
+  watchPlugins: true
+  staticPlugins:
+    enabled: true
+  oidc:
+    secret:
+      create: false
+    externalSecret:
+      enabled: true
+      name: headlamp-oidc
+      hasScopes: true
+    callbackURL: https://headlamp.walnuts.dev/oidc-callback
+    useAccessToken: true
+    usePKCE: true
+  sessionTTL: 86400
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+pluginsManager:
+  enabled: true
+  baseImage: node:24.14.1-alpine
+  version: 0.1.1
+  configContent: |
+    plugins:
+    - name: cert-manager
+      source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_cert-manager
+      version: 0.1.1
+    - name: keda
+      source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_keda
+      version: 0.1.2
+    installOptions:
+      parallel: true
+      maxConcurrent: 2
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    runAsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:
+      type: RuntimeDefault
+
+service:
+  type: ClusterIP
+  port: 80
+
+httpRoute:
+  enabled: true
+  parentRefs:
+  - name: envoy-gateway
+    namespace: envoy-gateway-system
+  hostnames:
+  - headlamp.walnuts.dev
+
+clusterRoleBinding:
+  create: false
+
+automountServiceAccountToken: false
+
+env:
+- name: KUBECONFIG
+  value: /home/headlamp/.config/Headlamp/kubeconfigs/config
+
+volumeMounts:
+- name: kubeconfig
+  mountPath: /home/headlamp/.config/Headlamp/kubeconfigs
+  readOnly: true
+- name: kube-oidc-proxy-ca
+  mountPath: /etc/kube-oidc-proxy
+  readOnly: true
+
+volumes:
+- name: kubeconfig
+  configMap:
+    name: headlamp-kubeconfig
+- name: kube-oidc-proxy-ca
+  configMap:
+    name: local-ca-bundle
+    items:
+    - key: trust-bundle.pem
+      path: trust-bundle.pem
+
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: kubernetes.io/hostname
+  whenUnsatisfiable: ScheduleAnyway
+priorityClassName: low
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    memory: 512Mi

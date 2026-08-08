@@ -1,7 +1,0 @@
-{
-  name: "openunison",
-  namespace: "openunison",
-  clusters: {
-    kurumi: {},
-  },
-}

@@ -1,0 +1,7 @@
+{
+  name: "headlamp",
+  namespace: "headlamp",
+  clusters: {
+    kurumi: {},
+  },
+}
