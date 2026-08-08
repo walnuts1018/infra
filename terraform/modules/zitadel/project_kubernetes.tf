@@ -52,18 +52,3 @@ output "headlamp_oidc_client_secret" {
   sensitive   = true
   description = "Store this in 1Password item headlamp as client_secret"
 }
-
-moved {
-  from = zitadel_project.headlamp
-  to   = zitadel_project.kubernetes
-}
-
-moved {
-  from = zitadel_project_role.headlamp_user
-  to   = zitadel_project_role.kubernetes_cluster_admin
-}
-
-moved {
-  from = zitadel_user_grant.walnuts_headlamp
-  to   = zitadel_user_grant.walnuts_kubernetes_cluster_admin
-}
