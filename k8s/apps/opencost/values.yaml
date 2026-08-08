@@ -66,7 +66,3 @@ opencost:
         memory: 55Mi
       limits:
         memory: 1Gi
-
-podAnnotations:
-  instrumentation.opentelemetry.io/inject-go: 'opentelemetry-collector/default'
-  instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/go/bin/app'
