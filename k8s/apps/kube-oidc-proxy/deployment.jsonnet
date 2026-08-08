@@ -44,6 +44,7 @@ local labels = {
               '--oidc-groups-prefix=zitadel:',
               '--oidc-signing-algs=RS256',
               '--oidc-ca-file=/etc/kube-oidc-proxy-ca/trust-bundle.pem',
+              '--v=9',
             ],
             ports: [
               {
