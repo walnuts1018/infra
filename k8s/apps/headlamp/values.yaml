@@ -25,7 +25,7 @@ podSecurityContext:
 
 pluginsManager:
   enabled: true
-  baseImage: node:24.14.1-alpine
+  baseImage: node:24.19.0-alpine
   version: 0.1.1
   configContent: |
     plugins:
