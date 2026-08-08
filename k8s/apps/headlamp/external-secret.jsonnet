@@ -44,13 +44,7 @@ local app = import 'app.json5';
       current-context: main
       users:
       - name: oidc
-        user:
-          auth-provider:
-            name: oidc
-            config:
-              idp-issuer-url: "https://auth.walnuts.dev"
-              client-id: "{{ .OIDC_CLIENT_ID }}"
-              client-secret: "{{ .OIDC_CLIENT_SECRET }}"
+        user: {}
     |||,
   },
 }
