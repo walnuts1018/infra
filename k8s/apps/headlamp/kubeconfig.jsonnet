@@ -24,7 +24,9 @@ local app = import 'app.json5';
       current-context: main
       users:
       - name: oidc
-        user: {}
+        user:
+          auth-provider:
+            name: oidc
     |||,
   },
 }
