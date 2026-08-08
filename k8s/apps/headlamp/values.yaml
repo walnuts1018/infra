@@ -70,7 +70,7 @@ httpRoute:
 clusterRoleBinding:
   create: false
 
-automountServiceAccountToken: true
+automountServiceAccountToken: false
 
 env:
 - name: KUBERNETES_SERVICE_HOST
@@ -81,18 +81,29 @@ env:
   value: debug
 
 volumeMounts:
-- name: kube-oidc-proxy-ca
-  mountPath: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-  subPath: trust-bundle.pem
+- name: sa-volume
+  mountPath: /var/run/secrets/kubernetes.io/serviceaccount
   readOnly: true
 
 volumes:
-- name: kube-oidc-proxy-ca
-  configMap:
-    name: local-ca-bundle
-    items:
-    - key: trust-bundle.pem
-      path: trust-bundle.pem
+- name: sa-volume
+  projected:
+    defaultMode: 420
+    sources:
+    - serviceAccountToken:
+        expirationSeconds: 3607
+        path: token
+    - configMap:
+        name: local-ca-bundle
+        items:
+        - key: trust-bundle.pem
+          path: ca.crt
+    - downwardAPI:
+        items:
+        - path: namespace
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
 
 topologySpreadConstraints:
 - maxSkew: 1
