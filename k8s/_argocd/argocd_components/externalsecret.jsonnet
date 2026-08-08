@@ -26,6 +26,13 @@ local app = import 'app.json5';
           property: 'client-secret',
         },
       },
+      {
+        secretKey: 'cli-client-id',
+        remoteRef: {
+          key: 'terraform-external-secrets',
+          property: 'argocd-cli-client-id',
+        },
+      },
     ],
   },
 }

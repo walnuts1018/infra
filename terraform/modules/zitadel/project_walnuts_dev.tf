@@ -398,7 +398,6 @@ resource "zitadel_application_oidc" "walnuts_dev_argocd" {
     "https://argocd.walnuts.dev/auth/callback",
     "https://argocd-biscuit.walnuts.dev/auth/callback",
     "https://argocd.local.walnuts.dev/auth/callback",
-    "http://localhost:8085/auth/callback",
   ]
   response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
@@ -478,4 +477,30 @@ resource "zitadel_user_grant" "junya_walnuts_dev" {
     zitadel_project_role.walnuts_dev_grafana_viewer.role_key,
     zitadel_project_role.walnuts_dev_argocd_viewer.role_key,
   ]
+}
+
+resource "zitadel_application_oidc" "walnuts_dev_argocd_cli" {
+  org_id     = zitadel_org.ZITADEL.id
+  project_id = zitadel_project.walnuts_dev.id
+  name       = "argocd-cli"
+
+  redirect_uris = [
+    "http://localhost:8085/auth/callback",
+  ]
+  response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
+  grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
+  auth_method_type            = "OIDC_AUTH_METHOD_TYPE_NONE"
+  post_logout_redirect_uris   = []
+  version                     = "OIDC_VERSION_1_0"
+  clock_skew                  = "0s"
+  dev_mode                    = true
+  access_token_type           = "OIDC_TOKEN_TYPE_BEARER"
+  access_token_role_assertion = true
+  id_token_role_assertion     = false
+  id_token_userinfo_assertion = true
+}
+
+output "argocd_cli_client_id" {
+  value     = zitadel_application_oidc.walnuts_dev_argocd_cli.client_id
+  sensitive = false
 }

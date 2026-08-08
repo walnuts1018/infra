@@ -8,6 +8,7 @@ resource "onepassword_item" "external_secret" {
       field_map = {
         "akvorado-client-id"        = { type = "STRING", value = var.akvorado_client_id }
         "akvorado-client-secret"    = { type = "CONCEALED", value = var.akvorado_client_secret }
+        "argocd-cli-client-id"      = { type = "STRING", value = var.argocd_cli_client_id }
         "b2-application-key"        = { type = "CONCEALED", value = var.b2_application_key }
         "headlamp-client-id"        = { type = "STRING", value = var.headlamp_client_id }
         "headlamp-client-secret"    = { type = "CONCEALED", value = var.headlamp_client_secret }

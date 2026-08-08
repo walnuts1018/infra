@@ -5,6 +5,7 @@ module "onepassword" {
   service_account_token  = var.onepassword_service_account_token
   akvorado_client_id     = module.zitadel.akvorado_oidc_client_id
   akvorado_client_secret = module.zitadel.akvorado_oidc_client_secret
+  argocd_cli_client_id   = module.zitadel.argocd_cli_client_id
   b2_application_key     = module.b2.application_key.application_key
   headlamp_client_id     = module.zitadel.headlamp_oidc_client_id
   headlamp_client_secret = module.zitadel.headlamp_oidc_client_secret

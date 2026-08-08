@@ -33,6 +33,25 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
         ingress: {
           enabled: false,
         },
+        extraArgs: [
+          '--tls-cert-path=/app/config/tls/tls.crt',
+          '--tls-key-path=/app/config/tls/tls.key',
+        ],
+        volumeMounts: [
+          {
+            name: 'tls',
+            mountPath: '/app/config/tls',
+            readOnly: true,
+          },
+        ],
+        volumes: [
+          {
+            name: 'tls',
+            secret: {
+              secretName: 'argocd-server-tls',
+            },
+          },
+        ],
         httproute: {
           enabled: true,
           parentRefs: [
