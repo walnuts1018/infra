@@ -1,0 +1,128 @@
+network:
+  openunison_host: kubernetes.walnuts.dev
+  # OpenUnison validates a distinct dashboard hostname even when its dashboard is disabled.
+  dashboard_host: dashboard-disabled.local.walnuts.dev
+  api_server_host: kurumi-kubernetes-api.local.walnuts.dev
+  session_inactivity_timeout_seconds: 900
+  k8s_url: https://kubernetes.default.svc
+  force_redirect_to_tls: true
+  createIngressCertificate: true
+  ingress_type: gatewayapi
+  ingress_annotations: {}
+  gatewayapi:
+    gateway:
+      create: false
+      parent_refs:
+      - name: envoy-gateway
+        namespace: envoy-gateway-system
+        sectionName: https
+
+cert_template:
+  ou: Kubernetes
+  o: walnuts.dev
+  l: Kurumi
+  st: Tokyo
+  c: JP
+
+myvd_config_path: WEB-INF/myvd.conf
+k8s_cluster_name: kurumi
+enable_impersonation: true
+
+impersonation:
+  use_jetstack: false
+
+headlamp:
+  enabled: true
+  service_name: headlamp
+  cert_name: headlamp-tls
+  image: ghcr.io/headlamp-k8s/headlamp:v0.44.0
+  config:
+    enableHelm: true
+    watchPlugins: true
+  pluginsManager:
+    enabled: true
+    baseImage: node:24.14.1-alpine
+    version: 0.1.1
+    configContent: |
+      plugins:
+      - name: cert-manager
+        source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_cert-manager
+        version: 0.1.1
+      - name: keda
+        source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_keda
+        version: 0.1.2
+      installOptions:
+        parallel: true
+        maxConcurrent: 2
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        memory: 512Mi
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 512Mi
+  namespace_api:
+    test:
+      enabled: false
+    all_namespaces:
+      enabled: true
+    no_namespaces:
+      enabled: false
+
+dashboard:
+  enabled: false
+
+certs:
+  use_k8s_cm: false
+
+trusted_certs: []
+
+oidc:
+  client_id_is_secret: true
+  issuer: https://auth.walnuts.dev
+  user_in_idtoken: true
+  domain: ""
+  scopes: openid email profile urn:zitadel:iam:org:project:id:385225927988084784:aud
+  claims:
+    sub: sub
+    email: email
+    given_name: given_name
+    family_name: family_name
+    display_name: name
+    groups: my:zitadel:grants
+
+network_policies:
+  enabled: false
+
+services:
+  enable_tokenrequest: true
+  token_request_audience: https://kubernetes.default.svc.cluster.local
+  token_request_expiration_seconds: 600
+  node_selectors: {}
+  tolerations: []
+  resources:
+    requests:
+      cpu: 250m
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+
+openunison:
+  replicas: 1
+  auto_timestamp: false
+  force_update: initial-openunison-deployment
+  non_secret_data:
+    K8S_DB_SSO: oidc
+    SHOW_PORTAL_ORGS: "false"
+  secrets: []
+  enable_provisioning: false
+  use_standard_jit_workflow: true
+  az_groups:
+  - 385225927988084784:cluster-admin
+  groups:
+    areJson: "false"

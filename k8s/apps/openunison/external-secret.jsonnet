@@ -1,32 +1,41 @@
-local kubeOIDCProxy = import '../kube-oidc-proxy/config.json5';
 local app = import 'app.json5';
 
 (import '../../components/external-secret.libsonnet') {
-  name: app.name + '-oidc',
+  name: 'orchestra-secrets-source',
+  namespace: app.namespace,
   use_suffix: false,
   data: [
     {
       secretKey: 'OIDC_CLIENT_ID',
       remoteRef: {
         key: 'terraform-external-secrets',
-        property: 'headlamp-client-id',
+        property: 'openunison-client-id',
       },
     },
     {
       secretKey: 'OIDC_CLIENT_SECRET',
       remoteRef: {
         key: 'terraform-external-secrets',
-        property: 'headlamp-client-secret',
+        property: 'openunison-client-secret',
+      },
+    },
+    {
+      secretKey: 'unisonKeystorePassword',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'openunison-keystore-password',
       },
     },
   ],
   template_data: {
     OIDC_CLIENT_ID: '{{ .OIDC_CLIENT_ID }}',
     OIDC_CLIENT_SECRET: '{{ .OIDC_CLIENT_SECRET }}',
-    OIDC_ISSUER_URL: 'https://auth.walnuts.dev',
-    OIDC_SCOPES: 'openid,email,profile,urn:zitadel:iam:org:project:id:' + kubeOIDCProxy.zitadelProjectId + ':aud',
-    OIDC_CALLBACK_URL: 'https://headlamp.walnuts.dev/oidc-callback',
-    OIDC_USE_PKCE: 'true',
-    OIDC_USE_ACCESS_TOKEN: 'true',
+    unisonKeystorePassword: '{{ .unisonKeystorePassword }}',
+  },
+} + {
+  metadata+: {
+    annotations: {
+      'argocd.argoproj.io/sync-wave': '-1',
+    },
   },
 }
