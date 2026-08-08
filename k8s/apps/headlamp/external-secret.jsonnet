@@ -51,6 +51,7 @@ local app = import 'app.json5';
               idp-issuer-url: "https://auth.walnuts.dev"
               client-id: "{{ .OIDC_CLIENT_ID }}"
               client-secret: "{{ .OIDC_CLIENT_SECRET }}"
+              extra-scopes: "email,profile,urn:zitadel:iam:org:project:id:' + kubeoidcProxyApp.params.oidcIssuerAudience + ':aud"
     |||,
   },
 }
