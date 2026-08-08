@@ -28,5 +28,29 @@ local app = import 'app.json5';
     OIDC_CALLBACK_URL: 'https://headlamp.walnuts.dev/oidc-callback',
     OIDC_USE_PKCE: 'true',
     OIDC_USE_ACCESS_TOKEN: 'true',
+    config: |||
+      apiVersion: v1
+      kind: Config
+      clusters:
+      - name: main
+        cluster:
+          server: https://kube-oidc-proxy.kube-oidc-proxy.svc:443
+          certificate-authority: /etc/kube-oidc-proxy/trust-bundle.pem
+      contexts:
+      - name: main
+        context:
+          cluster: main
+          user: oidc
+      current-context: main
+      users:
+      - name: oidc
+        user:
+          auth-provider:
+            name: oidc
+            config:
+              idp-issuer-url: "https://auth.walnuts.dev"
+              client-id: "{{ .OIDC_CLIENT_ID }}"
+              client-secret: "{{ .OIDC_CLIENT_SECRET }}"
+    |||,
   },
 }

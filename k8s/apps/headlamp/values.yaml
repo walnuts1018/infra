@@ -90,8 +90,11 @@ volumeMounts:
 
 volumes:
 - name: kubeconfig
-  configMap:
-    name: headlamp-kubeconfig
+  secret:
+    secretName: headlamp-oidc
+    items:
+    - key: config
+      path: config
 - name: kube-oidc-proxy-ca
   configMap:
     name: local-ca-bundle
