@@ -55,7 +55,7 @@ local app = import 'app.json5';
               },
               limits: {
                 cpu: '50m',
-                memory: '32Mi',
+                memory: '64Mi',
               },
             },
           },
