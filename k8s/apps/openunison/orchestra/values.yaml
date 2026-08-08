@@ -2,11 +2,14 @@ headlamp:
   enabled: true
   service_name: headlamp
   cert_name: headlamp-tls
+  image: ghcr.io/headlamp-k8s/headlamp:v0.44.0
   config:
     enableHelm: true
     watchPlugins: true
   pluginsManager:
     enabled: true
+    baseImage: node:24.14.1-alpine
+    version: 0.1.1
     configContent: |
       plugins:
       - name: cert-manager
