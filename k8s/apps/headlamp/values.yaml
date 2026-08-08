@@ -1,12 +1,13 @@
 replicaCount: 1
 
 config:
-  inCluster: true
+  inCluster: false
   inClusterContextName: main
   watchPlugins: true
   staticPlugins:
     enabled: true
   oidc:
+    useCookie: true
     secret:
       create: false
     externalSecret:
