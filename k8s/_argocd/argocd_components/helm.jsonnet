@@ -14,44 +14,16 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
       },
       configs: {
         params: {
-          'server.insecure': false,
+          'server.insecure': true,
         },
       },
       notifications: {
         argocdUrl: 'https://' + domain,
       },
       server: {
-        certificate: {
-          enabled: true,
-          domain: domain,
-          issuer: {
-            group: 'cert-manager.io',
-            kind: 'ClusterIssuer',
-            name: 'letsencrypt-prod',
-          },
-        },
         ingress: {
           enabled: false,
         },
-        extraArgs: [
-          '--tls-cert-path=/app/config/server-tls/tls.crt',
-          '--tls-key-path=/app/config/server-tls/tls.key',
-        ],
-        volumeMounts: [
-          {
-            name: 'server-tls',
-            mountPath: '/app/config/server-tls',
-            readOnly: true,
-          },
-        ],
-        volumes: [
-          {
-            name: 'server-tls',
-            secret: {
-              secretName: 'argocd-server-tls',
-            },
-          },
-        ],
         httproute: {
           enabled: true,
           parentRefs: [
