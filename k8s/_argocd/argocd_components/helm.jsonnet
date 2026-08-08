@@ -42,10 +42,6 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
             },
           ],
           hostnames: [domain],
-          validation: {
-            hostname: domain,
-            wellKnownCACertificates: 'System',
-          },
         },
         grpcroute: {
           enabled: true,
@@ -57,10 +53,6 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
           ],
           hostnames: [domain],
           rules: [{}],
-          validation: {
-            hostname: domain,
-            wellKnownCACertificates: 'System',
-          },
         },
         autoscaling: {
           enabled: enableHPA,
