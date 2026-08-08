@@ -35,7 +35,7 @@ local externalSecret = import 'external-secret.jsonnet';
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'ghcr.io/walnuts1018/walnuk-backend:v0.0.170',
+            image: 'ghcr.io/walnuts1018/walnuk-backend:v0.0.171',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
