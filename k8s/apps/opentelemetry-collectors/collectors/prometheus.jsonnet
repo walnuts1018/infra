@@ -49,6 +49,17 @@ function(
       },
     },
     config: {
+      exporters: {
+        'prometheus_remote_write/victoriametrics': {
+          disable_scope_info: true,
+          resource_to_telemetry_conversion: {
+            enabled: false,
+          },
+          target_info: {
+            enabled: false,
+          },
+        },
+      },
       receivers: {
         prometheus: {
           config: {
@@ -104,8 +115,6 @@ function(
             ],
             processors: [
               'memory_limiter',
-              'k8s_attributes',
-              'resource/cluster_name',
             ],
             exporters: [
               'prometheus_remote_write/victoriametrics',
