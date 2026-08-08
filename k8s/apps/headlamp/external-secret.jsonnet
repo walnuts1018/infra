@@ -1,5 +1,5 @@
-local kubeOIDCProxy = import '../kube-oidc-proxy/config.json5';
 local app = import 'app.json5';
+local kubeoidcProxyApp = import 'kube-oidc-proxy/app.json5';
 
 (import '../../components/external-secret.libsonnet') {
   name: app.name + '-oidc',
@@ -24,7 +24,7 @@ local app = import 'app.json5';
     OIDC_CLIENT_ID: '{{ .OIDC_CLIENT_ID }}',
     OIDC_CLIENT_SECRET: '{{ .OIDC_CLIENT_SECRET }}',
     OIDC_ISSUER_URL: 'https://auth.walnuts.dev',
-    OIDC_SCOPES: 'openid,email,profile,urn:zitadel:iam:org:project:id:' + kubeOIDCProxy.zitadelProjectId + ':aud',
+    OIDC_SCOPES: 'openid,email,profile,urn:zitadel:iam:org:project:id:' + kubeoidcProxyApp.params.zitadelProjectId + ':aud',
     OIDC_CALLBACK_URL: 'https://headlamp.walnuts.dev/oidc-callback',
     OIDC_USE_PKCE: 'true',
     OIDC_USE_ACCESS_TOKEN: 'true',

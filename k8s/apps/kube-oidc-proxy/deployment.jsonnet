@@ -1,6 +1,5 @@
 local app = import 'app.json5';
 local certificate = import 'certificate.jsonnet';
-local config = import 'config.json5';
 local serviceAccount = import 'service-account.jsonnet';
 
 local labels = {
@@ -36,7 +35,7 @@ local labels = {
               '--tls-cert-file=/etc/kube-oidc-proxy/tls.crt',
               '--tls-private-key-file=/etc/kube-oidc-proxy/tls.key',
               '--tls-min-version=VersionTLS12',
-              '--oidc-client-id=' + config.zitadelProjectId,
+              '--oidc-client-id=' + app.params.zitadelProjectId,
               '--oidc-issuer-url=https://auth.walnuts.dev',
               '--oidc-username-claim=email',
               '--oidc-username-prefix=zitadel:',

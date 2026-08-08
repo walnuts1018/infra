@@ -1,4 +1,4 @@
-local config = import 'config.json5';
+local app = import 'app.json5';
 
 {
   apiVersion: 'rbac.authorization.k8s.io/v1',
@@ -15,7 +15,7 @@ local config = import 'config.json5';
     {
       apiGroup: 'rbac.authorization.k8s.io',
       kind: 'Group',
-      name: 'zitadel:' + config.zitadelProjectId + ':cluster-admin',
+      name: 'zitadel:' + app.params.zitadelProjectId + ':cluster-admin',
     },
   ],
 }
