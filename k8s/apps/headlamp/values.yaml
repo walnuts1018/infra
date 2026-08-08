@@ -17,9 +17,8 @@ config:
     useAccessToken: true
     usePKCE: true
   sessionTTL: 86400
-
-extraArgs:
-- -kubeconfig=/etc/headlamp/config
+  extraArgs:
+  - -kubeconfig=/etc/headlamp/config
 
 podSecurityContext:
   fsGroup: 101
