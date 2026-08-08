@@ -52,6 +52,7 @@ opencost:
 
   ui:
     enabled: true
+    modelFqdn: 127.0.0.1:9003
     httpRoute:
       enabled: true
       parentRefs:
