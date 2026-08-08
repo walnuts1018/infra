@@ -27,7 +27,7 @@ local labels = {
         serviceAccountName: serviceAccount.metadata.name,
         containers: [
           {
-            name: app.name,
+            name: 'kube-oidc-proxy',
             image: 'ghcr.io/tremolosecurity/kube-oidc-proxy:1.0.12@sha256:d7747f308042216acd31eb48af4baefb2f508afc2023736451931b2d323907e9',
             imagePullPolicy: 'IfNotPresent',
             command: ['kube-oidc-proxy'],
