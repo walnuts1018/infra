@@ -43,6 +43,7 @@ local labels = {
               '--oidc-groups-claim=my:zitadel:grants',
               '--oidc-groups-prefix=zitadel:',
               '--oidc-signing-algs=RS256',
+              '--oidc-ca-file=/etc/kube-oidc-proxy-ca/trust-bundle.pem',
             ],
             ports: [
               {
@@ -100,6 +101,11 @@ local labels = {
                 mountPath: '/etc/kube-oidc-proxy',
                 readOnly: true,
               },
+              {
+                name: 'ca',
+                mountPath: '/etc/kube-oidc-proxy-ca',
+                readOnly: true,
+              },
             ],
           },
         ],
@@ -108,6 +114,18 @@ local labels = {
             name: 'tls',
             secret: {
               secretName: certificate.spec.secretName,
+            },
+          },
+          {
+            name: 'ca',
+            configMap: {
+              name: 'local-ca-bundle',
+              items: [
+                {
+                  key: 'trust-bundle.pem',
+                  path: 'trust-bundle.pem',
+                },
+              ],
             },
           },
         ],
