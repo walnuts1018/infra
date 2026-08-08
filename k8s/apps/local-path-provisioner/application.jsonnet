@@ -5,6 +5,9 @@ local app = import 'app.json5';
   metadata: {
     name: app.name + '-external',
     namespace: 'argocd',
+    finalizers: [
+      'resources-finalizer.argocd.argoproj.io',
+    ],
   },
   spec: {
     project: 'default',

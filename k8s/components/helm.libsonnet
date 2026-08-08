@@ -13,6 +13,9 @@
   metadata: {
     name: $.name + '-helm',
     namespace: 'argocd',
+    finalizers: [
+      'resources-finalizer.argocd.argoproj.io',
+    ],
   },
   spec: {
     project: 'default',

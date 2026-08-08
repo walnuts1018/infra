@@ -6,6 +6,9 @@ local app = import 'app.json5';
     metadata: {
       name: app.name + '-kustomize-crd',
       namespace: 'argocd',
+      finalizers: [
+        'resources-finalizer.argocd.argoproj.io',
+      ],
     },
     spec: {
       project: 'default',
@@ -32,6 +35,9 @@ local app = import 'app.json5';
     metadata: {
       name: app.name + '-kustomize-snapshot-controller',
       namespace: 'argocd',
+      finalizers: [
+        'resources-finalizer.argocd.argoproj.io',
+      ],
     },
     spec: {
       project: 'default',

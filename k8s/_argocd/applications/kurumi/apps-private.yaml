@@ -19,7 +19,7 @@ spec:
     metadata:
       name: '{{.name}}'
       finalizers:
-        - resources-finalizer.argocd.argoproj.io
+      - resources-finalizer.argocd.argoproj.io
     spec:
       project: default
       destination:

@@ -5,6 +5,9 @@ local app = import 'app.json5';
   metadata: {
     name: app.name + '-kustomize',
     namespace: 'argocd',
+    finalizers: [
+      'resources-finalizer.argocd.argoproj.io',
+    ],
   },
   spec: {
     project: 'default',
