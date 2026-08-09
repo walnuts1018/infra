@@ -79,6 +79,12 @@
   ],
   packageRules: [
     {
+      groupName: 'netbird',
+      matchPackagePatterns: [
+        'netbird',
+      ],
+    },
+    {
       matchDatasources: [
         'helm',
       ],
