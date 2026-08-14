@@ -64,24 +64,6 @@ local appname = app.name + '-api';
                 },
               },
               {
-                name: 'POSTGRES_USER',
-                valueFrom: {
-                  secretKeyRef: {
-                    name: externalSecret.spec.target.name,
-                    key: 'postgres_user',
-                  },
-                },
-              },
-              {
-                name: 'POSTGRES_DB',
-                valueFrom: {
-                  secretKeyRef: {
-                    name: externalSecret.spec.target.name,
-                    key: 'postgres_db',
-                  },
-                },
-              }
-              {
                 name: 'JWT_SECRET',
                 valueFrom: {
                   secretKeyRef: {
