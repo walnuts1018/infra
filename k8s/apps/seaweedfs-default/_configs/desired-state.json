@@ -69,7 +69,7 @@
       "publicRead": []
     },
     {
-      "name": "visual_regression_tracker",
+      "name": "visual-regression-tracker",
       "publicRead": []
     }
   ],
@@ -161,7 +161,7 @@
             "Tagging"
           ],
           "buckets": [
-            "visual_regression_tracker"
+            "visual-regression-tracker"
           ]
         }
       ]

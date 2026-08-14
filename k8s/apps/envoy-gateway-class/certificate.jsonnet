@@ -8,6 +8,7 @@
   spec: {
     dnsNames: [
       '*.local.walnuts.dev',
+      '*.seaweedfs.local.walnuts.dev',
       '*.walnuts.dev',
       'walnuts.dev',
       '*.waln.uk',

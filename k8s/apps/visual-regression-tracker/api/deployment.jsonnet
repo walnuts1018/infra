@@ -72,19 +72,21 @@ local appname = app.name + '-api';
                 name: 'STATIC_SERVICE',
                 value: 's3',
               },
-              // aws-sdk クライアントに forcePathStyle を明示できないため、DNS 非対応な bucket 名で
-              // 自動的に path-style リクエストへフォールバックさせている (SeaweedFS は virtual-hosted-style 未対応)
               {
                 name: 'AWS_S3_BUCKET_NAME',
-                value: 'visual_regression_tracker',
+                value: 'visual-regression-tracker',
               },
               {
                 name: 'AWS_REGION',
                 value: 'us-east-1',
               },
+              // SeaweedFS filer の S3 ゲートウェイを -s3.domainName=seaweedfs.local.walnuts.dev で
+              // 起動しており、HTTPRoute (seaweedfs-default/s3-gateway-httproute.jsonnet) 経由で
+              // <bucket>.seaweedfs.local.walnuts.dev を virtual-hosted-style S3 リクエストとして
+              // 受け付けられる。aws-sdk はデフォルトで virtual-hosted-style を使うため追加設定は不要。
               {
                 name: 'AWS_ENDPOINT_URL_S3',
-                value: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333',
+                value: 'https://seaweedfs.local.walnuts.dev',
               },
               {
                 name: 'AWS_ACCESS_KEY_ID',
