@@ -67,4 +67,8 @@
     db_name: 'netbird',
     user_name: 'netbird',
   },
+  {
+    db_name: 'visual_regression_tracker',
+    user_name: 'visual_regression_tracker',
+  },
 ]

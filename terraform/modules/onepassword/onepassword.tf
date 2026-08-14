@@ -1,3 +1,8 @@
+resource "random_password" "visual_regression_tracker_jwt_secret" {
+  length  = 32
+  special = false
+}
+
 resource "onepassword_item" "external_secret" {
   vault    = var.vault
   title    = "terraform-external-secrets"
@@ -27,6 +32,8 @@ resource "onepassword_item" "external_secret" {
         "opencost-client-secret"    = { type = "CONCEALED", value = var.opencost_client_secret }
         "shumoku-client-id"         = { type = "STRING", value = var.shumoku_client_id }
         "shumoku-client-secret"     = { type = "CONCEALED", value = var.shumoku_client_secret }
+
+        "visual-regression-tracker-jwt-secret" = { type = "CONCEALED", value = random_password.visual_regression_tracker_jwt_secret.result }
       }
     }
   }
