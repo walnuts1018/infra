@@ -80,10 +80,6 @@ local appname = app.name + '-api';
                 name: 'AWS_REGION',
                 value: 'us-east-1',
               },
-              // SeaweedFS filer の S3 ゲートウェイを -s3.domainName=seaweedfs.local.walnuts.dev で
-              // 起動しており、HTTPRoute (seaweedfs-default/s3-gateway-httproute.jsonnet) 経由で
-              // <bucket>.seaweedfs.local.walnuts.dev を virtual-hosted-style S3 リクエストとして
-              // 受け付けられる。aws-sdk はデフォルトで virtual-hosted-style を使うため追加設定は不要。
               {
                 name: 'AWS_ENDPOINT_URL_S3',
                 value: 'https://seaweedfs.local.walnuts.dev',
