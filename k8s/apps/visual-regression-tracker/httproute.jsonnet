@@ -44,7 +44,7 @@ local app = import 'app.json5';
           {
             kind: 'Service',
             name: (import './api/service.jsonnet').metadata.name,
-            port: 4200,
+            port: 3000,
             weight: 1,
           },
         ],

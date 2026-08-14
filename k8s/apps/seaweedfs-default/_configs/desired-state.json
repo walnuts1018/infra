@@ -67,6 +67,10 @@
     {
       "name": "tempo",
       "publicRead": []
+    },
+    {
+      "name": "visual_regression_tracker",
+      "publicRead": []
     }
   ],
   "accessKeyIdentities": [
@@ -139,6 +143,25 @@
           ],
           "buckets": [
             "stalwart"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "visual_regression_tracker",
+      "accessKey": "visual_regression_tracker",
+      "secretKeyProperty": "visual_regression_tracker_secretkey",
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "Read",
+            "Write",
+            "List",
+            "Tagging"
+          ],
+          "buckets": [
+            "visual_regression_tracker"
           ]
         }
       ]

@@ -30,14 +30,10 @@ local appname = app.name + '-api';
             ports: [
               {
                 name: 'http',
-                containerPort: 4200,
+                containerPort: 3000,
               },
             ],
             env: [
-              {
-                name: 'APP_PORT',
-                value: '4200',
-              },
               {
                 name: 'APP_FRONTEND_URL',
                 value: 'https://vrt.local.walnuts.dev',
@@ -72,17 +68,53 @@ local appname = app.name + '-api';
                   },
                 },
               },
+              {
+                name: 'STATIC_SERVICE',
+                value: 's3',
+              },
+              // aws-sdk クライアントに forcePathStyle を明示できないため、DNS 非対応な bucket 名で
+              // 自動的に path-style リクエストへフォールバックさせている (SeaweedFS は virtual-hosted-style 未対応)
+              {
+                name: 'AWS_S3_BUCKET_NAME',
+                value: 'visual_regression_tracker',
+              },
+              {
+                name: 'AWS_REGION',
+                value: 'us-east-1',
+              },
+              {
+                name: 'AWS_ENDPOINT_URL_S3',
+                value: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333',
+              },
+              {
+                name: 'AWS_ACCESS_KEY_ID',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: externalSecret.spec.target.name,
+                    key: 'AWS_ACCESS_KEY_ID',
+                  },
+                },
+              },
+              {
+                name: 'AWS_SECRET_ACCESS_KEY',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: externalSecret.spec.target.name,
+                    key: 'AWS_SECRET_ACCESS_KEY',
+                  },
+                },
+              },
             ],
             livenessProbe: {
               tcpSocket: {
-                port: 4200,
+                port: 3000,
               },
               initialDelaySeconds: 5,
               periodSeconds: 10,
             },
             readinessProbe: {
               tcpSocket: {
-                port: 4200,
+                port: 3000,
               },
               initialDelaySeconds: 5,
               periodSeconds: 10,

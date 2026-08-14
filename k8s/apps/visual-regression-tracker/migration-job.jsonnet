@@ -13,6 +13,28 @@ local env = [
       },
     },
   },
+  {
+    name: 'DEFAULT_USER_EMAIL',
+    value: 'admin@vrt.local.walnuts.dev',
+  },
+  {
+    name: 'DEFAULT_USER_PASSWORD',
+    valueFrom: {
+      secretKeyRef: {
+        name: externalSecret.spec.target.name,
+        key: 'DEFAULT_USER_PASSWORD',
+      },
+    },
+  },
+  {
+    name: 'DEFAULT_USER_API_KEY',
+    valueFrom: {
+      secretKeyRef: {
+        name: externalSecret.spec.target.name,
+        key: 'DEFAULT_USER_API_KEY',
+      },
+    },
+  },
 ];
 {
   apiVersion: 'batch/v1',

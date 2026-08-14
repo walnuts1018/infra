@@ -13,8 +13,8 @@ local appname = app.name + '-api';
     ports: [
       {
         name: 'http',
-        port: 4200,
-        targetPort: 4200,
+        port: 3000,
+        targetPort: 3000,
       },
     ],
     selector: (labels)(appname),
