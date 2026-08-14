@@ -16,8 +16,11 @@ local app = import 'app.json5';
         namespace: gateway.metadata.namespace,
       },
     ],
+    // ワイルドカード hostname を external-dns (coredns provider) が実際に
+    // ワイルドカード DNS レコードとして登録するか未検証のため、バケットごとに
+    // 具体的な hostname を列挙する。バケットを追加したらここにも追記する。
     hostnames: [
-      '*.seaweedfs.local.walnuts.dev',
+      'visual-regression-tracker.seaweedfs.local.walnuts.dev',
     ],
     rules: [
       {
