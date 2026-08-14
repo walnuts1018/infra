@@ -22,7 +22,7 @@ local externalSecret = import 'external-secret.jsonnet';
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'esp32-thermohygrometer-exporter',
-            image: 'ghcr.io/walnuts1018/esp32-thermohygrometer-exporter:v0.0.27',
+            image: 'ghcr.io/walnuts1018/esp32-thermohygrometer-exporter:v0.0.29',
             imagePullPolicy: 'IfNotPresent',
             resources: {
               requests: {

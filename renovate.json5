@@ -27,9 +27,9 @@
       ],
       matchStringsStrategy: 'combination',
       matchStrings: [
-        "chart:\\s+[\"']?(?<depName>[a-z0-9-]+)[\"']",
-        "repoURL:\\s+[\"']?(?<registryUrl>\\S+)[\"']",
-        "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']",
+        'chart:\\s+["\']?(?<depName>[a-z0-9-]+)["\']',
+        'repoURL:\\s+["\']?(?<registryUrl>\\S+)["\']',
+        'targetRevision:\\s+["\']?(?<currentValue>\\S+)["\']',
       ],
       datasourceTemplate: 'helm',
     },
@@ -43,8 +43,8 @@
       ],
       matchStringsStrategy: 'combination',
       matchStrings: [
-        "ociChartURL:\\s+[\"']?(?<packageName>\\S+)[\"']?",
-        "targetRevision:\\s+[\"']?(?<currentValue>\\S+)[\"']?",
+        'ociChartURL:\\s+["\']?(?<packageName>\\S+)["\']?',
+        'targetRevision:\\s+["\']?(?<currentValue>\\S+)["\']?',
       ],
       datasourceTemplate: 'docker',
     },
@@ -57,7 +57,7 @@
         '/^k8s/.*/.+\\.yml$/',
       ],
       matchStrings: [
-        "(?:registry:\\s+[\"']?(?<registryUrl>[^\\s'\"]+)[\"']?\\r?\\n\\s*)?repository:\\s+[\"']?(?<packageName>[^\\s'\"]+)[\"']?\\r?\\n\\s*tag:\\s+[\"']?(?<currentValue>[^\\s'\"]+)[\"']?(?:\\r?\\n\\s*digest:\\s+[\"']?(?<currentDigest>[^\\s'\"]+)[\"']?)?",
+        '(?:registry:\\s+["\']?(?<registryUrl>[^\\s\'"]+)["\']?\\r?\\n\\s*)?repository:\\s+["\']?(?<packageName>[^\\s\'"]+)["\']?\\r?\\n\\s*tag:\\s+["\']?(?<currentValue>[^\\s\'"]+)["\']?(?:\\r?\\n\\s*digest:\\s+["\']?(?<currentDigest>[^\\s\'"]+)["\']?)?',
       ],
       datasourceTemplate: 'docker',
       packageNameTemplate: '{{#if registryUrl}}{{{registryUrl}}}/{{/if}}{{{packageName}}}',
@@ -80,8 +80,8 @@
   packageRules: [
     {
       groupName: 'netbird',
-      matchPackagePatterns: [
-        'netbird',
+      matchPackageNames: [
+        '/netbird/',
       ],
     },
     {
@@ -154,7 +154,7 @@
       ],
       automerge: false,
       // Major, Minor versionはスキップ禁止なので、手動でPRを作るようにする
-      "dependencyDashboardApproval": true,
+      dependencyDashboardApproval: true,
     },
     {
       matchPackageNames: [
