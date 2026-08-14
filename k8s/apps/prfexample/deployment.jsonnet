@@ -37,7 +37,7 @@ local externalSecret = import 'external-secret.jsonnet';
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'ghcr.io/walnuts1018/prfexample/server:0.0.64',
+            image: 'ghcr.io/walnuts1018/prfexample/server:0.0.65',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
