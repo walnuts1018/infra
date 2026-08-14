@@ -64,6 +64,10 @@ local appname = app.name + '-ui';
           } + {
             securityContext+: {
               readOnlyRootFilesystem: false,
+              // nginx のエントリポイントが起動時に /var/cache/nginx 配下を nginx ユーザーへ chown するため必要
+              capabilities+: {
+                add+: ['CHOWN', 'SETUID', 'SETGID'],
+              },
             },
           },
         ],
