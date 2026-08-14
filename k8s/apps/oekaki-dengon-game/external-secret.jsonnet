@@ -23,4 +23,10 @@
       },
     },
   ],
+  template_data: {
+    'postgres-admin-password': '{{ index . "postgres-admin-password" }}',
+    'postgres-user-password': '{{ index . "postgres-user-password" }}',
+    'minio-secret-key': '{{ index . "minio-secret-key" }}',
+    'minio-access-key': 'oekaki_dengon_game',
+  },
 }

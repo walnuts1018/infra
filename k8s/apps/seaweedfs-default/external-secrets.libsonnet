@@ -34,31 +34,6 @@ local filerConfig = externalSecret {
   },
 };
 
-local s3Credentials = externalSecret {
-  name: app.name + '-s3-credentials',
-  namespace: app.namespace,
-  data: [
-    {
-      secretKey: identity.secretKeyField,
-      remoteRef: {
-        key: 'seaweedfs',
-        property: identity.secretKeyProperty,
-      },
-    }
-    for identity in config.identities
-  ],
-  template_data: std.foldl(
-    function(data, identity)
-      data {
-        [identity.accessKeyField]: identity.accessKey,
-        [identity.secretKeyField]: '{{ .' + identity.secretKeyField + ' }}',
-      },
-    config.identities,
-    {}
-  ),
-};
-
 {
   filerConfig: filerConfig,
-  s3Credentials: s3Credentials,
 }

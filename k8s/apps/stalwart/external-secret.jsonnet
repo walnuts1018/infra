@@ -16,4 +16,9 @@
       },
     },
   ],
+  template_data: {
+    postgres_password: '{{ .postgres_password }}',
+    s3_secret_access_key: '{{ .s3_secret_access_key }}',
+    s3_access_key: 'stalwart',
+  },
 }
