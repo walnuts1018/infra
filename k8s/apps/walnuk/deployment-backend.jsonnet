@@ -1,6 +1,7 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local externalSecret = import 'external-secret.jsonnet';
+local scyllaClientCertExternalSecret = import 'scylla-client-cert-external-secret.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -152,7 +153,7 @@ local externalSecret = import 'external-secret.jsonnet';
           {
             name: 'scylla-db-client-cert',
             secret: {
-              secretName: 'scylla-cluster-local-client-ca',  // TODO: database namespaceから手動コピーしてるけどいい方法を考えないといけない
+              secretName: scyllaClientCertExternalSecret.spec.target.name,
               items: [
                 {
                   key: 'tls.crt',
