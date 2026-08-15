@@ -5,16 +5,16 @@ local app = import 'app.json5';
   sizes:: {
     small: {
       cpuRequest: '500m',
-      cpuLimit: '2',
-      memoryRequest: '1Gi',
+      cpuLimit: '1',
+      memoryRequest: '512Mi',
       memoryLimit: '4Gi',
       minRunners: 0,
       maxRunners: 5,
     },
     large: {
-      cpuRequest: '2',
-      cpuLimit: '4',
-      memoryRequest: '4Gi',
+      cpuRequest: '1',
+      cpuLimit: '2',
+      memoryRequest: '1Gi',
       memoryLimit: '8Gi',
       minRunners: 0,
       maxRunners: 2,
