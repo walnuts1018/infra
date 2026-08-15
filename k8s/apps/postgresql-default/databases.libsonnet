@@ -1,5 +1,9 @@
 [
   {
+    db_name: 'picca',
+    user_name: 'picca',
+  },
+  {
     db_name: 'fitbit_manager',
     user_name: 'fitbit_manager',
   },
