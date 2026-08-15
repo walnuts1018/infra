@@ -16,7 +16,6 @@ local sa = import 'scylla-client-cert-sa.jsonnet';
           caProvider: {
             type: 'ConfigMap',
             name: 'kube-root-ca.crt',
-            namespace: app.namespace,
             key: 'ca.crt',
           },
         },
