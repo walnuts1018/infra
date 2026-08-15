@@ -316,6 +316,10 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
                   name: 'RUNNER_WAIT_FOR_DOCKER_IN_SECONDS',
                   value: '120',
                 },
+                {
+                  name: 'CUSTOM_ACTIONS_RESULTS_URL',
+                  value: 'http://gha-cache-server-github-actions-cache-server.arc-systems.svc.cluster.local:3000/',
+                },
               ],
               volumeMounts: [
                 { name: 'work', mountPath: '/home/runner/_work' },

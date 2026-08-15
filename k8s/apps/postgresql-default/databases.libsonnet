@@ -75,4 +75,8 @@
     db_name: 'visual_regression_tracker',
     user_name: 'visual_regression_tracker',
   },
+  {
+    db_name: 'gha_cache_server',
+    user_name: 'gha_cache_server',
+  },
 ]

@@ -12,6 +12,7 @@ RUN apt-get update \
     libatomic1 \
     pkg-config \
     sudo \
+    zstd \
     && rm -rf /var/lib/apt/lists/*
 
 USER runner

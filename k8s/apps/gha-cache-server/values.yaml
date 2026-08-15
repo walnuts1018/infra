@@ -8,17 +8,19 @@ config:
       region: us-east-1
       endpointUrl: https://seaweedfs.local.walnuts.dev
   db:
-    driver: sqlite
-    sqlite:
-      path: /data/cache-server.db
-
-persistentVolumeClaim:
-  enabled: true
-  storage: 10Gi
-  accessModes:
-  - ReadWriteOnce
+    driver: postgres
+    postgres:
+      host: postgresql-default-rw.databases.svc.cluster.local
+      port: 5432
+      user: gha_cache_server
+      database: gha_cache_server
 
 extraEnv:
+- name: DB_POSTGRES_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: gha-cache-server
+      key: db_password
 - name: AWS_WEB_IDENTITY_TOKEN_FILE
   value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
 - name: AWS_ROLE_ARN
