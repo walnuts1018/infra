@@ -16,7 +16,7 @@ CREATE ROLE IF NOT EXISTS 'seaweedfs'
     AND SUPERUSER = false
     AND LOGIN = true;
 GRANT ALL PERMISSIONS ON KEYSPACE seaweedfs TO 'seaweedfs';
-CREATE TABLE seaweedfs.filemeta (
+CREATE TABLE IF NOT EXISTS seaweedfs.filemeta (
     dirhash bigint,
     directory varchar,
     name varchar,
