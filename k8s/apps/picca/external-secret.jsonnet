@@ -18,7 +18,7 @@ local app = import 'app.json5';
       },
     },
     {
-      secretKey: 'redis_password',
+      secretKey: 'valkey_password',
       remoteRef: {
         key: 'terraform-external-secrets',
         property: 'picca-redis-password',
@@ -70,8 +70,9 @@ local app = import 'app.json5';
   template_data: {
     DATABASE_URL: 'postgres://picca:{{ .postgres_password }}@postgresql-default-rw.databases.svc.cluster.local:5432/picca',
     SCYLLA_PASSWORD: '{{ .scylla_password }}',
-    VALKEY_URL: 'redis://:{{ .redis_password }}@picca-redis.picca.svc.cluster.local:6379/0',
-    redis_password: '{{ .redis_password }}',
+    // ValkeyClusterのService名はvalkey-operatorの命名規則により`valkey-<ValkeyCluster名>`となる。
+    VALKEY_URL: 'redis://:{{ .valkey_password }}@valkey-picca-valkey.picca.svc.cluster.local:6379/0',
+    valkey_password: '{{ .valkey_password }}',
     IMGPROXY_KEY: '{{ .imgproxy_key }}',
     IMGPROXY_SALT: '{{ .imgproxy_salt }}',
     GRAPHQL_QUERY_SIGNING_SECRET: '{{ .graphql_query_signing_secret }}',
