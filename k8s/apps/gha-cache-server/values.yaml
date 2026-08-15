@@ -29,8 +29,6 @@ extraEnv:
   value: https://seaweedfs.local.walnuts.dev
 - name: S3_USE_PATH_STYLE
   value: "true"
-- name: AWS_REGION
-  value: us-east-1
 
 extraVolumes:
 - name: seaweedfs-sts-token
