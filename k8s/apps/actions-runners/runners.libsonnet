@@ -288,10 +288,6 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
               command: ['/home/runner/run.sh'],
               env: [
                 {
-                  name: 'ACTIONS_RUNTIME_TOKEN',
-                  value: 'dummy-token',
-                },
-                {
                   name: 'DOTNET_gcServer',
                   value: '0',
                 },
