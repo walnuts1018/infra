@@ -24,6 +24,15 @@ CREATE TABLE seaweedfs.filemeta (
 PRIMARY KEY ((dirhash, directory), name)
 ) WITH CLUSTERING ORDER BY (name ASC);
 
+CREATE KEYSPACE IF NOT EXISTS picca
+    WITH replication = {'class': 'NetworkTopologyStrategy', 'iwakura': '3'}
+    AND tablets = {'enabled': false};
+CREATE ROLE IF NOT EXISTS 'picca'
+    WITH PASSWORD = '{{ .picca_password }}'
+    AND SUPERUSER = false
+    AND LOGIN = true;
+GRANT ALL PERMISSIONS ON KEYSPACE picca TO 'picca';
+
 CREATE KEYSPACE IF NOT EXISTS prfexample
     WITH replication = {'class': 'NetworkTopologyStrategy', 'iwakura': '3'}
     AND tablets = {'enabled': false};

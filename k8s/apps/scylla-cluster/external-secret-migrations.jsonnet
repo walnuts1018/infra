@@ -30,6 +30,13 @@
         property: 'prfexample',
       },
     },
+    {
+      secretKey: 'picca_password',
+      remoteRef: {
+        key: 'scylladb',
+        property: 'picca',
+      },
+    },
   ],
   template_data: {
     admin_username: 'cassandra',
