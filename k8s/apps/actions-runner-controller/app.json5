@@ -1,0 +1,7 @@
+{
+  name: "actions-runner-controller",
+  namespace: "arc-systems",
+  clusters: {
+    kurumi: {},
+  },
+}
