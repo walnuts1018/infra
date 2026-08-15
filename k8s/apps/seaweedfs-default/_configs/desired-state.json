@@ -99,6 +99,22 @@
       ]
     },
     {
+      "name": "mac_hatena",
+      "accessKey": "mac_hatena",
+      "secretKeyProperty": "mac_hatena_secretkey",
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "Admin"
+          ],
+          "resources": [
+            "*"
+          ]
+        }
+      ]
+    },
+    {
       "name": "misskey",
       "accessKey": "misskey",
       "secretKeyProperty": "misskey_secretkey",
