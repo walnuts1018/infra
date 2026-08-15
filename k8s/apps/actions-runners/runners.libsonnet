@@ -1,5 +1,5 @@
 local helm = import '../../components/helm.libsonnet';
-local app = import '../app.json5';
+local app = import 'app.json5';
 
 {
   sizes:: {
