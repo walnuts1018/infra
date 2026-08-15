@@ -286,22 +286,6 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
                 },
               ],
             },
-            {
-              name: 'dind',
-              image: 'docker:dind',
-              volumeMounts: [
-                {
-                  name: 'dind-storage',
-                  mountPath: '/var/lib/docker',
-                },
-              ],
-            },
-          ],
-          volumes: [
-            {
-              name: 'dind-storage',
-              emptyDir: {},
-            },
           ],
         },
       },
