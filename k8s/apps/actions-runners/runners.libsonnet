@@ -9,7 +9,6 @@ local app = import 'app.json5';
       memoryRequest: '512Mi',
       memoryLimit: '4Gi',
       minRunners: 0,
-      maxRunners: 5,
     },
     large: {
       cpuRequest: '1',
@@ -17,16 +16,24 @@ local app = import 'app.json5';
       memoryRequest: '1Gi',
       memoryLimit: '8Gi',
       minRunners: 0,
-      maxRunners: 5,
     },
   },
 
   makeRunnerSet(repoName, repoUrl, size, customParams={})::
     local isObj = std.isObject(size);
-    local sizeName = if isObj then (if std.objectHas(size, 'name') then size.name else if std.objectHas(size, 'size') then size.size else error 'size name is required') else size;
-    local baseConfig = if std.objectHas($.sizes, sizeName) then $.sizes[sizeName] else error 'Unknown size: ' + sizeName;
+    local sizeName =
+      if isObj then
+        (if std.objectHas(size, 'name') then size.name else if std.objectHas(size, 'size') then size.size else error "size name is required in repository '%s'" % repoName)
+      else
+        size;
+    local baseConfig =
+      if std.objectHas($.sizes, sizeName) then
+        $.sizes[sizeName]
+      else
+        error "Unknown size '%s' in repository '%s'" % [sizeName, repoName];
     local sizeOverride = if isObj then size else {};
     local sizeConfig = baseConfig + sizeOverride;
+    assert std.objectHas(sizeConfig, 'maxRunners') && sizeConfig.maxRunners != null : "maxRunners is required for size '%s' in repository '%s'" % [sizeName, repoName];
     local sizeCustom = if isObj && std.objectHas(size, 'custom') then size.custom else {};
     local mergedCustom = std.mergePatch(sizeCustom, customParams);
     local scaleSetName = 'arc-' + repoName + '-' + sizeName;
@@ -311,20 +318,20 @@ local app = import 'app.json5';
         if std.isArray(repo.sizes) then
           [
             if std.isString(s) then
-              { name: s }
+              error "maxRunners is required for size '%s' in repository '%s'. Please specify an object, e.g. { size: '%s', maxRunners: 5 }" % [s, repo.name, s]
             else if std.isObject(s) then
               s
             else
-              error 'Invalid size element in repo ' + repo.name + ': ' + std.toString(s)
+              error "Invalid size element in repository '%s': %s" % [repo.name, std.toString(s)]
             for s in repo.sizes
           ]
         else if std.isObject(repo.sizes) then
           [
-            { name: k } + (if std.isObject(repo.sizes[k]) then repo.sizes[k] else {})
+            { name: k } + (if std.isObject(repo.sizes[k]) then repo.sizes[k] else error "Size config for '%s' in repository '%s' must be an object" % [k, repo.name])
             for k in std.objectFields(repo.sizes)
           ]
         else
-          error 'sizes in repo ' + repo.name + ' must be an array or an object';
+          error "sizes in repository '%s' must be an array or an object" % repo.name;
 
       [
         $.makeRunnerSet(repo.name, repo.url, sizeItem, repoCustom)

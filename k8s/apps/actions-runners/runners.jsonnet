@@ -3,6 +3,13 @@ runners.generate([
   {
     name: 'picca',
     url: 'https://github.com/walnuts1018/picca',
-    sizes: ['small', 'large'],
+    sizes: {
+      small: {
+        maxRunners: 5,
+      },
+      large: {
+        maxRunners: 2,
+      },
+    },
   },
 ])
