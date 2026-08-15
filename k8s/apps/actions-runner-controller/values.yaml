@@ -8,14 +8,14 @@ resources:
     cpu: 200m
     memory: 512Mi
 
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: 'kubernetes.io/hostname'
-    whenUnsatisfiable: 'ScheduleAnyway'
-    labelSelector:
-      matchLabels:
-        app.kubernetes.io/name: actions-runner-controller
-        app.kubernetes.io/instance: actions-runner-controller
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: 'kubernetes.io/hostname'
+  whenUnsatisfiable: 'ScheduleAnyway'
+  labelSelector:
+    matchLabels:
+      app.kubernetes.io/name: gha-rs-controller
+      app.kubernetes.io/instance: actions-runner-controller
 
 flags:
   logLevel: "info"
