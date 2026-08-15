@@ -288,14 +288,6 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
               command: ['/home/runner/run.sh'],
               env: [
                 {
-                  name: 'ACTIONS_CACHE_URL',
-                  value: 'http://gha-cache-server.arc-systems.svc:3000/',
-                },
-                {
-                  name: 'ACTIONS_RESULTS_URL',
-                  value: 'http://gha-cache-server.arc-systems.svc:3000/',
-                },
-                {
                   name: 'ACTIONS_RUNTIME_TOKEN',
                   value: 'dummy-token',
                 },
