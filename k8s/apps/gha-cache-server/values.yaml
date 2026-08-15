@@ -15,6 +15,9 @@ config:
       user: gha_cache_server
       database: gha_cache_server
 
+serviceAccount:
+  name: gha-cache-server
+
 extraEnv:
 - name: DB_POSTGRES_PASSWORD
   valueFrom:
