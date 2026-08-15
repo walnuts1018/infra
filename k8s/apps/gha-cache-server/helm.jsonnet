@@ -7,4 +7,3 @@ local app = import 'app.json5';
   targetRevision: '1.1.3',
   values: (importstr 'values.yaml'),
 }
-
