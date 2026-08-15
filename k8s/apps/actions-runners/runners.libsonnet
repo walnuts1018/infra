@@ -214,6 +214,25 @@ local app = import 'app.json5';
             },
           },
         },
+        listenerTemplate: {
+          spec: {
+            containers: [
+              {
+                name: 'listener',
+                resources: {
+                  requests: {
+                    cpu: '10m',
+                    memory: '32Mi',
+                  },
+                  limits: {
+                    cpu: '100m',
+                    memory: '128Mi',
+                  },
+                },
+              },
+            ],
+          },
+        },
         containerMode: {
           type: 'dind',
         },
@@ -250,6 +269,26 @@ local app = import 'app.json5';
                   {
                     name: 'ACTIONS_RUNTIME_TOKEN',
                     value: 'dummy-token',
+                  },
+                  {
+                    name: 'DOTNET_gcServer',
+                    value: '0',
+                  },
+                  {
+                    name: 'DOTNET_GCHeapHardLimit',
+                    value: '0x10000000',
+                  },
+                  {
+                    name: 'DOTNET_GCConserveMemory',
+                    value: '9',
+                  },
+                  {
+                    name: 'DOTNET_TieredPGO',
+                    value: '0',
+                  },
+                  {
+                    name: 'MALLOC_ARENA_MAX',
+                    value: '2',
                   },
                 ],
               },
