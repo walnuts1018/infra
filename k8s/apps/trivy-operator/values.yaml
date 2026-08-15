@@ -20,16 +20,17 @@ trivy:
   ignoreUnfixed: true
 
 operator:
-  privateRegistryScanSecretsNames:
-    trivy-system: ghcr-login-secret
   vulnerabilityScannerEnabled: false
+  sbomGenerationEnabled: false
+  clusterSbomCacheEnabled: false
+  exposedSecretScannerEnabled: false
   metricsFindingsEnabled: true
-  metricsVulnIdEnabled: true
-  metricsExposedSecretInfo: true
+  metricsVulnIdEnabled: false
+  metricsExposedSecretInfo: false
+  metricsImageInfo: false
   metricsConfigAuditInfo: true
   metricsRbacAssessmentInfo: true
   metricsInfraAssessmentInfo: true
-  metricsImageInfo: true
   metricsClusterComplianceInfo: true
 
 resources:
