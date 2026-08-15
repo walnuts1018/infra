@@ -19,6 +19,7 @@ local app = import 'app.json5';
     // バケットごとに具体的な hostname を列挙する。バケットを追加したらここにも追記する。
     hostnames: [
       'visual-regression-tracker.seaweedfs.local.walnuts.dev',
+      'picca.seaweedfs.walnuts.dev',
     ],
     rules: [
       {
