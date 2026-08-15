@@ -19,8 +19,7 @@ variable "oci_private_key" {
 }
 
 locals {
-  # Must match the seaweedfs-default app's "terraform" S3 identity access key.
-  seaweedfs_access_key = "terraform"
+  seaweedfs_access_key = "HF1WMN5WE8Y1F05KEQRAO"
 }
 
 variable "seaweedfs_secret_key" {
