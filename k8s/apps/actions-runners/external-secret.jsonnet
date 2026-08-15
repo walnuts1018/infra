@@ -6,21 +6,21 @@
     {
       secretKey: 'github_app_id',
       remoteRef: {
-        key: 'github',
+        key: 'github-arc',
         property: 'github_app_id',
       },
     },
     {
       secretKey: 'github_app_installation_id',
       remoteRef: {
-        key: 'github',
+        key: 'github-arc',
         property: 'github_app_installation_id',
       },
     },
     {
       secretKey: 'github_app_private_key',
       remoteRef: {
-        key: 'github',
+        key: 'github-arc',
         property: 'github_app_private_key',
       },
     },
