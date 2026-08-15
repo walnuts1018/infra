@@ -236,21 +236,21 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
           nodeSelector: {
             'kubernetes.io/arch': 'amd64',
           },
+          resources: {
+            requests: {
+              cpu: size.cpuRequest,
+              memory: size.memoryRequest,
+            },
+            limits: {
+              cpu: size.cpuLimit,
+              memory: size.memoryLimit,
+            },
+          },
           containers: [
             {
               name: 'runner',
               image: 'ghcr.io/walnuts1018/infra/actions-runner:2.336.0',
               command: ['/home/runner/run.sh'],
-              resources: {
-                requests: {
-                  cpu: size.cpuRequest,
-                  memory: size.memoryRequest,
-                },
-                limits: {
-                  cpu: size.cpuLimit,
-                  memory: size.memoryLimit,
-                },
-              },
               env: [
                 {
                   name: 'ACTIONS_CACHE_URL',
