@@ -7,7 +7,7 @@ local config = import 'config.libsonnet';
 // consuming app's own ExternalSecret-managed Secret (rather than a Secret
 // shared across identities) lets that Secret stay the single source of
 // truth, instead of racing another controller for ownership of a shared one.
-local targets = {
+local appOwnedTargets = {
   stalwart: {
     namespace: 'stalwart',
     secretName: (import '../stalwart/external-secret.jsonnet').spec.target.name,
@@ -27,6 +27,10 @@ local targets = {
     secretKeyField: 'AWS_SECRET_ACCESS_KEY',
   },
 };
+
+// Identities without a consuming app (e.g. terraform, mac_hatena) get their
+// own Secret managed alongside this app; see external-secrets.libsonnet.
+local targets = appOwnedTargets + (import 'external-secrets.libsonnet').selfManagedCredentialTargets;
 
 [
   {
