@@ -1,4 +1,4 @@
-local helm = import '../../../components/helm.libsonnet';
+local helm = import '../../components/helm.libsonnet';
 local app = import '../app.json5';
 
 {
