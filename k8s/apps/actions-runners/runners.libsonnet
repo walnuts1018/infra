@@ -285,6 +285,7 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
             {
               name: 'runner',
               image: 'ghcr.io/walnuts1018/infra/actions-runner:2.336.0',
+              imagePullPolicy: 'Always',
               command: ['/home/runner/run.sh'],
               env: [
                 {
