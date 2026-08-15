@@ -43,6 +43,8 @@ Kubernetes クラスタに適用される Manifest 群です。
 
 ### システム・インフラ
 
+- **actions-runner-controller**: GitHub Actions Runner Controller (ARC) Operator
+- **actions-runners**: GitHub Actions Self-hosted Runner Scale Sets (Small / Large)
 - **api-server-proxy**
 - **api-server-service-account-issuer-discovery**
 - **argocd-proxy**
