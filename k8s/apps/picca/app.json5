@@ -1,0 +1,7 @@
+{
+  name: "picca",
+  namespace: "picca",
+  clusters: {
+    kurumi: {},
+  },
+}
