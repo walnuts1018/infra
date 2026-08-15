@@ -1,9 +1,3 @@
-fullnameOverride: gha-cache-server
-
-serviceAccount:
-  create: true
-  name: gha-cache-server
-
 config:
   enableDirectDownloads: false
   cacheCleanupOlderThanDays: 30
