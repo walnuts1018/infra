@@ -17,13 +17,19 @@ local app = import 'app.json5';
       memoryRequest: '1Gi',
       memoryLimit: '8Gi',
       minRunners: 0,
-      maxRunners: 2,
+      maxRunners: 5,
     },
   },
 
   makeRunnerSet(repoName, repoUrl, size, customParams={})::
-    local sizeConfig = $.sizes[size];
-    local scaleSetName = 'arc-' + repoName + '-' + size;
+    local isObj = std.isObject(size);
+    local sizeName = if isObj then (if std.objectHas(size, 'name') then size.name else if std.objectHas(size, 'size') then size.size else error 'size name is required') else size;
+    local baseConfig = if std.objectHas($.sizes, sizeName) then $.sizes[sizeName] else error 'Unknown size: ' + sizeName;
+    local sizeOverride = if isObj then size else {};
+    local sizeConfig = baseConfig + sizeOverride;
+    local sizeCustom = if isObj && std.objectHas(size, 'custom') then size.custom else {};
+    local mergedCustom = std.mergePatch(sizeCustom, customParams);
+    local scaleSetName = 'arc-' + repoName + '-' + sizeName;
     helm {
       name: scaleSetName,
       namespace: app.namespace,
@@ -295,14 +301,34 @@ local app = import 'app.json5';
             ],
           },
         },
-      }, customParams),
+      }, mergedCustom),
     },
 
   generate(repos)::
     std.flattenArrays([
+      local repoCustom = if std.objectHas(repo, 'custom') then repo.custom else {};
+      local normalizedSizes =
+        if std.isArray(repo.sizes) then
+          [
+            if std.isString(s) then
+              { name: s }
+            else if std.isObject(s) then
+              s
+            else
+              error 'Invalid size element in repo ' + repo.name + ': ' + std.toString(s)
+            for s in repo.sizes
+          ]
+        else if std.isObject(repo.sizes) then
+          [
+            { name: k } + (if std.isObject(repo.sizes[k]) then repo.sizes[k] else {})
+            for k in std.objectFields(repo.sizes)
+          ]
+        else
+          error 'sizes in repo ' + repo.name + ' must be an array or an object';
+
       [
-        $.makeRunnerSet(repo.name, repo.url, size, if std.objectHas(repo, 'custom') then repo.custom else {})
-        for size in repo.sizes
+        $.makeRunnerSet(repo.name, repo.url, sizeItem, repoCustom)
+        for sizeItem in normalizedSizes
       ]
       for repo in repos
     ]),
