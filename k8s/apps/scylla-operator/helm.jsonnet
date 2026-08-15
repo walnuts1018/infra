@@ -4,6 +4,6 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
   namespace: app.namespace,
   chart: 'scylla-operator',
   repoURL: 'https://scylla-operator-charts.storage.googleapis.com/stable',
-  targetRevision: 'v1.21.0',
+  targetRevision: 'v1.21.1',
   values: (importstr 'values.yaml'),
 }
