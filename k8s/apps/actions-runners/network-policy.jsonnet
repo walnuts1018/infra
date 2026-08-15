@@ -12,7 +12,25 @@ local app = import 'app.json5';
       'Ingress',
       'Egress',
     ],
-    ingress: [],
+    ingress: [
+      {
+        from: [
+          {
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'opentelemetry-collector',
+              },
+            },
+          },
+        ],
+        ports: [
+          {
+            protocol: 'TCP',
+            port: 8080,
+          },
+        ],
+      },
+    ],
     egress: [
       {
         to: [

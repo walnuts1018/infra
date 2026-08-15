@@ -29,3 +29,8 @@ flags:
   ## Labels that match prefix specified in the list are excluded from propagation.
   excludeLabelPropagationPrefixes:
   - "argocd.argoproj.io/instance"
+
+metrics:
+  controllerManagerAddr: ":8080"
+  listenerAddr: ":8080"
+  listenerEndpoint: "/metrics"
