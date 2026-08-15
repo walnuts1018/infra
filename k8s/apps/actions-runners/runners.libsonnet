@@ -227,9 +227,6 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
           ],
         },
       },
-      containerMode: {
-        type: 'dind',
-      },
       template: {
         spec: {
           automountServiceAccountToken: false,
@@ -246,6 +243,44 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
               memory: size.memoryLimit,
             },
           },
+          initContainers: [
+            {
+              name: 'init-dind-externals',
+              image: 'ghcr.io/actions/actions-runner:latest',
+              command: ['cp', '-r', '/home/runner/externals/.', '/home/runner/tmpDir/'],
+              volumeMounts: [
+                { name: 'dind-externals', mountPath: '/home/runner/tmpDir' },
+              ],
+            },
+            {
+              name: 'dind',
+              image: 'docker:dind',
+              args: [
+                'dockerd',
+                '--host=unix:///var/run/docker.sock',
+                '--group=$(DOCKER_GROUP_GID)',
+              ],
+              env: [
+                { name: 'DOCKER_GROUP_GID', value: '123' },
+              ],
+              securityContext: {
+                privileged: true,
+              },
+              restartPolicy: 'Always',
+              startupProbe: {
+                exec: { command: ['docker', 'info'] },
+                initialDelaySeconds: 0,
+                failureThreshold: 24,
+                periodSeconds: 5,
+              },
+              volumeMounts: [
+                { name: 'work', mountPath: '/home/runner/_work' },
+                { name: 'dind-sock', mountPath: '/var/run' },
+                { name: 'dind-externals', mountPath: '/home/runner/externals' },
+                { name: 'docker-storage', mountPath: '/var/lib/docker' },
+              ],
+            },
+          ],
           containers: [
             {
               name: 'runner',
@@ -284,8 +319,26 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
                   name: 'MALLOC_ARENA_MAX',
                   value: '2',
                 },
+                {
+                  name: 'DOCKER_HOST',
+                  value: 'unix:///var/run/docker.sock',
+                },
+                {
+                  name: 'RUNNER_WAIT_FOR_DOCKER_IN_SECONDS',
+                  value: '120',
+                },
+              ],
+              volumeMounts: [
+                { name: 'work', mountPath: '/home/runner/_work' },
+                { name: 'dind-sock', mountPath: '/var/run' },
               ],
             },
+          ],
+          volumes: [
+            { name: 'work', emptyDir: {} },
+            { name: 'dind-sock', emptyDir: {} },
+            { name: 'dind-externals', emptyDir: {} },
+            { name: 'docker-storage', emptyDir: {} },
           ],
         },
       },
