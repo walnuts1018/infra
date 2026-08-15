@@ -40,6 +40,28 @@ local app = import 'app.json5';
           },
         ],
       },
+      {
+        ports: [
+          {
+            protocol: 'TCP',
+            port: 3000,
+          },
+        ],
+        to: [
+          {
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'arc-systems',
+              },
+            },
+            podSelector: {
+              matchLabels: {
+                'app.kubernetes.io/name': 'github-actions-cache-server',
+              },
+            },
+          },
+        ],
+      },
     ],
   },
 }

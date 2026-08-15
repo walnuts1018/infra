@@ -1,0 +1,4 @@
+{
+  name: 'gha-cache-server',
+  namespace: 'arc-systems',
+}

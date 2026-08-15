@@ -11,6 +11,10 @@
       "publicRead": []
     },
     {
+      "name": "gha-cache",
+      "publicRead": []
+    },
+    {
       "name": "ipu",
       "publicRead": []
     },
@@ -231,6 +235,11 @@
             "claim": "sub",
             "value": "system:serviceaccount:stalwart:stalwart",
             "role": "stalwart"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:arc-systems:gha-cache-server",
+            "role": "gha-cache-server"
           }
         ]
       },
@@ -415,6 +424,20 @@
             ]
           }
         ]
+      },
+      {
+        "name": "gha-cache-server",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:*"
+            ],
+            "buckets": [
+              "gha-cache"
+            ]
+          }
+        ]
       }
     ],
     "roles": [
@@ -494,6 +517,13 @@
         "name": "stalwart",
         "policies": [
           "stalwart"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "gha-cache-server",
+        "policies": [
+          "gha-cache-server"
         ],
         "provider": "k8s"
       }
