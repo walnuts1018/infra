@@ -239,7 +239,7 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
           containers: [
             {
               name: 'runner',
-              image: 'ghcr.io/actions/actions-runner:2.336.0',
+              image: 'ghcr.io/walnuts1018/infra/actions-runner:2.336.0',
               command: ['/home/runner/run.sh'],
               resources: {
                 requests: {
