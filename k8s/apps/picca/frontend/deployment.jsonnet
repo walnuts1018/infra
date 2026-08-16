@@ -25,7 +25,7 @@ local externalSecret = import '../external-secret.jsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'frontend',
-            image: 'ghcr.io/walnuts1018/picca/frontend:v0.0.6',
+            image: 'ghcr.io/walnuts1018/picca/frontend:v0.0.7',
             imagePullPolicy: 'IfNotPresent',
             env: [
               { name: 'PICCA_API_URL', value: 'http://picca-apiserver.picca.svc.cluster.local:8080' },
