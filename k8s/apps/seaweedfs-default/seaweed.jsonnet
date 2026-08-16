@@ -31,9 +31,6 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
       requests: {
         cpu: '6m',
         memory: '256Mi',
-        // local-path doesn't enforce this as a quota (it just creates a
-        // hostPath dir on the node's root disk), so this mainly documents
-        // the intended capacity ceiling matched by maxVolumeCounts below.
         storage: '300Gi',
       },
       limits: {
@@ -41,25 +38,9 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         memory: '2Gi',
       },
       storageClassName: 'local-path',
-      // The operator's default (-max=0, auto-detect) computes free slots as
-      // (real free disk) MINUS the unused headroom already reserved inside
-      // existing volumes below their volumeSizeLimitMB cap, summed across
-      // every volume on the disk. With hundreds of partially-filled volumes
-      // from other collections, that reserved headroom alone can exceed the
-      // real free disk, pinning the computed max at (or near) the current
-      // volume count — i.e. zero room to grow, even with the disk mostly
-      // empty. This blocks new collections (like a fresh S3 bucket) from
-      // ever getting their first volume ("No matching data node found").
-      // Pin an explicit ceiling instead.
-      //
-      // This is a COUNT of volume slots, not a byte size: existing
-      // collections (loki-chunks, tempo, ...) create many volumes well
-      // below the 1024MB volumeSizeLimitMB (average ~144MB observed), so
-      // count and bytes don't track linearly. The real volume count is
-      // already ~669 cluster-wide (~223/node average), so size this off
-      // that: 300/node gives ~35% headroom over the current average while
-      // the worst case (every volume filling to volumeSizeLimitMB) still
-      // stays under the smallest volume server's real disk size (~371GB).
+      // PVのサイズとは関係なく、maxVolumeCounts×volumeSizeLimitMBが1ノードあたりの最大ストレージ容量になる
+      // 0にすると自動設定される、が、実際にはまだストレージが空いているのに「No matching data node found」が起こることがあったので手動調整することにする
+      // 今の感じだと、1ボリュームあたり平均144MB程度であり、1ノードあたりのボリューム数は平均223程度だったので、一旦300にしてみる。
       maxVolumeCounts: 300,
       metricsPort: 9327,
       affinity: {
