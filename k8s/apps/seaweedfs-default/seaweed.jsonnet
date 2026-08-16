@@ -32,10 +32,8 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         cpu: '6m',
         memory: '256Mi',
         // local-path doesn't enforce this as a quota (it just creates a
-        // hostPath dir on the node's root disk), but the volume server's
-        // `-max=0` auto-detects its usable slot count from real free disk
-        // space at startup, so keep this in the right ballpark of what's
-        // actually usable rather than the previous, wildly-off 2Gi.
+        // hostPath dir on the node's root disk), so this mainly documents
+        // the intended capacity ceiling matched by maxVolumeCounts below.
         storage: '100Gi',
       },
       limits: {
@@ -43,6 +41,18 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         memory: '2Gi',
       },
       storageClassName: 'local-path',
+      // The operator's default (-max=0, auto-detect) computes free slots as
+      // (real free disk) MINUS the unused headroom already reserved inside
+      // existing volumes below their volumeSizeLimitMB cap, summed across
+      // every volume on the disk. With hundreds of partially-filled volumes
+      // from other collections, that reserved headroom alone can exceed the
+      // real free disk, pinning the computed max at (or near) the current
+      // volume count — i.e. zero room to grow, even with the disk mostly
+      // empty. This blocks new collections (like a fresh S3 bucket) from
+      // ever getting their first volume ("No matching data node found").
+      // Pin an explicit ceiling instead, matching the storage request above
+      // (100Gi / 1024MB volumeSizeLimitMB).
+      maxVolumeCounts: 100,
       metricsPort: 9327,
       affinity: {
         local labels = {
