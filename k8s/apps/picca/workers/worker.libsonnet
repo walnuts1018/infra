@@ -2,6 +2,7 @@ local labels = import '../../../components/labels.libsonnet';
 local app = import '../app.json5';
 local commonEnv = import '../env.libsonnet';
 local externalSecret = import '../external-secret.jsonnet';
+local plans = import '../plans.libsonnet';
 local s3Irsa = import '../s3-irsa.libsonnet';
 local scyllaTls = import '../scylla-tls.libsonnet';
 
@@ -35,7 +36,7 @@ function(name, image) {
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
             ],
-            env: commonEnv + s3Irsa.env + scyllaTls.env + [
+            env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
               { name: 'OTEL_SERVICE_NAME', value: 'picca-' + name },
             ],
             resources: {
@@ -58,7 +59,7 @@ function(name, image) {
             volumeMounts: [
               { name: 'tmp', mountPath: '/tmp' },
               s3Irsa.volumeMount,
-            ] + scyllaTls.volumeMounts,
+            ] + scyllaTls.volumeMounts + plans.volumeMounts,
           },
         ],
         securityContext: {
@@ -69,7 +70,7 @@ function(name, image) {
         volumes: [
           { name: 'tmp', emptyDir: {} },
           s3Irsa.volume,
-        ] + scyllaTls.volumes,
+        ] + scyllaTls.volumes + plans.volumes,
       },
     },
   },

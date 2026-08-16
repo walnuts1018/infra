@@ -2,6 +2,7 @@ local labels = import '../../../components/labels.libsonnet';
 local app = import '../app.json5';
 local commonEnv = import '../env.libsonnet';
 local externalSecret = import '../external-secret.jsonnet';
+local plans = import '../plans.libsonnet';
 local s3Irsa = import '../s3-irsa.libsonnet';
 local scyllaTls = import '../scylla-tls.libsonnet';
 {
@@ -50,7 +51,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
             ],
-            env: commonEnv + s3Irsa.env + scyllaTls.env + [
+            env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
               { name: 'OTEL_SERVICE_NAME', value: 'picca-apiserver' },
             ],
             ports: [
@@ -73,7 +74,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
             volumeMounts: [
               { name: 'tmp', mountPath: '/tmp' },
               s3Irsa.volumeMount,
-            ] + scyllaTls.volumeMounts,
+            ] + scyllaTls.volumeMounts + plans.volumeMounts,
           },
         ],
         securityContext: {
@@ -84,7 +85,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
         volumes: [
           { name: 'tmp', emptyDir: {} },
           s3Irsa.volume,
-        ] + scyllaTls.volumes,
+        ] + scyllaTls.volumes + plans.volumes,
       },
     },
   },
