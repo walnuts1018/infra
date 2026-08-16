@@ -110,6 +110,27 @@ local app = import 'app.json5';
           },
         ],
       },
+      {
+        toEndpoints: [
+          {
+            matchLabels: {
+              'k8s:io.kubernetes.pod.namespace': 'seaweedfs',
+              'k8s:app.kubernetes.io/name': 'seaweedfs',
+              'k8s:app.kubernetes.io/component': 'volume',
+            },
+          },
+        ],
+        toPorts: [
+          {
+            ports: [
+              {
+                port: '8080',
+                protocol: 'TCP',
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
 }
