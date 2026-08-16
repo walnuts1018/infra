@@ -23,12 +23,6 @@
       "publicRead": []
     },
     {
-      "name": "iso",
-      "publicRead": [
-        "*"
-      ]
-    },
-    {
       "name": "loki-admin",
       "publicRead": []
     },
