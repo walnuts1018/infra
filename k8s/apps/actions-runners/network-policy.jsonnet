@@ -1,103 +1,118 @@
 local app = import 'app.json5';
 {
-  apiVersion: 'networking.k8s.io/v1',
-  kind: 'NetworkPolicy',
+  apiVersion: 'cilium.io/v2',
+  kind: 'CiliumNetworkPolicy',
   metadata: {
     name: app.name,
     namespace: app.namespace,
   },
   spec: {
-    podSelector: {},
-    policyTypes: [
-      'Ingress',
-      'Egress',
-    ],
+    endpointSelector: {},
     ingress: [
       {
-        from: [
+        fromEndpoints: [
           {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'opentelemetry-collector',
-              },
+            matchLabels: {
+              'io.kubernetes.pod.namespace': 'opentelemetry-collector',
             },
           },
         ],
-        ports: [
+        toPorts: [
           {
-            protocol: 'TCP',
-            port: 8080,
+            ports: [
+              {
+                port: '8080',
+                protocol: 'TCP',
+              },
+            ],
           },
         ],
       },
     ],
     egress: [
       {
-        to: [
+        toCIDRSet: [
           {
-            ipBlock: {
-              cidr: '0.0.0.0/0',
-              except: [
-                '192.168.0.0/16',
-                '10.244.0.0/16',
-                '10.96.0.0/12',
+            cidr: '0.0.0.0/0',
+            except: [
+              '192.168.0.0/16',
+              '10.244.0.0/16',
+              '10.96.0.0/12',
+            ],
+          },
+        ],
+      },
+      {
+        toEndpoints: [
+          {
+            matchLabels: {
+              'io.kubernetes.pod.namespace': 'kube-system',
+              'k8s-app': 'kube-dns',
+            },
+          },
+        ],
+        toPorts: [
+          {
+            ports: [
+              {
+                port: '53',
+                protocol: 'ANY',
+              },
+            ],
+            rules: {
+              dns: [
+                {
+                  matchPattern: '*',
+                },
               ],
             },
           },
+        ],
+      },
+      {
+        toEndpoints: [
           {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'kube-system',
-              },
+            matchLabels: {
+              'io.kubernetes.pod.namespace': 'arc-systems',
+              'app.kubernetes.io/name': 'github-actions-cache-server',
             },
-            podSelector: {
-              matchLabels: {
-                'k8s-app': 'kube-dns',
+          },
+        ],
+        toPorts: [
+          {
+            ports: [
+              {
+                port: '3000',
+                protocol: 'TCP',
               },
-            },
+            ],
           },
         ],
       },
       {
-        ports: [
+        toEndpoints: [
           {
-            protocol: 'TCP',
-            port: 3000,
-          },
-        ],
-        to: [
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'arc-systems',
-              },
-            },
-            podSelector: {
-              matchLabels: {
-                'app.kubernetes.io/name': 'github-actions-cache-server',
-              },
+            matchLabels: {
+              'io.kubernetes.pod.namespace': 'seaweedfs',
+              'app.kubernetes.io/name': 'seaweedfs',
+              'app.kubernetes.io/component': 'filer',
             },
           },
         ],
-      },
-      {
-        ports: [
+        toPorts: [
           {
-            protocol: 'TCP',
-            port: 443,
-          },
-        ],
-        to: [
-          {
-            ipBlock: {
-              cidr: '192.168.12.138/32',
-            },
-          },
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'envoy-gateway-system',
+            ports: [
+              {
+                port: '8333',
+                protocol: 'TCP',
               },
+            ],
+            rules: {
+              http: [
+                {
+                  path: '^/gha-cache/.*',
+                },
+              ],
             },
           },
         ],
