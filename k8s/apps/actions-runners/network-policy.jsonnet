@@ -13,7 +13,7 @@ local app = import 'app.json5';
         fromEndpoints: [
           {
             matchLabels: {
-              'io.kubernetes.pod.namespace': 'opentelemetry-collector',
+              'k8s:io.kubernetes.pod.namespace': 'opentelemetry-collector',
             },
           },
         ],
@@ -46,8 +46,8 @@ local app = import 'app.json5';
         toEndpoints: [
           {
             matchLabels: {
-              'io.kubernetes.pod.namespace': 'kube-system',
-              'k8s-app': 'kube-dns',
+              'k8s:io.kubernetes.pod.namespace': 'kube-system',
+              'k8s:k8s-app': 'kube-dns',
             },
           },
         ],
@@ -73,8 +73,8 @@ local app = import 'app.json5';
         toEndpoints: [
           {
             matchLabels: {
-              'io.kubernetes.pod.namespace': 'arc-systems',
-              'app.kubernetes.io/name': 'github-actions-cache-server',
+              'k8s:io.kubernetes.pod.namespace': 'arc-systems',
+              'k8s:app.kubernetes.io/name': 'github-actions-cache-server',
             },
           },
         ],
@@ -93,9 +93,9 @@ local app = import 'app.json5';
         toEndpoints: [
           {
             matchLabels: {
-              'io.kubernetes.pod.namespace': 'seaweedfs',
-              'app.kubernetes.io/name': 'seaweedfs',
-              'app.kubernetes.io/component': 'filer',
+              'k8s:io.kubernetes.pod.namespace': 'seaweedfs',
+              'k8s:app.kubernetes.io/name': 'seaweedfs',
+              'k8s:app.kubernetes.io/component': 'filer',
             },
           },
         ],
