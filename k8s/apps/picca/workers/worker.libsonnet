@@ -42,6 +42,19 @@ function(name, image) {
               requests: { cpu: '20m', memory: '64Mi' },
               limits: { cpu: '500m', memory: '512Mi' },
             },
+            ports: [
+              { containerPort: 8080, name: 'health' },
+            ],
+            startupProbe: {
+              httpGet: { path: '/healthz', port: 8080 },
+              periodSeconds: 10,
+              failureThreshold: 18,
+            },
+            livenessProbe: {
+              httpGet: { path: '/healthz', port: 8080 },
+              periodSeconds: 15,
+              failureThreshold: 3,
+            },
             volumeMounts: [
               { name: 'tmp', mountPath: '/tmp' },
               s3Irsa.volumeMount,
