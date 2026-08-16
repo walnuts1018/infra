@@ -16,7 +16,7 @@ local app = import 'app.json5';
     },
     podMetricsEndpoints: [
       {
-        portNumber: 8080,
+        port: 'metrics',
         path: '/metrics',
         interval: '15s',
       },
