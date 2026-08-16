@@ -61,8 +61,6 @@ assert std.all([std.member(policyNames + ['AmazonS3FullAccess'], p) for p in att
 {
   buckets: [desired.bucketDefaults + bucket for bucket in desired.buckets],
   identities: identities,
-  iam: {
-    sts: sts.build(desired.sts),
-  },
+  iam: sts.build(desired.sts),
   stsSigningKeyProperty: desired.sts.signingKeyProperty,
 }
