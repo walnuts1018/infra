@@ -3,16 +3,57 @@ local app = import 'app.json5';
 local hooksConfigMap = import 'configmap-runner-hooks.jsonnet';
 
 local sizes = {
-  small: {
+  // バランス型 (Standard)
+  'standard-nano-amd64': {
+    cpuRequest: '200m',
+    cpuLimit: '1',
+    memoryRequest: '256Mi',
+    memoryLimit: '1Gi',
+  },
+  'standard-small-amd64': {
     cpuRequest: '500m',
     cpuLimit: '1',
     memoryRequest: '512Mi',
-    memoryLimit: '4Gi',
+    memoryLimit: '2Gi',
   },
-  large: {
+  'standard-medium-amd64': {
     cpuRequest: '1',
     cpuLimit: '2',
     memoryRequest: '1Gi',
+    memoryLimit: '4Gi',
+  },
+  'standard-large-amd64': {
+    cpuRequest: '2',
+    cpuLimit: '4',
+    memoryRequest: '2Gi',
+    memoryLimit: '8Gi',
+  },
+
+  // メモリ重視
+  'highmem-medium-amd64': {
+    cpuRequest: '1',
+    cpuLimit: '2',
+    memoryRequest: '2Gi',
+    memoryLimit: '8Gi',
+  },
+  'highmem-large-amd64': {
+    cpuRequest: '2',
+    cpuLimit: '4',
+    memoryRequest: '4Gi',
+    memoryLimit: '16Gi',
+  },
+
+  // CPU重視
+  'highcpu-medium-amd64': {
+    cpuRequest: '2',
+    cpuLimit: '4',
+    memoryRequest: '2Gi',
+    memoryLimit: '6Gi',
+  },
+  'highcpu-large-amd64': {
+    cpuRequest: '4',
+    cpuLimit: '8',
+    memoryRequest: '4Gi',
     memoryLimit: '8Gi',
   },
 };
