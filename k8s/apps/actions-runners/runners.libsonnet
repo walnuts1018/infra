@@ -1,5 +1,6 @@
 local helm = import '../../components/helm.libsonnet';
 local app = import 'app.json5';
+local hooksConfigMap = import 'configmap-runner-hooks.jsonnet';
 
 local sizes = {
   small: {
@@ -349,7 +350,7 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
             { name: 'dind-sock', emptyDir: {} },
             { name: 'dind-externals', emptyDir: {} },
             { name: 'docker-storage', emptyDir: {} },
-            { name: 'runner-hooks', configMap: { name: 'runner-hooks', defaultMode: 493 } },
+            { name: 'runner-hooks', configMap: { name: hooksConfigMap.metadata.name, defaultMode: 493 } },
           ],
         },
       },
