@@ -96,6 +96,7 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
       extraArgs: [
         '-s3.iam.config=/etc/seaweedfs/iam.json',
         '-s3.domainName=seaweedfs.local.walnuts.dev',
+        '-v=2',
       ],
       metricsPort: 9327,
       volumes: [
