@@ -1,6 +1,6 @@
 {
-  name: 'gha-cache-server',
-  namespace: 'arc-systems',
+  name: "gha-cache-server",
+  namespace: "arc-systems",
   clusters: {
     kurumi: {},
   },
