@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ghcr.io/netbox-community/netbox:v4.6.8@sha256:1cc0849088b211d8d796bf6f4e910e062e8437cafcb381c4a40e88077cab61a8
+FROM ghcr.io/netbox-community/netbox:v4.6.8@sha256:1abb7a50280cde87aca7e1a7391cde620f18c617333b24692adb1c077e58ecda
 RUN --mount=type=cache,target=/root/.cache/uv \
     /usr/local/bin/uv pip install \
     netbox-bgp \
