@@ -246,7 +246,7 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
           initContainers: [
             {
               name: 'init-dind-externals',
-              image: 'ghcr.io/actions/actions-runner:latest',
+              image: 'ghcr.io/walnuts1018/infra/actions-runner:2.336.0',
               command: ['cp', '-r', '/home/runner/externals/.', '/home/runner/tmpDir/'],
               volumeMounts: [
                 { name: 'dind-externals', mountPath: '/home/runner/tmpDir' },
