@@ -328,10 +328,19 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
                   name: 'CUSTOM_ACTIONS_RESULTS_URL',
                   value: 'http://gha-cache-server-github-actions-cache-server.arc-systems.svc.cluster.local:3000/',
                 },
+                {
+                  name: 'ACTIONS_RUNNER_HOOK_JOB_STARTED',
+                  value: '/etc/arc/hooks/job-started.sh',
+                },
+                {
+                  name: 'ACTIONS_RUNNER_HOOK_JOB_COMPLETED',
+                  value: '/etc/arc/hooks/job-completed.sh',
+                },
               ],
               volumeMounts: [
                 { name: 'work', mountPath: '/home/runner/_work' },
                 { name: 'dind-sock', mountPath: '/var/run' },
+                { name: 'runner-hooks', mountPath: '/etc/arc/hooks' },
               ],
             },
           ],
@@ -340,6 +349,7 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
             { name: 'dind-sock', emptyDir: {} },
             { name: 'dind-externals', emptyDir: {} },
             { name: 'docker-storage', emptyDir: {} },
+            { name: 'runner-hooks', configMap: { name: 'runner-hooks', defaultMode: 493 } },
           ],
         },
       },
