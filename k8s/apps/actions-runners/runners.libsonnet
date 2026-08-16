@@ -268,6 +268,7 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
                 'dockerd',
                 '--host=unix:///var/run/docker.sock',
                 '--group=$(DOCKER_GROUP_GID)',
+                '--mtu=1450',
               ],
               env: [
                 { name: 'DOCKER_GROUP_GID', value: '123' },
