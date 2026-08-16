@@ -1,153 +1,118 @@
 local app = import 'app.json5';
 {
-  apiVersion: 'cilium.io/v2',
-  kind: 'CiliumNetworkPolicy',
+  apiVersion: 'networking.k8s.io/v1',
+  kind: 'NetworkPolicy',
   metadata: {
     name: app.name,
     namespace: app.namespace,
   },
   spec: {
-    endpointSelector: {},
+    podSelector: {},
+    policyTypes: [
+      'Ingress',
+      'Egress',
+    ],
     ingress: [
       {
-        fromEndpoints: [
+        from: [
           {
-            matchLabels: {
-              'k8s:io.kubernetes.pod.namespace': 'opentelemetry-collector',
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'opentelemetry-collector',
+              },
             },
           },
         ],
-        toPorts: [
+        ports: [
           {
-            ports: [
-              {
-                port: '8080',
-                protocol: 'TCP',
-              },
-            ],
+            port: 8080,
+            protocol: 'TCP',
           },
         ],
       },
     ],
     egress: [
       {
-        toCIDRSet: [
+        to: [
           {
-            cidr: '0.0.0.0/0',
-            except: [
-              '192.168.0.0/16',
-              '10.244.0.0/16',
-              '10.96.0.0/12',
-            ],
-          },
-        ],
-      },
-      {
-        toEndpoints: [
-          {
-            matchLabels: {
-              'k8s:io.kubernetes.pod.namespace': 'kube-system',
-              'k8s:k8s-app': 'kube-dns',
-            },
-          },
-        ],
-        toPorts: [
-          {
-            ports: [
-              {
-                port: '53',
-                protocol: 'ANY',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        toEndpoints: [
-          {
-            matchLabels: {
-              'k8s:io.kubernetes.pod.namespace': 'arc-systems',
-              'k8s:app.kubernetes.io/name': 'github-actions-cache-server',
-            },
-          },
-        ],
-        toPorts: [
-          {
-            ports: [
-              {
-                port: '3000',
-                protocol: 'TCP',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        toEndpoints: [
-          {
-            matchLabels: {
-              'k8s:io.kubernetes.pod.namespace': 'seaweedfs',
-              'k8s:app.kubernetes.io/name': 'seaweedfs',
-              'k8s:app.kubernetes.io/component': 'filer',
-            },
-          },
-        ],
-        toPorts: [
-          {
-            ports: [
-              {
-                port: '8333',
-                protocol: 'TCP',
-              },
-            ],
-            rules: {
-              http: [
-                {
-                  path: '^/gha-cache/.*',
-                },
+            ipBlock: {
+              cidr: '0.0.0.0/0',
+              except: [
+                '192.168.0.0/16',
+                '10.244.0.0/16',
+                '10.96.0.0/12',
               ],
             },
           },
         ],
       },
       {
-        toEndpoints: [
+        to: [
           {
-            matchLabels: {
-              'k8s:io.kubernetes.pod.namespace': 'seaweedfs',
-              'k8s:app.kubernetes.io/name': 'seaweedfs',
-              'k8s:app.kubernetes.io/component': 'volume',
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'kube-system',
+              },
+            },
+            podSelector: {
+              matchLabels: {
+                'k8s-app': 'kube-dns',
+              },
             },
           },
         ],
-        toPorts: [
+        ports: [
           {
-            ports: [
-              {
-                port: '8080',
-                protocol: 'TCP',
-              },
-            ],
+            port: 53,
+            protocol: 'UDP',
+          },
+          {
+            port: 53,
+            protocol: 'TCP',
           },
         ],
       },
       {
-        toEndpoints: [
+        to: [
           {
-            matchLabels: {
-              'k8s:io.kubernetes.pod.namespace': 'opentelemetry-collector',
-              'k8s:app.kubernetes.io/name': 'default-collector',
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'arc-systems',
+              },
+            },
+            podSelector: {
+              matchLabels: {
+                'app.kubernetes.io/name': 'github-actions-cache-server',
+              },
             },
           },
         ],
-        toPorts: [
+        ports: [
           {
-            ports: [
-              {
-                port: '4318',
-                protocol: 'TCP',
+            port: 3000,
+            protocol: 'TCP',
+          },
+        ],
+      },
+      {
+        to: [
+          {
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'opentelemetry-collector',
               },
-            ],
+            },
+            podSelector: {
+              matchLabels: {
+                'app.kubernetes.io/name': 'default-collector',
+              },
+            },
+          },
+        ],
+        ports: [
+          {
+            port: 4318,
+            protocol: 'TCP',
           },
         ],
       },
