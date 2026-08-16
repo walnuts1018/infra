@@ -34,7 +34,7 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         // local-path doesn't enforce this as a quota (it just creates a
         // hostPath dir on the node's root disk), so this mainly documents
         // the intended capacity ceiling matched by maxVolumeCounts below.
-        storage: '100Gi',
+        storage: '150Gi',
       },
       limits: {
         cpu: '1',
@@ -51,8 +51,14 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
       // empty. This blocks new collections (like a fresh S3 bucket) from
       // ever getting their first volume ("No matching data node found").
       // Pin an explicit ceiling instead, matching the storage request above
-      // (100Gi / 1024MB volumeSizeLimitMB).
-      maxVolumeCounts: 100,
+      // (150Gi / 1024MB volumeSizeLimitMB). Current actual usage is ~96GB
+      // logical (~64GB/node physical average with 001 replication) across
+      // loki-chunks and cloudnative-pg-backup as the two largest, still-
+      // growing collections, so this leaves roughly 2x headroom over the
+      // current per-node footprint while staying well under the smallest
+      // volume server's real disk size (~371GB), leaving room for other
+      // workloads sharing that node's disk via local-path.
+      maxVolumeCounts: 150,
       metricsPort: 9327,
       affinity: {
         local labels = {
