@@ -36,6 +36,8 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
         counters: {
           gha_started_jobs_total: {
             labels: [
+              'name',
+              'namespace',
               'repository',
               'organization',
               'enterprise',
@@ -48,6 +50,8 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
           },
           gha_completed_jobs_total: {
             labels: [
+              'name',
+              'namespace',
               'repository',
               'organization',
               'enterprise',
@@ -89,6 +93,8 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
         histograms: {
           gha_job_startup_duration_seconds: {
             labels: [
+              'name',
+              'namespace',
               'repository',
               'organization',
               'enterprise',
@@ -148,6 +154,8 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
           },
           gha_job_execution_duration_seconds: {
             labels: [
+              'name',
+              'namespace',
               'repository',
               'organization',
               'enterprise',
