@@ -56,13 +56,6 @@ local role(providers, r) = {
 };
 
 {
-  // Builds the full top-level IAM config document that SeaweedFS's
-  // `-s3.iam.config` loader expects. Note that `policies` and `roles` are
-  // siblings of `sts`, NOT nested inside it: SeaweedFS's STSConfig struct
-  // has no `roles`/`policies` fields, so nesting them under `sts` causes
-  // them to be silently dropped (json.Unmarshal ignores unknown fields),
-  // leaving the role store empty and every AssumeRoleWithWebIdentity call
-  // failing with "role not found".
   build(sts):: {
     sts: {
       tokenDuration: sts.tokenDuration,
