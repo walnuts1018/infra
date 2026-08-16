@@ -1,1 +1,1 @@
-(import 'worker.libsonnet')('timeline-worker', 'ghcr.io/walnuts1018/picca/timeline-worker:v0.0.7')
+(import 'worker.libsonnet')('timeline-worker', 'ghcr.io/walnuts1018/picca/timeline-worker:v0.0.9')
