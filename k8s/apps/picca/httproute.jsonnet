@@ -17,8 +17,6 @@ local app = import 'app.json5';
       ],
       rules: [
         {
-          // /livez, /readyzはKubernetesのProbeがPodへ直接アクセスするために存在するエンドポイントであり、
-          // Gateway経由で外部公開する必要はないため意図的にmatchesへ含めない。
           matches: [
             { path: { type: 'PathPrefix', value: '/auth' } },
             { path: { type: 'PathPrefix', value: '/query' } },

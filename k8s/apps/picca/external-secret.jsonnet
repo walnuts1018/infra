@@ -70,14 +70,11 @@ local app = import 'app.json5';
   template_data: {
     DATABASE_URL: 'postgres://picca:{{ .postgres_password }}@postgresql-default-rw.databases.svc.cluster.local:5432/picca',
     SCYLLA_PASSWORD: '{{ .scylla_password }}',
-    // ValkeyClusterのService名はvalkey-operatorの命名規則により`valkey-<ValkeyCluster名>`となる。
     VALKEY_URL: 'redis://:{{ .valkey_password }}@valkey-picca-valkey.picca.svc.cluster.local:6379/0',
     valkey_password: '{{ .valkey_password }}',
     IMGPROXY_KEY: '{{ .imgproxy_key }}',
     IMGPROXY_SALT: '{{ .imgproxy_salt }}',
     GRAPHQL_QUERY_SIGNING_SECRET: '{{ .graphql_query_signing_secret }}',
-    // frontend(Nitro SSRサーバー)がRPC経由でクライアントへ配布する署名計算に使う。
-    // apiserver側の検証鍵と同じ値を使うため、1Password上は同一プロパティを参照する。
     PICCA_GRAPHQL_QUERY_SIGNING_SECRET: '{{ .graphql_query_signing_secret }}',
     OIDC_CLIENT_ID: '{{ .oidc_client_id }}',
     OIDC_CLIENT_SECRET: '{{ .oidc_client_secret }}',

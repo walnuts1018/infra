@@ -1,7 +1,3 @@
-// ScyllaDBクラスタ(PasswordAuthenticator + TLSクライアント証明書認証)へ接続するための共通設定。
-// k8s/apps/prfexample/deployment.jsonnet のパターンに倣うが、クライアント証明書Secretの
-// databases namespaceからのコピーはExternal Secrets Operatorのkubernetes providerで自動化する
-// (scylla-client-cert-store.jsonnet / scylla-client-cert-external-secret.jsonnet 参照)。
 {
   env: [
     { name: 'SCYLLA_CA_CERT_PATH', value: '/etc/certs/scylla-db/ca.crt' },

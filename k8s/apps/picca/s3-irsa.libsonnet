@@ -1,4 +1,3 @@
-// SeaweedFSのAssumeRoleWithWebIdentity(IRSA相当)用の共通設定。
 {
   env: [
     { name: 'AWS_WEB_IDENTITY_TOKEN_FILE', value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token' },
