@@ -34,7 +34,7 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         // local-path doesn't enforce this as a quota (it just creates a
         // hostPath dir on the node's root disk), so this mainly documents
         // the intended capacity ceiling matched by maxVolumeCounts below.
-        storage: '150Gi',
+        storage: '300Gi',
       },
       limits: {
         cpu: '1',
@@ -50,15 +50,17 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
       // volume count — i.e. zero room to grow, even with the disk mostly
       // empty. This blocks new collections (like a fresh S3 bucket) from
       // ever getting their first volume ("No matching data node found").
-      // Pin an explicit ceiling instead, matching the storage request above
-      // (150Gi / 1024MB volumeSizeLimitMB). Current actual usage is ~96GB
-      // logical (~64GB/node physical average with 001 replication) across
-      // loki-chunks and cloudnative-pg-backup as the two largest, still-
-      // growing collections, so this leaves roughly 2x headroom over the
-      // current per-node footprint while staying well under the smallest
-      // volume server's real disk size (~371GB), leaving room for other
-      // workloads sharing that node's disk via local-path.
-      maxVolumeCounts: 150,
+      // Pin an explicit ceiling instead.
+      //
+      // This is a COUNT of volume slots, not a byte size: existing
+      // collections (loki-chunks, tempo, ...) create many volumes well
+      // below the 1024MB volumeSizeLimitMB (average ~144MB observed), so
+      // count and bytes don't track linearly. The real volume count is
+      // already ~669 cluster-wide (~223/node average), so size this off
+      // that: 300/node gives ~35% headroom over the current average while
+      // the worst case (every volume filling to volumeSizeLimitMB) still
+      // stays under the smallest volume server's real disk size (~371GB).
+      maxVolumeCounts: 300,
       metricsPort: 9327,
       affinity: {
         local labels = {
