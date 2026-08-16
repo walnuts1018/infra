@@ -41,7 +41,7 @@ function(name, image) {
             ],
             resources: {
               requests: { cpu: '20m', memory: '64Mi' },
-              limits: { cpu: '500m', memory: '512Mi' },
+              limits: { cpu: '1', memory: '1Gi' },
             },
             ports: [
               { containerPort: 8080, name: 'health' },
