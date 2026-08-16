@@ -1,7 +1,11 @@
 {
   env: [
     { name: 'AWS_WEB_IDENTITY_TOKEN_FILE', value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token' },
-    { name: 'AWS_ENDPOINT_URL_STS', value: 'https://seaweedfs.local.walnuts.dev' },
+    // seaweedfs.local.walnuts.devはenvoy-gateway経由でseaweedfs-default-filer:8333へ
+    // ルーティングされるだけなので、cluster内DNSで直接同じバックエンドを指す
+    // (envoy-gatewayのLoadBalancer IPが192.168.0.0/16でNetworkPolicyのegress
+    // ipBlockから除外されているため、外部ドメイン経由だとSTSリクエストがブロックされる)。
+    { name: 'AWS_ENDPOINT_URL_STS', value: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333' },
     { name: 'AWS_ROLE_ARN', value: 'arn:aws:iam::role/picca' },
   ],
   volume: {
