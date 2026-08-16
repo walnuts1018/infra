@@ -95,6 +95,17 @@ local app = import 'app.json5';
             },
           },
           {
+            // S3のIRSA風クレデンシャル解決(AWS_ENDPOINT_URL_STS)が
+            // seaweedfs.local.walnuts.dev(envoy-gatewayのLoadBalancer IP、
+            // 192.168.0.0/16のためデフォルトのegress ipBlockから除外される)を
+            // 経由するため、明示的に許可する。
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'envoy-gateway-system',
+              },
+            },
+          },
+          {
             podSelector: {},
           },
         ],
