@@ -22,6 +22,10 @@ local app = import 'app.json5';
             { path: { type: 'PathPrefix', value: '/query' } },
             { path: { type: 'PathPrefix', value: '/api/media' } },
           ],
+          timeouts: {
+            request: '0s',
+            backendRequest: '0s',
+          },
           backendRefs: [
             { kind: 'Service', name: (import 'apiserver/service.jsonnet').metadata.name, port: 8080, weight: 1 },
           ],
