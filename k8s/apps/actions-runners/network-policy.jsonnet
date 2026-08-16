@@ -59,13 +59,6 @@ local app = import 'app.json5';
                 protocol: 'ANY',
               },
             ],
-            rules: {
-              dns: [
-                {
-                  matchPattern: '*',
-                },
-              ],
-            },
           },
         ],
       },
