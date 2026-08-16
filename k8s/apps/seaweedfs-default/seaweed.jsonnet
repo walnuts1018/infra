@@ -31,7 +31,12 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
       requests: {
         cpu: '6m',
         memory: '256Mi',
-        storage: '2Gi',
+        // local-path doesn't enforce this as a quota (it just creates a
+        // hostPath dir on the node's root disk), but the volume server's
+        // `-max=0` auto-detects its usable slot count from real free disk
+        // space at startup, so keep this in the right ballpark of what's
+        // actually usable rather than the previous, wildly-off 2Gi.
+        storage: '100Gi',
       },
       limits: {
         cpu: '1',
