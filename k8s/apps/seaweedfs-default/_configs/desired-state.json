@@ -8,7 +8,16 @@
   "buckets": [
     {
       "name": "picca",
-      "publicRead": []
+      "publicRead": [],
+      "cors": [
+        {
+          "allowedOrigins": ["https://picca.walnuts.dev"],
+          "allowedMethods": ["GET", "PUT", "HEAD"],
+          "allowedHeaders": ["Content-Type"],
+          "exposeHeaders": ["ETag"],
+          "maxAgeSeconds": 3600
+        }
+      ]
     },
     {
       "name": "cloudnative-pg-backup",
