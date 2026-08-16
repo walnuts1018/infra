@@ -30,7 +30,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
         initContainers: [
           (import '../../../components/container.libsonnet') {
             name: 'migrations',
-            image: 'ghcr.io/walnuts1018/picca/migrations:v0.0.9',
+            image: 'ghcr.io/walnuts1018/picca/migrations:v0.0.10',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
@@ -46,7 +46,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'apiserver',
-            image: 'ghcr.io/walnuts1018/picca/apiserver:v0.0.9',
+            image: 'ghcr.io/walnuts1018/picca/apiserver:v0.0.10',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },

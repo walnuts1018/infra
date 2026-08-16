@@ -1,4 +1,4 @@
-(import 'worker.libsonnet')('video-worker', 'ghcr.io/walnuts1018/picca/video-worker:v0.0.9')
+(import 'worker.libsonnet')('video-worker', 'ghcr.io/walnuts1018/picca/video-worker:v0.0.10')
 + {
   spec+: {
     template+: {
