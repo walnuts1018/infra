@@ -80,6 +80,28 @@ local app = import 'app.json5';
           },
         ],
       },
+      {
+        ports: [
+          {
+            protocol: 'TCP',
+            port: 443,
+          },
+        ],
+        to: [
+          {
+            ipBlock: {
+              cidr: '192.168.12.138/32',
+            },
+          },
+          {
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'envoy-gateway-system',
+              },
+            },
+          },
+        ],
+      },
     ],
   },
 }
