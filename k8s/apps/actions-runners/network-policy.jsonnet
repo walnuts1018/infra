@@ -131,6 +131,26 @@ local app = import 'app.json5';
           },
         ],
       },
+      {
+        toEndpoints: [
+          {
+            matchLabels: {
+              'k8s:io.kubernetes.pod.namespace': 'opentelemetry-collector',
+              'k8s:app.kubernetes.io/name': 'default-collector',
+            },
+          },
+        ],
+        toPorts: [
+          {
+            ports: [
+              {
+                port: '4318',
+                protocol: 'TCP',
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
 }
