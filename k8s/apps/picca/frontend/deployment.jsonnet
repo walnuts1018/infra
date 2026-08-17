@@ -7,16 +7,16 @@ local externalSecret = import '../external-secret.jsonnet';
   metadata: {
     name: app.name + '-frontend',
     namespace: app.namespace,
-    labels: (labels)(app.name + '-frontend'),
+    labels: labels(app.name + '-frontend'),
   },
   spec: {
     replicas: 2,
     selector: {
-      matchLabels: (labels)(app.name + '-frontend'),
+      matchLabels: labels(app.name + '-frontend'),
     },
     template: {
       metadata: {
-        labels: (labels)(app.name + '-frontend'),
+        labels: labels(app.name + '-frontend'),
       },
       spec: {
         imagePullSecrets: [

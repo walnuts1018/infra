@@ -6,14 +6,14 @@ local app = import '../app.json5';
   metadata: {
     name: app.name + '-imgproxy',
     namespace: app.namespace,
-    labels: (labels)(app.name + '-imgproxy'),
+    labels: labels(app.name + '-imgproxy'),
   },
   spec: {
     namespaceSelector: {
       matchNames: [app.namespace],
     },
     selector: {
-      matchLabels: (labels)(app.name + '-imgproxy'),
+      matchLabels: labels(app.name + '-imgproxy'),
     },
     endpoints: [
       {

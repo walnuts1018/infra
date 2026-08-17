@@ -7,7 +7,7 @@ local appname = app.name + '-api';
   metadata: {
     name: appname,
     namespace: app.namespace,
-    labels: (labels)(appname),
+    labels: labels(appname),
   },
   spec: {
     ports: [
@@ -17,7 +17,7 @@ local appname = app.name + '-api';
         targetPort: 3000,
       },
     ],
-    selector: (labels)(appname),
+    selector: labels(appname),
     type: 'ClusterIP',
   },
 }

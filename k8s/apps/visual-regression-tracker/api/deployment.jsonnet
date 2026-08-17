@@ -10,16 +10,16 @@ local appname = app.name + '-api';
   metadata: {
     name: appname,
     namespace: app.namespace,
-    labels: (labels)(appname),
+    labels: labels(appname),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (labels)(appname),
+      matchLabels: labels(appname),
     },
     template: {
       metadata: {
-        labels: (labels)(appname),
+        labels: labels(appname),
       },
       spec: {
         containers: [

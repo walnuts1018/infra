@@ -8,15 +8,15 @@ local scyllaClientCertExternalSecret = import 'scylla-client-cert-external-secre
   metadata: {
     name: app.appname.backend,
     namespace: app.namespace,
-    labels: (labels)(app.appname.backend),
+    labels: labels(app.appname.backend),
   },
   spec: {
     selector: {
-      matchLabels: (labels)(app.appname.backend),
+      matchLabels: labels(app.appname.backend),
     },
     template: {
       metadata: {
-        labels: (labels)(app.appname.backend),
+        labels: labels(app.appname.backend),
       },
       spec: {
         securityContext: {
@@ -173,7 +173,7 @@ local scyllaClientCertExternalSecret = import 'scylla-client-cert-external-secre
             topologyKey: 'kubernetes.io/hostname',
             whenUnsatisfiable: 'ScheduleAnyway',
             labelSelector: {
-              matchLabels: (labels)(app.appname.backend),
+              matchLabels: labels(app.appname.backend),
             },
           },
         ],

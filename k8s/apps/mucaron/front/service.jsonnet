@@ -6,10 +6,10 @@ local app = import '../app.json5';
   metadata: {
     name: app.name + '-front',
     namespace: app.namespace,
-    labels: (labels)(app.name + '-front'),
+    labels: labels(app.name + '-front'),
   },
   spec: {
-    selector: (labels)(app.name + '-front'),
+    selector: labels(app.name + '-front'),
     ports: [
       {
         protocol: 'TCP',

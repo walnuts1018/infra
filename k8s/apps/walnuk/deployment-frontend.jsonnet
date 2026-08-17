@@ -6,16 +6,16 @@ local app = import 'app.json5';
   metadata: {
     name: app.appname.frontend,
     namespace: app.namespace,
-    labels: (labels)(app.appname.frontend),
+    labels: labels(app.appname.frontend),
   },
   spec: {
     replicas: 2,
     selector: {
-      matchLabels: (labels)(app.appname.frontend),
+      matchLabels: labels(app.appname.frontend),
     },
     template: {
       metadata: {
-        labels: (labels)(app.appname.frontend),
+        labels: labels(app.appname.frontend),
       },
       spec: {
         securityContext: {
@@ -94,7 +94,7 @@ local app = import 'app.json5';
             topologyKey: 'kubernetes.io/hostname',
             whenUnsatisfiable: 'ScheduleAnyway',
             labelSelector: {
-              matchLabels: (labels)(app.appname.frontend),
+              matchLabels: labels(app.appname.frontend),
             },
           },
         ],

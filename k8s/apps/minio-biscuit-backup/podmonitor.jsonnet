@@ -6,7 +6,7 @@ local app = import 'app.json5';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: labels(app.name),
   },
   spec: {
     podMetricsEndpoints: [
@@ -15,7 +15,7 @@ local app = import 'app.json5';
       },
     ],
     selector: {
-      matchLabels: (labels)(app.name),
+      matchLabels: labels(app.name),
     },
   },
 }

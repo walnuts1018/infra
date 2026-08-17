@@ -7,16 +7,16 @@ local externalSecret = import 'external-secret.jsonnet';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: labels(app.name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (labels)(app.name),
+      matchLabels: labels(app.name),
     },
     template: {
       metadata: {
-        labels: (labels)(app.name),
+        labels: labels(app.name),
       },
       spec: {
         containers: [

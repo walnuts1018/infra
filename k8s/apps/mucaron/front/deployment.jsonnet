@@ -6,15 +6,15 @@ local app = import '../app.json5';
   metadata: {
     name: app.name + '-front',
     namespace: app.namespace,
-    labels: (labels)(app.name + '-front'),
+    labels: labels(app.name + '-front'),
   },
   spec: {
     selector: {
-      matchLabels: (labels)(app.name + '-front'),
+      matchLabels: labels(app.name + '-front'),
     },
     template: {
       metadata: {
-        labels: (labels)(app.name + '-front'),
+        labels: labels(app.name + '-front'),
       },
       spec: {
         containers: [

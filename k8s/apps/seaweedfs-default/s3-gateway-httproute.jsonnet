@@ -7,7 +7,7 @@ local app = import 'app.json5';
   metadata: {
     name: app.name + '-s3',
     namespace: app.namespace,
-    labels: (labels)(app.name + '-s3'),
+    labels: labels(app.name + '-s3'),
   },
   spec: {
     parentRefs: [

@@ -42,12 +42,12 @@ local env = [
   metadata: {
     name: appname + '-' + std.md5(std.toString(env))[0:10],
     namespace: app.namespace,
-    labels: (labels)(appname),
+    labels: labels(appname),
   },
   spec: {
     template: {
       metadata: {
-        labels: (labels)(appname),
+        labels: labels(appname),
       },
       spec: {
         restartPolicy: 'Never',

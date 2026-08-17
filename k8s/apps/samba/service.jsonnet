@@ -6,7 +6,7 @@ local app = import 'app.json5';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: labels(app.name),
   },
   spec: {
     ports: [
@@ -16,7 +16,7 @@ local app = import 'app.json5';
         targetPort: 10445,
       },
     ],
-    selector: (labels)(app.name),
+    selector: labels(app.name),
     type: 'LoadBalancer',
     loadBalancerIP: '192.168.12.132',
   },

@@ -7,7 +7,7 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: labels(app.name),
   },
   spec: {
     image: 'chrislusf/seaweedfs:4.41_large_disk',

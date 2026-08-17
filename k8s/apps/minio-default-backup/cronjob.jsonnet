@@ -6,7 +6,7 @@ local app = import 'app.json5';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: labels(app.name),
   },
   spec: {
     schedule: '10 2 * * *',  // AM 2:10
@@ -17,7 +17,7 @@ local app = import 'app.json5';
       spec: {
         template: {
           metadata: {
-            labels: (labels)(app.name),
+            labels: labels(app.name),
           },
           spec: {
             serviceAccountName: (import 'sa.jsonnet').metadata.name,

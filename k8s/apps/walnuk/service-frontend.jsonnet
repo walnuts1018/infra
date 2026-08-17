@@ -6,7 +6,7 @@ local app = import 'app.json5';
   metadata: {
     name: app.appname.frontend,
     namespace: app.namespace,
-    labels: (labels)(app.appname.frontend),
+    labels: labels(app.appname.frontend),
   },
   spec: {
     ports: [
@@ -16,7 +16,7 @@ local app = import 'app.json5';
         targetPort: 3000,
       },
     ],
-    selector: (labels)(app.appname.frontend),
+    selector: labels(app.appname.frontend),
     type: 'ClusterIP',
   },
 }

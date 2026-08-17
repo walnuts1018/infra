@@ -6,17 +6,17 @@ local app = import 'app.json5';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: labels(app.name),
   },
   spec: {
     selector: {
-      matchLabels: (labels)(app.name),
+      matchLabels: labels(app.name),
     },
     serviceName: (import 'service.jsonnet').metadata.name,
     replicas: 1,
     template: {
       metadata: {
-        labels: (labels)(app.name),
+        labels: labels(app.name),
       },
       spec: {
         securityContext: {

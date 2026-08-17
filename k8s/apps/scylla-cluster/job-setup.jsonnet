@@ -13,13 +13,13 @@ local appname = app.name + '-setup';
       std.toString(externalSecretMigrations)
     )[0:10],
     namespace: app.namespace,
-    labels: (labels)(appname),
+    labels: labels(appname),
   },
   spec: {
     // ttlSecondsAfterFinished: 60,
     template: {
       metadata: {
-        labels: (labels)(appname),
+        labels: labels(appname),
       },
       spec: {
         restartPolicy: 'OnFailure',

@@ -6,19 +6,19 @@ local app = import 'app.json5';
   metadata: {
     name: app.name,
     namespace: app.namespace,
-    labels: (labels)(app.name),
+    labels: labels(app.name),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: (labels)(app.name),
+      matchLabels: labels(app.name),
     },
     template: {
       metadata: {
         annotations: {
           'k8s.v1.cni.cncf.io/networks': '[{"name": "tailscale-bridge", "ips": ["192.168.0.24/24"]}]',
         },
-        labels: (labels)(app.name),
+        labels: labels(app.name),
       },
       spec: {
         serviceAccountName: (import 'sa.jsonnet').metadata.name,

@@ -34,7 +34,7 @@ local app = import 'app.json5';
             topologyKey: 'kubernetes.io/hostname',
             whenUnsatisfiable: 'ScheduleAnyway',
             labelSelector: {
-              matchLabels: (labels)(app.name),
+              matchLabels: labels(app.name),
             },
           },
         ],
