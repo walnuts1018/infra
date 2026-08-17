@@ -10,7 +10,7 @@ local externalSecret = import '../external-secret.jsonnet';
     labels: labels(app.name + '-frontend'),
   },
   spec: {
-    replicas: 2,
+    replicas: 1,
     selector: {
       matchLabels: labels(app.name + '-frontend'),
     },
@@ -28,10 +28,22 @@ local externalSecret = import '../external-secret.jsonnet';
             image: 'ghcr.io/walnuts1018/picca/frontend:v0.0.10',
             imagePullPolicy: 'IfNotPresent',
             env: [
-              { name: 'PICCA_API_URL', value: 'http://picca-apiserver.picca.svc.cluster.local:8080' },
-              { name: 'PICCA_GRAPHQL_ENDPOINT', value: 'https://picca.walnuts.dev/query' },
-              { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4318' },
-              { name: 'OTEL_SERVICE_NAME', value: 'picca-frontend' },
+              {
+                name: 'PICCA_API_URL',
+                value: 'http://picca-apiserver.picca.svc.cluster.local:8080',
+              },
+              {
+                name: 'PICCA_GRAPHQL_ENDPOINT',
+                value: 'https://picca.walnuts.dev/query',
+              },
+              {
+                name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
+                value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4318',
+              },
+              {
+                name: 'OTEL_SERVICE_NAME',
+                value: 'picca-frontend',
+              },
               {
                 name: 'PICCA_GRAPHQL_QUERY_SIGNING_SECRET',
                 valueFrom: {
@@ -46,22 +58,40 @@ local externalSecret = import '../external-secret.jsonnet';
               { containerPort: 3000 },
             ],
             livenessProbe: {
-              httpGet: { path: '/api/health', port: 3000 },
+              httpGet: {
+                path: '/api/health',
+                port: 3000,
+              },
               initialDelaySeconds: 15,
               failureThreshold: 5,
             },
             readinessProbe: {
-              httpGet: { path: '/api/health', port: 3000 },
+              httpGet: {
+                path: '/api/health',
+                port: 3000,
+              },
               initialDelaySeconds: 15,
               failureThreshold: 5,
             },
             resources: {
-              requests: { cpu: '50m', memory: '128Mi' },
-              limits: { cpu: '500m', memory: '512Mi' },
+              requests: {
+                cpu: '50m',
+                memory: '128Mi',
+              },
+              limits: {
+                cpu: '500m',
+                memory: '512Mi',
+              },
             },
             volumeMounts: [
-              { name: 'tmp', mountPath: '/tmp' },
-              { name: 'cache', mountPath: '/.cache' },
+              {
+                name: 'tmp',
+                mountPath: '/tmp',
+              },
+              {
+                name: 'cache',
+                mountPath: '/.cache',
+              },
             ],
           },
         ],
@@ -71,8 +101,14 @@ local externalSecret = import '../external-secret.jsonnet';
           runAsUser: 10001,
         },
         volumes: [
-          { name: 'tmp', emptyDir: {} },
-          { name: 'cache', emptyDir: {} },
+          {
+            name: 'tmp',
+            emptyDir: {},
+          },
+          {
+            name: 'cache',
+            emptyDir: {},
+          },
         ],
       },
     },

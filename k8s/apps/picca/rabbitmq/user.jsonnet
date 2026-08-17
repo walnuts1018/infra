@@ -1,4 +1,5 @@
 local app = import '../app.json5';
+local cluster = (import '../../rabbitmq-default/rabbitmqcluster.jsonnet');
 {
   apiVersion: 'rabbitmq.com/v1beta1',
   kind: 'User',
@@ -8,8 +9,8 @@ local app = import '../app.json5';
   },
   spec: {
     rabbitmqClusterReference: {
-      name: 'default',
-      namespace: 'rabbitmq',
+      name: cluster.metadata.name,
+      namespace: cluster.metadata.namespace,
     },
     importCredentialsSecret: {
       name: (import 'credentials-secret.jsonnet').spec.target.name,

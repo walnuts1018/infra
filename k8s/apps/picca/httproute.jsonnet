@@ -10,7 +10,10 @@ local app = import 'app.json5';
     },
     spec: {
       parentRefs: [
-        { name: gateway.metadata.name, namespace: gateway.metadata.namespace },
+        {
+          name: gateway.metadata.name,
+          namespace: gateway.metadata.namespace,
+        },
       ],
       hostnames: [
         'picca.walnuts.dev',
@@ -18,9 +21,24 @@ local app = import 'app.json5';
       rules: [
         {
           matches: [
-            { path: { type: 'PathPrefix', value: '/auth' } },
-            { path: { type: 'PathPrefix', value: '/query' } },
-            { path: { type: 'PathPrefix', value: '/api/media' } },
+            {
+              path: {
+                type: 'PathPrefix',
+                value: '/auth',
+              },
+            },
+            {
+              path: {
+                type: 'PathPrefix',
+                value: '/query',
+              },
+            },
+            {
+              path: {
+                type: 'PathPrefix',
+                value: '/api/media',
+              },
+            },
           ],
           timeouts: {
             request: '0s',
@@ -47,7 +65,10 @@ local app = import 'app.json5';
     },
     spec: {
       parentRefs: [
-        { name: gateway.metadata.name, namespace: gateway.metadata.namespace },
+        {
+          name: gateway.metadata.name,
+          namespace: gateway.metadata.namespace,
+        },
       ],
       hostnames: [
         'imgproxy-picca.walnuts.dev',
@@ -55,7 +76,12 @@ local app = import 'app.json5';
       rules: [
         {
           backendRefs: [
-            { kind: 'Service', name: (import 'imgproxy/service.jsonnet').metadata.name, port: 80, weight: 1 },
+            {
+              kind: 'Service',
+              name: (import 'imgproxy/service.jsonnet').metadata.name,
+              port: 80,
+              weight: 1,
+            },
           ],
         },
       ],

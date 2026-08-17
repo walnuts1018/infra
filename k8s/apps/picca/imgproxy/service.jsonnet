@@ -11,8 +11,16 @@ local app = import '../app.json5';
   spec: {
     selector: labels(app.name + '-imgproxy'),
     ports: [
-      { name: 'http', port: 80, targetPort: 8080 },
-      { name: 'metrics', port: 8081, targetPort: 8081 },
+      {
+        name: 'http',
+        port: 80,
+        targetPort: 8080,
+      },
+      {
+        name: 'metrics',
+        port: 8081,
+        targetPort: 8081,
+      },
     ],
     type: 'ClusterIP',
   },

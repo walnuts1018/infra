@@ -2,7 +2,7 @@ local app = import '../app.json5';
 (import '../../../components/external-secret.libsonnet') {
   name: app.name + '-rabbitmq-user-credentials',
   namespace: app.namespace,
-  use_suffix:: false,
+  use_suffix: false,
   data: [
     {
       secretKey: 'password',

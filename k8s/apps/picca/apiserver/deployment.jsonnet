@@ -14,7 +14,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
     labels: labels(app.name + '-apiserver'),
   },
   spec: {
-    replicas: 2,
+    replicas: 1,
     selector: {
       matchLabels: labels(app.name + '-apiserver'),
     },

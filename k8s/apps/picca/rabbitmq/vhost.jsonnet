@@ -1,4 +1,5 @@
 local app = import '../app.json5';
+local cluster = (import '../../rabbitmq-default/rabbitmqcluster.jsonnet');
 {
   apiVersion: 'rabbitmq.com/v1beta1',
   kind: 'Vhost',
@@ -9,8 +10,8 @@ local app = import '../app.json5';
   spec: {
     name: app.name,
     rabbitmqClusterReference: {
-      name: 'default',
-      namespace: 'rabbitmq',
+      name: cluster.metadata.name,
+      namespace: cluster.metadata.namespace,
     },
   },
 }
