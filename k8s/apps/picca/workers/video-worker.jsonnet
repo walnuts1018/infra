@@ -6,7 +6,7 @@ local plans = import '../plans.libsonnet';
 local s3Irsa = import '../s3-irsa.libsonnet';
 local scyllaTls = import '../scylla-tls.libsonnet';
 
-function(name, image) {
+{
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
