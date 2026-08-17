@@ -94,6 +94,10 @@ local externalSecret = import 'external-secret.jsonnet';
                     value: 'true',
                   },
                   {
+                    name: 'RENOVATE_X_GITHUB_HOST_RULES',
+                    value: 'true',
+                  },
+                  {
                     name: 'GITHUB_APP_ID',
                     valueFrom: {
                       secretKeyRef: {

@@ -47,6 +47,17 @@ async function createInstallationToken() {
   return data.token;
 }
 
-module.exports = async () => ({
-  token: await createInstallationToken(),
-});
+module.exports = async () => {
+  const token = await createInstallationToken();
+  return {
+    token,
+    hostRules: [
+      {
+        matchHost: "ghcr.io",
+        hostType: "docker",
+        token,
+      },
+    ],
+  };
+};
+
