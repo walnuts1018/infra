@@ -162,5 +162,11 @@
       ],
       versioning: 'regex:^(?<major>[0-9]+)\\.(?<minor>[0-9]+)(_(?<compatibility>.+))?$',
     },
+    {
+      groupName: 'picca',
+      matchPackageNames: [
+        '/^ghcr\\.io\\/walnuts1018\\/picca\\//',
+      ],
+    },
   ],
 }
