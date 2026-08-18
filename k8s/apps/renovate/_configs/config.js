@@ -78,7 +78,7 @@ module.exports = async () => {
     hostRules: [
       {
         hostType: "docker",
-        matchHost: "https://ghcr.io",
+        matchHost: "ghcr.io",
         username: "walnuts1018",
         password: ghcrToken,
       },
