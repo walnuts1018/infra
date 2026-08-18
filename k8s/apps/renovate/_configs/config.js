@@ -5,16 +5,18 @@ function base64urlJson(value) {
 }
 
 async function createInstallationToken() {
-  const clientId = process.env.GITHUB_APP_ID;
+  const appId = process.env.GITHUB_APP_ID;
   const installationId = process.env.GITHUB_APP_INSTALLATION_ID;
   const privateKey = process.env.GITHUB_APP_PRIVATE_KEY?.replace(/\\n/g, "\n");
 
-  if (!clientId) {
+  if (!appId) {
     throw new Error("GITHUB_APP_ID is required");
   }
+
   if (!installationId) {
     throw new Error("GITHUB_APP_INSTALLATION_ID is required");
   }
+
   if (!privateKey) {
     throw new Error("GITHUB_APP_PRIVATE_KEY is required");
   }
@@ -29,7 +31,7 @@ async function createInstallationToken() {
   const payload = base64urlJson({
     iat: now - 60,
     exp: now + 600,
-    iss: clientId,
+    iss: appId,
   });
 
   const unsignedJwt = `${header}.${payload}`;
@@ -65,16 +67,18 @@ module.exports = async () => {
   const token = await createInstallationToken();
 
   const ghcrToken = process.env.GHCR_TOKEN;
+
   if (!ghcrToken) {
     throw new Error("GHCR_TOKEN is required");
   }
 
   return {
     token,
+
     hostRules: [
       {
         hostType: "docker",
-        matchHost: "ghcr.io",
+        matchHost: "https://ghcr.io",
         username: "walnuts1018",
         password: ghcrToken,
       },
