@@ -57,10 +57,10 @@
         '/^k8s/.*/.+\\.yml$/',
       ],
       matchStrings: [
-        '(?:registry:\\s+["\']?(?<registryUrl>[^\\s\'"]+)["\']?\\r?\\n\\s*)?repository:\\s+["\']?(?<packageName>[^\\s\'"]+)["\']?\\r?\\n\\s*tag:\\s+["\']?(?<currentValue>[^\\s\'"]+)["\']?(?:\\r?\\n\\s*digest:\\s+["\']?(?<currentDigest>[^\\s\'"]+)["\']?)?',
+        '(?:registry:\\s+["\']?(?<registry>[^\\s\'"]+)["\']?\\r?\\n\\s*)?repository:\\s+["\']?(?<packageName>[^\\s\'"]+)["\']?\\r?\\n\\s*tag:\\s+["\']?(?<currentValue>[^\\s\'"]+)["\']?(?:\\r?\\n\\s*digest:\\s+["\']?(?<currentDigest>[^\\s\'"]+)["\']?)?',
       ],
       datasourceTemplate: 'docker',
-      packageNameTemplate: '{{#if registryUrl}}{{{registryUrl}}}/{{/if}}{{{packageName}}}',
+      packageNameTemplate: '{{#if registry}}{{{registry}}}/{{/if}}{{{packageName}}}',
     },
     {
       customType: 'regex',
