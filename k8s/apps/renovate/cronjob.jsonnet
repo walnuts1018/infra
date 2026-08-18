@@ -94,10 +94,6 @@ local externalSecret = import 'external-secret.jsonnet';
                     value: 'true',
                   },
                   {
-                    name: 'RENOVATE_X_GITHUB_HOST_RULES',
-                    value: 'true',
-                  },
-                  {
                     name: 'GITHUB_APP_ID',
                     valueFrom: {
                       secretKeyRef: {
@@ -121,6 +117,16 @@ local externalSecret = import 'external-secret.jsonnet';
                       secretKeyRef: {
                         name: externalSecret.spec.target.name,
                         key: 'github-app-private-key',
+                      },
+                    },
+                  },
+                  {
+                    name: 'GHCR_TOKEN',
+                    valueFrom: {
+                      secretKeyRef: {
+                        name: externalSecret.spec.target.name,
+                        key: 'pat-for-ghcr',
+                        optional: true,
                       },
                     },
                   },

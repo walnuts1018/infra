@@ -22,5 +22,12 @@
         property: 'github_app_private_key',
       },
     },
+    {
+      secretKey: 'pat-for-ghcr',
+      remoteRef: {
+        key: 'renovate',
+        property: 'pat_for_ghcr',
+      },
+    },
   ],
 }

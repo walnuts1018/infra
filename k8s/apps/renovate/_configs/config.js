@@ -55,9 +55,8 @@ module.exports = async () => {
       {
         matchHost: "ghcr.io",
         hostType: "docker",
-        token,
+        token: process.env.GHCR_TOKEN,
       },
     ],
   };
 };
-
