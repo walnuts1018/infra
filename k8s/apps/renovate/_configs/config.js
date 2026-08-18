@@ -71,7 +71,6 @@ module.exports = async () => {
 
   return {
     token,
-
     hostRules: [
       {
         hostType: "docker",
