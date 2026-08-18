@@ -31,8 +31,8 @@ local externalSecret = import 'external-secret.jsonnet';
                 ],
                 volumeMounts: [
                   {
-                    name: 'renovate',
-                    mountPath: '/tmp/renovate',
+                    name: 'renovate-cache',
+                    mountPath: '/tmp/renovate/cache',
                   },
                   {
                     name: 'scripts',
@@ -133,8 +133,12 @@ local externalSecret = import 'external-secret.jsonnet';
                 ],
                 volumeMounts: [
                   {
-                    name: 'renovate',
+                    name: 'renovate-work',
                     mountPath: '/tmp/renovate',
+                  },
+                  {
+                    name: 'renovate-cache',
+                    mountPath: '/cache',
                   },
                   {
                     name: 'config',
@@ -152,9 +156,13 @@ local externalSecret = import 'external-secret.jsonnet';
             ],
             volumes: [
               {
-                name: 'renovate',
+                name: 'renovate-work',
+                emptyDir: {},
+              },
+              {
+                name: 'renovate-cache',
                 persistentVolumeClaim: {
-                  claimName: 'renovate',
+                  claimName: (import 'pvc.jsonnet').metadata.name,
                 },
               },
               {

@@ -1,7 +1,7 @@
 #!/bin/sh
 
-USE=$(df /tmp/renovate | awk 'NR==2{print $5}')
-IUSE=$(df -i /tmp/renovate | awk 'NR==2{print $5}')
+USE=$(df /tmp/renovate/cache | awk 'NR==2{print $5}')
+IUSE=$(df -i /tmp/renovate/cache | awk 'NR==2{print $5}')
 
 echo "Disk usage: $USE, Inode usage: $IUSE"
 
