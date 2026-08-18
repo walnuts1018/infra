@@ -61,10 +61,10 @@ local externalSecret = import 'external-secret.jsonnet';
                 },
                 local branch_prefix = 'renovate/',
                 env: [
-                  // {
-                  //   name: 'LOG_LEVEL',
-                  //   value: 'debug',
-                  // },
+                  {
+                    name: 'LOG_LEVEL',
+                    value: 'debug',
+                  },
                   {
                     name: 'RENOVATE_PLATFORM',
                     value: 'github',
