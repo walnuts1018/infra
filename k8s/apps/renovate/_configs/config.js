@@ -70,7 +70,6 @@ module.exports = async () => {
   }
 
   return {
-    platform: "github",
     token,
 
     hostRules: [
