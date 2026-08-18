@@ -5,12 +5,12 @@ function base64urlJson(value) {
 }
 
 async function createInstallationToken() {
-  const clientId = process.env.GITHUB_APP_CLIENT_ID;
+  const clientId = process.env.GITHUB_APP_ID;
   const installationId = process.env.GITHUB_APP_INSTALLATION_ID;
   const privateKey = process.env.GITHUB_APP_PRIVATE_KEY?.replace(/\\n/g, "\n");
 
   if (!clientId) {
-    throw new Error("GITHUB_APP_CLIENT_ID is required");
+    throw new Error("GITHUB_APP_ID is required");
   }
   if (!installationId) {
     throw new Error("GITHUB_APP_INSTALLATION_ID is required");
