@@ -29,7 +29,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'thumbnail-worker',
-            image: 'ghcr.io/walnuts1018/picca/thumbnail-worker:v0.0.10',
+            image: 'ghcr.io/walnuts1018/picca/thumbnail-worker:v0.0.12',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
