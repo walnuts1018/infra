@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'metrics-server',
   repoURL: 'https://kubernetes-sigs.github.io/metrics-server/',
-  targetRevision: '3.13.1',
+  targetRevision: '3.14.0',
   values: (importstr 'values.yaml'),
 }
