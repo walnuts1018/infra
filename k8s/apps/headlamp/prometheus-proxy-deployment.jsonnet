@@ -26,7 +26,7 @@ local labels = {
         containers: [
           {
             name: 'nginx',
-            image: 'nginxinc/nginx-unprivileged:1.31.3-alpine',
+            image: 'nginxinc/nginx-unprivileged:1.31.4-alpine',
             ports: [
               {
                 name: 'http',
