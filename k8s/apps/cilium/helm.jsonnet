@@ -14,7 +14,7 @@ function(
   namespace: app.namespace,
   chart: 'cilium',
   repoURL: 'https://helm.cilium.io/',
-  targetRevision: '1.20.0',
+  targetRevision: '1.20.1',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'), {
       k8sServiceHost: k8sServiceHost,
