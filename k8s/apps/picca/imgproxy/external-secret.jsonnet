@@ -26,7 +26,6 @@ local app = import '../app.json5';
     IMGPROXY_S3_REGION: 'us-east-1',
     IMGPROXY_S3_ALLOWED_BUCKETS: 'picca',
     IMGPROXY_S3_ENDPOINT_USE_PATH_STYLE: 'true',
-    IMGPROXY_S3_ALLOWED_BUCKETS: 'picca',
     IMGPROXY_KEY: '{{ .imgproxy_key }}',
     IMGPROXY_SALT: '{{ .imgproxy_salt }}',
     IMGPROXY_TTL: '900',
