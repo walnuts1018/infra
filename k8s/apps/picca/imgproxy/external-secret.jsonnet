@@ -24,7 +24,7 @@ local app = import '../app.json5';
     IMGPROXY_USE_S3: 'true',
     IMGPROXY_S3_ENDPOINT: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333',
     IMGPROXY_S3_REGION: 'us-east-1',
-    IMGPROXY_S3_BUCKET: 'picca',
+    IMGPROXY_S3_ALLOWED_BUCKETS: 'picca',
     IMGPROXY_S3_ENDPOINT_USE_PATH_STYLE: 'true',
     IMGPROXY_S3_ALLOWED_BUCKETS: 'picca',
     IMGPROXY_KEY: '{{ .imgproxy_key }}',
