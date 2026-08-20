@@ -5,6 +5,6 @@ local app = import 'app.json5';
 
   chart: 'tempo-distributed',
   repoURL: 'https://grafana-community.github.io/helm-charts',
-  targetRevision: '2.26.2',
+  targetRevision: '3.3.0',
   values: (importstr 'values.yaml'),
 }
