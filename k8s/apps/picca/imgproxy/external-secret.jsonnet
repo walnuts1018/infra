@@ -20,6 +20,7 @@ local app = import '../app.json5';
   ],
   template_data: {
     IMGPROXY_PROMETHEUS_BIND: ':8081',
+    IMGPROXY_FAIL_ON_DEPRECATION: 'true',
     IMGPROXY_USE_S3: 'true',
     IMGPROXY_S3_ENDPOINT: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333',
     IMGPROXY_S3_REGION: 'us-east-1',
