@@ -29,7 +29,28 @@
     fi
   fi
 
+  WORKER_LOG=""
+  for d in "/home/runner/_diag" "${RUNNER_WORKSPACE:-}/../_diag" "${RUNNER_WORKSPACE%/_work*}/_diag" "/actions-runner/_diag" "/runner/_diag"; do
+    if [ -d "${d}" ]; then
+      LATEST=$(ls -t "${d}"/Worker_*.log 2>/dev/null | head -n 1)
+      if [ -n "${LATEST}" ] && [ -f "${LATEST}" ]; then
+        WORKER_LOG="${LATEST}"
+        break
+      fi
+    fi
+  done
+
   JOB_NAME="${GITHUB_JOB:-unknown}"
+  if [ -n "${WORKER_LOG}" ] && [ -f "${WORKER_LOG}" ]; then
+    DISPLAY_NAME=$(sed -n -E 's/^[[:space:]]*"[jJ]obDisplayName":[[:space:]]*"(.*)"[[:space:]]*,?[[:space:]]*$/\1/p' "${WORKER_LOG}" | head -n 1)
+    if [ -z "${DISPLAY_NAME}" ]; then
+      DISPLAY_NAME=$(sed -n -E 's/.*Starting:[[:space:]]*(.*)/\1/p' "${WORKER_LOG}" | head -n 1)
+    fi
+    if [ -n "${DISPLAY_NAME}" ]; then
+      JOB_NAME="${DISPLAY_NAME}"
+    fi
+  fi
+
   WORKFLOW_NAME="${GITHUB_WORKFLOW:-unknown}"
   REPO_NAME="${GITHUB_REPOSITORY:-unknown}"
   REPO_SHORT="${REPO_NAME##*/}"
