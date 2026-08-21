@@ -49,7 +49,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'apiserver',
-            image: 'ghcr.io/walnuts1018/picca/apiserver:v0.0.16',
+            image: 'ghcr.io/walnuts1018/picca/apiserver:v0.0.17',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               {
