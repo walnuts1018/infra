@@ -11,7 +11,7 @@ local app = import 'app.json5';
     clusterVersion: 'v7',
     persistenceEnabled: true,
     kubernetesConfig: {
-      image: 'quay.io/opstree/redis:v7.4.8',
+      image: 'quay.io/opstree/redis:v7.4.11',
       imagePullPolicy: 'IfNotPresent',
       resources: {
         requests: {
