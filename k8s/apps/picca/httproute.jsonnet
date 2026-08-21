@@ -103,7 +103,7 @@ local httpParentRef = {
               type: 'RequestRedirect',
               requestRedirect: {
                 scheme: 'https',
-                statusCode: 308,
+                statusCode: 301,
               },
             },
           ],
