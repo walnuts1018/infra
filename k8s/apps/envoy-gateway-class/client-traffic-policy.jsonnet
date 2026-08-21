@@ -8,6 +8,11 @@ local gateway = import 'gateway.jsonnet';
   },
   spec: {
     http3: {},
+    headers: {
+      lateResponseHeaders: {
+        remove: ['Server'],
+      },
+    },
     targetRefs: [
       {
         group: 'gateway.networking.k8s.io',
