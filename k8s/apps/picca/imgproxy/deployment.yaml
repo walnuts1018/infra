@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: picca-imgproxy
+    app.kubernetes.io/name: picca-imgproxy
+  name: picca-imgproxy
+  namespace: picca
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: picca-imgproxy
+      app.kubernetes.io/name: picca-imgproxy
+  template:
+    metadata:
+      labels:
+        app: picca-imgproxy
+        app.kubernetes.io/name: picca-imgproxy
+    spec:
+      containers:
+        - env:
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ENDPOINT_URL_STS
+              value: http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/picca
+          envFrom:
+            - secretRef:
+                name: picca-imgproxy-44c96f
+          image: ghcr.io/imgproxy/imgproxy:v4.0.13
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          name: imgproxy
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 8081
+              name: metrics
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+      serviceAccountName: picca
+      volumes:
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 86400
+                  path: token

@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: shumoku-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: netbox
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: shumoku
+    helm:
+      releaseName: shumoku
+      values: |
+        replicaCount: 1
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            memory: 300Mi
+
+        persistence:
+          enabled: true
+          size: 1Gi
+          storageClass: "longhorn"
+    repoURL: ghcr.io/konoe-akitoshi/charts
+    targetRevision: 0.1.5
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

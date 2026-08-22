@@ -1,0 +1,16 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Permission
+metadata:
+  name: picca
+  namespace: picca
+spec:
+  permissions:
+    configure: .*
+    read: .*
+    write: .*
+  rabbitmqClusterReference:
+    name: default
+    namespace: rabbitmq
+  userReference:
+    name: picca
+  vhost: picca

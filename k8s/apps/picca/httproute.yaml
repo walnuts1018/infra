@@ -1,0 +1,102 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: picca
+  namespace: picca
+spec:
+  hostnames:
+    - picca.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: https
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: picca-apiserver
+          port: 8080
+          weight: 1
+      filters:
+        - responseHeaderModifier:
+            set:
+              - name: Strict-Transport-Security
+                value: max-age=63072000; includeSubDomains
+              - name: X-Content-Type-Options
+                value: nosniff
+              - name: X-Frame-Options
+                value: DENY
+              - name: Referrer-Policy
+                value: no-referrer
+              - name: Permissions-Policy
+                value: camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=()
+          type: ResponseHeaderModifier
+      matches:
+        - path:
+            type: PathPrefix
+            value: /auth
+        - path:
+            type: PathPrefix
+            value: /query
+        - path:
+            type: PathPrefix
+            value: /api/media
+      timeouts:
+        backendRequest: 0s
+        request: 0s
+    - backendRefs:
+        - kind: Service
+          name: picca-frontend
+          port: 3000
+          weight: 1
+      filters:
+        - responseHeaderModifier:
+            set:
+              - name: Strict-Transport-Security
+                value: max-age=63072000; includeSubDomains
+              - name: X-Content-Type-Options
+                value: nosniff
+              - name: X-Frame-Options
+                value: DENY
+              - name: Referrer-Policy
+                value: no-referrer
+              - name: Permissions-Policy
+                value: camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=()
+          type: ResponseHeaderModifier
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: picca-http
+  namespace: picca
+spec:
+  hostnames:
+    - picca.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: http
+  rules:
+    - filters:
+        - requestRedirect:
+            scheme: https
+            statusCode: 301
+          type: RequestRedirect
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: picca-imgproxy
+  namespace: picca
+spec:
+  hostnames:
+    - imgproxy-picca.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: https
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: picca-imgproxy
+          port: 80
+          weight: 1

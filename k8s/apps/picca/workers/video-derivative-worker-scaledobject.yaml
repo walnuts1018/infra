@@ -1,0 +1,29 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: picca-video-derivative-worker
+  namespace: picca
+spec:
+  maxReplicaCount: 8
+  minReplicaCount: 1
+  scaleTargetRef:
+    name: picca-video-derivative-worker
+  triggers:
+    - authenticationRef:
+        name: picca-rabbitmq-worker-auth
+      metadata:
+        mode: ExpectedQueueConsumptionTime
+        protocol: http
+        queueName: picca.video-thumbnail
+        value: "60"
+      metricType: Value
+      type: rabbitmq
+    - authenticationRef:
+        name: picca-rabbitmq-worker-auth
+      metadata:
+        mode: ExpectedQueueConsumptionTime
+        protocol: http
+        queueName: picca.video-motion
+        value: "120"
+      metricType: Value
+      type: rabbitmq

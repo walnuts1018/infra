@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: picca-imgproxy
+    app.kubernetes.io/name: picca-imgproxy
+  name: picca-imgproxy
+  namespace: picca
+spec:
+  endpoints:
+    - path: /metrics
+      port: metrics
+  namespaceSelector:
+    matchNames:
+      - picca
+  selector:
+    matchLabels:
+      app: picca-imgproxy
+      app.kubernetes.io/name: picca-imgproxy

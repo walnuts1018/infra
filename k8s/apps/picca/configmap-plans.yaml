@@ -1,0 +1,21 @@
+apiVersion: v1
+data:
+  plans.yaml: |
+    plans:
+      - id: admin
+        name: Admin
+        storageLimitBytes: null # 無制限
+
+    assignmentRules:
+      - planId: admin
+        expression: >
+          "urn:zitadel:iam:org:project:roles" in userinfo &&
+          "picca-admin" in userinfo["urn:zitadel:iam:org:project:roles"]
+immutable: true
+kind: ConfigMap
+metadata:
+  labels:
+    app: picca
+    app.kubernetes.io/name: picca
+  name: picca-plans-23d579
+  namespace: picca

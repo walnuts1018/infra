@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: picca-apiserver
+    app.kubernetes.io/name: picca-apiserver
+  name: picca-apiserver
+  namespace: picca
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: picca-apiserver
+    app.kubernetes.io/name: picca-apiserver
+  type: ClusterIP

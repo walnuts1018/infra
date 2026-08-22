@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  labels:
+    app: seaweedfs-default-s3
+    app.kubernetes.io/name: seaweedfs-default-s3
+  name: seaweedfs-default-s3
+  namespace: seaweedfs
+spec:
+  hostnames:
+    - visual-regression-tracker.seaweedfs.local.walnuts.dev
+    - picca.seaweedfs.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: seaweedfs-default-filer
+          port: 8333

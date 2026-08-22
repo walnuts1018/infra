@@ -1,0 +1,181 @@
+---
+# Source: github-actions-cache-server/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: gha-cache-server
+  namespace: arc-systems
+  labels:
+    helm.sh/chart: github-actions-cache-server-1.1.3
+    app.kubernetes.io/name: github-actions-cache-server
+    app.kubernetes.io/instance: gha-cache-server
+    app.kubernetes.io/version: "9.7.0"
+    app.kubernetes.io/managed-by: Helm
+automountServiceAccountToken: true
+---
+# Source: github-actions-cache-server/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: gha-cache-server-github-actions-cache-server
+  namespace: arc-systems
+  labels:
+    helm.sh/chart: github-actions-cache-server-1.1.3
+    app.kubernetes.io/name: github-actions-cache-server
+    app.kubernetes.io/instance: gha-cache-server
+    app.kubernetes.io/version: "9.7.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: cache
+      protocol: TCP
+      name: cache
+  selector:
+    app.kubernetes.io/name: github-actions-cache-server
+    app.kubernetes.io/instance: gha-cache-server
+---
+# Source: github-actions-cache-server/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gha-cache-server-github-actions-cache-server
+  namespace: arc-systems
+  labels:
+    helm.sh/chart: github-actions-cache-server-1.1.3
+    app.kubernetes.io/name: github-actions-cache-server
+    app.kubernetes.io/instance: gha-cache-server
+    app.kubernetes.io/version: "9.7.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: github-actions-cache-server
+      app.kubernetes.io/instance: gha-cache-server
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: github-actions-cache-server-1.1.3
+        app.kubernetes.io/name: github-actions-cache-server
+        app.kubernetes.io/instance: gha-cache-server
+        app.kubernetes.io/version: "9.7.0"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: gha-cache-server
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: github-actions-cache-server
+          securityContext:
+            capabilities:
+              drop:
+              - ALL
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: "ghcr.io/falcondev-oss/github-actions-cache-server:9.7.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: cache
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: cache
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: cache
+          resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+          env:
+            - name: PORT
+              value: "3000"
+            - name: API_BASE_URL
+              value: "http://gha-cache-server-github-actions-cache-server.arc-systems.svc.cluster.local:3000"
+            - name: ENABLE_DIRECT_DOWNLOADS
+              value: "false"
+            - name: CACHE_CLEANUP_OLDER_THAN_DAYS
+              value: "30"
+            - name: CACHE_FILESYSTEM_MAX_USAGE_PERCENT
+              value: "90"
+            - name: ORPHANED_STORAGE_GRACE_PERIOD_HOURS
+              value: "24"
+            
+            - name: STORAGE_DRIVER
+              value: "s3"
+            - name: STORAGE_S3_BUCKET
+              value: "gha-cache"
+            - name: AWS_REGION
+              value: "us-east-1"
+            - name: AWS_ENDPOINT_URL
+              value: "http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333"
+            - name: STORAGE_S3_SOCKET_TIMEOUT_MS
+              value: "10000"
+            
+            - name: DB_DRIVER
+              value: "postgres"
+            - name: DB_POSTGRES_DATABASE
+              value: "gha_cache_server"
+            - name: DB_POSTGRES_HOST
+              value: "postgresql-default-rw.databases.svc.cluster.local"
+            - name: DB_POSTGRES_PORT
+              value: "5432"
+            - name: DB_POSTGRES_USER
+              value: "gha_cache_server"
+            - name: DB_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: db_password
+                  name: gha-cache-server
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/gha-cache-server
+            - name: AWS_ENDPOINT_URL_STS
+              value: http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+            - name: AWS_ENDPOINT_URL_S3
+              value: http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+            - name: S3_USE_PATH_STYLE
+              value: "true"
+      volumes:
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                audience: sts.seaweedfs.com
+                expirationSeconds: 86400
+                path: token
+---
+# Source: github-actions-cache-server/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "gha-cache-server-github-actions-cache-server-test-connection"
+  namespace: arc-systems
+  labels:
+    helm.sh/chart: github-actions-cache-server-1.1.3
+    app.kubernetes.io/name: github-actions-cache-server
+    app.kubernetes.io/instance: gha-cache-server
+    app.kubernetes.io/version: "9.7.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['gha-cache-server-github-actions-cache-server:3000']
+  restartPolicy: Never

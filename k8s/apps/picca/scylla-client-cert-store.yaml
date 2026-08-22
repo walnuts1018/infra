@@ -1,0 +1,19 @@
+apiVersion: external-secrets.io/v1
+kind: SecretStore
+metadata:
+  name: scylla-client-cert
+  namespace: picca
+spec:
+  provider:
+    kubernetes:
+      auth:
+        serviceAccount:
+          name: picca-scylla-secret-reader
+          namespace: picca
+      remoteNamespace: databases
+      server:
+        caProvider:
+          key: ca.crt
+          name: kube-root-ca.crt
+          type: ConfigMap
+        url: https://kubernetes.default.svc

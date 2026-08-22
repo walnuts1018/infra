@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: netbird
+    app.kubernetes.io/name: netbird
+  name: netbird
+  namespace: netbird
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: netbird
+      app.kubernetes.io/name: netbird
+  serviceName: netbird-headless
+  template:
+    metadata:
+      labels:
+        app: netbird
+        app.kubernetes.io/name: netbird
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - env:
+            - name: NB_MANAGEMENT_URL
+              value: https://netbird.walnuts.dev:443
+            - name: NB_SETUP_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: NB_SETUP_KEY
+                  name: netbird-config-7ba0fc
+            - name: NB_HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          image: netbirdio/netbird:0.77.0
+          imagePullPolicy: IfNotPresent
+          name: netbird
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 20m
+              memory: 64Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - NET_BIND_SERVICE
+                - NET_RAW
+                - SYS_ADMIN
+                - SYS_RESOURCE
+              drop:
+                - ALL
+            readOnlyRootFilesystem: false
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /var/lib/netbird
+              name: state
+            - mountPath: /dev/net/tun
+              name: tun
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app: netbird
+              app.kubernetes.io/name: netbird
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - hostPath:
+            path: /dev/net/tun
+            type: CharDevice
+          name: tun
+  volumeClaimTemplates:
+    - metadata:
+        name: state
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 64Mi
+        storageClassName: longhorn

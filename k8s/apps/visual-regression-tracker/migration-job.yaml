@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: visual-regression-tracker-migration
+    app.kubernetes.io/name: visual-regression-tracker-migration
+  name: visual-regression-tracker-migration-f27f195925
+  namespace: visual-regression-tracker
+spec:
+  template:
+    metadata:
+      labels:
+        app: visual-regression-tracker-migration
+        app.kubernetes.io/name: visual-regression-tracker-migration
+    spec:
+      containers:
+        - env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: DATABASE_URL
+                  name: visual-regression-tracker-d80b2e
+            - name: DEFAULT_USER_EMAIL
+              value: admin@vrt.local.walnuts.dev
+            - name: DEFAULT_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: DEFAULT_USER_PASSWORD
+                  name: visual-regression-tracker-d80b2e
+            - name: DEFAULT_USER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: DEFAULT_USER_API_KEY
+                  name: visual-regression-tracker-d80b2e
+          image: docker.io/visualregressiontracker/migration:5.3.0
+          imagePullPolicy: IfNotPresent
+          name: migration
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: false
+            seccompProfile:
+              type: RuntimeDefault
+      restartPolicy: Never

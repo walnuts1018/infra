@@ -1,7 +1,0 @@
-{
-  name: "external-dns-cloudflare",
-  namespace: "external-dns-cloudflare",
-  clusters: {
-    kurumi: {},
-  },
-}

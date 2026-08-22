@@ -1,0 +1,11 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: User
+metadata:
+  name: picca
+  namespace: picca
+spec:
+  importCredentialsSecret:
+    name: picca-rabbitmq-user-credentials
+  rabbitmqClusterReference:
+    name: default
+    namespace: rabbitmq

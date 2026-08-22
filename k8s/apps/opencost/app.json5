@@ -1,7 +1,0 @@
-{
-  name: "opencost",
-  namespace: "opencost",
-  clusters: {
-    kurumi: {},
-  },
-}

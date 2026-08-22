@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: visual-regression-tracker-ui
+    app.kubernetes.io/name: visual-regression-tracker-ui
+  name: visual-regression-tracker-ui
+  namespace: visual-regression-tracker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: visual-regression-tracker-ui
+      app.kubernetes.io/name: visual-regression-tracker-ui
+  template:
+    metadata:
+      labels:
+        app: visual-regression-tracker-ui
+        app.kubernetes.io/name: visual-regression-tracker-ui
+    spec:
+      containers:
+        - env:
+            - name: REACT_APP_API_URL
+              value: https://vrt.local.walnuts.dev/api
+          image: docker.io/visualregressiontracker/ui:5.5.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            tcpSocket:
+              port: 8080
+          name: ui
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            tcpSocket:
+              port: 8080
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+                - CHOWN
+                - SETUID
+                - SETGID
+              drop:
+                - all
+            readOnlyRootFilesystem: false
+            seccompProfile:
+              type: RuntimeDefault

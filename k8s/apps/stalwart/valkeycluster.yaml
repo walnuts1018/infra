@@ -1,0 +1,22 @@
+apiVersion: valkey.io/v1alpha1
+kind: ValkeyCluster
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app: stalwart-valkey
+    app.kubernetes.io/name: stalwart-valkey
+  name: stalwart-valkey
+  namespace: stalwart
+spec:
+  persistence:
+    size: 1Gi
+  replicas: 2
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1Gi
+    requests:
+      cpu: 5m
+      memory: 5Mi
+  shards: 1

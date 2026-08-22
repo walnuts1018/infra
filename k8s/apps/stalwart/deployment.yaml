@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    reloader.stakater.com/auto: "true"
+  labels:
+    app: stalwart
+    app.kubernetes.io/name: stalwart
+  name: stalwart
+  namespace: stalwart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stalwart
+      app.kubernetes.io/name: stalwart
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: stalwart
+        app.kubernetes.io/name: stalwart
+    spec:
+      containers:
+        - args:
+            - --config
+            - /opt/stalwart/etc/config.json
+          env:
+            - name: STALWART_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgres_password
+                  name: stalwart-c92609
+            - name: STALWART_S3_ACCESS_KEY
+              value: stalwart
+            - name: STALWART_S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: s3_secret_access_key
+                  name: stalwart-c92609
+          image: docker.io/stalwartlabs/stalwart:v0.16.18
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz/live
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          name: stalwart
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 443
+              name: https
+            - containerPort: 25
+              name: smtp
+            - containerPort: 465
+              name: smtps
+            - containerPort: 587
+              name: submission
+            - containerPort: 993
+              name: imaps
+          readinessProbe:
+            httpGet:
+              path: /healthz/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resizePolicy:
+            - resourceName: cpu
+              restartPolicy: NotRequired
+            - resourceName: memory
+              restartPolicy: RestartContainer
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 5m
+              memory: 60Mi
+          securityContext: null
+          startupProbe:
+            failureThreshold: 20
+            httpGet:
+              path: /healthz/live
+              port: 8080
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /opt/stalwart/etc/config.json
+              name: stalwart-config
+              readOnly: true
+              subPath: config.json
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /var/run/stalwart/tls
+              name: tls
+              readOnly: true
+      serviceAccountName: stalwart
+      topologySpreadConstraints:
+        - labelSelector:
+            matchLabels:
+              app: stalwart
+              app.kubernetes.io/name: stalwart
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - configMap:
+            items:
+              - key: config.json
+                path: config.json
+            name: stalwart-config-75c21d
+          name: stalwart-config
+        - emptyDir: {}
+          name: tmp
+        - name: tls
+          secret:
+            secretName: stalwart-mx-tls

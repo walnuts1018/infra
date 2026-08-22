@@ -1,0 +1,65 @@
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Identity
+metadata:
+  name: terraform
+  namespace: seaweedfs
+spec:
+  name: terraform
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Identity
+metadata:
+  name: mac-hatena
+  namespace: seaweedfs
+spec:
+  name: mac_hatena
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Identity
+metadata:
+  name: misskey
+  namespace: seaweedfs
+spec:
+  name: misskey
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Identity
+metadata:
+  name: oekaki-dengon-game
+  namespace: seaweedfs
+spec:
+  name: oekaki_dengon_game
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Identity
+metadata:
+  name: stalwart
+  namespace: seaweedfs
+spec:
+  name: stalwart
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Identity
+metadata:
+  name: visual-regression-tracker
+  namespace: seaweedfs
+spec:
+  name: visual_regression_tracker
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default

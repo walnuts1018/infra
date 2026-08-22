@@ -1,0 +1,11 @@
+apiVersion: cilium.io/v2
+kind: CiliumBGPPeerConfig
+metadata:
+  name: vanilla
+spec:
+  families:
+    - advertisements:
+        matchLabels:
+          bgp.cilium.io/advertise: load-balancer-ips
+      afi: ipv4
+      safi: unicast

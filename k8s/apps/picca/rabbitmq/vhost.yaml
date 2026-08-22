@@ -1,0 +1,10 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Vhost
+metadata:
+  name: picca
+  namespace: picca
+spec:
+  name: picca
+  rabbitmqClusterReference:
+    name: default
+    namespace: rabbitmq

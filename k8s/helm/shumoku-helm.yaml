@@ -1,0 +1,142 @@
+---
+# Source: shumoku/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: shumoku
+  labels:
+    helm.sh/chart: shumoku-0.1.5
+    app.kubernetes.io/name: shumoku
+    app.kubernetes.io/instance: shumoku
+    app.kubernetes.io/version: "0.1.5"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: shumoku/templates/pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shumoku
+  labels:
+    helm.sh/chart: shumoku-0.1.5
+    app.kubernetes.io/name: shumoku
+    app.kubernetes.io/instance: shumoku
+    app.kubernetes.io/version: "0.1.5"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: "longhorn"
+  resources:
+    requests:
+      storage: 1Gi
+---
+# Source: shumoku/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: shumoku
+  labels:
+    helm.sh/chart: shumoku-0.1.5
+    app.kubernetes.io/name: shumoku
+    app.kubernetes.io/instance: shumoku
+    app.kubernetes.io/version: "0.1.5"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: shumoku
+    app.kubernetes.io/instance: shumoku
+---
+# Source: shumoku/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shumoku
+  labels:
+    helm.sh/chart: shumoku-0.1.5
+    app.kubernetes.io/name: shumoku
+    app.kubernetes.io/instance: shumoku
+    app.kubernetes.io/version: "0.1.5"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: shumoku
+      app.kubernetes.io/instance: shumoku
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: shumoku-0.1.5
+        app.kubernetes.io/name: shumoku
+        app.kubernetes.io/instance: shumoku
+        app.kubernetes.io/version: "0.1.5"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: shumoku
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsUser: 1000
+      containers:
+        - name: shumoku
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+          image: "ghcr.io/konoe-akitoshi/shumoku:0.1.5"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "8080"
+            - name: HOST
+              value: "0.0.0.0"
+            - name: DATA_DIR
+              value: /data
+            - name: SHUMOKU_DEPLOYMENT
+              value: kubernetes
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            limits:
+              memory: 300Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: shumoku
+        - name: tmp
+          emptyDir: {}

@@ -1,0 +1,20 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: picca-metadata-worker
+  namespace: picca
+spec:
+  maxReplicaCount: 4
+  minReplicaCount: 1
+  scaleTargetRef:
+    name: picca-metadata-worker
+  triggers:
+    - authenticationRef:
+        name: picca-rabbitmq-worker-auth
+      metadata:
+        mode: ExpectedQueueConsumptionTime
+        protocol: http
+        queueName: picca.metadata
+        value: "30"
+      metricType: Value
+      type: rabbitmq

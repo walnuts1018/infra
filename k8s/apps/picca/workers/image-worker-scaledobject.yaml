@@ -1,0 +1,47 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: picca-image-worker
+  namespace: picca
+spec:
+  maxReplicaCount: 8
+  minReplicaCount: 1
+  scaleTargetRef:
+    name: picca-image-worker
+  triggers:
+    - authenticationRef:
+        name: picca-rabbitmq-worker-auth
+      metadata:
+        mode: ExpectedQueueConsumptionTime
+        protocol: http
+        queueName: picca.image-thumbnail
+        value: "30"
+      metricType: Value
+      type: rabbitmq
+    - authenticationRef:
+        name: picca-rabbitmq-worker-auth
+      metadata:
+        mode: ExpectedQueueConsumptionTime
+        protocol: http
+        queueName: picca.image-inspect
+        value: "30"
+      metricType: Value
+      type: rabbitmq
+    - authenticationRef:
+        name: picca-rabbitmq-worker-auth
+      metadata:
+        mode: ExpectedQueueConsumptionTime
+        protocol: http
+        queueName: picca.image-hdr
+        value: "60"
+      metricType: Value
+      type: rabbitmq
+    - authenticationRef:
+        name: picca-rabbitmq-worker-auth
+      metadata:
+        mode: ExpectedQueueConsumptionTime
+        protocol: http
+        queueName: picca.image-portrait
+        value: "60"
+      metricType: Value
+      type: rabbitmq
