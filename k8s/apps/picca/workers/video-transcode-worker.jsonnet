@@ -9,26 +9,26 @@ local scyllaTls = import '../scylla-tls.libsonnet';
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: app.name + '-timeline-worker',
+    name: app.name + '-video-transcode-worker',
     namespace: app.namespace,
-    labels: labels(app.name + '-timeline-worker'),
+    labels: labels(app.name + '-video-transcode-worker'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: labels(app.name + '-timeline-worker'),
+      matchLabels: labels(app.name + '-video-transcode-worker'),
     },
     template: {
       metadata: {
-        labels: labels(app.name + '-timeline-worker'),
+        labels: labels(app.name + '-video-transcode-worker'),
       },
       spec: {
         serviceAccountName: (import '../sa.jsonnet').metadata.name,
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         containers: [
           (import '../../../components/container.libsonnet') {
-            name: 'timeline-worker',
-            image: 'ghcr.io/walnuts1018/picca/timeline-worker:v0.0.21',
+            name: 'video-transcode-worker',
+            image: 'ghcr.io/walnuts1018/picca/video-transcode-worker:v0.0.21',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
@@ -36,17 +36,17 @@ local scyllaTls = import '../scylla-tls.libsonnet';
             env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
               {
                 name: 'OTEL_SERVICE_NAME',
-                value: 'picca-timeline-worker',
+                value: 'picca-video-transcode-worker',
               },
             ],
             resources: {
               requests: {
-                cpu: '100m',
-                memory: '256Mi',
+                cpu: '1',
+                memory: '1Gi',
               },
               limits: {
-                cpu: '1',
-                memory: '512Mi',
+                cpu: '4',
+                memory: '2Gi',
               },
             },
             ports: [

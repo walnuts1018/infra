@@ -5,31 +5,30 @@ local externalSecret = import '../external-secret.jsonnet';
 local plans = import '../plans.libsonnet';
 local s3Irsa = import '../s3-irsa.libsonnet';
 local scyllaTls = import '../scylla-tls.libsonnet';
-
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: app.name + '-exif-worker',
+    name: app.name + '-outbox-worker',
     namespace: app.namespace,
-    labels: labels(app.name + '-exif-worker'),
+    labels: labels(app.name + '-outbox-worker'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: labels(app.name + '-exif-worker'),
+      matchLabels: labels(app.name + '-outbox-worker'),
     },
     template: {
       metadata: {
-        labels: labels(app.name + '-exif-worker'),
+        labels: labels(app.name + '-outbox-worker'),
       },
       spec: {
         serviceAccountName: (import '../sa.jsonnet').metadata.name,
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         containers: [
           (import '../../../components/container.libsonnet') {
-            name: 'exif-worker',
-            image: 'ghcr.io/walnuts1018/picca/exif-worker:v0.0.21',
+            name: 'outbox-worker',
+            image: 'ghcr.io/walnuts1018/picca/outbox-worker:v0.0.21',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
@@ -37,17 +36,17 @@ local scyllaTls = import '../scylla-tls.libsonnet';
             env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
               {
                 name: 'OTEL_SERVICE_NAME',
-                value: 'picca-exif-worker',
+                value: 'picca-outbox-worker',
               },
             ],
             resources: {
               requests: {
-                cpu: '20m',
-                memory: '128Mi',
+                cpu: '100m',
+                memory: '256Mi',
               },
               limits: {
                 cpu: '1',
-                memory: '1Gi',
+                memory: '512Mi',
               },
             },
             ports: [

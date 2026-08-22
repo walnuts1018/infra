@@ -5,31 +5,30 @@ local externalSecret = import '../external-secret.jsonnet';
 local plans = import '../plans.libsonnet';
 local s3Irsa = import '../s3-irsa.libsonnet';
 local scyllaTls = import '../scylla-tls.libsonnet';
-
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: app.name + '-video-worker',
+    name: app.name + '-video-derivative-worker',
     namespace: app.namespace,
-    labels: labels(app.name + '-video-worker'),
+    labels: labels(app.name + '-video-derivative-worker'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: labels(app.name + '-video-worker'),
+      matchLabels: labels(app.name + '-video-derivative-worker'),
     },
     template: {
       metadata: {
-        labels: labels(app.name + '-video-worker'),
+        labels: labels(app.name + '-video-derivative-worker'),
       },
       spec: {
         serviceAccountName: (import '../sa.jsonnet').metadata.name,
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         containers: [
           (import '../../../components/container.libsonnet') {
-            name: 'video-worker',
-            image: 'ghcr.io/walnuts1018/picca/video-worker:v0.0.21',
+            name: 'video-derivative-worker',
+            image: 'ghcr.io/walnuts1018/picca/video-derivative-worker:v0.0.21',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
@@ -37,17 +36,17 @@ local scyllaTls = import '../scylla-tls.libsonnet';
             env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
               {
                 name: 'OTEL_SERVICE_NAME',
-                value: 'picca-video-worker',
+                value: 'picca-video-derivative-worker',
               },
             ],
             resources: {
               requests: {
-                cpu: '100m',
-                memory: '256Mi',
+                cpu: '1',
+                memory: '1Gi',
               },
               limits: {
-                cpu: '2',
-                memory: '4Gi',
+                cpu: '4',
+                memory: '2Gi',
               },
             },
             ports: [
@@ -78,9 +77,6 @@ local scyllaTls = import '../scylla-tls.libsonnet';
                 mountPath: '/tmp',
               },
             ] + s3Irsa.volumeMounts + scyllaTls.volumeMounts + plans.volumeMounts,
-            securityContext+: {
-              readOnlyRootFilesystem: false,
-            },
           },
         ],
         securityContext: {

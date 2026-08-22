@@ -9,26 +9,26 @@ local scyllaTls = import '../scylla-tls.libsonnet';
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: app.name + '-timeline-worker',
+    name: app.name + '-processing-reconciler',
     namespace: app.namespace,
-    labels: labels(app.name + '-timeline-worker'),
+    labels: labels(app.name + '-processing-reconciler'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: labels(app.name + '-timeline-worker'),
+      matchLabels: labels(app.name + '-processing-reconciler'),
     },
     template: {
       metadata: {
-        labels: labels(app.name + '-timeline-worker'),
+        labels: labels(app.name + '-processing-reconciler'),
       },
       spec: {
         serviceAccountName: (import '../sa.jsonnet').metadata.name,
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         containers: [
           (import '../../../components/container.libsonnet') {
-            name: 'timeline-worker',
-            image: 'ghcr.io/walnuts1018/picca/timeline-worker:v0.0.21',
+            name: 'processing-reconciler',
+            image: 'ghcr.io/walnuts1018/picca/processing-reconciler:v0.0.21',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
@@ -36,7 +36,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
             env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
               {
                 name: 'OTEL_SERVICE_NAME',
-                value: 'picca-timeline-worker',
+                value: 'picca-processing-reconciler',
               },
             ],
             resources: {
