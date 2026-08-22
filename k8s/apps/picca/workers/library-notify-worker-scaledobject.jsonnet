@@ -1,24 +1,24 @@
 local app = import '../app.json5';
-local worker = import 'video-derivative-worker.jsonnet';
+local worker = import 'library-notify-worker.jsonnet';
 {
   apiVersion: 'keda.sh/v1alpha1',
   kind: 'ScaledObject',
   metadata: { name: worker.metadata.name, namespace: app.namespace },
   spec: {
     minReplicaCount: 1,
-    maxReplicaCount: 8,
+    maxReplicaCount: 4,
     scaleTargetRef: { name: worker.metadata.name },
     triggers: [
       {
         type: 'rabbitmq',
         metricType: 'Value',
-        metadata: { protocol: 'http', queueName: 'picca.video-thumbnail', mode: 'ExpectedQueueConsumptionTime', value: '60' },
+        metadata: { protocol: 'http', queueName: 'picca.library-auto-stack', mode: 'ExpectedQueueConsumptionTime', value: '30' },
         authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
       },
       {
         type: 'rabbitmq',
         metricType: 'Value',
-        metadata: { protocol: 'http', queueName: 'picca.video-motion', mode: 'ExpectedQueueConsumptionTime', value: '120' },
+        metadata: { protocol: 'http', queueName: 'picca.media-processing-notification', mode: 'ExpectedQueueConsumptionTime', value: '30' },
         authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
       },
     ],

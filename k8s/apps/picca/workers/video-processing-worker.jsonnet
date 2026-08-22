@@ -9,26 +9,26 @@ local scyllaTls = import '../scylla-tls.libsonnet';
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: app.name + '-image-worker',
+    name: app.name + '-video-processing-worker',
     namespace: app.namespace,
-    labels: labels(app.name + '-image-worker'),
+    labels: labels(app.name + '-video-processing-worker'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: labels(app.name + '-image-worker'),
+      matchLabels: labels(app.name + '-video-processing-worker'),
     },
     template: {
       metadata: {
-        labels: labels(app.name + '-image-worker'),
+        labels: labels(app.name + '-video-processing-worker'),
       },
       spec: {
         serviceAccountName: (import '../sa.jsonnet').metadata.name,
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         containers: [
           (import '../../../components/container.libsonnet') {
-            name: 'image-worker',
-            image: 'ghcr.io/walnuts1018/picca/image-worker:v0.0.23',
+            name: 'video-processing-worker',
+            image: 'ghcr.io/walnuts1018/picca/video-processing-worker:v0.0.23',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
@@ -36,17 +36,17 @@ local scyllaTls = import '../scylla-tls.libsonnet';
             env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
               {
                 name: 'OTEL_SERVICE_NAME',
-                value: 'picca-image-worker',
+                value: 'picca-video-processing-worker',
               },
             ],
             resources: {
               requests: {
-                cpu: '500m',
-                memory: '512Mi',
+                cpu: '1',
+                memory: '1Gi',
               },
               limits: {
-                cpu: '2',
-                memory: '1Gi',
+                cpu: '4',
+                memory: '2Gi',
               },
             },
             ports: [

@@ -9,26 +9,26 @@ local scyllaTls = import '../scylla-tls.libsonnet';
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: app.name + '-metadata-worker',
+    name: app.name + '-image-processing-worker',
     namespace: app.namespace,
-    labels: labels(app.name + '-metadata-worker'),
+    labels: labels(app.name + '-image-processing-worker'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: labels(app.name + '-metadata-worker'),
+      matchLabels: labels(app.name + '-image-processing-worker'),
     },
     template: {
       metadata: {
-        labels: labels(app.name + '-metadata-worker'),
+        labels: labels(app.name + '-image-processing-worker'),
       },
       spec: {
         serviceAccountName: (import '../sa.jsonnet').metadata.name,
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         containers: [
           (import '../../../components/container.libsonnet') {
-            name: 'metadata-worker',
-            image: 'ghcr.io/walnuts1018/picca/metadata-worker:v0.0.23',
+            name: 'image-processing-worker',
+            image: 'ghcr.io/walnuts1018/picca/image-processing-worker:v0.0.23',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
@@ -36,16 +36,16 @@ local scyllaTls = import '../scylla-tls.libsonnet';
             env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
               {
                 name: 'OTEL_SERVICE_NAME',
-                value: 'picca-metadata-worker',
+                value: 'picca-image-processing-worker',
               },
             ],
             resources: {
               requests: {
-                cpu: '20m',
-                memory: '128Mi',
+                cpu: '500m',
+                memory: '512Mi',
               },
               limits: {
-                cpu: '1',
+                cpu: '2',
                 memory: '1Gi',
               },
             },

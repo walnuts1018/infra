@@ -9,26 +9,26 @@ local scyllaTls = import '../scylla-tls.libsonnet';
   apiVersion: 'apps/v1',
   kind: 'Deployment',
   metadata: {
-    name: app.name + '-orphan-reconciler',
+    name: app.name + '-library-notify-worker',
     namespace: app.namespace,
-    labels: labels(app.name + '-orphan-reconciler'),
+    labels: labels(app.name + '-library-notify-worker'),
   },
   spec: {
     replicas: 1,
     selector: {
-      matchLabels: labels(app.name + '-orphan-reconciler'),
+      matchLabels: labels(app.name + '-library-notify-worker'),
     },
     template: {
       metadata: {
-        labels: labels(app.name + '-orphan-reconciler'),
+        labels: labels(app.name + '-library-notify-worker'),
       },
       spec: {
         serviceAccountName: (import '../sa.jsonnet').metadata.name,
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         containers: [
           (import '../../../components/container.libsonnet') {
-            name: 'orphan-reconciler',
-            image: 'ghcr.io/walnuts1018/picca/orphan-reconciler:v0.0.22',
+            name: 'library-notify-worker',
+            image: 'ghcr.io/walnuts1018/picca/library-notify-worker:v0.0.23',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
@@ -36,7 +36,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
             env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
               {
                 name: 'OTEL_SERVICE_NAME',
-                value: 'picca-orphan-reconciler',
+                value: 'picca-library-notify-worker',
               },
             ],
             resources: {
