@@ -28,7 +28,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'video-derivative-worker',
-            image: 'ghcr.io/walnuts1018/picca/video-derivative-worker:v0.0.21',
+            image: 'ghcr.io/walnuts1018/picca/video-derivative-worker:v0.0.22',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
