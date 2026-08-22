@@ -41,12 +41,12 @@ local scyllaTls = import '../scylla-tls.libsonnet';
             ],
             resources: {
               requests: {
-                cpu: '500m',
-                memory: '512Mi',
+                cpu: '200m',
+                memory: '256Mi',
               },
               limits: {
                 cpu: '2',
-                memory: '1Gi',
+                memory: '4Gi',
               },
             },
             ports: [
