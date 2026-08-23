@@ -10,7 +10,14 @@ global:
   - name: AWS_ROLE_ARN
     value: arn:aws:iam::role/tempo
   storageClass: longhorn
+
 multitenancyEnabled: false
+streamOverHTTPEnabled: true
+overrides:
+  defaults:
+    metrics_generator:
+      processors:
+      - local-blocks
 
 ingester:
   replicas: 3
@@ -48,6 +55,11 @@ metricsGenerator:
       memory: 100Mi
     limits:
       memory: 1Gi
+  config:
+    processor:
+      local_blocks:
+        filter_server_spans: false
+        flush_to_storage: true
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
