@@ -126,7 +126,7 @@ datasources:
       isDefault: false
       jsonData:
         tracesToLogsV2:
-          datasourceUid: 'P214B5B846CF3925F'
+          datasourceUid: 'P8E80F9AEF21F6940'
           filterByTraceID: true
           filterBySpanID: true
         tracesToMetrics:
