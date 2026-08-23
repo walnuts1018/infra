@@ -1,6 +1,7 @@
 schedule: "*/5 * * * *"
 
 deschedulerPolicy:
+  # 1回の実行でevectできるのは、1Nodeあたり3Podまでとする
   maxNoOfPodsToEvictPerNode: 3
   metricsProviders:
   - source: KubernetesMetrics
