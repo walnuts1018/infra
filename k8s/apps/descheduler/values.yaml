@@ -1,4 +1,5 @@
-schedule: "*/30 * * * *"
+schedule: "*/5 * * * *"
+
 deschedulerPolicy:
   profiles:
   - name: default
@@ -8,40 +9,52 @@ deschedulerPolicy:
         - RemoveDuplicates
         - RemovePodsViolatingTopologySpreadConstraint
         - LowNodeUtilization
+
       deschedule:
         enabled:
         - RemovePodsViolatingInterPodAntiAffinity
         - RemovePodsViolatingNodeAffinity
         - RemovePodsViolatingNodeTaints
         - RemovePodsHavingTooManyRestarts
+
     pluginConfig:
     - name: DefaultEvictor
       args:
         ignorePvcPods: true
         evictLocalStoragePods: true
+        nodeFit: true
+
     - name: RemoveDuplicates
+
     - name: RemovePodsViolatingTopologySpreadConstraint
       args:
         constraints:
         - ScheduleAnyway
+
     - name: LowNodeUtilization
       args:
-        useDeviationThresholds: true
+        useDeviationThresholds: false
+
         thresholds:
-          cpu: 65
-          memory: 75
-          pods: 90
+          cpu: 60
+          memory: 70
+
         targetThresholds:
           cpu: 75
           memory: 80
-          pods: 95
+
+        evictionLimits:
+          node: 3
+
     - name: RemovePodsViolatingInterPodAntiAffinity
+
     - name: RemovePodsViolatingNodeAffinity
       args:
         nodeAffinityType:
         - requiredDuringSchedulingIgnoredDuringExecution
-        - preferredDuringSchedulingIgnoredDuringExecution
+
     - name: RemovePodsViolatingNodeTaints
+
     - name: RemovePodsHavingTooManyRestarts
       args:
         podRestartThreshold: 100
