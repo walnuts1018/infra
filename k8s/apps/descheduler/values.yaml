@@ -1,8 +1,12 @@
 schedule: "*/5 * * * *"
 
 deschedulerPolicy:
+  metricsProviders:
+  - source: KubernetesMetrics
+
   profiles:
-  - name: default
+  - name: request-balance
+
     plugins:
       balance:
         enabled:
@@ -59,3 +63,32 @@ deschedulerPolicy:
       args:
         podRestartThreshold: 100
         includingInitContainers: true
+
+  - name: actual-usage
+
+    plugins:
+      balance:
+        enabled:
+        - LowNodeUtilization
+
+    pluginConfig:
+    - name: DefaultEvictor
+      args:
+        ignorePvcPods: true
+        evictLocalStoragePods: true
+        nodeFit: true
+
+    - name: LowNodeUtilization
+      args:
+        metricsUtilization:
+          source: KubernetesMetrics
+
+        useDeviationThresholds: false
+
+        thresholds:
+          cpu: 70
+          memory: 70
+
+        targetThresholds:
+          cpu: 90
+          memory: 90
