@@ -6,11 +6,10 @@ image:
 
 resources:
   requests:
-    cpu: 100m
+    cpu: 80m
     memory: 400Mi
   limits:
-    cpu: 500m
-    memory: 1Gi
+    memory: 600Mi
 
 tolerations:
 - operator: Exists
