@@ -52,7 +52,6 @@ extraVolumeMounts:
 resources:
   requests:
     cpu: 50m
-    memory: 128Mi
+    memory: 192Mi
   limits:
-    cpu: "1"
-    memory: 2Gi
+    memory: 1Gi
