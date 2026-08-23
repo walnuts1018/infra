@@ -3,93 +3,90 @@ schedule: "*/5 * * * *"
 deschedulerPolicy:
   metricsProviders:
   - source: KubernetesMetrics
-
   profiles:
   - name: request-balance
-
     plugins:
       balance:
         enabled:
         - RemoveDuplicates
         - RemovePodsViolatingTopologySpreadConstraint
         - LowNodeUtilization
-
       deschedule:
         enabled:
         - RemovePodsViolatingInterPodAntiAffinity
         - RemovePodsViolatingNodeAffinity
         - RemovePodsViolatingNodeTaints
         - RemovePodsHavingTooManyRestarts
-
     pluginConfig:
     - name: DefaultEvictor
       args:
-        ignorePvcPods: true
-        evictLocalStoragePods: true
         nodeFit: true
-
+        podProtections:
+          defaultDisabled:
+          - PodsWithLocalStorage
+          extraEnabled:
+          - PodsWithPVC
+          config:
+            PodsWithPVC:
+              protectedStorageClasses:
+              - name: local-path
     - name: RemoveDuplicates
-
     - name: RemovePodsViolatingTopologySpreadConstraint
       args:
         constraints:
         - DoNotSchedule
         - ScheduleAnyway
-
     - name: LowNodeUtilization
       args:
         useDeviationThresholds: false
-
         thresholds:
           cpu: 60
           memory: 70
-
         targetThresholds:
           cpu: 75
           memory: 80
-
         evictionLimits:
           node: 3
-
     - name: RemovePodsViolatingInterPodAntiAffinity
-
     - name: RemovePodsViolatingNodeAffinity
       args:
         nodeAffinityType:
         - requiredDuringSchedulingIgnoredDuringExecution
-
     - name: RemovePodsViolatingNodeTaints
-
     - name: RemovePodsHavingTooManyRestarts
       args:
         podRestartThreshold: 100
         includingInitContainers: true
 
   - name: actual-usage
-
     plugins:
       balance:
         enabled:
         - LowNodeUtilization
-
     pluginConfig:
     - name: DefaultEvictor
       args:
-        ignorePvcPods: true
-        evictLocalStoragePods: true
         nodeFit: true
+        podProtections:
+          defaultDisabled:
+          - PodsWithLocalStorage
+          extraEnabled:
+          - PodsWithPVC
+          config:
+            PodsWithPVC:
+              protectedStorageClasses:
+              - name: local-path
 
     - name: LowNodeUtilization
       args:
         metricsUtilization:
           source: KubernetesMetrics
-
         useDeviationThresholds: false
-
         thresholds:
           cpu: 70
           memory: 70
-
         targetThresholds:
           cpu: 90
           memory: 90
+        evictionLimits:
+          node: 3
