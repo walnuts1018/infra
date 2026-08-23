@@ -40,7 +40,14 @@ ingester:
     replication_factor: 3
 
 metricsGenerator:
-  enabled: false
+  enabled: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: 20m
+      memory: 100Mi
+    limits:
+      memory: 1Gi
 
 distributor:
   replicas: 2
