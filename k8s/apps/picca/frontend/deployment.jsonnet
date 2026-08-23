@@ -25,7 +25,7 @@ local externalSecret = import '../external-secret.jsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'frontend',
-            image: 'ghcr.io/walnuts1018/picca/frontend:v0.0.25',
+            image: 'ghcr.io/walnuts1018/picca/frontend:v0.0.26',
             imagePullPolicy: 'IfNotPresent',
             env: [
               {
