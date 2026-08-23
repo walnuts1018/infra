@@ -76,7 +76,7 @@ local labels = {
             },
             resources: {
               requests: {
-                cpu: '10m',
+                cpu: '5m',
                 memory: '32Mi',
               },
               limits: {

@@ -21,7 +21,6 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         memory: '36Mi',
       },
       limits: {
-        cpu: '1',
         memory: '2Gi',
       },
     },
@@ -30,11 +29,10 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
       replicas: 3,
       requests: {
         cpu: '6m',
-        memory: '256Mi',
+        memory: '756Mi',
         storage: '300Gi',
       },
       limits: {
-        cpu: '1',
         memory: '2Gi',
       },
       storageClassName: 'local-path',
@@ -87,10 +85,9 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
       },
       requests: {
         cpu: '10m',
-        memory: '90Mi',
+        memory: '218Mi',
       },
       limits: {
-        cpu: '1',
         memory: '2Gi',
       },
       service: {
