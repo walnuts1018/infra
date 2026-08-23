@@ -1,6 +1,7 @@
 schedule: "*/5 * * * *"
 
 deschedulerPolicy:
+  maxNoOfPodsToEvictPerNode: 3
   metricsProviders:
   - source: KubernetesMetrics
   profiles:
@@ -21,6 +22,18 @@ deschedulerPolicy:
     - name: DefaultEvictor
       args:
         nodeFit: true
+        namespaceLabelSelector:
+          matchExpressions:
+          # github actions runnerは除外
+          - key: kubernetes.io/metadata.name
+            operator: NotIn
+            values:
+            - arc-runners
+        labelSelector:
+          matchExpressions:
+          # Job系は除外
+          - key: batch.kubernetes.io/controller-uid
+            operator: DoesNotExist
         podProtections:
           defaultDisabled:
           - PodsWithLocalStorage
@@ -28,6 +41,7 @@ deschedulerPolicy:
           - PodsWithPVC
           config:
             PodsWithPVC:
+              # local path provisionerのPodは他のNodeに移動できないので意味なし
               protectedStorageClasses:
               - name: local-path
     - name: RemoveDuplicates
@@ -45,8 +59,6 @@ deschedulerPolicy:
         targetThresholds:
           cpu: 75
           memory: 80
-        evictionLimits:
-          node: 3
     - name: RemovePodsViolatingInterPodAntiAffinity
     - name: RemovePodsViolatingNodeAffinity
       args:
@@ -57,7 +69,6 @@ deschedulerPolicy:
       args:
         podRestartThreshold: 100
         includingInitContainers: true
-
   - name: actual-usage
     plugins:
       balance:
@@ -67,6 +78,18 @@ deschedulerPolicy:
     - name: DefaultEvictor
       args:
         nodeFit: true
+        namespaceLabelSelector:
+          matchExpressions:
+          # github actions runnerは除外
+          - key: kubernetes.io/metadata.name
+            operator: NotIn
+            values:
+            - arc-runners
+        labelSelector:
+          matchExpressions:
+          # Job系は除外
+          - key: batch.kubernetes.io/controller-uid
+            operator: DoesNotExist
         podProtections:
           defaultDisabled:
           - PodsWithLocalStorage
@@ -87,5 +110,3 @@ deschedulerPolicy:
         targetThresholds:
           cpu: 90
           memory: 90
-        evictionLimits:
-          node: 3
