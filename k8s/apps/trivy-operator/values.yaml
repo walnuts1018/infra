@@ -35,10 +35,9 @@ operator:
 
 resources:
   requests:
-    cpu: 120m
+    cpu: 2m
     memory: 685Mi
   limits:
-    cpu: 500m
     memory: 2Gi
 
 serviceMonitor:
