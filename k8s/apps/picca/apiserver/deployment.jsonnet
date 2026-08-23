@@ -28,7 +28,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
         initContainers: [
           (import '../../../components/container.libsonnet') {
             name: 'migrations',
-            image: 'ghcr.io/walnuts1018/picca/migrations:v0.0.23',
+            image: 'ghcr.io/walnuts1018/picca/migrations:v0.0.24',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               {
