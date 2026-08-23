@@ -76,7 +76,6 @@ deschedulerPolicy:
             PodsWithPVC:
               protectedStorageClasses:
               - name: local-path
-
     - name: LowNodeUtilization
       args:
         metricsUtilization:
