@@ -2,10 +2,9 @@ replicaCount: 1
 
 resources:
   requests:
-    cpu: 16m
-    memory: 32Mi
+    cpu: 5m
+    memory: 52Mi
   limits:
-    cpu: 200m
     memory: 512Mi
 
 topologySpreadConstraints:

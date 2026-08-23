@@ -265,7 +265,7 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
               name: 'listener',
               resources: {
                 requests: {
-                  cpu: '5m',
+                  cpu: '2m',
                   memory: '32Mi',
                 },
                 limits: {
