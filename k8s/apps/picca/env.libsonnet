@@ -81,6 +81,6 @@
   },
   {
     name: 'LOG_LEVEL',
-    value: 'info',
+    value: 'debug',
   },
 ]
