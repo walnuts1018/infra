@@ -31,24 +31,21 @@ logging:
 resources:
   operator:
     requests:
-      cpu: 50m
-      memory: 100Mi
+      cpu: 10m
+      memory: 76Mi
     limits:
-      cpu: 1
       memory: 1000Mi
   metricServer:
     requests:
-      cpu: 50m
-      memory: 100Mi
+      cpu: 10m
+      memory: 90Mi
     limits:
-      cpu: 1
       memory: 1000Mi
   webhooks:
     requests:
-      cpu: 10m
-      memory: 64Mi
+      cpu: 2m
+      memory: 44Mi
     limits:
-      cpu: 1
       memory: 1000Mi
 
 topologySpreadConstraints:

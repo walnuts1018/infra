@@ -40,8 +40,8 @@ pluginsManager:
       maxConcurrent: 2
   resources:
     requests:
-      cpu: 50m
-      memory: 128Mi
+      cpu: 5m
+      memory: 64Mi
     limits:
       memory: 512Mi
   securityContext:
