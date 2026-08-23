@@ -33,6 +33,7 @@ deschedulerPolicy:
     - name: RemovePodsViolatingTopologySpreadConstraint
       args:
         constraints:
+        - DoNotSchedule
         - ScheduleAnyway
 
     - name: LowNodeUtilization
