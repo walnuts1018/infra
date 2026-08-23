@@ -3,19 +3,35 @@ runners.generate([
   {
     name: 'picca',
     url: 'https://github.com/walnuts1018/picca',
-    sizes: {
-      'standard-nano-amd64': {
+    runners: [
+      {
+        name: 'standard-nano-amd64',
+        cpu: '250m',
+        memory: '256Mi',
+        arch: 'amd64',
         maxRunners: 5,
       },
-      'standard-small-amd64': {
+      {
+        name: 'standard-small-amd64',
+        cpu: '500m',
+        memory: '512Mi',
+        arch: 'amd64',
         maxRunners: 3,
       },
-      'highmem-medium-amd64': {
+      {
+        name: 'highmem-medium-amd64',
+        cpu: '1',
+        memory: '2Gi',
+        arch: 'amd64',
         maxRunners: 2,
       },
-      'highcpu-medium-amd64': {
+      {
+        name: 'highcpu-medium-amd64',
+        cpu: '2',
+        memory: '2Gi',
+        arch: 'amd64',
         maxRunners: 2,
       },
-    },
+    ],
   },
 ])

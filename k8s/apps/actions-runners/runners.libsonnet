@@ -2,66 +2,15 @@ local helm = import '../../components/helm.libsonnet';
 local app = import 'app.json5';
 local hooksConfigMap = import 'configmap-runner-hooks.jsonnet';
 
-local sizes = {
-  // バランス型 (Standard)
-  'standard-nano-amd64': {
-    cpuRequest: '200m',
-    cpuLimit: '1',
-    memoryRequest: '256Mi',
-    memoryLimit: '1Gi',
-  },
-  'standard-small-amd64': {
-    cpuRequest: '500m',
-    cpuLimit: '1',
-    memoryRequest: '512Mi',
-    memoryLimit: '2Gi',
-  },
-  'standard-medium-amd64': {
-    cpuRequest: '1',
-    cpuLimit: '2',
-    memoryRequest: '1Gi',
-    memoryLimit: '4Gi',
-  },
-  'standard-large-amd64': {
-    cpuRequest: '2',
-    cpuLimit: '4',
-    memoryRequest: '2Gi',
-    memoryLimit: '8Gi',
-  },
-
-  // メモリ重視
-  'highmem-medium-amd64': {
-    cpuRequest: '1',
-    cpuLimit: '2',
-    memoryRequest: '2Gi',
-    memoryLimit: '8Gi',
-  },
-  'highmem-large-amd64': {
-    cpuRequest: '2',
-    cpuLimit: '4',
-    memoryRequest: '4Gi',
-    memoryLimit: '16Gi',
-  },
-
-  // CPU重視
-  'highcpu-medium-amd64': {
-    cpuRequest: '2',
-    cpuLimit: '4',
-    memoryRequest: '2Gi',
-    memoryLimit: '6Gi',
-  },
-  'highcpu-large-amd64': {
-    cpuRequest: '4',
-    cpuLimit: '8',
-    memoryRequest: '4Gi',
-    memoryLimit: '8Gi',
-  },
-};
-
-local makeRunnerSet(repo, sizeName, sizeConfig) =
-  local size = sizes[sizeName];
+local makeRunnerSet(repo, runner) =
+  local arch = if std.objectHas(runner, 'architecture') then
+    runner.architecture
+  else if std.objectHas(runner, 'arch') then
+    runner.arch
+  else
+    'amd64';
   helm {
-    name: 'arc-%s-%s' % [repo.name, sizeName],
+    name: 'arc-%s-%s' % [repo.name, runner.name],
     namespace: app.namespace,
     ociChartURL: 'ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set',
     targetRevision: '0.14.2',
@@ -73,7 +22,7 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
       githubConfigUrl: repo.url,
       githubConfigSecret: 'arc-secret',
       minRunners: 0,
-      maxRunners: sizeConfig.maxRunners,
+      maxRunners: runner.maxRunners,
       listenerMetrics: {
         counters: {
           gha_started_jobs_total: {
@@ -281,16 +230,16 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
         spec: {
           automountServiceAccountToken: false,
           nodeSelector: {
-            'kubernetes.io/arch': 'amd64',
+            'kubernetes.io/arch': arch,
           },
           resources: {
             requests: {
-              cpu: size.cpuRequest,
-              memory: size.memoryRequest,
+              cpu: runner.cpu,
+              memory: runner.memory,
             },
             limits: {
-              cpu: size.cpuLimit,
-              memory: size.memoryLimit,
+              cpu: runner.cpu,
+              memory: runner.memory,
             },
           },
           initContainers: [
@@ -402,8 +351,8 @@ local makeRunnerSet(repo, sizeName, sizeConfig) =
 {
   generate(repos):: std.flattenArrays([
     [
-      makeRunnerSet(repo, sizeName, repo.sizes[sizeName])
-      for sizeName in std.objectFields(repo.sizes)
+      makeRunnerSet(repo, runner)
+      for runner in repo.runners
     ]
     for repo in repos
   ]),
