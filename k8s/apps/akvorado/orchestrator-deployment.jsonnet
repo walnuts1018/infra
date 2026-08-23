@@ -38,8 +38,14 @@ local app = import 'app.json5';
             { name: 'snmp-config', mountPath: '/etc/akvorado/snmp.yaml', subPath: 'snmp.yaml', readOnly: true },
           ],
           resources: {
-            requests: { cpu: '2m', memory: '11Mi' },
-            limits: { cpu: '500m', memory: '256Mi' },
+            requests: {
+              cpu: '2m',
+              memory: '11Mi',
+            },
+            limits: {
+              cpu: '500m',
+              memory: '256Mi',
+            },
           },
           livenessProbe: {
             httpGet: { path: '/api/v0/healthcheck', port: 8080 },

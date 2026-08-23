@@ -36,7 +36,7 @@ local app = import 'app.json5';
         resources: {
           requests: {
             cpu: '4m',
-            memory: '232Mi',
+            memory: '200Mi',
           },
           limits: {
             cpu: '500m',
@@ -47,8 +47,8 @@ local app = import 'app.json5';
       userOperator: {
         resources: {
           requests: {
-            cpu: '7m',
-            memory: '233Mi',
+            cpu: '5m',
+            memory: '200Mi',
           },
           limits: {
             cpu: '500m',

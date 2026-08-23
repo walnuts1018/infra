@@ -32,8 +32,13 @@ local app = import 'app.json5';
           ],
           volumeMounts: [],
           resources: {
-            requests: { cpu: '2m', memory: '13Mi' },
-            limits: { cpu: '500m', memory: '512Mi' },
+            requests: {
+              cpu: '12m',
+              memory: '23Mi',
+            },
+            limits: {
+              memory: '256Mi',
+            },
           },
           livenessProbe: {
             httpGet: { path: '/api/v0/healthcheck', port: 8080 },
