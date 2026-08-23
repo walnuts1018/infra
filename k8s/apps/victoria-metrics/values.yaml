@@ -15,11 +15,10 @@ vmselect:
       type: Resource
   resources:
     requests:
-      cpu: 20m
-      memory: 115Mi
+      cpu: 10m
+      memory: 48Mi
     limits:
-      cpu: "1"
-      memory: 1Gi
+      memory: 512Gi
   serviceMonitor:
     enabled: true
 
@@ -40,11 +39,10 @@ vminsert:
       type: Resource
   resources:
     requests:
-      cpu: 80m
-      memory: 256Mi
+      cpu: 70m
+      memory: 220Mi
     limits:
-      cpu: "2"
-      memory: 2Gi
+      memory: 1Gi
   serviceMonitor:
     enabled: true
 
@@ -59,9 +57,8 @@ vmstorage:
   resources:
     requests:
       cpu: 50m
-      memory: 1600Mi
+      memory: 1.5Gi
     limits:
-      cpu: "2"
       memory: 2Gi
   topologySpreadConstraints:
   - maxSkew: 1
