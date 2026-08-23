@@ -3,7 +3,7 @@ deployment:
     resources:
       requests:
         cpu: 2m
-        memory: 51Mi
+        memory: 115Mi
       limits:
         memory: 1Gi
 
