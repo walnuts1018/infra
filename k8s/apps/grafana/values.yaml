@@ -124,6 +124,18 @@ datasources:
       url: http://tempo-gateway.tempo.svc.cluster.local
       access: proxy
       isDefault: false
+      jsonData:
+        tracesToLogsV2:
+          datasourceUid: 'P214B5B846CF3925F'
+          filterByTraceID: true
+          filterBySpanID: true
+        tracesToMetrics:
+          datasourceUid: 'P4169E866C3094E38'
+        serviceMap:
+          datasourceUid: 'P4169E866C3094E38'
+        streamingEnabled:
+          search: true
+          metrics: true
     - name: influxdb
       type: influxdb
       url: http://influxdb-influxdb2.databases.svc.cluster.local
