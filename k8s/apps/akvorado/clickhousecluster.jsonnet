@@ -13,7 +13,7 @@ local app = import 'app.json5';
   },
   spec: {
     keeperClusterRef: {
-      name: 'akvorado-keeper',
+      name: (import 'keepercluster.jsonnet').metadata.name,
     },
     replicas: 1,
     dataVolumeClaimSpec: {
@@ -27,11 +27,10 @@ local app = import 'app.json5';
     containerTemplate: {
       resources: {
         requests: {
-          cpu: '116m',
-          memory: '593Mi',
+          cpu: '130m',
+          memory: '1Gi',
         },
         limits: {
-          cpu: '2',
           memory: '4Gi',
         },
       },
