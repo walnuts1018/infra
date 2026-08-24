@@ -16,9 +16,6 @@ local redfishSecret = import 'rusk-redfish.jsonnet';
     },
     nodeName: 'rusk',
     powerPolicy: 'OnDemand',
-    capacity: {
-      runnerSlots: 11,
-    },
     priority: 100,
     redfish: {
       endpoint: 'https://192.168.4.101/',
