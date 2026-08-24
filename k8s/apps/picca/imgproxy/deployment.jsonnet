@@ -24,7 +24,7 @@ local externalSecret = import 'external-secret.jsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'imgproxy',
-            image: 'ghcr.io/imgproxy/imgproxy:v4.0.13',
+            image: 'ghcr.io/imgproxy/imgproxy:v4.0.14',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               {
