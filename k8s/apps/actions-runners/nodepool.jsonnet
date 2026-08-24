@@ -1,7 +1,7 @@
 local app = import 'app.json5';
 
 {
-  apiVersion: 'gha.walnuts.dev/v1alpha1',
+  apiVersion: 'sharc.walnuts.dev/v1alpha1',
   kind: 'RunnerNodePool',
   metadata: {
     name: 'rusk',

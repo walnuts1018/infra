@@ -40,7 +40,7 @@ local app = import 'app.json5';
 local githubAppSecret = import 'github-app-secret.jsonnet';
 [
   {
-    apiVersion: 'gha.walnuts.dev/v1alpha1',
+    apiVersion: 'sharc.walnuts.dev/v1alpha1',
     kind: 'RunnerScaleSet',
     metadata: {
       name: 'arc-picca-%s' % runner.name,

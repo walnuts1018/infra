@@ -1,7 +1,7 @@
 local app = import 'app.json5';
 local redfishSecret = import 'rusk-redfish.jsonnet';
 {
-  apiVersion: 'gha.walnuts.dev/v1alpha1',
+  apiVersion: 'sharc.walnuts.dev/v1alpha1',
   kind: 'RunnerMachine',
   metadata: {
     name: 'rusk',

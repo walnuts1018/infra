@@ -2,7 +2,7 @@ local app = import 'app.json5';
 local kubeconfigSecret = import 'rusk-kubeconfig.jsonnet';
 
 {
-  apiVersion: 'gha.walnuts.dev/v1alpha1',
+  apiVersion: 'sharc.walnuts.dev/v1alpha1',
   kind: 'RunnerCluster',
   metadata: {
     name: 'rusk',
