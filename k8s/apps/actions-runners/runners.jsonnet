@@ -47,22 +47,6 @@ local githubAppSecret = import 'github-app-secret.jsonnet';
       namespace: app.namespace,
     },
     spec: {
-      containerMode: 'dind',
-      dind: {
-        image: 'docker:dind',
-        dockerGroupGID: '123',
-        mtu: '1280',
-        resources: {
-          requests: {
-            cpu: '50m',
-            memory: '128Mi',
-          },
-          limits: {
-            cpu: '100m',
-            memory: '256Mi',
-          },
-        },
-      },
       github: {
         configURL: 'https://github.com/walnuts1018/picca',
         scaleSetName: 'arc-picca-%s' % runner.name,
@@ -72,7 +56,7 @@ local githubAppSecret = import 'github-app-secret.jsonnet';
         },
       },
       nodePoolRef: {
-        name: 'rusk',
+        name: (import 'nodepool.jsonnet').metadata.name,
       },
       scaling: {
         minRunners: 0,
@@ -91,8 +75,27 @@ local githubAppSecret = import 'github-app-secret.jsonnet';
         },
       },
       runner: {
+        containerMode: 'dind',
+        dind: {
+          image: 'docker:dind',
+          dockerGroupGID: '123',
+          mtu: '1280',
+        },
+        metrics: {
+          enabled: false,
+        },
         template: {
           spec: {
+            resources: {
+              requests: {
+                cpu: runner.cpu,
+                memory: runner.memory,
+              },
+              limits: {
+                cpu: runner.cpu,
+                memory: runner.memory,
+              },
+            },
             automountServiceAccountToken: false,
             enableServiceLinks: false,
             restartPolicy: 'Never',
@@ -104,16 +107,6 @@ local githubAppSecret = import 'github-app-secret.jsonnet';
                 name: 'runner',
                 image: 'ghcr.io/walnuts1018/infra/actions-runner:2.336.0',
                 command: ['/home/runner/run.sh'],
-                resources: {
-                  requests: {
-                    cpu: runner.cpu,
-                    memory: runner.memory,
-                  },
-                  limits: {
-                    cpu: runner.cpu,
-                    memory: runner.memory,
-                  },
-                },
                 env: [
                   { name: 'DOTNET_gcServer', value: '0' },
                   { name: 'DOTNET_GCHeapHardLimit', value: '0x10000000' },
