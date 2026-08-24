@@ -1,6 +1,6 @@
 {
   name: "actions-runners",
-  namespace: "arc-systems",
+  namespace: "sharc",
   annotations: {
     "argocd.argoproj.io/sync-wave": "1",
   },
