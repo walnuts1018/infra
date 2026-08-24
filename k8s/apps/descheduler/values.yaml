@@ -23,13 +23,6 @@ deschedulerPolicy:
     - name: DefaultEvictor
       args:
         nodeFit: true
-        namespaceLabelSelector:
-          matchExpressions:
-          # github actions runnerは除外
-          - key: kubernetes.io/metadata.name
-            operator: NotIn
-            values:
-            - arc-runners
         labelSelector:
           matchExpressions:
           # Job系は除外
@@ -85,7 +78,7 @@ deschedulerPolicy:
           - key: kubernetes.io/metadata.name
             operator: NotIn
             values:
-            - arc-runners
+            - smart-hibernatable-actions-runner-controller
         labelSelector:
           matchExpressions:
           # Job系は除外

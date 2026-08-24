@@ -1,6 +1,9 @@
 {
   name: "actions-runners",
-  namespace: "arc-runners",
+  namespace: "arc-systems",
+  annotations: {
+    "argocd.argoproj.io/sync-wave": "1",
+  },
   clusters: {
     kurumi: {},
   },

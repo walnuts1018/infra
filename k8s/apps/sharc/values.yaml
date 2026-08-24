@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/walnuts1018/smart-hibernatable-actions-runner-controller/manager
+  pullPolicy: IfNotPresent
+  tag: "0.0.4"
+
+listenerImage:
+  repository: ghcr.io/walnuts1018/smart-hibernatable-actions-runner-controller/listener
+  tag: "0.0.4"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+webhook:
+  enabled: true
+  certManager:
+    enabled: true
+
+otel:
+  metricsExporter: otlp
+  serviceName: sharc
+  exporter:
+    endpoint: http://default-collector.opentelemetry-collector.svc.cluster.local:4318
+    protocol: http/protobuf

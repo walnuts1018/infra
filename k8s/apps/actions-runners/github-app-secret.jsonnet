@@ -1,7 +1,10 @@
-(import '../../components/external-secret.libsonnet') {
+local externalSecret = import '../../components/external-secret.libsonnet';
+local app = import 'app.json5';
+
+externalSecret {
+  name: 'github-app-secret',
+  namespace: app.namespace,
   use_suffix: false,
-  name: 'arc-secret',
-  namespace: (import 'app.json5').namespace,
   data: [
     {
       secretKey: 'github_app_id',
@@ -25,4 +28,9 @@
       },
     },
   ],
+  template_data: {
+    github_app_id: '{{ .github_app_id }}',
+    github_app_installation_id: '{{ .github_app_installation_id }}',
+    github_app_private_key: '{{ .github_app_private_key }}',
+  },
 }

@@ -1,0 +1,10 @@
+{
+  name: "sharc",
+  namespace: "sharc",
+  annotations: {
+    "argocd.argoproj.io/sync-wave": "0",
+  },
+  clusters: {
+    kurumi: {},
+  },
+}
