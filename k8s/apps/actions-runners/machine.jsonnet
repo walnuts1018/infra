@@ -18,7 +18,7 @@ local redfishSecret = import 'rusk-redfish.jsonnet';
     powerPolicy: 'OnDemand',
     priority: 100,
     redfish: {
-      endpoint: 'https://192.168.4.101/',
+      endpoint: 'https://192.168.4.101',
       credentialsSecretRef: {
         name: redfishSecret.spec.target.name,
       },
