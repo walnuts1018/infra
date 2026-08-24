@@ -1,9 +1,6 @@
 {
   name: "actions-runners",
   namespace: "sharc",
-  annotations: {
-    "argocd.argoproj.io/sync-wave": "1",
-  },
   clusters: {
     kurumi: {},
   },
