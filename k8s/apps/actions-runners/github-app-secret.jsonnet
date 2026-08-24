@@ -9,21 +9,21 @@ externalSecret {
     {
       secretKey: 'github_app_id',
       remoteRef: {
-        key: 'gha-rusk',
+        key: 'sharc-rusk',
         property: 'github_app_id',
       },
     },
     {
       secretKey: 'github_app_installation_id',
       remoteRef: {
-        key: 'gha-rusk',
+        key: 'sharc-rusk',
         property: 'github_app_installation_id',
       },
     },
     {
       secretKey: 'github_app_private_key',
       remoteRef: {
-        key: 'gha-rusk',
+        key: 'sharc-rusk',
         property: 'github_app_private_key',
       },
     },

@@ -9,7 +9,7 @@ externalSecret {
     {
       secretKey: 'kubeconfig',
       remoteRef: {
-        key: 'gha-rusk',
+        key: 'sharc-rusk',
         property: 'kubeconfig',
       },
     },

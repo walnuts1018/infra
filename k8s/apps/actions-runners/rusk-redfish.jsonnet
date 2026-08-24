@@ -9,14 +9,14 @@ externalSecret {
     {
       secretKey: 'username',
       remoteRef: {
-        key: 'gha-rusk',
+        key: 'sharc-rusk',
         property: 'redfish_username',
       },
     },
     {
       secretKey: 'password',
       remoteRef: {
-        key: 'gha-rusk',
+        key: 'sharc-rusk',
         property: 'redfish_password',
       },
     },
