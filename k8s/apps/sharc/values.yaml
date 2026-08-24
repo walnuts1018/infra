@@ -1,14 +1,5 @@
 replicaCount: 1
 
-image:
-  repository: ghcr.io/walnuts1018/smart-hibernatable-actions-runner-controller/manager
-  pullPolicy: IfNotPresent
-  tag: "v0.0.5"
-
-listenerImage:
-  repository: ghcr.io/walnuts1018/smart-hibernatable-actions-runner-controller/listener
-  tag: "v0.0.5"
-
 resources:
   requests:
     cpu: 10m
