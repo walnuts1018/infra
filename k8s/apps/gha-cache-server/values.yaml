@@ -1,4 +1,5 @@
 config:
+  apiBaseUrl: https://gha-cache-server.local.walnuts.dev
   enableDirectDownloads: false
   cacheCleanupOlderThanDays: 30
   storage:
