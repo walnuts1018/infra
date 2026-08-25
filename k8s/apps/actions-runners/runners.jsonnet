@@ -73,22 +73,22 @@ local githubAppSecret = import 'github-app-secret.jsonnet';
           image: 'docker:29.7.2-dind',
           dockerGroupGID: '123',
           mtu: '1280',
-          resources: {
-            requests: {
-              cpu: runner.cpu,
-              memory: runner.memory,
-            },
-            limits: {
-              cpu: runner.cpu,
-              memory: runner.memory,
-            },
-          },
         },
         metrics: {
           enabled: false,
         },
         template: {
           spec: {
+            resources: {
+              requests: {
+                cpu: runner.cpu,
+                memory: runner.memory,
+              },
+              limits: {
+                cpu: runner.cpu,
+                memory: runner.memory,
+              },
+            },
             automountServiceAccountToken: false,
             enableServiceLinks: false,
             restartPolicy: 'Never',
