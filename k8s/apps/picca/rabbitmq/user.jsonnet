@@ -8,6 +8,7 @@ local cluster = (import '../../rabbitmq-default/rabbitmqcluster.jsonnet');
     namespace: app.namespace,
   },
   spec: {
+    tags: ['monitoring'],
     rabbitmqClusterReference: {
       name: cluster.metadata.name,
       namespace: cluster.metadata.namespace,
