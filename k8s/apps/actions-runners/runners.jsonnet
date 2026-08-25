@@ -70,7 +70,7 @@ local githubAppSecret = import 'github-app-secret.jsonnet';
       runner: {
         containerMode: 'dind',
         dind: {
-          image: 'docker:dind',
+          image: 'docker:29.7.2-dind',
           dockerGroupGID: '123',
           mtu: '1280',
         },
