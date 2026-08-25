@@ -21,6 +21,20 @@ local runners = [
     maxRunners: 1,
   },
   {
+    name: 'build-frontend-amd64',
+    cpu: '2',
+    memory: '4Gi',
+    arch: 'amd64',
+    maxRunners: 1,
+  },
+  {
+    name: 'build-backend-amd64',
+    cpu: '4',
+    memory: '8Gi',
+    arch: 'amd64',
+    maxRunners: 1,
+  },
+  {
     name: 'highmem-xlarge-amd64',
     cpu: '300m',
     memory: '8Gi',
