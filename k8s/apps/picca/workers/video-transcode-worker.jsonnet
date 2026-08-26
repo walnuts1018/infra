@@ -28,7 +28,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'video-transcode-worker',
-            image: 'ghcr.io/walnuts1018/picca/video-transcode-worker:v0.0.31',
+            image: 'ghcr.io/walnuts1018/picca/video-transcode-worker:v0.0.32',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
