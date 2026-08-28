@@ -28,7 +28,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'library-notify-worker',
-            image: 'ghcr.io/walnuts1018/picca/library-notify-worker:v0.0.37',
+            image: 'ghcr.io/walnuts1018/picca/library-notify-worker:v0.0.38',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
