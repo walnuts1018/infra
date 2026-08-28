@@ -28,6 +28,7 @@ local app = import '../app.json5';
     IMGPROXY_S3_ENDPOINT_USE_PATH_STYLE: 'true',
     IMGPROXY_KEY: '{{ .imgproxy_key }}',
     IMGPROXY_SALT: '{{ .imgproxy_salt }}',
+    IMGPROXY_ALLOW_ORIGIN: 'https://picca.walnuts.dev',
     IMGPROXY_TTL: '900',
   },
 }
