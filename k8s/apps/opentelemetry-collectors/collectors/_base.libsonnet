@@ -39,6 +39,7 @@ function(
           ],
         },
       },
+
       exporters: {
         'otlp_grpc/tempo': {
           endpoint: 'tempo-gateway.tempo.svc.cluster.local:4317',
@@ -53,20 +54,35 @@ function(
             },
           },
         },
+
         'otlp_http/loki': {
           endpoint: 'http://loki-gateway.loki.svc.cluster.local/otlp',
           tls: {
             insecure: true,
           },
+          timeout: '5s',
+          retry_on_failure: {
+            enabled: true,
+            initial_interval: '1s',
+            max_interval: '30s',
+            max_elapsed_time: '0s',
+          },
           sending_queue: {
+            enabled: true,
+            num_consumers: 4,
+            sizer: 'items',
+            queue_size: 50000,
+            block_on_overflow: true,
+            wait_for_result: false,
             batch: {
-              flush_timeout: '1s',
               sizer: 'bytes',
-              min_size: 262144, // 256 KiB
+              flush_timeout: '500ms',
+              min_size: 524288, // 512 KiB
               max_size: 1048576, // 1 MiB
             },
           },
         },
+
         'otlp_http/mackerel': {
           endpoint: 'https://otlp-vaxila.mackerelio.com',
           headers: {
@@ -81,6 +97,7 @@ function(
             },
           },
         },
+
         'otlp_grpc/mackerel': {
           endpoint: 'otlp.mackerelio.com:4317',
           compression: 'gzip',
@@ -95,6 +112,7 @@ function(
             },
           },
         },
+
         'prometheus_remote_write/victoriametrics': {
           endpoint: 'http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write',
           timeout: '30s',
@@ -102,6 +120,7 @@ function(
             enabled: true,
           },
         },
+
         'otlp_grpc/pyroscope': {
           endpoint: 'http://pyroscope.pyroscope.svc.cluster.local:4317',
           tls: {
@@ -115,21 +134,25 @@ function(
             },
           },
         },
+
         file: {
           path: '/tmp/debug.json',
           format: 'json',
         },
+
         debug: {
           verbosity: 'detailed',
         },
       },
     },
+
     volumes: [
       {
         name: 'tmp',
         emptyDir: {},
       },
     ],
+
     volumeMounts: [
       {
         name: 'tmp',
