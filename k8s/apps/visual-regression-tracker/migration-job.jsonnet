@@ -54,7 +54,7 @@ local env = [
         containers: [
           (container) {
             name: 'migration',
-            image: 'docker.io/visualregressiontracker/migration:5.3.0',
+            image: 'docker.io/visualregressiontracker/migration:5.4.0',
             imagePullPolicy: 'IfNotPresent',
             env: env,
           } + {
