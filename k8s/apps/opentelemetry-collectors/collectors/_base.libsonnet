@@ -18,12 +18,14 @@ function(
             },
           ],
         },
+
         'transform/add_sample_key': {
           error_mode: 'ignore',
           log_statements: [
             'set(log.attributes["_sample_key"], UUID())',
           ],
         },
+
         'probabilistic_sampler/mackerel': {
           sampling_percentage: 1,
           mode: 'hash_seed',
@@ -32,6 +34,7 @@ function(
           hash_seed: 1018,
           fail_closed: true,
         },
+        
         'transform/remove_sample_key': {
           error_mode: 'ignore',
           log_statements: [
@@ -39,7 +42,6 @@ function(
           ],
         },
       },
-
       exporters: {
         'otlp_grpc/tempo': {
           endpoint: 'tempo-gateway.tempo.svc.cluster.local:4317',
@@ -145,14 +147,12 @@ function(
         },
       },
     },
-
     volumes: [
       {
         name: 'tmp',
         emptyDir: {},
       },
     ],
-
     volumeMounts: [
       {
         name: 'tmp',
