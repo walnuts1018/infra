@@ -50,8 +50,8 @@ local app = import 'app.json5';
             ],
             resources: {
               requests: {
-                cpu: '5m',
-                memory: '48Mi',
+                cpu: '3m',
+                memory: '8Mi',
               },
               limits: {
                 cpu: '50m',

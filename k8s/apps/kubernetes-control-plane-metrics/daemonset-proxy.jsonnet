@@ -55,7 +55,7 @@ local app = import 'app.json5';
             ],
             resources: {
               requests: {
-                cpu: '5m',
+                cpu: '3m',
                 memory: '8Mi',
               },
               limits: {
@@ -82,7 +82,7 @@ local app = import 'app.json5';
             ],
             resources: {
               requests: {
-                cpu: '5m',
+                cpu: '3m',
                 memory: '8Mi',
               },
               limits: {
@@ -109,7 +109,7 @@ local app = import 'app.json5';
             ],
             resources: {
               requests: {
-                cpu: '5m',
+                cpu: '3m',
                 memory: '8Mi',
               },
               limits: {
