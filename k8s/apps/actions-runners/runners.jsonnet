@@ -55,18 +55,6 @@ local githubAppSecret = import 'github-app-secret.jsonnet';
         minRunners: 0,
         maxRunners: runner.maxRunners,
       },
-      listener: {
-        resources: {
-          requests: {
-            cpu: '2m',
-            memory: '32Mi',
-          },
-          limits: {
-            cpu: '100m',
-            memory: '128Mi',
-          },
-        },
-      },
       runner: {
         containerMode: 'dind',
         dind: {
