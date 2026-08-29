@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'redis-operator',
   repoURL: 'https://ot-container-kit.github.io/helm-charts/',
-  targetRevision: '0.25.0',
+  targetRevision: '0.26.1',
   values: (importstr 'values.yaml'),
 }
