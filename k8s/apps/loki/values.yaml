@@ -26,12 +26,14 @@ loki:
   # -- Limits config
   limits_config:
     allow_structured_metadata: true
-    ingestion_burst_size_mb: 100
+    ingestion_rate_strategy: global
+    ingestion_rate_mb: 16
+    ingestion_burst_size_mb: 32
     retention_period: 336h # 14 days
     reject_old_samples: false
     shard_streams:
       enabled: true
-      desired_rate: 104857600 # 10MiB
+      desired_rate: 2097152 # 2 MiB/s
   commonConfig:
     replication_factor: 1
 
