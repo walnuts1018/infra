@@ -77,8 +77,8 @@ function(
             batch: {
               sizer: 'bytes',
               flush_timeout: '500ms',
-              min_size: 524288, // 512 KiB
-              max_size: 1048576, // 1 MiB
+              min_size: 524288,  // 512 KiB
+              max_size: 1048576,  // 1 MiB
             },
           },
         },
