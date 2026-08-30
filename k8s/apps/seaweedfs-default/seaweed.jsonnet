@@ -33,6 +33,24 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
           value: '1',
         },
       ],
+      affinity: {
+        podAntiAffinity: {
+          preferredDuringSchedulingIgnoredDuringExecution: [
+            {
+              weight: 100,
+              podAffinityTerm: {
+                labelSelector: {
+                  matchLabels: {
+                    'app.kubernetes.io/component': 'master',
+                    'app.kubernetes.io/instance': $.metadata.name,
+                  },
+                },
+                topologyKey: 'kubernetes.io/hostname',
+              },
+            },
+          ],
+        },
+      },
       metricsPort: 9327,
       requests: {
         cpu: '6m',
