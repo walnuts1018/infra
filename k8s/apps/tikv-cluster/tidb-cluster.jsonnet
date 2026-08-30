@@ -32,7 +32,7 @@ local componentAffinity(component) = {
     },
     discovery: {},
     helper: {
-      image: 'alpine:3.16.0',
+      image: 'alpine:3.24.1',
     },
     pd: {
       baseImage: 'pingcap/pd',
