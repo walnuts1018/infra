@@ -163,22 +163,14 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
           },
         },
         {
-          name: 'scylla-db-ca-cert',
-          configMap: {
-            name: (import 'configmap-scylladb-ca.jsonnet').metadata.name,
+          name: 'tikv-client-cert',
+          secret: {
+            secretName: (import 'tikv-client-certificate.jsonnet').spec.secretName,
             items: [
               {
                 key: 'ca.crt',
                 path: 'ca.crt',
               },
-            ],
-          },
-        },
-        {
-          name: 'scylla-db-client-cert',
-          secret: {
-            secretName: 'scylla-cluster-local-client-ca',  // TODO: database namespaceから手動コピーしてるけどいい方法を考えないといけない
-            items: [
               {
                 key: 'tls.crt',
                 path: 'tls.crt',
@@ -198,13 +190,8 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
           readOnly: true,
         },
         {
-          mountPath: '/etc/seaweedfs/scylladb-ca',
-          name: 'scylla-db-ca-cert',
-          readOnly: true,
-        },
-        {
-          mountPath: '/etc/seaweedfs/scylladb-client',
-          name: 'scylla-db-client-cert',
+          mountPath: '/etc/seaweedfs/tikv-client',
+          name: 'tikv-client-cert',
           readOnly: true,
         },
       ],

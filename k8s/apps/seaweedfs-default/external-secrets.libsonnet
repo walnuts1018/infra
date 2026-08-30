@@ -37,20 +37,6 @@ local filerConfig = externalSecret {
   namespace: app.namespace,
   data: [
     {
-      secretKey: 'scylladb_password',
-      remoteRef: {
-        key: 'scylladb',
-        property: 'seaweedfs',
-      },
-    },
-    {
-      secretKey: 'postgres_seaweedfs_password',
-      remoteRef: {
-        key: 'postgres_passwords',
-        property: 'seaweedfs',
-      },
-    },
-    {
       secretKey: config.stsSigningKeyProperty,
       remoteRef: {
         key: 'seaweedfs',
