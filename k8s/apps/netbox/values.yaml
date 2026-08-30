@@ -95,6 +95,8 @@ extraEnvVars:
   value: us-east-1
 - name: AWS_ROLE_ARN
   value: arn:aws:iam::role/netbox
+- name: GRANIAN_WORKERS
+  value: "2"
 
 extraVolumes:
 - name: seaweedfs-sa-token
