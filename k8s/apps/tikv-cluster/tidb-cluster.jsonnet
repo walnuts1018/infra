@@ -60,7 +60,8 @@ local componentAffinity(component) = {
       maxFailoverCount: 0,
       storageClassName: 'local-path',
       requests: {
-        cpu: '250m',
+        // cakeの割り当て可能CPUが少ないため、スケジューリング保証を最小化しつつlimitでバーストを許可する
+        cpu: '10m',
         memory: '1Gi',
         storage: '8Gi',
       },
