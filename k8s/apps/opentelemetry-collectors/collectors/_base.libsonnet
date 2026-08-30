@@ -34,7 +34,7 @@ function(
           hash_seed: 1018,
           fail_closed: true,
         },
-        
+
         'transform/remove_sample_key': {
           error_mode: 'ignore',
           log_statements: [
