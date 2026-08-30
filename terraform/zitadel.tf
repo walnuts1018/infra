@@ -32,15 +32,15 @@ output "shumoku_oidc_client_secret" {
   description = "Store this in 1Password item shumoku as client_secret"
 }
 
-output "headlamp_oidc_client_id" {
-  value       = nonsensitive(module.zitadel.headlamp_oidc_client_id)
-  description = "Client ID for Headlamp's ZITADEL OIDC login"
+output "radar_oidc_client_id" {
+  value       = nonsensitive(module.zitadel.radar_oidc_client_id)
+  description = "Client ID for Radar's ZITADEL OIDC login"
 }
 
-output "headlamp_oidc_client_secret" {
-  value       = module.zitadel.headlamp_oidc_client_secret
+output "radar_oidc_client_secret" {
+  value       = module.zitadel.radar_oidc_client_secret
   sensitive   = true
-  description = "Store this in 1Password item headlamp as client_secret"
+  description = "OIDC client secret for Radar"
 }
 
 output "kubernetes_oidc_issuer_audience" {

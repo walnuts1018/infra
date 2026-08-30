@@ -23,16 +23,21 @@ output "kubernetes_oidc_issuer_audience" {
   description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy (passed to --oidc-client-id)"
 }
 
-resource "zitadel_application_oidc" "headlamp" {
+moved {
+  from = zitadel_application_oidc.headlamp
+  to   = zitadel_application_oidc.radar
+}
+
+resource "zitadel_application_oidc" "radar" {
   org_id     = zitadel_org.ZITADEL.id
   project_id = zitadel_project.kubernetes.id
-  name       = "headlamp"
+  name       = "radar"
 
-  redirect_uris               = ["https://headlamp.walnuts.dev/oidc-callback"]
+  redirect_uris               = ["https://k8s-dashboard.walnuts.dev/auth/callback"]
   response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
-  post_logout_redirect_uris   = ["https://headlamp.walnuts.dev/"]
+  post_logout_redirect_uris   = ["https://k8s-dashboard.walnuts.dev/"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
   dev_mode                    = false
@@ -42,13 +47,13 @@ resource "zitadel_application_oidc" "headlamp" {
   id_token_userinfo_assertion = true
 }
 
-output "headlamp_oidc_client_id" {
-  value       = nonsensitive(zitadel_application_oidc.headlamp.client_id)
-  description = "Client ID for Headlamp's OIDC login"
+output "radar_oidc_client_id" {
+  value       = nonsensitive(zitadel_application_oidc.radar.client_id)
+  description = "Client ID for Radar's OIDC login"
 }
 
-output "headlamp_oidc_client_secret" {
-  value       = zitadel_application_oidc.headlamp.client_secret
+output "radar_oidc_client_secret" {
+  value       = zitadel_application_oidc.radar.client_secret
   sensitive   = true
-  description = "Store this in 1Password item headlamp as client_secret"
+  description = "OIDC client secret for Radar"
 }

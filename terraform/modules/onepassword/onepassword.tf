@@ -37,6 +37,11 @@ resource "random_password" "visual_regression_tracker_admin_api_key" {
   special = false
 }
 
+resource "random_password" "radar_auth_secret" {
+  length  = 64
+  special = false
+}
+
 resource "onepassword_item" "external_secret" {
   vault    = var.vault
   title    = "terraform-external-secrets"
@@ -49,8 +54,6 @@ resource "onepassword_item" "external_secret" {
         "akvorado-client-secret"             = { type = "CONCEALED", value = var.akvorado_client_secret }
         "argocd-cli-client-id"               = { type = "STRING", value = var.argocd_cli_client_id }
         "b2-application-key"                 = { type = "CONCEALED", value = var.b2_application_key }
-        "headlamp-client-id"                 = { type = "STRING", value = var.headlamp_client_id }
-        "headlamp-client-secret"             = { type = "CONCEALED", value = var.headlamp_client_secret }
         "hubble-client-id"                   = { type = "STRING", value = var.hubble_client_id }
         "hubble-client-secret"               = { type = "CONCEALED", value = var.hubble_client_secret }
         "ipu-client-id"                      = { type = "STRING", value = var.ipu_client_id }
@@ -71,6 +74,9 @@ resource "onepassword_item" "external_secret" {
         "picca-imgproxy-salt"                = { type = "CONCEALED", value = random_id.picca_imgproxy_salt.hex }
         "picca-redis-password"               = { type = "CONCEALED", value = random_password.picca_redis_password.result }
         "picca-rabbitmq-password"            = { type = "CONCEALED", value = random_password.picca_rabbitmq_password.result }
+        "radar-auth-secret"                  = { type = "CONCEALED", value = random_password.radar_auth_secret.result }
+        "radar-client-id"                    = { type = "STRING", value = var.radar_client_id }
+        "radar-client-secret"                = { type = "CONCEALED", value = var.radar_client_secret }
         "shumoku-client-id"                  = { type = "STRING", value = var.shumoku_client_id }
         "shumoku-client-secret"              = { type = "CONCEALED", value = var.shumoku_client_secret }
 

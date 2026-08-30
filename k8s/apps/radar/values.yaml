@@ -1,0 +1,55 @@
+replicaCount: 1
+
+rbac:
+  create: true
+  helm: true
+  secrets: true
+  viewRBAC: true
+  podExec: true
+  portForward: true
+
+serviceAccount:
+  create: true
+
+httpRoute:
+  enabled: true
+  parentRefs:
+  - name: envoy-gateway
+    namespace: envoy-gateway-system
+  hostnames:
+  - k8s-dashboard.walnuts.dev
+
+auth:
+  mode: oidc
+  existingSecret: radar-auth
+  existingSecretKey: auth-secret
+  cookieTTL: 4h
+  oidc:
+    issuerURL: https://auth.walnuts.dev
+    clientID: "385332731359330363"
+    existingSecret: radar-auth
+    clientSecretKey: client-secret
+    redirectURL: https://k8s-dashboard.walnuts.dev/auth/callback
+    groupsClaim: my:zitadel:grants
+    scopes:
+    - openid
+    - email
+    - profile
+    - urn:zitadel:iam:org:project:id:385225927988084784:aud
+    postLogoutRedirectURL: https://k8s-dashboard.walnuts.dev/
+    usernamePrefix: "zitadel:"
+    groupsPrefix: "zitadel:"
+    enablePKCE: true
+
+timeline:
+  storage: memory
+
+mcp:
+  enabled: true
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 128Mi
+  limits:
+    memory: 512Mi
