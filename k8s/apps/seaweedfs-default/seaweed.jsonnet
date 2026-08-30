@@ -136,6 +136,24 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         '-s3.iam.config=/etc/seaweedfs/iam.json',
         '-s3.domainName=seaweedfs.local.walnuts.dev',
       ],
+      affinity: {
+        podAntiAffinity: {
+          preferredDuringSchedulingIgnoredDuringExecution: [
+            {
+              weight: 100,
+              podAffinityTerm: {
+                labelSelector: {
+                  matchLabels: {
+                    'app.kubernetes.io/component': 'filer',
+                    'app.kubernetes.io/instance': $.metadata.name,
+                  },
+                },
+                topologyKey: 'kubernetes.io/hostname',
+              },
+            },
+          ],
+        },
+      },
       metricsPort: 9327,
       volumes: [
         {
