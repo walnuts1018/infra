@@ -7,8 +7,7 @@ local app = import 'app.json5';
   chart: 'radar',
   repoURL: 'https://skyhook-io.github.io/helm-charts',
   targetRevision: '1.12.1',
-  values: (importstr 'values.yaml'),
-  valuesObject: {
+  valuesObject: std.mergePatch(std.parseYaml(importstr 'values.yaml'), {
     auth: {
       oidc: {
         scopes: [
@@ -19,5 +18,5 @@ local app = import 'app.json5';
         ],
       },
     },
-  },
+  }),
 }
