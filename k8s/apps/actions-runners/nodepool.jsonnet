@@ -17,7 +17,7 @@ local app = import 'app.json5';
     scaling: {
       minNodes: 0,
       maxNodes: 1,
-      scaleDownDelay: '10m',
+      scaleDownDelay: '1h',
     },
   },
 }
