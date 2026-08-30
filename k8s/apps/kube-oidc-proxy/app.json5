@@ -4,7 +4,4 @@
   clusters: {
     kurumi: {},
   },
-  params: {
-    oidcIssuerAudience: "385225927988084784",
-  }
 }

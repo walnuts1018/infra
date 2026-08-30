@@ -31,11 +31,6 @@ auth:
     clientSecretKey: client-secret
     redirectURL: https://k8s-dashboard.walnuts.dev/auth/callback
     groupsClaim: my:zitadel:grants
-    scopes:
-    - openid
-    - email
-    - profile
-    - urn:zitadel:iam:org:project:id:385225927988084784:aud
     postLogoutRedirectURL: https://k8s-dashboard.walnuts.dev/
     usernamePrefix: "zitadel:"
     groupsPrefix: "zitadel:"

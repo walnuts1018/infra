@@ -1,3 +1,4 @@
+local zitadelKubernetesRbacApp = import '../zitadel-kubernetes-rbac/app.json5';
 local app = import 'app.json5';
 local certificate = import 'certificate.jsonnet';
 local serviceAccount = import 'service-account.jsonnet';
@@ -36,7 +37,7 @@ local labels = {
               '--tls-cert-file=/etc/kube-oidc-proxy/tls.crt',
               '--tls-private-key-file=/etc/kube-oidc-proxy/tls.key',
               '--tls-min-version=VersionTLS12',
-              '--oidc-client-id=' + app.params.oidcIssuerAudience,
+              '--oidc-client-id=' + zitadelKubernetesRbacApp.params.oidcIssuerAudience,
               '--oidc-issuer-url=https://auth.walnuts.dev',
               '--oidc-username-claim=email',
               '--oidc-username-prefix=zitadel:',

@@ -1,3 +1,4 @@
+local zitadelKubernetesRbacApp = import '../zitadel-kubernetes-rbac/app.json5';
 local app = import 'app.json5';
 
 (import '../../components/helm.libsonnet') {
@@ -7,4 +8,16 @@ local app = import 'app.json5';
   repoURL: 'https://skyhook-io.github.io/helm-charts',
   targetRevision: '1.12.1',
   values: (importstr 'values.yaml'),
+  valuesObject: {
+    auth: {
+      oidc: {
+        scopes: [
+          'openid',
+          'email',
+          'profile',
+          'urn:zitadel:iam:org:project:id:' + zitadelKubernetesRbacApp.params.oidcIssuerAudience + ':aud',
+        ],
+      },
+    },
+  },
 }
