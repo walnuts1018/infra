@@ -15,6 +15,24 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
       replicas: 3,
       volumeSizeLimitMB: 1024,
       defaultReplication: '001',
+      env: [
+        {
+          name: 'WEED_MASTER_VOLUME_GROWTH_COPY_1',
+          value: '1',
+        },
+        {
+          name: 'WEED_MASTER_VOLUME_GROWTH_COPY_2',
+          value: '1',
+        },
+        {
+          name: 'WEED_MASTER_VOLUME_GROWTH_COPY_3',
+          value: '1',
+        },
+        {
+          name: 'WEED_MASTER_VOLUME_GROWTH_COPY_OTHER',
+          value: '1',
+        },
+      ],
       metricsPort: 9327,
       requests: {
         cpu: '6m',
@@ -38,8 +56,10 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
       storageClassName: 'local-path',
       // PVのサイズとは関係なく、maxVolumeCounts×volumeSizeLimitMBが1ノードあたりの最大ストレージ容量になる
       // 0にすると自動設定される、が、実際にはまだストレージが空いているのに「No matching data node found」が起こることがあったので手動調整することにする
-      // 今の感じだと、1ボリュームあたり平均144MB程度であり、1ノードあたりのボリューム数は平均223程度だったので、一旦300にしてみる。
-      maxVolumeCounts: 300,
+      // 1000という数字にはあまり根拠がない
+      maxVolumeCounts: 1000,
+      // local-pathはPVCの容量上限が機能しないので、Nodeのストレージを埋めすぎないように設定しておく
+      minFreeSpacePercent: 10,
       metricsPort: 9327,
       affinity: {
         local labels = {
