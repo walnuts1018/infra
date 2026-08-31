@@ -70,6 +70,9 @@ local componentAffinity(component) = {
       },
       affinity: componentAffinity('tikv'),
       config: |||
+        [memory]
+          enable-thread-exclusive-arena = false
+
         [security]
           cert-allowed-cn = [ "TiDB", "SeaweedFS" ]
       |||,
