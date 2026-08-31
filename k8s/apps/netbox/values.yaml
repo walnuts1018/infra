@@ -119,7 +119,7 @@ serviceAccount:
 resources:
   requests:
     cpu: 95m
-    memory: 1300Mi
+    memory: 700Mi
   limits:
     cpu: "2"
     memory: 3Gi
