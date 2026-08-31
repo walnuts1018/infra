@@ -15,9 +15,6 @@ local app = import 'app.json5';
   spec: {
     shards: 1,
     replicas: 2,
-    persistence: {
-      size: '2Gi',
-    },
     scheduling: {
       affinity: storage.avoidSlowNodeAffinity,
     },
