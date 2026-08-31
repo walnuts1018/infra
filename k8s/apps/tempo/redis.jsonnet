@@ -7,12 +7,6 @@ local storage = import '../../components/storage.libsonnet';
     labels: (import '../../components/labels.libsonnet')($.metadata.name),
   },
   spec: {
-    redisLeader: {
-      affinity: storage.avoidSlowNodeAffinity,
-    },
-    redisFollower: {
-      affinity: storage.avoidSlowNodeAffinity,
-    },
     clusterSize: 3,
     clusterVersion: 'v7',
     persistenceEnabled: true,

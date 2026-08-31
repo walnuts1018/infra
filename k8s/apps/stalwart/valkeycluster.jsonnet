@@ -18,9 +18,6 @@ local app = import 'app.json5';
     persistence: {
       size: '1Gi',
     },
-    scheduling: {
-      affinity: storage.avoidSlowNodeAffinity,
-    },
     resources: {
       requests: {
         cpu: '5m',

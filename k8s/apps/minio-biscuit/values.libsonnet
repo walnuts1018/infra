@@ -23,7 +23,6 @@
         size: '32Gi',
         storageClassName: (import 'persistent-volume.jsonnet').spec.storageClassName,
         volumesPerServer: 1,
-        affinity: storage.avoidSlowNodeAffinity,
       },
     ],
     certificate: {
