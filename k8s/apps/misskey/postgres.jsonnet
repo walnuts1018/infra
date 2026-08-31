@@ -13,7 +13,7 @@ local app = import 'app.json5';
       apiGroup: 'postgresql.cnpg.io',
       kind: 'ClusterImageCatalog',
       name: (import '../cloudnative-pg-image-catalog/standard.jsonnet').metadata.name,
-      major: 17,
+      major: 18,
     },
     storage: {
       size: '10Gi',
