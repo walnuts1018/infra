@@ -79,6 +79,6 @@ local app = import 'app.json5';
     OIDC_CLIENT_ID: '{{ .oidc_client_id }}',
     OIDC_CLIENT_SECRET: '{{ .oidc_client_secret }}',
     RABBITMQ_URL: 'amqp://picca:{{ .rabbitmq_password }}@default.rabbitmq.svc.cluster.local:5672/picca',
-    KEDA_RABBITMQ_HOST: 'http://picca:{{ .rabbitmq_password }}@default.rabbitmq.svc.cluster.local:15672/%2Fpicca',
+    KEDA_RABBITMQ_HOST: 'http://picca:{{ .rabbitmq_password }}@default.rabbitmq.svc.cluster.local:15672/picca',
   },
 }
