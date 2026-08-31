@@ -1,5 +1,7 @@
+local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
 local componentAffinity(component) = {
+  nodeAffinity: storage.avoidSlowNodeAffinity.nodeAffinity,
   podAntiAffinity: {
     requiredDuringSchedulingIgnoredDuringExecution: [
       {

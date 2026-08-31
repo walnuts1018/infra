@@ -1,3 +1,4 @@
+local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'postgresql.cnpg.io/v1',
@@ -6,6 +7,7 @@ local app = import 'app.json5';
     name: app.name,
   },
   spec: {
+    affinity: storage.avoidSlowNodeAffinity,
     instances: 3,
     imageCatalogRef: {
       apiGroup: 'postgresql.cnpg.io',

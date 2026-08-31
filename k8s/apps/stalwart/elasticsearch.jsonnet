@@ -1,3 +1,4 @@
+local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'elasticsearch.k8s.elastic.co/v1',
@@ -21,6 +22,7 @@ local app = import 'app.json5';
         },
         podTemplate: {
           spec: {
+            affinity: storage.avoidSlowNodeAffinity,
             containers: [
               {
                 name: 'elasticsearch',

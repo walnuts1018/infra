@@ -1,4 +1,5 @@
 local labels = import '../../components/labels.libsonnet';
+local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'clickhouse.com/v1alpha1',
@@ -28,6 +29,9 @@ local app = import 'app.json5';
           storage: '5Gi',
         },
       },
+    },
+    podTemplate: {
+      affinity: storage.avoidSlowNodeAffinity,
     },
   },
 }

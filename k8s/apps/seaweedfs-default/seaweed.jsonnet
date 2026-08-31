@@ -1,4 +1,5 @@
 local labels = import '../../components/labels.libsonnet';
+local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
 local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
 {
@@ -34,6 +35,7 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         },
       ],
       affinity: {
+        nodeAffinity: storage.avoidSlowNodeAffinity.nodeAffinity,
         podAntiAffinity: {
           preferredDuringSchedulingIgnoredDuringExecution: [
             {
@@ -84,6 +86,7 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
           'app.kubernetes.io/component': 'volume',
           'app.kubernetes.io/instance': $.metadata.name,
         },
+        nodeAffinity: storage.avoidSlowNodeAffinity.nodeAffinity,
         podAntiAffinity: {
           requiredDuringSchedulingIgnoredDuringExecution: [
             {
@@ -137,6 +140,7 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         '-s3.domainName=seaweedfs.local.walnuts.dev',
       ],
       affinity: {
+        nodeAffinity: storage.avoidSlowNodeAffinity.nodeAffinity,
         podAntiAffinity: {
           preferredDuringSchedulingIgnoredDuringExecution: [
             {

@@ -1,3 +1,4 @@
+local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
 local labels = (import '../../components/labels.libsonnet')('coredns-etcd');
 local peerHost(ordinal) =
@@ -22,6 +23,7 @@ local peerHost(ordinal) =
       },
       spec: {
         affinity: {
+          nodeAffinity: storage.avoidSlowNodeAffinity.nodeAffinity,
           podAntiAffinity: {
             preferredDuringSchedulingIgnoredDuringExecution: [
               {

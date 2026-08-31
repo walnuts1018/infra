@@ -1,3 +1,4 @@
+local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'rabbitmq.com/v1beta1',
@@ -12,6 +13,7 @@ local app = import 'app.json5';
     labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
+    affinity: storage.avoidSlowNodeAffinity,
     replicas: 1,
     image: 'docker.io/rabbitmq:4.3.5-management',
     persistence: {

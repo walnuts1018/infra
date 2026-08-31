@@ -1,3 +1,4 @@
+local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
 function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
   name: app.name,
@@ -31,7 +32,7 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
           },
         },
         placement: {
-          nodeAffinity: {},
+          nodeAffinity: storage.avoidSlowNodeAffinity.nodeAffinity,
           podAffinity: {},
           podAntiAffinity: {
             preferredDuringSchedulingIgnoredDuringExecution: [

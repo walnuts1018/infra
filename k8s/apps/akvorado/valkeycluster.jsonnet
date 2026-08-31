@@ -1,4 +1,5 @@
 local labels = import '../../components/labels.libsonnet';
+local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'valkey.io/v1alpha1',
@@ -16,6 +17,9 @@ local app = import 'app.json5';
     replicas: 1,
     persistence: {
       size: '1Gi',
+    },
+    scheduling: {
+      affinity: storage.avoidSlowNodeAffinity,
     },
     resources: {
       requests: {

@@ -11,3 +11,11 @@ persistence:
   enabled: true
   size: 1Gi
   storageClass: "longhorn"
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: storage.walnuts.dev/slow
+          operator: DoesNotExist

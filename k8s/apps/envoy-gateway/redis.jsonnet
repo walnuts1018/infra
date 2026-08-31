@@ -1,3 +1,4 @@
+local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'redis.redis.opstreelabs.in/v1beta2',
@@ -7,6 +8,12 @@ local app = import 'app.json5';
     labels: (import '../../components/labels.libsonnet')(app.name + '-redis'),
   },
   spec: {
+    redisLeader: {
+      affinity: storage.avoidSlowNodeAffinity,
+    },
+    redisFollower: {
+      affinity: storage.avoidSlowNodeAffinity,
+    },
     clusterSize: 3,
     clusterVersion: 'v7',
     persistenceEnabled: true,

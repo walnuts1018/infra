@@ -43,6 +43,27 @@ ingester:
   persistence:
     enabled: true
     size: 2Gi
+  affinity: |
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: storage.walnuts.dev/slow
+            operator: DoesNotExist
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 14 }}
+          topologyKey: kubernetes.io/hostname
+      - weight: 75
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 14 }}
+          topologyKey: topology.kubernetes.io/zone
   config:
     replication_factor: 3
 

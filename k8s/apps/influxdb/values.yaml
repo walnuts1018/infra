@@ -35,6 +35,14 @@ resources:
   limits:
     memory: 512Mi
 
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: storage.walnuts.dev/slow
+          operator: DoesNotExist
+
 startupProbe:
   enabled: true
   path: /health

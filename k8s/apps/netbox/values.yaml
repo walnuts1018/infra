@@ -51,10 +51,24 @@ valkey:
     persistence:
       storageClass: "longhorn-local"
       size: 2Gi
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: storage.walnuts.dev/slow
+              operator: DoesNotExist
   replica:
     persistence:
       storageClass: "longhorn-local"
       size: 2Gi
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: storage.walnuts.dev/slow
+              operator: DoesNotExist
 
 autoscaling:
   enabled: true

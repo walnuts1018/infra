@@ -1,3 +1,4 @@
+local storage = import '../../components/storage.libsonnet';
 {
   apiVersion: 'redis.redis.opstreelabs.in/v1beta2',
   kind: 'Redis',
@@ -8,6 +9,7 @@
     },
   },
   spec: {
+    affinity: storage.avoidSlowNodeAffinity,
     kubernetesConfig: {
       image: 'quay.io/opstree/redis:v7.4.11',
       imagePullPolicy: 'IfNotPresent',
