@@ -5,9 +5,5 @@ local app = import 'app.json5';
   chart: 'tidb-operator',
   repoURL: 'https://charts.pingcap.com/',
   targetRevision: 'v1.6.6',
-  valuesObject: {
-    scheduler: {
-      create: false,
-    },
-  },
+  valuesObject: std.mergePatch(std.parseYaml(importstr 'values.yaml'), {}),
 }
