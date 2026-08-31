@@ -31,7 +31,7 @@ local valkeyLabels = labels(app.name + '-valkey');
         containers: [
           (container) {
             name: 'valkey',
-            image: 'valkey/valkey:9.0.0',
+            image: 'valkey/valkey:9.1.1',
             imagePullPolicy: 'IfNotPresent',
             command: ['valkey-server'],
             args: [
