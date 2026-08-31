@@ -65,7 +65,7 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
       replicas: 3,
       requests: {
         cpu: '6m',
-        memory: '756Mi',
+        memory: '512Mi',
         storage: '300Gi',
       },
       limits: {

@@ -6,8 +6,8 @@ recommender:
   - "--pod-recommendation-min-memory-mb=10"
   resources:
     requests:
-      cpu: 50m
-      memory: 500Mi
+      cpu: 10m
+      memory: 128Mi
     limits:
       memory: 1000Mi
 
@@ -16,7 +16,7 @@ updater:
   replicas: 1
   resources:
     requests:
-      cpu: 50m
-      memory: 500Mi
+      cpu: 10m
+      memory: 128Mi
     limits:
       memory: 1000Mi
