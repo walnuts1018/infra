@@ -125,8 +125,8 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         enabled: true,
       },
       requests: {
-        cpu: '10m',
-        memory: '218Mi',
+        cpu: '60m',
+        memory: '512Mi',
       },
       limits: {
         memory: '2Gi',
