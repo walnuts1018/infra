@@ -1,5 +1,6 @@
 local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
+
 {
   apiVersion: 'postgresql.cnpg.io/v1',
   kind: 'Cluster',
@@ -14,6 +15,13 @@ local app = import 'app.json5';
       kind: 'ClusterImageCatalog',
       name: (import '../cloudnative-pg-image-catalog/standard.jsonnet').metadata.name,
       major: 18,
+    },
+    postgresql: {
+      extensions: [
+        {
+          name: 'postgis',
+        },
+      ],
     },
     storage: {
       size: '10Gi',

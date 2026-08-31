@@ -29,6 +29,18 @@
       {
         major: 18,
         image: 'ghcr.io/cloudnative-pg/postgresql:18.6-standard-trixie',
+
+        extensions: [
+          {
+            name: 'postgis',
+            image: {
+              reference: 'ghcr.io/cloudnative-pg/postgis-extension:3.6.4-18-trixie',
+            },
+            ld_library_path: [
+              'system',
+            ],
+          },
+        ],
       },
     ],
   },
