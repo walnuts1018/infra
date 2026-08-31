@@ -69,7 +69,7 @@ local componentAffinity(component) = {
       env: [
         {
           name: 'MALLOC_CONF',
-          value: 'prof:true,prof_active:false,narenas:8,background_thread:true,dirty_decay_ms:1000,muzzy_decay_ms:1000',
+          value: 'narenas:8,background_thread:true,dirty_decay_ms:1000,muzzy_decay_ms:1000',
         },
       ],
       affinity: componentAffinity('tikv'),
