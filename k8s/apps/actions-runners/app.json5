@@ -1,6 +1,6 @@
 {
   name: "actions-runners",
-  namespace: "sharc",
+  namespace: "arc-runners",
   clusters: {
     kurumi: {},
   },

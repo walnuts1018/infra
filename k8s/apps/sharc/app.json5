@@ -1,7 +1,0 @@
-{
-  name: "sharc",
-  namespace: "sharc",
-  clusters: {
-    kurumi: {},
-  },
-}
