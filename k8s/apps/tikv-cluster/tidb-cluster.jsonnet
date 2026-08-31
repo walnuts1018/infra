@@ -64,7 +64,7 @@ local componentAffinity(component) = {
         storage: '8Gi',
       },
       limits: {
-        memory: '2Gi',
+        memory: '1536Mi',
       },
       env: [
         {
