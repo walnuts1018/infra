@@ -66,36 +66,10 @@ local componentAffinity(component) = {
       limits: {
         memory: '2Gi',
       },
-      env: [
-        {
-          name: 'MALLOC_CONF',
-          value: 'narenas:8,background_thread:true,dirty_decay_ms:1000,muzzy_decay_ms:1000',
-        },
-      ],
       affinity: componentAffinity('tikv'),
       config: |||
-        memory-usage-limit = "1GiB"
-
-        [memory]
-          enable-heap-profiling = false
-          enable-thread-exclusive-arena = false
-
-        [rocksdb]
-          [rocksdb.defaultcf]
-            write-buffer-size = "32MiB"
-          [rocksdb.lockcf]
-            write-buffer-size = "8MiB"
-          [rocksdb.raftcf]
-            write-buffer-size = "32MiB"
-          [rocksdb.writecf]
-            write-buffer-size = "32MiB"
-
         [security]
           cert-allowed-cn = ["TiDB", "SeaweedFS"]
-
-        [storage]
-          [storage.block-cache]
-            capacity = "256MiB"
       |||,
     },
   },
