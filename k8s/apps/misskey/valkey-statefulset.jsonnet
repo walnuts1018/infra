@@ -1,3 +1,4 @@
+// TODO: valkey-operatorがNot Clusterをサポートするようになったらそちらに移行する
 local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
