@@ -60,7 +60,6 @@ local componentAffinity(component) = {
       storageClassName: 'local-path',
       requests: {
         cpu: '30m',
-        memory: '128Mi',
         storage: '8Gi',
       },
       limits: {
