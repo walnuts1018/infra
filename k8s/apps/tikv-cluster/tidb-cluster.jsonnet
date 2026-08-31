@@ -77,6 +77,7 @@ local componentAffinity(component) = {
         memory-usage-limit = "1GiB"
 
         [memory]
+          enable-heap-profiling = false
           enable-thread-exclusive-arena = false
 
         [storage.block-cache]
