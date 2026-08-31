@@ -40,12 +40,11 @@ local componentAffinity(component) = {
       maxFailoverCount: 0,
       storageClassName: 'local-path',
       requests: {
-        cpu: '100m',
-        memory: '256Mi',
+        cpu: '50m',
+        memory: '100Mi',
         storage: '1Gi',
       },
       limits: {
-        cpu: '500m',
         memory: '512Mi',
       },
       affinity: componentAffinity('pd'),
@@ -60,12 +59,11 @@ local componentAffinity(component) = {
       maxFailoverCount: 0,
       storageClassName: 'local-path',
       requests: {
-        cpu: '10m',
+        cpu: '30m',
         memory: '1Gi',
         storage: '8Gi',
       },
       limits: {
-        cpu: '2',
         memory: '2Gi',
       },
       affinity: componentAffinity('tikv'),
