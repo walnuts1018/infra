@@ -42,6 +42,7 @@ externalDatabase:
   existingSecretName: "netbox"
   existingSecretKey: db-password
 
+# TODO: valkey operatorがsentinelに対応したら移行する
 valkey:
   enabled: true
   auth:
