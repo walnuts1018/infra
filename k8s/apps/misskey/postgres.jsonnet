@@ -6,7 +6,7 @@ local app = import 'app.json5';
     name: app.name + '-postgresql',
   },
   spec: {
-    instances: 2,
+    instances: 1,
     imageCatalogRef: {
       apiGroup: 'postgresql.cnpg.io',
       kind: 'ClusterImageCatalog',
