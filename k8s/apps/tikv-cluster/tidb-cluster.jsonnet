@@ -70,8 +70,25 @@ local componentAffinity(component) = {
       },
       affinity: componentAffinity('tikv'),
       config: |||
+        memory-usage-limit = "1GiB"
+
         [memory]
           enable-thread-exclusive-arena = false
+
+        [storage.block-cache]
+          capacity = "256MiB"
+
+        [rocksdb.defaultcf]
+          write-buffer-size = "32MiB"
+
+        [rocksdb.writecf]
+          write-buffer-size = "32MiB"
+
+        [rocksdb.raftcf]
+          write-buffer-size = "32MiB"
+
+        [rocksdb.lockcf]
+          write-buffer-size = "8MiB"
 
         [security]
           cert-allowed-cn = [ "TiDB", "SeaweedFS" ]
