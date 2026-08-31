@@ -50,7 +50,7 @@ local componentAffinity(component) = {
       affinity: componentAffinity('pd'),
       config: |||
         [security]
-          cert-allowed-cn = [ "TiDB", "SeaweedFS" ]
+          cert-allowed-cn = ["TiDB", "SeaweedFS"]
       |||,
     },
     tikv: {
@@ -80,23 +80,22 @@ local componentAffinity(component) = {
           enable-heap-profiling = false
           enable-thread-exclusive-arena = false
 
-        [storage.block-cache]
-          capacity = "256MiB"
-
-        [rocksdb.defaultcf]
-          write-buffer-size = "32MiB"
-
-        [rocksdb.writecf]
-          write-buffer-size = "32MiB"
-
-        [rocksdb.raftcf]
-          write-buffer-size = "32MiB"
-
-        [rocksdb.lockcf]
-          write-buffer-size = "8MiB"
+        [rocksdb]
+          [rocksdb.defaultcf]
+            write-buffer-size = "32MiB"
+          [rocksdb.lockcf]
+            write-buffer-size = "8MiB"
+          [rocksdb.raftcf]
+            write-buffer-size = "32MiB"
+          [rocksdb.writecf]
+            write-buffer-size = "32MiB"
 
         [security]
-          cert-allowed-cn = [ "TiDB", "SeaweedFS" ]
+          cert-allowed-cn = ["TiDB", "SeaweedFS"]
+
+        [storage]
+          [storage.block-cache]
+            capacity = "256MiB"
       |||,
     },
   },
