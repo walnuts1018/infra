@@ -15,13 +15,12 @@ local s3Irsa = import '../s3-irsa.libsonnet';
     // OSMデータ自体は高頻度更新が不要なため月次実行(毎月1日 03:00 JST)。
     schedule: '0 3 1 * *',
     timeZone: 'Asia/Tokyo',
-    // manifestベースの差分アップロード(S3上のmanifest.jsonを読み書きする)が
-    // 多重実行に対して安全ではないため、前回実行が残っていれば新規実行を禁止する。
+    // manifestベースの差分アップロード(S3上のmanifest.jsonを読み書きする)が多重実行に対して安全ではないため、前回実行が残っていれば新規実行を禁止する。
     concurrencyPolicy: 'Forbid',
     startingDeadlineSeconds: 300,
     jobTemplate: {
       spec: {
-        // BASEMAP_RUN_TIMEOUT(アプリ側デフォルト2h)より十分長く確保する。
+        // BASEMAP_RUN_TIMEOUT(デフォルト2h)より十分長く確保する。
         activeDeadlineSeconds: 3 * 60 * 60,
         backoffLimit: 2,
         template: {
@@ -46,8 +45,7 @@ local s3Irsa = import '../s3-irsa.libsonnet';
                     value: 'picca-basemap-updater',
                   },
                   {
-                    // 日本全域のOSM抽出データ(Geofabrik)。対象地域を広げる場合は
-                    // resources/emptyDirのサイズも合わせて見直すこと。
+                    // 日本全域のOSM抽出データ(Geofabrik)。対象地域を広げる場合はresources/emptyDirのサイズも合わせて見直すこと。
                     name: 'OSM_PBF_URL',
                     value: 'https://download.geofabrik.de/asia/japan-latest.osm.pbf',
                   },
