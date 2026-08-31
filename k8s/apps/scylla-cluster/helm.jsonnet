@@ -28,6 +28,7 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
             memory: '300Mi',
           },
           limits: {
+            cpu: '1',  // なんかoperatorがlimitつけろってうるさいのでつける
             memory: '2Gi',
           },
         },

@@ -59,7 +59,6 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         memory: '50Mi',
       },
       limits: {
-        cpu: '1',  // なんかoperatorがlimitつけろってうるさいのでつける
         memory: '2Gi',
       },
     },
