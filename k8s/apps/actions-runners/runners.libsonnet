@@ -214,6 +214,7 @@ local makeRunnerSet(repo, runner) =
           enableServiceLinks: false,
           nodeSelector: {
             'kubernetes.io/arch': arch,
+            'kubernetes.io/hostname': 'rusk',
           },
           resources: {
             requests: {
