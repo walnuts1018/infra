@@ -17,13 +17,6 @@
       },
     },
     {
-      secretKey: 'seaweedfs_password',
-      remoteRef: {
-        key: 'scylladb',
-        property: 'seaweedfs',
-      },
-    },
-    {
       secretKey: 'prfexample_password',
       remoteRef: {
         key: 'scylladb',

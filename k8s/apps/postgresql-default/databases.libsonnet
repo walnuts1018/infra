@@ -56,10 +56,6 @@
     user_name: 'stalwart',
   },
   {
-    db_name: 'seaweedfs_loki_chunks',
-    user_name: 'seaweedfs',
-  },
-  {
     db_name: 'netbox',
     user_name: 'netbox',
   },
