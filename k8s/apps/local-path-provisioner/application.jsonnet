@@ -24,6 +24,66 @@ local app = import 'app.json5';
           {
             patch: '$patch: delete\napiVersion: v1\nkind: Namespace\nmetadata:\n  name: local-path-storage',
           },
+          {
+            target: {
+              group: 'apps',
+              version: 'v1',
+              kind: 'Deployment',
+              name: 'local-path-provisioner',
+            },
+            patch: |||
+              - op: add
+                path: /spec/template/spec/affinity
+                value:
+                  nodeAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                      nodeSelectorTerms:
+                        - matchExpressions:
+                            - key: storage.walnuts.dev/slow
+                              operator: DoesNotExist
+            |||,
+          },
+          {
+            target: {
+              version: 'v1',
+              kind: 'ConfigMap',
+              name: 'local-path-config',
+            },
+            patch: |||
+              - op: replace
+                path: /data/config.json
+                value: |-
+                  {
+                    "nodePathMap": [
+                      {
+                        "node": "DEFAULT_PATH_FOR_NON_LISTED_NODES",
+                        "paths": ["/opt/local-path-provisioner"]
+                      },
+                      {
+                        "node": "rusk",
+                        "paths": []
+                      }
+                    ]
+                  }
+            |||,
+          },
+          {
+            target: {
+              group: 'storage.k8s.io',
+              version: 'v1',
+              kind: 'StorageClass',
+              name: 'local-path',
+            },
+            patch: |||
+              - op: add
+                path: /allowedTopologies
+                value:
+                  - matchLabelExpressions:
+                      - key: storage.walnuts.dev/fast
+                        values:
+                          - "true"
+            |||,
+          },
         ],
       },
     },
