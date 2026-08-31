@@ -14,7 +14,7 @@ dbReplications: false
 #   user: misskey
 #   pass: "{{ .dbPassword }}"
 redis:
-  host: misskey-redis
+  host: misskey-valkey
   port: 6379
   pass: "{{ .redisPassword }}"
 id: 'aidx'

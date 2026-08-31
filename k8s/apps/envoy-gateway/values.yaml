@@ -16,7 +16,7 @@ config:
       backend:
         type: Redis
         redis:
-          url: "envoy-gateway-redis-leader.envoy-gateway-system.svc.cluster.local:6379"
+          url: "valkey-envoy-gateway-valkey.envoy-gateway-system.svc.cluster.local:6379"
     provider:
       kubernetes:
         rateLimitDeployment:

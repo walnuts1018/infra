@@ -37,6 +37,7 @@ configs:
   params:
     server.insecure: true
     server.basehref: /
+    redis.key.prefix: "{argocd}:"
     controller.diff.server.side: "true"
     controller.resource.health.persist: "false"
     applicationsetcontroller.enable.new.git.file.globbing: "true"
@@ -80,6 +81,7 @@ dex:
       cpu: 500m
       memory: 256Mi
 redis:
+  enabled: false
   metrics:
     enabled: true
     serviceMonitor:
@@ -91,6 +93,12 @@ redis:
     limits:
       cpu: 100m
       memory: 256Mi
+
+redis-ha:
+  enabled: false
+
+externalRedis:
+  host: valkey-argocd-valkey.argocd.svc.cluster.local
 
 server:
   ingress:

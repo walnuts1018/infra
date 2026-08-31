@@ -76,7 +76,6 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **mcs-api**
 - **nvidia-gpu-operator**
 - **priorities**: Pod 優先度クラスの設定
-- **redis-operator**
 - **renovate**: Self-hosted Renovate
 - **tailscale**
 - **trivy-operator**

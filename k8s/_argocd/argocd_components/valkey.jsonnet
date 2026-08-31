@@ -1,28 +1,34 @@
 local labels = import '../../components/labels.libsonnet';
-local app = import 'app.json5';
+local storage = import '../../components/storage.libsonnet';
 {
   apiVersion: 'valkey.io/v1alpha1',
   kind: 'ValkeyCluster',
   metadata: {
-    name: 'akvorado-valkey',
-    namespace: app.namespace,
+    name: 'argocd-valkey',
+    namespace: 'argocd',
     annotations: {
       'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
     },
-    labels: labels('akvorado-valkey'),
+    labels: labels('argocd-valkey'),
   },
   spec: {
     shards: 1,
-    replicas: 1,
+    replicas: 0,
+    scheduling: {
+      affinity: storage.avoidSlowNodeAffinity,
+    },
     resources: {
       requests: {
-        cpu: '6m',
-        memory: '13Mi',
+        cpu: '5m',
+        memory: '16Mi',
       },
       limits: {
-        cpu: '500m',
+        cpu: '100m',
         memory: '256Mi',
       },
+    },
+    config: {
+      'maxmemory-policy': 'noeviction',
     },
   },
 }
