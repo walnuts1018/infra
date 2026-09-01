@@ -8,7 +8,7 @@
   "buckets": [
     {
       "name": "picca",
-      "publicRead": ["basemap/*", "fonts/*"],
+      "publicRead": [],
       "cors": [
         {
           "allowedOrigins": ["https://picca.walnuts.dev"],
@@ -41,6 +41,10 @@
     },
     {
       "name": "loki-ruler",
+      "publicRead": []
+    },
+    {
+      "name": "maps",
       "publicRead": []
     },
     {
@@ -113,6 +117,25 @@
           ],
           "resources": [
             "*"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "maps_rclone",
+      "accessKey": "maps_rclone",
+      "secretKeyProperty": "maps_rclone_secretkey",
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "Read",
+            "Write",
+            "List",
+            "Tagging"
+          ],
+          "buckets": [
+            "maps"
           ]
         }
       ]
