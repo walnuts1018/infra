@@ -1,6 +1,6 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local config = import 'configmap.jsonnet';
+local configName = (import 'configmap-name.libsonnet').name;
 local sa = import 'sa.jsonnet';
 {
   apiVersion: 'apps/v1',
@@ -84,8 +84,11 @@ local sa = import 'sa.jsonnet';
             ],
           },
         ],
+        // このConfigMapはjsonnet(ArgoCD管理)ではなく、update-cronjobがkubectl applyで
+        // 都度書き込む(presigned URLを含む動的な内容のため)。初回デプロイ時、
+        // CronJobを一度手動実行するまでこのConfigMapが存在せずPodは起動できない。
         volumes: [
-          { name: 'config', configMap: { name: config.metadata.name } },
+          { name: 'config', configMap: { name: configName } },
         ],
       },
     },

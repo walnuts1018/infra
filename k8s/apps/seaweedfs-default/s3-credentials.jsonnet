@@ -8,11 +8,11 @@ local config = import 'config.libsonnet';
 // shared across identities) lets that Secret stay the single source of
 // truth, instead of racing another controller for ownership of a shared one.
 local appOwnedTargets = {
-  maps_rclone: {
+  maps_read: {
     namespace: 'maps',
     secretName: (import '../maps/external-secret.jsonnet').spec.target.name,
-    accessKeyField: 'RCLONE_CONFIG_SEAWEEDMAPS_ACCESS_KEY_ID',
-    secretKeyField: 'RCLONE_CONFIG_SEAWEEDMAPS_SECRET_ACCESS_KEY',
+    accessKeyField: 'RCLONE_CONFIG_SEAWEEDMAPSREAD_ACCESS_KEY_ID',
+    secretKeyField: 'RCLONE_CONFIG_SEAWEEDMAPSREAD_SECRET_ACCESS_KEY',
   },
   stalwart: {
     namespace: 'stalwart',

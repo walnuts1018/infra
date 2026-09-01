@@ -122,17 +122,14 @@
       ]
     },
     {
-      "name": "maps_rclone",
-      "accessKey": "maps_rclone",
-      "secretKeyProperty": "maps_rclone_secretkey",
+      "name": "maps_read",
+      "accessKey": "maps_read",
+      "secretKeyProperty": "maps_read_secretkey",
       "permissions": [
         {
           "effect": "Allow",
           "actions": [
-            "Read",
-            "Write",
-            "List",
-            "Tagging"
+            "Read"
           ],
           "buckets": [
             "maps"
@@ -246,6 +243,11 @@
             "claim": "sub",
             "value": "system:serviceaccount:picca:picca",
             "role": "picca"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:maps:maps-updater",
+            "role": "maps"
           },
           {
             "claim": "sub",
@@ -369,6 +371,25 @@
             ],
             "buckets": [
               "ipu"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "maps",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:Get*",
+              "s3:Put*",
+              "s3:Delete*",
+              "s3:List*",
+              "s3:*Tagging",
+              "s3:AbortMultipartUpload"
+            ],
+            "buckets": [
+              "maps"
             ]
           }
         ]
@@ -545,6 +566,13 @@
         "name": "picca",
         "policies": [
           "picca"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "maps",
+        "policies": [
+          "maps"
         ],
         "provider": "k8s"
       },

@@ -1,5 +1,6 @@
 local app = import 'app.json5';
 local deployment = import 'deployment.jsonnet';
+local configName = (import 'configmap-name.libsonnet').name;
 {
   apiVersion: 'rbac.authorization.k8s.io/v1',
   kind: 'Role',
@@ -13,6 +14,19 @@ local deployment = import 'deployment.jsonnet';
       resources: ['deployments'],
       resourceNames: [deployment.metadata.name],
       verbs: ['get', 'patch'],
+    },
+    {
+      apiGroups: [''],
+      resources: ['configmaps'],
+      resourceNames: [configName],
+      verbs: ['get', 'patch'],
+    },
+    {
+      // resourceNamesはcreateには効かない(未作成objectをnameで絞れないため)。
+      // 同namespace内でこのCronJobだけがconfigmapsを操作する運用なので許容する。
+      apiGroups: [''],
+      resources: ['configmaps'],
+      verbs: ['create'],
     },
   ],
 }
