@@ -12,9 +12,7 @@ local s3Irsa = import '../s3-irsa.libsonnet';
     labels: labels(app.name + '-basemap-generate'),
   },
   spec: {
-    // OSMデータ自体は高頻度更新が不要なため月次実行(毎月1日 03:00 JST)。旧basemap-updater
-    // CronJobと同じscheduleを維持する。
-    schedule: '0 3 1 * *',
+    schedule: '0 3 1 * *',  // 毎月1日 03:00
     timeZone: 'Asia/Tokyo',
     concurrencyPolicy: 'Forbid',
     startingDeadlineSeconds: 300,
@@ -184,6 +182,11 @@ local s3Irsa = import '../s3-irsa.libsonnet';
                 // 焼き込んでいたのと同じ、「app-specific configはPicca側が単一の
                 // source of truthとしてartifact配布し、infraはtag参照するだけ」という
                 // 設計に合わせている)。
+                // このクラスタ(k8s/init/kurumi.md)はCRI-O(1.36系)を使っており、
+                // CRI-O 1.33+のOCI Artifact mountはlayer blobをtar展開せずそのまま
+                // ファイルとして配置するため、artifact側はtar化していない(layerの
+                // org.opencontainers.image.titleアノテーションがファイル名になり、
+                // このmountPath直下に`schema.yml`として見える)。
                 name: 'schema',
                 image: { reference: 'ghcr.io/walnuts1018/picca/basemap-schema:v0.0.44' },
               },
