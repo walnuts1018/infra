@@ -3,7 +3,6 @@ local app = import '../app.json5';
 local commonEnv = import '../env.libsonnet';
 local externalSecret = import '../external-secret.jsonnet';
 local s3Irsa = import '../s3-irsa.libsonnet';
-local schemaConfigMap = import 'basemap-schema-configmap.jsonnet';
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
@@ -178,8 +177,15 @@ local schemaConfigMap = import 'basemap-schema-configmap.jsonnet';
                 },
               },
               {
+                // tools/basemap/schema.yml(picca側リポジトリのソース)は、Picca CIが
+                // OCI artifactとしてghcr.ioへpushしたものをimage volumeSource(K8s 1.31+)
+                // で直接マウントする。infra側でConfigMapとして手動コピーを保持しない
+                // (旧tilemaker時代にconfig.json/process.luaをPicca製Dockerイメージへ
+                // 焼き込んでいたのと同じ、「app-specific configはPicca側が単一の
+                // source of truthとしてartifact配布し、infraはtag参照するだけ」という
+                // 設計に合わせている)。
                 name: 'schema',
-                configMap: { name: schemaConfigMap.metadata.name },
+                image: { reference: 'ghcr.io/walnuts1018/picca/basemap-schema:v0.0.44' },
               },
             ] + s3Irsa.volumes,
           },
