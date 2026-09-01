@@ -28,7 +28,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'outbox-worker',
-            image: 'ghcr.io/walnuts1018/picca/outbox-worker:v0.0.43',
+            image: 'ghcr.io/walnuts1018/picca/outbox-worker:v0.0.44',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
