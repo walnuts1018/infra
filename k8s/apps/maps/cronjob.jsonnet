@@ -47,6 +47,8 @@ local updaterSa = import 'updater-sa.jsonnet';
                   '--contimeout=30s',
                   '--s3-chunk-size=64M',
                   '--s3-upload-concurrency=4',
+                  '-v',
+                  '--stats=1m',
                 ],
                 env: s3Irsa.env,
                 resources: {
