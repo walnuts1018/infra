@@ -12,6 +12,11 @@ local credentialSecret(identity) = externalSecret {
   name: identity.secretRef.secretName,
   namespace: identity.secretRef.namespace,
   use_suffix: false,
+  spec+: {
+    target+: {
+      creationPolicy: 'Orphan',
+    },
+  },
   data: [
     {
       secretKey: 'secretkey',
