@@ -27,7 +27,7 @@ runners.generate([
       },
       {
         name: 'xlarge-amd64',
-        cpu: '4',
+        cpu: '3',
         memory: '8Gi',
         arch: 'amd64',
         maxRunners: 2,
