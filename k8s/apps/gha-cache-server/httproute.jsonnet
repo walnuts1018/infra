@@ -28,6 +28,10 @@ local app = import 'app.json5';
             },
           },
         ],
+        timeouts: {
+          request: '0s',
+          backendRequest: '0s',
+        },
         backendRefs: [
           {
             kind: 'Service',
