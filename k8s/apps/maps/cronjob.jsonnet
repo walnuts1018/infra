@@ -38,7 +38,7 @@ local updaterSa = import 'updater-sa.jsonnet';
                 args: [
                   '--config=/config/rclone.conf',
                   'copyto',
-                  ':http,url=https://download.versatiles.org/:osm-landcover.versatiles',
+                  ":http,url='https://download.versatiles.org/':osm-landcover.versatiles",
                   'seaweedmaps:maps/osm-landcover.versatiles',
                   '--retries=5',
                   '--low-level-retries=20',
