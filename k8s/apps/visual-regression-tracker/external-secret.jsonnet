@@ -16,13 +16,6 @@
       },
     },
     {
-      secretKey: 'seaweedfs_secret_key',
-      remoteRef: {
-        key: 'seaweedfs',
-        property: 'visual_regression_tracker_secretkey',
-      },
-    },
-    {
       secretKey: 'admin_password',
       remoteRef: {
         key: 'terraform-external-secrets',
@@ -40,8 +33,6 @@
   template_data: {
     jwt_secret: '{{ .jwt_secret }}',
     DATABASE_URL: 'postgresql://visual_regression_tracker:{{ .postgres_password }}@postgresql-default-rw.databases.svc.cluster.local:5432/visual_regression_tracker?connection_limit=10',
-    AWS_ACCESS_KEY_ID: 'visual_regression_tracker',
-    AWS_SECRET_ACCESS_KEY: '{{ .seaweedfs_secret_key }}',
     DEFAULT_USER_PASSWORD: '{{ .admin_password }}',
     DEFAULT_USER_API_KEY: '{{ .admin_api_key }}',
   },

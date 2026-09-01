@@ -18,10 +18,6 @@ variable "oci_private_key" {
   sensitive = true
 }
 
-locals {
-  seaweedfs_access_key = "HF1WMN5WE8Y1F05KEQRAO"
-}
-
 variable "seaweedfs_secret_key" {
   type      = string
   sensitive = true

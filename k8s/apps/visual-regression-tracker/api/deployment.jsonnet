@@ -2,6 +2,7 @@ local container = import '../../../components/container.libsonnet';
 local labels = import '../../../components/labels.libsonnet';
 local app = import '../app.json5';
 local externalSecret = import '../external-secret.jsonnet';
+local s3Credentials = (import '../../../components/seaweedfs-s3-credentials.libsonnet')('visual_regression_tracker');
 local appname = app.name + '-api';
 
 {
@@ -88,8 +89,8 @@ local appname = app.name + '-api';
                 name: 'AWS_ACCESS_KEY_ID',
                 valueFrom: {
                   secretKeyRef: {
-                    name: externalSecret.spec.target.name,
-                    key: 'AWS_ACCESS_KEY_ID',
+                    name: s3Credentials.secretName,
+                    key: s3Credentials.accessKeyField,
                   },
                 },
               },
@@ -97,8 +98,8 @@ local appname = app.name + '-api';
                 name: 'AWS_SECRET_ACCESS_KEY',
                 valueFrom: {
                   secretKeyRef: {
-                    name: externalSecret.spec.target.name,
-                    key: 'AWS_SECRET_ACCESS_KEY',
+                    name: s3Credentials.secretName,
+                    key: s3Credentials.secretKeyField,
                   },
                 },
               },

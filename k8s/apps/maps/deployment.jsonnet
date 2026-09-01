@@ -3,7 +3,7 @@ local app = import 'app.json5';
 local envoyConfig = import 'configmap-envoy.jsonnet';
 local config = import 'configmap.jsonnet';
 local sa = import 'sa.jsonnet';
-local readSecretName = (import 'external-secret.jsonnet').spec.target.name;
+local readSecretName = (import '../../components/seaweedfs-s3-credentials.libsonnet')('maps_read').secretName;
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',

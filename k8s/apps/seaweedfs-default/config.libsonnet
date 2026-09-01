@@ -1,11 +1,5 @@
-// Loads _configs/desired-state.json, validates it for internal consistency,
-// and derives the values the various *.jsonnet manifests need
-// (bucket list, S3 identities/policies, IAM+STS config for the filer).
-//
-// See policy.libsonnet / sts.libsonnet for how policy documents and STS
-// config are built from the desired-state shorthand.
-
 local desired = import '_configs/desired-state.json';
+local app = import 'app.json5';
 local policy = import 'policy.libsonnet';
 local sts = import 'sts.libsonnet';
 
@@ -16,8 +10,15 @@ local identities = [
     resourceName: std.strReplace(identity.name, '_', '-'),
     policyName: std.strReplace(identity.name, '_', '-') + '-access-key',
     policyDocument: policy.document(identity.permissions),
-    accessKeyField: identity.accessKey + '_accesskey',
-    secretKeyField: identity.accessKey + '_secretkey',
+    external: std.objectHas(identity, 'secretKeyProperty'),
+    secretRef:
+      if std.objectHas(identity, 'secretTarget') then identity.secretTarget
+      else {
+        namespace: app.namespace,
+        secretName: app.name + '-' + std.strReplace(identity.name, '_', '-') + '-credentials',
+        accessKeyField: 'accesskey',
+        secretKeyField: 'secretkey',
+      },
   }
   for identity in desired.accessKeyIdentities
 ];
@@ -43,7 +44,8 @@ assert unique(bucketNames) : 'bucket names must be unique';
 assert unique(identityNames) : 'access-key identity names must be unique';
 assert unique([identity.resourceName for identity in identities]) : 'access-key identity resource names must be unique after normalization';
 assert unique([identity.policyName for identity in identities]) : 'access-key identity policy names must be unique';
-assert unique([identity.accessKey for identity in identities]) : 'access-key identity access keys must be unique';
+assert unique([identity.secretRef.namespace + '/' + identity.secretRef.secretName for identity in identities])
+       : 'each identity must resolve to a unique Secret, otherwise the S3Credentials operator will race another controller for ownership of it';
 assert unique(policyNames) : 'STS policy names must be unique';
 assert unique(roleNames) : 'STS role names must be unique';
 assert unique(providerNames) : 'OIDC provider names must be unique';

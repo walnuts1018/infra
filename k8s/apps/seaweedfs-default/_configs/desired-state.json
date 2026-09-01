@@ -123,8 +123,12 @@
     },
     {
       "name": "maps_read",
-      "accessKey": "maps_read",
-      "secretKeyProperty": "maps_read_secretkey",
+      "secretTarget": {
+        "namespace": "maps",
+        "secretName": "maps-s3-credentials",
+        "accessKeyField": "AWS_ACCESS_KEY_ID",
+        "secretKeyField": "AWS_SECRET_ACCESS_KEY"
+      },
       "permissions": [
         {
           "effect": "Allow",
@@ -158,8 +162,12 @@
     },
     {
       "name": "oekaki_dengon_game",
-      "accessKey": "oekaki_dengon_game",
-      "secretKeyProperty": "oekaki_dengon_game_secretkey",
+      "secretTarget": {
+        "namespace": "oekaki-dengon-game",
+        "secretName": "oekaki-dengon-game-s3-credentials",
+        "accessKeyField": "minio-access-key",
+        "secretKeyField": "minio-secret-key"
+      },
       "permissions": [
         {
           "effect": "Allow",
@@ -177,8 +185,12 @@
     },
     {
       "name": "stalwart",
-      "accessKey": "stalwart",
-      "secretKeyProperty": "stalwart_secretkey",
+      "secretTarget": {
+        "namespace": "stalwart",
+        "secretName": "stalwart-s3-credentials",
+        "accessKeyField": "s3_access_key",
+        "secretKeyField": "s3_secret_access_key"
+      },
       "permissions": [
         {
           "effect": "Allow",
@@ -196,8 +208,12 @@
     },
     {
       "name": "visual_regression_tracker",
-      "accessKey": "visual_regression_tracker",
-      "secretKeyProperty": "visual_regression_tracker_secretkey",
+      "secretTarget": {
+        "namespace": "visual-regression-tracker",
+        "secretName": "visual-regression-tracker-s3-credentials",
+        "accessKeyField": "AWS_ACCESS_KEY_ID",
+        "secretKeyField": "AWS_SECRET_ACCESS_KEY"
+      },
       "permissions": [
         {
           "effect": "Allow",
