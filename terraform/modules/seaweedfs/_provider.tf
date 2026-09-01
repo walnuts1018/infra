@@ -28,7 +28,9 @@ provider "aws" {
   }
 
   assume_role_with_web_identity {
-    role_arn           = "arn:aws:iam::role/TerraformCloud"
+    # SeaweedFSのroleArn形式(arn:aws:iam::role/<name>)はaccount-idフィールドを完全に省略しているためAWS provider側のARN検証でエラーになる
+    # account-idフィールドを空文字で明示したこちらの形式はSeaweedFS側でも有効なロールARNとして解釈されるので、こちらを使う
+    role_arn           = "arn:aws:iam:::role/TerraformCloud"
     web_identity_token = data.external.workload_identity_token.result.token
     session_name       = "terraform-cloud"
   }
