@@ -41,7 +41,6 @@ local s3Irsa = import '../s3-irsa.libsonnet';
                 args: [
                   'generate-custom',
                   '--schema=/schema/schema.yml',
-                  // 日本全域のOSM抽出データ
                   '--osm_pbf_url=https://download.geofabrik.de/asia/japan-latest.osm.pbf',
                   '--dataset_version=$(DATASET_VERSION)',
                   '--output=/work/basemap.pmtiles',
