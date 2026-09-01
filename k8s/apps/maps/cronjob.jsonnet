@@ -63,7 +63,7 @@ local updaterSa = import 'updater-sa.jsonnet';
             containers: [
               (container) {
                 name: 'rollout-restart',
-                image: 'registry.k8s.io/kubectl:v1.36.4',
+                image: 'registry.k8s.io/kubectl:v1.37.0',
                 command: ['kubectl'],
                 args: [
                   'rollout',
