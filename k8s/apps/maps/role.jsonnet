@@ -22,8 +22,6 @@ local configName = (import 'configmap-name.libsonnet').name;
       verbs: ['get', 'patch'],
     },
     {
-      // resourceNamesはcreateには効かない(未作成objectをnameで絞れないため)。
-      // 同namespace内でこのCronJobだけがconfigmapsを操作する運用なので許容する。
       apiGroups: [''],
       resources: ['configmaps'],
       verbs: ['create'],

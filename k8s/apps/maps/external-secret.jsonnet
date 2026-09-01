@@ -1,6 +1,3 @@
-// presigned URL発行専用の読み取り専用identity(maps_read)のcredentialだけをここで扱う。
-// mapsバケットへの書き込み(rclone-sync)はWebIdentity AssumeRole(s3-irsa.libsonnet)を
-// 使うため、静的credentialは不要。
 (import '../../components/external-secret.libsonnet') {
   name: (import 'app.json5').name,
   namespace: (import 'app.json5').namespace,

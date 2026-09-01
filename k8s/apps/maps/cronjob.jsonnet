@@ -7,13 +7,6 @@ local s3Irsa = import 's3-irsa.libsonnet';
 local updaterSa = import 'updater-sa.jsonnet';
 local readSecretName = (import 'external-secret.jsonnet').spec.target.name;
 
-// 5ステップの依存関係(shellでの条件分岐は使わず、initContainer失敗で後続が
-// 実行されないKubernetesの標準挙動だけで表現する):
-//   1. rclone-sync:     upstream -> mapsバケットへ同期(WebIdentity AssumeRole、変更が無ければskip)
-//   2. presign:         mapsバケットのobjectに対するpresigned URLを発行(読み取り専用static key)
-//   3. render-config:   presigned URLを埋め込んだVersaTiles ConfigMapマニフェストを生成
-//   4. apply-config:    そのConfigMapをapply(ArgoCD管理外、update-cronjobだけが所有)
-//   5. rollout-restart: VersaTiles Serverを再起動(新しいconfigを読み込ませる)
 {
   apiVersion: 'batch/v1',
   kind: 'CronJob',
@@ -69,8 +62,6 @@ local readSecretName = (import 'external-secret.jsonnet').spec.target.name;
               (container) {
                 name: 'presign',
                 image: 'ghcr.io/rclone/rclone:1.75.0',
-                // 標準出力を1行ファイルへ書き出すだけの用途に限定してshを使う
-                // (rclone linkの出力をそのままVersaTiles configへ埋め込むための橋渡し)。
                 command: ['sh', '-c'],
                 args: [
                   'rclone --config=/config/rclone.conf link --expire=840h seaweedmapsread:maps/osm-landcover.versatiles > /work/presigned-url',

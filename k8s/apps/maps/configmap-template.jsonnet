@@ -1,9 +1,6 @@
 local app = import 'app.json5';
 local configName = (import 'configmap-name.libsonnet').name;
 
-// update-cronjobのrender-configステップがgomplateでこのテンプレートを展開し、
-// presigned URL(/work/presigned-url、presignステップの出力)を埋め込んだ
-// ConfigMapマニフェスト全体を生成する。テンプレート自体は静的な内容なのでGit管理する。
 local template = |||
   apiVersion: v1
   kind: ConfigMap

@@ -1,5 +1,3 @@
-// picca/s3-irsa.libsonnetと同じSeaweedFS STS(OIDC WebIdentity AssumeRole)方式。
-// rclone-syncコンテナ(mapsバケットへの書き込み)専用。role名だけ'maps'にしている。
 {
   env: [
     { name: 'AWS_WEB_IDENTITY_TOKEN_FILE', value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token' },

@@ -84,9 +84,6 @@ local sa = import 'sa.jsonnet';
             ],
           },
         ],
-        // このConfigMapはjsonnet(ArgoCD管理)ではなく、update-cronjobがkubectl applyで
-        // 都度書き込む(presigned URLを含む動的な内容のため)。初回デプロイ時、
-        // CronJobを一度手動実行するまでこのConfigMapが存在せずPodは起動できない。
         volumes: [
           { name: 'config', configMap: { name: configName } },
         ],
