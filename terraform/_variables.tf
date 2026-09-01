@@ -18,6 +18,10 @@ variable "oci_private_key" {
   sensitive = true
 }
 
+variable "seaweedfs_access_key" {
+  type = string
+}
+
 variable "seaweedfs_secret_key" {
   type      = string
   sensitive = true

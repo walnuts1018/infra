@@ -91,7 +91,7 @@
   "accessKeyIdentities": [
     {
       "name": "terraform",
-      "accessKey": "terraform",
+      "accessKeyProperty": "terraform_accesskey",
       "secretKeyProperty": "terraform_secretkey",
       "permissions": [
         {
@@ -107,7 +107,7 @@
     },
     {
       "name": "mac_hatena",
-      "accessKey": "mac_hatena",
+      "accessKeyProperty": "mac_hatena_accesskey",
       "secretKeyProperty": "mac_hatena_secretkey",
       "permissions": [
         {
@@ -143,7 +143,7 @@
     },
     {
       "name": "misskey",
-      "accessKey": "misskey",
+      "accessKeyProperty": "misskey_accesskey",
       "secretKeyProperty": "misskey_secretkey",
       "permissions": [
         {

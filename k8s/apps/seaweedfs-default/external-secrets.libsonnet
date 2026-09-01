@@ -19,6 +19,13 @@ local credentialSecret(identity) = externalSecret {
   },
   data: [
     {
+      secretKey: 'accesskey',
+      remoteRef: {
+        key: 'seaweedfs',
+        property: identity.accessKeyProperty,
+      },
+    },
+    {
       secretKey: 'secretkey',
       remoteRef: {
         key: 'seaweedfs',
@@ -27,7 +34,7 @@ local credentialSecret(identity) = externalSecret {
     },
   ],
   template_data: {
-    accesskey: identity.accessKey,
+    accesskey: '{{ .accesskey }}',
     secretkey: '{{ .secretkey }}',
   },
 };
