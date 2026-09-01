@@ -256,6 +256,7 @@ local makeRunnerSet(repo, runner) =
                 initialDelaySeconds: 0,
                 failureThreshold: 24,
                 periodSeconds: 5,
+                timeoutSeconds: 10,
               },
               volumeMounts: [
                 { name: 'work', mountPath: '/home/runner/_work' },
