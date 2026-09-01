@@ -28,7 +28,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'stack-timeline-worker',
-            image: 'ghcr.io/walnuts1018/picca/stack-timeline-worker:v0.0.45',
+            image: 'ghcr.io/walnuts1018/picca/stack-timeline-worker:v0.0.46',
             imagePullPolicy: 'IfNotPresent',
             envFrom: [
               { secretRef: { name: externalSecret.spec.target.name } },
