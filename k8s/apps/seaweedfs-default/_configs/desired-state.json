@@ -8,7 +8,7 @@
   "buckets": [
     {
       "name": "picca",
-      "publicRead": [],
+      "publicRead": ["basemap/*", "fonts/*"],
       "cors": [
         {
           "allowedOrigins": ["https://picca.walnuts.dev"],

@@ -1,6 +1,8 @@
 local gateway = import '../envoy-gateway-class/gateway.jsonnet';
 local seaweed = import '../seaweedfs-default/seaweed.jsonnet';
 local app = import 'app.json5';
+
+local seaweedS3DomainName = 'seaweedfs.local.walnuts.dev';
 {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
@@ -35,6 +37,7 @@ local app = import 'app.json5';
           {
             type: 'URLRewrite',
             urlRewrite: {
+              hostname: seaweedS3DomainName,
               path: {
                 type: 'ReplacePrefixMatch',
                 replacePrefixMatch: '/misskey/files',
