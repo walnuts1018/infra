@@ -45,8 +45,8 @@ local externalSecret = import '../external-secret.jsonnet';
                 value: 'https://imgproxy-picca.walnuts.dev',
               },
               {
-                name: 'PICCA_MAP_CDN_URL',
-                value: 'https://picca-map.walnuts.dev',
+                name: 'PICCA_MAPS_URL',
+                value: 'https://maps.walnuts.dev',
               },
               {
                 name: 'OTEL_EXPORTER_OTLP_ENDPOINT',
