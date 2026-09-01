@@ -25,7 +25,7 @@ local appname = app.name + '-api';
         containers: [
           (container) {
             name: 'api',
-            image: 'docker.io/visualregressiontracker/api:5.6.2',
+            image: 'docker.io/visualregressiontracker/api:5.6.3',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
