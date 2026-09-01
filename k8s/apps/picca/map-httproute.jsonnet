@@ -47,8 +47,6 @@ local tileResponseHeaders = {
     ],
     rules: [
       {
-        // TileJSON。MartinのソースIDが`basemap`(PMTilesファイル名`basemap.pmtiles`の
-        // stem)なので、exact一致でTileJSONエンドポイントだけを通す。
         matches: [
           {
             path: {
@@ -69,7 +67,6 @@ local tileResponseHeaders = {
         ],
       },
       {
-        // XYZ MVT。
         matches: [
           {
             path: {

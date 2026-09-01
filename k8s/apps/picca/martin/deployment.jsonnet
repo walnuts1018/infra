@@ -12,8 +12,6 @@ local config = import 'configmap.jsonnet';
     labels: labels(app.name + '-martin'),
   },
   spec: {
-    // read-only tile servingで低頻度更新のため、imgproxyほどのtrafficは想定せず
-    // replica 1から開始する(HPAや複雑なcache layerは最初から追加しない)。
     replicas: 1,
     selector: {
       matchLabels: labels(app.name + '-martin'),
