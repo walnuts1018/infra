@@ -34,7 +34,7 @@ local s3Irsa = import '../s3-irsa.libsonnet';
             containers: [
               (import '../../../components/container.libsonnet') {
                 name: 'basemap-updater',
-                image: 'ghcr.io/walnuts1018/picca/basemap-updater:v0.0.43',
+                image: 'ghcr.io/walnuts1018/picca/basemap-updater:v0.0.44',
                 imagePullPolicy: 'IfNotPresent',
                 envFrom: [
                   { secretRef: { name: externalSecret.spec.target.name } },
