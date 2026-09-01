@@ -114,6 +114,29 @@ local app = import 'app.json5';
           {
             namespaceSelector: {
               matchLabels: {
+                'kubernetes.io/metadata.name': 'envoy-gateway-system',
+              },
+            },
+            podSelector: {
+              matchLabels: {
+                'app.kubernetes.io/component': 'proxy',
+                'app.kubernetes.io/name': 'envoy',
+              },
+            },
+          },
+        ],
+        ports: [
+          {
+            port: 10443,
+            protocol: 'TCP',
+          },
+        ],
+      },
+      {
+        to: [
+          {
+            namespaceSelector: {
+              matchLabels: {
                 'kubernetes.io/metadata.name': 'opentelemetry-collector',
               },
             },
