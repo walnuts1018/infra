@@ -1,5 +1,5 @@
 local app = import '../app.json5';
-local worker = import 'timeline-worker.jsonnet';
+local worker = import 'stack-timeline-worker.jsonnet';
 {
   apiVersion: 'keda.sh/v1alpha1',
   kind: 'ScaledObject',
@@ -11,7 +11,7 @@ local worker = import 'timeline-worker.jsonnet';
     triggers: [{
       type: 'rabbitmq',
       metricType: 'Value',
-      metadata: { protocol: 'http', queueName: 'picca.timeline', mode: 'ExpectedQueueConsumptionTime', value: '30' },
+      metadata: { protocol: 'http', queueName: 'picca.stack-timeline', mode: 'ExpectedQueueConsumptionTime', value: '30' },
       authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
     }],
   },
