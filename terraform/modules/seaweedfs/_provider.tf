@@ -4,20 +4,18 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 6.62.0"
     }
+    external = {
+      source  = "hashicorp/external"
+      version = "~> 2.3"
+    }
   }
 }
 
-variable "access_key" {
-  type = string
-}
-
-variable "secret_key" {
-  type = string
+data "external" "workload_identity_token" {
+  program = ["sh", "-c", "printf '{\"token\":\"%s\"}' \"$TFC_WORKLOAD_IDENTITY_TOKEN_SEAWEEDFS\""]
 }
 
 provider "aws" {
-  access_key                  = var.access_key
-  secret_key                  = var.secret_key
   region                      = "us-east-1"
   skip_credentials_validation = true
   skip_requesting_account_id  = true
@@ -25,6 +23,13 @@ provider "aws" {
   s3_use_path_style           = true
 
   endpoints {
-    s3 = "https://seaweedfs.walnuts.dev"
+    s3  = "https://seaweedfs.walnuts.dev"
+    sts = "https://seaweedfs.walnuts.dev"
+  }
+
+  assume_role_with_web_identity {
+    role_arn           = "arn:aws:iam::role/TerraformCloud"
+    web_identity_token = data.external.workload_identity_token.result.token
+    session_name       = "terraform-cloud"
   }
 }

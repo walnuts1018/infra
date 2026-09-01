@@ -87,3 +87,29 @@ resource "tfe_variable" "aws_run_role_arn" {
   category        = "env"
   hcl             = false
 }
+
+resource "tfe_variable_set" "seaweedfs_sts" {
+  organization = tfe_organization.walnuts_dev.name
+  name         = "SeaweedFS STS"
+  description  = ""
+  global       = false
+  priority     = false
+}
+
+resource "tfe_project_variable_set" "seaweedfs_sts" {
+  project_id      = tfe_project.default.id
+  variable_set_id = tfe_variable_set.seaweedfs_sts.id
+}
+
+resource "tfe_workspace_variable_set" "seaweedfs_sts" {
+  workspace_id    = tfe_workspace.infra.id
+  variable_set_id = tfe_variable_set.seaweedfs_sts.id
+}
+
+resource "tfe_variable" "seaweedfs_workload_identity_audience" {
+  variable_set_id = tfe_variable_set.seaweedfs_sts.id
+  key             = "TFC_WORKLOAD_IDENTITY_AUDIENCE_SEAWEEDFS"
+  value           = "aws.workload.identity"
+  category        = "env"
+  hcl             = false
+}
