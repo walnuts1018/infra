@@ -46,6 +46,7 @@ local s3Irsa = import '../s3-irsa.libsonnet';
                   '--dataset_version=$(DATASET_VERSION)',
                   '--output=/work/basemap.pmtiles',
                   '--tmpdir=/work/tmp',
+                  '--download',
                 ],
                 env: [
                   {
