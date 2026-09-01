@@ -19,10 +19,6 @@ local s3Irsa = import '../s3-irsa.libsonnet';
     jobTemplate: {
       spec: {
         activeDeadlineSeconds: 3 * 60 * 60,
-        // 失敗のたびに新しいPodが作られ、planetiler initContainerがosm.pbf
-        // (日本全域、GB単位)を最初からダウンロードし直してしまう(emptyDirは
-        // Pod単位のため、リトライで前回のダウンロード結果を引き継げない)。
-        // Geofabrikへの負荷・実行時間の無駄を避けるため自動リトライはしない。
         backoffLimit: 0,
         template: {
           metadata: {
@@ -96,11 +92,6 @@ local s3Irsa = import '../s3-irsa.libsonnet';
                 imagePullPolicy: 'IfNotPresent',
                 command: ['sh', '-c'],
                 args: [
-                  // --s3-no-check-bucketが無いと、multi-thread copy時にrcloneが
-                  // アップロード前にバケット存在確認→無ければCreateBucketを試みる。
-                  // Piccaのs3IrsaロールにCreateBucket権限は無く(bucket作成はinfra
-                  // manifest側で静的に行う運用、storage.goのEnsureBucketと同じ方針)、
-                  // 403 AccessDeniedで失敗するため明示的に無効化する。
                   |||
                     set -eu
                     rclone copyto /work/basemap.pmtiles seaweedfs:picca/basemap/basemap.pmtiles \
