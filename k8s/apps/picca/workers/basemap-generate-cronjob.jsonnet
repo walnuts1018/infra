@@ -81,7 +81,7 @@ local schemaConfigMap = import 'basemap-schema-configmap.jsonnet';
               // 3.5章相当)。
               (import '../../../components/container.libsonnet') {
                 name: 'fonts-extract',
-                image: 'docker.io/library/alpine:3.22',
+                image: 'docker.io/library/alpine:3.24',
                 imagePullPolicy: 'IfNotPresent',
                 command: ['sh', '-c'],
                 args: [
