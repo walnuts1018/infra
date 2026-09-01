@@ -1,11 +1,9 @@
 local container = import '../../components/container.libsonnet';
 local app = import 'app.json5';
 local rcloneConfig = import 'configmap-rclone.jsonnet';
-local configTemplate = import 'configmap-template.jsonnet';
 local deployment = import 'deployment.jsonnet';
 local s3Irsa = import 's3-irsa.libsonnet';
 local updaterSa = import 'updater-sa.jsonnet';
-local readSecretName = (import 'external-secret.jsonnet').spec.target.name;
 
 {
   apiVersion: 'batch/v1',
@@ -59,52 +57,6 @@ local readSecretName = (import 'external-secret.jsonnet').spec.target.name;
                   { name: 'rclone-config', mountPath: '/config', readOnly: true },
                 ] + s3Irsa.volumeMounts,
               },
-              (container) {
-                name: 'presign',
-                image: 'ghcr.io/rclone/rclone:1.75.0',
-                command: ['sh', '-c'],
-                args: [
-                  'rclone --config=/config/rclone.conf link --expire=840h seaweedmapsread:maps/osm-landcover.versatiles > /work/presigned-url',
-                ],
-                envFrom: [
-                  { secretRef: { name: readSecretName } },
-                ],
-                resources: {
-                  requests: { cpu: '50m', memory: '64Mi' },
-                  limits: { memory: '128Mi' },
-                },
-                volumeMounts: [
-                  { name: 'rclone-config', mountPath: '/config', readOnly: true },
-                  { name: 'work', mountPath: '/work' },
-                ],
-              },
-              (container) {
-                name: 'render-config',
-                image: 'ghcr.io/hairyhenderson/gomplate:v4.3.3-alpine',
-                command: ['gomplate'],
-                args: ['-f', '/template/configmap.yaml.tmpl', '-o', '/work/configmap.yaml'],
-                resources: {
-                  requests: { cpu: '10m', memory: '32Mi' },
-                  limits: { memory: '64Mi' },
-                },
-                volumeMounts: [
-                  { name: 'config-template', mountPath: '/template', readOnly: true },
-                  { name: 'work', mountPath: '/work' },
-                ],
-              },
-              (container) {
-                name: 'apply-config',
-                image: 'registry.k8s.io/kubectl:v1.36.4',
-                command: ['kubectl'],
-                args: ['apply', '-f', '/work/configmap.yaml', '--namespace=' + app.namespace],
-                resources: {
-                  requests: { cpu: '10m', memory: '32Mi' },
-                  limits: { memory: '128Mi' },
-                },
-                volumeMounts: [
-                  { name: 'work', mountPath: '/work', readOnly: true },
-                ],
-              },
             ],
             containers: [
               (container) {
@@ -125,8 +77,6 @@ local readSecretName = (import 'external-secret.jsonnet').spec.target.name;
             ],
             volumes: [
               { name: 'rclone-config', configMap: { name: rcloneConfig.metadata.name } },
-              { name: 'config-template', configMap: { name: configTemplate.metadata.name } },
-              { name: 'work', emptyDir: {} },
             ] + s3Irsa.volumes,
           },
         },

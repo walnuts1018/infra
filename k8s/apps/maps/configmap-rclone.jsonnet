@@ -9,14 +9,6 @@ local config = |||
   sts_endpoint = http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
   region = us-east-1
   no_check_bucket = true
-
-  [seaweedmapsread]
-  type = s3
-  provider = Other
-  env_auth = false
-  access_key_id = maps_read
-  endpoint = http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
-  region = us-east-1
 |||;
 
 (import '../../components/configmap.libsonnet') {

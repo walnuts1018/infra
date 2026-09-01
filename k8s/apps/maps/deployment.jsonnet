@@ -1,7 +1,9 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local configName = (import 'configmap-name.libsonnet').name;
+local envoyConfig = import 'configmap-envoy.jsonnet';
+local config = import 'configmap.jsonnet';
 local sa = import 'sa.jsonnet';
+local readSecretName = (import 'external-secret.jsonnet').spec.target.name;
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -40,6 +42,34 @@ local sa = import 'sa.jsonnet';
             labelSelector: {
               matchLabels: labels(app.name + '-versatiles-server'),
             },
+          },
+        ],
+        initContainers: [
+          (import '../../components/container.libsonnet') {
+            name: 'envoy-s3-proxy',
+            image: 'docker.io/envoyproxy/envoy:distroless-v1.39.0',
+            imagePullPolicy: 'IfNotPresent',
+            restartPolicy: 'Always',
+            command: ['envoy'],
+            args: ['-c', '/etc/envoy/envoy.yaml'],
+            envFrom: [
+              { secretRef: { name: readSecretName } },
+            ],
+            securityContext+: {
+              allowPrivilegeEscalation: false,
+            },
+            readinessProbe: {
+              httpGet: { path: '/ready', port: 9901 },
+              periodSeconds: 5,
+              failureThreshold: 6,
+            },
+            resources: {
+              requests: { cpu: '50m', memory: '64Mi' },
+              limits: { memory: '128Mi' },
+            },
+            volumeMounts: [
+              { name: 'envoy-config', mountPath: '/etc/envoy', readOnly: true },
+            ],
           },
         ],
         containers: [
@@ -85,7 +115,8 @@ local sa = import 'sa.jsonnet';
           },
         ],
         volumes: [
-          { name: 'config', configMap: { name: configName } },
+          { name: 'config', configMap: { name: config.metadata.name } },
+          { name: 'envoy-config', configMap: { name: envoyConfig.metadata.name } },
         ],
       },
     },

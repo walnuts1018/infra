@@ -11,7 +11,7 @@
     },
   ],
   template_data: {
-    RCLONE_CONFIG_SEAWEEDMAPSREAD_ACCESS_KEY_ID: 'maps_read',
-    RCLONE_CONFIG_SEAWEEDMAPSREAD_SECRET_ACCESS_KEY: '{{ .secretkey }}',
+    AWS_ACCESS_KEY_ID: 'maps_read',
+    AWS_SECRET_ACCESS_KEY: '{{ .secretkey }}',
   },
 }
