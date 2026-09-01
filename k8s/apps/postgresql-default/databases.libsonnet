@@ -2,6 +2,9 @@
   {
     db_name: 'picca',
     user_name: 'picca',
+    extensions: [
+      { name: 'postgis' },
+    ],
   },
   {
     db_name: 'fitbit_manager',
