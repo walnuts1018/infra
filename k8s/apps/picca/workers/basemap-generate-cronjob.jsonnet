@@ -62,9 +62,16 @@ local s3Irsa = import '../s3-irsa.libsonnet';
                 ],
                 // Planetiler公式推奨: JVMヒープはOSM PBFファイルサイズの概ね1.5〜2倍程度。
                 // 日本全域のosm.pbfは概ね2〜3GB程度のため、余裕を持たせる。
+                // ephemeral-storageのrequests/limitsは、/workのemptyDir(osm.pbf+
+                // Planetilerの一時データ+PMTiles出力、日本全域規模で合計十数GB程度を
+                // 想定)がnode root diskを圧迫しないようにするための指定。requestsで
+                // schedulerに空き容量のあるnodeを選ばせ、limitsを超えたらkubeletが
+                // Podをevictする(LocalStorageCapacityIsolation)。専用の
+                // StorageClass/PVCを別途用意するより単純なため、node root diskからの
+                // 隔離が必須でない限りこちらを優先する。
                 resources: {
-                  requests: { cpu: '2', memory: '6Gi' },
-                  limits: { cpu: '4', memory: '10Gi' },
+                  requests: { cpu: '2', memory: '6Gi', 'ephemeral-storage': '15Gi' },
+                  limits: { cpu: '4', memory: '10Gi', 'ephemeral-storage': '30Gi' },
                 },
                 volumeMounts: [
                   { name: 'work', mountPath: '/work' },
@@ -160,19 +167,13 @@ local s3Irsa = import '../s3-irsa.libsonnet';
             volumes: [
               {
                 // Planetilerの一時データ(OSM PBF展開・feature sort等)+PMTiles出力は
-                // 日本全域規模でGB単位になりうるため、node root filesystemを圧迫する
-                // 無制限emptyDirは避け、longhorn-local-temporary StorageClassの
-                // Generic Ephemeral Volumeを使う(Job終了時に自動削除される)。
+                // 日本全域規模でGB単位になりうるが、node root diskの保護は専用
+                // StorageClass/PVCではなく、上記planetilerコンテナの
+                // ephemeral-storage requests/limits(LocalStorageCapacityIsolation)
+                // で行う。Job終了時にPodごと自動削除される点はGeneric Ephemeral
+                // Volumeと変わらない。
                 name: 'work',
-                ephemeral: {
-                  volumeClaimTemplate: {
-                    spec: {
-                      accessModes: ['ReadWriteOnce'],
-                      storageClassName: 'longhorn-local-temporary',
-                      resources: { requests: { storage: '30Gi' } },
-                    },
-                  },
-                },
+                emptyDir: {},
               },
               {
                 // tools/basemap/schema.yml(picca側リポジトリのソース)は、Picca CIが
