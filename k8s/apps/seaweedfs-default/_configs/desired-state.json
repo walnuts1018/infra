@@ -344,6 +344,20 @@
         ]
       },
       {
+        "name": "AdministratorAccess",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:*"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        ]
+      },
+      {
         "name": "cloudnative-pg-backup",
         "statements": [
           {
@@ -557,7 +571,7 @@
       {
         "name": "TerraformCloud",
         "policies": [
-          "AmazonS3FullAccess"
+          "AdministratorAccess"
         ],
         "provider": "terraform_cloud",
         "subjectPatterns": [
