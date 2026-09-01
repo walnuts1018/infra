@@ -33,6 +33,8 @@ local readSecretName = (import 'external-secret.jsonnet').spec.target.name;
         automountServiceAccountToken: false,
         securityContext: {
           runAsNonRoot: true,
+          runAsUser: 65532,
+          runAsGroup: 65532,
         },
         topologySpreadConstraints: [
           {
