@@ -11,8 +11,6 @@
     },
   ],
   template_data: {
-    // rcloneの環境変数ベース設定(RCLONE_CONFIG_<remote名大文字>_<key>)にそのまま
-    // 対応する名前でSecretのキーを作る。rclone.confファイルは一切生成しない。
     RCLONE_CONFIG_SEAWEEDMAPS_TYPE: 's3',
     RCLONE_CONFIG_SEAWEEDMAPS_PROVIDER: 'Other',
     RCLONE_CONFIG_SEAWEEDMAPS_ENV_AUTH: 'false',

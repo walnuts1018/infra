@@ -54,10 +54,6 @@ local sa = import 'sa.jsonnet';
             ports: [
               { name: 'http', containerPort: 8080 },
             ],
-            // versatiles-rsの`/status`はプロセス起動直後から常に200を返す軽量なliveness用
-            // endpoint(公式ソースコード上のコメントで明記)。Kubernetesのhttpget probeは
-            // status codeしか見ないため、`/tiles/index.json`を使ってもbodyの中身までは
-            // 検証できず実益がない。重いtile取得をprobeにしないという方針も満たす。
             startupProbe: {
               httpGet: { path: '/status', port: 8080 },
               periodSeconds: 2,
@@ -74,10 +70,14 @@ local sa = import 'sa.jsonnet';
               failureThreshold: 3,
             },
             resources: {
-              // VersaTilesのデフォルトchunk読み込みバジェット(VERSATILES_CHUNK_READ_MEMORY)は
-              // 256MiB。上書きはせずデフォルトのまま使うため、それに見合う値にする。
-              requests: { cpu: '100m', memory: '320Mi' },
-              limits: { cpu: '1', memory: '768Mi' },
+              requests: {
+                cpu: '100m',
+                memory: '320Mi',
+              },
+              limits: {
+                cpu: '1',
+                memory: '768Mi',
+              },
             },
             volumeMounts: [
               { name: 'config', mountPath: '/config', readOnly: true },
