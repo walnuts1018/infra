@@ -64,7 +64,7 @@ local s3Irsa = import '../s3-irsa.libsonnet';
               },
               (import '../../../components/container.libsonnet') {
                 name: 'fonts-extract',
-                image: 'docker.io/curlimages/curl:8.11.1',
+                image: 'docker.io/curlimages/curl:8.21.0',
                 imagePullPolicy: 'IfNotPresent',
                 command: ['sh', '-c'],
                 args: [

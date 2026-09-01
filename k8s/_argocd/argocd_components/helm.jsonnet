@@ -5,7 +5,7 @@ function(domain, ingressClassName='cilium', enableHPA=true) (helm) {
   namespace: app.namespace,
   chart: 'argo-cd',
   repoURL: 'https://argoproj.github.io/argo-helm',
-  targetRevision: '10.4.3',
+  targetRevision: '10.6.0',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'),
     {
