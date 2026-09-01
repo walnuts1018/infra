@@ -141,7 +141,7 @@ local s3Irsa = import '../s3-irsa.libsonnet';
               },
               {
                 name: 'schema',
-                image: { reference: 'ghcr.io/walnuts1018/picca/basemap-schema:v0.0.44' },
+                image: { reference: 'ghcr.io/walnuts1018/picca/basemap-schema:v0.0.45' },
               },
             ] + s3Irsa.volumes,
           },
