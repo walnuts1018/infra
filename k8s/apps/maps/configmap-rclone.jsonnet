@@ -6,7 +6,6 @@ local config = |||
   provider = Other
   env_auth = true
   endpoint = http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
-  sts_endpoint = http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
   region = us-east-1
   no_check_bucket = true
 |||;
