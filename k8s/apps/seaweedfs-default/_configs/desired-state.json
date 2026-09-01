@@ -90,22 +90,6 @@
   ],
   "accessKeyIdentities": [
     {
-      "name": "terraform",
-      "accessKeyProperty": "terraform_accesskey",
-      "secretKeyProperty": "terraform_secretkey",
-      "permissions": [
-        {
-          "effect": "Allow",
-          "actions": [
-            "Admin"
-          ],
-          "resources": [
-            "*"
-          ]
-        }
-      ]
-    },
-    {
       "name": "mac_hatena",
       "accessKeyProperty": "mac_hatena_accesskey",
       "secretKeyProperty": "mac_hatena_secretkey",
