@@ -40,6 +40,11 @@ function(app)
               envFrom: [
                 {
                   secretRef: {
+                    name: postgresSecret.spec.target.name,
+                  },
+                },
+                {
+                  secretRef: {
                     name: scyllaSecret.spec.target.name,
                   },
                 },
