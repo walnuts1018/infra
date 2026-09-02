@@ -22,3 +22,11 @@ driver:
   enabled: true
   kernelModuleType: "proprietary"
   # version: "580.159.04"
+
+validator:
+  cuda:
+    env:
+    # gpu-operatorのCUDA tool chainがPascal世代のサポートを終了していて、cuda-validatorのvectorAdd workloadがクラッシュしてしまう
+    # とりあえず無効化して、ライブラリ・デバイスの疎通確認のみ行う。
+    - name: WITH_WORKLOAD
+      value: "false"
