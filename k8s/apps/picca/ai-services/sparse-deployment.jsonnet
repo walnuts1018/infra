@@ -23,7 +23,7 @@ local app = import '../app.json5';
         containers: [
           std.mergePatch((import '../../../components/container.libsonnet') {
             name: 'sparse-service',
-            image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.48',
+            image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.49',
             imagePullPolicy: 'IfNotPresent',
             command: ['python', 'scripts/run_sparse_service.py'],
             env: [
