@@ -22,6 +22,9 @@ local app = import 'app.json5';
           name: 'postgis',
         },
       ],
+      parameters: {
+        max_connections: '200',
+      },
     },
     storage: {
       size: '10Gi',

@@ -14,6 +14,6 @@ function(app, useSuffix=true)
       },
     ],
     template_data: {
-      DATABASE_URL: 'postgres://' + dbName + ':{{ .postgres_password }}@postgresql-default-rw.databases.svc.cluster.local:5432/' + dbName,
+      DATABASE_URL: 'postgres://' + dbName + ':{{ .postgres_password }}@postgresql-default-rw.databases.svc.cluster.local:5432/' + dbName + '?pool_max_conns=2',
     },
   }
