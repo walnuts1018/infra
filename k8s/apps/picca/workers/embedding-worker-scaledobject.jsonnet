@@ -5,7 +5,7 @@ local worker = import 'embedding-worker.jsonnet';
   kind: 'ScaledObject',
   metadata: { name: worker.metadata.name, namespace: app.namespace },
   spec: {
-    minReplicaCount: 1,
+    minReplicaCount: 0,
     maxReplicaCount: 4,
     scaleTargetRef: { name: worker.metadata.name },
     triggers: [{

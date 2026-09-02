@@ -14,7 +14,7 @@ local scyllaTls = import '../scylla-tls.libsonnet';
     labels: labels(app.name + '-download-worker'),
   },
   spec: {
-    replicas: 1,
+    replicas: 0,
     selector: {
       matchLabels: labels(app.name + '-download-worker'),
     },

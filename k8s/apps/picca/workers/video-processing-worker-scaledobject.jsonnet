@@ -5,7 +5,7 @@ local worker = import 'video-processing-worker.jsonnet';
   kind: 'ScaledObject',
   metadata: { name: worker.metadata.name, namespace: app.namespace },
   spec: {
-    minReplicaCount: 1,
+    minReplicaCount: 0,
     maxReplicaCount: 8,
     scaleTargetRef: { name: worker.metadata.name },
     triggers: [

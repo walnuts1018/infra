@@ -12,7 +12,7 @@ local s3Irsa = import '../s3-irsa.libsonnet';
     labels: labels(app.name + '-embedding-worker'),
   },
   spec: {
-    replicas: 1,
+    replicas: 0,
     selector: {
       matchLabels: labels(app.name + '-embedding-worker'),
     },
