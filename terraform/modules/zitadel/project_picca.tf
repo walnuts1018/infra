@@ -51,7 +51,10 @@ resource "zitadel_application_oidc" "picca_dev" {
   project_id = zitadel_project.picca.id
   name       = "picca-dev"
 
-  redirect_uris               = ["https://picca-dev.walnuts.dev/auth/callback"]
+  redirect_uris               = [
+    "https://picca-dev.walnuts.dev/auth/callback",
+    "https://picca-dev.walnuts.dev/oauth2/callback",
+  ]
   response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
