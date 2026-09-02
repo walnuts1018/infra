@@ -83,6 +83,11 @@ variable "picca_client_secret" {
   type      = string
   sensitive = true
 }
+variable "picca_dev_client_id" { type = string }
+variable "picca_dev_client_secret" {
+  type      = string
+  sensitive = true
+}
 variable "shumoku_client_id" { type = string }
 variable "shumoku_client_secret" {
   type      = string
