@@ -12,7 +12,12 @@ function(app)
       triggers: [{
         type: 'rabbitmq',
         metricType: 'Value',
-        metadata: { protocol: 'http', queueName: 'picca.video-transcode', mode: 'QueueLength', value: '1' },
+        metadata: {
+          protocol: 'http',
+          queueName: 'picca.video-transcode',
+          mode: 'QueueLength',
+          value: '1',
+        },
         authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
       }],
     },
