@@ -1,5 +1,5 @@
 function(app)
-  local rabbitmqSecret = (import '../rabbitmq/secret.libsonnet')(app);
+  local rabbitmqSecret = (import '../_internal/rabbitmq/external-secret.libsonnet')(app);
   {
     apiVersion: 'keda.sh/v1alpha1',
     kind: 'TriggerAuthentication',

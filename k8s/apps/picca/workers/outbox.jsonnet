@@ -1,1 +1,1 @@
-(import '../../../components/picca/workers/outbox/deployment.libsonnet')(import '../app.json5')
+(import '../../../components/picca/workers/outbox.libsonnet')(import '../app.json5')

@@ -1,1 +1,1 @@
-(import '../../../components/picca/workers/processing-reconciler/deployment.libsonnet')(import '../app.json5')
+(import '../../../components/picca/workers/processing-reconciler.libsonnet')(import '../app.json5')

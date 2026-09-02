@@ -1,8 +1,4 @@
 local sa = import 'scylla-client-cert-sa.jsonnet';
-// databases namespaceにある scylla-cluster-local-client-ca Secretを、
-// External Secrets Operatorのkubernetes providerでprfexample namespaceへ複製するためのRBAC。
-// Role/RoleBindingはSecretの所在するnamespace(databases)側に作る必要があるため、
-// このファイルはprfexample appの一部でありながらmetadata.namespaceをdatabasesに向けている。
 [
   {
     apiVersion: 'rbac.authorization.k8s.io/v1',
