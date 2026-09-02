@@ -21,13 +21,20 @@ runners.generate([
       {
         name: 'large-amd64',
         cpu: '2',
-        memory: '4Gi',
+        memory: '2Gi',
         arch: 'amd64',
         maxRunners: 2,
       },
       {
         name: 'xlarge-amd64',
-        cpu: '3',
+        cpu: '4',
+        memory: '4Gi',
+        arch: 'amd64',
+        maxRunners: 2,
+      },
+      {
+        name: '2xlarge-amd64',
+        cpu: '4',
         memory: '8Gi',
         arch: 'amd64',
         maxRunners: 2,
