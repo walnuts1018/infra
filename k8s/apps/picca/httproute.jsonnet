@@ -65,6 +65,12 @@ local httpParentRef = {
                 value: '/api/media',
               },
             },
+            {
+              path: {
+                type: 'PathPrefix',
+                value: '/api/map',
+              },
+            },
           ],
           filters: [responseHeadersFilter],
           timeouts: {
