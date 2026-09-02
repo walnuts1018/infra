@@ -9,7 +9,7 @@ function(app, useSuffix=true)
         secretKey: 'postgres_password',
         remoteRef: {
           key: 'postgres_passwords',
-          property: app.name,
+          property: std.strReplace(app.name, '-', '_'),
         },
       },
     ],

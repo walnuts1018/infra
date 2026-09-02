@@ -8,7 +8,7 @@ function(app, useSuffix=true)
         secretKey: 'scylla_password',
         remoteRef: {
           key: 'scylladb',
-          property: app.name,
+          property: std.strReplace(app.name, '-', '_'),
         },
       },
     ],
