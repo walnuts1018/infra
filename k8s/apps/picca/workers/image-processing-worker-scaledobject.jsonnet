@@ -5,6 +5,7 @@ local worker = import 'image-processing-worker.jsonnet';
   kind: 'ScaledObject',
   metadata: { name: worker.metadata.name, namespace: app.namespace },
   spec: {
+    pollingInterval: 1,
     minReplicaCount: 0,
     maxReplicaCount: 8,
     scaleTargetRef: { name: worker.metadata.name },

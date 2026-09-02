@@ -5,6 +5,7 @@ local worker = import 'library-notify-worker.jsonnet';
   kind: 'ScaledObject',
   metadata: { name: worker.metadata.name, namespace: app.namespace },
   spec: {
+    pollingInterval: 1,
     minReplicaCount: 0,
     maxReplicaCount: 4,
     scaleTargetRef: { name: worker.metadata.name },
