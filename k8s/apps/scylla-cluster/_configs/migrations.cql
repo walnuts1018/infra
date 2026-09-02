@@ -17,6 +17,15 @@ CREATE ROLE IF NOT EXISTS 'picca'
     AND LOGIN = true;
 GRANT ALL PERMISSIONS ON KEYSPACE picca TO 'picca';
 
+CREATE KEYSPACE IF NOT EXISTS picca_dev
+    WITH replication = {'class': 'NetworkTopologyStrategy', 'iwakura': '3'}
+    AND tablets = {'enabled': false};
+CREATE ROLE IF NOT EXISTS 'picca_dev'
+    WITH PASSWORD = '{{ .picca_dev_password }}'
+    AND SUPERUSER = false
+    AND LOGIN = true;
+GRANT ALL PERMISSIONS ON KEYSPACE picca_dev TO 'picca_dev';
+
 CREATE KEYSPACE IF NOT EXISTS prfexample
     WITH replication = {'class': 'NetworkTopologyStrategy', 'iwakura': '3'}
     AND tablets = {'enabled': false};

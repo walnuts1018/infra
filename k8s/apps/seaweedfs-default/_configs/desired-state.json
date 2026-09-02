@@ -20,6 +20,19 @@
       ]
     },
     {
+      "name": "picca-dev",
+      "publicRead": [],
+      "cors": [
+        {
+          "allowedOrigins": ["https://picca-dev.walnuts.dev"],
+          "allowedMethods": ["GET", "PUT", "HEAD"],
+          "allowedHeaders": ["Content-Type"],
+          "exposeHeaders": ["ETag"],
+          "maxAgeSeconds": 3600
+        }
+      ]
+    },
+    {
       "name": "cloudnative-pg-backup",
       "publicRead": []
     },
@@ -246,6 +259,11 @@
           },
           {
             "claim": "sub",
+            "value": "system:serviceaccount:picca-dev:picca-dev",
+            "role": "picca-dev"
+          },
+          {
+            "claim": "sub",
             "value": "system:serviceaccount:maps:maps-updater",
             "role": "maps"
           },
@@ -370,6 +388,25 @@
             ],
             "buckets": [
               "picca"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "picca-dev",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:Get*",
+              "s3:Put*",
+              "s3:Delete*",
+              "s3:List*",
+              "s3:*Tagging",
+              "s3:AbortMultipartUpload"
+            ],
+            "buckets": [
+              "picca-dev"
             ]
           }
         ]
@@ -580,6 +617,13 @@
         "name": "picca",
         "policies": [
           "picca"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "picca-dev",
+        "policies": [
+          "picca-dev"
         ],
         "provider": "k8s"
       },

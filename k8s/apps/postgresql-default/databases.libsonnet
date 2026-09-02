@@ -7,6 +7,13 @@
     ],
   },
   {
+    db_name: 'picca_dev',
+    user_name: 'picca_dev',
+    extensions: [
+      { name: 'postgis' },
+    ],
+  },
+  {
     db_name: 'fitbit_manager',
     user_name: 'fitbit_manager',
   },
