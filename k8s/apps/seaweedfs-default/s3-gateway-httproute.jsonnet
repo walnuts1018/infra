@@ -20,6 +20,7 @@ local app = import 'app.json5';
     hostnames: [
       'visual-regression-tracker.seaweedfs.local.walnuts.dev',
       'picca.seaweedfs.walnuts.dev',
+      'picca-dev.seaweedfs.walnuts.dev',
     ],
     rules: [
       {
