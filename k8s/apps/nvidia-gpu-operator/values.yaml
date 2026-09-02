@@ -21,7 +21,7 @@ operator:
 driver:
   enabled: true
   kernelModuleType: "proprietary"
-  # version: "580.159.04"
+  version: "580.159.04"
 
 validator:
   cuda:
