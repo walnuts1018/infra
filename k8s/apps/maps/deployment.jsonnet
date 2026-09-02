@@ -13,7 +13,7 @@ local readSecretName = (import '../../components/seaweedfs-s3-credentials.libson
     labels: labels(app.name + '-versatiles-server'),
   },
   spec: {
-    replicas: 2,
+    replicas: 1,
     selector: {
       matchLabels: labels(app.name + '-versatiles-server'),
     },
@@ -66,8 +66,13 @@ local readSecretName = (import '../../components/seaweedfs-s3-credentials.libson
               failureThreshold: 6,
             },
             resources: {
-              requests: { cpu: '50m', memory: '64Mi' },
-              limits: { memory: '128Mi' },
+              requests: {
+                cpu: '30m',
+                memory: '48Mi',
+              },
+              limits: {
+                memory: '256Mi',
+              },
             },
             volumeMounts: [
               { name: 'envoy-config', mountPath: '/etc/envoy', readOnly: true },
