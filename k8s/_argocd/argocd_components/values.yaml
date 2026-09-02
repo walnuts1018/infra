@@ -118,7 +118,7 @@ server:
     targetMemoryUtilizationPercentage: 10000 # memoryによるHPAを無効化するために大きな値を設定
   resources:
     requests:
-      cpu: 10m
+      cpu: 50m
       memory: 86Mi
     limits:
       cpu: 500m
@@ -137,7 +137,7 @@ repoServer:
     targetMemoryUtilizationPercentage: 10000 # memoryによるHPAを無効化するために大きな値を設定
   resources:
     requests:
-      cpu: 50m
+      cpu: 100m
       memory: 128Mi
     limits:
       memory: 1Gi
