@@ -127,7 +127,7 @@ local externalSecret = import 'external-secret.jsonnet';
             resources: {
               requests: {
                 cpu: '100m',
-                memory: '960Mi',
+                memory: '840Mi',
               },
               limits: {
                 memory: '2Gi',
