@@ -214,7 +214,37 @@ local makeRunnerSet(repo, runner) =
           enableServiceLinks: false,
           nodeSelector: {
             'kubernetes.io/arch': arch,
-            'kubernetes.io/hostname': 'rusk',
+          },
+          affinity: {
+            nodeAffinity: {
+              requiredDuringSchedulingIgnoredDuringExecution: {
+                nodeSelectorTerms: [
+                  {
+                    matchExpressions: [
+                      {
+                        key: 'kubernetes.io/hostname',
+                        operator: 'In',
+                        values: ['rusk', 'cake'],
+                      },
+                    ],
+                  },
+                ],
+              },
+              preferredDuringSchedulingIgnoredDuringExecution: [
+                {
+                  weight: 100,
+                  preference: {
+                    matchExpressions: [
+                      {
+                        key: 'kubernetes.io/hostname',
+                        operator: 'In',
+                        values: ['rusk'],
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
           },
           resources: {
             requests: {
