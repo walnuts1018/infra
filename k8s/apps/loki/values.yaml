@@ -182,8 +182,8 @@ ingester:
     targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 50m
-      memory: 630Mi
+      cpu: 60m
+      memory: 400Mi
     limits:
       cpu: 1
       memory: 2Gi
