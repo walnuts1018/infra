@@ -90,6 +90,13 @@ local app = import 'app.json5';
           {
             namespaceSelector: {
               matchLabels: {
+                'kubernetes.io/metadata.name': 'qdrant',
+              },
+            },
+          },
+          {
+            namespaceSelector: {
+              matchLabels: {
                 'kubernetes.io/metadata.name': 'zitadel',
               },
             },
