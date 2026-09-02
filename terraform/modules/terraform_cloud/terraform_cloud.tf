@@ -34,7 +34,7 @@ resource "tfe_workspace" "infra" {
   queue_all_runs                = false
   speculative_enabled           = true
   structured_run_output_enabled = true
-  terraform_version             = "~>1.15.0"
+  terraform_version             = "~> 1.16.0"
   trigger_patterns = [
     "k8s/apps/seaweedfs-default/_configs/desired-state.json",
     "terraform/*",
