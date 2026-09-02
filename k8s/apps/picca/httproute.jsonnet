@@ -50,6 +50,26 @@ local httpParentRef = {
             {
               path: {
                 type: 'PathPrefix',
+                value: '/api/health',
+              },
+            },
+            {
+              path: {
+                type: 'PathPrefix',
+                value: '/api/telemetry',
+              },
+            },
+          ],
+          filters: [responseHeadersFilter],
+          backendRefs: [
+            { kind: 'Service', name: (import 'frontend/service.jsonnet').metadata.name, port: 3000, weight: 1 },
+          ],
+        },
+        {
+          matches: [
+            {
+              path: {
+                type: 'PathPrefix',
                 value: '/auth',
               },
             },
@@ -62,13 +82,7 @@ local httpParentRef = {
             {
               path: {
                 type: 'PathPrefix',
-                value: '/api/media',
-              },
-            },
-            {
-              path: {
-                type: 'PathPrefix',
-                value: '/api/map',
+                value: '/api',
               },
             },
           ],
