@@ -49,6 +49,12 @@ valkey:
     existingSecret: "netbox"
     existingSecretPasswordKey: valkey_password
   primary:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 16Mi
+      limits:
+        memory: 256Mi
     persistence:
       storageClass: "longhorn-local"
       size: 2Gi
@@ -60,6 +66,12 @@ valkey:
             - key: storage.walnuts.dev/slow
               operator: DoesNotExist
   replica:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 16Mi
+      limits:
+        memory: 256Mi
     persistence:
       storageClass: "longhorn-local"
       size: 2Gi
