@@ -121,11 +121,11 @@ gateway:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: 95
+    targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 5m
+      cpu: 10m
       memory: 20Mi
     limits:
       cpu: 100m
@@ -178,11 +178,11 @@ ingester:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: 95
+    targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 20m
+      cpu: 50m
       memory: 630Mi
     limits:
       cpu: 1
@@ -209,11 +209,11 @@ distributor:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: 95
+    targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 70m
+      cpu: 80m
       memory: 260Mi
     limits:
       cpu: 2
@@ -238,11 +238,11 @@ querier:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: 95
+    targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 15m
+      cpu: 30m
       memory: 455Mi
     limits:
       cpu: 2
@@ -267,11 +267,11 @@ queryFrontend:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: 95
+    targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 5m
+      cpu: 10m
       memory: 120Mi
     limits:
       cpu: 1
@@ -416,14 +416,13 @@ bloomBuilder:
     enabled: true
     minReplicas: 1
     maxReplicas: 3
-    targetCPUUtilizationPercentage: 95
+    targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 3m
+      cpu: 10m
       memory: 95Mi
     limits:
-      cpu: 1
       memory: 512Mi
   topologySpreadConstraints:
   - maxSkew: 1
