@@ -1,15 +1,25 @@
 replicaCount: 1
 
 rbac:
-  create: true
-  helm: true
-  secrets: true
-  viewRBAC: true
-  podExec: true
-  portForward: true
+  create: false
 
 serviceAccount:
   create: true
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 65532
+  capabilities:
+    drop:
+    - ALL
 
 httpRoute:
   enabled: true

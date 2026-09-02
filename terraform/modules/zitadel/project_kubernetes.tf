@@ -18,6 +18,20 @@ resource "zitadel_user_grant" "walnuts_kubernetes_cluster_admin" {
   role_keys  = [zitadel_project_role.kubernetes_cluster_admin.role_key]
 }
 
+resource "zitadel_project_role" "kubernetes_radar_operator" {
+  org_id       = zitadel_org.ZITADEL.id
+  project_id   = zitadel_project.kubernetes.id
+  role_key     = "radar-operator"
+  display_name = "Radar dashboard operator (scoped, non-admin)"
+}
+
+resource "zitadel_user_grant" "walnuts_kubernetes_radar_operator" {
+  org_id     = zitadel_org.ZITADEL.id
+  project_id = zitadel_project.kubernetes.id
+  user_id    = local.zitadel_human_user_ids.walnuts
+  role_keys  = [zitadel_project_role.kubernetes_radar_operator.role_key]
+}
+
 output "kubernetes_oidc_issuer_audience" {
   value       = nonsensitive(zitadel_project.kubernetes.id)
   description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy (passed to --oidc-client-id)"
