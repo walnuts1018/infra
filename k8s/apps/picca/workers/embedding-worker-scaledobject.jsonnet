@@ -5,14 +5,14 @@ local worker = import 'embedding-worker.jsonnet';
   kind: 'ScaledObject',
   metadata: { name: worker.metadata.name, namespace: app.namespace },
   spec: {
-    pollingInterval: 1,
+    pollingInterval: 5,
     minReplicaCount: 0,
     maxReplicaCount: 4,
     scaleTargetRef: { name: worker.metadata.name },
     triggers: [{
       type: 'rabbitmq',
       metricType: 'Value',
-      metadata: { protocol: 'http', queueName: 'picca.embedding-processing', mode: 'ExpectedQueueConsumptionTime', value: '60' },
+      metadata: { protocol: 'http', queueName: 'picca.embedding-processing', mode: 'QueueLength', value: '1' },
       authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
     }],
   },

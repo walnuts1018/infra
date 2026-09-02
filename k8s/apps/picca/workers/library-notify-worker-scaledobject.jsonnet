@@ -5,7 +5,7 @@ local worker = import 'library-notify-worker.jsonnet';
   kind: 'ScaledObject',
   metadata: { name: worker.metadata.name, namespace: app.namespace },
   spec: {
-    pollingInterval: 1,
+    pollingInterval: 5,
     minReplicaCount: 0,
     maxReplicaCount: 4,
     scaleTargetRef: { name: worker.metadata.name },
@@ -13,13 +13,13 @@ local worker = import 'library-notify-worker.jsonnet';
       {
         type: 'rabbitmq',
         metricType: 'Value',
-        metadata: { protocol: 'http', queueName: 'picca.library-auto-stack', mode: 'ExpectedQueueConsumptionTime', value: '30' },
+        metadata: { protocol: 'http', queueName: 'picca.library-auto-stack', mode: 'QueueLength', value: '1' },
         authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
       },
       {
         type: 'rabbitmq',
         metricType: 'Value',
-        metadata: { protocol: 'http', queueName: 'picca.media-processing-notification', mode: 'ExpectedQueueConsumptionTime', value: '30' },
+        metadata: { protocol: 'http', queueName: 'picca.media-processing-notification', mode: 'QueueLength', value: '1' },
         authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
       },
     ],

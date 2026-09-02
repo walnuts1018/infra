@@ -5,14 +5,14 @@ local worker = import 'stack-timeline-worker.jsonnet';
   kind: 'ScaledObject',
   metadata: { name: worker.metadata.name, namespace: app.namespace },
   spec: {
-    pollingInterval: 1,
+    pollingInterval: 5,
     minReplicaCount: 0,
     maxReplicaCount: 8,
     scaleTargetRef: { name: worker.metadata.name },
     triggers: [{
       type: 'rabbitmq',
       metricType: 'Value',
-      metadata: { protocol: 'http', queueName: 'picca.stack-timeline', mode: 'ExpectedQueueConsumptionTime', value: '30' },
+      metadata: { protocol: 'http', queueName: 'picca.stack-timeline', mode: 'QueueLength', value: '1' },
       authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
     }],
   },
