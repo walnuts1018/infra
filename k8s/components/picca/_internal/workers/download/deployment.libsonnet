@@ -52,7 +52,7 @@ function(app)
               ],
               resources: {
                 requests: {
-                  cpu: '500m',
+                  cpu: '300m',
                   memory: '512Mi',
                 },
                 limits: {
