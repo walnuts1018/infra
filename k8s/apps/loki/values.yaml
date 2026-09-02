@@ -271,8 +271,8 @@ queryFrontend:
     targetMemoryUtilizationPercentage: null
   resources:
     requests:
-      cpu: 10m
-      memory: 120Mi
+      cpu: 20m
+      memory: 100Mi
     limits:
       cpu: 1
       memory: 512Mi
