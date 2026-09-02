@@ -135,7 +135,7 @@ function(
     },
     autoscaler: {
       minReplicas: 1,
-      maxReplicas: 10,
+      maxReplicas: 5,
       targetMemoryUtilization: 100,
     },
     resources: {

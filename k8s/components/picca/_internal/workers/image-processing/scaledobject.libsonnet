@@ -7,7 +7,7 @@ function(app)
     spec: {
       pollingInterval: 5,
       minReplicaCount: 0,
-      maxReplicaCount: 8,
+      maxReplicaCount: 4,
       scaleTargetRef: { name: worker.metadata.name },
       triggers: [
         {
