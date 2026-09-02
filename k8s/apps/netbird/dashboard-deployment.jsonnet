@@ -61,8 +61,13 @@ local app = import 'app.json5';
             protocol: 'TCP',
           }],
           resources: {
-            requests: { cpu: '20m', memory: '64Mi' },
-            limits: { cpu: '500m', memory: '256Mi' },
+            requests: {
+              cpu: '10m',
+              memory: '64Mi',
+            },
+            limits: {
+              memory: '256Mi',
+            },
           },
         }],
       },

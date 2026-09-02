@@ -84,11 +84,10 @@ local app = import 'app.json5';
             },
             resources: {
               requests: {
-                cpu: '20m',
+                cpu: '10m',
                 memory: '64Mi',
               },
               limits: {
-                cpu: '500m',
                 memory: '256Mi',
               },
             },

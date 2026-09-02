@@ -60,12 +60,11 @@ local app = import 'app.json5';
           },
           resources: {
             requests: {
-              cpu: '50m',
-              memory: '256Mi',
+              cpu: '10m',
+              memory: '32Mi',
             },
             limits: {
-              cpu: '1',
-              memory: '1Gi',
+              memory: '256Mi',
             },
           },
           volumeMounts: [
