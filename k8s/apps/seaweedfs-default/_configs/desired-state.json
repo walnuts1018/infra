@@ -11,10 +11,20 @@
       "publicRead": [],
       "cors": [
         {
-          "allowedOrigins": ["https://picca.walnuts.dev"],
-          "allowedMethods": ["GET", "PUT", "HEAD"],
-          "allowedHeaders": ["Content-Type"],
-          "exposeHeaders": ["ETag"],
+          "allowedOrigins": [
+            "https://picca.walnuts.dev"
+          ],
+          "allowedMethods": [
+            "GET",
+            "PUT",
+            "HEAD"
+          ],
+          "allowedHeaders": [
+            "Content-Type"
+          ],
+          "exposeHeaders": [
+            "ETag"
+          ],
           "maxAgeSeconds": 3600
         }
       ]
@@ -24,10 +34,20 @@
       "publicRead": [],
       "cors": [
         {
-          "allowedOrigins": ["https://picca-dev.walnuts.dev"],
-          "allowedMethods": ["GET", "PUT", "HEAD"],
-          "allowedHeaders": ["Content-Type"],
-          "exposeHeaders": ["ETag"],
+          "allowedOrigins": [
+            "https://picca-dev.walnuts.dev"
+          ],
+          "allowedMethods": [
+            "GET",
+            "PUT",
+            "HEAD"
+          ],
+          "allowedHeaders": [
+            "Content-Type"
+          ],
+          "exposeHeaders": [
+            "ETag"
+          ],
           "maxAgeSeconds": 3600
         }
       ]
@@ -79,10 +99,6 @@
       "publicRead": [
         "*"
       ]
-    },
-    {
-      "name": "picca-ai-prototype",
-      "publicRead": []
     },
     {
       "name": "pyroscope",
@@ -266,16 +282,6 @@
             "claim": "sub",
             "value": "system:serviceaccount:maps:maps-updater",
             "role": "maps"
-          },
-          {
-            "claim": "sub",
-            "value": "system:serviceaccount:picca-ai-prototype:picca-ai-prototype-gateway",
-            "role": "picca-ai-prototype-gateway"
-          },
-          {
-            "claim": "sub",
-            "value": "system:serviceaccount:picca-ai-prototype:picca-ai-prototype-debug-web",
-            "role": "picca-ai-prototype-debug-web"
           },
           {
             "claim": "sub",
@@ -477,55 +483,6 @@
         ]
       },
       {
-        "name": "picca-ai-prototype-debug-web",
-        "statements": [
-          {
-            "effect": "Allow",
-            "actions": [
-              "s3:ListBucket"
-            ],
-            "resources": [
-              "picca-ai-prototype"
-            ]
-          },
-          {
-            "effect": "Allow",
-            "actions": [
-              "s3:GetObject",
-              "s3:PutObject"
-            ],
-            "resources": [
-              "picca-ai-prototype",
-              "picca-ai-prototype/*"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "picca-ai-prototype-gateway",
-        "statements": [
-          {
-            "effect": "Allow",
-            "actions": [
-              "s3:ListBucket"
-            ],
-            "resources": [
-              "picca-ai-prototype"
-            ]
-          },
-          {
-            "effect": "Allow",
-            "actions": [
-              "s3:GetObject"
-            ],
-            "resources": [
-              "picca-ai-prototype",
-              "picca-ai-prototype/*"
-            ]
-          }
-        ]
-      },
-      {
         "name": "pyroscope",
         "statements": [
           {
@@ -638,20 +595,6 @@
         "name": "cloudnative-pg-backup",
         "policies": [
           "cloudnative-pg-backup"
-        ],
-        "provider": "k8s"
-      },
-      {
-        "name": "picca-ai-prototype-gateway",
-        "policies": [
-          "picca-ai-prototype-gateway"
-        ],
-        "provider": "k8s"
-      },
-      {
-        "name": "picca-ai-prototype-debug-web",
-        "policies": [
-          "picca-ai-prototype-debug-web"
         ],
         "provider": "k8s"
       },

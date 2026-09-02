@@ -142,8 +142,6 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **mucaron**: 音楽アプリ
 - **oekaki-dengon-game**: NF2023で開催したお絵描き伝言ゲーム / <https://oekaki.walnuts.dev/public>
 - **openchokin**: 家計簿アプリ
-- **picca-ai-prototype**
-- **picca-ai-prototype-qdrant**
 - **prfexample**
 - **stalwart**
 - **ubuntu-test**: テスト・デバッグ用のコンテナ
