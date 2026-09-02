@@ -11,8 +11,8 @@ function(app)
       scaleTargetRef: { name: worker.metadata.name },
       triggers: [{
         type: 'rabbitmq',
-        metricType: 'Value',
-        metadata: { protocol: 'http', queueName: 'picca.stack-timeline', mode: 'QueueLength', value: '1' },
+        metricType: 'AverageValue',
+        metadata: { protocol: 'http', queueName: 'picca.stack-timeline', mode: 'QueueLength', value: '4' },
         authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
       }],
     },

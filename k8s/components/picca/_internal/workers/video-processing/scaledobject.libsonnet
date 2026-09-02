@@ -12,8 +12,8 @@ function(app)
       triggers: [
         {
           type: 'rabbitmq',
-          metricType: 'Value',
-          metadata: { protocol: 'http', queueName: 'picca.video-processing', mode: 'QueueLength', value: '1' },
+          metricType: 'AverageValue',
+          metadata: { protocol: 'http', queueName: 'picca.video-processing', mode: 'QueueLength', value: '4' },
           authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
         },
       ],

@@ -11,7 +11,7 @@ function(app)
       scaleTargetRef: { name: worker.metadata.name },
       triggers: [{
         type: 'rabbitmq',
-        metricType: 'Value',
+        metricType: 'AverageValue',
         metadata: {
           protocol: 'http',
           queueName: 'picca.video-transcode',

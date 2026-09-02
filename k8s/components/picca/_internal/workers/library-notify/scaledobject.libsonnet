@@ -12,14 +12,14 @@ function(app)
       triggers: [
         {
           type: 'rabbitmq',
-          metricType: 'Value',
-          metadata: { protocol: 'http', queueName: 'picca.library-auto-stack', mode: 'QueueLength', value: '1' },
+          metricType: 'AverageValue',
+          metadata: { protocol: 'http', queueName: 'picca.library-auto-stack', mode: 'QueueLength', value: '2' },
           authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
         },
         {
           type: 'rabbitmq',
-          metricType: 'Value',
-          metadata: { protocol: 'http', queueName: 'picca.media-processing-notification', mode: 'QueueLength', value: '1' },
+          metricType: 'AverageValue',
+          metadata: { protocol: 'http', queueName: 'picca.media-processing-notification', mode: 'QueueLength', value: '4' },
           authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
         },
       ],
