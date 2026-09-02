@@ -11,7 +11,7 @@
         { name: 'Referrer-Policy', value: 'no-referrer' },
         {
           name: 'Permissions-Policy',
-          value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=()',
+          value: 'camera=(), microphone=(), geolocation=(self), payment=(), usb=(), serial=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=()',
         },
       ],
     },
