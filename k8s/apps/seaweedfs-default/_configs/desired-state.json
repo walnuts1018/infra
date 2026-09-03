@@ -58,7 +58,10 @@
     },
     {
       "name": "gha-cache",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "replication": "000"
+      }
     },
     {
       "name": "ipu",
@@ -70,7 +73,11 @@
     },
     {
       "name": "loki-chunks",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "diskType": "hdd",
+        "replication": "000"
+      }
     },
     {
       "name": "loki-ruler",
@@ -102,7 +109,11 @@
     },
     {
       "name": "pyroscope",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "diskType": "hdd",
+        "replication": "000"
+      }
     },
     {
       "name": "stalwart",
@@ -110,11 +121,18 @@
     },
     {
       "name": "tempo",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "diskType": "hdd",
+        "replication": "000"
+      }
     },
     {
       "name": "visual-regression-tracker",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "replication": "000"
+      }
     }
   ],
   "accessKeyIdentities": [

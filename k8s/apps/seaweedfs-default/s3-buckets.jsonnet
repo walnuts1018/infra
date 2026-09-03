@@ -16,7 +16,9 @@ local config = import 'config.libsonnet';
       objectLock: bucket.objectLock,
       reclaimPolicy: bucket.reclaimPolicy,
       versioning: bucket.versioning,
-    },
+    } + if std.objectHas(bucket, 'placement') then {
+      placement: bucket.placement,
+    } else {},
   }
   for bucket in config.buckets
 ]
