@@ -13,7 +13,8 @@
       "name": "picca",
       "publicRead": [],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       },
       "cors": [
         {
@@ -39,7 +40,8 @@
       "name": "picca-dev",
       "publicRead": [],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       },
       "cors": [
         {
@@ -65,7 +67,8 @@
       "name": "cloudnative-pg-backup",
       "publicRead": [],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       }
     },
     {
@@ -80,14 +83,16 @@
       "name": "ipu",
       "publicRead": [],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       }
     },
     {
       "name": "loki-admin",
       "publicRead": [],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       }
     },
     {
@@ -102,14 +107,16 @@
       "name": "loki-ruler",
       "publicRead": [],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       }
     },
     {
       "name": "maps",
       "publicRead": [],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       }
     },
     {
@@ -118,21 +125,24 @@
         "files/*"
       ],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       }
     },
     {
       "name": "netbox-media",
       "publicRead": [],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       }
     },
     {
       "name": "netbox-scripts",
       "publicRead": [],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       }
     },
     {
@@ -141,7 +151,8 @@
         "*"
       ],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       }
     },
     {
@@ -156,7 +167,8 @@
       "name": "stalwart",
       "publicRead": [],
       "placement": {
-        "diskType": "ssd"
+        "diskType": "ssd",
+        "replication": "001"
       }
     },
     {
