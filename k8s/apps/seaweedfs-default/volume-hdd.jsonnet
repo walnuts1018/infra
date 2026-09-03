@@ -111,7 +111,7 @@ local componentLabels = labels(app.name) + {
               resources: {
                 requests: {
                   cpu: '10m',
-                  memory: '400Mi',
+                  memory: '10Mi',
                 },
                 limits: {
                   memory: '2Gi',
