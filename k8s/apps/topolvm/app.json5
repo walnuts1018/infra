@@ -1,0 +1,7 @@
+{
+  name: "topolvm",
+  namespace: "topolvm-system",
+  clusters: {
+    kurumi: {},
+  },
+}

@@ -1,0 +1,134 @@
+useLegacy: false
+
+cert-manager:
+  enabled: false
+
+scheduler:
+  enabled: false
+
+webhook:
+  certManager: true
+  # Storage Capacity Trackingを使うので不要
+  podMutatingWebhook:
+    enabled: false
+
+lvmd:
+  managed: true
+  nodeSelector:
+    topolvm.io/lvmd-config: rusk
+  deviceClasses:
+  - name: hdd-0
+    volume-group: hdd-0
+    spare-gb: 10
+    default: true
+  - name: hdd-1
+    volume-group: hdd-1
+    spare-gb: 10
+    default: false
+  prometheus:
+    podMonitor:
+      enabled: true
+  additionalConfigs: []
+  # additionalConfigs:
+  #   - nodeSelector:
+  #       topolvm.io/lvmd-config: cake
+  #     deviceClasses:
+  #       - name: hdd-0
+  #         volume-group: hdd-0
+  #         spare-gb: 10
+  #         default: true
+
+controller:
+  replicaCount: 1
+  podDisruptionBudget:
+    enabled: true
+  prometheus:
+    podMonitor:
+      enabled: true
+
+node:
+  lvmdEmbedded: false
+  nodeSelector:
+    topolvm.io/enabled: "true"
+  kubeletWorkDirectory: /var/lib/kubelet
+  prometheus:
+    podMonitor:
+      enabled: true
+
+storageClasses:
+- name: topolvm-hdd-0
+  storageClass:
+    fsType: xfs
+    reclaimPolicy: Retain
+    isDefaultClass: false
+    volumeBindingMode: WaitForFirstConsumer
+    allowVolumeExpansion: true
+    additionalParameters:
+      "topolvm.io/device-class": hdd-0
+    mountOptions:
+    - noatime
+- name: topolvm-hdd-1
+  storageClass:
+    fsType: xfs
+    reclaimPolicy: Retain
+    isDefaultClass: false
+    volumeBindingMode: WaitForFirstConsumer
+    allowVolumeExpansion: true
+    additionalParameters:
+      "topolvm.io/device-class": hdd-1
+    mountOptions:
+    - noatime
+
+# TODO: PVレベルでバックアップが必要になったら有効化する
+snapshot:
+  enabled: false
+
+resources:
+  topolvm_node:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 128Mi
+  csi_registrar:
+    requests:
+      cpu: 5m
+      memory: 16Mi
+    limits:
+      memory: 64Mi
+  liveness_probe:
+    requests:
+      cpu: 2m
+      memory: 8Mi
+    limits:
+      memory: 32Mi
+  topolvm_controller:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 128Mi
+  csi_provisioner:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 128Mi
+  csi_resizer:
+    requests:
+      cpu: 5m
+      memory: 16Mi
+    limits:
+      memory: 64Mi
+  csi_snapshotter:
+    requests:
+      cpu: 5m
+      memory: 16Mi
+    limits:
+      memory: 64Mi
+  lvmd:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 128Mi
