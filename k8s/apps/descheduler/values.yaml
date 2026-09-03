@@ -72,11 +72,24 @@ deschedulerPolicy:
         includingInitContainers: true
     - name: PodLifeTime
       args:
+        maxPodLifeTimeSeconds: 86400
+        includingInitContainers: true
         states:
         - Succeeded
         - Failed
         - Unknown
-        - ContainerStatusUnknown
+        - Completed
+        - Error
+        - Evicted
+        - CrashLoopBackOff
+        - ImagePullBackOff
+        - ErrImagePull
+        - CreateContainerConfigError
+        - CreateContainerError
+        - InvalidImageName
+        - OOMKilled
+        - ContainerCannotRun
+        - StartError
 
   - name: actual-usage
     plugins:
