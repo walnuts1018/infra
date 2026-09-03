@@ -2,6 +2,9 @@
   "bucketDefaults": {
     "adoptExisting": true,
     "objectLock": false,
+    "placement": {
+      "diskType": "ssd"
+    },
     "reclaimPolicy": "Retain",
     "versioning": "Off"
   },
@@ -60,6 +63,7 @@
       "name": "gha-cache",
       "publicRead": [],
       "placement": {
+        "diskType": "ssd",
         "replication": "000"
       }
     },
@@ -131,6 +135,7 @@
       "name": "visual-regression-tracker",
       "publicRead": [],
       "placement": {
+        "diskType": "ssd",
         "replication": "000"
       }
     }
