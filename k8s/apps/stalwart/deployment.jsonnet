@@ -1,7 +1,7 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local configMap = import 'configmap.jsonnet';
-local secret = (import 's3-credentials-secret.jsonnet');
+local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonnet')('stalwart');
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -74,8 +74,8 @@ local secret = (import 's3-credentials-secret.jsonnet');
                 name: 'STALWART_S3_ACCESS_KEY',
                 valueFrom: {
                   secretKeyRef: {
-                    name: secret.metadata.name,
-                    key: secret.data.accessKey,
+                    name: s3Credentials.secretName,
+                    key: s3Credentials.accessKeyField,
                   },
                 },
               },
@@ -83,8 +83,8 @@ local secret = (import 's3-credentials-secret.jsonnet');
                 name: 'STALWART_S3_SECRET_KEY',
                 valueFrom: {
                   secretKeyRef: {
-                    name: secret.metadata.name,
-                    key: secret.data.secretKey,
+                    name: s3Credentials.secretName,
+                    key: s3Credentials.secretKeyField,
                   },
                 },
               },
