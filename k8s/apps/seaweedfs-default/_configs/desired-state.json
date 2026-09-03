@@ -3,7 +3,8 @@
     "adoptExisting": true,
     "objectLock": false,
     "placement": {
-      "diskType": "ssd"
+      "diskType": "ssd",
+      "replication": "001"
     },
     "reclaimPolicy": "Retain",
     "versioning": "Off"
