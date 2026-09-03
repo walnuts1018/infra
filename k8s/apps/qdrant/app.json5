@@ -1,6 +1,6 @@
 {
-  name: 'qdrant',
-  namespace: 'qdrant',
+  name: "qdrant",
+  namespace: "qdrant",
   clusters: {
     kurumi: {},
   },
