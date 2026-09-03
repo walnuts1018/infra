@@ -134,7 +134,7 @@ local componentLabels = labels(app.name) + {
           },
           spec: {
             accessModes: ['ReadWriteOnce'],
-            storageClassName: 'topolvm-rusk-hdd-0',
+            storageClassName: 'topolvm-hdd',
             resources: {
               requests: {
                 storage: '256Gi',

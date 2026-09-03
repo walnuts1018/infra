@@ -52,7 +52,7 @@ vmstorage:
   retentionPeriod: 1y
   persistentVolume:
     enabled: true
-    storageClassName: "topolvm-rusk-hdd-1"
+    storageClassName: "topolvm-hdd"
     size: 128Gi
   resources:
     requests:

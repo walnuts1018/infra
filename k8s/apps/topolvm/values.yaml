@@ -17,25 +17,25 @@ lvmd:
   nodeSelector:
     topolvm.io/lvmd-config: rusk
   deviceClasses:
-  - name: rusk-hdd-0
-    volume-group: hdd-0
+  - name: hdd
+    volume-group: hdd
     spare-gb: 10
     default: true
-  - name: rusk-hdd-1
-    volume-group: hdd-1
-    spare-gb: 10
-    default: false
+    lvcreate-options:
+    - --alloc=normal
   prometheus:
     podMonitor:
       enabled: true
   additionalConfigs: []
-  #   - nodeSelector:
-  #       topolvm.io/lvmd-config: cake
-  #     deviceClasses:
-  #       - name: cake-hdd-0
-  #         volume-group: hdd-0
-  #         spare-gb: 10
-  #         default: true
+  # - nodeSelector:
+  #     topolvm.io/lvmd-config: cake
+  #   deviceClasses:
+  #   - name: hdd
+  #     volume-group: hdd
+  #     spare-gb: 10
+  #     default: true
+  #     lvcreate-options:
+  #     - --alloc=normal
 
 controller:
   replicaCount: 1
@@ -55,7 +55,7 @@ node:
       enabled: true
 
 storageClasses:
-- name: topolvm-rusk-hdd-0
+- name: topolvm-hdd
   storageClass:
     fsType: xfs
     reclaimPolicy: Retain
@@ -63,18 +63,7 @@ storageClasses:
     volumeBindingMode: WaitForFirstConsumer
     allowVolumeExpansion: true
     additionalParameters:
-      "topolvm.io/device-class": rusk-hdd-0
-    mountOptions:
-    - noatime
-- name: topolvm-rusk-hdd-1
-  storageClass:
-    fsType: xfs
-    reclaimPolicy: Retain
-    isDefaultClass: false
-    volumeBindingMode: WaitForFirstConsumer
-    allowVolumeExpansion: true
-    additionalParameters:
-      "topolvm.io/device-class": rusk-hdd-1
+      "topolvm.io/device-class": hdd
     mountOptions:
     - noatime
 
