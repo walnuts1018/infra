@@ -7,7 +7,7 @@ defaultSettings:
   snapshotDataIntegrityImmediateCheckAfterSnapshotCreation: false
   snapshotDataIntegrityCronjob: "5 18 */7 * *"
   replicaAutoBalance: disabled
-  guaranteedInstanceManagerCPU: 1
+  guaranteedInstanceManagerCPU: 0 # 無効化
   systemManagedCSIComponentsResourceLimits: |
     {
       "csi-attacher": {
