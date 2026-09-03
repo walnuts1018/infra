@@ -84,6 +84,13 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
       // local-pathはPVCの容量上限が機能しないので、Nodeのストレージを埋めすぎないように設定しておく
       minFreeSpacePercent: 10,
       metricsPort: 9327,
+      tolerations: [
+        {
+          key: 'node.kubernetes.io/disk-pressure',
+          operator: 'Exists',
+          effect: 'NoSchedule',
+        },
+      ],
       affinity: {
         local labels = {
           'app.kubernetes.io/component': 'volume',
