@@ -74,6 +74,9 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         memory: '2Gi',
       },
       storageClassName: 'local-path',
+      extraArgs: [
+        '-disk=ssd',
+      ],
       // PVのサイズとは関係なく、maxVolumeCounts×volumeSizeLimitMBが1ノードあたりの最大ストレージ容量になる
       // 0にすると自動設定される、が、実際にはまだストレージが空いているのに「No matching data node found」が起こることがあったので手動調整することにする
       // 1000という数字にはあまり根拠がない
