@@ -12,6 +12,9 @@
     {
       "name": "picca",
       "publicRead": [],
+      "placement": {
+        "diskType": "ssd"
+      },
       "cors": [
         {
           "allowedOrigins": [
@@ -35,6 +38,9 @@
     {
       "name": "picca-dev",
       "publicRead": [],
+      "placement": {
+        "diskType": "ssd"
+      },
       "cors": [
         {
           "allowedOrigins": [
@@ -57,7 +63,10 @@
     },
     {
       "name": "cloudnative-pg-backup",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd"
+      }
     },
     {
       "name": "gha-cache",
@@ -69,11 +78,17 @@
     },
     {
       "name": "ipu",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd"
+      }
     },
     {
       "name": "loki-admin",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd"
+      }
     },
     {
       "name": "loki-chunks",
@@ -85,31 +100,49 @@
     },
     {
       "name": "loki-ruler",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd"
+      }
     },
     {
       "name": "maps",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd"
+      }
     },
     {
       "name": "misskey",
       "publicRead": [
         "files/*"
-      ]
+      ],
+      "placement": {
+        "diskType": "ssd"
+      }
     },
     {
       "name": "netbox-media",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd"
+      }
     },
     {
       "name": "netbox-scripts",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd"
+      }
     },
     {
       "name": "oekaki-dengon-game",
       "publicRead": [
         "*"
-      ]
+      ],
+      "placement": {
+        "diskType": "ssd"
+      }
     },
     {
       "name": "pyroscope",
@@ -121,7 +154,10 @@
     },
     {
       "name": "stalwart",
-      "publicRead": []
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd"
+      }
     },
     {
       "name": "tempo",
