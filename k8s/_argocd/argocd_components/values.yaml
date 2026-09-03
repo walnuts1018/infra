@@ -113,7 +113,7 @@ server:
   autoscaling:
     enabled: true
     minReplicas: 1
-    maxReplicas: 5
+    maxReplicas: 3
     targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: 10000 # memoryによるHPAを無効化するために大きな値を設定
   resources:
@@ -132,7 +132,7 @@ repoServer:
   autoscaling:
     enabled: true
     minReplicas: 1
-    maxReplicas: 5
+    maxReplicas: 3
     targetCPUUtilizationPercentage: 100
     targetMemoryUtilizationPercentage: 10000 # memoryによるHPAを無効化するために大きな値を設定
   resources:
