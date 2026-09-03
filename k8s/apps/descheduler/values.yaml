@@ -70,6 +70,14 @@ deschedulerPolicy:
       args:
         podRestartThreshold: 100
         includingInitContainers: true
+    - name: PodLifeTime
+      args:
+        states:
+        - Succeeded
+        - Failed
+        - Unknown
+        - ContainerStatusUnknown
+
   - name: actual-usage
     plugins:
       balance:
