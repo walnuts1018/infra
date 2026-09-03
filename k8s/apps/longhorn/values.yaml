@@ -7,6 +7,32 @@ defaultSettings:
   snapshotDataIntegrityImmediateCheckAfterSnapshotCreation: false
   snapshotDataIntegrityCronjob: "5 18 */7 * *"
   replicaAutoBalance: disabled
+  guaranteedInstanceManagerCPU: 1
+  systemManagedCSIComponentsResourceLimits: |
+    {
+      "csi-attacher": {
+        "requests": {"cpu": "10m", "memory": "64Mi"}
+      },
+      "csi-provisioner": {
+        "requests": {"cpu": "10m", "memory": "64Mi"}
+      },
+      "csi-resizer": {
+        "requests": {"cpu": "10m", "memory": "32Mi"}
+      },
+      "csi-snapshotter": {
+        "requests": {"cpu": "50m", "memory": "64Mi"}
+      },
+      "longhorn-csi-plugin": {
+        "requests": {"cpu": "30m", "memory": "128Mi"}
+      },
+      "node-driver-registrar": {
+        "requests": {"cpu": "10m", "memory": "16Mi"}
+      },
+      "longhorn-liveness-probe": {
+        "requests": {"cpu": "10m", "memory": "32Mi"}
+      }
+    }
+
 csi:
   attacherReplicaCount: 2
   provisionerReplicaCount: 2
@@ -37,8 +63,7 @@ defaultBackupStore:
 longhornManager:
   resources:
     requests:
-      cpu: 200m
-      memory: 512Mi
+      cpu: 100m
+      memory: 256Mi
     limits:
-      cpu: 2
       memory: 4Gi
