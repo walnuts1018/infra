@@ -48,12 +48,12 @@ vminsert:
 
 vmstorage:
   enabled: true
-  replicaCount: 2
+  replicaCount: 1
   retentionPeriod: 1y
   persistentVolume:
     enabled: true
-    storageClassName: "local-path"
-    size: 10Gi
+    storageClassName: "topolvm-rusk-hdd-1"
+    size: 128Gi
   resources:
     requests:
       cpu: 50m
