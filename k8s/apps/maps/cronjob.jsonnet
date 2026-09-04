@@ -33,7 +33,7 @@ local updaterSa = import 'updater-sa.jsonnet';
             initContainers: [
               (container) {
                 name: 'rclone-sync',
-                image: 'ghcr.io/rclone/rclone:1.75.0',
+                image: 'ghcr.io/rclone/rclone:1.75.1',
                 command: ['rclone'],
                 args: [
                   '--config=/config/rclone.conf',
