@@ -44,8 +44,8 @@ hubble:
         enabled: true
     resources:
       requests:
-        cpu: 1m
-        memory: 80Mi
+        cpu: 5m
+        memory: 48Mi
       limits:
         memory: 512Mi
   ui:
@@ -53,7 +53,7 @@ hubble:
     backend:
       resources:
         requests:
-          cpu: 1m
+          cpu: 5m
           memory: 60Mi
         limits:
           memory: 256Mi
@@ -91,16 +91,17 @@ envoy:
       cpu: 10m
       memory: 51Mi
 operator:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 60Mi
+    limits:
+      memory: 512Mi
   prometheus:
     enabled: true
     serviceMonitor:
       enabled: true
-  resources:
-    requests:
-      cpu: 2m
-      memory: 51Mi
-    limits:
-      memory: 512Mi
 prometheus:
   enabled: true
   serviceMonitor:
