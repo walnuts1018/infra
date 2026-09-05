@@ -1,0 +1,54 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: cert-manager-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: cert-manager
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: cert-manager
+    helm:
+      releaseName: cert-manager
+      valuesObject:
+        cainjector:
+          resources:
+            requests:
+              cpu: 1m
+              memory: 140Mi
+        config:
+          featureGates:
+            ExperimentalGatewayAPISupport: true
+        extraArgs:
+          - --dns01-recursive-nameservers=1.1.1.1:53,1.0.0.1:53
+          - --dns01-recursive-nameservers-only
+        installCRDs: true
+        prometheus:
+          enabled: true
+          servicemonitor:
+            enabled: true
+        resources:
+          requests:
+            cpu: 1m
+            memory: 60Mi
+        tolerations:
+          - key: node.walnuts.dev/low-performance
+            operator: Exists
+        webhook:
+          resources:
+            requests:
+              cpu: 1m
+              memory: 50Mi
+    repoURL: https://charts.jetstack.io
+    targetRevision: v1.21.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

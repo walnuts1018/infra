@@ -1,0 +1,76 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: local-path-storage-external
+  namespace: argocd
+spec:
+  destination:
+    namespace: local-path-storage
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    kustomize:
+      patches:
+        - patch: |-
+            $patch: delete
+            apiVersion: v1
+            kind: Namespace
+            metadata:
+              name: local-path-storage
+        - patch: |
+            - op: add
+              path: /spec/template/spec/affinity
+              value:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                      - matchExpressions:
+                          - key: storage.walnuts.dev/slow
+                            operator: DoesNotExist
+          target:
+            group: apps
+            kind: Deployment
+            name: local-path-provisioner
+            version: v1
+        - patch: |
+            - op: replace
+              path: /data/config.json
+              value: |-
+                {
+                  "nodePathMap": [
+                    {
+                      "node": "DEFAULT_PATH_FOR_NON_LISTED_NODES",
+                      "paths": ["/opt/local-path-provisioner"]
+                    },
+                    {
+                      "node": "rusk",
+                      "paths": []
+                    }
+                  ]
+                }
+          target:
+            kind: ConfigMap
+            name: local-path-config
+            version: v1
+        - patch: |
+            - op: add
+              path: /allowedTopologies
+              value:
+                - matchLabelExpressions:
+                    - key: storage.walnuts.dev/fast
+                      values:
+                        - "true"
+          target:
+            group: storage.k8s.io
+            kind: StorageClass
+            name: local-path
+            version: v1
+    path: deploy
+    repoURL: https://github.com/rancher/local-path-provisioner
+    targetRevision: v0.0.32
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

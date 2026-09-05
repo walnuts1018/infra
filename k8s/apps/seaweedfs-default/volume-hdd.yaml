@@ -1,0 +1,106 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: seaweedfs-default
+    app.kubernetes.io/component: volume
+    app.kubernetes.io/name: seaweedfs-default-volume-hdd
+  name: seaweedfs-default-volume-hdd-peer
+  namespace: seaweedfs
+spec:
+  clusterIP: None
+  ports:
+    - name: volume-http
+      port: 8444
+      targetPort: volume-http
+    - name: volume-grpc
+      port: 18444
+      targetPort: volume-grpc
+    - name: metrics
+      port: 9327
+      targetPort: metrics
+  publishNotReadyAddresses: true
+  selector:
+    app: seaweedfs-default
+    app.kubernetes.io/component: volume
+    app.kubernetes.io/name: seaweedfs-default-volume-hdd
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: seaweedfs-default
+    app.kubernetes.io/component: volume
+    app.kubernetes.io/name: seaweedfs-default-volume-hdd
+  name: seaweedfs-default-volume-hdd
+  namespace: seaweedfs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seaweedfs-default
+      app.kubernetes.io/component: volume
+      app.kubernetes.io/name: seaweedfs-default-volume-hdd
+  serviceName: seaweedfs-default-volume-hdd-peer
+  template:
+    metadata:
+      labels:
+        app: seaweedfs-default
+        app.kubernetes.io/component: volume
+        app.kubernetes.io/name: seaweedfs-default-volume-hdd
+    spec:
+      containers:
+        - command:
+            - /bin/sh
+            - -ec
+            - weed -logtostderr=true volume -port=8444 -max=1000 -ip=$(POD_NAME).seaweedfs-default-volume-hdd-peer.seaweedfs -ip.bind=0.0.0.0 -mserver=seaweedfs-default-master-0.seaweedfs-default-master-peer.seaweedfs:9333,seaweedfs-default-master-1.seaweedfs-default-master-peer.seaweedfs:9333,seaweedfs-default-master-2.seaweedfs-default-master-peer.seaweedfs:9333 -dir=/data -disk=hdd -metricsPort=9327 -minFreeSpacePercent=10
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          image: chrislusf/seaweedfs:4.45_large_disk_full
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /status
+              port: volume-http
+            initialDelaySeconds: 20
+            periodSeconds: 30
+          name: volume
+          ports:
+            - containerPort: 8444
+              name: volume-http
+            - containerPort: 18444
+              name: volume-grpc
+            - containerPort: 9327
+              name: metrics
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /status
+              port: volume-http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 10m
+              memory: 10Mi
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      nodeSelector:
+        kubernetes.io/hostname: rusk
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 256Gi
+        storageClassName: topolvm-hdd

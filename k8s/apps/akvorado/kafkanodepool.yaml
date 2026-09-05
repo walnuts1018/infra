@@ -1,0 +1,35 @@
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaNodePool
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app: akvorado-kafka-pool
+    app.kubernetes.io/name: akvorado-kafka-pool
+    strimzi.io/cluster: akvorado-kafka
+  name: akvorado-kafka-pool
+  namespace: akvorado
+spec:
+  replicas: 1
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      cpu: 17m
+      memory: 1.5Gi
+  roles:
+    - broker
+    - controller
+  storage:
+    deleteClaim: false
+    size: 10Gi
+    type: persistent-claim
+  template:
+    pod:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: storage.walnuts.dev/slow
+                    operator: DoesNotExist

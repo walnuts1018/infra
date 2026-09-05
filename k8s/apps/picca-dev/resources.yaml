@@ -1,0 +1,613 @@
+apiVersion: v1
+data:
+  plans.yaml: |
+    plans:
+      - id: admin
+        name: Admin
+        storageLimitBytes: null # 無制限
+
+    assignmentRules:
+      - planId: admin
+        expression: >
+          "urn:zitadel:iam:org:project:roles" in userinfo &&
+          "picca-admin" in userinfo["urn:zitadel:iam:org:project:roles"]
+immutable: false
+kind: ConfigMap
+metadata:
+  labels:
+    app: picca-dev
+    app.kubernetes.io/name: picca-dev
+  name: picca-dev-plans
+  namespace: picca-dev
+---
+apiVersion: v1
+data:
+  ca.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIIFITCCAwmgAwIBAgIRAIKt5RN1QQspKFcXT8UxovIwDQYJKoZIhvcNAQENBQAw
+    KjEoMCYGA1UEAxMfc2N5bGxhLWNsdXN0ZXItbG9jYWwtc2VydmluZy1jYTAeFw0y
+    NTEyMTUwMjA3MDlaFw0zNTEyMTMwMjA3MTBaMCoxKDAmBgNVBAMTH3NjeWxsYS1j
+    bHVzdGVyLWxvY2FsLXNlcnZpbmctY2EwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAw
+    ggIKAoICAQCzOrot6lkztBRZTLwymGp8vX+fbuogJbJqoDBuu3HMKhE29XC4jVQh
+    P7AjJva4MKBQRIQb/Y2cW5av2lgQZ5hzaCBAYrzXpngbWmtsHB6tHRYiAYbmT5ty
+    b2b1Jm77LrYVNVsx10QCGCOQKsW6g0JpDEZKG/EzZZTw+iI3OqWvD9wpIMG0ZthL
+    7cDByxB0IvK+5t45ioypl1mqa/LQmukCa9Ik9b2mG3OvLyG4Ila+AEeRePsH+9H+
+    xeFimJp+Yuuv2bIVN89nxTL0voZlaD2QKJdDqhHqKUPr5XYTkoccdysnqhFoZfob
+    PypNxoQi11zrEdvff5BfLT2Jg74s1m3O2MYrMmNej8p2855ApDrt2lxSSHqCRP7x
+    9jTk2W4f6bbSQdhxxNCOjqPtppIbFv2XUdMjG92JgkCOLKgYHpydfMHMrXcs+Yvs
+    ZZMPQQwsvrQm4gWXQg+xtczyF8zEPdje1rxjo0iNkq2HyYqoJkVgSfaep39NFhFr
+    fo2ACpCCJNbRmE+h51i+1Qf/+Lpa0xnu4gPpEBunpjQ6IJHbb2EEk+9VAtmDCSa4
+    5bPoHGsaPAp+BbSdznEj43b+NWdJUJQbx4sGUpJSR4eobTFEYFKFU8myC5lvpeMK
+    tKMCwRRy0tTQrRlkKv4msjjHFfKErYLLro+AY3DKb8NuUcDq2KhgkwIDAQABo0Iw
+    QDAOBgNVHQ8BAf8EBAMCAqQwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUu2J3
+    ad9P0EKhE/LsLFKhHd/lXfgwDQYJKoZIhvcNAQENBQADggIBAG3CyTn64/uPPJCI
+    2veQBCfzzfzZX02eTlzPrDP0wEG6Y6tCfKdSF7ivTFt8wB5TiK78hTyftSe2Me/V
+    Dyz5sRmZZXIF5gfjExFRXQW37i9I8owFG5SeD1AT4R3W8vL2SXaT1wDstNYcpD1D
+    s/ajC5CYIo6uZ5GFEHniLFzr0VCgAFA7rNQDjdRdr/1lPPHDtBh74ADk6WyndJh0
+    dLZFA2kXzijwSusbBoHd81gyQ2moLThHwjUubqx5e06y6y0FGiFowG4PWn+HzW69
+    GtnK8Ts10/iXNkg2Dy1sX1SFhNS+D6riT2urLyI0yLLABrDHba3FRvf5h3+x1Uar
+    GxgVgDWxhaL6P805RpfD6PYwdZaDHJtRIRG83nCcxhb6TptmmYPHGLtX1nDGIDao
+    Vlnl2ARf1zG1+QhWfYoPm8jyRu4TI4E1vvd537osmfIdN9faiU1UA5ghTNfI2XnC
+    Z7vUQb566qtnhQehl5hqjcVkCwVViKCZWYE8E97VlMAcFz8l2sdhrXNHgBwCQm/V
+    m94EMyjcZGyA0NZ5HOFz2r4JwjObm7govZPfcMVCpexJJRLBJ4IlaP1MLSD6CNib
+    IidnORsgZpYNHxD6C65CP3DI2FWDCHuoPVB2q0DmtilUTppnbRHs2uuQ8sufVAEl
+    AX3hT8tcSVSeRknuGfYmTNEcxI9H
+    -----END CERTIFICATE-----
+immutable: false
+kind: ConfigMap
+metadata:
+  labels:
+    app: picca-dev
+    app.kubernetes.io/name: picca-dev
+  name: picca-dev-scylladb-ca-cert
+  namespace: picca-dev
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: picca-dev-graphql-signing-secret
+  namespace: picca-dev
+spec:
+  data:
+    - remoteRef:
+        key: terraform-external-secrets
+        property: picca-dev-graphql-query-signing-secret
+      secretKey: graphql_query_signing_secret
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: picca-dev-graphql-signing-secret
+    template:
+      data:
+        GRAPHQL_QUERY_SIGNING_SECRET: '{{ .graphql_query_signing_secret }}'
+        PICCA_GRAPHQL_QUERY_SIGNING_SECRET: '{{ .graphql_query_signing_secret }}'
+      engineVersion: v2
+      type: Opaque
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: picca-dev-imgproxy
+  namespace: picca-dev
+spec:
+  hostnames:
+    - imgproxy-picca-dev.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: https
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: picca-dev-imgproxy
+          port: 80
+          weight: 1
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: picca-dev
+  namespace: picca-dev
+spec:
+  hostnames:
+    - picca-dev.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: https
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: picca-dev-frontend
+          port: 3000
+          weight: 1
+      filters:
+        - responseHeaderModifier:
+            set:
+              - name: Strict-Transport-Security
+                value: max-age=63072000; includeSubDomains
+              - name: X-Content-Type-Options
+                value: nosniff
+              - name: X-Frame-Options
+                value: DENY
+              - name: Referrer-Policy
+                value: no-referrer
+              - name: Permissions-Policy
+                value: camera=(), microphone=(), geolocation=(self), payment=(), usb=(), serial=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=()
+          type: ResponseHeaderModifier
+      matches:
+        - path:
+            type: PathPrefix
+            value: /api/health
+        - path:
+            type: PathPrefix
+            value: /api/telemetry
+    - backendRefs:
+        - kind: Service
+          name: picca-dev-apiserver
+          port: 8080
+          weight: 1
+      filters:
+        - responseHeaderModifier:
+            set:
+              - name: Strict-Transport-Security
+                value: max-age=63072000; includeSubDomains
+              - name: X-Content-Type-Options
+                value: nosniff
+              - name: X-Frame-Options
+                value: DENY
+              - name: Referrer-Policy
+                value: no-referrer
+              - name: Permissions-Policy
+                value: camera=(), microphone=(), geolocation=(self), payment=(), usb=(), serial=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=()
+          type: ResponseHeaderModifier
+      matches:
+        - path:
+            type: PathPrefix
+            value: /auth
+        - path:
+            type: PathPrefix
+            value: /query
+        - path:
+            type: PathPrefix
+            value: /api
+      timeouts:
+        backendRequest: 0s
+        request: 0s
+    - backendRefs:
+        - kind: Service
+          name: picca-dev-frontend
+          port: 3000
+          weight: 1
+      filters:
+        - responseHeaderModifier:
+            set:
+              - name: Strict-Transport-Security
+                value: max-age=63072000; includeSubDomains
+              - name: X-Content-Type-Options
+                value: nosniff
+              - name: X-Frame-Options
+                value: DENY
+              - name: Referrer-Policy
+                value: no-referrer
+              - name: Permissions-Policy
+                value: camera=(), microphone=(), geolocation=(self), payment=(), usb=(), serial=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=()
+          type: ResponseHeaderModifier
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: picca-dev-http
+  namespace: picca-dev
+spec:
+  hostnames:
+    - picca-dev.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: http
+  rules:
+    - filters:
+        - requestRedirect:
+            scheme: https
+            statusCode: 301
+          type: RequestRedirect
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: picca-dev-imgproxy
+  namespace: picca-dev
+spec:
+  data:
+    - remoteRef:
+        key: terraform-external-secrets
+        property: picca-dev-imgproxy-key
+      secretKey: imgproxy_key
+    - remoteRef:
+        key: terraform-external-secrets
+        property: picca-dev-imgproxy-salt
+      secretKey: imgproxy_salt
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: picca-dev-imgproxy
+    template:
+      data:
+        IMGPROXY_ALLOW_ORIGIN: https://picca-dev.walnuts.dev
+        IMGPROXY_FAIL_ON_DEPRECATION: "true"
+        IMGPROXY_KEY: '{{ .imgproxy_key }}'
+        IMGPROXY_PROMETHEUS_BIND: :8081
+        IMGPROXY_S3_ALLOWED_BUCKETS: picca-dev
+        IMGPROXY_S3_ENDPOINT: http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+        IMGPROXY_S3_ENDPOINT_USE_PATH_STYLE: "true"
+        IMGPROXY_S3_REGION: us-east-1
+        IMGPROXY_SALT: '{{ .imgproxy_salt }}'
+        IMGPROXY_TTL: "900"
+        IMGPROXY_USE_S3: "true"
+      engineVersion: v2
+      type: Opaque
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app: picca-dev
+    app.kubernetes.io/name: picca-dev
+  name: picca-dev
+  namespace: picca-dev
+spec:
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 192.168.0.0/16
+              - 10.244.0.0/16
+              - 10.96.0.0/12
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: opentelemetry-collector
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: default-collector
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: databases
+          podSelector:
+            matchLabels:
+              cnpg.io/cluster: postgresql-default
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: databases
+          podSelector:
+            matchLabels:
+              scylla/cluster: scylla-cluster
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: rabbitmq
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: seaweedfs
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: qdrant
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: zitadel
+        - podSelector: {}
+  podSelector: {}
+  policyTypes:
+    - Egress
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: picca-dev-oidc
+  namespace: picca-dev
+spec:
+  data:
+    - remoteRef:
+        key: terraform-external-secrets
+        property: picca-dev-client-id
+      secretKey: oidc_client_id
+    - remoteRef:
+        key: terraform-external-secrets
+        property: picca-dev-client-secret
+      secretKey: oidc_client_secret
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: picca-dev-oidc
+    template:
+      data:
+        OIDC_CLIENT_ID: '{{ .oidc_client_id }}'
+        OIDC_CLIENT_SECRET: '{{ .oidc_client_secret }}'
+      engineVersion: v2
+      type: Opaque
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: picca-dev-postgres
+  namespace: picca-dev
+spec:
+  data:
+    - remoteRef:
+        key: postgres_passwords
+        property: picca_dev
+      secretKey: postgres_password
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: picca-dev-postgres
+    template:
+      data:
+        DATABASE_URL: postgres://picca_dev:{{ .postgres_password }}@postgresql-default-rw.databases.svc.cluster.local:5432/picca_dev?pool_max_conns=2
+      engineVersion: v2
+      type: Opaque
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: picca-dev-rabbitmq-user-credentials
+  namespace: picca-dev
+spec:
+  data:
+    - remoteRef:
+        key: terraform-external-secrets
+        property: picca-dev-rabbitmq-password
+      secretKey: password
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: picca-dev-rabbitmq-user-credentials
+    template:
+      data:
+        password: '{{ .password }}'
+        username: picca-dev
+      engineVersion: v2
+      type: Opaque
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: Permission
+metadata:
+  name: picca-dev
+  namespace: picca-dev
+spec:
+  permissions:
+    configure: .*
+    read: .*
+    write: .*
+  rabbitmqClusterReference:
+    name: default
+    namespace: rabbitmq
+  userReference:
+    name: picca-dev
+  vhost: picca-dev
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: picca-dev-rabbitmq
+  namespace: picca-dev
+spec:
+  data:
+    - remoteRef:
+        key: terraform-external-secrets
+        property: picca-dev-rabbitmq-password
+      secretKey: rabbitmq_password
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: picca-dev-rabbitmq
+    template:
+      data:
+        KEDA_RABBITMQ_HOST: http://picca-dev:{{ .rabbitmq_password }}@default.rabbitmq.svc.cluster.local:15672/picca-dev
+        RABBITMQ_URL: amqp://picca-dev:{{ .rabbitmq_password }}@default.rabbitmq.svc.cluster.local:5672/picca-dev
+      engineVersion: v2
+      type: Opaque
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: User
+metadata:
+  name: picca-dev
+  namespace: picca-dev
+spec:
+  importCredentialsSecret:
+    name: picca-dev-rabbitmq-user-credentials
+  rabbitmqClusterReference:
+    name: default
+    namespace: rabbitmq
+  tags:
+    - monitoring
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: Vhost
+metadata:
+  name: picca-dev
+  namespace: picca-dev
+spec:
+  name: picca-dev
+  rabbitmqClusterReference:
+    name: default
+    namespace: rabbitmq
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: picca-dev
+  namespace: picca-dev
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: scylla-cluster-local-client-ca
+  namespace: picca-dev
+spec:
+  dataFrom:
+    - extract:
+        key: scylla-cluster-local-client-ca
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: SecretStore
+    name: scylla-client-cert
+  target:
+    name: scylla-cluster-local-client-ca
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: picca-dev-read-scylla-client-cert
+  namespace: databases
+rules:
+  - apiGroups:
+      - ""
+    resourceNames:
+      - scylla-cluster-local-client-ca
+    resources:
+      - secrets
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: picca-dev-read-scylla-client-cert
+  namespace: databases
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: picca-dev-read-scylla-client-cert
+subjects:
+  - kind: ServiceAccount
+    name: picca-dev-scylla-secret-reader
+    namespace: picca-dev
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: picca-dev-scylla-secret-reader
+  namespace: picca-dev
+---
+apiVersion: external-secrets.io/v1
+kind: SecretStore
+metadata:
+  name: scylla-client-cert
+  namespace: picca-dev
+spec:
+  provider:
+    kubernetes:
+      auth:
+        serviceAccount:
+          name: picca-dev-scylla-secret-reader
+          namespace: picca-dev
+      remoteNamespace: databases
+      server:
+        caProvider:
+          key: ca.crt
+          name: kube-root-ca.crt
+          type: ConfigMap
+        url: https://kubernetes.default.svc
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: picca-dev-scylla
+  namespace: picca-dev
+spec:
+  data:
+    - remoteRef:
+        key: scylladb
+        property: picca_dev
+      secretKey: scylla_password
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: picca-dev-scylla
+    template:
+      data:
+        SCYLLA_PASSWORD: '{{ .scylla_password }}'
+      engineVersion: v2
+      type: Opaque
+---
+apiVersion: valkey.io/v1alpha1
+kind: ValkeyCluster
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app: picca-dev-valkey
+    app.kubernetes.io/name: picca-dev-valkey
+  name: picca-dev-valkey
+  namespace: picca-dev
+spec:
+  replicas: 2
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1Gi
+    requests:
+      cpu: 5m
+      memory: 5Mi
+  scheduling:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: storage.walnuts.dev/slow
+                  operator: DoesNotExist
+  shards: 1
+  users:
+    - enabled: true
+      name: default
+      passwordSecret:
+        keys:
+          - valkey_password
+        name: picca-dev-valkey
+      permissions: +@all ~* &*
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: picca-dev-valkey
+  namespace: picca-dev
+spec:
+  data:
+    - remoteRef:
+        key: terraform-external-secrets
+        property: picca-dev-redis-password
+      secretKey: valkey_password
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: picca-dev-valkey
+    template:
+      data:
+        VALKEY_URL: redis://:{{ .valkey_password }}@valkey-picca-dev-valkey.picca-dev.svc.cluster.local:6379/0
+        valkey_password: '{{ .valkey_password }}'
+      engineVersion: v2
+      type: Opaque

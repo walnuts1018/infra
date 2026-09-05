@@ -1,0 +1,26 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  labels:
+    app: oekaki-dengon-game-back
+    app.kubernetes.io/name: oekaki-dengon-game-back
+  name: oekaki-dengon-game-back
+  namespace: oekaki-dengon-game
+spec:
+  resourcePolicy:
+    containerPolicies:
+      - containerName: oekaki-dengon-game-back
+        controlledResources:
+          - memory
+        maxAllowed:
+          cpu: 500m
+          memory: 256Mi
+        minAllowed:
+          cpu: 1m
+          memory: 64Mi
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: oekaki-dengon-game-back
+  updatePolicy:
+    updateMode: Auto

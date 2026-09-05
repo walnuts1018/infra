@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: netbird-dashboard
+    app.kubernetes.io/name: netbird-dashboard
+  name: netbird-dashboard
+  namespace: netbird
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netbird-dashboard
+      app.kubernetes.io/name: netbird-dashboard
+  template:
+    metadata:
+      labels:
+        app: netbird-dashboard
+        app.kubernetes.io/name: netbird-dashboard
+    spec:
+      containers:
+        - env:
+            - name: NETBIRD_MGMT_API_ENDPOINT
+              value: https://netbird.walnuts.dev
+            - name: NETBIRD_MGMT_GRPC_API_ENDPOINT
+              value: https://netbird.walnuts.dev
+            - name: AUTH_AUDIENCE
+              value: netbird-dashboard
+            - name: AUTH_CLIENT_ID
+              value: netbird-dashboard
+            - name: AUTH_AUTHORITY
+              value: https://netbird.walnuts.dev/oauth2
+            - name: USE_AUTH0
+              value: "false"
+            - name: AUTH_SUPPORTED_SCOPES
+              value: openid profile email offline_access
+            - name: AUTH_REDIRECT_URI
+              value: /auth
+            - name: AUTH_SILENT_REDIRECT_URI
+              value: /silent-auth
+          image: netbirdio/dashboard:v2.91.1
+          name: dashboard
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi

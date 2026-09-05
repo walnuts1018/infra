@@ -1,0 +1,77 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: radar-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: radar
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: radar
+    helm:
+      releaseName: radar
+      valuesObject:
+        auth:
+          cookieTTL: 4h
+          existingSecret: radar-auth
+          existingSecretKey: auth-secret
+          mode: oidc
+          oidc:
+            clientID: "385332731359330363"
+            clientSecretKey: client-secret
+            enablePKCE: true
+            existingSecret: radar-auth
+            groupsClaim: my:zitadel:grants
+            groupsPrefix: 'zitadel:'
+            issuerURL: https://auth.walnuts.dev
+            postLogoutRedirectURL: https://k8s-dashboard.walnuts.dev/
+            redirectURL: https://k8s-dashboard.walnuts.dev/auth/callback
+            scopes:
+              - openid
+              - email
+              - profile
+              - urn:zitadel:iam:org:project:id:385225927988084784:aud
+            usernamePrefix: 'zitadel:'
+        httpRoute:
+          enabled: false
+        mcp:
+          enabled: true
+        podSecurityContext:
+          fsGroup: 65532
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+        rbac:
+          create: false
+        replicaCount: 1
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            cpu: 10m
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65532
+        serviceAccount:
+          create: true
+        timeline:
+          storage: memory
+    repoURL: https://skyhook-io.github.io/helm-charts
+    targetRevision: 1.12.2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

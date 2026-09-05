@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: maps-rollout-restart
+  namespace: maps
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: maps-rollout-restart
+subjects:
+  - kind: ServiceAccount
+    name: maps-updater
+    namespace: maps

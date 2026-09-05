@@ -1,0 +1,419 @@
+---
+# Source: qdrant/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: qdrant
+  labels:
+    helm.sh/chart: qdrant-1.19.1
+    app: qdrant
+    app.kubernetes.io/name: qdrant
+    app.kubernetes.io/instance: qdrant
+    app.kubernetes.io/version: "v1.19.1"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: qdrant/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qdrant
+  labels:
+    helm.sh/chart: qdrant-1.19.1
+    app: qdrant
+    app.kubernetes.io/name: qdrant
+    app.kubernetes.io/instance: qdrant
+    app.kubernetes.io/version: "v1.19.1"
+    app.kubernetes.io/managed-by: Helm
+    
+data:
+  initialize.sh: |
+    #!/bin/sh
+    echo "Soft limits"
+    ulimit -a -S
+    echo "Hard limits"
+    ulimit -a -H
+    ulimit -n $(ulimit -Hn)
+    SET_INDEX=${HOSTNAME##*-}
+    echo "Starting initializing for pod $SET_INDEX"
+    if [ "$SET_INDEX" = "0" ]; then
+      exec ./entrypoint.sh --uri 'http://qdrant-0.qdrant-headless:6335'
+    else
+      exec ./entrypoint.sh --bootstrap 'http://qdrant-0.qdrant-headless:6335' --uri 'http://qdrant-'"$SET_INDEX"'.qdrant-headless:6335'
+    fi
+    
+  production.yaml: |
+    cluster:
+      consensus:
+        tick_period_ms: 100
+      enabled: true
+      p2p:
+        enable_tls: false
+        port: 6335
+    service:
+      enable_tls: false
+---
+# Source: qdrant/templates/service-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: qdrant-headless
+  labels:
+    helm.sh/chart: qdrant-1.19.1
+    app: qdrant
+    app.kubernetes.io/name: qdrant
+    app.kubernetes.io/instance: qdrant
+    app.kubernetes.io/version: "v1.19.1"
+    app.kubernetes.io/managed-by: Helm
+    
+    app.kubernetes.io/component: cluster-discovery
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - name: http
+      port: 6333
+      targetPort: 6333
+      protocol: TCP
+    - name: grpc
+      port: 6334
+      targetPort: 6334
+      protocol: TCP
+    - name: p2p
+      port: 6335
+      targetPort: 6335
+      protocol: TCP
+  selector:
+    app: qdrant
+    app.kubernetes.io/name: qdrant
+    app.kubernetes.io/instance: qdrant
+---
+# Source: qdrant/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: qdrant
+  labels:
+    helm.sh/chart: qdrant-1.19.1
+    app: qdrant
+    app.kubernetes.io/name: qdrant
+    app.kubernetes.io/instance: qdrant
+    app.kubernetes.io/version: "v1.19.1"
+    app.kubernetes.io/managed-by: Helm
+    
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 6333
+      targetPort: 6333
+      protocol: TCP
+    - name: grpc
+      port: 6334
+      targetPort: 6334
+      protocol: TCP
+    - name: p2p
+      port: 6335
+      targetPort: 6335
+      protocol: TCP
+  selector:
+    app: qdrant
+    app.kubernetes.io/name: qdrant
+    app.kubernetes.io/instance: qdrant
+---
+# Source: qdrant/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: qdrant
+  labels:
+    helm.sh/chart: qdrant-1.19.1
+    app: qdrant
+    app.kubernetes.io/name: qdrant
+    app.kubernetes.io/instance: qdrant
+    app.kubernetes.io/version: "v1.19.1"
+    app.kubernetes.io/managed-by: Helm
+    
+spec:
+  replicas: 1
+  podManagementPolicy: Parallel
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  selector:
+    matchLabels:
+      app: qdrant
+      app.kubernetes.io/name: qdrant
+      app.kubernetes.io/instance: qdrant
+  serviceName: qdrant-headless
+  template:
+    metadata:
+      annotations:
+        checksum/config: c94f8435e256056a29a01cbde1da8a1fa9f14e45f08562446d69705dec6fd55d
+      labels:
+        app: qdrant
+        app.kubernetes.io/name: qdrant
+        app.kubernetes.io/instance: qdrant
+        
+    spec:
+      initContainers:
+      - name: ensure-dir-ownership
+        image: "docker.io/qdrant/qdrant:v1.19.1"
+        command:
+          - chown
+          - -R
+          - 1000:3000
+          - /qdrant/storage
+          - /qdrant/snapshots
+        volumeMounts:
+          - name: qdrant-storage
+            mountPath: /qdrant/storage
+          - name: qdrant-snapshots
+            mountPath: /qdrant/snapshots
+      containers:
+        - name: qdrant
+          image: "docker.io/qdrant/qdrant:v1.19.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: QDRANT_INIT_FILE_PATH
+              value: /qdrant/init/.qdrant-initialized
+          command: ["/bin/bash", "-c"]
+          args:
+          - ./config/initialize.sh
+          ports:
+            - name: http
+              containerPort: 6333
+              protocol: TCP
+            - name: grpc
+              containerPort: 6334
+              protocol: TCP
+            - name: p2p
+              containerPort: 6335
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 6333
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: "/readyz"
+              port: 6333
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 2000
+            runAsNonRoot: true
+            runAsUser: 1000
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                - sleep
+                - "3"
+          volumeMounts:
+          - name: qdrant-storage
+            mountPath: /qdrant/storage
+          - name: qdrant-config
+            mountPath: /qdrant/config/initialize.sh
+            subPath: initialize.sh
+          - name: qdrant-config
+            mountPath: /qdrant/config/production.yaml
+            subPath: production.yaml
+          - name: qdrant-snapshots
+            mountPath: /qdrant/snapshots
+          - name: qdrant-init
+            mountPath: /qdrant/init
+      securityContext:
+        fsGroup: 3000
+        fsGroupChangePolicy: Always
+      serviceAccountName: qdrant
+      volumes:
+        - name: qdrant-config
+          configMap:
+            name: qdrant
+            defaultMode: 0755
+        - name: qdrant-init
+          emptyDir: {}
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: qdrant-storage
+        labels:
+          app: qdrant
+      spec:
+        storageClassName: longhorn
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "10Gi"
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: qdrant-snapshots
+        labels:
+          app: qdrant
+      spec:
+        storageClassName: longhorn
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "10Gi"
+---
+# Source: qdrant/templates/servicemonitor.yaml
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  labels:
+    helm.sh/chart: qdrant-1.19.1
+    app: qdrant
+    app.kubernetes.io/name: qdrant
+    app.kubernetes.io/instance: qdrant
+    app.kubernetes.io/version: "v1.19.1"
+    app.kubernetes.io/managed-by: Helm
+    
+  name: qdrant
+spec:
+  endpoints:
+    - honorLabels: true
+      interval: 30s
+      path: /metrics
+      port: http
+      scheme: http
+      scrapeTimeout: 10s
+  selector:
+    matchLabels:
+      helm.sh/chart: qdrant-1.19.1
+      app: qdrant
+      app.kubernetes.io/name: qdrant
+      app.kubernetes.io/instance: qdrant
+      app.kubernetes.io/version: "v1.19.1"
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/component: cluster-discovery
+---
+# Source: qdrant/templates/tests/test-db-interaction.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "qdrant-test-db-interaction"
+  labels:
+    helm.sh/chart: qdrant-1.19.1
+    app: qdrant
+    app.kubernetes.io/name: qdrant
+    app.kubernetes.io/instance: qdrant
+    app.kubernetes.io/version: "v1.19.1"
+    app.kubernetes.io/managed-by: Helm
+    
+  annotations:
+    "helm.sh/hook": test
+data:
+  entrypoint.sh: |
+    #!/bin/bash
+    set -xe
+    # Kind's networking is very flaky
+    echo 'connect-timeout = 5' > $HOME/.curlrc
+    echo 'retry = 60' >> $HOME/.curlrc
+    echo 'retry-delay = 5' >> $HOME/.curlrc
+    echo 'retry-all-errors' >> $HOME/.curlrc
+    # Don't clutter the logs with progress bars
+    echo 'no-progress-meter' >> $HOME/.curlrc
+    # Ensure errors cause the script to fail, but show the response body
+    echo 'fail-with-body' >> $HOME/.curlrc
+
+    if [ -d /mnt/secrets/certs ]; then
+      cp /mnt/secrets/certs/ca.pem /usr/share/pki/trust/anchors/private-ca.pem
+      update-ca-certificates
+    fi
+
+    QDRANT_COLLECTION="test_collection"
+    echo "Connecting to qdrant.qdrant:6333"
+    QDRANT_URL="http://qdrant.qdrant:6333"
+    API_KEY_HEADER=""
+
+    # Delete collection if exists
+    curl -X DELETE -H "${API_KEY_HEADER}" $QDRANT_URL/collections/${QDRANT_COLLECTION}
+
+    # Create collection
+    curl -X PUT \
+    -H 'Content-Type: application-json' \
+    -d '{"vectors":{"size":4,"distance":"Dot"}}' \
+    -H  "${API_KEY_HEADER}" \
+    $QDRANT_URL/collections/${QDRANT_COLLECTION}
+
+    # Insert points
+    curl -X PUT \
+    -H 'Content-Type: application-json' \
+    -d '{"points":[
+      {"id":1,"vector":[0.05, 0.61, 0.76, 0.74],"payload":{"city":"Berlin"}},
+      {"id":2,"vector":[0.19, 0.81, 0.75, 0.11],"payload":{"city":"London"}},
+      {"id":3,"vector":[0.36, 0.55, 0.47, 0.94],"payload":{"city":"Moscow"}},
+      {"id":4,"vector":[0.18, 0.01, 0.85, 0.80],"payload":{"city":"New York"}},
+      {"id":5,"vector":[0.24, 0.18, 0.22, 0.44],"payload":{"city":"Beijing"}},
+      {"id":6,"vector":[0.35, 0.08, 0.11, 0.44],"payload":{"city":"Mumbai"}}
+    ]}' \
+    -H  "${API_KEY_HEADER}" \
+    $QDRANT_URL/collections/${QDRANT_COLLECTION}/points
+
+    # Run query
+    curl -X POST \
+    -H 'Content-Type: application-json' \
+    -d '{"vector":[0.2, 0.1, 0.9, 0.7],"limit":3}' \
+    -H  "${API_KEY_HEADER}" \
+    $QDRANT_URL/collections/${QDRANT_COLLECTION}/points/search
+---
+# Source: qdrant/templates/tests/test-db-interaction.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "qdrant-test-db-interaction"
+  labels:
+    helm.sh/chart: qdrant-1.19.1
+    app: qdrant
+    app.kubernetes.io/name: qdrant
+    app.kubernetes.io/instance: qdrant
+    app.kubernetes.io/version: "v1.19.1"
+    app.kubernetes.io/managed-by: Helm
+    
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: test-script
+      image: "registry.suse.com/bci/bci-base:latest"
+      args: ['bash', '/app/entrypoint.sh']
+      volumeMounts:
+        - mountPath: /app
+          name: test-script
+      resources:
+        limits:
+          cpu: 100m
+          memory: 200Mi
+        requests:
+          cpu: 100m
+          memory: 200Mi
+  volumes:
+    - name: test-script
+      configMap:
+        name: "qdrant-test-db-interaction"
+  restartPolicy: Never
+  serviceAccountName: qdrant

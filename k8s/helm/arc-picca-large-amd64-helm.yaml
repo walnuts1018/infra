@@ -1,0 +1,495 @@
+---
+# Source: gha-runner-scale-set/templates/no_permission_serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: arc-picca-large-amd64-gha-rs-no-permission
+  namespace: arc-runners
+  labels:
+    helm.sh/chart: gha-rs-0.14.2
+    app.kubernetes.io/name: arc-picca-large-amd64
+    app.kubernetes.io/instance: arc-picca-large-amd64
+    app.kubernetes.io/version: "0.14.2"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: gha-rs
+    actions.github.com/scale-set-name: arc-picca-large-amd64
+    actions.github.com/scale-set-namespace: arc-runners
+  annotations:
+  finalizers:
+    - actions.github.com/cleanup-protection
+---
+# Source: gha-runner-scale-set/templates/manager_role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: arc-picca-large-amd64-gha-rs-manager
+  namespace: arc-runners
+  labels:
+    helm.sh/chart: gha-rs-0.14.2
+    app.kubernetes.io/name: arc-picca-large-amd64
+    app.kubernetes.io/instance: arc-picca-large-amd64
+    app.kubernetes.io/version: "0.14.2"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: gha-rs
+    actions.github.com/scale-set-name: arc-picca-large-amd64
+    actions.github.com/scale-set-namespace: arc-runners
+    app.kubernetes.io/component: manager-role
+  annotations:
+  finalizers:
+    - actions.github.com/cleanup-protection
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - create
+  - delete
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - pods/status
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - rolebindings
+  verbs:
+  - create
+  - delete
+  - get
+  - patch
+  - update
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - roles
+  verbs:
+  - create
+  - delete
+  - get
+  - patch
+  - update
+---
+# Source: gha-runner-scale-set/templates/manager_role_binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: arc-picca-large-amd64-gha-rs-manager
+  namespace: arc-runners
+  labels:
+    helm.sh/chart: gha-rs-0.14.2
+    app.kubernetes.io/name: arc-picca-large-amd64
+    app.kubernetes.io/instance: arc-picca-large-amd64
+    app.kubernetes.io/version: "0.14.2"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: gha-rs
+    actions.github.com/scale-set-name: arc-picca-large-amd64
+    actions.github.com/scale-set-namespace: arc-runners
+    app.kubernetes.io/component: manager-role-binding
+  annotations:
+  finalizers:
+    - actions.github.com/cleanup-protection
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: arc-picca-large-amd64-gha-rs-manager
+subjects:
+- kind: ServiceAccount
+  name: 
+    actions-runner-controller-gha-rs-controller
+  namespace: 
+    arc-systems
+---
+# Source: gha-runner-scale-set/templates/autoscalingrunnerset.yaml
+apiVersion: actions.github.com/v1alpha1
+kind: AutoscalingRunnerSet
+metadata:
+  name: arc-picca-large-amd64
+  namespace: arc-runners
+  labels:
+    app.kubernetes.io/component: "autoscaling-runner-set"
+    helm.sh/chart: gha-rs-0.14.2
+    app.kubernetes.io/name: arc-picca-large-amd64
+    app.kubernetes.io/instance: arc-picca-large-amd64
+    app.kubernetes.io/version: "0.14.2"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: gha-rs
+    actions.github.com/scale-set-name: arc-picca-large-amd64
+    actions.github.com/scale-set-namespace: arc-runners
+  annotations:
+    actions.github.com/values-hash: 1b17eea1515dca239b2137c9b1209447569fb287729a22baba86aa47e914faf
+    actions.github.com/cleanup-manager-role-binding: arc-picca-large-amd64-gha-rs-manager
+    actions.github.com/cleanup-manager-role-name: arc-picca-large-amd64-gha-rs-manager
+    actions.github.com/cleanup-no-permission-service-account-name: arc-picca-large-amd64-gha-rs-no-permission
+
+spec:
+  githubConfigUrl: https://github.com/walnuts1018/picca
+  githubConfigSecret: github-app-secret
+  maxRunners: 2
+  minRunners: 0
+  listenerMetrics:
+    counters:
+      gha_completed_jobs_total:
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+        - job_name
+        - event_name
+        - job_result
+        - job_workflow_ref
+        - job_workflow_name
+        - job_workflow_target
+      gha_started_jobs_total:
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+        - job_name
+        - event_name
+        - job_workflow_ref
+        - job_workflow_name
+        - job_workflow_target
+    gauges:
+      gha_assigned_jobs:
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+      gha_busy_runners:
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+      gha_desired_runners:
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+      gha_idle_runners:
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+      gha_max_runners:
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+      gha_min_runners:
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+      gha_registered_runners:
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+      gha_running_jobs:
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+    histograms:
+      gha_job_execution_duration_seconds:
+        buckets:
+        - 0.01
+        - 0.05
+        - 0.1
+        - 0.5
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+        - 10
+        - 12
+        - 15
+        - 18
+        - 20
+        - 25
+        - 30
+        - 40
+        - 50
+        - 60
+        - 70
+        - 80
+        - 90
+        - 100
+        - 110
+        - 120
+        - 150
+        - 180
+        - 210
+        - 240
+        - 300
+        - 360
+        - 420
+        - 480
+        - 540
+        - 600
+        - 900
+        - 1200
+        - 1800
+        - 2400
+        - 3000
+        - 3600
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+        - job_name
+        - event_name
+        - job_result
+        - job_workflow_ref
+        - job_workflow_name
+        - job_workflow_target
+      gha_job_startup_duration_seconds:
+        buckets:
+        - 0.01
+        - 0.05
+        - 0.1
+        - 0.5
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+        - 10
+        - 12
+        - 15
+        - 18
+        - 20
+        - 25
+        - 30
+        - 40
+        - 50
+        - 60
+        - 70
+        - 80
+        - 90
+        - 100
+        - 110
+        - 120
+        - 150
+        - 180
+        - 210
+        - 240
+        - 300
+        - 360
+        - 420
+        - 480
+        - 540
+        - 600
+        - 900
+        - 1200
+        - 1800
+        - 2400
+        - 3000
+        - 3600
+        labels:
+        - name
+        - namespace
+        - repository
+        - organization
+        - enterprise
+        - job_name
+        - event_name
+        - job_workflow_ref
+        - job_workflow_name
+        - job_workflow_target
+
+  template:
+    spec:
+      affinity: 
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - rusk
+            weight: 100
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - rusk
+                - cake
+      automountServiceAccountToken: 
+        false
+      enableServiceLinks: 
+        false
+      nodeSelector: 
+        kubernetes.io/arch: amd64
+      resources: 
+        limits:
+          cpu: "2"
+          memory: 2Gi
+        requests:
+          cpu: "2"
+          memory: 2Gi
+      restartPolicy: Never
+      serviceAccountName: arc-picca-large-amd64-gha-rs-no-permission
+      initContainers:
+      - command:
+        - cp
+        - -r
+        - /home/runner/externals/.
+        - /home/runner/tmpDir/
+        image: ghcr.io/walnuts1018/infra/actions-runner:2.336.0
+        name: init-dind-externals
+        volumeMounts:
+        - mountPath: /home/runner/tmpDir
+          name: dind-externals
+      - args:
+        - dockerd
+        - --host=unix:///var/run/docker.sock
+        - --group=$(DOCKER_GROUP_GID)
+        - --mtu=1280
+        env:
+        - name: DOCKER_GROUP_GID
+          value: "123"
+        image: docker:29.7.2-dind
+        name: dind
+        restartPolicy: Always
+        securityContext:
+          privileged: true
+        startupProbe:
+          exec:
+            command:
+            - docker
+            - info
+          failureThreshold: 24
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          timeoutSeconds: 10
+        volumeMounts:
+        - mountPath: /home/runner/_work
+          name: work
+        - mountPath: /var/run
+          name: dind-sock
+        - mountPath: /home/runner/externals
+          name: dind-externals
+        - mountPath: /var/lib/docker
+          name: docker-storage
+      containers:
+      
+      - name: runner
+        command: 
+          - /home/runner/run.sh
+        image: 
+          ghcr.io/walnuts1018/infra/actions-runner:2.336.0
+        env:
+          - 
+            name: DOTNET_gcServer
+            value: "0"
+          - 
+            name: DOTNET_GCHeapHardLimit
+            value: "0x10000000"
+          - 
+            name: DOTNET_GCConserveMemory
+            value: "9"
+          - 
+            name: DOTNET_TieredPGO
+            value: "0"
+          - 
+            name: MALLOC_ARENA_MAX
+            value: "2"
+          - 
+            name: DOCKER_HOST
+            value: unix:///var/run/docker.sock
+          - 
+            name: RUNNER_WAIT_FOR_DOCKER_IN_SECONDS
+            value: "120"
+          - 
+            name: CUSTOM_ACTIONS_RESULTS_URL
+            value: https://gha-cache-server.local.walnuts.dev/
+          - 
+            name: ACTIONS_RUNNER_HOOK_JOB_STARTED
+            value: /etc/arc/hooks/job-started.sh
+          - 
+            name: ACTIONS_RUNNER_HOOK_JOB_COMPLETED
+            value: /etc/arc/hooks/job-completed.sh
+        volumeMounts:
+          - 
+            mountPath: /home/runner/_work
+            name: work
+          - 
+            mountPath: /var/run
+            name: dind-sock
+          - 
+            mountPath: /etc/arc/hooks
+            name: runner-hooks
+      volumes:
+      - emptyDir: {}
+        name: work
+      - emptyDir: {}
+        name: dind-sock
+      - emptyDir: {}
+        name: dind-externals
+      - emptyDir: {}
+        name: docker-storage
+      - configMap:
+          defaultMode: 493
+          name: runner-hooks-076f5f
+        name: runner-hooks

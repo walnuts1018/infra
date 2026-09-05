@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: netbird-server
+    app.kubernetes.io/name: netbird-server
+  name: netbird-server
+  namespace: netbird
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netbird-server
+      app.kubernetes.io/name: netbird-server
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: netbird-server
+        app.kubernetes.io/name: netbird-server
+    spec:
+      containers:
+        - args:
+            - --config
+            - /etc/netbird/config.yaml
+          image: netbirdio/netbird-server:0.77.1
+          livenessProbe:
+            tcpSocket:
+              port: http
+          name: netbird-server
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+            - containerPort: 9090
+              name: metrics
+              protocol: TCP
+            - containerPort: 9000
+              name: health
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: http
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          securityContext:
+            readOnlyRootFilesystem: false
+          volumeMounts:
+            - mountPath: /etc/netbird/config.yaml
+              name: config
+              readOnly: true
+              subPath: config.yaml
+            - mountPath: /var/lib/netbird
+              name: data
+      volumes:
+        - name: config
+          secret:
+            secretName: netbird-config-7ba0fc
+        - name: data
+          persistentVolumeClaim:
+            claimName: netbird-server

@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: akvorado
+    app.kubernetes.io/name: akvorado
+  name: akvorado-inlet
+  namespace: akvorado
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: inlet
+      app.kubernetes.io/name: akvorado
+  template:
+    metadata:
+      labels:
+        app: akvorado
+        app.kubernetes.io/component: inlet
+        app.kubernetes.io/name: akvorado
+    spec:
+      containers:
+        - args:
+            - inlet
+            - http://akvorado-orchestrator:8080
+          image: quay.io/akvorado/akvorado:2.4.1
+          livenessProbe:
+            httpGet:
+              path: /api/v0/healthcheck
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          name: inlet
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+            - containerPort: 2055
+              name: netflow
+              protocol: UDP
+            - containerPort: 6343
+              hostPort: 6343
+              name: sflow
+              protocol: UDP
+          readinessProbe:
+            httpGet:
+              path: /api/v0/healthcheck
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "2"
+              memory: 1Gi
+            requests:
+              cpu: 2m
+              memory: 14Mi
+          volumeMounts: []
+      nodeSelector:
+        kubernetes.io/hostname: cake
+      volumes: []

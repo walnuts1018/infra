@@ -1,0 +1,171 @@
+---
+# Source: radar/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: radar
+  labels:
+    helm.sh/chart: radar-1.12.2
+    app.kubernetes.io/name: radar
+    app.kubernetes.io/instance: radar
+    app.kubernetes.io/version: "1.12.2"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: radar/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: radar
+  labels:
+    helm.sh/chart: radar-1.12.2
+    app.kubernetes.io/name: radar
+    app.kubernetes.io/instance: radar
+    app.kubernetes.io/version: "1.12.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9280
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: radar
+    app.kubernetes.io/instance: radar
+---
+# Source: radar/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radar
+  labels:
+    helm.sh/chart: radar-1.12.2
+    app.kubernetes.io/name: radar
+    app.kubernetes.io/instance: radar
+    app.kubernetes.io/version: "1.12.2"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: radar
+      app.kubernetes.io/instance: radar
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: radar
+        app.kubernetes.io/instance: radar
+    spec:
+      serviceAccountName: radar
+      securityContext:
+        fsGroup: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+      containers:
+        - name: radar
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+          image: "ghcr.io/skyhook-io/radar:1.12.2"
+          imagePullPolicy: IfNotPresent
+          args:
+            - --port=9280
+            - --listen-address=0.0.0.0
+            - --no-browser
+            - --timeline-storage=memory
+            - --history-limit=10000
+            - "--auth-mode=oidc"
+            - "--auth-cookie-ttl=4h"
+            - "--auth-user-header=X-Forwarded-User"
+            - "--auth-groups-header=X-Forwarded-Groups"
+            - "--auth-oidc-issuer=https://auth.walnuts.dev"
+            - "--auth-oidc-client-id=385332731359330363"
+            - "--auth-oidc-redirect-url=https://k8s-dashboard.walnuts.dev/auth/callback"
+            - "--auth-oidc-groups-claim=my:zitadel:grants"
+            - "--auth-oidc-scopes=openid,email,profile,urn:zitadel:iam:org:project:id:385225927988084784:aud"
+            - "--auth-oidc-post-logout-redirect-url=https://k8s-dashboard.walnuts.dev/"
+            - "--auth-oidc-username-prefix=zitadel:"
+            - "--auth-oidc-groups-prefix=zitadel:"
+            - --auth-oidc-enable-pkce
+          ports:
+            - name: http
+              containerPort: 9280
+              protocol: TCP
+          env:
+            - name: RADAR_AUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: radar-auth
+                  key: auth-secret
+            - name: RADAR_OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: radar-auth
+                  key: client-secret
+            - name: HELM_CACHE_HOME
+              value: "/tmp/helm/cache"
+            - name: HELM_CONFIG_HOME
+              value: "/tmp/helm/config"
+            - name: HELM_DATA_HOME
+              value: "/tmp/helm/data"
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            # Downward-API identity. Always emitted: Radar needs to know which
+            # object it is for read-only self-description (Cloud connect
+            # handoff), which carries no RBAC implication. Whether it may
+            # actually patch itself is decided by the apiserver against
+            # rbac.selfUpgrade's Role — never by an env marker, which a
+            # Hub image-only self-upgrade would leave stale.
+            - name: MY_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            # Pin the in-cluster reachability probe to radar's own deployed image.
+            # This is the no-RBAC fallback for when the runtime self-read of radar's
+            # pod can't run; an explicit --reachability-image / config still wins,
+            # and the self-read (radar's live pod image) is preferred when available.
+            - name: RADAR_IMAGE
+              value: "ghcr.io/skyhook-io/radar:1.12.2"
+            - name: MY_DEPLOYMENT_NAME
+              value: radar
+          livenessProbe:
+            httpGet:
+              path: "/api/health"
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: "/api/health"
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 10m
+              memory: 128Mi
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: home
+              mountPath: /home/nonroot
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: home
+          emptyDir: {}

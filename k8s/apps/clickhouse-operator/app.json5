@@ -1,7 +1,0 @@
-{
-  name: "clickhouse-operator",
-  namespace: "clickhouse-operator-system",
-  clusters: {
-    kurumi: {},
-  },
-}

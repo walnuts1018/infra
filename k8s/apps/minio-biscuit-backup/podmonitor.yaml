@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app: minio-biscuit-backup
+    app.kubernetes.io/name: minio-biscuit-backup
+  name: minio-biscuit-backup
+  namespace: minio-biscuit
+spec:
+  podMetricsEndpoints:
+    - port: metrics
+  selector:
+    matchLabels:
+      app: minio-biscuit-backup
+      app.kubernetes.io/name: minio-biscuit-backup
