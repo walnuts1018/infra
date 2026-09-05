@@ -3,7 +3,7 @@ controllerManager:
   replicas: 1
   resources:
     requests:
-      cpu: 80m
-      memory: 50Mi
+      cpu: 20m
+      memory: 80Mi
 scheduler:
   create: false
