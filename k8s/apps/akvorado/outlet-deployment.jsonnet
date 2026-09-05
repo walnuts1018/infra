@@ -33,8 +33,8 @@ local app = import 'app.json5';
           volumeMounts: [],
           resources: {
             requests: {
-              cpu: '12m',
-              memory: '23Mi',
+              cpu: '10m',
+              memory: '32Mi',
             },
             limits: {
               memory: '256Mi',

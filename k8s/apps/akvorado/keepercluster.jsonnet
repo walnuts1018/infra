@@ -17,8 +17,8 @@ local app = import 'app.json5';
     containerTemplate: {
       resources: {
         requests: {
-          cpu: '30m',
-          memory: '128Mi',
+          cpu: '15m',
+          memory: '116Mi',
         },
       },
     },
