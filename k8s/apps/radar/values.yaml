@@ -22,12 +22,7 @@ securityContext:
     - ALL
 
 httpRoute:
-  enabled: true
-  parentRefs:
-  - name: envoy-gateway
-    namespace: envoy-gateway-system
-  hostnames:
-  - k8s-dashboard.walnuts.dev
+  enabled: false
 
 auth:
   mode: oidc

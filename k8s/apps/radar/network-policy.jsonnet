@@ -25,6 +25,13 @@ local app = import 'app.json5';
               },
             },
           },
+          {
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'keda',
+              },
+            },
+          },
         ],
         ports: [
           {
