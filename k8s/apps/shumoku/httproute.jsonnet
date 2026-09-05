@@ -18,20 +18,11 @@ local app = import 'app.json5';
     hostnames: ['shumoku.walnuts.dev'],
     rules: [
       {
-        matches: [
-          {
-            path: {
-              type: 'PathPrefix',
-              value: '/',
-            },
-          },
-        ],
         backendRefs: [
           {
-            kind: 'Service',
-            name: app.name,
+            name: 'keda-add-ons-http-interceptor-proxy',
+            namespace: 'keda',
             port: 8080,
-            weight: 1,
           },
         ],
       },

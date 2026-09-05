@@ -21,18 +21,9 @@ local app = import 'app.json5';
       {
         backendRefs: [
           {
-            kind: 'Service',
-            name: (import 'service.jsonnet').metadata.name,
+            name: 'keda-add-ons-http-interceptor-proxy',
+            namespace: 'keda',
             port: 8080,
-            weight: 1,
-          },
-        ],
-        matches: [
-          {
-            path: {
-              type: 'PathPrefix',
-              value: '/',
-            },
           },
         ],
       },
