@@ -1,0 +1,24 @@
+{
+  apiVersion: 'gateway.networking.k8s.io/v1beta1',
+  kind: 'ReferenceGrant',
+  metadata: {
+    name: 'http-dump-allow-interceptor',
+    namespace: 'keda',
+  },
+  spec: {
+    from: [
+      {
+        group: 'gateway.networking.k8s.io',
+        kind: 'HTTPRoute',
+        namespace: 'default',
+      },
+    ],
+    to: [
+      {
+        group: '',
+        kind: 'Service',
+        name: 'keda-add-ons-http-interceptor-proxy',
+      },
+    ],
+  },
+}
