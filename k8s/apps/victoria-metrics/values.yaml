@@ -10,13 +10,13 @@ vmselect:
     - resource:
         name: cpu
         target:
-          averageUtilization: 95
+          averageUtilization: 100
           type: Utilization
       type: Resource
   resources:
     requests:
       cpu: 10m
-      memory: 48Mi
+      memory: 60Mi
     limits:
       memory: 512Gi
   serviceMonitor:
@@ -34,13 +34,13 @@ vminsert:
     - resource:
         name: cpu
         target:
-          averageUtilization: 95
+          averageUtilization: 100
           type: Utilization
       type: Resource
   resources:
     requests:
-      cpu: 150m
-      memory: 220Mi
+      cpu: 80m
+      memory: 250Mi
     limits:
       memory: 1Gi
   serviceMonitor:
@@ -56,7 +56,7 @@ vmstorage:
     size: 128Gi
   resources:
     requests:
-      cpu: 50m
+      cpu: 100m
       memory: 1.5Gi
     limits:
       memory: 2Gi
