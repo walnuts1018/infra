@@ -69,7 +69,7 @@ function(app)
             {
               name: 'models',
               image: {
-                reference: 'ghcr.io/walnuts1018/picca/ai-models:v0.0.1',
+                reference: 'ghcr.io/walnuts1018/picca/ai-models-ocr:v0.0.1',
                 pullPolicy: 'IfNotPresent',
               },
             },
