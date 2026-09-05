@@ -108,8 +108,8 @@ local readSecretName = (import '../../components/seaweedfs-s3-credentials.libson
             },
             resources: {
               requests: {
-                cpu: '100m',
-                memory: '320Mi',
+                cpu: '50m',
+                memory: '128Mi',
               },
               limits: {
                 cpu: '1',
