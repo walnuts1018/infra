@@ -5,8 +5,6 @@ serviceMonitor:
   targets:
   - name: "walnuts-dev"
     url: "https://walnuts.dev/healthz"
-  - name: "http-test"
-    url: "https://httptest.walnuts.dev/"
   - name: "blog"
     url: "https://blog.walnuts.dev/"
   - name: "grafana"
