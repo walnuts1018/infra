@@ -1,7 +1,0 @@
-{
-  name: "warrior",
-  namespace: "warrior",
-  clusters: {
-    kurumi: {},
-  },
-}

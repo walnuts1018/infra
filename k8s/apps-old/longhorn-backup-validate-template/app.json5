@@ -1,7 +1,0 @@
-{
-  name: "longhorn-backup-validate-template",
-  namespace: "longhorn-backup-validate",
-  clusters: {
-    kurumi: {},
-  },
-}

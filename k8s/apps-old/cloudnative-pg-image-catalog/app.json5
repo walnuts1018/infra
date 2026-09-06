@@ -1,7 +1,0 @@
-{
-  name: "cloudnative-pg-image-catalog",
-  namespace: "cloudnative-pg",
-  clusters: {
-    kurumi: {},
-  },
-}

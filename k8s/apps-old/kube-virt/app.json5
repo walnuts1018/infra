@@ -1,7 +1,0 @@
-{
-  name: "kube-virt",
-  namespace: "kube-virt",
-  clusters: {
-    kurumi: {},
-  },
-}
