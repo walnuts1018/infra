@@ -28,9 +28,8 @@
       kind: LVMVolumeGroupConfig
       name: topolvm
       provisioning:
-        diskSelector:
+        volumeSelector:
           match: '!disk.readonly && disk.size == 1000204886016u && disk.wwid == "naa.50014ee2118ad24b"'
-        wipe: false
       ---
       apiVersion: v1alpha1
       kind: SwapVolumeConfig
