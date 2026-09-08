@@ -6,7 +6,7 @@
     namespace: (import 'cluster.json5').namespace,
   },
   type: 'Opaque',
-  immutable: true,
+  immutable: false,
   stringData: {
     patches: |||
       cluster:
