@@ -9,14 +9,6 @@
   immutable: true,
   stringData: {
     patches: |||
-      cluster:
-        network:
-          cni:
-            name: none # Ciliumを使う
-        proxy:
-          disabled: true
-        allowSchedulingOnControlPlanes: true
-      ---
       apiVersion: v1alpha1
       kind: UnattendedInstallConfig
       provisioning:
@@ -38,12 +30,6 @@
         diskSelector:
           match: '!disk.readonly && disk.size == 240057409536u && disk.wwid == "t10.ATA     ADATA SU650                             38F8079715D100008282"'
         maxSize: 4GiB
-      ---
-      machine:
-        kubelet:
-          extraConfig:
-            memorySwap:
-              swapBehavior: LimitedSwap
     |||,
   },
 }
