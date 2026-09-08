@@ -21,7 +21,7 @@
       kind: UnattendedInstallConfig
       provisioning:
         diskSelector:
-          match: '!disk.rotational'
+          match: '!disk.readonly && disk.size == 240057409536u && disk.wwid == "t10.ATA     ADATA SU650                             38F8079715D100008282"'
         wipe: false
       ---
       apiVersion: v1alpha1
@@ -29,7 +29,7 @@
       name: topolvm
       provisioning:
         diskSelector:
-          match: 'disk.rotational'
+          match: '!disk.readonly && disk.size == 1000204886016u && disk.wwid == "naa.50014ee2118ad24b"'
         wipe: false
       ---
       apiVersion: v1alpha1
@@ -37,7 +37,7 @@
       name: swap
       provisioning:
         diskSelector:
-          match: '!disk.rotational'
+          match: '!disk.readonly && disk.size == 240057409536u && disk.wwid == "t10.ATA     ADATA SU650                             38F8079715D100008282"'
         maxSize: 4GiB
       ---
       machine:
