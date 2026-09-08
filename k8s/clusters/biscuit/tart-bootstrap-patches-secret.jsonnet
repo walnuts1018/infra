@@ -30,6 +30,26 @@
         diskSelector:
           match: '!disk.readonly && disk.size == 240057409536u && disk.wwid == "t10.ATA     ADATA SU650                             38F8079715D100008282"'
         maxSize: 4GiB
+      ---
+      # DHCP(vyos側のstatic reservation名)がTalosの自動生成hostnameより優先されてしまい、
+      # nodeがネットワーク予約名(例: server-reserved-15)で登録されてしまう。
+      # DHCP由来の名前を上書きするため、TartHost名と一致する静的hostnameを明示する。
+      apiVersion: v1alpha1
+      kind: HostnameConfig
+      hostname: eclair
+      ---
+      # kube-proxyはCiliumのkube-proxy replacementで代替するため無効化する。
+      apiVersion: v1alpha1
+      kind: KubeProxyConfig
+      enabled: false
+      ---
+      # SeaweedFS/バックアップ転送時の瞬間的なメモリ圧迫でkube-apiserver等がOOMKillされるのを
+      # 避けるための安全弁。常用メモリをswapへ逃がす前提ではなく、あくまで緊急退避用。
+      apiVersion: v1alpha1
+      kind: KubeletConfig
+      config:
+        memorySwap:
+          swapBehavior: LimitedSwap
     |||,
   },
 }
