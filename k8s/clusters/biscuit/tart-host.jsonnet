@@ -16,7 +16,7 @@
       intelManageability: {
         address: 'http://192.168.0.15:16992/wsman',
         credentialSecretRef: {
-          name: 'eclair-intelmanageability-credential',
+          name: (import 'tart-host-eclair-intelmanageability-secret.jsonnet').spec.target.name,
         },
       },
     },

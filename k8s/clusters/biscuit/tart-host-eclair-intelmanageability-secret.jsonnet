@@ -1,6 +1,6 @@
 (import '../../components/external-secret.libsonnet') {
   name: 'eclair-intelmanageability-credential',
-  namespace: 'cluster-api-provider-tart-system',
+  namespace: 'tart-infrastructure-system',
   use_suffix: false,
   data: [
     {
