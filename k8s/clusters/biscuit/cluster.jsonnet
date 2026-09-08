@@ -18,13 +18,13 @@
       },
     },
     controlPlaneEndpoint: {
-      host: '192.168.0.20',
+      host: '192.168.0.15',
       port: 6443,
     },
     controlPlaneRef: {
       apiGroup: 'controlplane.cluster.x-k8s.io',
-      kind: 'KubeadmControlPlane',
-      name: (import 'kubeadm-control-plane.jsonnet').metadata.name,
+      kind: 'TartControlPlane',
+      name: (import 'tart-control-plane.jsonnet').metadata.name,
     },
     infrastructureRef: {
       apiGroup: 'infrastructure.cluster.x-k8s.io',
