@@ -36,6 +36,7 @@
       # DHCP由来の名前を上書きするため、TartHost名と一致する静的hostnameを明示する。
       apiVersion: v1alpha1
       kind: HostnameConfig
+      auto: null
       hostname: eclair
       ---
       # kube-proxyはCiliumのkube-proxy replacementで代替するため無効化する。
