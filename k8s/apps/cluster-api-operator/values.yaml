@@ -2,19 +2,19 @@ core:
   cluster-api: {}
 bootstrap:
   tart:
-    version: v0.3.3
+    version: v0.3.4
     fetchConfig:
-      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.3/infrastructure-components.yaml
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.4/infrastructure-components.yaml
 controlPlane:
   tart:
-    version: v0.3.3
+    version: v0.3.4
     fetchConfig:
-      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.3/infrastructure-components.yaml
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.4/infrastructure-components.yaml
 infrastructure:
   tart:
-    version: v0.3.3
+    version: v0.3.4
     fetchConfig:
-      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.3/infrastructure-components.yaml
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.4/infrastructure-components.yaml
 resources:
   manager: {}
 enableHelmHook: false # これをつけないと、毎回Syncする時にnamespaceごと消える
