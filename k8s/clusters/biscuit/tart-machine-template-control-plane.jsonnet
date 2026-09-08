@@ -8,12 +8,10 @@
   spec: {
     template: {
       spec: {
-        hostSelector: {
-          selector: {
-            matchLabels: {
-              'infrastructure.cluster.x-k8s.io/host-name': 'eclair',
-            },
-          },
+        // hostSelector(label match)ではRetained/Reusable状態のHostを自動claimできないため、
+        // 単一Host専用のこのクラスタではhostRefで直接指定する。
+        hostRef: {
+          name: 'eclair',
         },
         image: {
           version: (import 'cluster.json5').talosVersion,
