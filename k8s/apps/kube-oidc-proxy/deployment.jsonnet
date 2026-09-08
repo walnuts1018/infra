@@ -29,7 +29,7 @@ local labels = {
         containers: [
           {
             name: 'kube-oidc-proxy',
-            image: 'ghcr.io/tremolosecurity/kube-oidc-proxy:1.0.12@sha256:d7747f308042216acd31eb48af4baefb2f508afc2023736451931b2d323907e9',
+            image: 'ghcr.io/tremolosecurity/kube-oidc-proxy:1.0.13@sha256:400477688105f303005df4eec55fb96cf12692cbda510ca68c401f9926bd702f',
             imagePullPolicy: 'IfNotPresent',
             command: ['kube-oidc-proxy'],
             args: [
