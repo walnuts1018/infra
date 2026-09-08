@@ -12,9 +12,12 @@
     talosAPIAddress: '192.168.0.15',
     architecture: 'amd64',
     power: {
-      backend: 'WakeOnLAN',
-      wakeOnLAN: {
-        broadcastAddress: '192.168.0.255',
+      backend: 'IntelManageability',
+      intelManageability: {
+        address: 'http://192.168.0.15:16992/wsman',
+        credentialSecretRef: {
+          name: 'eclair-intelmanageability-credential',
+        },
       },
     },
   },
