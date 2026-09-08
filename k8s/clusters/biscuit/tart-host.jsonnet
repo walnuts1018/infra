@@ -20,5 +20,13 @@
         },
       },
     },
+    // 直前のTartMachine(biscuit-0)はTalosのinstallが完了する前に削除されたため、
+    // 保持されたHost stateをReprovision(明示的にclaimしてidentityを再確認し、
+    // data破棄はTalos resetとinstaller lifecycleへ委譲)で再利用する。
+    reusePolicy: 'AllowReuse',
+    reuseMode: 'Reprovision',
+    reuseApproval: {
+      previousConsumerUID: '3b332cc4-8da8-4fa9-8f56-7e20d7bab8fa',
+    },
   },
 }
