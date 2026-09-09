@@ -6,6 +6,9 @@
       repoURL: "https://jmcgrath207.github.io/k8s-ephemeral-storage-metrics/chart",
       chart: "k8s-ephemeral-storage-metrics",
       targetRevision: "1.21.3",
+      valueFiles: [
+        "values.yaml",
+      ],
     },
   },
   clusters: {

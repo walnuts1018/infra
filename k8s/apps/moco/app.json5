@@ -6,6 +6,9 @@
       repoURL: "https://cybozu-go.github.io/moco/",
       chart: "moco",
       targetRevision: "0.27.0",
+      valueFiles: [
+        "values.yaml",
+      ],
     },
   },
   clusters: {

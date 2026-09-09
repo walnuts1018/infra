@@ -1,9 +1,5 @@
 local app = import 'app.json5';
-local credentialsToml = |||
-  [default]
-  aws_access_key_id = {{ .accessKey }}
-  aws_secret_access_key = {{ .secretKey }}
-|||;
+local credentialsToml = importstr './_config/credentials.toml.tmpl';
 std.mergePatch((import '../../components/external-secret.libsonnet') {
   name: app.name + '-minio-biscuit',
   namespace: app.namespace,
