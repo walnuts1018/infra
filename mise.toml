@@ -3,14 +3,6 @@ terraform = "1.15.9"
 go-jsonnet = "0.22.0"
 kubeconform = "0.8.0"
 
-[tasks.jsonnet-check]
-description = "Evaluate Jsonnet and JSON5 sources"
-run = "scripts/validate-jsonnet.sh --check-only"
-
-[tasks.app-check]
-description = "Validate app descriptors and render external Helm sources"
-run = "scripts/validate-apps.sh"
-
 [tasks.jsonnet-fmt]
 description = "Format Jsonnet files"
 run = """
@@ -24,11 +16,6 @@ run = """
 echo "Checking Jsonnet format..."
 find k8s \\( -name '*.jsonnet' -o -name '*.libsonnet' \\) -type f | xargs jsonnetfmt --test
 """
-
-[tasks.lint]
-description = "Render and validate Kubernetes resources"
-depends = ["jsonnet-check", "app-check"]
-run = "scripts/validate-jsonnet.sh"
 
 [tasks.terraform]
 run = "terraform -chdir=terraform"
