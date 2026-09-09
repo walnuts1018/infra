@@ -6,19 +6,19 @@ core:
         RuntimeSDK: true
 bootstrap:
   tart:
-    version: v0.3.14
+    version: v0.3.15
     fetchConfig:
-      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.14/bootstrap-components.yaml
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.15/bootstrap-components.yaml
 controlPlane:
   tart:
-    version: v0.3.14
+    version: v0.3.15
     fetchConfig:
-      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.14/control-plane-components.yaml
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.15/control-plane-components.yaml
 infrastructure:
   tart:
-    version: v0.3.14
+    version: v0.3.15
     fetchConfig:
-      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.14/infrastructure-components.yaml
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.15/infrastructure-components.yaml
 resources:
   manager: {}
 enableHelmHook: false # これをつけないと、毎回Syncする時にnamespaceごと消える
