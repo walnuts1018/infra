@@ -12,7 +12,34 @@
 
 ## Argo CD Agent
 
-`biscuit`のSpokeとAgentの導入、Principalへの登録は[argocd-agent.md](argocd-agent.md)の`biscuit`手順を実行する。従来の`argocd cluster add`は使用しない。
+`biscuit`のArgo CD SpokeとAgentは、`k8s/clusters/biscuit`のClusterResourceSetとHelmChartProxyが自動導入する。通常の新規構築ではworkload clusterへ`helm install`したり、TLS Secretを手動作成したり、`argocd-agentctl agent create`を実行したりしない。
+
+PrincipalのJWT signing keyが未作成の場合だけ、次のコマンドを一度実行する。
+
+```bash
+argocd-agentctl --principal-context berry --principal-namespace argocd jwt create-key
+```
+
+`argocd-agent-certs`が`argocd-agent-client-tls-biscuit`を発行し、ESOとClusterResourceSetがworkload clusterの`argocd-agent-client-tls`と`argocd-agent-ca`へ配送する。次のコマンドでPrincipalのself-registrationとAgentの状態を確認する。
+
+```bash
+kubectl --context berry -n argocd get secret cluster-biscuit
+kubectl --context berry -n biscuit get helmchartproxy,clusterresourceset,externalsecret
+kubectl --context biscuit -n argocd get secret argocd-agent-client-tls argocd-agent-ca
+kubectl --context biscuit -n argocd get pods
+```
+
+証明書更新後はAgentがTLS Secretを起動時に読み込むため、次のコマンドで再起動する。
+
+```bash
+mise run argocd-agent:restart biscuit
+```
+
+クラスターを削除するときは、Argo CDの`prune: false`とself-registered SecretのownerReferenceなしを考慮し、次のコマンドで依存順に削除する。
+
+```bash
+mise run cluster:decommission biscuit
+```
 
 登録後は`k8s/_argocd/applications/biscuit`のApplicationSetが、Cilium、TopoLVM、SeaweedFS、証明書、External SecretsをAgent経由で`biscuit`へ適用する。
 

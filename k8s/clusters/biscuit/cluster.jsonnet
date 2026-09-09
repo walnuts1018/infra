@@ -1,11 +1,13 @@
+local cluster = import 'cluster.json5';
 {
   apiVersion: 'cluster.x-k8s.io/v1beta2',
   kind: 'Cluster',
   metadata: {
-    name: (import 'cluster.json5').name,
-    namespace: (import 'cluster.json5').namespace,
+    name: cluster.name,
+    namespace: cluster.namespace,
     labels: {
-      'cluster.x-k8s.io/cluster-name': (import 'cluster.json5').name,
+      'cluster.x-k8s.io/cluster-name': cluster.name,
+      'argocd-agent.walnuts.dev/enabled': 'true',
     },
   },
   spec: {

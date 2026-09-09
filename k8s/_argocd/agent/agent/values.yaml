@@ -1,5 +1,8 @@
 fullnameOverride: argocd-agent
 
+image:
+  tag: v0.10.0 # TODO: appVersionがちゃんと上がったらそっちに合わせる
+
 agentMode: managed
 logFormat: json
 server: argocd-agent.local.walnuts.dev
