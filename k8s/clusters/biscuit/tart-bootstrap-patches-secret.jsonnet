@@ -32,11 +32,11 @@
         maxSize: 4GiB
       ---
       # DHCP(vyos側のstatic reservation名)がTalosの自動生成hostnameより優先されてしまい、
-      # nodeがネットワーク予約名(例: server-reserved-15)で登録されてしまう。
-      # DHCP由来の名前を上書きするため、TartHost名と一致する静的hostnameを明示する。
+      # nodeがネットワーク予約名(例: server-reserved-15)で登録されてしまう。providerがCAPI
+      # Machine名で静的hostnameを生成した上でこのpatchを適用するため、ここではhostnameを
+      # TartHost名で上書きするだけでよい(autoフィールドはprovider側で既に取り除かれている)。
       apiVersion: v1alpha1
       kind: HostnameConfig
-      auto: null
       hostname: eclair
       ---
       # kube-proxyはCiliumのkube-proxy replacementで代替するため無効化する。
@@ -51,6 +51,19 @@
       config:
         memorySwap:
           swapBehavior: LimitedSwap
+      ---
+      # 単一node(control plane兼worker)構成のため、通常のPodをcontrol planeへscheduleできる
+      # ようにNoSchedule taintを取り除く。Talosの`$patch: delete`構文でfieldごと削除する。
+      apiVersion: v1alpha1
+      kind: KubeNodeConfig
+      taints:
+        $patch: delete
+      ---
+      # CiliumをArgoCD側で別途管理するため、Talosが既定でinstallするFlannel CNIを取り除く。
+      # 導入までnodeはNotReadyのままになるため、Ciliumのdeployとセットで有効化すること。
+      apiVersion: v1alpha1
+      kind: KubeFlannelCNIConfig
+      $patch: delete
     |||,
   },
 }
