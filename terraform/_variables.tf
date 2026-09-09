@@ -55,18 +55,6 @@ variable "seaweedfs_biscuit_terraform_secret_key" {
   description = "SeaweedFS biscuit Terraform S3 secret key, supplied through TF_VAR_seaweedfs_biscuit_terraform_secret_key"
 }
 
-variable "seaweedfs_biscuit_kurumi_access_key" {
-  type        = string
-  sensitive   = true
-  description = "SeaweedFS biscuit kurumi writer access key, supplied through TF_VAR_seaweedfs_biscuit_kurumi_access_key"
-}
-
-variable "seaweedfs_biscuit_kurumi_secret_key" {
-  type        = string
-  sensitive   = true
-  description = "SeaweedFS biscuit kurumi writer secret key, supplied through TF_VAR_seaweedfs_biscuit_kurumi_secret_key"
-}
-
 # variable "zitadel_github_idp_client_secret" {
 #   type        = string
 #   sensitive   = true

@@ -19,8 +19,8 @@ log() {
 log "info" "Starting backup process"
 
 EXCLUDE_ARGS=()
-for BUCKET in $(rclone lsf minio-default: --dirs-only --config=/config/rclone.conf | sed 's/\///g'); do
-    if aws s3api get-bucket-tagging --profile minio-default --bucket "${BUCKET}" 2>/dev/null | jq -e '.TagSet[] | select(.Key == "skip-backup")' > /dev/null; then
+for BUCKET in $(rclone lsf seaweedfs-default: --dirs-only --config=/config/rclone.conf | sed 's/\///g'); do
+    if aws s3api get-bucket-tagging --profile seaweedfs-default --bucket "${BUCKET}" 2>/dev/null | jq -e '.TagSet[] | select(.Key == "skip-backup")' > /dev/null; then
         log "info" "Excluding bucket due to skip-backup tag" bucket "${BUCKET}"
         EXCLUDE_ARGS+=("--exclude" "/${BUCKET}/**")
     else
@@ -28,8 +28,8 @@ for BUCKET in $(rclone lsf minio-default: --dirs-only --config=/config/rclone.co
     fi
 done
 
-SOURCE_PATH="minio-default:"
-DEST_PATH="minio-biscuit:minio-default-backup/"
+SOURCE_PATH="seaweedfs-default:"
+DEST_PATH="seaweedfs-biscuit:seaweedfs-default-backup/"
 
 log "info" "Sync started" source "${SOURCE_PATH}" dest "${DEST_PATH}"
 

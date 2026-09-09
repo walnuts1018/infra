@@ -14,15 +14,3 @@ variable "seaweedfs_biscuit_terraform_secret_key" {
   sensitive   = true
   description = "SeaweedFS biscuit Terraform S3 secret key supplied by the root Terraform variable"
 }
-
-variable "seaweedfs_biscuit_kurumi_access_key" {
-  type        = string
-  sensitive   = true
-  description = "SeaweedFS biscuit kurumi writer access key supplied by the root Terraform variable"
-}
-
-variable "seaweedfs_biscuit_kurumi_secret_key" {
-  type        = string
-  sensitive   = true
-  description = "SeaweedFS biscuit kurumi writer secret key supplied by the root Terraform variable"
-}

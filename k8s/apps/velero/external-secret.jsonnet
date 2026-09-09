@@ -1,22 +1,22 @@
 local app = import 'app.json5';
 local credentialsToml = importstr './_config/credentials.toml.tmpl';
 std.mergePatch((import '../../components/external-secret.libsonnet') {
-  name: app.name + '-minio-biscuit',
+  name: app.name + '-seaweedfs-biscuit',
   namespace: app.namespace,
   use_suffix: false,
   data: [
     {
       secretKey: 'accessKey',
       remoteRef: {
-        key: 'velero',
-        property: 'access_key',
+        key: 'terraform-external-secrets',
+        property: 'seaweedfs_biscuit_velero_access_key',
       },
     },
     {
       secretKey: 'secretKey',
       remoteRef: {
-        key: 'velero',
-        property: 'secret_key',
+        key: 'terraform-external-secrets',
+        property: 'seaweedfs_biscuit_velero_secret_key',
       },
     },
   ],

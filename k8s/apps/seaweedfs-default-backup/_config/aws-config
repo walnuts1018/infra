@@ -1,0 +1,14 @@
+[profile seaweedfs-default]
+region = us-east-1
+endpoint_url = http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+credential_process = bash /scripts/assumerole.sh
+s3 =
+  endpoint_url = http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+  s3_force_path_style = true
+
+[profile seaweedfs-biscuit]
+region = ap-northeast-1
+endpoint_url = https://seaweedfs-biscuit.local.walnuts.dev
+s3 =
+  endpoint_url = https://seaweedfs-biscuit.local.walnuts.dev
+  s3_force_path_style = true

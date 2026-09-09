@@ -115,10 +115,8 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **cloudnative-pg-barman-cloud-plugin**: PostgreSQL バックアッププラグイン
 - **cloudnative-pg-image-catalog**
 - **influxdb**: 時系列データベース
-- **minio-biscuit**
-- **minio-biscuit-backup**
-- **minio-biscuit-backup-trigger**
-- **minio-default-backup**
+- **seaweedfs-biscuit**
+- **seaweedfs-default-backup**
 - **moco**: MySQL オペレーター
 - **postgresql-default**: 複数サービスで共用の PostgreSQL インスタンス
 - **rabbitmq-cluster-operator**

@@ -21,17 +21,45 @@ externalSecret {
       },
     },
     {
-      secretKey: 'kurumi_access_key',
+      secretKey: 'velero_access_key',
       remoteRef: {
         key: 'terraform-external-secrets',
-        property: 'seaweedfs_biscuit_kurumi_access_key',
+        property: 'seaweedfs_biscuit_velero_access_key',
       },
     },
     {
-      secretKey: 'kurumi_secret_key',
+      secretKey: 'velero_secret_key',
       remoteRef: {
         key: 'terraform-external-secrets',
-        property: 'seaweedfs_biscuit_kurumi_secret_key',
+        property: 'seaweedfs_biscuit_velero_secret_key',
+      },
+    },
+    {
+      secretKey: 'longhorn_access_key',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'seaweedfs_biscuit_longhorn_access_key',
+      },
+    },
+    {
+      secretKey: 'longhorn_secret_key',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'seaweedfs_biscuit_longhorn_secret_key',
+      },
+    },
+    {
+      secretKey: 'default_backup_access_key',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'seaweedfs_biscuit_default_backup_access_key',
+      },
+    },
+    {
+      secretKey: 'default_backup_secret_key',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'seaweedfs_biscuit_default_backup_secret_key',
       },
     },
   ],
@@ -50,15 +78,37 @@ externalSecret {
             "actions": ["Admin", "Read", "Write", "List", "Tagging"]
           },
           {
-            "name": "kurumi",
+            "name": "velero",
             "credentials": [
               {
-                "accessKey": "{{ .kurumi_access_key }}",
-                "secretKey": "{{ .kurumi_secret_key }}"
+                "accessKey": "{{ .velero_access_key }}",
+                "secretKey": "{{ .velero_secret_key }}"
               }
             ],
             "actions": ["Read", "Write", "List", "Tagging"],
-            "resources": ["buckets/cloudnative-pg-backup"]
+            "resources": ["buckets/velero-backup"]
+          },
+          {
+            "name": "longhorn",
+            "credentials": [
+              {
+                "accessKey": "{{ .longhorn_access_key }}",
+                "secretKey": "{{ .longhorn_secret_key }}"
+              }
+            ],
+            "actions": ["Read", "Write", "List", "Tagging"],
+            "resources": ["buckets/longhorn-backup"]
+          },
+          {
+            "name": "seaweedfs-default-backup",
+            "credentials": [
+              {
+                "accessKey": "{{ .default_backup_access_key }}",
+                "secretKey": "{{ .default_backup_secret_key }}"
+              }
+            ],
+            "actions": ["Read", "Write", "List", "Tagging"],
+            "resources": ["buckets/seaweedfs-default-backup"]
           }
         ]
       }

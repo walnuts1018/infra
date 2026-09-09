@@ -57,8 +57,8 @@ local app = import 'app.json5';
                       subPath: 'usr/local/bin',
                     },
                     {
-                      name: 'minio-default-sts-token',
-                      mountPath: '/var/run/secrets/sts.min.io/serviceaccount',
+                      name: 'seaweedfs-default-sts-token',
+                      mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
                       readOnly: true,
                     },
                     {
@@ -110,12 +110,12 @@ local app = import 'app.json5';
                 },
               },
               {
-                name: 'minio-default-sts-token',
+                name: 'seaweedfs-default-sts-token',
                 projected: {
                   sources: [
                     {
                       serviceAccountToken: {
-                        audience: 'sts.min.io',
+                        audience: 'sts.seaweedfs.com',
                         path: 'token',
                       },
                     },

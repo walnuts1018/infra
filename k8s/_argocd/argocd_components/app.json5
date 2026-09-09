@@ -12,7 +12,6 @@
     },
   },
   clusters: {
-    // berry is the Argo CD hub. Spokes use k8s/_argocd/spoke.
     berry: {
       jsonnet: {
         tlas: [

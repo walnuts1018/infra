@@ -4,10 +4,17 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
   use_suffix: false,
   data: [
     {
+      secretKey: 'AWS_ACCESS_KEY_ID',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'seaweedfs_biscuit_longhorn_access_key',
+      },
+    },
+    {
       secretKey: 'AWS_SECRET_ACCESS_KEY',
       remoteRef: {
-        key: 'longhorn',
-        property: 'minio_secret_key',
+        key: 'terraform-external-secrets',
+        property: 'seaweedfs_biscuit_longhorn_secret_key',
       },
     },
   ],
@@ -18,9 +25,9 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
         engineVersion: 'v2',
         type: 'Opaque',
         data: {
-          AWS_ACCESS_KEY_ID: 'abaQ84KgJMyEtxZzW3RW',
+          AWS_ACCESS_KEY_ID: '{{ .AWS_ACCESS_KEY_ID }}',
           AWS_SECRET_ACCESS_KEY: '{{ .AWS_SECRET_ACCESS_KEY }}',
-          AWS_ENDPOINTS: 'https://minio-biscuit.local.walnuts.dev/',
+          AWS_ENDPOINTS: 'https://seaweedfs-biscuit.local.walnuts.dev/',
         },
       },
     },

@@ -6,10 +6,17 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
   use_suffix: false,
   data: [
     {
-      secretKey: 'minio_biscuit_secret_key',
+      secretKey: 'seaweedfs_biscuit_default_backup_access_key',
       remoteRef: {
-        key: 'minio-default-backup',
-        property: 'minio_biscuit_secret_key',
+        key: 'terraform-external-secrets',
+        property: 'seaweedfs_biscuit_default_backup_access_key',
+      },
+    },
+    {
+      secretKey: 'seaweedfs_biscuit_default_backup_secret_key',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'seaweedfs_biscuit_default_backup_secret_key',
       },
     },
   ],

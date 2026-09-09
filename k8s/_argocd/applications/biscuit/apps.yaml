@@ -17,7 +17,7 @@ spec:
           - path: "k8s/apps/*/app.json5"
       - list:
           elements:
-          - biscuitEnabled: '{{ hasKey .clusters "biscuit" }}'
+          - biscuitEnabled: '{{ hasKey (default dict .clusters) "biscuit" }}'
     selector:
       matchLabels:
         biscuitEnabled: "true"

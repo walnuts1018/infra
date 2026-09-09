@@ -17,30 +17,6 @@ local app = import 'app.json5';
         ],
       },
       {
-        dnsName: 'minio-biscuit.local.walnuts.dev',
-        recordTTL: 60,
-        recordType: 'A',
-        targets: [
-          '192.168.16.159',
-        ],
-      },
-      {
-        dnsName: 'minio-biscuit-console.local.walnuts.dev',
-        recordTTL: 60,
-        recordType: 'A',
-        targets: [
-          '192.168.16.159',
-        ],
-      },
-      {
-        dnsName: 'sts-minio.local.walnuts.dev',
-        recordTTL: 60,
-        recordType: 'A',
-        targets: [
-          '192.168.12.138',
-        ],
-      },
-      {
         dnsName: 'shutdown-manager.local.walnuts.dev',
         recordTTL: 60,
         recordType: 'A',
