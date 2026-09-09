@@ -5,7 +5,7 @@ local credentialsToml = |||
   aws_secret_access_key = {{ .secretKey }}
 |||;
 std.mergePatch((import '../../components/external-secret.libsonnet') {
-  name: app.name + '-minio-biscuit-' + std.md5(std.toString($.data) + (credentialsToml))[0:6],
+  name: app.name + '-minio-biscuit',
   namespace: app.namespace,
   use_suffix: false,
   data: [

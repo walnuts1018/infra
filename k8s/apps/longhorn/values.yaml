@@ -59,7 +59,7 @@ metrics:
 
 defaultBackupStore:
   backupTarget: "s3://longhorn-backup@ap-northeast-1/"
-  backupTargetCredentialSecret: longhorn-backupstore-credential-6cfe2a
+  backupTargetCredentialSecret: longhorn-backupstore-credential
 
 longhornManager:
   resources:

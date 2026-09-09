@@ -8,12 +8,12 @@ Kubernetes クラスタに適用される Manifest 群です。
   - `applications`: ArgoCD Application リソース
     - `[<cluster>]`:
       - `apps.yaml`: ApplicationSet / `apps`ディレクトリの`app.json5`を見てApplicationを生成
-      - `argodcd.yaml`: `argocd_components`を見るApplication
+      - `argocd.yaml`: `argocd_components`を見るApplication
       - `namespaces.yaml`: `namespace` を見る Application
   - `argocd_components`: ArgoCD 用のコンポーネント
     - `appproject.jsonnet`: ArgoCD AppProject
     - `externalsecret.jsonnet`: ArgoCD用のSecret
-    - `helm.jsonnet`: ArgoCD
+    - `app.json5`: ApplicationのmetadataとHelm/Kustomizeのsource定義
     - `notification-externalsecret.jsonnet`: Secret
     - `values.yaml`: ArgoCDの Helm values
   - `clusters`: クラスタ固有の設定
