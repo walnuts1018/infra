@@ -2,6 +2,9 @@ installCRDs: true
 config:
   featureGates:
     ExperimentalGatewayAPISupport: true
+extraArgs:
+- --dns01-recursive-nameservers=1.1.1.1:53,1.0.0.1:53
+- --dns01-recursive-nameservers-only
 prometheus:
   enabled: true
   servicemonitor:
@@ -10,16 +13,20 @@ prometheus:
 resources:
   requests:
     cpu: 1m
-    memory: 78Mi
+    memory: 60Mi
 
 webhook:
   resources:
     requests:
       cpu: 1m
-      memory: 64Mi
+      memory: 50Mi
 
 cainjector:
   resources:
     requests:
       cpu: 1m
-      memory: 112Mi
+      memory: 140Mi
+
+tolerations:
+- key: "node.walnuts.dev/low-performance"
+  operator: "Exists"

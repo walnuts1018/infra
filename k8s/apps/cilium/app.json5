@@ -1,25 +1,7 @@
 {
   name: "cilium",
   namespace: "cilium-system",
-  additionalSources: {
-    helm: {
-      repoURL: "https://helm.cilium.io/",
-      chart: "cilium",
-      targetRevision: "1.18.6",
-      valueFiles: [
-        "values.yaml"
-      ]
-    },
-  },
   clusters: {
-    kurumi: {
-      additionalSources: {
-        helm: {
-          additionalValueFiles: [
-            "values-kurumi.yaml",
-          ],
-        }
-      }
-    },
+    kurumi: {},
   },
 }

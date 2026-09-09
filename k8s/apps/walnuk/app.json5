@@ -1,0 +1,11 @@
+{
+  name: "walnuk",
+  namespace: "walnuk",
+  appname: {
+    backend: "walnuk-backend",
+    frontend: "walnuk-frontend",
+  },
+  clusters: {
+    kurumi: {},
+  },
+}

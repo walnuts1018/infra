@@ -10,27 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: switch to auto-gen-namespace branch
         run: git switch -c auto-gen-namespace
 
       - name: setup-go
-        uses: actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5 # v6.2.0
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: "scripts/infrautil/go.mod"
           cache-dependency-path: "scripts/infrautil/go.sum"
 
-      - name: make namespace
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+      - name: run namespace
         run: |
-          make namespace
+          mise run namespace
 
       - name: check diff
         id: check-diff
         run: |
           echo "diff=$(git diff --name-only | wc -l)" >> $GITHUB_OUTPUT
 
-      - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: generate_token
         if: steps.check-diff.outputs.diff > 0
         with:

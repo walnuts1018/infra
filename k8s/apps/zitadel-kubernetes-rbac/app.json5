@@ -1,0 +1,10 @@
+{
+  name: "zitadel-kubernetes-rbac",
+  namespace: "kube-system",
+  clusters: {
+    kurumi: {},
+  },
+  params: {
+    oidcIssuerAudience: "385225927988084784",
+  },
+}

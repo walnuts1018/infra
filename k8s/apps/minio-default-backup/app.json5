@@ -1,0 +1,7 @@
+{
+  name: "minio-default-backup",
+  namespace: "minio",
+  clusters: {
+    kurumi: {},
+  },
+}

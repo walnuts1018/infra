@@ -1,0 +1,7 @@
+{
+  name: "picca-dev",
+  namespace: "picca-dev",
+  clusters: {
+    kurumi: {},
+  },
+}

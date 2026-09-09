@@ -1,0 +1,7 @@
+{
+  name: "nvidia-gpu-operator",
+  namespace: "nvidia-gpu-operator",
+  clusters: {
+    kurumi: {},
+  },
+}

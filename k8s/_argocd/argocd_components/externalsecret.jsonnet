@@ -1,9 +1,10 @@
+local app = import 'app.json5';
 {
   apiVersion: 'external-secrets.io/v1',
   kind: 'ExternalSecret',
   metadata: {
     name: 'argocd-oidc',
-    namespace: (import 'app.json5').namespace,
+    namespace: app.namespace,
     labels: {
       'app.kubernetes.io/part-of': 'argocd',
     },
@@ -23,6 +24,13 @@
         remoteRef: {
           key: 'argocd-oidc',
           property: 'client-secret',
+        },
+      },
+      {
+        secretKey: 'cli-client-id',
+        remoteRef: {
+          key: 'terraform-external-secrets',
+          property: 'argocd-cli-client-id',
         },
       },
     ],

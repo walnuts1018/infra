@@ -1,18 +1,21 @@
-function(loadBalancerIP, minReplicas) {
+function(loadBalancerIP='192.168.12.138') {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'EnvoyProxy',
-  metadata: (import 'envoy-proxy-metadata.libsonnet'),
+  metadata: {
+    name: 'custom-config',
+    namespace: (import 'app.json5').namespace,
+  },
   spec: {
     provider: {
       type: 'Kubernetes',
       kubernetes: {
         envoyDeployment: {
-          replicas: minReplicas,
+          replicas: 2,
           container: {
             resources: {
               requests: {
-                cpu: '5m',
-                memory: '64Mi',
+                cpu: '8m',
+                memory: '96Mi',
               },
               limits: {
                 memory: '1Gi',
@@ -21,7 +24,7 @@ function(loadBalancerIP, minReplicas) {
           },
         },
         envoyHpa: {
-          minReplicas: minReplicas,
+          minReplicas: 2,
           maxReplicas: 5,
           metrics: [
             {
@@ -37,8 +40,9 @@ function(loadBalancerIP, minReplicas) {
           ],
         },
         envoyService: {
-          type: 'LoadBalancer',
+          externalTrafficPolicy: 'Local',
           loadBalancerIP: loadBalancerIP,
+          type: 'LoadBalancer',
         },
       },
     },
@@ -49,11 +53,36 @@ function(loadBalancerIP, minReplicas) {
     //   },
     // },
     telemetry: {
+      // TODO:  OpenTelemetryを使うと、複数のPodのメトリクスを区別できない
+      // https://github.com/envoyproxy/gateway/issues/9093 が実装されたら、resource attributeにPod名を付与するようにする
+      //
+      // metrics: {
+      //   sinks: [
+      //     {
+      //       type: 'OpenTelemetry',
+      //       openTelemetry: {
+      //         backendRefs: [
+      //           {
+      //             name: 'default-collector',
+      //             namespace: 'opentelemetry-collector',
+      //             port: 4317,
+      //           },
+      //         ],
+      //       },
+      //     },
+      //   ],
+      // },
       tracing: {
         samplingRate: 100,
         provider: {
-          host: 'default-collector.opentelemetry-collector.svc.cluster.local',
-          port: 4317,
+          type: 'OpenTelemetry',
+          backendRefs: [
+            {
+              name: 'default-collector',
+              namespace: 'opentelemetry-collector',
+              port: 4317,
+            },
+          ],
         },
       },
     },

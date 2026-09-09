@@ -17,4 +17,3 @@ resource "cloudflare_zone" "walnuts_dev" {
     name = "walnuts1018"
   }
 }
-

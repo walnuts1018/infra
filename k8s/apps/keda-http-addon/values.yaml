@@ -1,0 +1,33 @@
+# KEDA HTTP Add-on values for scale-to-zero via HTTP requests.
+# See https://keda.sh/http-add-on/operations/installation/ for all options.
+
+interceptor:
+  replicas:
+    min: 1
+    max: 10
+  # Allow quick cold start for radar (holds request while pod scales from 0).
+  # Defaults are 300s responseHeaderTimeout, disabled requestTimeout.
+  # Keep defaults unless tuning is needed.
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+
+scaler:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      memory: 256Mi
+
+operator:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      memory: 256Mi

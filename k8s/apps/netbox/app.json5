@@ -1,0 +1,7 @@
+{
+  name: "netbox",
+  namespace: "netbox",
+  clusters: {
+    kurumi: {},
+  },
+}

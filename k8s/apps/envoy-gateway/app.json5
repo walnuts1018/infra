@@ -1,25 +1,7 @@
 {
   name: "envoy-gateway",
   namespace: "envoy-gateway-system",
-  additionalSources: {
-    helm: {
-      repoURL: "docker.io/envoyproxy",
-      chart: "gateway-helm",
-      targetRevision: "1.6.1",
-      valueFiles: [
-        "values.yaml"
-      ]
-    },
-  },
   clusters: {
-    kurumi: {
-      additionalSources: {
-        helm: {
-          additionalValueFiles: [
-            "values.kurumi.yaml",
-          ],
-        }
-      }
-    },
+    kurumi: {},
   },
 }

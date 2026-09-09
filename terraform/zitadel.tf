@@ -1,9 +1,54 @@
 module "zitadel" {
-  source           = "./modules/zitadel"
-  jwt_profile_json = var.zitadel_jwt_profile_json
+  source                   = "./modules/zitadel"
+  jwt_profile_json         = var.zitadel_jwt_profile_json
+  google_idp_client_secret = var.zitadel_google_idp_client_secret
+  # github_idp_client_secret = var.zitadel_github_idp_client_secret
 }
 
-moved {
-  from = module.zitadel.zitadel_project.default
-  to   = module.zitadel.zitadel_project.walnuts_dev
+output "netbird_oidc_client_id" {
+  value       = module.zitadel.netbird_oidc_client_id
+  description = "Client ID for NetBird's ZITADEL identity-provider connector"
+}
+
+output "netbird_oidc_client_secret" {
+  value       = module.zitadel.netbird_oidc_client_secret
+  sensitive   = true
+  description = "Client secret for NetBird's ZITADEL identity-provider connector"
+}
+
+output "stalwart_oidc_client_id" {
+  value       = nonsensitive(module.zitadel.stalwart_oidc_client_id) // client_idは公開しても問題ない
+  description = "Client ID for Stalwart's ZITADEL OpenID Connect directory"
+}
+
+output "shumoku_oidc_client_id" {
+  value       = nonsensitive(module.zitadel.shumoku_oidc_client_id)
+  description = "Client ID for Shumoku's Envoy Gateway OIDC policy"
+}
+
+output "shumoku_oidc_client_secret" {
+  value       = module.zitadel.shumoku_oidc_client_secret
+  sensitive   = true
+  description = "Store this in 1Password item shumoku as client_secret"
+}
+
+output "radar_oidc_client_id" {
+  value       = nonsensitive(module.zitadel.radar_oidc_client_id)
+  description = "Client ID for Radar's ZITADEL OIDC login"
+}
+
+output "radar_oidc_client_secret" {
+  value       = module.zitadel.radar_oidc_client_secret
+  sensitive   = true
+  description = "OIDC client secret for Radar"
+}
+
+output "kubernetes_oidc_issuer_audience" {
+  value       = module.zitadel.kubernetes_oidc_issuer_audience
+  description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy (passed to --oidc-client-id)"
+}
+
+output "terraform_cloud_saml_metadata_url" {
+  value       = module.zitadel.terraform_cloud_saml_metadata_url
+  description = "Zitadel SAML metadata URL for Terraform Cloud"
 }

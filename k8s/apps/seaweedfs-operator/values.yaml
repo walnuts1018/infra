@@ -1,0 +1,14 @@
+replicaCount: 1
+
+grafanaDashboard:
+  enabled: true
+
+serviceMonitor:
+  enabled: true
+
+resources:
+  requests:
+    cpu: 5m
+    memory: 80Mi
+  limits:
+    memory: 256Mi

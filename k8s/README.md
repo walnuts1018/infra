@@ -43,85 +43,109 @@ Kubernetes クラスタに適用される Manifest 群です。
 
 ### システム・インフラ
 
-- **agones**
+- **actions-runner-controller**: GitHub Actions Runner Controller (ARC) Operator
+- **actions-runners**: GitHub Actions Self-hosted Runner Scale Sets (Small / Large)
+- **api-server-proxy**
+- **api-server-service-account-issuer-discovery**
+- **argocd-proxy**
 - **cert-manager**
 - **cilium**
 - **cilium-hubble-oauth2-proxy**: Cilium Hubble UI の OAuth2 Proxy
 - **cilium-ipaddress**: Cilium LB 用 の IP アドレス管理
 - **cloudflare-tunnel**: Cloudflare Tunnel Resource
 - **cloudflare-tunnel-operator**: Cloudflare TunnelをCustom Resourceから自動作成
+- **cluster-api-operator**
 - **clusterissuer**
+- **coredns**
 - **descheduler**
 - **envoy-gateway**
-- **external-secrets**:
+- **envoy-gateway-class**
+- **external-dns**
+- **external-secrets**
 - **external-secrets-store**: External Secrets のOnePassword プロバイダー
+- **eck-operator**: Elastic 公式の Elastic Cloud on Kubernetes Operator
+- **external-snapshotter**
 - **ghcr-login-secret**
-- **ingress-nginx**
+- **kube-virt**
 - **local-path-provisioner**
 - **longhorn**
 - **longhorn-backup**: Longhorn バックアップ設定
+- **longhorn-backup-validate**
+- **longhorn-backup-validate-template**
 - **longhorn-oauth2-proxy**: Longhorn UI の OAuth2 Proxy
+- **mcs-api**
+- **nvidia-gpu-operator**
 - **priorities**: Pod 優先度クラスの設定
-- **redis-operator**
 - **renovate**: Self-hosted Renovate
 - **tailscale**
+- **trivy-operator**
 - **trust-manager**
+- **velero**
 
 ### モニタリング・オブザーバビリティ
 
 - **blackbox-exporter**
+- **caretta**
 - **ephemeral-storage-metrics**
+- **grafana**
+- **kube-state-metrics**
 - **loki**
 - **metrics-server**
 - **opencost**
 - **opentelemetry-collectors**
 - **opentelemetry-instrumentations**
 - **opentelemetry-operator**
-- **prometheus-oauth2-proxy**: Prometheus UI の OAuth2 Proxy
-- **prometheus-stack**
+- **prometheus-node-exporter**
+- **prometheus-operator-crds**
+- **pyroscope**
 - **smartctl-exporter**
 - **snmp-exporter**
 - **tempo**
+- **victoria-metrics**
 
 ### データベース・ストレージ
 
 - **cloudnative-pg**: PostgreSQL オペレーター
 - **cloudnative-pg-barman-cloud-plugin**: PostgreSQL バックアッププラグイン
+- **cloudnative-pg-image-catalog**
 - **influxdb**: 時系列データベース
-- **minio**
-- **minio-operator**
+- **minio-biscuit**
+- **minio-biscuit-backup**
+- **minio-biscuit-backup-trigger**
+- **minio-default-backup**
 - **moco**: MySQL オペレーター
 - **postgresql-default**: 複数サービスで共用の PostgreSQL インスタンス
+- **rabbitmq-cluster-operator**
+- **rabbitmq-default**
+- **rabbitmq-topology-operator**
 - **samba**
-- **samba-backup**: Samba バックアップ
+- **scylla-cluster**
+- **scylla-manager**
+- **scylla-node-config**
+- **scylla-operator**
+- **seaweedfs-default**
+- **seaweedfs-operator**
+- **stalwart-search**: Stalwart の全文検索用 Elasticsearch クラスター
 
 ### アプリケーション
 
-- **ac-hacking-2024**: ハンズオンでエアコンハッキングを行うためのサイト
 - **affine**: ノート
-- **code-server**: ブラウザベース IDE
-- **code-server-operator**: Code Server を Custom Resource から自動作成
+- **esp32-thermohygrometer-exporter**: ESP32 の温湿度データを OpenTelemetry にエクスポート
 - **fitbit-manager**: Fitbitのデータを収集し、InfluxDBに保存する /<https://walnuts.dev> に心拍数データを提供
 - **github-readme-stats**
-- **hedgedoc**: メモツール / <https://hedgedoc.org/>
 - **http-dump**: HTTP テスト用サイト / <https://httptest.walnuts.dev>
 - **ipu**: IPU Doc
-- **ipxe-manager**: iPXE ブート管理
 - **komga**: 電子書籍管理 / <https://komga.org/>
 - **machine-status-api**: GPIOで物理サーバーを起動するためのAPIサーバー
 - **misskey**: <https://misskey.walnuts.dev>
 - **mpeg-dash-encoder**: MPEG-DASH のエンコードを行うAPI サーバー
 - **mucaron**: 音楽アプリ
-- **n8n**: <https://n8n.io>
-- **nginx-test**: テスト・デバッグ用の Nginx
 - **oekaki-dengon-game**: NF2023で開催したお絵描き伝言ゲーム / <https://oekaki.walnuts.dev/public>
 - **openchokin**: 家計簿アプリ
-- **photoprism**: 写真管理 / <https://www.photoprism.app/>
-- **teddy**
+- **prfexample**
+- **stalwart**
 - **ubuntu-test**: テスト・デバッグ用のコンテナ
-- **wakatime-to-slack-profile**: VSCodeで書いている言語をSlackのステータスに反映 / <https://github.com/walnuts1018/wakatime-to-slack-profile>
 - **walnuk**: 短縮URLサービス <https://waln.uk>
 - **walnuts-dev**: <https://walnuts.dev>
-- **walnuts-dev-www-redirect**: <https://www.walnuts.dev>
 - **warrior**
 - **zitadel**: 自宅IdP / Walnuts.devの各サービスにSSOを提供

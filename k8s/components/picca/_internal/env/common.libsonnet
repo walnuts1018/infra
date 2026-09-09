@@ -1,0 +1,6 @@
+function(app)
+  (import 'observability.libsonnet')(app)
+  + (import 'storage.libsonnet')(app)
+  + (import 'database.libsonnet')(app)
+  + (import 'oidc.libsonnet')(app)
+  + (import 'search-ai.libsonnet')(app)

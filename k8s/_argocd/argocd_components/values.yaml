@@ -1,5 +1,5 @@
 global:
-  domain: argocd.local.walnuts.dev
+  domain: argocd.walnuts.dev
   logging:
     format: json
     level: info
@@ -25,6 +25,7 @@ configs:
       issuer: https://auth.walnuts.dev
       clientID: "296595833422414292"
       clientSecret: $argocd-oidc:client-secret
+      cliClientID: $argocd-oidc:cli-client-id
       requestedScopes:
       - openid
       - email
@@ -36,6 +37,7 @@ configs:
   params:
     server.insecure: true
     server.basehref: /
+    redis.key.prefix: "{argocd}:"
     controller.diff.server.side: "true"
     controller.resource.health.persist: "false"
     applicationsetcontroller.enable.new.git.file.globbing: "true"
@@ -61,12 +63,11 @@ controller:
       enabled: true
   resources:
     requests:
-      cpu: 300m
-      memory: 300Mi
+      cpu: "1"
+      memory: 1268Mi
     limits:
-      cpu: 1000m
-      memory: 1Gi
-
+      cpu: "2"
+      memory: 4Gi
 dex:
   metrics:
     enabled: true
@@ -75,43 +76,50 @@ dex:
   resources:
     requests:
       cpu: 1m
-      memory: 15Mi
+      memory: 20Mi
     limits:
-      cpu: 100m
+      cpu: 500m
       memory: 256Mi
-
 redis:
+  enabled: false
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
   resources:
     requests:
-      cpu: 10m
-      memory: 10Mi
+      cpu: 5m
+      memory: 16Mi
     limits:
       cpu: 100m
       memory: 256Mi
 
+redis-ha:
+  enabled: false
+
+externalRedis:
+  host: valkey-argocd-valkey.argocd.svc.cluster.local
+
 server:
   ingress:
     enabled: false
-  httproute:
-    enabled: false
+    controller: generic
+    ingressClassName: "cilium"
+    tls: false
   metrics:
     enabled: true
     serviceMonitor:
       enabled: true
   autoscaling:
-    enabled: false
-  service:
-    type: NodePort
-    nodePortHttp: 30080
-    nodePortHttps: 30443
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 100
+    targetMemoryUtilizationPercentage: 10000 # memoryによるHPAを無効化するために大きな値を設定
   resources:
     requests:
-      cpu: 5m
-      memory: 50Mi
+      cpu: 50m
+      memory: 86Mi
     limits:
       cpu: 500m
       memory: 512Mi
@@ -122,14 +130,17 @@ repoServer:
     serviceMonitor:
       enabled: true
   autoscaling:
-    enabled: false
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 100
+    targetMemoryUtilizationPercentage: 10000 # memoryによるHPAを無効化するために大きな値を設定
   resources:
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 120m
+      memory: 128Mi
     limits:
-      cpu: 300m
-      memory: 512Mi
+      memory: 1Gi
 
 applicationSet:
   metrics:
@@ -138,14 +149,16 @@ applicationSet:
       enabled: true
   resources:
     requests:
-      cpu: 3m
-      memory: 40Mi
+      cpu: 15m
+      memory: 64Mi
     limits:
-      cpu: 100m
+      cpu: 500m
       memory: 512Mi
 
 notifications:
-  argocdUrl: "https://argocd.local.walnuts.dev"
+  argocdUrl: "https://argocd.walnuts.dev"
+  context:
+    cluster: "kurumi"
   secret:
     create: false
     name: "argocd-notifications-secret"
@@ -429,9 +442,9 @@ notifications:
     serviceMonitor:
       enabled: true
   resources:
-    requests:
-      cpu: 1m
-      memory: 30Mi
     limits:
       cpu: 100m
       memory: 128Mi
+    requests:
+      cpu: 2m
+      memory: 74Mi

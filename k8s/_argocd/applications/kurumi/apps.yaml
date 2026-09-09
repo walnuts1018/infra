@@ -4,6 +4,8 @@ metadata:
   name: apps
   namespace: argocd
 spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: false
   goTemplate: true
   generators:
   - matrix:

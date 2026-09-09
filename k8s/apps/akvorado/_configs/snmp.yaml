@@ -1,0 +1,5 @@
+- type: snmp
+  credentials:
+    ::/0:
+      communities:
+        - "{{ .snmp_community }}"

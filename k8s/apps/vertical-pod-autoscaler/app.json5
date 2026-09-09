@@ -1,0 +1,7 @@
+{
+  name: "vertical-pod-autoscaler",
+  namespace: "kube-system",
+  clusters: {
+    kurumi: {},
+  },
+}

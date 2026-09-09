@@ -1,0 +1,7 @@
+{
+  name: "rabbitmq-default",
+  namespace: "rabbitmq",
+  clusters: {
+    kurumi: {},
+  },
+}

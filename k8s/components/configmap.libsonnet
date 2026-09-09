@@ -5,6 +5,7 @@
   labels:: {},
   apiVersion: 'v1',
   kind: 'ConfigMap',
+  immutable: $.use_suffix,
   metadata: {
     name: $.name + if $.use_suffix then '-' + std.md5(std.toString($.data))[0:6] else '',
     namespace: $.namespace,

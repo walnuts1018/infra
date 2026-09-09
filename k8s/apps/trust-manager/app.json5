@@ -1,26 +1,7 @@
 {
   name: "trust-manager",
   namespace: "cert-manager",
-  additionalSources: {
-    helm: {
-      repoURL: 'https://charts.jetstack.io',
-      chart: 'trust-manager',
-      targetRevision: 'v0.20.3',
-      valueFiles: [
-        "values.yaml"
-      ]
-    },
-  },
   clusters: {
-    kurumi: {
-      additionalSources: {
-        helm: {
-          additionalValueFiles: [
-            "values.kurumi.yaml",
-          ],
-        }
-      }
-    },
-    berry: {},
+    kurumi: {},
   },
 }

@@ -2,8 +2,6 @@
   name: "priorities",
   namespace: "kube-system",
   clusters: {
-    berry: {},
     kurumi: {},
-    biscuit: {},
   },
 }

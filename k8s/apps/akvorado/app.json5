@@ -1,0 +1,7 @@
+{
+  name: "akvorado",
+  namespace: "akvorado",
+  clusters: {
+    kurumi: {},
+  },
+}

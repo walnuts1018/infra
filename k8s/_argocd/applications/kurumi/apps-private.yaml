@@ -5,6 +5,8 @@ metadata:
   namespace: argocd
 
 spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: false
   goTemplate: true
   generators:
   - git:

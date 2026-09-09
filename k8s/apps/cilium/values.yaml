@@ -1,7 +1,7 @@
 kubeProxyReplacement: true
 l7Proxy: true
-l2announcements:
-  enabled: true
+k8sServiceHost: 192.168.0.17
+k8sServicePort: 16443
 bgpControlPlane:
   enabled: true
 k8sClientRateLimit:
@@ -18,6 +18,8 @@ ingressController:
   loadbalancerMode: shared
   default: true
   enforceHttps: true
+  service:
+    loadBalancerIP: 192.168.12.129
   defaultSecretName: cloudflare-origin-cert
   defaultSecretNamespace: cilium-system
   secretsNamespace:
@@ -26,8 +28,6 @@ ingressController:
     # -- Enable secret sync, which will make sure all TLS secrets used by Ingress are synced to secretsNamespace.name.
     # If disabled, TLS secrets must be maintained externally.
     sync: true
-gatewayAPI:
-  enabled: true
 nodePort:
   enabled: true
 hubble:
@@ -44,8 +44,8 @@ hubble:
         enabled: true
     resources:
       requests:
-        cpu: 1m
-        memory: 80Mi
+        cpu: 5m
+        memory: 48Mi
       limits:
         memory: 512Mi
   ui:
@@ -53,7 +53,7 @@ hubble:
     backend:
       resources:
         requests:
-          cpu: 1m
+          cpu: 5m
           memory: 60Mi
         limits:
           memory: 256Mi
@@ -80,6 +80,8 @@ hubble:
     dashboards:
       enabled: true
 envoy:
+  log:
+    accessLogBufferSize: 16384 # Envoy: Discarded truncated access log message - increase buffer size via --envoy-access-log-buffer-size って言われるので増やす
   prometheus:
     enabled: true
     serviceMonitor:
@@ -89,16 +91,17 @@ envoy:
       cpu: 10m
       memory: 51Mi
 operator:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 60Mi
+    limits:
+      memory: 512Mi
   prometheus:
     enabled: true
     serviceMonitor:
       enabled: true
-  resources:
-    requests:
-      cpu: 2m
-      memory: 51Mi
-    limits:
-      memory: 512Mi
 prometheus:
   enabled: true
   serviceMonitor:

@@ -2,7 +2,7 @@ terraform {
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.16.0"
+      version = "5.24.0"
     }
   }
 }
@@ -10,6 +10,14 @@ terraform {
 variable "cloudflare_api_token" {
   type      = string
   sensitive = true
+}
+
+variable "amazonses_verification_token_walnuts_dev" {
+  type = string
+}
+
+variable "amazonses_dkim_tokens_walnuts_dev" {
+  type = list(string)
 }
 
 provider "cloudflare" {

@@ -8,8 +8,11 @@
   spec: {
     dnsNames: [
       '*.local.walnuts.dev',
+      '*.seaweedfs.local.walnuts.dev',
+      '*.seaweedfs.walnuts.dev',
       '*.walnuts.dev',
       'walnuts.dev',
+      '*.waln.uk',
     ],
     issuerRef: {
       group: 'cert-manager.io',

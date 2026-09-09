@@ -1,0 +1,7 @@
+{
+  name: "longhorn",
+  namespace: "longhorn-system",
+  clusters: {
+    kurumi: {},
+  },
+}

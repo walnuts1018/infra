@@ -1,0 +1,7 @@
+{
+  name: "visual-regression-tracker",
+  namespace: "visual-regression-tracker",
+  clusters: {
+    kurumi: {},
+  },
+}

@@ -1,0 +1,11 @@
+replicas: 1
+
+watchAnyNamespace: true
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 1000m
+    memory: 512Mi

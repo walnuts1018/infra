@@ -3,6 +3,5 @@
   namespace: "cert-manager",
   clusters: {
     kurumi: {},
-    berry: {},
   },
 }

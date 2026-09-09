@@ -1,0 +1,7 @@
+{
+  name: "kube-state-metrics",
+  namespace: "monitoring",
+  clusters: {
+    kurumi: {},
+  },
+}

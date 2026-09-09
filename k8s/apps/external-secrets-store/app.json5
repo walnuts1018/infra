@@ -2,6 +2,6 @@
   name: "external-secrets-store",
   namespace: "external-secrets",
   clusters: {
-    berry: {},
+    kurumi: {},
   },
 }

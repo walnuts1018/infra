@@ -1,0 +1,7 @@
+{
+  name: "keda-http-addon",
+  namespace: "keda",
+  clusters: {
+    kurumi: {},
+  },
+}
