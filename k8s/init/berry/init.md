@@ -48,7 +48,11 @@ sudo vim /etc/rancher/k3s/config.yaml
 ```yaml
 write-kubeconfig-mode: "0644"
 disable:
-- local-storage
+  - servicelb
+  - local-storage
+  - metrics-server
+disable-network-policy: true
+flannel-backend: host-gw
 ```
 
 ```bash
