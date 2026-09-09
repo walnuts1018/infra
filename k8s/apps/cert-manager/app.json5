@@ -12,24 +12,16 @@
     },
   },
   clusters: {
-    kurumi: {},
-    berry: {
+    kurumi: {
       additionalSources: {
         helm: {
           additionalValueFiles: [
-            "values.berry.yaml",
+            "values.kurumi.yaml",
           ],
         },
       },
     },
-    biscuit: {
-      additionalSources: {
-        helm: {
-          additionalValueFiles: [
-            "values.biscuit.yaml",
-          ],
-        },
-      },
-    },
+    berry: {},
+    biscuit: {},
   },
 }
