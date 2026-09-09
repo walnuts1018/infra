@@ -4,6 +4,9 @@
   metadata: {
     name: 'argocd-agent-client-biscuit',
     namespace: 'argocd',
+    annotations: {
+      'argocd.argoproj.io/sync-wave': '0',
+    },
   },
   spec: {
     commonName: 'biscuit',

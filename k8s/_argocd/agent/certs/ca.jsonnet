@@ -4,6 +4,9 @@
   metadata: {
     name: 'argocd-agent-ca',
     namespace: 'argocd',
+    annotations: {
+      'argocd.argoproj.io/sync-wave': '-2',
+    },
   },
   spec: {
     isCA: true,

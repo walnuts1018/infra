@@ -25,7 +25,7 @@ kubectl --context berry -n argocd get secret argocd-agent-client-tls-biscuit
 
 ## リモート側のSpoke導入
 
-各クラスターで同じ手順を実行し、`CLUSTER_CONTEXT`だけ対象に合わせる。リモート側へ渡す証明書は一時ファイルを作らず、Secretから直接`kubectl`へ渡す。
+各クラスターで同じ手順を実行し、`CLUSTER_CONTEXT`だけ対象に合わせる。リモート側へ渡す証明書は一時ファイルを作らず、Secretから直接`kubectl`へ渡す。このHelm導入は既存クラスターをAgent管理へ移行するための一度限りのBootstrapであり、以後の変更はberry上のGitOps管理下にある`argocd-spoke-*`と`argocd-agent-*`で行う。
 
 ```bash
 CLUSTER_CONTEXT=kurumi
@@ -55,6 +55,8 @@ rm -rf "$AGENT_SOURCE_DIR"
 
 `biscuit`でも`CLUSTER_CONTEXT=biscuit`として実行する。Agentの接続先を変更する場合は、`k8s/_argocd/agent/agent/values.yaml`の`server`と、Principal証明書のSANを同じ名前に変更する。
 
+この時点ではHelmリリースを削除せず、berry上のApplicationが既存リソースを引き継ぐまで`helm upgrade`も実行しない。リポジトリ内の`k8s/_argocd/applications/{kurumi,biscuit}/spoke.yaml`と`agent.yaml`が継続管理用の正本であり、Spoke上へ直接Applicationを作成する必要はない。
+
 ## Principalへの登録
 
 リモート側Agentが起動できる状態になった後、`berry`で各Agentを登録する。`agent create`が`skip-reconcile`付きのクラスターSecretを生成するため、SecretをGitへ作成しない。
@@ -69,6 +71,18 @@ argocd-agentctl --principal-context berry --principal-namespace argocd agent cre
 ```
 
 `biscuit`も`CLUSTER_NAME=biscuit`として実行する。生成された`cluster-kurumi`と`cluster-biscuit`には`argocd-agent.argoproj-labs.io/agent-name`ラベルと`argocd.argoproj.io/skip-reconcile: "true"`アノテーションが必要であり、これらを失った場合はAgent管理へ切り替えない。
+
+両方のAgent登録後、berryの`base` Applicationを同期して、SpokeとAgentのApplicationをGitから作成または更新する。
+
+```bash
+argocd app sync base --project berry
+argocd app get argocd-spoke-kurumi --refresh
+argocd app get argocd-agent-kurumi --refresh
+argocd app get argocd-spoke-biscuit --refresh
+argocd app get argocd-agent-biscuit --refresh
+```
+
+以後はGitの変更をberryの`base` Applicationへ同期する。対象クラスターへ直接Helmを実行したり、Spoke上でApplicationを手動作成したりしない。
 
 ## 移行順序
 

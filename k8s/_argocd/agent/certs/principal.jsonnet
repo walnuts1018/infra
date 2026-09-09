@@ -4,6 +4,9 @@
   metadata: {
     name: 'argocd-agent-principal-tls',
     namespace: 'argocd',
+    annotations: {
+      'argocd.argoproj.io/sync-wave': '0',
+    },
   },
   spec: {
     commonName: 'argocd-agent',

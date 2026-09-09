@@ -4,6 +4,9 @@
   metadata: {
     name: 'argocd-agent-client-kurumi',
     namespace: 'argocd',
+    annotations: {
+      'argocd.argoproj.io/sync-wave': '0',
+    },
   },
   spec: {
     commonName: 'kurumi',
