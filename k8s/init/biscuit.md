@@ -1,123 +1,46 @@
-# Init
+# biscuit初期構成
 
-## 前提
+## 構成
 
-- OS: Ubuntu24.04
+`biscuit`はTalos上のCAPI管理クラスターとして`berry`から構築する。ノードはcontrol plane兼workerの1台構成で、Kubernetes APIは`192.168.0.15:6443`、Talos APIは`192.168.0.15`を使用する。
 
-## 初期設定
+ディスク構成は240GB SSDをTalosのシステム領域とswapに使用し、1TBディスクを`hdd`ボリュームグループとしてTopoLVMに割り当てる。CNI、kube-proxy、TopoLVM、SeaweedFS、Cilium Gateway APIはGitOps管理とする。
 
-- [zsh&dotfile](https://github.com/walnuts1018/dotfiles)
+## CAPI構築
 
-## Timezone
+`berry`のArgo CDから`k8s/clusters/biscuit`を適用する。TartHostの割り当て後にTalosのbootstrapが完了し、`biscuit`クラスターのAPIが到達可能になったことを確認する。
 
-```bash
-sudo timedatectl set-timezone Asia/Tokyo
-```
+## Argo CD登録
 
-## IP 固定
-
-インストールの時にやる
-
-## mount
+`biscuit`のkubeconfigを使用して、`berry`上のArgo CDへremote clusterとして登録する。
 
 ```bash
-sudo mkdir -p /mnt/HDD-1TB
-sudo vim /etc/fstab
+argocd cluster add biscuit --name biscuit --insecure --port-forward --port-forward-namespace argocd -y
 ```
+
+登録後は`k8s/_argocd/applications/biscuit`のApplicationSetが、Cilium、TopoLVM、SeaweedFS、証明書、External Secretsを`biscuit`へ適用する。
+
+## 1Password Connect
+
+`onepassword-connect`は`biscuit`上で動作するため、Argo CD同期前に`onepassword` namespaceへ接続用Secretを作成する。
 
 ```bash
-sudo mount -a
+kubectl create namespace onepassword --context biscuit
+kubectl create secret generic op-credentials -n onepassword --context biscuit \
+  --from-literal=1password-credentials.json="$(op read 'op://kurumi/k8s Credentials File/1password-credentials.json')"
+kubectl create secret generic onepassword-token -n onepassword --context biscuit \
+  --from-literal=token="$(op read 'op://kurumi/pcookjymtl2zwyozhofaco5yhy/credential')"
 ```
 
-```bash
-sudo mkdir -p /mnt/HDD-1TB/minio
-sudo chown -R 1000:1000 /mnt/HDD-1TB/minio && sudo chmod u+rxw /mnt/HDD-1TB/minio
-```
+## Argo CD
 
-## k3s
+Argo CDのbase Applicationは`k8s/_argocd/applications`を再帰的に読み込み、`biscuit` ApplicationSetを作成する。同期後、`seaweedfs-biscuit.local.walnuts.dev`が`192.168.16.159`を指し、SeaweedFS S3 gatewayがバックアップ用エンドポイントとして公開される。
 
-```bash
-sudo apt update && sudo apt upgrade -y
-```
+## OIDCログイン
 
-```bash
-curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC='--flannel-backend=none --disable-kube-proxy --disable-network-policy --disable=servicelb,traefik --kube-apiserver-arg=oidc-issuer-url=https://192.168.0.17:16443 --kube-apiserver-arg=oidc-client-id=kurumi.k8s.walnuts.dev --kube-apiserver-arg=oidc-username-claim=sub' sh -
-```
-
-## kubeconfig
-
-```bash
-sudo rm -r .kube
-mkdir -p $HOME/.kube
-sudo cp -i /etc/rancher/k3s/k3s.yaml $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-```
-
-## Cilium
-
-```bash
-cd ~/ghq/github.com/walnuts1018/infra/k8s/apps/cilium
-```
-
-```bash
-jsonnet helm.jsonnet --tla-str k8sServiceHost="192.168.0.15" --tla-code k8sServicePort=6443 --tla-str ingressLoadBalancerIP="192.168.16.159" --tla-code enableServiceMonitor=false --tla-code operatorReplicas=1 --tla-code usek3s=true | jq .spec.source.helm.valuesObject > values.json
-```
-
-```bash
-helm repo add cilium https://helm.cilium.io/
-helm install cilium cilium/cilium --version 1.16.6 --namespace cilium-system --create-namespace --values values.json
-```
-
-## 1Password
-
-```shell
-eval $(op signin)
-```
-
-```shell
-mkdir -p /tmp/onepassword
-cd /tmp/onepassword
-op connect server create biscuit --vaults kurumi
-OP_TOKEN=$(op connect token create biscuit --server biscuit --vault kurumi)
-```
-
-```shell
-helm repo add 1password https://1password.github.io/connect-helm-charts/
-helm install onepassword-connect -n onepassword --create-namespace  1password/connect --set-file connect.credentials=1password-credentials.json --set operator.create=true --set operator.token.value=$OP_TOKEN
-```
-
-## ArgoCD
-
-```bash
-cd ~/ghq/github.com/walnuts1018/infra/k8s/_argocd/argocd_components
-```
-
-```bash
-helm repo add argo https://argoproj.github.io/argo-helm
-helm install argocd -n argocd --create-namespace argo/argo-cd --values ./values.yaml
-```
-
-```bash
-argocd admin initial-password -n argocd
-argocd login --insecure --port-forward --port-forward-namespace argocd --plaintext --username admin localhost:8080
-```
-
-```bash
-argocd account update-password --insecure --port-forward --port-forward-namespace argocd --plaintext
-```
-
-```bash
-cd ../clusters/biscuit
-kubectl apply -f base.yaml
-```
-
-## OIDC login by kurumi
+必要に応じて、`kurumi`のCA証明書を`biscuit`へ配置して信頼ストアを更新する。
 
 ```bash
 scp cake:/etc/kubernetes/pki/ca.crt biscuit:/usr/local/share/ca-certificates/kurumi.crt
-```
-
-```bash
-# on biscuit
 sudo update-ca-certificates
 ```

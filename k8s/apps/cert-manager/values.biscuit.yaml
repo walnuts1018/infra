@@ -1,0 +1,4 @@
+prometheus:
+  enabled: false
+  servicemonitor:
+    enabled: false

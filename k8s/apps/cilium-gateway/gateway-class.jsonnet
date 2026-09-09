@@ -1,0 +1,10 @@
+{
+  apiVersion: 'gateway.networking.k8s.io/v1',
+  kind: 'GatewayClass',
+  metadata: {
+    name: 'cilium',
+  },
+  spec: {
+    controllerName: 'io.cilium/gateway-controller',
+  },
+}

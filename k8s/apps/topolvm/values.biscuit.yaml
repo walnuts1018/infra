@@ -1,0 +1,16 @@
+lvmd:
+  nodeSelector: null
+  prometheus:
+    podMonitor:
+      enabled: false
+
+node:
+  nodeSelector: null
+  prometheus:
+    podMonitor:
+      enabled: false
+
+controller:
+  prometheus:
+    podMonitor:
+      enabled: false

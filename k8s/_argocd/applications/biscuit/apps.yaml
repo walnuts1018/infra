@@ -1,0 +1,87 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps-biscuit
+  namespace: argocd
+spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: false
+  goTemplate: true
+  generators:
+  - matrix:
+      generators:
+      - git:
+          repoURL: https://github.com/walnuts1018/infra
+          revision: clusterapi
+          files:
+          - path: "k8s/apps/*/app.json5"
+      - list:
+          elements:
+          - biscuitEnabled: '{{ hasKey .clusters "biscuit" }}'
+    selector:
+      matchLabels:
+        biscuitEnabled: "true"
+  ignoreApplicationDifferences:
+  - jsonPointers:
+    - /spec/syncPolicy
+  template:
+    metadata:
+      name: '{{ printf "%s-biscuit" .name }}'
+    spec:
+      project: default
+      destination:
+        name: biscuit
+        namespace: '{{.namespace}}'
+      sources:
+      - repoURL: 'https://github.com/walnuts1018/infra'
+        targetRevision: clusterapi
+        path: '{{.path.path}}'
+        directory:
+          recurse: true
+          exclude: '{config/*,_*/*}'
+          jsonnet:
+            tlas:
+            {{- range $tla := .clusters.biscuit.jsonnet.tlas }}
+            - {{ $tla | toJson }}
+            {{- end }}
+        ref: infra
+      {{- with .additionalSources.helm }}
+      - repoURL: '{{ .repoURL }}'
+        chart: '{{ .chart }}'
+        targetRevision: '{{ .targetRevision }}'
+        helm:
+          releaseName: '{{ $.name }}'
+          valueFiles:
+          {{- range .valueFiles }}
+          - {{ printf "$infra/%s/%s" $.path.path . }}
+          {{- end }}
+          {{- with $.clusters.biscuit.additionalSources.helm.additionalValueFiles }}
+          {{- range . }}
+          - {{ printf "$infra/%s/%s" $.path.path . }}
+          {{- end }}
+          {{- end }}
+      {{- end }}
+      {{- range .additionalSources.kustomize }}
+      - repoURL: '{{ .repoURL }}'
+        path: '{{ .path }}'
+        targetRevision: '{{ .targetRevision }}'
+        {{- with .patches }}
+        kustomize:
+          patches: {{ . | toJson }}
+        {{- end }}
+      {{- end }}
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+        - ServerSideApply=true
+        - FailOnSharedResource=true
+  templatePatch: |
+    {{- with  .annotations }}
+    metadata:
+      annotations:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    {{- end }}

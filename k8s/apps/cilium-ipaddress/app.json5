@@ -3,5 +3,19 @@
   namespace: "cilium-system",
   clusters: {
     kurumi: {},
+    biscuit: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "start",
+            value: "192.168.16.0",
+          },
+          {
+            name: "stop",
+            value: "192.168.16.255",
+          },
+        ],
+      },
+    },
   },
 }

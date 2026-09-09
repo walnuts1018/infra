@@ -1,0 +1,7 @@
+{
+  name: "cilium-gateway",
+  namespace: "cilium-system",
+  clusters: {
+    biscuit: {},
+  },
+}

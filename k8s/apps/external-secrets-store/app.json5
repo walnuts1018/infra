@@ -4,5 +4,6 @@
   clusters: {
     kurumi: {},
     berry: {},
+    biscuit: {},
   },
 }
