@@ -1,7 +1,0 @@
-{
-  name: "envoy-gateway-redis",
-  namespace: "envoy-gateway-system",
-  clusters: {
-    kurumi: {},
-  },
-}

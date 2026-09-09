@@ -8,9 +8,7 @@
       'cluster.x-k8s.io/cluster-name': (import 'cluster.json5').name,
     },
   },
-  // 単一node(control plane兼worker)構成でのcontrol planeへのPod scheduling許可や、
-  // Cilium導入のためのdefault CNI(Flannel)無効化は、TartClusterSpecの専用fieldではなく
-  // tart-bootstrap-patches-secret.jsonnetのraw config patch(KubeNodeConfig/KubeFlannelCNIConfig
-  // への`$patch: delete`)で行う。
+  // 単一node(control plane兼worker)構成でのcontrol planeへのPod scheduling許可は、
+  // tart-bootstrap-patches-secret.jsonnetのraw config patchで行う。
   spec: {},
 }

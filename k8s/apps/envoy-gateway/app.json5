@@ -12,14 +12,6 @@
     },
   },
   clusters: {
-    kurumi: {
-      additionalSources: {
-        helm: {
-          additionalValueFiles: [
-            "values.kurumi.yaml",
-          ],
-        },
-      },
-    },
+    kurumi: {},
   },
 }

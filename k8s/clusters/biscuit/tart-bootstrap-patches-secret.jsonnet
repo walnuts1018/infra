@@ -39,11 +39,6 @@
       kind: HostnameConfig
       hostname: eclair
       ---
-      # kube-proxyはCiliumのkube-proxy replacementで代替するため無効化する。
-      apiVersion: v1alpha1
-      kind: KubeProxyConfig
-      enabled: false
-      ---
       # SeaweedFS/バックアップ転送時の瞬間的なメモリ圧迫でkube-apiserver等がOOMKillされるのを
       # 避けるための安全弁。常用メモリをswapへ逃がす前提ではなく、あくまで緊急退避用。
       apiVersion: v1alpha1
@@ -58,12 +53,6 @@
       kind: KubeNodeConfig
       taints:
         $patch: delete
-      ---
-      # CiliumをArgoCD側で別途管理するため、Talosが既定でinstallするFlannel CNIを取り除く。
-      # 導入までnodeはNotReadyのままになるため、Ciliumのdeployとセットで有効化すること。
-      apiVersion: v1alpha1
-      kind: KubeFlannelCNIConfig
-      $patch: delete
     |||,
   },
 }

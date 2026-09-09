@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: apps
+  name: apps-kurumi
   namespace: argocd
 spec:
   syncPolicy:
@@ -32,7 +32,7 @@ spec:
     spec:
       project: default
       destination:
-        server: https://kubernetes.default.svc
+        name: kurumi
         namespace: '{{.namespace}}'
       sources:
       - repoURL: 'https://github.com/walnuts1018/infra'

@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: apps-private
+  name: apps-private-kurumi
   namespace: argocd
 
 spec:
@@ -23,7 +23,7 @@ spec:
     spec:
       project: default
       destination:
-        server: https://kubernetes.default.svc
+        name: kurumi
         namespace: '{{.namespace}}'
       source:
         repoURL: 'https://github.com/walnuts1018/infra-private'

@@ -2,6 +2,9 @@ kubeProxyReplacement: true
 l7Proxy: true
 k8sServiceHost: 192.168.0.17
 k8sServicePort: 16443
+cluster:
+  id: 1
+  name: kurumi
 l2announcements:
   enabled: true
 bgpControlPlane:

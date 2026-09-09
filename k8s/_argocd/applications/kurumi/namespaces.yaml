@@ -1,12 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: namespaces
+  name: namespaces-kurumi
   namespace: argocd
 spec:
   project: default
   destination:
-    server: https://kubernetes.default.svc
+    name: kurumi
   source:
     path: k8s/namespaces
     repoURL: 'https://github.com/walnuts1018/infra'

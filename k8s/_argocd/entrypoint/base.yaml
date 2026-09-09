@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: base-biscuit
+  name: base
   namespace: argocd
 spec:
   project: default
@@ -9,12 +9,14 @@ spec:
     namespace: argocd
     server: https://kubernetes.default.svc
   sources:
-  - path: k8s/_argocd/applications/biscuit
+  - path: k8s/_argocd/applications
     repoURL: 'https://github.com/walnuts1018/infra'
-    targetRevision: main
-  - path: k8s/_argocd/clusters/biscuit
+    targetRevision: clusterapi # TODO
+    directory:
+      recurse: true
+  - path: k8s/_argocd/entrypoint
     repoURL: 'https://github.com/walnuts1018/infra'
-    targetRevision: main
+    targetRevision: clusterapi # TODO
   syncPolicy:
     automated:
       selfHeal: true

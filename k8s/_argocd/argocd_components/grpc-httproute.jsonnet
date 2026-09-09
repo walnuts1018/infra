@@ -1,6 +1,6 @@
 local app = import 'app.json5';
 
-function(domain) {
+function(domain, enableHPA=null) {
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
   metadata: {
