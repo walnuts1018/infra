@@ -1,5 +1,18 @@
 lvmd:
   nodeSelector: null
+  deviceClasses:
+  - name: ssd
+    volume-group: ssd
+    spare-gb: 5
+    default: false
+    lvcreate-options:
+    - --alloc=normal
+  - name: hdd
+    volume-group: hdd
+    spare-gb: 10
+    default: false
+    lvcreate-options:
+    - --alloc=normal
   prometheus:
     podMonitor:
       enabled: false
@@ -9,6 +22,30 @@ node:
   prometheus:
     podMonitor:
       enabled: false
+
+storageClasses:
+- name: topolvm-ssd
+  storageClass:
+    fsType: xfs
+    reclaimPolicy: Retain
+    isDefaultClass: false
+    volumeBindingMode: WaitForFirstConsumer
+    allowVolumeExpansion: true
+    additionalParameters:
+      "topolvm.io/device-class": ssd
+    mountOptions:
+    - noatime
+- name: topolvm-hdd
+  storageClass:
+    fsType: xfs
+    reclaimPolicy: Retain
+    isDefaultClass: false
+    volumeBindingMode: WaitForFirstConsumer
+    allowVolumeExpansion: true
+    additionalParameters:
+      "topolvm.io/device-class": hdd
+    mountOptions:
+    - noatime
 
 controller:
   prometheus:

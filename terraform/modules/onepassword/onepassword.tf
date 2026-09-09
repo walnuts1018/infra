@@ -109,6 +109,8 @@ resource "onepassword_item" "external_secret" {
         "radar-client-secret"                    = { type = "CONCEALED", value = var.radar_client_secret }
         "shumoku-client-id"                      = { type = "STRING", value = var.shumoku_client_id }
         "shumoku-client-secret"                  = { type = "CONCEALED", value = var.shumoku_client_secret }
+        "seaweedfs_biscuit_access_key"           = { type = "CONCEALED", value = var.seaweedfs_biscuit_access_key }
+        "seaweedfs_biscuit_secret_key"           = { type = "CONCEALED", value = var.seaweedfs_biscuit_secret_key }
 
         "visual-regression-tracker-jwt-secret"     = { type = "CONCEALED", value = random_password.visual_regression_tracker_jwt_secret.result }
         "visual-regression-tracker-admin-password" = { type = "CONCEALED", value = random_password.visual_regression_tracker_admin_password.result }

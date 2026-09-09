@@ -13,14 +13,5 @@
   },
   clusters: {
     kurumi: {},
-    biscuit: {
-      additionalSources: {
-        helm: {
-          additionalValueFiles: [
-            "values.biscuit.yaml",
-          ],
-        },
-      },
-    },
   },
 }

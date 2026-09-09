@@ -16,9 +16,34 @@
           match: '!disk.readonly && disk.size == 240057409536u && disk.wwid == "t10.ATA     ADATA SU650                             38F8079715D100008282"'
         wipe: false
       ---
+      # OSディスク上の未使用領域を、SeaweedFSメタデータ用のLVM PVとして確保する。
+      # system_disk全体ではなくRawVolumeConfigが作る専用パーティションだけをLVMへ渡す。
+      apiVersion: v1alpha1
+      kind: VolumeConfig
+      name: EPHEMERAL
+      provisioning:
+        maxSize: 160GiB
+      ---
+      apiVersion: v1alpha1
+      kind: RawVolumeConfig
+      name: topolvm-ssd
+      provisioning:
+        diskSelector:
+          match: 'system_disk && !disk.readonly && disk.size == 240057409536u && disk.wwid == "t10.ATA     ADATA SU650                             38F8079715D100008282"'
+        minSize: 20GiB
+        maxSize: 40GiB
+        grow: false
+      ---
       apiVersion: v1alpha1
       kind: LVMVolumeGroupConfig
-      name: topolvm
+      name: ssd
+      provisioning:
+        volumeSelector:
+          match: "volume.partition_label == 'r-topolvm-ssd'"
+      ---
+      apiVersion: v1alpha1
+      kind: LVMVolumeGroupConfig
+      name: hdd
       provisioning:
         volumeSelector:
           match: '!disk.readonly && disk.size == 1000204886016u && disk.wwid == "naa.50014ee2118ad24b"'
