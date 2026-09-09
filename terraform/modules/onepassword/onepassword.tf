@@ -104,6 +104,8 @@ resource "onepassword_item" "external_secret" {
         "akvorado-client-secret"                      = { type = "CONCEALED", value = var.akvorado_client_secret }
         "argocd-cli-client-id"                        = { type = "STRING", value = var.argocd_cli_client_id }
         "b2-application-key"                          = { type = "CONCEALED", value = var.b2_application_key }
+        "b2-seaweedfs-application-key-id"             = { type = "STRING", value = var.b2_seaweedfs_application_key_id }
+        "b2-seaweedfs-application-key"                = { type = "CONCEALED", value = var.b2_seaweedfs_application_key }
         "hubble-client-id"                            = { type = "STRING", value = var.hubble_client_id }
         "hubble-client-secret"                        = { type = "CONCEALED", value = var.hubble_client_secret }
         "ipu-client-id"                               = { type = "STRING", value = var.ipu_client_id }

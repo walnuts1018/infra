@@ -3,8 +3,14 @@ global:
 
 notifications:
   argocdUrl: https://argocd.local.walnuts.dev
+  metrics:
+    serviceMonitor:
+      enabled: false
 
 server:
+  metrics:
+    serviceMonitor:
+      enabled: false
   ingress:
     enabled: false
   httproute:
@@ -17,5 +23,23 @@ server:
     nodePortHttps: 30443
 
 repoServer:
+  metrics:
+    serviceMonitor:
+      enabled: false
   autoscaling:
     enabled: false
+
+controller:
+  metrics:
+    serviceMonitor:
+      enabled: false
+
+redis:
+  metrics:
+    serviceMonitor:
+      enabled: false
+
+applicationSet:
+  metrics:
+    serviceMonitor:
+      enabled: false

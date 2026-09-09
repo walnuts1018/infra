@@ -19,6 +19,20 @@ std.mergePatch((import '../../components/external-secret.libsonnet') {
         property: 'seaweedfs_biscuit_default_backup_secret_key',
       },
     },
+    {
+      secretKey: 'b2_seaweedfs_application_key_id',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'b2-seaweedfs-application-key-id',
+      },
+    },
+    {
+      secretKey: 'b2_seaweedfs_application_key',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'b2-seaweedfs-application-key',
+      },
+    },
   ],
 }, {
   spec: {

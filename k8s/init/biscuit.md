@@ -14,6 +14,8 @@
 
 `biscuit`のArgo CD SpokeとAgentは、`k8s/clusters/biscuit`のClusterResourceSetとHelmChartProxyが自動導入する。通常の新規構築ではworkload clusterへ`helm install`したり、TLS Secretを手動作成したり、`argocd-agentctl agent create`を実行したりしない。
 
+`cluster:decommission biscuit`を実行する前に、`k8s/clusters/biscuit/cluster.json5`を削除してコミットし、`clusters` ApplicationSetが`biscuit` Applicationを生成しなくなったことを確認する。コマンドはその状態を検査してからbootstrap resourceとClusterを削除する。
+
 PrincipalのJWT signing keyが未作成の場合だけ、次のコマンドを一度実行する。
 
 ```bash

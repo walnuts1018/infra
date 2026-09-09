@@ -40,7 +40,7 @@ kubectl --context "$CLUSTER_CONTEXT" -n argocd create secret tls argocd-agent-cl
   --dry-run=client -o yaml | kubectl --context "$CLUSTER_CONTEXT" apply -f -
 
 kubectl --context "$CLUSTER_CONTEXT" -n argocd create secret generic argocd-agent-ca \
-  --from-file=ca.crt=<(kubectl --context berry -n argocd get secret argocd-agent-ca -o jsonpath='{.data.ca\.crt}' | base64 --decode) \
+  --from-file=ca.crt=<(kubectl --context berry -n argocd get secret argocd-agent-ca -o jsonpath='{.data.tls\.crt}' | base64 --decode) \
   --dry-run=client -o yaml | kubectl --context "$CLUSTER_CONTEXT" apply -f -
 
 helm repo add argo https://argoproj.github.io/argo-helm
@@ -54,7 +54,14 @@ helm upgrade --install argocd-agent "$AGENT_SOURCE_DIR/argocd-agent/install/helm
 rm -rf "$AGENT_SOURCE_DIR"
 ```
 
-Agentの接続先を変更する場合は、`k8s/_argocd/agent/agent/values.yaml`の`server`と、Principal証明書のSANを同じ名前に変更する。`biscuit`の接続先やTLS Secretは`k8s/clusters/biscuit/argocd-agent-bootstrap.jsonnet`が既存設定を参照して生成する。
+Agentの接続先を変更する場合は、`k8s/_argocd/agent/agent/values.yaml`の`server`と、Principal証明書のSANを同じ名前に変更する。`biscuit`の接続先やTLS Secretは`k8s/clusters/biscuit/argocd-agent-clusterresourceset.jsonnet`と`k8s/clusters/biscuit/argocd-agent-resources-externalsecret.jsonnet`が生成する。
+
+`infra-private`のRepository Secretは認証情報を含むため、このリポジトリでは管理しない。berryのArgo CDで該当Secretに`argocd-agent=true`ラベルを付け、Agent側へ配送されることを確認する。
+
+```bash
+kubectl --context berry -n argocd label secret <infra-private-repository-secret> argocd-agent=true --overwrite
+kubectl --context biscuit -n argocd get secret -l argocd-agent=true
+```
 
 この時点ではHelmリリースを削除せず、berry上のApplicationが既存リソースを引き継ぐまで`helm upgrade`も実行しない。`kurumi`の継続管理用Applicationが正本であり、Spoke上へ直接Applicationを作成する必要はない。
 

@@ -3,7 +3,11 @@ kind: ApplicationSet
 metadata:
   name: clusters
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
 spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: true
   goTemplate: true
   generators:
   - git:
@@ -11,9 +15,6 @@ spec:
       revision: clusterapi # TODO
       files:
       - path: "k8s/clusters/*/cluster.json5"
-  ignoreApplicationDifferences:
-  - jsonPointers:
-    - /spec/syncPolicy
   template:
     metadata:
       name: '{{.name}}'
@@ -28,7 +29,7 @@ spec:
         path: '{{.path.path}}'
         directory:
           recurse: true
-          exclude: '{config/*,_*/*}'
+          exclude: '{config/*,_*/*,values*.yaml}'
           jsonnet:
             tlas: []
       syncPolicy:
@@ -38,3 +39,4 @@ spec:
         syncOptions:
         - ServerSideApply=true
         - FailOnSharedResource=true
+        - SkipDryRunOnMissingResource=true

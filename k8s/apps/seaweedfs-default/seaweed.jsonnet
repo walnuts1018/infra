@@ -11,9 +11,12 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
     labels: labels(app.name),
   },
   spec: {
-    image: 'chrislusf/seaweedfs:4.45_large_disk_full',
+    image: 'chrislusf/seaweedfs@sha256:aa0d394e64735d240d57673b6745ee344360a9fab9ca0b26e4ed3707d135f570',  // 4.45_large_disk_full
     master: {
       replicas: 3,
+      annotations: {
+        'reloader.stakater.com/auto': 'true',
+      },
       volumeSizeLimitMB: 1024,
       defaultReplication: '001',
       env: [
@@ -65,6 +68,9 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
     // TODO: volumeTopology使いたいけど、ServiceのSelectorがバグってる気がする
     volume: {
       replicas: 3,
+      annotations: {
+        'reloader.stakater.com/auto': 'true',
+      },
       requests: {
         cpu: '10m',
         memory: '300Mi',
@@ -131,6 +137,9 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
     },
     filer: {
       replicas: 2,
+      annotations: {
+        'reloader.stakater.com/auto': 'true',
+      },
       s3: {
         enabled: true,
       },

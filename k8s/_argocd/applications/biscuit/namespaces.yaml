@@ -10,12 +10,12 @@ spec:
   destination:
     name: biscuit
   source:
-    path: k8s/namespaces
+    path: k8s/namespaces/biscuit
     repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: clusterapi
     directory:
       recurse: true
-      exclude: '{config/*,_*/*}'
+      exclude: '{config/*,_*/*,values*.yaml}'
       jsonnet: {}
   syncPolicy:
     automated:
@@ -24,3 +24,4 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - FailOnSharedResource=true
+    - Prune=confirm

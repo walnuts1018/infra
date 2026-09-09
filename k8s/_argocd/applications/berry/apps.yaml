@@ -3,7 +3,11 @@ kind: ApplicationSet
 metadata:
   name: apps-berry
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: true
   goTemplate: true
   generators:
   - matrix:
@@ -19,9 +23,6 @@ spec:
     selector:
       matchLabels:
         berryEnabled: "true"
-  ignoreApplicationDifferences:
-  - jsonPointers:
-    - /spec/syncPolicy
   template:
     metadata:
       name: '{{ printf "%s-berry" .name }}'
@@ -40,6 +41,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
         - FailOnSharedResource=true
+        - CreateNamespace=true
   templatePatch: |
     {{- with .annotations }}
     metadata:
@@ -55,7 +57,7 @@ spec:
         path: '{{.path.path}}'
         directory:
           recurse: true
-          exclude: '{config/*,_*/*}'
+          exclude: '{config/*,_*/*,values*.yaml}'
           jsonnet:
             tlas:
             {{- range $tla := .clusters.berry.jsonnet.tlas }}

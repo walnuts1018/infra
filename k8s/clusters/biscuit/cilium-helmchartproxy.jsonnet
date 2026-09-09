@@ -3,10 +3,10 @@ local cluster = import 'cluster.json5';
   apiVersion: 'addons.cluster.x-k8s.io/v1alpha1',
   kind: 'HelmChartProxy',
   metadata: {
-    name: 'argocd-agent',
+    name: 'cilium-bootstrap',
     namespace: cluster.namespace,
     annotations: {
-      'argocd.argoproj.io/sync-wave': '23',
+      'argocd.argoproj.io/sync-wave': '20',
     },
   },
   spec: {
@@ -15,16 +15,16 @@ local cluster = import 'cluster.json5';
         'argocd-agent.walnuts.dev/enabled': 'true',
       },
     },
-    chartName: 'argocd-agent-agent',
-    repoURL: 'oci://ghcr.io/argoproj-labs/argocd-agent',
-    version: '0.2.7',
-    releaseName: 'argocd-agent',
-    namespace: 'argocd',
+    chartName: 'cilium',
+    repoURL: 'https://helm.cilium.io/',
+    version: '1.20.1',
+    releaseName: 'cilium',
+    namespace: 'cilium-system',
     reconcileStrategy: 'InstallOnce',
     options: {
-      wait: false,
+      wait: true,
       install: { createNamespace: true },
     },
-    valuesTemplate: importstr '../../_argocd/agent/agent/values.yaml',
+    valuesTemplate: importstr '_config/cilium-values.yaml',
   },
 }

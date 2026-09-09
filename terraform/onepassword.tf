@@ -7,6 +7,8 @@ module "onepassword" {
   akvorado_client_secret                 = module.zitadel.akvorado_oidc_client_secret
   argocd_cli_client_id                   = module.zitadel.argocd_cli_client_id
   b2_application_key                     = module.b2.application_key.application_key
+  b2_seaweedfs_application_key_id        = module.b2.seaweedfs_application_key.application_key_id
+  b2_seaweedfs_application_key           = module.b2.seaweedfs_application_key.application_key
   radar_client_id                        = module.zitadel.radar_oidc_client_id
   radar_client_secret                    = module.zitadel.radar_oidc_client_secret
   hubble_client_id                       = module.zitadel.hubble_oidc_client_id

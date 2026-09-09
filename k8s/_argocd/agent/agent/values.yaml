@@ -12,7 +12,10 @@ allowedNamespaces: "*"
 labelSelector: "argocd-agent=true"
 
 serviceMonitor:
-  enabled: true
+  enabled: false
+
+deploymentAnnotations:
+  reloader.stakater.com/auto: "true"
 
 resources:
   requests:

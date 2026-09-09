@@ -3,6 +3,15 @@ variable "argocd_cli_client_id" {
   type = string
 }
 
+variable "b2_seaweedfs_application_key_id" {
+  type = string
+}
+
+variable "b2_seaweedfs_application_key" {
+  type      = string
+  sensitive = true
+}
+
 variable "seaweedfs_biscuit_terraform_access_key" {
   type        = string
   sensitive   = true

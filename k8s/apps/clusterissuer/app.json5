@@ -1,8 +1,12 @@
 {
   name: "clusterissuer",
   namespace: "cert-manager",
+  annotations: {
+    "argocd.argoproj.io/sync-wave": "-3",
+  },
   clusters: {
     kurumi: {},
+    berry: {},
     biscuit: {},
   },
 }

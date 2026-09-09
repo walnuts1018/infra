@@ -12,3 +12,10 @@ endpoint_url = https://seaweedfs-biscuit.local.walnuts.dev
 s3 =
   endpoint_url = https://seaweedfs-biscuit.local.walnuts.dev
   s3_force_path_style = true
+
+[profile b2]
+region = us-west-004
+endpoint_url = https://s3.us-west-004.backblazeb2.com
+s3 =
+  endpoint_url = https://s3.us-west-004.backblazeb2.com
+  s3_force_path_style = true

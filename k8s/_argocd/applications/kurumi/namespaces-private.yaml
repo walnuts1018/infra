@@ -15,7 +15,7 @@ spec:
     targetRevision: main
     directory:
       recurse: true
-      exclude: '{config/*,_*/*}'
+      exclude: '{config/*,_*/*,values*.yaml}'
       jsonnet: {}
   syncPolicy:
     automated:
@@ -24,3 +24,4 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - FailOnSharedResource=true
+    - Prune=confirm

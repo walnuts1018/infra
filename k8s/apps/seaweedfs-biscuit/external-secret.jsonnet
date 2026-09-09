@@ -85,8 +85,7 @@ externalSecret {
                 "secretKey": "{{ .velero_secret_key }}"
               }
             ],
-            "actions": ["Read", "Write", "List", "Tagging"],
-            "resources": ["buckets/velero-backup"]
+            "actions": ["Read:velero-backup", "Write:velero-backup", "List:velero-backup", "Tagging:velero-backup"]
           },
           {
             "name": "longhorn",
@@ -96,8 +95,7 @@ externalSecret {
                 "secretKey": "{{ .longhorn_secret_key }}"
               }
             ],
-            "actions": ["Read", "Write", "List", "Tagging"],
-            "resources": ["buckets/longhorn-backup"]
+            "actions": ["Read:longhorn-backup", "Write:longhorn-backup", "List:longhorn-backup", "Tagging:longhorn-backup"]
           },
           {
             "name": "seaweedfs-default-backup",
@@ -107,8 +105,7 @@ externalSecret {
                 "secretKey": "{{ .default_backup_secret_key }}"
               }
             ],
-            "actions": ["Read", "Write", "List", "Tagging"],
-            "resources": ["buckets/seaweedfs-default-backup"]
+            "actions": ["Read:seaweedfs-default-backup", "Write:seaweedfs-default-backup", "List:seaweedfs-default-backup", "Tagging:seaweedfs-default-backup"]
           }
         ]
       }

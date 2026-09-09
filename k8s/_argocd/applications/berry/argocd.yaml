@@ -6,7 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "0"
 spec:
-  project: berry
+  project: default
   destination:
     namespace: argocd
     server: https://kubernetes.default.svc
@@ -16,7 +16,7 @@ spec:
     targetRevision: clusterapi
     directory:
       recurse: true
-      exclude: '{config/*,_*/*}'
+      exclude: '{config/*,_*/*,values*.yaml,appproject-*.jsonnet}'
       jsonnet:
         tlas:
         - name: domain

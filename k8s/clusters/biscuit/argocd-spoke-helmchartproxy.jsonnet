@@ -5,6 +5,9 @@ local cluster = import 'cluster.json5';
   metadata: {
     name: 'argocd-spoke',
     namespace: cluster.namespace,
+    annotations: {
+      'argocd.argoproj.io/sync-wave': '21',
+    },
   },
   spec: {
     clusterSelector: {
@@ -17,7 +20,9 @@ local cluster = import 'cluster.json5';
     version: '10.8.2',
     releaseName: 'argocd',
     namespace: 'argocd',
-    reconcileStrategy: 'Continuous',
+    // The spoke is only a transport bootstrap. Argo CD takes over after the
+    // agent has registered with the berry Principal.
+    reconcileStrategy: 'InstallOnce',
     options: {
       wait: true,
       install: { createNamespace: true },

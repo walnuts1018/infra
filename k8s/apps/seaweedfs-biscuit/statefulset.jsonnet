@@ -10,6 +10,9 @@ local componentLabels = labels(app.name) + {
     name: app.name,
     namespace: app.namespace,
     labels: componentLabels,
+    annotations: {
+      'reloader.stakater.com/auto': 'true',
+    },
   },
   spec: {
     replicas: 1,
@@ -31,7 +34,7 @@ local componentLabels = labels(app.name) + {
         containers: [
           {
             name: 'seaweedfs',
-            image: 'chrislusf/seaweedfs:4.45_large_disk_full',
+            image: 'chrislusf/seaweedfs@sha256:aa0d394e64735d240d57673b6745ee344360a9fab9ca0b26e4ed3707d135f570',  // 4.45_large_disk_full
             imagePullPolicy: 'IfNotPresent',
             args: [
               'mini',

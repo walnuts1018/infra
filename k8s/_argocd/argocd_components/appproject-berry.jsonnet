@@ -17,10 +17,9 @@
     destinations: [{ namespace: '*', server: 'https://kubernetes.default.svc' }],
     sourceNamespaces: ['*'],
     orphanedResources: { warn: false },
-    sourceRepos: [
-      'https://github.com/walnuts1018/infra',
-      'https://github.com/argoproj-labs/argocd-agent',
-      'https://argoproj.github.io/argo-helm',
-    ],
+    // app.json5 is the trusted source-of-truth for external charts and
+    // multi-source Applications. Restricting this list to the bootstrap
+    // repositories makes every external chart fail Project validation.
+    sourceRepos: ['*'],
   },
 }

@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   syncPolicy:
-    preserveResourcesOnDeletion: false
+    preserveResourcesOnDeletion: true
   goTemplate: true
   generators:
   - matrix:
@@ -21,9 +21,6 @@ spec:
     selector:
       matchLabels:
         biscuitEnabled: "true"
-  ignoreApplicationDifferences:
-  - jsonPointers:
-    - /spec/syncPolicy
   template:
     metadata:
       name: '{{ printf "%s-biscuit" .name }}'
@@ -40,7 +37,7 @@ spec:
         path: '{{.path.path}}'
         directory:
           recurse: true
-          exclude: '{config/*,_*/*}'
+          exclude: '{config/*,_*/*,values*.yaml}'
           jsonnet:
             tlas:
             {{- range $tla := .clusters.biscuit.jsonnet.tlas }}
@@ -79,6 +76,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
         - FailOnSharedResource=true
+        - CreateNamespace=true
   templatePatch: |
     {{- with  .annotations }}
     metadata:

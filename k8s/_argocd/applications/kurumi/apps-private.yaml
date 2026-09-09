@@ -6,7 +6,7 @@ metadata:
 
 spec:
   syncPolicy:
-    preserveResourcesOnDeletion: false
+    preserveResourcesOnDeletion: true
   goTemplate: true
   generators:
   - git:
@@ -14,9 +14,6 @@ spec:
       revision: main
       files:
       - path: "k8s/apps/*/app.json5"
-  ignoreApplicationDifferences:
-  - jsonPointers:
-    - /spec/syncPolicy
   template:
     metadata:
       name: '{{ printf "%s-private-kurumi" .name }}'
@@ -33,7 +30,7 @@ spec:
         path: '{{.path.path}}'
         directory:
           recurse: true
-          exclude: '{config/*,_*/*}'
+          exclude: '{config/*,_*/*,values*.yaml}'
           jsonnet:
             tlas: []
       syncPolicy:
@@ -43,6 +40,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
         - FailOnSharedResource=true
+        - CreateNamespace=true
   templatePatch: |
     {{- with  .annotations }}
     metadata:

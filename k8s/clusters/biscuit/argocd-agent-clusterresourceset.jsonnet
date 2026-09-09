@@ -5,6 +5,9 @@ local cluster = import 'cluster.json5';
   metadata: {
     name: 'argocd-agent',
     namespace: cluster.namespace,
+    annotations: {
+      'argocd.argoproj.io/sync-wave': '22',
+    },
   },
   spec: {
     clusterSelector: {
