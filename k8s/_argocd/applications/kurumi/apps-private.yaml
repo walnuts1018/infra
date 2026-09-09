@@ -19,7 +19,7 @@ spec:
     - /spec/syncPolicy
   template:
     metadata:
-      name: '{{.name}}'
+      name: '{{ printf "%s-private-kurumi" .name }}'
     spec:
       project: default
       destination:

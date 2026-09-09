@@ -26,9 +26,7 @@ spec:
     - /spec/syncPolicy
   template:
     metadata:
-      name: '{{.name}}'
-      # annotations:
-      #   argocd.argoproj.io/manifest-generate-paths: .;../components
+      name: '{{ printf "%s-kurumi" .name }}'
     spec:
       project: default
       destination:
