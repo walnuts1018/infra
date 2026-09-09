@@ -16,7 +16,7 @@
       additionalSources: {
         helm: {
           additionalValueFiles: [
-            "values-berry.yaml",
+            "values.berry.yaml",
           ],
         }
       }

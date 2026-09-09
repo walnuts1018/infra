@@ -16,7 +16,7 @@
       additionalSources: {
         helm: {
           additionalValueFiles: [
-            "values-kurumi.yaml",
+            "values.kurumi.yaml",
           ],
         }
       }
