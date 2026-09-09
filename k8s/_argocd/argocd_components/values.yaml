@@ -83,7 +83,7 @@ dex:
       cpu: 500m
       memory: 256Mi
 redis:
-  enabled: false
+  enabled: true
   metrics:
     enabled: true
     serviceMonitor:
@@ -98,9 +98,6 @@ redis:
 
 redis-ha:
   enabled: false
-
-externalRedis:
-  host: valkey-argocd-valkey.argocd.svc.cluster.local
 
 server:
   ingress:

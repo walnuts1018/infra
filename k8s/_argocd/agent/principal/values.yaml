@@ -39,7 +39,7 @@ principal:
     minVersion: tls1.3
   redis:
     server:
-      address: valkey-argocd-valkey.argocd.svc.cluster.local:6379
+      address: argocd-redis:6379
   redisProxy:
     enabled: true
   resourceProxy:

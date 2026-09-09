@@ -8,13 +8,9 @@ Agentの接続先は`argocd-agent.local.walnuts.dev:443`とする。この名前
 
 ## ハブ側の準備
 
-以下は`berry`のcontextを使用して実行する。`argocd-redis`の`auth`は既存のValkeyが認証なしで動作するための空値であり、秘密情報ではない。JWT鍵と証明書の秘密鍵はコマンドと`cert-manager`がクラスター内で生成し、Gitには保存しない。
+以下は`berry`のcontextを使用して実行する。RedisとRedisの認証SecretはArgo CD Helmチャートが生成する。JWT鍵と証明書の秘密鍵はコマンドと`cert-manager`がクラスター内で生成し、Gitには保存しない。
 
 ```bash
-kubectl --context berry -n argocd create secret generic argocd-redis \
-  --from-literal=auth= \
-  --dry-run=client -o yaml | kubectl --context berry apply -f -
-
 argocd-agentctl --principal-context berry --principal-namespace argocd jwt create-key
 ```
 
