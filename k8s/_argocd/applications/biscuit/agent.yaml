@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: namespaces-biscuit
+  name: argocd-agent-biscuit
   namespace: argocd
   labels:
     argocd-agent: "true"
@@ -9,14 +9,17 @@ spec:
   project: biscuit
   destination:
     name: biscuit
-  source:
-    path: k8s/namespaces
-    repoURL: 'https://github.com/walnuts1018/infra'
+    namespace: argocd
+  sources:
+  - repoURL: https://github.com/walnuts1018/infra
     targetRevision: clusterapi
-    directory:
-      recurse: true
-      exclude: '{config/*,_*/*}'
-      jsonnet: {}
+    ref: infra
+  - repoURL: https://github.com/argoproj-labs/argocd-agent
+    targetRevision: v0.9.0
+    path: install/helm-repo/argocd-agent-agent
+    helm:
+      valueFiles:
+      - $infra/k8s/_argocd/agent/agent/values.yaml
   syncPolicy:
     automated:
       selfHeal: true

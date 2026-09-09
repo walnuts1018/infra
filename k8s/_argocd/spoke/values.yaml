@@ -1,0 +1,54 @@
+fullnameOverride: argocd
+
+configs:
+  params:
+    controller.status.processors: "2"
+    controller.operation.processors: "1"
+    controller.kubectl.parallelism.limit: "2"
+    reposerver.parallelism.limit: "1"
+
+dex:
+  enabled: false
+
+server:
+  replicas: 0
+
+applicationSet:
+  replicas: 0
+
+notifications:
+  enabled: false
+
+redis:
+  enabled: true
+
+redis-ha:
+  enabled: false
+
+controller:
+  replicas: 1
+  extraArgs:
+    - --status-processors=2
+    - --operation-processors=1
+    - --kubectl-parallelism-limit=2
+  resources:
+    requests:
+      cpu: 500m
+      memory: 768Mi
+    limits:
+      cpu: "2"
+      memory: 3Gi
+
+repoServer:
+  replicas: 1
+  autoscaling:
+    enabled: false
+  env:
+    - name: ARGOCD_REPO_SERVER_PARALLELISM_LIMIT
+      value: "1"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 1Gi

@@ -1,0 +1,70 @@
+fullnameOverride: argocd-agent
+
+image:
+  repository: quay.io/argoprojlabs/argocd-agent
+  tag: v0.9.0
+
+replicaCount: 1
+
+service:
+  type: LoadBalancer
+  port: 443
+  targetPort: 8443
+
+metricsService:
+  enabled: true
+
+healthzService:
+  enabled: true
+
+redisSecretName: argocd-redis
+redisPasswordKey: auth
+
+principal:
+  listen:
+    host: ""
+    port: 8443
+  log:
+    level: info
+    format: json
+  namespace: argocd
+  tls:
+    secretName: argocd-agent-principal-tls
+    server:
+      allowGenerate: false
+      rootCaSecretName: argocd-agent-ca
+    clientCert:
+      require: true
+      matchSubject: true
+    minVersion: tls1.3
+  redis:
+    server:
+      address: valkey-argocd-valkey.argocd.svc.cluster.local:6379
+  redisProxy:
+    enabled: true
+  resourceProxy:
+    enabled: true
+    secretName: argocd-agent-resource-proxy-tls
+    ca:
+      secretName: argocd-agent-ca
+  jwt:
+    allowGenerate: false
+    secretName: argocd-agent-jwt
+  auth: "mtls:CN=([^,]+)"
+  destinationBasedMapping: true
+  labelSelector: "argocd-agent=true"
+
+rbac:
+  create: true
+  createClusterRole: true
+
+serviceMonitor:
+  enabled: true
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

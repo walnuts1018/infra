@@ -4,7 +4,7 @@ metadata:
   name: namespaces-berry
   namespace: argocd
 spec:
-  project: default
+  project: berry
   destination:
     server: https://kubernetes.default.svc
   source:

@@ -12,21 +12,7 @@
     },
   },
   clusters: {
-    kurumi: {
-      jsonnet: {
-        tlas: [
-          {
-            name: "domain",
-            value: "argocd.walnuts.dev",
-          },
-          {
-            name: "enableHPA",
-            value: "true",
-            code: true,
-          },
-        ],
-      },
-    },
+    // berry is the Argo CD hub. Spokes use k8s/_argocd/spoke.
     berry: {
       jsonnet: {
         tlas: [

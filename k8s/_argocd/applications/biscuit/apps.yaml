@@ -27,8 +27,10 @@ spec:
   template:
     metadata:
       name: '{{ printf "%s-biscuit" .name }}'
+      labels:
+        argocd-agent: "true"
     spec:
-      project: default
+      project: biscuit
       destination:
         name: biscuit
         namespace: '{{.namespace}}'

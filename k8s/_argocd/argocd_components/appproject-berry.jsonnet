@@ -2,7 +2,7 @@
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'AppProject',
   metadata: {
-    name: 'default',
+    name: 'berry',
     namespace: (import 'app.json5').namespace,
     annotations: {
       local slackChannel = 'argocd',
@@ -13,23 +13,10 @@
     },
   },
   spec: {
-    clusterResourceWhitelist: [
-      {
-        group: '*',
-        kind: '*',
-      },
-    ],
-    destinations: [
-      {
-        namespace: '*',
-        server: '*',
-      },
-    ],
-    orphanedResources: {
-      warn: false,
-    },
-    sourceRepos: [
-      '*',
-    ],
+    clusterResourceWhitelist: [{ group: '*', kind: '*' }],
+    destinations: [{ namespace: '*', server: 'https://kubernetes.default.svc' }],
+    sourceNamespaces: ['*'],
+    orphanedResources: { warn: false },
+    sourceRepos: ['*'],
   },
 }

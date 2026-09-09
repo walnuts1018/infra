@@ -1,21 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: namespaces-kurumi
+  name: argocd-agent-certs
   namespace: argocd
-  labels:
-    argocd-agent: "true"
 spec:
-  project: kurumi
+  project: berry
   destination:
-    name: kurumi
+    server: https://kubernetes.default.svc
+    namespace: argocd
   source:
-    path: k8s/namespaces
-    repoURL: 'https://github.com/walnuts1018/infra'
-    targetRevision: main
+    repoURL: https://github.com/walnuts1018/infra
+    targetRevision: clusterapi
+    path: k8s/_argocd/agent/certs
     directory:
       recurse: true
-      exclude: '{config/*,_*/*}'
       jsonnet: {}
   syncPolicy:
     automated:

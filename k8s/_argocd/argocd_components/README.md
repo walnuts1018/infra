@@ -1,6 +1,6 @@
-# 初回セットアップ
+# Argo CD初回セットアップ
 
-Argo CDはberry clusterにのみinstallし、berryと登録済みのworkload clusterを管理する。
+`berry`に通常のArgo CDをインストールし、PrincipalとAgentを経由して`kurumi`と`biscuit`を管理する。初回のクラスター登録とリモート側のSpoke導入は[k8s/init/argocd-agent.md](../../init/argocd-agent.md)に従う。
 
 ## Argo CD
 
@@ -11,20 +11,6 @@ helm install argocd -n argocd --create-namespace argo/argo-cd \
   --values ./k8s/_argocd/argocd_components/values.berry.yaml
 ```
 
-## Cluster登録
-
-kurumiのcontext名が`kurumi`であるkubeconfigを使い、berry上のArgo CDへ登録する。
-
-```bash
-argocd cluster add kurumi --name kurumi --insecure --port-forward --port-forward-namespace argocd -y
-```
-
-biscuitもcluster構築とAPIの到達性を確認した後、同じ方法で`biscuit`として登録する。登録後に`k8s/_argocd/applications/biscuit`を追加すれば、berryのbase Applicationが自動的に読み込む。
-
 ## 管理構成
 
-```bash
-kubectl apply -f k8s/_argocd/clusters/berry/base.yaml
-```
-
-base Applicationは`k8s/_argocd/applications` 以下を再帰的に読み込む。`berry`は同一cluster、`kurumi`はArgo CDに登録したremote clusterをdestinationとする。
+`k8s/_argocd/entrypoint/base.yaml`を適用すると、`berry`上のArgo CD、Principal、証明書、ApplicationSetが登録される。リモート向け`Application`は`argocd-agent=true`ラベルとクラスター別`AppProject`を持ち、Principalのdestination-based mappingで対象クラスターへ転送される。

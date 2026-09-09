@@ -134,5 +134,5 @@ argocd account update-password --insecure --plaintext --new-password "$(op item 
 ### Init
 
 ```bash
-kubectl apply -f k8s/_argocd/clusters/berry/base.yaml
+kubectl apply -f k8s/_argocd/entrypoint/base.yaml
 ```

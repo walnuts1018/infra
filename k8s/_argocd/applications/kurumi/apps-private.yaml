@@ -20,8 +20,10 @@ spec:
   template:
     metadata:
       name: '{{ printf "%s-private-kurumi" .name }}'
+      labels:
+        argocd-agent: "true"
     spec:
-      project: default
+      project: kurumi
       destination:
         name: kurumi
         namespace: '{{.namespace}}'

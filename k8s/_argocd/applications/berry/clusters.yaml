@@ -18,7 +18,7 @@ spec:
     metadata:
       name: '{{.name}}'
     spec:
-      project: default
+      project: berry
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{.namespace}}'

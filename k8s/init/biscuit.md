@@ -10,15 +10,11 @@
 
 `berry`のArgo CDから`k8s/clusters/biscuit`を適用する。TartHostの割り当て後にTalosのbootstrapが完了し、`biscuit`クラスターのAPIが到達可能になったことを確認する。
 
-## Argo CD登録
+## Argo CD Agent
 
-`biscuit`のkubeconfigを使用して、`berry`上のArgo CDへremote clusterとして登録する。
+`biscuit`のSpokeとAgentの導入、Principalへの登録は[argocd-agent.md](argocd-agent.md)の`biscuit`手順を実行する。従来の`argocd cluster add`は使用しない。
 
-```bash
-argocd cluster add biscuit --name biscuit --insecure --port-forward --port-forward-namespace argocd -y
-```
-
-登録後は`k8s/_argocd/applications/biscuit`のApplicationSetが、Cilium、TopoLVM、SeaweedFS、証明書、External Secretsを`biscuit`へ適用する。
+登録後は`k8s/_argocd/applications/biscuit`のApplicationSetが、Cilium、TopoLVM、SeaweedFS、証明書、External SecretsをAgent経由で`biscuit`へ適用する。
 
 ## 1Password Connect
 

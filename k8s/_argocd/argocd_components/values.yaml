@@ -41,6 +41,7 @@ configs:
     controller.diff.server.side: "true"
     controller.resource.health.persist: "false"
     applicationsetcontroller.enable.new.git.file.globbing: "true"
+    redis.server: "argocd-agent-redis-proxy:6379"
 
   rbac:
     create: true
@@ -69,10 +70,11 @@ controller:
       cpu: "2"
       memory: 4Gi
 dex:
+  enabled: false
   metrics:
-    enabled: true
+    enabled: false
     serviceMonitor:
-      enabled: true
+      enabled: false
   resources:
     requests:
       cpu: 1m
