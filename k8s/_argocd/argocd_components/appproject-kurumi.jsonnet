@@ -18,6 +18,11 @@
     destinations: [{ namespace: '*', name: 'kurumi' }],
     sourceNamespaces: ['*'],
     orphanedResources: { warn: false },
-    sourceRepos: ['*'],
+    sourceRepos: [
+      'https://github.com/walnuts1018/infra',
+      'https://github.com/walnuts1018/infra-private',
+      'https://github.com/argoproj-labs/argocd-agent',
+      'https://argoproj.github.io/argo-helm',
+    ],
   },
 }
