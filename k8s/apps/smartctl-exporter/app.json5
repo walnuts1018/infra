@@ -1,6 +1,13 @@
 {
   name: "smartctl-exporter",
   namespace: "monitoring",
+  additionalSources: {
+    helm: {
+      repoURL: "https://prometheus-community.github.io/helm-charts",
+      chart: "prometheus-smartctl-exporter",
+      targetRevision: "0.17.1",
+    },
+  },
   clusters: {
     kurumi: {},
   },

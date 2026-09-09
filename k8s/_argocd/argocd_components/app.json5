@@ -1,4 +1,53 @@
 {
   name: "argocd",
   namespace: "argocd",
+  additionalSources: {
+    helm: {
+      repoURL: "https://argoproj.github.io/argo-helm",
+      chart: "argo-cd",
+      targetRevision: "10.8.2",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
+  clusters: {
+    kurumi: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "domain",
+            value: "argocd.walnuts.dev",
+          },
+          {
+            name: "enableHPA",
+            value: "true",
+            code: true,
+          },
+        ],
+      },
+    },
+    berry: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "domain",
+            value: "argocd.local.walnuts.dev",
+          },
+          {
+            name: "enableHPA",
+            value: "false",
+            code: true,
+          },
+        ],
+      },
+      additionalSources: {
+        helm: {
+          additionalValueFiles: [
+            "values.berry.yaml",
+          ],
+        },
+      },
+    },
+  },
 }

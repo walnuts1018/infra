@@ -1,6 +1,16 @@
 {
   name: "prometheus-node-exporter",
   namespace: "monitoring",
+  additionalSources: {
+    helm: {
+      repoURL: "https://prometheus-community.github.io/helm-charts",
+      chart: "prometheus-node-exporter",
+      targetRevision: "4.56.3",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

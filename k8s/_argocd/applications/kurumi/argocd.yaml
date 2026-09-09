@@ -8,16 +8,28 @@ spec:
   destination:
     namespace: argocd
     server: https://kubernetes.default.svc
-  source:
-    path: k8s/_argocd/argocd_components
+  sources:
+  - path: k8s/_argocd/argocd_components
     repoURL: 'https://github.com/walnuts1018/infra'
-    targetRevision: main
+    targetRevision: clusterapi
     directory:
       recurse: true
+      exclude: '{config/*,_*/*}'
       jsonnet:
         tlas:
-        - name: 'domain'
-          value: 'argocd.walnuts.dev'
+        - name: domain
+          value: argocd.walnuts.dev
+        - name: enableHPA
+          value: "true"
+          code: true
+    ref: infra
+  - repoURL: 'https://argoproj.github.io/argo-helm'
+    chart: argo-cd
+    targetRevision: 10.8.2
+    helm:
+      releaseName: argocd
+      valueFiles:
+      - $infra/k8s/_argocd/argocd_components/values.yaml
   syncPolicy:
     automated:
       selfHeal: true

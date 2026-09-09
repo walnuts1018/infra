@@ -11,18 +11,26 @@ spec:
   sources:
   - path: k8s/_argocd/argocd_components
     repoURL: 'https://github.com/walnuts1018/infra'
-    targetRevision: clusterapi # TODO
+    targetRevision: clusterapi
     directory:
       recurse: true
+      exclude: '{config/*,_*/*}'
       jsonnet:
-        tlas: []
+        tlas:
+        - name: domain
+          value: argocd.local.walnuts.dev
+        - name: enableHPA
+          value: "false"
+          code: true
     ref: infra
   - repoURL: "https://argoproj.github.io/argo-helm"
     chart: "argo-cd"
-    targetRevision: "9.4.2"
+    targetRevision: "10.8.2"
     helm:
+      releaseName: argocd
       valueFiles:
       - $infra/k8s/_argocd/argocd_components/values.yaml
+      - $infra/k8s/_argocd/argocd_components/values.berry.yaml
   syncPolicy:
     automated:
       selfHeal: true

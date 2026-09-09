@@ -1,6 +1,16 @@
 {
   name: "kube-state-metrics",
   namespace: "monitoring",
+  additionalSources: {
+    helm: {
+      repoURL: "https://prometheus-community.github.io/helm-charts",
+      chart: "kube-state-metrics",
+      targetRevision: "8.4.2",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

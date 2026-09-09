@@ -10,7 +10,7 @@ spec:
       generators:
       - git:
           repoURL: https://github.com/walnuts1018/infra
-          revision: clusterapi # TODO
+          revision: clusterapi
           files:
           - path: "k8s/apps/*/app.json5"
       - list:
@@ -51,7 +51,7 @@ spec:
     spec:
       sources:
       - repoURL: 'https://github.com/walnuts1018/infra'
-        targetRevision: clusterapi # TODO
+        targetRevision: clusterapi
         path: '{{.path.path}}'
         directory:
           recurse: true
@@ -78,4 +78,13 @@ spec:
           - {{ printf "$infra/%s/%s" $.path.path . }}
           {{- end }}
           {{- end }}
+      {{- end }}
+      {{- range .additionalSources.kustomize }}
+      - repoURL: '{{ .repoURL }}'
+        path: '{{ .path }}'
+        targetRevision: '{{ .targetRevision }}'
+        {{- with .patches }}
+        kustomize:
+          patches: {{ . | toJson }}
+        {{- end }}
       {{- end }}

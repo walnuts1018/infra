@@ -1,0 +1,41 @@
+developerMode: true
+scyllaImage:
+  repository: scylladb/scylla
+  tag: "2025.4.10"
+datacenter: iwakura
+racks:
+- name: iwakura-a
+  scyllaConfig: scylla-config
+  members: 3
+  storage:
+    storageClassName: local-path
+    capacity: 8Gi
+  resources:
+    requests:
+      cpu: 20m
+      memory: 300Mi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+  placement:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: storage.walnuts.dev/slow
+            operator: DoesNotExist
+    podAffinity: {}
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+            - key: scylla/cluster
+              operator: In
+              values:
+              - scylla-cluster
+          topologyKey: kubernetes.io/hostname
+    tolerations: []
+serviceMonitor:
+  create: true

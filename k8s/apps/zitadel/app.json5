@@ -1,6 +1,16 @@
 {
   name: "zitadel",
   namespace: "zitadel",
+  additionalSources: {
+    helm: {
+      repoURL: "https://charts.zitadel.com",
+      chart: "zitadel",
+      targetRevision: "10.0.6",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

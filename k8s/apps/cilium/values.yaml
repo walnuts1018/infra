@@ -2,6 +2,8 @@ kubeProxyReplacement: true
 l7Proxy: true
 k8sServiceHost: 192.168.0.17
 k8sServicePort: 16443
+l2announcements:
+  enabled: true
 bgpControlPlane:
   enabled: true
 k8sClientRateLimit:
@@ -91,7 +93,7 @@ envoy:
       cpu: 10m
       memory: 51Mi
 operator:
-  replicas: 1
+  replicas: 2
   resources:
     requests:
       cpu: 10m

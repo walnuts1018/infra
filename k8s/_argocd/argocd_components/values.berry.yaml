@@ -1,0 +1,21 @@
+global:
+  domain: argocd.local.walnuts.dev
+
+notifications:
+  argocdUrl: https://argocd.local.walnuts.dev
+
+server:
+  ingress:
+    enabled: false
+  httproute:
+    enabled: false
+  autoscaling:
+    enabled: false
+  service:
+    type: NodePort
+    nodePortHttp: 30080
+    nodePortHttps: 30443
+
+repoServer:
+  autoscaling:
+    enabled: false

@@ -10,4 +10,3 @@ flow:
     decoder: sflow
     listen: :6343
     workers: 2
-

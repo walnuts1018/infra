@@ -28,6 +28,28 @@ metrics:
 configuration:
   features: EnableCSI
   # logLevel: debug
+  backupStorageLocation:
+  - name: minio-biscuit
+    default: true
+    provider: aws
+    bucket: velero-backup
+    config:
+      s3Url: https://minio-biscuit.local.walnuts.dev
+      region: ap-northeast-1
+      s3ForcePathStyle: "true"
+    credential:
+      name: velero-minio-biscuit-8a3d33
+      key: credentials
+  volumeSnapshotLocation:
+  - name: minio-biscuit
+    provider: aws
+    config:
+      s3Url: https://minio-biscuit.local.walnuts.dev
+      region: ap-northeast-1
+      s3ForcePathStyle: "true"
+    credential:
+      name: velero-minio-biscuit-8a3d33
+      key: credentials
 
 schedules:
   minio-biscuit:

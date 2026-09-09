@@ -12,7 +12,7 @@ spec:
       generators:
       - git:
           repoURL: https://github.com/walnuts1018/infra
-          revision: main
+          revision: clusterapi
           files:
           - path: "k8s/apps/*/app.json5"
       - list:
@@ -34,15 +34,44 @@ spec:
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{.namespace}}'
-      source:
-        repoURL: 'https://github.com/walnuts1018/infra'
-        targetRevision: main
+      sources:
+      - repoURL: 'https://github.com/walnuts1018/infra'
+        targetRevision: clusterapi
         path: '{{.path.path}}'
         directory:
           recurse: true
           exclude: '{config/*,_*/*}'
           jsonnet:
-            tlas: []
+            tlas:
+            {{- range $tla := .clusters.kurumi.jsonnet.tlas }}
+            - {{ $tla | toJson }}
+            {{- end }}
+        ref: infra
+      {{- with .additionalSources.helm }}
+      - repoURL: '{{ .repoURL }}'
+        chart: '{{ .chart }}'
+        targetRevision: '{{ .targetRevision }}'
+        helm:
+          releaseName: '{{ $.name }}'
+          valueFiles:
+          {{- range .valueFiles }}
+          - {{ printf "$infra/%s/%s" $.path.path . }}
+          {{- end }}
+          {{- with $.clusters.kurumi.additionalSources.helm.additionalValueFiles }}
+          {{- range . }}
+          - {{ printf "$infra/%s/%s" $.path.path . }}
+          {{- end }}
+          {{- end }}
+      {{- end }}
+      {{- range .additionalSources.kustomize }}
+      - repoURL: '{{ .repoURL }}'
+        path: '{{ .path }}'
+        targetRevision: '{{ .targetRevision }}'
+        {{- with .patches }}
+        kustomize:
+          patches: {{ . | toJson }}
+        {{- end }}
+      {{- end }}
       syncPolicy:
         automated:
           selfHeal: true

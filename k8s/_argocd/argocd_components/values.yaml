@@ -106,6 +106,20 @@ server:
     controller: generic
     ingressClassName: "cilium"
     tls: false
+  httproute:
+    enabled: true
+    parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+    hostnames:
+    - argocd.walnuts.dev
+    rules:
+    - matches:
+      - path:
+          type: PathPrefix
+          value: /
+  grpcroute:
+    enabled: false
   metrics:
     enabled: true
     serviceMonitor:

@@ -5,3 +5,9 @@ resources:
   limits:
     cpu: 100m
     memory: 128Mi
+
+app:
+  metrics:
+    service:
+      servicemonitor:
+        enabled: true

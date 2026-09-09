@@ -1,6 +1,13 @@
 {
   name: "scylla-operator",
   namespace: "scylla-operator",
+  additionalSources: {
+    helm: {
+      repoURL: "https://scylla-operator-charts.storage.googleapis.com/stable",
+      chart: "scylla-operator",
+      targetRevision: "v1.21.1",
+    },
+  },
   clusters: {
     kurumi: {},
   },

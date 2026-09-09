@@ -1,6 +1,16 @@
 {
   name: "scylla-manager",
   namespace: "scylla-manager",
+  additionalSources: {
+    helm: {
+      repoURL: "https://scylla-operator-charts.storage.googleapis.com/stable",
+      chart: "scylla-manager",
+      targetRevision: "v1.21.1",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },
