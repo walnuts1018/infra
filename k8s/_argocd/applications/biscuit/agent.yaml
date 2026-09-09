@@ -3,6 +3,8 @@ kind: Application
 metadata:
   name: argocd-agent-biscuit
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     argocd-agent: "true"
 spec:
@@ -18,6 +20,7 @@ spec:
     targetRevision: v0.9.0
     path: install/helm-repo/argocd-agent-agent
     helm:
+      releaseName: argocd-agent
       valueFiles:
       - $infra/k8s/_argocd/agent/agent/values.yaml
   syncPolicy:
