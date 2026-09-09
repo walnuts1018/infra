@@ -42,23 +42,23 @@ variable "biscuit_endpoint" {
   description = "SeaweedFS S3 endpoint for the biscuit backup cluster"
 }
 
-variable "biscuit_access_key" {
+variable "biscuit_terraform_access_key" {
   type        = string
   sensitive   = true
-  description = "SeaweedFS S3 access key for the biscuit backup bucket"
+  description = "SeaweedFS Terraform S3 access key for the biscuit backup bucket"
 }
 
-variable "biscuit_secret_key" {
+variable "biscuit_terraform_secret_key" {
   type        = string
   sensitive   = true
-  description = "SeaweedFS S3 secret key for the biscuit backup bucket"
+  description = "SeaweedFS Terraform S3 secret key for the biscuit backup bucket"
 }
 
 provider "aws" {
   alias                       = "biscuit"
   region                      = "us-east-1"
-  access_key                  = var.biscuit_access_key
-  secret_key                  = var.biscuit_secret_key
+  access_key                  = var.biscuit_terraform_access_key
+  secret_key                  = var.biscuit_terraform_secret_key
   skip_credentials_validation = true
   skip_requesting_account_id  = true
   skip_metadata_api_check     = true
