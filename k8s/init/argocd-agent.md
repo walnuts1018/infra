@@ -14,13 +14,14 @@ Agentの接続先は`argocd-agent.local.walnuts.dev:443`とする。この名前
 argocd-agentctl --principal-context berry --principal-namespace argocd jwt create-key
 ```
 
-`argocd-agent-certs`を同期し、CAと各クラスターのクライアント証明書が作成されたことを確認する。
+`argocd-agent-certs`を同期し、CA、各クラスターのクライアント証明書、Self-registration用共有クライアント証明書が作成されたことを確認する。Self-registrationは`v0.10.0`のBeta機能であり、認証済みAgentのクラスターSecretをPrincipalが生成するために使用する。
 
 ```bash
 argocd app sync argocd-agent-certs --project berry
 kubectl --context berry -n argocd get secret argocd-agent-ca
 kubectl --context berry -n argocd get secret argocd-agent-client-tls-kurumi
 kubectl --context berry -n argocd get secret argocd-agent-client-tls-biscuit
+kubectl --context berry -n argocd get secret argocd-agent-shared-client-cert
 ```
 
 ## リモート側のSpoke導入
@@ -57,22 +58,18 @@ rm -rf "$AGENT_SOURCE_DIR"
 
 この時点ではHelmリリースを削除せず、berry上のApplicationが既存リソースを引き継ぐまで`helm upgrade`も実行しない。リポジトリ内の`k8s/_argocd/applications/{kurumi,biscuit}/spoke.yaml`と`agent.yaml`が継続管理用の正本であり、Spoke上へ直接Applicationを作成する必要はない。
 
-## Principalへの登録
+## Principalへの自動登録
 
-リモート側Agentが起動できる状態になった後、`berry`で各Agentを登録する。`agent create`が`skip-reconcile`付きのクラスターSecretを生成するため、SecretをGitへ作成しない。
+リモート側Agentが起動すると、PrincipalがAgentの認証後に`skip-reconcile`付きのクラスターSecretを自動生成する。AgentごとのクラスターSecretをGitへ保存したり、`argocd-agentctl agent create`を実行したりしない。
 
 ```bash
-CLUSTER_NAME=kurumi
-
-argocd-agentctl --principal-context berry --principal-namespace argocd agent create "$CLUSTER_NAME" \
-  --resource-proxy-server argocd-agent-resource-proxy:9090 \
-  --tls-from-secret "argocd-agent-client-tls-$CLUSTER_NAME" \
-  --ca-from-secret argocd-agent-ca
+kubectl --context berry -n argocd get secret \
+  -l argocd-agent.argoproj-labs.io/self-registered-cluster=true
 ```
 
-`biscuit`も`CLUSTER_NAME=biscuit`として実行する。生成された`cluster-kurumi`と`cluster-biscuit`には`argocd-agent.argoproj-labs.io/agent-name`ラベルと`argocd.argoproj.io/skip-reconcile: "true"`アノテーションが必要であり、これらを失った場合はAgent管理へ切り替えない。
+`cluster-kurumi`と`cluster-biscuit`が生成され、`argocd-agent.argoproj-labs.io/agent-name`ラベルと`argocd.argoproj.io/skip-reconcile: "true"`アノテーションが付いていることを確認する。これらのSecretはPrincipalが管理するため、手動編集やGitへの取り込みを行わない。
 
-両方のAgent登録後、berryの`base` Applicationを同期して、SpokeとAgentのApplicationをGitから作成または更新する。
+両方のAgent接続後、berryの`base` Applicationを同期して、SpokeとAgentのApplicationをGitから作成または更新する。
 
 ```bash
 argocd app sync base --project berry
@@ -93,6 +90,7 @@ argocd app get argocd-agent-biscuit --refresh
 ```bash
 kubectl --context berry -n argocd get deployment argocd-agent
 kubectl --context berry -n argocd get secret cluster-kurumi -o jsonpath='{.metadata.annotations.argocd\.argoproj\.io/skip-reconcile}'
+kubectl --context berry -n argocd get secret cluster-biscuit -o jsonpath='{.metadata.annotations.argocd\.argoproj\.io/skip-reconcile}'
 kubectl --context kurumi -n argocd get pods
 kubectl --context kurumi -n argocd logs deployment/argocd-agent
 argocd app list

@@ -12,6 +12,9 @@ principal:
   auth: "mtls:CN=([^,]+)"
   destinationBasedMapping: true
   labelSelector: "argocd-agent=true"
+  selfRegistration:
+    enabled: true
+    clientCertSecretName: argocd-agent-shared-client-cert
 
 serviceMonitor:
   enabled: true
