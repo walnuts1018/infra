@@ -40,10 +40,6 @@ principal:
   redis:
     server:
       address: valkey-argocd-valkey.argocd.svc.cluster.local:6379
-    proxy:
-      server:
-        tls:
-          secretName: argocd-redis-proxy-tls
   redisProxy:
     enabled: true
   resourceProxy:
