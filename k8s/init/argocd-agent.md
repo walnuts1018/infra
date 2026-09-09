@@ -46,7 +46,7 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm upgrade --install argocd argo/argo-cd --kube-context "$CLUSTER_CONTEXT" \
   --namespace argocd --create-namespace --values k8s/_argocd/spoke/values.yaml
 AGENT_SOURCE_DIR="$(mktemp -d)"
-git clone --depth 1 --branch v0.9.0 https://github.com/argoproj-labs/argocd-agent "$AGENT_SOURCE_DIR/argocd-agent"
+git clone --depth 1 --branch v0.10.0 https://github.com/argoproj-labs/argocd-agent "$AGENT_SOURCE_DIR/argocd-agent"
 helm upgrade --install argocd-agent "$AGENT_SOURCE_DIR/argocd-agent/install/helm-repo/argocd-agent-agent" \
   --kube-context "$CLUSTER_CONTEXT" --namespace argocd --create-namespace \
   --values k8s/_argocd/agent/agent/values.yaml

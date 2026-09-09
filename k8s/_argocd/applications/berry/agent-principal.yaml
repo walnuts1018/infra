@@ -15,7 +15,7 @@ spec:
     targetRevision: clusterapi
     ref: infra
   - repoURL: https://github.com/argoproj-labs/argocd-agent
-    targetRevision: v0.9.0
+    targetRevision: v0.10.0
     path: install/helm-repo/argocd-agent-principal
     helm:
       releaseName: argocd-agent-principal

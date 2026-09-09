@@ -1,32 +1,12 @@
 fullnameOverride: argocd-agent
 
-image:
-  repository: ghcr.io/argoproj-labs/argocd-agent/argocd-agent
-  tag: v0.9.0
-
-replicaCount: 1
 agentMode: managed
-auth: mtls:any
-logLevel: info
 logFormat: json
 server: argocd-agent.local.walnuts.dev
-serverPort: "443"
-tlsClientInSecure: "false"
-tlsInsecurePlaintext: "false"
-tlsSecretName: argocd-agent-client-tls
-tlsRootCASecretName: argocd-agent-ca
-redisAddress: argocd-redis:6379
-argoCdRedisSecretName: argocd-redis
-argoCdRedisPasswordKey: auth
-enableResourceProxy: true
 destinationBasedMapping: true
 createNamespace: true
 allowedNamespaces: "*"
 labelSelector: "argocd-agent=true"
-
-rbac:
-  create: true
-  createClusterRole: true
 
 serviceMonitor:
   enabled: true

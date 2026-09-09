@@ -19,14 +19,7 @@ applicationSet:
 notifications:
   enabled: false
 
-redis:
-  enabled: true
-
-redis-ha:
-  enabled: false
-
 controller:
-  replicas: 1
   extraArgs:
     - --status-processors=2
     - --operation-processors=1
@@ -40,9 +33,6 @@ controller:
       memory: 3Gi
 
 repoServer:
-  replicas: 1
-  autoscaling:
-    enabled: false
   env:
     - name: ARGOCD_REPO_SERVER_PARALLELISM_LIMIT
       value: "1"
