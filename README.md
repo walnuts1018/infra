@@ -25,7 +25,6 @@ Walnuts 家の自宅サーバ全般のリポジトリです。
 
 このリポジトリではjsonnetを用いてマニフェスト管理を行っています。
 
-
 ## Renovate
 
 - [renovate.json](./renovate.json5)
