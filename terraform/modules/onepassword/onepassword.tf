@@ -111,8 +111,8 @@ resource "onepassword_item" "external_secret" {
         "shumoku-client-secret"                  = { type = "CONCEALED", value = var.shumoku_client_secret }
         "seaweedfs_biscuit_terraform_access_key" = { type = "CONCEALED", value = var.seaweedfs_biscuit_terraform_access_key }
         "seaweedfs_biscuit_terraform_secret_key" = { type = "CONCEALED", value = var.seaweedfs_biscuit_terraform_secret_key }
-        "seaweedfs_biscuit_backup_access_key"    = { type = "CONCEALED", value = var.seaweedfs_biscuit_backup_access_key }
-        "seaweedfs_biscuit_backup_secret_key"    = { type = "CONCEALED", value = var.seaweedfs_biscuit_backup_secret_key }
+        "seaweedfs_biscuit_kurumi_access_key"    = { type = "CONCEALED", value = var.seaweedfs_biscuit_kurumi_access_key }
+        "seaweedfs_biscuit_kurumi_secret_key"    = { type = "CONCEALED", value = var.seaweedfs_biscuit_kurumi_secret_key }
 
         "visual-regression-tracker-jwt-secret"     = { type = "CONCEALED", value = random_password.visual_regression_tracker_jwt_secret.result }
         "visual-regression-tracker-admin-password" = { type = "CONCEALED", value = random_password.visual_regression_tracker_admin_password.result }
