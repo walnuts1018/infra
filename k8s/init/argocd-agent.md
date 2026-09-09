@@ -44,7 +44,7 @@ kubectl --context "$CLUSTER_CONTEXT" -n argocd create secret generic argocd-agen
   --dry-run=client -o yaml | kubectl --context "$CLUSTER_CONTEXT" apply -f -
 
 helm repo add argo https://argoproj.github.io/argo-helm
-helm upgrade --install argocd argo/argo-cd --kube-context "$CLUSTER_CONTEXT" \
+helm upgrade --install argocd argo/argo-cd --version 10.8.2 --kube-context "$CLUSTER_CONTEXT" \
   --namespace argocd --create-namespace --values k8s/_argocd/spoke/values.yaml
 AGENT_SOURCE_DIR="$(mktemp -d)"
 git clone --depth 1 --branch v0.10.0 https://github.com/argoproj-labs/argocd-agent "$AGENT_SOURCE_DIR/argocd-agent"

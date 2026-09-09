@@ -6,7 +6,7 @@
 
 ```bash
 helm repo add argo https://argoproj.github.io/argo-helm
-helm install argocd -n argocd --create-namespace argo/argo-cd \
+helm install argocd -n argocd --create-namespace --version 10.8.2 argo/argo-cd \
   --values ./k8s/_argocd/argocd_components/values.yaml \
   --values ./k8s/_argocd/argocd_components/values.berry.yaml
 ```
