@@ -3,6 +3,8 @@
 #   hotate: nvme0n1 KIOXIA EXCERIA PLUS G3 (eui.00000000000000008ce38e0300b2ecea)
 #   lemon:  nvme0n1 SAMSUNG MZALQ512HALU (eui.002538a611b7054b)
 # 3台で1つのSecretを共有するため、ORでつないだCEL式にして各ホストが自分のディスクにだけマッチさせる。
+# EPHEMERALのmaxSizeは特に制限しない(システムディスク全体をそのまま使い、/var/lib/longhornも
+# その中に収まる。現行のhotate/lemonと同じ形)。
 apiVersion: v1alpha1
 kind: UnattendedInstallConfig
 provisioning:
@@ -15,33 +17,22 @@ provisioning:
       )
   wipe: false
 ---
-# Talos自体が使うシステム領域(OS用途)をmaxSizeで区切り、残りをLonghorn/TopoLVM用のVGへ回す。
+# cakeだけが持つ追加のLonghorn用ディスク(現行構成の/mnt/data/longhornに相当、CT1000MX500SSD1 1TB)。
+# UserVolumeConfigはTalosが自動でフォーマット・マウントし、/var/mnt/longhorn-extraとして公開する
+# (パーティション単位のRawVolumeConfig+手動LVMより、Kubernetesワークロード向けにはこちらが標準)。
+# hotate/lemonにはこのWWIDのディスクが存在しないため、単純にvolumeが作られないだけで無害。
+# 移行後、Longhorn側でこのnodeに/var/mnt/longhorn-extraを追加ディスクとして登録すること
+# (Longhorn UIまたはnodes.longhorn.io CRDで、現行のsata-disk-1と同じ役割)。
 apiVersion: v1alpha1
-kind: VolumeConfig
-name: EPHEMERAL
-provisioning:
-  maxSize: 100GiB
----
-# システムディスク上のEPHEMERAL以降の未使用領域を、LVM PV用のパーティションとして丸ごと確保する。
-# system_diskを条件に含めることで、3台共有のこのSecretでも各ホストが自分のシステムディスク上の
-# パーティションだけを掴む(他ホストのディスクを誤って触ることはない)。
-apiVersion: v1alpha1
-kind: RawVolumeConfig
-name: data-pv
+kind: UserVolumeConfig
+name: longhorn-extra
+volumeType: disk
 provisioning:
   diskSelector:
-    match: system_disk && !disk.readonly
+    match: '!disk.readonly && disk.wwid == "naa.500a0751e625c7e6"'
   grow: true
----
-# OSディスクの残り領域をまとめて1つのVGにし、この上にthin-poolを作ってLonghornとTopoLVMで共有する。
-# thin-pool自体の作成はTalosの宣言的設定では未対応のため、k8s/apps/lvm-thinpool-init/のJob/DaemonSetが
-# VG作成後に一度だけ`lvcreate --type thinpool`を実行して用意する。
-apiVersion: v1alpha1
-kind: LVMVolumeGroupConfig
-name: data
-provisioning:
-  volumeSelector:
-    match: volume.partition_label == "r-data-pv"
+filesystem:
+  type: xfs
 ---
 # control planeのVIP(192.168.4.11/32)を保持するためだけの仮想リンク。
 # kube-vipは使わず、TalosネイティブのBGP機能でこのリンクのアドレスをそのままvyosへ広告する。

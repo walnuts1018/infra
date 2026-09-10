@@ -1,7 +1,0 @@
-{
-  name: "lvm-thinpool-init",
-  namespace: "lvm-thinpool-init",
-  clusters: {
-    kurumi: {},
-  },
-}

@@ -17,16 +17,10 @@ lvmd:
   nodeSelector:
     topolvm.io/lvmd-config: rusk
   deviceClasses:
-  # VG名は"data"(旧"hdd"): LonghornのthinボリュームともVG/thin-poolを共有する
-  # (k8s/clusters/kurumi/tart-bootstrap-patches-secret-worker.jsonnet、k8s/apps/lvm-thinpool-init/参照)。
-  # thin-poolを介すことでLonghornとTopoLVMの間で空き容量をオーバープロビジョニングできる。
-  - name: data-thin
-    volume-group: data
+  - name: hdd
+    volume-group: hdd
+    spare-gb: 10
     default: true
-    type: thin
-    thin-pool:
-      name: pool0
-      overprovision-ratio: 3.0
     lvcreate-options:
     - --alloc=normal
   prometheus:
@@ -64,7 +58,7 @@ storageClasses:
     volumeBindingMode: WaitForFirstConsumer
     allowVolumeExpansion: true
     additionalParameters:
-      "topolvm.io/device-class": data-thin
+      "topolvm.io/device-class": hdd
     mountOptions:
     - noatime
 

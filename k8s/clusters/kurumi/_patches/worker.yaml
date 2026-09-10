@@ -1,9 +1,6 @@
-# hostnameはTalos側では明示せず、vyosのDHCP static-mapping(予約名"rusk")から自動的に
-# 引き継がれる(biscuitのeclairと同じ仕組み。infra-privateのconfig.boot参照)。
-# topolvmのlvmd nodeSelector(topolvm.io/lvmd-config: rusk)やseaweedfs-hdd、local-path-provisionerが
-# このhostnameに決め打ちで依存しているため、DHCP予約名は必ず"rusk"にすること。
-#
 # OSインストール先: sda(HP Smart Array論理ドライブ、100G)。ssh + udevadmで実機確認済み(2026-09-11)。
+# EPHEMERALのmaxSizeは制限しない(システムディスク全体を使い、/var/lib/longhornもその中に収まる。
+# 現行のrusk構成と同じ形)。
 apiVersion: v1alpha1
 kind: UnattendedInstallConfig
 provisioning:
@@ -11,18 +8,11 @@ provisioning:
     match: '!disk.readonly && disk.wwid == "naa.600508b1001c1351"'
   wipe: false
 ---
-apiVersion: v1alpha1
-kind: VolumeConfig
-name: EPHEMERAL
-provisioning:
-  maxSize: 60GiB
----
-# 既存のTopoLVM VG「hdd」(物理的にはsdc+sddのHP Smart Array論理ドライブ、465.7GB x2)を、Longhornとも
-# 共有するthin-pool対応のVG名「data」として再構成する。k8s/apps/topolvm/values.yaml側のvolume-groupも
-# 合わせて更新済み。sda(OS)とは別の専用ディスクなのでRawVolumeConfigは不要(biscuitの"hdd" VGと同じ形)。
+# 既存のTopoLVM VG「hdd」(物理的にはsdc+sddのHP Smart Array論理ドライブ、465.7GB x2)。
+# sda(OS)とは別の専用ディスクであり、現行構成のまま(thick provisioning)再現する。
 apiVersion: v1alpha1
 kind: LVMVolumeGroupConfig
-name: data
+name: hdd
 provisioning:
   volumeSelector:
     match: >-
