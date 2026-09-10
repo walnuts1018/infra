@@ -1,0 +1,4 @@
+reloader:
+  autoReloadAll: true
+  namespaceSelector: kubernetes.io/metadata.name=argocd
+  reloadStrategy: annotations

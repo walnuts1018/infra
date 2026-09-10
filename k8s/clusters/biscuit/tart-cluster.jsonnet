@@ -8,7 +8,6 @@
       'cluster.x-k8s.io/cluster-name': (import 'cluster.json5').name,
     },
   },
-  // 単一node(control plane兼worker)構成でのcontrol planeへのPod scheduling許可は、
-  // tart-bootstrap-patches-secret.jsonnetのraw config patchで行う。
+  // 単一node(control plane兼worker)構成でのcontrol planeへのPod scheduling許可は、tart-bootstrap-patches-secret.jsonnetのraw config patchで行う。
   spec: {},
 }

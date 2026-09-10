@@ -1,3 +1,6 @@
+// このApplicationはArgo CD自体をブートストラップするため、apps-berry ApplicationSetの
+// 走査対象(k8s/apps/*/app.json5)には含まれず、k8s/_argocd/applications/berry/argocd.yaml
+// にハンドライトされている。値を変更する場合はargocd.yamlも合わせて更新すること。
 {
   name: "argocd",
   namespace: "argocd",
@@ -9,30 +12,6 @@
       valueFiles: [
         "values.yaml",
       ],
-    },
-  },
-  clusters: {
-    berry: {
-      jsonnet: {
-        tlas: [
-          {
-            name: "domain",
-            value: "argocd.local.walnuts.dev",
-          },
-          {
-            name: "enableHPA",
-            value: "false",
-            code: true,
-          },
-        ],
-      },
-      additionalSources: {
-        helm: {
-          additionalValueFiles: [
-            "values.berry.yaml",
-          ],
-        },
-      },
     },
   },
 }

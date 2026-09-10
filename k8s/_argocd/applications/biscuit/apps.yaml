@@ -51,14 +51,8 @@ spec:
         helm:
           releaseName: '{{ $.name }}'
           valueFiles:
-          {{- with $.clusters.biscuit.additionalSources.helm.valueFiles }}
-          {{- range . }}
-          - {{ printf "$infra/%s/%s" $.path.path . }}
-          {{- end }}
-          {{- else }}
           {{- range .valueFiles }}
           - {{ printf "$infra/%s/%s" $.path.path . }}
-          {{- end }}
           {{- end }}
           {{- with $.clusters.biscuit.additionalSources.helm.additionalValueFiles }}
           {{- range . }}

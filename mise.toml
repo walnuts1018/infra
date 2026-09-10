@@ -1,7 +1,6 @@
 [tools]
 terraform = "1.15.9"
 go-jsonnet = "0.22.0"
-kubeconform = "0.8.0"
 
 [tasks.jsonnet-fmt]
 description = "Format Jsonnet files"

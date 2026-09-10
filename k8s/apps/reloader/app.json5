@@ -10,7 +10,15 @@
   },
   clusters: {
     kurumi: {},
-    berry: {},
+    berry: {
+      additionalSources: {
+        helm: {
+          additionalValueFiles: [
+            "values.berry.yaml",
+          ],
+        },
+      },
+    },
     biscuit: {},
   },
 }

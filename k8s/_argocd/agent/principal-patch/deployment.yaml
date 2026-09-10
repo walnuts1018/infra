@@ -1,9 +1,0 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  # Server-side apply merges this metadata-only resource into the Helm-managed
-  # Deployment while leaving the chart-owned spec untouched.
-  name: argocd-agent
-  namespace: argocd
-  annotations:
-    reloader.stakater.com/auto: "true"

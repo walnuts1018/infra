@@ -12,7 +12,7 @@ spec:
   source:
     path: k8s/namespaces/kurumi
     repoURL: 'https://github.com/walnuts1018/infra'
-    targetRevision: main
+    targetRevision: clusterapi
     directory:
       recurse: true
       exclude: '{config/*,_*/*,values*.yaml}'

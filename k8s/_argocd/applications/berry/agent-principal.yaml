@@ -28,10 +28,3 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - FailOnSharedResource=true
-    - RespectIgnoreDifferences=true
-  ignoreDifferences:
-  - group: apps
-    kind: Deployment
-    name: argocd-agent
-    jsonPointers:
-    - /metadata/annotations/reloader.stakater.com~1auto

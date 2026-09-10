@@ -6,6 +6,8 @@
   'default',
   'external-secrets',
   'kube-system',
+  'onepassword',
   'reloader',
   'tart-infrastructure-system',
+  'valkey-operator-system',
 ])
