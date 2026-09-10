@@ -27,13 +27,13 @@ local app = import 'app.json5';
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'rclone',
-                  image: 'public.ecr.aws/aws-cli/aws-cli:2.36.41',
+                  image: 'python:3.14.7-slim',
                   command: [
                     '/usr/bin/bash',
                     '-c',
                   ],
                   args: [
-                    'export PATH=$PATH:/rclone && bash /scripts/backup.sh',
+                    'export PATH=$PATH:/rclone:/usr/local/aws-cli/v2/current/bin && python3 -u /scripts/backup.py',
                   ],
                   resources: {
                     requests: {
@@ -56,6 +56,14 @@ local app = import 'app.json5';
                       name: 'rclone',
                       mountPath: '/rclone',
                       subPath: 'usr/local/bin',
+                    },
+                    {
+                      name: 'aws-cli',
+                      // Mounted at the same absolute path the image itself uses so that
+                      // /usr/local/aws-cli/v2/current (an *absolute* symlink to the
+                      // versioned dist dir) still resolves correctly.
+                      mountPath: '/usr/local/aws-cli',
+                      subPath: 'usr/local/aws-cli',
                     },
                     {
                       name: 'seaweedfs-default-sts-token',
@@ -108,6 +116,12 @@ local app = import 'app.json5';
                 name: 'rclone',
                 image: {
                   reference: 'ghcr.io/rclone/rclone:1.71.1',
+                },
+              },
+              {
+                name: 'aws-cli',
+                image: {
+                  reference: 'public.ecr.aws/aws-cli/aws-cli:2.36.41',
                 },
               },
               {

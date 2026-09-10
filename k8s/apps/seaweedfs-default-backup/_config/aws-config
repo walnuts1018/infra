@@ -1,7 +1,7 @@
 [profile seaweedfs-default]
 region = us-east-1
 endpoint_url = http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
-credential_process = bash /scripts/assumerole.sh
+credential_process = python3 /scripts/assumerole.py
 s3 =
   endpoint_url = http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
   s3_force_path_style = true
