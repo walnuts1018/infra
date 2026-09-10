@@ -1,0 +1,77 @@
+# OSインストール先ディスク(ssh + udevadmで実機確認済み、2026-09-11時点):
+#   cake:   nvme1n1 512GB SSD (nvme.126f-4e4a4d333538523031353432385037304758-353132474220535344-00000001)
+#   hotate: nvme0n1 KIOXIA EXCERIA PLUS G3 (eui.00000000000000008ce38e0300b2ecea)
+#   lemon:  nvme0n1 SAMSUNG MZALQ512HALU (eui.002538a611b7054b)
+# 3台で1つのSecretを共有するため、ORでつないだCEL式にして各ホストが自分のディスクにだけマッチさせる。
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: >-
+      !disk.readonly && (
+        disk.wwid == "nvme.126f-4e4a4d333538523031353432385037304758-353132474220535344-00000001" ||
+        disk.wwid == "eui.00000000000000008ce38e0300b2ecea" ||
+        disk.wwid == "eui.002538a611b7054b"
+      )
+  wipe: false
+---
+# Talos自体が使うシステム領域(OS用途)をmaxSizeで区切り、残りをLonghorn/TopoLVM用のVGへ回す。
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: EPHEMERAL
+provisioning:
+  maxSize: 100GiB
+---
+# システムディスク上のEPHEMERAL以降の未使用領域を、LVM PV用のパーティションとして丸ごと確保する。
+# system_diskを条件に含めることで、3台共有のこのSecretでも各ホストが自分のシステムディスク上の
+# パーティションだけを掴む(他ホストのディスクを誤って触ることはない)。
+apiVersion: v1alpha1
+kind: RawVolumeConfig
+name: data-pv
+provisioning:
+  diskSelector:
+    match: system_disk && !disk.readonly
+  grow: true
+---
+# OSディスクの残り領域をまとめて1つのVGにし、この上にthin-poolを作ってLonghornとTopoLVMで共有する。
+# thin-pool自体の作成はTalosの宣言的設定では未対応のため、k8s/apps/lvm-thinpool-init/のJob/DaemonSetが
+# VG作成後に一度だけ`lvcreate --type thinpool`を実行して用意する。
+apiVersion: v1alpha1
+kind: LVMVolumeGroupConfig
+name: data
+provisioning:
+  volumeSelector:
+    match: volume.partition_label == "r-data-pv"
+---
+# control planeのVIP(192.168.4.11/32)を保持するためだけの仮想リンク。
+# kube-vipは使わず、TalosネイティブのBGP機能でこのリンクのアドレスをそのままvyosへ広告する。
+apiVersion: v1alpha1
+kind: DummyLinkConfig
+name: dummy-vip
+addresses:
+  - address: 192.168.4.11/32
+---
+# dummy-vipのアドレスをconnected networkとしてvyos(ASN 65001)へBGP広告する。
+# cake/hotate/lemonの3台が同時に同じ/32を広告するECMP構成。ノード障害時はBGPセッション断で
+# 経路が自動的に引き上げられ、残りのノードへトラフィックが寄る。
+# localASNは65010(vyos側のpeer-group "CILIUM"のremote-as)に合わせる。
+# vyosのBGP dynamic listen rangeは同一prefix(192.168.0.0/24)に1つのpeer-groupしか
+# 割り当てられないため、Cilium(LoadBalancer IP用BGP)と同じpeer-group/ASNへ相乗りし、
+# vyos側route-map(CILIUM-IN)のprefix-list単位で広告内容を区別する。
+apiVersion: v1alpha1
+kind: BGPInstanceConfig
+name: control-plane-vip
+localASN: 65010
+advertise:
+  - dummy-vip
+multipath: true
+neighbors:
+  - address: 192.168.0.1
+    peerASN: 65001
+---
+# SeaweedFS/バックアップ転送等の瞬間的なメモリ圧迫でkube-apiserver等がOOMKillされるのを避けるための安全弁。
+apiVersion: v1alpha1
+kind: KubeletConfig
+config:
+  memorySwap:
+    swapBehavior: LimitedSwap

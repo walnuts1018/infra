@@ -36,12 +36,14 @@ Kubernetes クラスタに適用される Manifest 群です。
 
 ### kurumi クラスタ
 
-| HostName | Model                        | CPU                                     | Memory    | Disk                                              | OS                             | ControlPlane |
-| :------- | :--------------------------- | :-------------------------------------- | :-------- | :-------------------------------------------------| :----------------------------- | :----------- |
-| cake     | HP ProDesk 400 G4 DM (Japan) | Intel Core i5-8500T Processor (6 cores) | 64GB      | KIOXIA-EXCERIA G2 (1TB), CT1000MX500SSD1/JP (1TB) | Ubuntu 24.04.3 LTS             | ○            |
-| hotate   | TRIGKEY Key-N100             | Intel Processor N100 (4 cores)          | 16GB      | KIOXIA-EXCERIA G3 (1TB)                           | Ubuntu 24.04.3 LTS             | ○            |
-| cheese   | Raspberry Pi 4B              | BCM2835 (4 cores)                       | 4GB       | CSSD-S6O240NCG1Q (240GB)                          | Debian GNU/Linux 12            | ○            |
-| donut    | Raspberry Pi 4B              | BCM2835 (4 cores)                       | 2GB       | Apacer AS340 (120GB)                              | Debian GNU/Linux 12            |              |
+Talos Linux + Cluster API(`walnuts1018/cluster-api-provider-tart`、`k8s/clusters/kurumi/`)で管理する。control planeはcake/hotate/lemonの3台でTalosネイティブBGP(`BGPInstanceConfig`)によるVIP冗長化構成、ruskはworker専用。
+
+| HostName | Model                         | CPU                            | Memory | Disk                                              | OS         | ControlPlane | Power backend        |
+| :------- | :---------------------------- | :------------------------------| :----- | :------------------------------------------------ | :--------- | :----------- | :-------------------- |
+| cake     | ASRock B660M Phantom Gaming 4 | Intel (12 threads)              | 48GB   | 512GB SSD(OS), KIOXIA EXCERIA G2 1TB, CT1000MX500SSD1 1TB | Talos v1.14 | ○           | Wake-on-LAN            |
+| hotate   | Trigkey Green G4              | AMD (4 threads)                 | 32GB   | KIOXIA EXCERIA PLUS G3                            | Talos v1.14 | ○           | Wake-on-LAN            |
+| lemon    | Lenovo IdeaPad 5 15ITL05      | Intel Tiger Lake (8 threads)    | 16GB   | Samsung MZALQ512HALU 512GB                        | Talos v1.14 | ○           | Wake-on-LAN            |
+| rusk     | HP ProLiant DL120 Gen9        | Intel (20 threads)              | 32GB   | HP Smart Array 論理ドライブ(OS/TopoLVM)           | Talos v1.14 |              | Redfish(iLO)           |
 
 ### biscuit クラスタ
 

@@ -1,5 +1,13 @@
-local cluster = import 'cluster.json5';
-{
+// biscuit/kurumiなど、Tart provider配下のワークロードクラスタに共通するCluster CRの骨格。
+function(
+  cluster,
+  controlPlaneEndpointHost,
+  controlPlaneEndpointPort,
+  controlPlaneRefName,
+  infrastructureRefName,
+  podCIDRs=['10.244.0.0/16'],
+  serviceCIDRs=['10.96.0.0/12'],
+) {
   apiVersion: 'cluster.x-k8s.io/v1beta2',
   kind: 'Cluster',
   metadata: {
@@ -12,26 +20,22 @@ local cluster = import 'cluster.json5';
   },
   spec: {
     clusterNetwork: {
-      pods: {
-        cidrBlocks: ['10.244.0.0/16'],
-      },
-      services: {
-        cidrBlocks: ['10.96.0.0/12'],
-      },
+      pods: { cidrBlocks: podCIDRs },
+      services: { cidrBlocks: serviceCIDRs },
     },
     controlPlaneEndpoint: {
-      host: '192.168.0.15',
-      port: 6443,
+      host: controlPlaneEndpointHost,
+      port: controlPlaneEndpointPort,
     },
     controlPlaneRef: {
       apiGroup: 'controlplane.cluster.x-k8s.io',
       kind: 'TartControlPlane',
-      name: (import 'tart-control-plane.jsonnet').metadata.name,
+      name: controlPlaneRefName,
     },
     infrastructureRef: {
       apiGroup: 'infrastructure.cluster.x-k8s.io',
       kind: 'TartCluster',
-      name: (import 'tart-cluster.jsonnet').metadata.name,
+      name: infrastructureRefName,
     },
   },
 }

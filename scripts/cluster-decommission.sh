@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-if [[ $# -ne 1 || "$1" != "biscuit" ]]; then
-  echo "usage: mise run cluster:decommission biscuit" >&2
+if [[ $# -ne 1 ]]; then
+  echo "usage: mise run cluster:decommission <cluster-name>" >&2
   exit 2
 fi
 

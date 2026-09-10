@@ -1,5 +1,4 @@
-local cluster = import 'cluster.json5';
-{
+function(cluster) {
   apiVersion: 'addons.cluster.x-k8s.io/v1beta2',
   kind: 'ClusterResourceSet',
   metadata: {
@@ -10,9 +9,12 @@ local cluster = import 'cluster.json5';
     },
   },
   spec: {
+    // cluster-nameも含めて絞り込む: 'argocd-agent.walnuts.dev/enabled'だけだと他clusterの
+    // 同名ClusterResourceSetともお互いのClusterへ二重適用されてしまう。
     clusterSelector: {
       matchLabels: {
         'argocd-agent.walnuts.dev/enabled': 'true',
+        'cluster.x-k8s.io/cluster-name': cluster.name,
       },
     },
     resources: [

@@ -1,5 +1,5 @@
-local cluster = import 'cluster.json5';
-{
+local spokeValues = importstr '../../../_argocd/spoke/values.yaml';
+function(cluster, version='10.8.2') {
   apiVersion: 'addons.cluster.x-k8s.io/v1alpha1',
   kind: 'HelmChartProxy',
   metadata: {
@@ -13,11 +13,12 @@ local cluster = import 'cluster.json5';
     clusterSelector: {
       matchLabels: {
         'argocd-agent.walnuts.dev/enabled': 'true',
+        'cluster.x-k8s.io/cluster-name': cluster.name,
       },
     },
     chartName: 'argo-cd',
     repoURL: 'https://argoproj.github.io/argo-helm',
-    version: '10.8.2',
+    version: version,
     releaseName: 'argocd',
     namespace: 'argocd',
     // The spoke is only a transport bootstrap. Argo CD takes over after the
@@ -27,6 +28,6 @@ local cluster = import 'cluster.json5';
       wait: true,
       install: { createNamespace: true },
     },
-    valuesTemplate: importstr '../../_argocd/spoke/values.yaml',
+    valuesTemplate: spokeValues,
   },
 }

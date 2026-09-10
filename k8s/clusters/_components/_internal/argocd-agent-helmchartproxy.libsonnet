@@ -1,5 +1,5 @@
-local cluster = import 'cluster.json5';
-{
+local agentValues = importstr '../../../_argocd/agent/agent/values.yaml';
+function(cluster, version='0.2.7') {
   apiVersion: 'addons.cluster.x-k8s.io/v1alpha1',
   kind: 'HelmChartProxy',
   metadata: {
@@ -13,11 +13,12 @@ local cluster = import 'cluster.json5';
     clusterSelector: {
       matchLabels: {
         'argocd-agent.walnuts.dev/enabled': 'true',
+        'cluster.x-k8s.io/cluster-name': cluster.name,
       },
     },
     chartName: 'argocd-agent-agent',
     repoURL: 'oci://ghcr.io/argoproj-labs/argocd-agent',
-    version: '0.2.7',
+    version: version,
     releaseName: 'argocd-agent',
     namespace: 'argocd',
     reconcileStrategy: 'InstallOnce',
@@ -25,6 +26,6 @@ local cluster = import 'cluster.json5';
       wait: false,
       install: { createNamespace: true },
     },
-    valuesTemplate: importstr '../../_argocd/agent/agent/values.yaml',
+    valuesTemplate: agentValues,
   },
 }

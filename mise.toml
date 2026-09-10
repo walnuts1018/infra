@@ -24,5 +24,5 @@ description = "Restart an Argo CD Agent after its TLS Secret is renewed"
 run = "bash scripts/argocd-agent-restart.sh"
 
 [tasks."cluster:decommission"]
-description = "Remove the biscuit CAPI and Argo CD Agent bootstrap resources"
+description = "Remove a workload cluster's CAPI and Argo CD Agent bootstrap resources"
 run = "bash scripts/cluster-decommission.sh"

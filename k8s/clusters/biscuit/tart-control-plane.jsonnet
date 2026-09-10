@@ -1,26 +1,11 @@
-{
-  apiVersion: 'controlplane.cluster.x-k8s.io/v1alpha1',
-  kind: 'TartControlPlane',
-  metadata: {
-    name: (import 'cluster.json5').name,
-    namespace: (import 'cluster.json5').namespace,
-  },
-  spec: {
-    version: (import 'cluster.json5').kubernetesVersion,
-    replicas: (import 'cluster.json5').controlPlaneMachineCount,
-    machineTemplate: {
-      spec: {
-        infrastructureRef: {
-          apiGroup: 'infrastructure.cluster.x-k8s.io',
-          kind: 'TartMachineTemplate',
-          name: (import 'tart-machine-template-control-plane.jsonnet').metadata.name,
-        },
-      },
-    },
-    bootstrapConfigTemplateRef: {
-      apiGroup: 'bootstrap.cluster.x-k8s.io',
-      kind: 'TartBootstrapConfigTemplate',
-      name: (import 'tart-bootstrap-config-template.jsonnet').metadata.name,
-    },
-  },
-}
+local flatten = import '../../components/flatten-resources.libsonnet';
+local stack = import '../_components/tart-control-plane-stack.libsonnet';
+local cluster = import 'cluster.json5';
+
+flatten(stack(cluster, {
+  controlPlaneEndpointHost: '192.168.0.15',
+  controlPlaneEndpointPort: 6443,
+  hostSelectorLabels: { 'infrastructure.cluster.x-k8s.io/host-name': 'eclair' },
+  schematicID: '376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba',
+  patches: importstr '_patches/control-plane.yaml',
+}))
