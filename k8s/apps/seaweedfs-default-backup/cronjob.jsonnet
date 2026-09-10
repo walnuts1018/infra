@@ -27,13 +27,35 @@ local app = import 'app.json5';
               std.mergePatch(
                 (import '../../components/container.libsonnet') {
                   name: 'rclone',
-                  image: 'python:3.14.7-slim',
+                  image: 'denoland/deno:2.9.6',
                   command: [
                     '/usr/bin/bash',
                     '-c',
                   ],
                   args: [
-                    'export PATH=$PATH:/rclone:/usr/local/aws-cli/v2/current/bin && python3 -u /scripts/backup.py',
+                    'export PATH=$PATH:/rclone:/usr/local/aws-cli/v2/current/bin && deno run --allow-run --allow-env --allow-read /scripts/backup.ts',
+                  ],
+                  env: [
+                    {
+                      name: 'AWS_ROLE_ARN',
+                      value: 'arn:aws:iam::role/seaweedfs-default-backup',
+                    },
+                    {
+                      name: 'AWS_ROLE_SESSION_NAME',
+                      value: 'seaweedfs-default-backup',
+                    },
+                    {
+                      name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
+                      value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
+                    },
+                    {
+                      name: 'AWS_REGION',
+                      value: 'us-east-1',
+                    },
+                    {
+                      name: 'AWS_ENDPOINT_URL_STS',
+                      value: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333',
+                    },
                   ],
                   resources: {
                     requests: {
