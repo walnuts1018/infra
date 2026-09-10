@@ -25,6 +25,11 @@ local cluster = import 'cluster.json5';
       wait: true,
       install: { createNamespace: true },
     },
-    valuesTemplate: importstr '../../apps/cilium/values.biscuit.yaml',
+    // Gateway API CRDs are installed by the preceding ClusterResourceSet. Keep
+    // the one-shot Cilium bootstrap independent of that CRD discovery.
+    valuesTemplate: (importstr '../../apps/cilium/values.biscuit.yaml') + |||
+      gatewayAPI:
+        enabled: false
+    |||,
   },
 }

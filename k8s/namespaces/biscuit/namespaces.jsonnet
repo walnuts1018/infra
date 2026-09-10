@@ -2,7 +2,6 @@
   'argocd',
   'biscuit',
   'cert-manager',
-  'cilium-secrets',
   'cilium-system',
   'external-secrets',
   'kube-system',

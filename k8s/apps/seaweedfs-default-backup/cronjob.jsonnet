@@ -12,9 +12,10 @@ local app = import 'app.json5';
     schedule: '10 2 * * *',  // AM 2:10
     timeZone: 'Asia/Tokyo',
     concurrencyPolicy: 'Forbid',
-    startingDeadlineSeconds: 120,
+    startingDeadlineSeconds: 21600,
     jobTemplate: {
       spec: {
+        activeDeadlineSeconds: 43200,
         template: {
           metadata: {
             labels: labels(app.name),

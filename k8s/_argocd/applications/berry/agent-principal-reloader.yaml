@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-agent-principal-reloader
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: berry
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  source:
+    repoURL: https://github.com/walnuts1018/infra
+    targetRevision: clusterapi
+    path: k8s/_argocd/agent/principal-patch
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: false
+    syncOptions:
+    - ServerSideApply=true
+    - Validate=false
+    - SkipDryRunOnMissingResource=true
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    name: argocd-agent
+    jsonPointers:
+    - /metadata/labels
+    - /spec

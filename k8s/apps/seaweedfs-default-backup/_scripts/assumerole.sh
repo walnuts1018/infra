@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+set -euo pipefail
+
 aws sts assume-role-with-web-identity \
   --role-arn arn:aws:iam::role/seaweedfs-default-backup \
   --role-session-name "seaweedfs-default-backup-session-$(date +%s)" \

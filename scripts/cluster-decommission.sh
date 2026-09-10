@@ -38,12 +38,12 @@ while IFS= read -r application; do
 done <<<"${workload_applications}"
 
 kubectl --context berry -n "$cluster_context" delete helmchartproxy cilium-bootstrap argocd-spoke argocd-agent --ignore-not-found
-kubectl --context berry -n "$cluster_context" delete clusterresourceset argocd-agent --ignore-not-found
+kubectl --context berry -n "$cluster_context" delete clusterresourceset gateway-api-crds argocd-agent --ignore-not-found
 kubectl --context berry -n "$cluster_context" delete externalsecret argocd-agent-resources --ignore-not-found
-kubectl --context berry -n "$cluster_context" delete secret argocd-agent-resources --ignore-not-found
-kubectl --context berry delete clustersecretstore argocd-agent-berry --ignore-not-found
-kubectl --context berry -n argocd delete rolebinding argocd-agent-secret-reader --ignore-not-found
-kubectl --context berry -n argocd delete role argocd-agent-secret-reader --ignore-not-found
-kubectl --context berry -n argocd delete serviceaccount argocd-agent-secret-reader --ignore-not-found
+kubectl --context berry -n "$cluster_context" delete secret gateway-api-crds-resources argocd-agent-resources --ignore-not-found
+kubectl --context berry delete clustersecretstore argocd-agent-biscuit --ignore-not-found
+kubectl --context berry -n argocd delete rolebinding argocd-agent-secret-reader-biscuit --ignore-not-found
+kubectl --context berry -n argocd delete role argocd-agent-secret-reader-biscuit --ignore-not-found
+kubectl --context berry -n argocd delete serviceaccount argocd-agent-secret-reader-biscuit --ignore-not-found
 kubectl --context berry -n argocd delete secret "cluster-$cluster_context" --ignore-not-found
 kubectl --context berry -n "$cluster_context" delete cluster "$cluster_context" --ignore-not-found

@@ -114,5 +114,9 @@ tls:
     name: cilium-secrets
 gatewayAPI:
   enabled: true
+  secretsNamespace:
+    create: true
+    name: cilium-secrets
+    sync: true
   gatewayClass:
     create: false

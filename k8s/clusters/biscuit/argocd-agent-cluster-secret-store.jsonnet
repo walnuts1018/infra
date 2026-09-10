@@ -3,7 +3,7 @@ local cluster = import 'cluster.json5';
   apiVersion: 'external-secrets.io/v1',
   kind: 'ClusterSecretStore',
   metadata: {
-    name: 'argocd-agent-berry',
+    name: 'argocd-agent-biscuit',
   },
   spec: {
     conditions: [{ namespaces: [cluster.namespace] }],
@@ -21,7 +21,7 @@ local cluster = import 'cluster.json5';
         },
         auth: {
           serviceAccount: {
-            name: 'argocd-agent-secret-reader',
+            name: 'argocd-agent-secret-reader-biscuit',
             namespace: 'argocd',
           },
         },

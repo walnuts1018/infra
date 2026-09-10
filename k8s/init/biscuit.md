@@ -18,6 +18,8 @@ fresh installではTerraformの1Passwordへの書き込み完了後にExternal S
 
 `biscuit`のArgo CD SpokeとAgentは、`k8s/clusters/biscuit`のClusterResourceSetとHelmChartProxyが自動導入する。通常の新規構築ではworkload clusterへ`helm install`したり、TLS Secretを手動作成したり、`argocd-agentctl agent create`を実行したりしない。
 
+Gateway API CRDはCiliumより先にClusterResourceSetのbootstrap Jobが導入する。Cilium bootstrapではGateway APIを無効にし、CRD導入後にAgent経由の通常Applicationが最終設定へ更新する。
+
 `cluster:decommission biscuit`を実行する前に、`k8s/clusters/biscuit/cluster.json5`を削除してコミットし、各`app.json5`から`biscuit`を削除してコミットする。これにより`clusters`と`apps-biscuit`の両方が対象Applicationを生成しなくなる。コマンドはその状態を検査し、残存するbiscuit向けApplicationをworkload resourceを残したまま削除してからbootstrap resourceとClusterを削除する。
 
 PrincipalのJWT signing keyが未作成の場合だけ、次のコマンドを一度実行する。

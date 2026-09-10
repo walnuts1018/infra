@@ -36,7 +36,7 @@ local resourcePayload = |||
     refreshInterval: '1h',
     secretStoreRef: {
       kind: 'ClusterSecretStore',
-      name: 'argocd-agent-berry',
+      name: 'argocd-agent-biscuit',
     },
     target: {
       name: 'argocd-agent-resources',

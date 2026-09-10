@@ -52,17 +52,14 @@ resource "aws_s3_bucket_versioning" "biscuit_backup" {
 
 resource "aws_s3_bucket_lifecycle_configuration" "biscuit_backup" {
   for_each = {
-    cloudnative_pg = aws_s3_bucket.biscuit_cloudnative_pg_backup
-    longhorn       = aws_s3_bucket.biscuit_longhorn_backup
-    seaweedfs      = aws_s3_bucket.biscuit_seaweedfs_default_backup
-    velero         = aws_s3_bucket.biscuit_velero_backup
+    seaweedfs = aws_s3_bucket.biscuit_seaweedfs_default_backup
   }
 
   provider = aws.biscuit
   bucket   = each.value.id
 
   rule {
-    id     = "retain-backups-for-30-days"
+    id     = "retain-seaweedfs-backups-for-30-days"
     status = "Enabled"
 
     filter {}

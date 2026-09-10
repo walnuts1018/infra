@@ -22,9 +22,6 @@ principal:
 serviceMonitor:
   enabled: false
 
-podAnnotations:
-  reloader.stakater.com/auto: "true"
-
 resources:
   requests:
     cpu: 50m

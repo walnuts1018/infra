@@ -2,7 +2,7 @@
   apiVersion: 'rbac.authorization.k8s.io/v1',
   kind: 'Role',
   metadata: {
-    name: 'argocd-agent-secret-reader',
+    name: 'argocd-agent-secret-reader-biscuit',
     namespace: 'argocd',
   },
   rules: [

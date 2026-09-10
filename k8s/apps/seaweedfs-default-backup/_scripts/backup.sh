@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+set -euo pipefail
+
 log() {
     local level="$1"
     local msg="$2"
@@ -25,7 +27,13 @@ log "info" "Starting backup process"
 BACKUP_BUCKETS=()
 tagging_error_file=$(mktemp)
 trap 'rm -f "$tagging_error_file"' EXIT
-for BUCKET in $(rclone lsf seaweedfs-default: --dirs-only --config=/config/rclone.conf | sed 's/\///g'); do
+if ! bucket_list="$(rclone lsf seaweedfs-default: --dirs-only --config=/config/rclone.conf | sed 's/\///g')"; then
+    log "error" "Failed to list source buckets"
+    exit 1
+fi
+
+while IFS= read -r BUCKET; do
+    [[ -z "${BUCKET}" ]] && continue
     : >"${tagging_error_file}"
     if tagging=$(aws s3api get-bucket-tagging --profile seaweedfs-default --bucket "${BUCKET}" 2>"${tagging_error_file}"); then
         if jq -e '.TagSet[]? | select(.Key == "skip-backup")' <<<"${tagging}" > /dev/null; then
@@ -41,7 +49,7 @@ for BUCKET in $(rclone lsf seaweedfs-default: --dirs-only --config=/config/rclon
         log "error" "Failed to read bucket tags" bucket "${BUCKET}" error "$(<"${tagging_error_file}")"
         exit 1
     fi
-done
+done <<<"${bucket_list}"
 
 for BUCKET in "${BACKUP_BUCKETS[@]}"; do
     SOURCE_PATH="seaweedfs-default:${BUCKET}/"
