@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-agent-biscuit
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    argocd-agent: "true"
+spec:
+  project: biscuit
+  destination:
+    name: biscuit
+    namespace: argocd
+  sources:
+  - repoURL: https://github.com/walnuts1018/infra
+    targetRevision: clusterapi
+    ref: infra
+  - repoURL: https://github.com/argoproj-labs/argocd-agent
+    targetRevision: v0.10.0
+    path: install/helm-repo/argocd-agent-agent
+    helm:
+      releaseName: argocd-agent
+      valueFiles:
+      - $infra/k8s/_argocd/agent/agent/values.yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - ServerSideApply=true
+    - FailOnSharedResource=true

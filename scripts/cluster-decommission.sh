@@ -16,12 +16,28 @@ if [[ -e "${cluster_descriptor}" ]]; then
   exit 1
 fi
 
+remaining_app_descriptors=$(rg -l -U '^[[:space:]]+biscuit[[:space:]]*:' "${repo_root}"/k8s/apps/*/app.json5 || true)
+if [[ -n "${remaining_app_descriptors}" ]]; then
+  echo "remove ${cluster_context} from these app descriptors before decommissioning ${cluster_context}:" >&2
+  echo "${remaining_app_descriptors}" >&2
+  exit 1
+fi
+
 # The ApplicationSet must no longer generate this Application. Orphaning it
 # keeps the cleanup below explicit and prevents Argo CD from pruning workload
 # resources as a side effect of deleting the parent Application.
 kubectl --context berry -n argocd delete application "${cluster_context}" --cascade=orphan --ignore-not-found
 
-kubectl --context berry -n "$cluster_context" delete helmchartproxy argocd-spoke argocd-agent --ignore-not-found
+# Remove generated Applications that still target the cluster. Orphaning keeps
+# workload resources in place while the cluster bootstrap resources are removed.
+workload_applications=$(kubectl --context berry -n argocd get applications -o json \
+  | jq -r --arg cluster "${cluster_context}" '.items[] | select(.spec.destination.name == $cluster) | .metadata.name')
+while IFS= read -r application; do
+  [[ -z "${application}" ]] && continue
+  kubectl --context berry -n argocd delete application "${application}" --cascade=orphan --ignore-not-found
+done <<<"${workload_applications}"
+
+kubectl --context berry -n "$cluster_context" delete helmchartproxy cilium-bootstrap argocd-spoke argocd-agent --ignore-not-found
 kubectl --context berry -n "$cluster_context" delete clusterresourceset argocd-agent --ignore-not-found
 kubectl --context berry -n "$cluster_context" delete externalsecret argocd-agent-resources --ignore-not-found
 kubectl --context berry -n "$cluster_context" delete secret argocd-agent-resources --ignore-not-found

@@ -12,6 +12,7 @@ local app = import 'app.json5';
   },
   spec: {
     type: 'ClusterIP',
+    clusterIP: 'None',
     selector: labels(app.name) + {
       'app.kubernetes.io/component': 'mini',
     },

@@ -16,7 +16,7 @@
     biscuit: {
       additionalSources: {
         helm: {
-          additionalValueFiles: [
+          valueFiles: [
             "values.biscuit.yaml",
           ],
         },

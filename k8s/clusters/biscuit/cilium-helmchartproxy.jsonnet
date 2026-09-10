@@ -25,6 +25,6 @@ local cluster = import 'cluster.json5';
       wait: true,
       install: { createNamespace: true },
     },
-    valuesTemplate: importstr '_config/cilium-values.yaml',
+    valuesTemplate: importstr '../../apps/cilium/values.biscuit.yaml',
   },
 }

@@ -1,5 +1,6 @@
 core:
   cluster-api:
+    version: v1.14.2
     # tart control-plane providerがRuntime SDK extension(ExtensionConfig)を登録するため、CAPI core側でも有効化する必要がある。
     manager:
       featureGates:

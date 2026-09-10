@@ -10,11 +10,15 @@
 
 `berry`のArgo CDから`k8s/clusters/biscuit`を適用する。TartHostの割り当て後にTalosのbootstrapが完了し、`biscuit`クラスターのAPIが到達可能になったことを確認する。
 
+## Terraform bootstrap
+
+fresh installではTerraformの1Passwordへの書き込み完了後にExternal Secrets OperatorがSecretを作成し、SeaweedFSがS3 APIをreadiness状態にするまで待つ必要がある。最初にcredentialを含むTerraform applyを完了し、biscuit上で対象Secret、SeaweedFSのreadiness、S3 APIを確認してから、SeaweedFSのbucketを含む残りのTerraform applyを実行する。同一apply内の`depends_on`だけではこのKubernetes内の非同期処理を待機できない。
+
 ## Argo CD Agent
 
 `biscuit`のArgo CD SpokeとAgentは、`k8s/clusters/biscuit`のClusterResourceSetとHelmChartProxyが自動導入する。通常の新規構築ではworkload clusterへ`helm install`したり、TLS Secretを手動作成したり、`argocd-agentctl agent create`を実行したりしない。
 
-`cluster:decommission biscuit`を実行する前に、`k8s/clusters/biscuit/cluster.json5`を削除してコミットし、`clusters` ApplicationSetが`biscuit` Applicationを生成しなくなったことを確認する。コマンドはその状態を検査してからbootstrap resourceとClusterを削除する。
+`cluster:decommission biscuit`を実行する前に、`k8s/clusters/biscuit/cluster.json5`を削除してコミットし、各`app.json5`から`biscuit`を削除してコミットする。これにより`clusters`と`apps-biscuit`の両方が対象Applicationを生成しなくなる。コマンドはその状態を検査し、残存するbiscuit向けApplicationをworkload resourceを残したまま削除してからbootstrap resourceとClusterを削除する。
 
 PrincipalのJWT signing keyが未作成の場合だけ、次のコマンドを一度実行する。
 
@@ -43,7 +47,7 @@ mise run argocd-agent:restart biscuit
 mise run cluster:decommission biscuit
 ```
 
-登録後は`k8s/_argocd/applications/biscuit`のApplicationSetが、Cilium、TopoLVM、SeaweedFS、証明書、External SecretsをAgent経由で`biscuit`へ適用する。
+登録後は`k8s/_argocd/applications/biscuit`の`argocd-spoke-biscuit`と`argocd-agent-biscuit`がbootstrapのHelmChartProxyを引き継ぎ、その後ApplicationSetがCilium、TopoLVM、SeaweedFS、証明書、External SecretsをAgent経由で`biscuit`へ適用する。
 
 ## 1Password Connect
 
@@ -70,6 +74,8 @@ Argo CDのbase Applicationは`k8s/_argocd/applications`を再帰的に読み込�
 ## 可用性と復旧目標
 
 `biscuit`はcontrol plane兼workerが1台で、SeaweedFSも`replicas: 1`のため、ノード再起動中はSeaweedFSと同じバックアップ経路を利用するサービスが停止する。TopoLVMのStorageClassは`Retain`だが、これはPVCやPVの削除を防ぐだけであり、ノード障害やディスク故障からデータを復元できることを意味しない。
+
+SeaweedFSのbackup bucketはcurrent objectと非current versionを30日で削除し、未完了multipart uploadを7日で破棄する。B2はcurrent objectを自動hideせず、置き換えでhiddenになったversionを30日保持する。`skip-backup`はその実行で許可されたbucketだけをbiscuitとB2へコピーする指定であり、既存のコピーを削除する指定ではない。
 
 | 対象 | RPOの目安 | RTOの扱い |
 | --- | --- | --- |

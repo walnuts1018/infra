@@ -1,5 +1,8 @@
 fullnameOverride: argocd-agent
 
+image:
+  tag: v0.10.0
+
 principal:
   listen:
     host: ""
