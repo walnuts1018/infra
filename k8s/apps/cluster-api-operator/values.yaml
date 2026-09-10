@@ -7,19 +7,19 @@ core:
         RuntimeSDK: true
 bootstrap:
   tart:
-    version: v0.3.15
+    version: v0.3.16
     fetchConfig:
-      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.15/bootstrap-components.yaml
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/bootstrap-components.yaml
 controlPlane:
   tart:
-    version: v0.3.15
+    version: v0.3.16
     fetchConfig:
-      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.15/control-plane-components.yaml
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/control-plane-components.yaml
 infrastructure:
   tart:
-    version: v0.3.15
+    version: v0.3.16
     fetchConfig:
-      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.15/infrastructure-components.yaml
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/infrastructure-components.yaml
 addon:
   helm:
     version: v0.6.4
