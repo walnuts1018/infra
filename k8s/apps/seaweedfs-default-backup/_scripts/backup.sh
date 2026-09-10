@@ -56,7 +56,7 @@ for BUCKET in "${BACKUP_BUCKETS[@]}"; do
     DEST_PATH="seaweedfs-biscuit:seaweedfs-default-backup/${BUCKET}/"
     log "info" "Sync started" source "${SOURCE_PATH}" dest "${DEST_PATH}" bucket "${BUCKET}"
 
-    if rclone copy --metrics-addr=:9250 --config=/config/rclone.conf -v \
+    if rclone sync --metrics-addr=:9250 --config=/config/rclone.conf -v \
         "${SOURCE_PATH}" "${DEST_PATH}"; then
         log "info" "Sync completed successfully" source "${SOURCE_PATH}" dest "${DEST_PATH}" bucket "${BUCKET}"
     else
@@ -70,7 +70,7 @@ for BUCKET in "${BACKUP_BUCKETS[@]}"; do
     SOURCE_PATH="seaweedfs-biscuit:seaweedfs-default-backup/${BUCKET}/"
     B2_PATH="b2:walnuts-seaweedfs-biscuit-backup-81f18e5/${BUCKET}/"
     log "info" "Offsite backup started" source "${SOURCE_PATH}" dest "${B2_PATH}" bucket "${BUCKET}"
-    if rclone copy --metrics-addr=:9250 --config=/config/rclone.conf -v \
+    if rclone sync --metrics-addr=:9250 --config=/config/rclone.conf -v \
         "${SOURCE_PATH}" "${B2_PATH}"; then
         log "info" "Offsite backup completed" source "${SOURCE_PATH}" dest "${B2_PATH}" bucket "${BUCKET}"
     else
