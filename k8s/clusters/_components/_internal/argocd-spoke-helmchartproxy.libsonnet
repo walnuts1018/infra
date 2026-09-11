@@ -6,7 +6,6 @@ function(cluster, version='10.8.2') {
     name: 'argocd-spoke',
     namespace: cluster.namespace,
     annotations: {
-      'argocd.argoproj.io/sync-wave': '21',
     },
   },
   spec: {

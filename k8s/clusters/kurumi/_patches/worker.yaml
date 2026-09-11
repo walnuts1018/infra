@@ -22,6 +22,14 @@ provisioning:
       )
 ---
 apiVersion: v1alpha1
+kind: SwapVolumeConfig
+name: swap
+provisioning:
+  diskSelector:
+    match: '!disk.readonly && disk.wwid == "naa.600508b1001c1351"'
+  maxSize: 4GiB
+---
+apiVersion: v1alpha1
 kind: KubeletConfig
 config:
   memorySwap:

@@ -9,7 +9,6 @@ function(cluster, baseValues, version='1.20.1') {
     name: 'cilium-bootstrap',
     namespace: cluster.namespace,
     annotations: {
-      'argocd.argoproj.io/sync-wave': '20',
     },
   },
   spec: {

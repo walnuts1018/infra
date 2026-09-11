@@ -1,405 +1,113 @@
-# Init
+# kurumi構築
 
-## 前提
+## 構成
 
-- OS: Ubuntu24.04
+`kurumi`はTalos上のCAPI管理クラスターとして`berry`から構築する。control planeはcake、hotate、lemonの3台、workerはruskの1台とする。Kubernetes APIのcontrol plane endpointとOIDC issuerは、TalosのBGPで広告する`192.168.4.11:6443`を使用する。
 
-## 初期設定
+旧Ubuntu、CRI-O、kubeadm、nginx、keepalived環境を並行稼働させない。旧環境を停止する前に、LonghornとSeaweedFSのバックアップおよび復旧可能性を確認する。
 
-- [zsh&dotfile](https://github.com/walnuts1018/dotfiles)
+## 事前確認
 
-## ラズパイのみ
-
-```bash
-sudo su
-```
+次の確認を完了するまで、ディスクのwipeを有効にしない。
 
 ```bash
-sed -i 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/g' /boot/firmware/cmdline.txt
-rpi-eeprom-update -a
-echo -n "dtoverlay=cma,cma-64
-dtoverlay=disable-bt
-dtoverlay=disable-wifi
-dtparam=watchdog=on
-" >> /boot/firmware/config.txt
-
-exit
+kubectl --context berry get cluster,tartcontrolplane,machinedeployment -n kurumi
+talosctl get disks --nodes 192.168.0.25,192.168.0.26,192.168.0.19,192.168.0.101 -o yaml
+kubectl --context kurumi get nodes
+kubectl --context kurumi -n longhorn get nodes,volumes,replicas
+kubectl --context kurumi get pv,pvc -A
 ```
 
-再起動
+control planeのOSディスクは各ホストの`k8s/clusters/kurumi/_patches/control-plane.yaml`、workerのOSディスクとTopoLVM用ディスクは`_patches/worker.yaml`のWWIDと一致することを確認する。追加ディスクの識別に失敗した場合は、Talosの設定を変更してから再実行し、推測でディスクを指定しない。
 
-### Raspberry Pi OS カスタムビルド
+## Longhorn移行
 
-\#\# TODO
+移行前にLonghornのreplicaがHealthyであること、退避対象のvolumeが確認できること、PVから対応するLVとTalos volumeを追跡できることを記録する。Longhornのデータはアプリケーション単位で外部バックアップを取得し、復元対象と復元順序を記録する。
 
-## Timezone
+cakeの追加ディスクは`longhorn-extra`としてTalosが`/var/mnt/longhorn-extra`へ公開する。クラスター復旧後にLonghornのnode diskとして登録し、既存のreplica配置と容量を確認する。Talos volume、LVM、PV、Longhorn replicaの対応が確認できない場合は、対象ディスクをwipeしない。
+
+## CAPI構築
+
+`berry`のArgo CDから`k8s/clusters/kurumi`を適用し、TartHostの割り当て、PXE/DHCP、Talos bootstrap、control planeの起動を順に確認する。
 
 ```bash
-sudo timedatectl set-timezone Asia/Tokyo
+kubectl --context berry apply -f k8s/_argocd/applications/berry/clusters.yaml
+kubectl --context berry -n kurumi get tartcluster,tartcontrolplane,machine,machinedeployment
+kubectl --context berry -n kurumi describe tartcontrolplane kurumi
 ```
 
-## IP 固定
-
-インストールの時にやる
-
-## crio
+control plane 3台がReadyになり、各ノードのTalos APIとKubernetes APIが応答することを確認する。control plane endpointは`192.168.4.11:6443`で疎通し、VyOSに`192.168.4.11/32`の経路が3台から広告されることを確認する。
 
 ```bash
-cat <<EOF | sudo tee /etc/modules-load.d/crio.conf
-overlay
-br_netfilter
-EOF
-sudo modprobe overlay
-sudo modprobe br_netfilter
-cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
-net.bridge.bridge-nf-call-iptables  = 1
-net.ipv4.ip_forward = 1
-net.ipv4.ip_nonlocal_bind = 1
-net.bridge.bridge-nf-call-ip6tables = 1
-EOF
-sudo sysctl --system
+talosctl --nodes 192.168.0.25,192.168.0.26,192.168.0.19 get members
+talosctl --nodes 192.168.0.25,192.168.0.26,192.168.0.19 get volumestatus
+kubectl --context kurumi get nodes -o wide
+kubectl --context kurumi get --raw='/readyz?verbose'
 ```
+
+workerのMachineを作成し、ruskがReadyになった後にCNI、Longhorn、SeaweedFS、Argo CD Agentの順で状態を確認する。Agentが登録されるまで、通常Applicationを手動でworkload clusterへ適用しない。
+
+## Swap
+
+control planeとworkerには、各OSディスクをbacking deviceとする4GiBの`SwapVolumeConfig`を作成する。`KubeletConfig`の`LimitedSwap`は維持する。
 
 ```bash
-sudo apt update
-sudo apt install -y software-properties-common curl
+kubectl --context kurumi get nodes -o json | jq '.items[] | {name: .metadata.name, swap: .status.nodeInfo.swap}'
+talosctl --nodes 192.168.0.25,192.168.0.26,192.168.0.19,192.168.0.101 get volumestatus
 ```
+
+Swap volumeが作成されない場合は、backing deviceのWWIDとTalosの`VolumeStatus`を確認する。swapを理由にシステムディスクやLonghornデータを削除しない。
+
+## OIDCとSeaweedFS STS
+
+新クラスターではJWTの`iss`を`https://192.168.4.11:6443`へ切り替える。SeaweedFS STSのKubernetes providerは同じissuer、`https://kubernetes.default.svc/openid/v1/jwks`のJWKS URI、Podの`kube-root-ca.crt`に対応するCAを使用し、ServiceAccount tokenのaudienceは`sts.seaweedfs.com`とする。
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.36/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://download.opensuse.org/repositories/isv:/cri-o:/stable:/v1.36/deb/ /" | sudo tee /etc/apt/sources.list.d/cri-o.list
+kubectl --context kurumi create token seaweedfs-default-backup \
+  -n seaweedfs --audience=sts.seaweedfs.com > /tmp/seaweedfs-token
+python3 - <<'PY'
+import base64, json
+token = open('/tmp/seaweedfs-token').read().strip()
+payload = token.split('.')[1] + '=='
+print(json.loads(base64.urlsafe_b64decode(payload)))
+PY
+curl --cacert /path/to/kurumi-ca.crt \
+  https://192.168.4.11:6443/.well-known/openid-configuration
+curl --cacert /path/to/kurumi-ca.crt \
+  https://192.168.4.11:6443/openid/v1/jwks
 ```
+
+JWTの`iss`、OIDC discoveryの`jwks_uri`、JWKSによる署名検証を確認した後、SeaweedFS STSのWebIdentity交換を確認する。最後にバックアップCronJobからsource bucketの追加、更新、削除を実行し、rcloneのrelay認証とB2認証が成功することを確認する。静的なSTS設定のrender成功は、実際のJWT署名検証やWebIdentity交換の成功を意味しない。
+
+## Argo CD Agent
+
+`berry`のArgo CDが`argocd-spoke-kurumi`と`argocd-agent-kurumi`を管理する。Agentの証明書とbootstrap resourceは、cert-manager、External Secrets、ClusterResourceSet、HelmChartProxyの依存順に作成される。
 
 ```bash
-sudo apt update
-sudo apt install -y cri-o
-sudo systemctl daemon-reload
-sudo systemctl enable crio
-sudo systemctl start crio
-````
+kubectl --context berry -n argocd get application argocd-spoke-kurumi argocd-agent-kurumi
+kubectl --context kurumi -n argocd get pods
+kubectl --context kurumi -n argocd get secret argocd-agent-client-tls argocd-agent-ca
+kubectl --context berry get secret cluster-kurumi
+```
 
-## k8s 本体
+通常のNamespaceは公開・privateのApplicationSetが`app.json5`の`namespace`を配置先として`CreateNamespace=true`で作成する。`namespaces-kurumi`はCiliumのPSA設定が必要な`cilium-system`と、Ciliumが自動作成しない`cilium-secrets`だけを明示manifestで管理する。private側の`adguard`もNamespace Applicationの明示manifestで管理する。
+
+証明書更新後はAgentを再起動する。
 
 ```bash
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.36/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.36/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
-sudo apt update
-sudo apt install -y kubelet kubeadm kubectl
-
-cat <<EOF | sudo tee /etc/default/kubelet
-KUBELET_EXTRA_ARGS=--container-runtime-endpoint='unix:///var/run/crio/crio.sock'
-EOF
+mise run argocd-agent:restart kurumi
 ```
 
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable kubelet
-sudo systemctl start kubelet
-```
+## 依存順
 
-## nginx & keepalived
+CNIとKubernetes APIのReady、Longhornのreplica状態、SeaweedFSの`/readyz`、S3 bucketの読み書き、Argo CD Agentの登録を順に確認する。証明書、External Secrets、Cluster API Operator、ClusterIssuerは既存のsync-waveで依存関係を保つ。通常Application、CRS、HelmChartProxyには追加のwaveを設定しない。
 
-```bash
-sudo apt install -y curl gnupg2 ca-certificates lsb-release ubuntu-keyring
-curl https://nginx.org/keys/nginx_signing.key | sudo gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
-echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" | sudo tee /etc/apt/sources.list.d/nginx.list
-echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" | sudo tee /etc/apt/preferences.d/99nginx
-sudo apt update
-sudo apt install keepalived nginx -y
-```
+## ロールバック境界
 
-```bash
-cat <<EOF | sudo tee /etc/nginx/nginx.conf
-user  nginx;
-worker_processes  auto;
+Talos bootstrapまたはAPIのReady確認に失敗した場合は、ディスクをwipeせず旧環境へ戻す。旧環境からの読み書き、Longhorn replica、SeaweedFS S3、Argo CDの状態を確認してから再試行する。
 
-error_log  /var/log/nginx/error.log notice;
-pid        /var/run/nginx.pid;
+ディスクをwipeした後は旧環境へ戻さず、LonghornのバックアップまたはB2から復元する。復元ではTalos、TopoLVM、Longhorn、SeaweedFS、Kubernetesワークロードの順に再構築し、各段階でreadinessとデータ整合性を確認する。復元訓練を完了するまでRTOを実績値として扱わない。
 
+## CIDR制約
 
-events {
-    worker_connections  1024;
-}
-
-stream {
-  upstream kube_apiserver {
-    least_conn;
-    server $(hostname -I | cut -f1 -d' '):6443;
-    }
-
-  server {
-    listen        16443;
-    proxy_pass    kube_apiserver;
-    proxy_timeout 10m;
-    proxy_connect_timeout 1s;
-  }
-}
-
-http {
-    include       /etc/nginx/mime.types;
-    default_type  application/octet-stream;
-
-    log_format  main  '\$remote_addr - \$remote_user [\$time_local] "\$request" '
-                      '\$status \$body_bytes_sent "\$http_referer" '
-                      '"\$http_user_agent" "\$http_x_forwarded_for"';
-
-    access_log  /var/log/nginx/access.log  main;
-
-    sendfile        on;
-    #tcp_nopush     on;
-
-    keepalive_timeout  65;
-
-    #gzip  on;
-
-    include /etc/nginx/conf.d/*.conf;
-}
-EOF
-```
-
-```bash
-cat <<EOF | sudo tee /etc/keepalived/chk_nginx_status.sh
-#!/usr/bin/bash
-systemctl is-active nginx
-EOF
-
-cat <<EOF | sudo tee /etc/keepalived/chk_nginx_proc.sh
-#!/usr/bin/bash
-
-timeout 5 curl -k https://localhost:16443
-status=\$?
-
-if [ \$status -eq 0 ]; then
-  logger "nginx processes are alive."
-  exit 0
-elif [ \$status -eq 130 ]; then
-  logger "nginx process is hanging up."
-  exit 1
-else
-  logger "Something is wrong."
-  exit 1
-fi
-EOF
-
-cat <<EOF | sudo tee /etc/keepalived/maintenance.sh
-#!/bin/sh
-
-[ -f "/etc/keepalived/maintenance" ] && exit 1
-
-exit 0
-EOF
-```
-
-```bash
-cat <<EOF | sudo tee /etc/keepalived/keepalived.conf
-! Configuration File for keepalived
-
-global_defs {
-}
-
-vrrp_script chk_nginx {
-    script "/etc/keepalived/chk_nginx_status.sh"
-    interval 2
-    fall 2
-    rise 2
-}
-
-vrrp_script chk_nginx_processes {
-    script "/etc/keepalived/chk_nginx_proc.sh"
-    interval 2
-    fall 2
-    rise 2
-}
-
-vrrp_script maintenance_mode {
-    script "/etc/keepalived/maintenance.sh"
-    interval 2
-    weight 50
-}
-
-vrrp_instance VI_1 {
-    state MASTER / BACKUP # to be changed
-    interface eth0 # to be changed
-    virtual_router_id 51
-    priority 120 # to be changed
-    advert_int 1
-    virtual_ipaddress {
-        192.168.0.17 # to be changed
-    }
-    track_script {
-      chk_nginx
-      chk_nginx_processes
-      maintenance_mode
-    }
-}
-EOF
-```
-
-```bash
-sudo useradd keepalived_script
-sudo chmod +x /etc/keepalived/*.sh
-
-sudo systemctl enable keepalived
-sudo systemctl start keepalived
-
-sudo systemctl enable nginx
-sudo systemctl start nginx
-```
-
-## longhorn
-
-```bash
-sudo apt -y install open-iscsi nfs-common
-sudo systemctl start iscsid
-sudo systemctl enable iscsid
-```
-
-```bash
-cat <<EOF | sudo tee /etc/modules-load.d/longhorn.conf
-nvme_tcp
-vfio_pci
-uio_pci_generic
-EOF
-sudo modprobe nvme_tcp
-sudo modprobe vfio_pci
-sudo modprobe uio_pci_generic
-
-cat <<EOF | sudo tee /etc/sysctl.d/99-longhorn.conf
-vm.nr_hugepages = 1024
-EOF
-sudo sysctl --system
-
-cat <<EOF | sudo tee /etc/multipath.conf
-defaults {
-    user_friendly_names yes
-}
-
-blacklist {
-    devnode "^sd[a-z0-9]+"
-}
-EOF
-sudo systemctl restart multipathd.service
-```
-
-## kubeadm
-
-```bash
-rm kubeadm-config.yaml
-echo "apiVersion: kubeadm.k8s.io/v1beta4
-kind: ClusterConfiguration
-clusterName: kurumi
-controlPlaneEndpoint: 192.168.0.17:16443
-apiServer:
-  extraArgs:
-  - name: feature-gates
-    value: "ImageVolume=true"
-controllerManager:
-  extraArgs:
-  - name: feature-gates
-    value: "ImageVolume=true"
-scheduler:
-  extraArgs:
-  - name: feature-gates
-    value: "ImageVolume=true"
----
-apiVersion: kubeadm.k8s.io/v1beta4
-kind: InitConfiguration
-nodeRegistration:
-  criSocket: unix:///var/run/crio/crio.sock
----
-apiVersion: kubelet.config.k8s.io/v1beta1
-kind: KubeletConfiguration
-failSwapOn: false
-featureGates:
-  ImageVolume: true
-memorySwap:
-  swapBehavior: LimitedSwap" > kubeadm-config.yaml
-
-sudo kubeadm init --config kubeadm-config.yaml
-```
-
-再試行してるうちに ↓
-
-## swap support
-
-```bash
-sudo vim /var/lib/kubelet/kubeadm-flags.env
-```
-
-`--feature-gates=NodeSwap=true` を追加
-
-## kubeconfig
-
-```bash
-sudo rm -r .kube
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-```
-
-## kubeproxy
-
-```bash
-kubectl -n kube-system delete ds kube-proxy
-kubectl -n kube-system delete cm kube-proxy
-```
-
-## taint
-
-```bash
-kubectl taint node $(hostname) node-role.kubernetes.io/control-plane:NoSchedule-
-```
-
-## join
-
-### Control Plane
-
-```bash
-echo "sudo" $(sudo kubeadm token create --print-join-command) "--control-plane --certificate-key" $(sudo kubeadm init phase upload-certs --upload-certs | tail -n 1) "--cri-socket unix:///var/run/crio/crio.sock"
-```
-
-👆 を実行
-
-### Worker
-
-```bash
-echo "sudo" $(sudo kubeadm token create --print-join-command) "--cri-socket unix:///var/run/crio/crio.sock"
-```
-
-👆 を実行
-
-## helm
-
-```bash
-curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-sudo apt-get install apt-transport-https --yes
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-sudo apt-get update
-sudo apt-get install helm
-```
-
-## labels
-
-```bash
-kubectl label nodes peach walnuts.dev/ondemand=true
-```
-
-## 1Password
-
-```shell
-helm repo add 1password https://1password.github.io/connect-helm-charts/
-helm install onepassword-connect -n onepassword --create-namespace  1password/connect --set-literal connect.credentials="$(op read "op://kurumi/kurumi Credentials File/1password-credentials.json")" --set operator.create=true --set operator.token.value="$(op item get mhc7wnb4oe3kevaiubx3cxz7du --reveal --fields label=credential)"
-```
-
-## MaxPods
-
-```shell
-kubectl -n kube-system edit cm kubelet-config
-```
-
-下を追記
-
-```yaml
-maxPods: 250
-```
+`kurumi`と他クラスターのPod CIDRおよびService CIDRは現状変更しない。現在はArgo CD Agentによる管理経路のみを使用する。ClusterMeshやMCSを導入する前に、相互に重複しないCIDRへ移行する必要がある。

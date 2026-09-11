@@ -10,7 +10,6 @@ function(cluster) {
     name: 'argocd-agent-resources',
     namespace: cluster.namespace,
     annotations: {
-      'argocd.argoproj.io/sync-wave': '22',
     },
   },
   spec: {

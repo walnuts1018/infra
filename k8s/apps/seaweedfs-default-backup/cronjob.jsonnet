@@ -29,13 +29,21 @@ local app = import 'app.json5';
                   name: 'rclone',
                   image: 'denoland/deno:2.9.6',
                   command: [
-                    '/usr/bin/bash',
-                    '-c',
+                    '/usr/bin/deno',
                   ],
                   args: [
-                    'export PATH=$PATH:/rclone:/usr/local/aws-cli/v2/current/bin && deno run --allow-run --allow-env --allow-read /scripts/backup.ts',
+                    'run',
+                    '--allow-run',
+                    '--allow-env',
+                    '--allow-read',
+                    '--allow-write=/tmp',
+                    '/scripts/backup.ts',
                   ],
                   env: [
+                    {
+                      name: 'PATH',
+                      value: '/usr/local/bin:/usr/bin:/bin:/rclone:/usr/local/aws-cli/v2/current/bin',
+                    },
                     {
                       name: 'AWS_ROLE_ARN',
                       value: 'arn:aws:iam::role/seaweedfs-default-backup',
@@ -56,6 +64,18 @@ local app = import 'app.json5';
                       name: 'AWS_ENDPOINT_URL_STS',
                       value: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333',
                     },
+                    {
+                      name: 'AWS_CONFIG_FILE',
+                      value: '/config/aws/config',
+                    },
+                    {
+                      name: 'AWS_SHARED_CREDENTIALS_FILE',
+                      value: '/config/aws/credentials',
+                    },
+                    {
+                      name: 'AWS_CA_BUNDLE',
+                      value: '/etc/ssl/certs/trust-bundle.pem',
+                    },
                   ],
                   resources: {
                     requests: {
@@ -67,12 +87,6 @@ local app = import 'app.json5';
                       memory: '2Gi',
                     },
                   },
-                  ports: [
-                    {
-                      name: 'metrics',
-                      containerPort: 9250,
-                    },
-                  ],
                   volumeMounts: [
                     {
                       name: 'rclone',
@@ -99,16 +113,9 @@ local app = import 'app.json5';
                       readOnly: true,
                     },
                     {
-                      name: 'aws-config',
-                      mountPath: '/root/.aws/config',
+                      name: 'aws',
+                      mountPath: '/config/aws',
                       readOnly: true,
-                      subPath: 'config',
-                    },
-                    {
-                      name: 'aws-credentials',
-                      mountPath: '/root/.aws/credentials',
-                      readOnly: true,
-                      subPath: 'credentials',
                     },
                     {
                       name: 'rclone-config',
@@ -128,7 +135,18 @@ local app = import 'app.json5';
                   ],
                 }, {
                   securityContext: {
-                    readOnlyRootFilesystem: false,
+                    runAsNonRoot: true,
+                    runAsUser: 1000,
+                    runAsGroup: 1000,
+                    allowPrivilegeEscalation: false,
+                    readOnlyRootFilesystem: true,
+                    seccompProfile: {
+                      type: 'RuntimeDefault',
+                    },
+                    capabilities: {
+                      add: [],
+                      drop: ['ALL'],
+                    },
                   },
                 }
               ),
@@ -178,25 +196,30 @@ local app = import 'app.json5';
                 },
               },
               {
-                name: 'aws-config',
-                configMap: {
-                  name: (import 'configmap-aws.jsonnet').metadata.name,
-                  items: [
+                name: 'aws',
+                projected: {
+                  sources: [
                     {
-                      key: 'config',
-                      path: 'config',
+                      configMap: {
+                        name: (import 'configmap-aws.jsonnet').metadata.name,
+                        items: [
+                          {
+                            key: 'config',
+                            path: 'config',
+                          },
+                        ],
+                      },
                     },
-                  ],
-                },
-              },
-              {
-                name: 'aws-credentials',
-                secret: {
-                  secretName: (import 'external-secret-aws.jsonnet').spec.target.name,
-                  items: [
                     {
-                      key: 'credentials',
-                      path: 'credentials',
+                      secret: {
+                        name: (import 'external-secret-aws.jsonnet').spec.target.name,
+                        items: [
+                          {
+                            key: 'credentials',
+                            path: 'credentials',
+                          },
+                        ],
+                      },
                     },
                   ],
                 },

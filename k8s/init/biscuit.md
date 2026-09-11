@@ -18,7 +18,7 @@ fresh installではTerraformの1Passwordへの書き込み完了後にExternal S
 
 `biscuit`のArgo CD SpokeとAgentは、`k8s/clusters/biscuit`のClusterResourceSetとHelmChartProxyが自動導入する。通常の新規構築ではworkload clusterへ`helm install`したり、TLS Secretを手動作成したり、`argocd-agentctl agent create`を実行したりしない。
 
-Gateway API CRDはCiliumより先にClusterResourceSetのbootstrap Jobが導入する。Cilium bootstrapではGateway APIを無効にし、CRD導入後にAgent経由の通常Applicationが最終設定へ更新する。
+Gateway API CRDは`gateway-api-crds` Applicationがv1.6.1を導入する。Cilium bootstrapはGateway APIを無効にして起動し、CRD導入後にAgent経由の通常ApplicationがCiliumを最終値へ更新する。bootstrap Jobを手動で作成しない。
 
 `cluster:decommission biscuit`を実行する前に、`k8s/clusters/biscuit/cluster.json5`を削除してコミットし、各`app.json5`から`biscuit`を削除してコミットする。これにより`clusters`と`apps-biscuit`の両方が対象Applicationを生成しなくなる。コマンドはその状態を検査し、残存するbiscuit向けApplicationをworkload resourceを残したまま削除してからbootstrap resourceとClusterを削除する。
 
@@ -43,7 +43,7 @@ kubectl --context biscuit -n argocd get pods
 mise run argocd-agent:restart biscuit
 ```
 
-クラスターを削除するときは、Argo CDの`prune: false`とself-registered SecretのownerReferenceなしを考慮し、次のコマンドで依存順に削除する。
+クラスターを削除するときは、Cluster本体だけ`Prune=confirm`であることと、self-registered SecretにownerReferenceがないことを考慮し、次のコマンドで依存順に削除する。
 
 ```bash
 mise run cluster:decommission biscuit
@@ -67,6 +67,8 @@ kubectl create secret generic onepassword-token -n onepassword --context biscuit
 
 Argo CDのbase Applicationは`k8s/_argocd/applications`を再帰的に読み込み、`biscuit` ApplicationSetを作成する。同期後、`seaweedfs-biscuit.local.walnuts.dev`が`192.168.16.159`を指し、SeaweedFS S3 gatewayがバックアップ用エンドポイントとして公開される。
 
+通常のNamespaceは`app.json5`の`namespace`をApplicationの配置先として`CreateNamespace=true`で作成する。`namespaces-biscuit`は通常のNamespace一覧を管理せず、CiliumのPSA設定が必要な`cilium-system`だけを明示manifestで管理する。`cilium-secrets`はCiliumのbiscuit向け設定で作成する。
+
 ## ハードウェア依存値
 
 `tart-bootstrap-patches-secret.jsonnet`のディスクセレクターは、`eclair`の240GB SSDと1TB HDDを誤認識しないためにサイズとWWIDを固定している。ディスク交換やホスト変更の前には`talosctl get disks --nodes 192.168.0.15 -o yaml`で現在の`size`と`wwid`を確認し、対象ディスク以外を選択しないことを確認してからパッチを更新する。
@@ -77,7 +79,7 @@ Argo CDのbase Applicationは`k8s/_argocd/applications`を再帰的に読み込�
 
 `biscuit`はcontrol plane兼workerが1台で、SeaweedFSも`replicas: 1`のため、ノード再起動中はSeaweedFSと同じバックアップ経路を利用するサービスが停止する。TopoLVMのStorageClassは`Retain`だが、これはPVCやPVの削除を防ぐだけであり、ノード障害やディスク故障からデータを復元できることを意味しない。
 
-SeaweedFSのbackup bucketはcurrent objectと非current versionを30日で削除し、未完了multipart uploadを7日で破棄する。B2はcurrent objectを自動hideせず、置き換えでhiddenになったversionを30日保持する。`skip-backup`はその実行で許可されたbucketだけをbiscuitとB2へコピーする指定であり、既存のコピーを削除する指定ではない。
+SeaweedFSのcurrent objectの保持はアプリケーション側のretention設定で管理する。noncurrent versionは30日、未完了multipart uploadは7日で削除する。B2はcurrent objectを自動hideせず、置き換えでhiddenになったversionを30日保持する。`skip-backup`はbucketを存在中として扱うため、その実行でコピーを行わず、既存のrelayとB2のprefixも削除しない。source bucketの消失はmanifestで30日追跡し、経過後にrelayとB2のprefixを削除する。
 
 | 対象 | RPOの目安 | RTOの扱い |
 | --- | --- | --- |

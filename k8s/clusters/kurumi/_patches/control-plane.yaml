@@ -30,7 +30,6 @@ volumeType: disk
 provisioning:
   diskSelector:
     match: '!disk.readonly && disk.wwid == "naa.500a0751e625c7e6"'
-  grow: true
 filesystem:
   type: xfs
 ---
@@ -66,3 +65,22 @@ kind: KubeletConfig
 config:
   memorySwap:
     swapBehavior: LimitedSwap
+---
+apiVersion: v1alpha1
+kind: SwapVolumeConfig
+name: swap
+provisioning:
+  diskSelector:
+    match: >-
+      !disk.readonly && (
+        disk.wwid == "nvme.126f-4e4a4d333538523031353432385037304758-353132474220535344-00000001" ||
+        disk.wwid == "eui.00000000000000008ce38e0300b2ecea" ||
+        disk.wwid == "eui.002538a611b7054b"
+      )
+  maxSize: 4GiB
+---
+# SeaweedFS STSと外部OIDC検証で使用する、移行後のcontrol plane VIPをissuerにする。
+cluster:
+  apiServer:
+    extraArgs:
+      service-account-issuer: https://192.168.4.11:6443

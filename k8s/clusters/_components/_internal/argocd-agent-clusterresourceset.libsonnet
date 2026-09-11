@@ -5,7 +5,6 @@ function(cluster) {
     name: 'argocd-agent',
     namespace: cluster.namespace,
     annotations: {
-      'argocd.argoproj.io/sync-wave': '22',
     },
   },
   spec: {

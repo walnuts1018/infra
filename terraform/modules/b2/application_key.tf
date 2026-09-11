@@ -26,6 +26,7 @@ resource "b2_application_key" "seaweedfs_biscuit_backup" {
   key_name   = "seaweedfs-biscuit-backup"
   bucket_ids = [b2_bucket.seaweedfs_biscuit_backup.id]
   capabilities = [
+    "deleteFiles",
     "listBuckets",
     "listFiles",
     "readBuckets",

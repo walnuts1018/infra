@@ -5,9 +5,9 @@ metadata:
   namespace: argocd
 
 spec:
-  syncPolicy:
-    preserveResourcesOnDeletion: true
   goTemplate: true
+  goTemplateOptions:
+  - missingkey=error
   generators:
   - git:
       repoURL: https://github.com/walnuts1018/infra-private
@@ -24,8 +24,8 @@ spec:
       destination:
         name: kurumi
         namespace: '{{.namespace}}'
-      source:
-        repoURL: 'https://github.com/walnuts1018/infra-private'
+      sources:
+      - repoURL: 'https://github.com/walnuts1018/infra-private'
         targetRevision: main
         path: '{{.path.path}}'
         directory:
@@ -42,7 +42,7 @@ spec:
         - FailOnSharedResource=true
         - CreateNamespace=true
   templatePatch: |
-    {{- with  .annotations }}
+    {{- with (dig "annotations" (dict) .) }}
     metadata:
       annotations:
         {{- range $key, $value := . }}

@@ -3,12 +3,10 @@ kind: ApplicationSet
 metadata:
   name: clusters
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "10"
 spec:
-  syncPolicy:
-    preserveResourcesOnDeletion: true
   goTemplate: true
+  goTemplateOptions:
+  - missingkey=error
   generators:
   - git:
       repoURL: https://github.com/walnuts1018/infra
@@ -35,8 +33,9 @@ spec:
       syncPolicy:
         automated:
           selfHeal: true
-          prune: false # Cluster削除するのは怖いので
+          prune: true
         syncOptions:
         - ServerSideApply=true
         - FailOnSharedResource=true
         - SkipDryRunOnMissingResource=true
+        - CreateNamespace=true

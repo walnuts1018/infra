@@ -30,10 +30,21 @@ local componentLabels = labels(app.name) + {
       },
       spec: {
         automountServiceAccountToken: false,
+        securityContext: {
+          seccompProfile: {
+            type: 'RuntimeDefault',
+          },
+        },
         terminationGracePeriodSeconds: 60,
         containers: [
           {
             name: 'seaweedfs',
+            securityContext: {
+              allowPrivilegeEscalation: false,
+              capabilities: {
+                drop: ['ALL'],
+              },
+            },
             image: 'chrislusf/seaweedfs@sha256:aa0d394e64735d240d57673b6745ee344360a9fab9ca0b26e4ed3707d135f570',  // 4.45_large_disk_full
             imagePullPolicy: 'IfNotPresent',
             args: [

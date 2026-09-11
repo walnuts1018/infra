@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: argocd-spoke-kurumi
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "0"
   labels:
     argocd-agent: "true"
 spec:

@@ -17,6 +17,9 @@ function(
       'cluster.x-k8s.io/cluster-name': cluster.name,
       'argocd-agent.walnuts.dev/enabled': 'true',
     },
+    annotations: {
+      'argocd.argoproj.io/sync-options': 'Prune=confirm',
+    },
   },
   spec: {
     clusterNetwork: {

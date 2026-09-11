@@ -206,7 +206,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             },
             {
@@ -245,7 +245,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             }
             {{range $index, $c := .app.status.conditions}}
@@ -279,7 +279,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             }
             {{range $index, $c := .app.status.conditions}}
@@ -313,7 +313,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             }
             {{range $index, $c := .app.status.conditions}}
@@ -352,7 +352,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             }
             {{range $index, $c := .app.status.conditions}}
@@ -386,7 +386,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             }
             {{range $index, $c := .app.status.conditions}}

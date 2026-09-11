@@ -4,9 +4,9 @@ metadata:
   name: apps-kurumi
   namespace: argocd
 spec:
-  syncPolicy:
-    preserveResourcesOnDeletion: true
   goTemplate: true
+  goTemplateOptions:
+  - missingkey=error
   generators:
   - matrix:
       generators:
@@ -40,31 +40,31 @@ spec:
           exclude: '{config/*,_*/*,values*.yaml}'
           jsonnet:
             tlas:
-            {{- range $tla := .clusters.kurumi.jsonnet.tlas }}
+            {{- range $tla := dig "clusters" "kurumi" "jsonnet" "tlas" (list) . }}
             - {{ $tla | toJson }}
             {{- end }}
         ref: infra
-      {{- with .additionalSources.helm }}
+      {{- with (dig "additionalSources" "helm" (dict) .) }}
       - repoURL: '{{ .repoURL }}'
         chart: '{{ .chart }}'
         targetRevision: '{{ .targetRevision }}'
         helm:
           releaseName: '{{ $.name }}'
           valueFiles:
-          {{- range .valueFiles }}
+          {{- range (dig "valueFiles" (list) .) }}
           - {{ printf "$infra/%s/%s" $.path.path . }}
           {{- end }}
-          {{- with $.clusters.kurumi.additionalSources.helm.additionalValueFiles }}
+          {{- with (dig "clusters" "kurumi" "additionalSources" "helm" "additionalValueFiles" (list) $) }}
           {{- range . }}
           - {{ printf "$infra/%s/%s" $.path.path . }}
           {{- end }}
           {{- end }}
       {{- end }}
-      {{- range .additionalSources.kustomize }}
+      {{- range (dig "additionalSources" "kustomize" (list) .) }}
       - repoURL: '{{ .repoURL }}'
         path: '{{ .path }}'
         targetRevision: '{{ .targetRevision }}'
-        {{- with .patches }}
+        {{- with (dig "patches" (list) .) }}
         kustomize:
           patches: {{ . | toJson }}
         {{- end }}
@@ -78,7 +78,7 @@ spec:
         - FailOnSharedResource=true
         - CreateNamespace=true
   templatePatch: |
-    {{- with  .annotations }}
+    {{- with (dig "annotations" (dict) .) }}
     metadata:
       annotations:
         {{- range $key, $value := . }}

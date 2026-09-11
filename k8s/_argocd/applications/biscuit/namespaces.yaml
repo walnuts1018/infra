@@ -16,7 +16,6 @@ spec:
     directory:
       recurse: true
       exclude: '{config/*,_*/*,values*.yaml}'
-      jsonnet: {}
   syncPolicy:
     automated:
       selfHeal: true
@@ -24,4 +23,3 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - FailOnSharedResource=true
-    - Prune=confirm

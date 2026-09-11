@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: argocd-agent-biscuit
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "1"
   labels:
     argocd-agent: "true"
 spec:
