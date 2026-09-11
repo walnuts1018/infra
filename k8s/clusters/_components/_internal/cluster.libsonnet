@@ -18,7 +18,7 @@ function(
       'argocd-agent.walnuts.dev/enabled': 'true',
     },
     annotations: {
-      'argocd.argoproj.io/sync-options': 'Prune=confirm',
+      'argocd.argoproj.io/sync-options': 'Prune=confirm,Delete=confirm',
     },
   },
   spec: {

@@ -1,9 +1,6 @@
 {
   name: "external-secrets",
   namespace: "external-secrets",
-  annotations: {
-    "argocd.argoproj.io/sync-wave": "-5",
-  },
   additionalSources: {
     helm: {
       repoURL: "https://charts.external-secrets.io",

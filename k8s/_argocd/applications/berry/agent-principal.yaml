@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: argocd-agent-principal
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "-1"
 spec:
   project: berry
   destination:

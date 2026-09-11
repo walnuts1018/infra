@@ -1,9 +1,6 @@
 {
   name: "cert-manager",
   namespace: "cert-manager",
-  annotations: {
-    "argocd.argoproj.io/sync-wave": "-5",
-  },
   additionalSources: {
     helm: {
       repoURL: "https://charts.jetstack.io",

@@ -53,6 +53,11 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 const isNonEmptyString = (value: unknown): value is string =>
   typeof value === "string" && value.length > 0;
 
+const isSafeBucketName = (value: unknown): value is string =>
+  typeof value === "string" &&
+  /^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(value) &&
+  !value.includes("..") && !value.includes(".-") && !value.includes("-.");
+
 const isRfc3339Utc = (value: unknown): value is string =>
   typeof value === "string" &&
   /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value) &&
@@ -61,7 +66,8 @@ const isRfc3339Utc = (value: unknown): value is string =>
 export function isTaggingResponse(value: unknown): value is TaggingResponse {
   return isRecord(value) && Array.isArray(value.TagSet) && value.TagSet.every(
     (tag) =>
-      isRecord(tag) && isNonEmptyString(tag.Key) && typeof tag.Value === "string",
+      isRecord(tag) && isNonEmptyString(tag.Key) &&
+      typeof tag.Value === "string",
   );
 }
 
@@ -73,15 +79,29 @@ export function parseTaggingResponse(text: string): TaggingResponse {
   return value;
 }
 
+export function expectedDestinationPrefix(sourceBucket: string): string {
+  return `${sourceBucket}/`;
+}
+
+function isSafeDestinationPrefix(
+  sourceBucket: string,
+  value: unknown,
+): value is string {
+  return isNonEmptyString(value) &&
+    value === expectedDestinationPrefix(sourceBucket) &&
+    !value.startsWith("_backup/");
+}
+
 export function isBackupManifest(value: unknown): value is BackupManifest {
   return isRecord(value) && value.version === 1 &&
     isRfc3339Utc(value.updatedAt) && Array.isArray(value.buckets) &&
     value.buckets.every((entry) => {
       if (!isRecord(entry)) return false;
-      return isNonEmptyString(entry.sourceBucket) &&
-        isNonEmptyString(entry.destinationPrefix) &&
+      return isSafeBucketName(entry.sourceBucket) &&
+        isSafeDestinationPrefix(entry.sourceBucket, entry.destinationPrefix) &&
         isRfc3339Utc(entry.lastSeenAt) &&
-        (entry.missingSince === undefined || isRfc3339Utc(entry.missingSince)) &&
+        (entry.missingSince === undefined ||
+          isRfc3339Utc(entry.missingSince)) &&
         typeof entry.skipped === "boolean";
     });
 }
@@ -95,7 +115,9 @@ export function parseBackupManifest(text: string): BackupManifest {
 }
 
 export function shouldSkipBackup(tagSet: readonly Tag[]): boolean {
-  return tagSet.some((tag) => tag.Key === "skip-backup");
+  return tagSet.some((tag) =>
+    tag.Key === "skip-backup" && tag.Value === "true"
+  );
 }
 
 export function extractAwsErrorCode(stderr: string): string | undefined {
@@ -111,8 +133,13 @@ export function canReconcileDeletion(
   return sourceListingSucceeded && taggingSucceeded;
 }
 
-function destinationPrefix(bucket: string): string {
-  return `${bucket}/`;
+export function remotePath(remote: string, object: string): string {
+  if (remote.length === 0 || object.length === 0) {
+    throw new Error("Remote and object must be non-empty");
+  }
+  const base = remote.replace(/\/+$/, "");
+  const separator = base.includes(":") ? "/" : ":";
+  return `${base}${separator}${object.replace(/^\/+/, "")}`;
 }
 
 export function reconcileManifest(
@@ -121,15 +148,19 @@ export function reconcileManifest(
   now: string,
   retentionDays = RETENTION_DAYS,
 ): { manifest: BackupManifest; expired: readonly BackupManifestEntry[] } {
-  if (!isRfc3339Utc(now)) throw new Error("Manifest timestamp must be RFC3339 UTC");
-  const observedByName = new Map(observed.map((bucket) => [bucket.name, bucket]));
+  if (!isRfc3339Utc(now)) {
+    throw new Error("Manifest timestamp must be RFC3339 UTC");
+  }
+  const observedByName = new Map(
+    observed.map((bucket) => [bucket.name, bucket]),
+  );
   const expired: BackupManifestEntry[] = [];
   const entries = manifest.buckets.flatMap((entry) => {
     const current = observedByName.get(entry.sourceBucket);
     if (current) {
       return [{
         sourceBucket: entry.sourceBucket,
-        destinationPrefix: entry.destinationPrefix,
+        destinationPrefix: expectedDestinationPrefix(entry.sourceBucket),
         lastSeenAt: now,
         skipped: current.skipped,
       }];
@@ -143,10 +174,12 @@ export function reconcileManifest(
   });
 
   for (const current of observed) {
-    if (!manifest.buckets.some((entry) => entry.sourceBucket === current.name)) {
+    if (
+      !manifest.buckets.some((entry) => entry.sourceBucket === current.name)
+    ) {
       entries.push({
         sourceBucket: current.name,
-        destinationPrefix: destinationPrefix(current.name),
+        destinationPrefix: expectedDestinationPrefix(current.name),
         lastSeenAt: now,
         skipped: current.skipped,
       });
@@ -199,14 +232,20 @@ function rcloneArgs(...args: string[]): string[] {
 }
 
 async function listSourceBuckets(): Promise<string[]> {
-  const result = await run(rcloneArgs("lsf", `${SOURCE_REMOTE}:/`, "--dirs-only"));
+  const result = await run(
+    rcloneArgs("lsf", `${SOURCE_REMOTE}:/`, "--dirs-only"),
+  );
   if (!result.success) {
     throw new Error(`Failed to list source buckets: ${result.stderr}`);
   }
-  return result.stdout
+  const buckets = result.stdout
     .split("\n")
     .map((line) => line.trim().replace(/\/$/, ""))
     .filter((bucket) => bucket.length > 0);
+  if (!buckets.every(isSafeBucketName)) {
+    throw new Error("Source bucket listing contains an invalid bucket name");
+  }
+  return buckets;
 }
 
 async function getBucketTags(bucket: string): Promise<readonly Tag[]> {
@@ -224,15 +263,29 @@ async function getBucketTags(bucket: string): Promise<readonly Tag[]> {
   throw new Error(`Failed to read tags for ${bucket}: ${result.stderr}`);
 }
 
-async function readRemoteManifest(remote: string): Promise<BackupManifest | undefined> {
-  const result = await run(rcloneArgs("cat", `${remote}:${MANIFEST_OBJECT}`));
+async function readRemoteManifest(
+  remote: string,
+): Promise<BackupManifest | undefined> {
+  const result = await run(
+    rcloneArgs("cat", remotePath(remote, MANIFEST_OBJECT)),
+  );
   if (!result.success) {
-    const directory = await run(rcloneArgs("lsf", `${remote}:_backup/`, "--files-only"));
+    const directory = await run(
+      rcloneArgs("lsf", remotePath(remote, "_backup/"), "--files-only"),
+    );
     if (!directory.success) {
-      throw new Error(`Failed to read backup manifest from ${remote}: ${result.stderr}`);
+      throw new Error(
+        `Failed to read backup manifest from ${remote}: ${result.stderr}`,
+      );
     }
-    if (directory.stdout.split("\n").some((line) => line.trim() === "manifest.json")) {
-      throw new Error(`Backup manifest exists but could not be read from ${remote}: ${result.stderr}`);
+    if (
+      directory.stdout.split("\n").some((line) =>
+        line.trim() === "manifest.json"
+      )
+    ) {
+      throw new Error(
+        `Backup manifest exists but could not be read from ${remote}: ${result.stderr}`,
+      );
     }
     return undefined;
   }
@@ -242,31 +295,66 @@ async function readRemoteManifest(remote: string): Promise<BackupManifest | unde
 async function loadManifest(): Promise<BackupManifest> {
   const relay = await readRemoteManifest(`${RELAY_REMOTE}:${RELAY_BUCKET}`);
   if (relay) return relay;
-  const offsite = await readRemoteManifest(`${OFFSITE_REMOTE}:${OFFSITE_BUCKET}`);
+  const offsite = await readRemoteManifest(
+    `${OFFSITE_REMOTE}:${OFFSITE_BUCKET}`,
+  );
   if (offsite) return offsite;
   return { version: 1, updatedAt: new Date(0).toISOString(), buckets: [] };
 }
 
 async function saveManifest(manifest: BackupManifest): Promise<void> {
-  await Deno.writeTextFile(MANIFEST_FILE, JSON.stringify(manifest, null, 2) + "\n");
-  await runInherited(rcloneArgs(
-    "copyto",
+  await Deno.writeTextFile(
     MANIFEST_FILE,
-    `${RELAY_REMOTE}:${RELAY_BUCKET}/${MANIFEST_OBJECT}`,
-  ));
-  await runInherited(rcloneArgs(
-    "copyto",
+    JSON.stringify(manifest, null, 2) + "\n",
+  );
+  await copyManifestToDestinations(
     MANIFEST_FILE,
-    `${OFFSITE_REMOTE}:${OFFSITE_BUCKET}/${MANIFEST_OBJECT}`,
-  ));
+    [
+      remotePath(`${RELAY_REMOTE}:${RELAY_BUCKET}`, MANIFEST_OBJECT),
+      remotePath(`${OFFSITE_REMOTE}:${OFFSITE_BUCKET}`, MANIFEST_OBJECT),
+    ],
+    async (source, destination) => {
+      await runInherited(rcloneArgs("copyto", source, destination));
+    },
+  );
 }
 
 async function syncBucket(source: string, destination: string): Promise<void> {
   await runInherited(rcloneArgs("sync", source, destination, "-v"));
 }
 
+export type SyncOperation = (
+  source: string,
+  destination: string,
+) => Promise<void>;
+
+export async function syncBucketPair(
+  source: string,
+  relay: string,
+  offsite: string,
+  sync: SyncOperation,
+): Promise<void> {
+  await sync(source, relay);
+  await sync(relay, offsite);
+}
+
+export type CopyOperation = (
+  source: string,
+  destination: string,
+) => Promise<void>;
+
+export async function copyManifestToDestinations(
+  manifestFile: string,
+  destinations: readonly string[],
+  copy: CopyOperation,
+): Promise<void> {
+  for (const destination of destinations) {
+    await copy(manifestFile, destination);
+  }
+}
+
 async function deletePrefix(remote: string, prefix: string): Promise<void> {
-  await runInherited(rcloneArgs("purge", `${remote}:${prefix}`));
+  await runInherited(rcloneArgs("purge", remotePath(remote, prefix)));
 }
 
 async function main(): Promise<void> {
@@ -285,28 +373,44 @@ async function main(): Promise<void> {
       continue;
     }
 
-    const sourcePath = `${SOURCE_REMOTE}:${bucket}/`;
-    const relayPath = `${RELAY_REMOTE}:${RELAY_BUCKET}/${bucket}/`;
-    const offsitePath = `${OFFSITE_REMOTE}:${OFFSITE_BUCKET}/${bucket}/`;
-    log("info", "Relay sync started", { bucket, source: sourcePath, dest: relayPath });
-    await syncBucket(sourcePath, relayPath);
-    log("info", "B2 sync started", { bucket, source: relayPath, dest: offsitePath });
-    await syncBucket(relayPath, offsitePath);
+    const sourcePath = remotePath(SOURCE_REMOTE, `${bucket}/`);
+    const relayPath = remotePath(
+      `${RELAY_REMOTE}:${RELAY_BUCKET}`,
+      `${bucket}/`,
+    );
+    const offsitePath = remotePath(
+      `${OFFSITE_REMOTE}:${OFFSITE_BUCKET}`,
+      `${bucket}/`,
+    );
+    log("info", "Relay and B2 sync started", {
+      bucket,
+      source: sourcePath,
+      relay: relayPath,
+      offsite: offsitePath,
+    });
+    await syncBucketPair(sourcePath, relayPath, offsitePath, syncBucket);
   }
   taggingSucceeded = true;
 
   if (!canReconcileDeletion(sourceListingSucceeded, taggingSucceeded)) {
-    throw new Error("Deletion reconciliation requires complete source and tag observations");
+    throw new Error(
+      "Deletion reconciliation requires complete source and tag observations",
+    );
   }
   const currentManifest = await loadManifest();
-  const { manifest, expired } = reconcileManifest(currentManifest, observed, now);
+  const { manifest, expired } = reconcileManifest(
+    currentManifest,
+    observed,
+    now,
+  );
   for (const entry of expired) {
     log("info", "Deleting expired bucket prefix", {
       bucket: entry.sourceBucket,
       missingSince: entry.missingSince ?? "",
     });
-    await deletePrefix(`${RELAY_REMOTE}:${RELAY_BUCKET}`, entry.destinationPrefix);
-    await deletePrefix(`${OFFSITE_REMOTE}:${OFFSITE_BUCKET}`, entry.destinationPrefix);
+    const prefix = expectedDestinationPrefix(entry.sourceBucket);
+    await deletePrefix(`${RELAY_REMOTE}:${RELAY_BUCKET}`, prefix);
+    await deletePrefix(`${OFFSITE_REMOTE}:${OFFSITE_BUCKET}`, prefix);
   }
   await saveManifest(manifest);
   log("info", "Backup process completed successfully", {
@@ -315,7 +419,11 @@ async function main(): Promise<void> {
   });
 }
 
-function log(level: string, msg: string, fields: Record<string, string> = {}): void {
+function log(
+  level: string,
+  msg: string,
+  fields: Record<string, string> = {},
+): void {
   console.log(JSON.stringify({
     level,
     time: new Date().toISOString(),

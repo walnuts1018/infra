@@ -45,9 +45,8 @@ addresses:
 # cake/hotate/lemonの3台が同時に同じ/32を広告するECMP構成。ノード障害時はBGPセッション断で
 # 経路が自動的に引き上げられ、残りのノードへトラフィックが寄る。
 # localASNは65010(vyos側のpeer-group "CILIUM"のremote-as)に合わせる。
-# vyosのBGP dynamic listen rangeは同一prefix(192.168.0.0/24)に1つのpeer-groupしか
-# 割り当てられないため、Cilium(LoadBalancer IP用BGP)と同じpeer-group/ASNへ相乗りし、
-# vyos側route-map(CILIUM-IN)のprefix-list単位で広告内容を区別する。
+# Ciliumのservice-BGPはworkerだけをspeakerにするため、control-planeではTalosだけが
+# 192.168.0.xのnode addressからVyOSへ接続する。
 apiVersion: v1alpha1
 kind: BGPInstanceConfig
 name: control-plane-vip
@@ -77,6 +76,7 @@ provisioning:
         disk.wwid == "eui.00000000000000008ce38e0300b2ecea" ||
         disk.wwid == "eui.002538a611b7054b"
       )
+  minSize: 4GiB
   maxSize: 4GiB
 ---
 # SeaweedFS STSと外部OIDC検証で使用する、移行後のcontrol plane VIPをissuerにする。

@@ -31,6 +31,17 @@ spec:
       destination:
         name: biscuit
         namespace: '{{.namespace}}'
+      sources: []
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+        - ServerSideApply=true
+        - FailOnSharedResource=true
+        - CreateNamespace=true
+  templatePatch: |
+    spec:
       sources:
       - repoURL: 'https://github.com/walnuts1018/infra'
         targetRevision: clusterapi
@@ -69,15 +80,6 @@ spec:
           patches: {{ . | toJson }}
         {{- end }}
       {{- end }}
-      syncPolicy:
-        automated:
-          selfHeal: true
-          prune: true
-        syncOptions:
-        - ServerSideApply=true
-        - FailOnSharedResource=true
-        - CreateNamespace=true
-  templatePatch: |
     {{- with (dig "annotations" (dict) .) }}
     metadata:
       annotations:

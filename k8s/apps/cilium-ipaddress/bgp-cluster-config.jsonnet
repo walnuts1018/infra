@@ -1,4 +1,5 @@
 local peerConfig = import 'bgp-peer-config.jsonnet';
+local cluster = std.extVar('cluster');
 
 {
   apiVersion: 'cilium.io/v2',
@@ -8,7 +9,12 @@ local peerConfig = import 'bgp-peer-config.jsonnet';
   },
   spec: {
     nodeSelector: {
-      matchLabels: {
+      matchLabels: if cluster == 'kurumi' then {
+        // Talos advertises the API VIP from control-plane nodes. Keep the
+        // Cilium service-BGP speaker on workers to avoid two speakers using
+        // the same node address and ASN on the same VyOS neighbor.
+        'kurumi.walnuts.dev/pool': 'worker',
+      } else {
         'kubernetes.io/os': 'linux',
       },
     },

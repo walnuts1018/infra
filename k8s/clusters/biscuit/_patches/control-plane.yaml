@@ -43,6 +43,7 @@ name: swap
 provisioning:
   diskSelector:
     match: '!disk.readonly && disk.size == 240057409536u && disk.wwid == "t10.ATA     ADATA SU650                             38F8079715D100008282"'
+  minSize: 4GiB
   maxSize: 4GiB
 ---
 # DHCP(vyos側のstatic reservation名)がTalosの自動生成hostnameより優先されてしまい、nodeがネットワーク予約名(例: server-reserved-15)で登録されてしまう。

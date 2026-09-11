@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: argocd-agent-certs
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "-2"
 spec:
   project: berry
   destination:

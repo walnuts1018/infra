@@ -60,7 +60,7 @@ Swap volumeが作成されない場合は、backing deviceのWWIDとTalosの`Vol
 
 ## OIDCとSeaweedFS STS
 
-新クラスターではJWTの`iss`を`https://192.168.4.11:6443`へ切り替える。SeaweedFS STSのKubernetes providerは同じissuer、`https://kubernetes.default.svc/openid/v1/jwks`のJWKS URI、Podの`kube-root-ca.crt`に対応するCAを使用し、ServiceAccount tokenのaudienceは`sts.seaweedfs.com`とする。
+新クラスターではJWTの`iss`を`https://192.168.4.11:6443`へ切り替える。SeaweedFS STSのKubernetes providerは同じissuer、`https://kubernetes.default.svc/openid/v1/jwks`のJWKS URI、Podの`kube-root-ca.crt`に対応するCAを使用し、ServiceAccount tokenのaudienceは`sts.seaweedfs.com`とする。source bucket消失後のバックアップはprefix purgeまで30日追跡し、B2のhidden version lifecycleがさらに30日保持するため、実効的なrecoverabilityは最大約60日である。
 
 ```bash
 kubectl --context kurumi create token seaweedfs-default-backup \
@@ -100,7 +100,13 @@ mise run argocd-agent:restart kurumi
 
 ## 依存順
 
-CNIとKubernetes APIのReady、Longhornのreplica状態、SeaweedFSの`/readyz`、S3 bucketの読み書き、Argo CD Agentの登録を順に確認する。証明書、External Secrets、Cluster API Operator、ClusterIssuerは既存のsync-waveで依存関係を保つ。通常Application、CRS、HelmChartProxyには追加のwaveを設定しない。
+CNIとKubernetes APIのReady、Longhornのreplica状態、SeaweedFSの`/readyz`、S3 bucketの読み書き、Argo CD Agentの登録を順に確認する。これらは独立したArgo CD Applicationとしてreconcileされるため、Application間の同期順をsync-waveで保証しない。依存リソースが未準備なら同期が失敗し、self-healによる再同期で収束する。厳密なApplication間順序が必要になった場合はProgressive Syncなど専用の仕組みを導入する。
+
+## VIPとBGP
+
+VyOSから`192.168.4.11/32`がcontrol plane 3台から見えることと、各経路のnodeへ`/readyz`が成功することを確認する。Ciliumのservice-BGPは同一nodeでTalos BGPと競合しないようworkerだけをspeakerにする。
+
+control plane 1台のkube-apiserverだけを停止する障害試験では、停止nodeから`192.168.4.11/32`の経路が残らず、残り2台へのAPI接続が安定することを確認する。TalosのBGP広告は標準ではインターフェースとBGPセッションの状態に基づくため、`/readyz`との連動はこの構成だけでは証明されない。経路が残る場合は、health-awareなVIP広告または外部health checkを導入するまで移行を完了扱いにしない。
 
 ## ロールバック境界
 

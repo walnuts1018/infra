@@ -27,6 +27,7 @@ name: swap
 provisioning:
   diskSelector:
     match: '!disk.readonly && disk.wwid == "naa.600508b1001c1351"'
+  minSize: 4GiB
   maxSize: 4GiB
 ---
 apiVersion: v1alpha1

@@ -1,6 +1,6 @@
 local flatten = import '../../components/flatten-resources.libsonnet';
 local bootstrap = import '../_components/argocd-agent-bootstrap.libsonnet';
 local cluster = import 'cluster.json5';
-local ciliumBaseValues = std.parseYaml(importstr '../../apps/cilium/values.yaml');
+local ciliumValues = (import '../_components/_internal/cilium-values.libsonnet')(cluster.name);
 
-flatten(bootstrap(cluster, ciliumBaseValues))
+flatten(bootstrap(cluster, ciliumValues))

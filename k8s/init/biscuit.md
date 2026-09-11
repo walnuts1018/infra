@@ -4,7 +4,7 @@
 
 `biscuit`はTalos上のCAPI管理クラスターとして`berry`から構築する。ノードはcontrol plane兼workerの1台構成で、Kubernetes APIは`192.168.0.15:6443`、Talos APIは`192.168.0.15`を使用する。
 
-ディスク構成は240GB SSDをTalosのシステム領域とswapに使用し、1TBディスクを`hdd`ボリュームグループとしてTopoLVMに割り当てる。CNI、kube-proxy、TopoLVM、SeaweedFS、Cilium Gateway APIはGitOps管理とする。
+ディスク構成は240GB SSDをTalosのシステム領域とswapに使用し、1TBディスクを`hdd`ボリュームグループとしてTopoLVMに割り当てる。CNI、kube-proxy replacementを含むCilium、TopoLVM、SeaweedFS、Cilium Gateway APIはGitOps管理とする。
 
 ## CAPI構築
 
@@ -43,7 +43,7 @@ kubectl --context biscuit -n argocd get pods
 mise run argocd-agent:restart biscuit
 ```
 
-クラスターを削除するときは、Cluster本体だけ`Prune=confirm`であることと、self-registered SecretにownerReferenceがないことを考慮し、次のコマンドで依存順に削除する。
+クラスターを削除するときは、Cluster本体だけ`Prune=confirm,Delete=confirm`であることと、self-registered SecretにownerReferenceがないことを考慮し、次のコマンドで依存順に削除する。
 
 ```bash
 mise run cluster:decommission biscuit
@@ -71,15 +71,15 @@ Argo CDのbase Applicationは`k8s/_argocd/applications`を再帰的に読み込�
 
 ## ハードウェア依存値
 
-`tart-bootstrap-patches-secret.jsonnet`のディスクセレクターは、`eclair`の240GB SSDと1TB HDDを誤認識しないためにサイズとWWIDを固定している。ディスク交換やホスト変更の前には`talosctl get disks --nodes 192.168.0.15 -o yaml`で現在の`size`と`wwid`を確認し、対象ディスク以外を選択しないことを確認してからパッチを更新する。
+`k8s/clusters/biscuit/_patches/control-plane.yaml`のディスクセレクターは、`eclair`の240GB SSDと1TB HDDを誤認識しないためにサイズとWWIDを固定している。ディスク交換やホスト変更の前には`talosctl get disks --nodes 192.168.0.15 -o yaml`で現在の`size`と`wwid`を確認し、対象ディスク以外を選択しないことを確認してからパッチを更新する。
 
-`tart-machine-template-control-plane.jsonnet`の`schematicID`は、`cluster.json5`の`talosVersion`に対応するTalos Factoryの生成済みSchematic IDを固定している。Talosのバージョンを変更するときは、同じExtension構成でTalos FactoryからSchematic IDを再生成し、バージョンとIDの組み合わせを更新したうえで、既存ノードのディスクセレクターとbootstrap結果を確認する。
+`k8s/clusters/biscuit/tart-control-plane.jsonnet`の`schematicID`は、`cluster.json5`の`talosVersion`に対応するTalos Factoryの生成済みSchematic IDを固定している。Talosのバージョンを変更するときは、同じExtension構成でTalos FactoryからSchematic IDを再生成し、バージョンとIDの組み合わせを更新したうえで、既存ノードのディスクセレクターとbootstrap結果を確認する。TartHostとMACアドレスの対応は`k8s/clusters/biscuit/tart-hosts.jsonnet`で管理する。
 
 ## 可用性と復旧目標
 
 `biscuit`はcontrol plane兼workerが1台で、SeaweedFSも`replicas: 1`のため、ノード再起動中はSeaweedFSと同じバックアップ経路を利用するサービスが停止する。TopoLVMのStorageClassは`Retain`だが、これはPVCやPVの削除を防ぐだけであり、ノード障害やディスク故障からデータを復元できることを意味しない。
 
-SeaweedFSのcurrent objectの保持はアプリケーション側のretention設定で管理する。noncurrent versionは30日、未完了multipart uploadは7日で削除する。B2はcurrent objectを自動hideせず、置き換えでhiddenになったversionを30日保持する。`skip-backup`はbucketを存在中として扱うため、その実行でコピーを行わず、既存のrelayとB2のprefixも削除しない。source bucketの消失はmanifestで30日追跡し、経過後にrelayとB2のprefixを削除する。
+SeaweedFSのcurrent objectの保持はアプリケーション側のretention設定で管理する。noncurrent versionは30日、未完了multipart uploadは7日で削除する。B2はcurrent objectを自動hideせず、置き換えやrelay/B2 prefixのpurgeでhiddenになったversionを30日保持する。そのためsource bucket消失からの実効的なrecoverabilityは、prefix purgeまでの30日とB2のlifecycleを合わせて最大約60日になる。`skip-backup`は`skip-backup=true`のtagだけを認識し、bucketを存在中として扱うため、その実行でコピーを行わず、既存のrelayとB2のprefixも削除しない。source bucketの消失はmanifestで30日追跡し、経過後にrelayとB2のprefixを削除する。
 
 | 対象 | RPOの目安 | RTOの扱い |
 | --- | --- | --- |
@@ -91,9 +91,11 @@ SeaweedFSのcurrent objectの保持はアプリケーション側のretention設
 
 ## OIDCログイン
 
-必要に応じて、`kurumi`のCA証明書を`biscuit`へ配置して信頼ストアを更新する。
+`kurumi`のCA証明書をTalosホストへコピーしたり、ホストの信頼ストアを変更したりせず、Kubernetesが作成する`kube-root-ca.crt`を検証用のCAとして取得する。
 
 ```bash
-scp cake:/etc/kubernetes/pki/ca.crt biscuit:/usr/local/share/ca-certificates/kurumi.crt
-sudo update-ca-certificates
+kubectl --context kurumi -n default get configmap kube-root-ca.crt \
+  -o jsonpath='{.data.ca\.crt}' > /tmp/kurumi-ca.crt
+curl --cacert /tmp/kurumi-ca.crt \
+  https://192.168.4.11:6443/.well-known/openid-configuration
 ```

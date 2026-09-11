@@ -2,7 +2,16 @@
   name: "cilium-ipaddress",
   namespace: "cilium-system",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "cluster",
+            value: "kurumi",
+          },
+        ],
+      },
+    },
     biscuit: {
       jsonnet: {
         tlas: [

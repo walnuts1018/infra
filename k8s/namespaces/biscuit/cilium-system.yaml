@@ -4,5 +4,3 @@ metadata:
   name: cilium-system
   labels:
     pod-security.kubernetes.io/enforce: privileged
-  annotations:
-    argocd.argoproj.io/sync-options: Prune=confirm

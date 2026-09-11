@@ -28,6 +28,9 @@ function(cluster, baseValues, version='1.20.1') {
       wait: true,
       install: { createNamespace: true },
     },
+    // baseValues is the same merged base/cluster override used by the
+    // steady-state Application. Only the bootstrap-only gateway override is
+    // applied here.
     valuesTemplate: std.manifestYamlDoc(std.mergePatch(baseValues, {
       gatewayAPI: { enabled: false },
     })),
