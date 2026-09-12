@@ -97,4 +97,3 @@ kubectl --context berry apply -f k8s/_argocd/entrypoint/base.yaml
 ```
 
 `base.yaml`の適用が完了した後は、個別のApplication、Cluster、Secretなどを手動で適用する必要はありません。
-

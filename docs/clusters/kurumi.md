@@ -33,4 +33,3 @@ kubectl --context berry -n argocd get applications -l argocd-agent=true
 ```
 
 詳しいAgentの稼働状態確認や証明書の更新手順、トラブルシューティングについては[Argo CD Agent運用](../operations/argocd-agent.md)を参照してください。
-

@@ -108,4 +108,3 @@ kubectl --context berry -n argocd rollout status deployment/argocd-agent --timeo
 3. Applicationに`argocd-agent=true`ラベルが付与されているか
 4. AgentからResource Proxyへの接続状態
 5. ワークロードクラスタ側の`application-controller`のログ
-
