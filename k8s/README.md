@@ -42,7 +42,7 @@ Kubernetes クラスタに適用される Manifest 群です。
 | HostName | Model                         | CPU                            | Memory | Disk                                              | OS         | ControlPlane |
 | :------- | :---------------------------- | :------------------------------| :----- | :------------------------------------------------ | :--------- | :--- |
 | cake     | ASRock B660M Phantom Gaming 4 | Intel (12 threads)              | 48GB   | 512GB SSD(OS), KIOXIA EXCERIA G2 1TB, CT1000MX500SSD1 1TB | Talos v1.14 | ○           |
-| hotate   | Trigkey Green G4              | AMD (4 threads)                 | 32GB   | KIOXIA EXCERIA PLUS G3                            | Talos v1.14 | ○           |
+| hotate   | TRIGKEY Key-N100             | Intel Processor N100 (4 cores)          | 32GB   | KIOXIA EXCERIA PLUS G3                            | Talos v1.14 | ○           |
 | lemon    | Lenovo IdeaPad 5 15ITL05      | Intel Tiger Lake (8 threads)    | 16GB   | Samsung MZALQ512HALU 512GB                        | Talos v1.14 | ○           |
 | rusk     | HP ProLiant DL120 Gen9        | Intel (20 threads)              | 32GB   | HP Smart Array 論理ドライブ(OS/TopoLVM)           | Talos v1.14 |              |
 
