@@ -25,16 +25,16 @@ State移行は、既存の`infra`workspaceを操作できる担当者が主導�
 1. Terraform Cloudの`infra`、`seaweedfs-default`、`seaweedfs-biscuit`に実行中のrunがないことを確認し、webhookによる新しいrunを一時的に止めます。
 2. Terraform CloudのState Versionsから現在の`infra` stateをbackupします。加えて、次のコマンドでstateを取得し、アクセス権を絞った場所へ保存します。
 
-```bash
-umask 077
-terraform -chdir=terraform state pull > /secure/path/infra-state-$(date +%Y%m%d-%H%M%S).json
-```
+    ```bash
+    umask 077
+    terraform -chdir=terraform state pull > /secure/path/infra-state-$(date +%Y%m%d-%H%M%S).json
+    ```
 
 3. 現在のstateに残っているSeaweedFS resourceを確認します。
 
-```bash
-terraform -chdir=terraform state list | rg '^module\.seaweedfs\[0\]\.'
-```
+    ```bash
+    terraform -chdir=terraform state list | rg '^module\.seaweedfs\[0\]\.'
+    ```
 
 4. 新しい3 rootをcheckoutしたcommitで、下記の一時`import` blockを各workspaceのrootへ追加します。`infra`のapplyがqueueするinitial runがこのcommitを実行できるよう、state操作より先に準備します。
 
