@@ -78,11 +78,11 @@ resource "tfe_workspace" "seaweedfs_default" {
   structured_run_output_enabled = true
   terraform_version             = "~>1.15.0"
   trigger_patterns = [
-    "terraform/seaweedfs-default/**",
+    "terraform/workspaces/seaweedfs-default/**",
     "terraform/modules/seaweedfs-default/**",
     "k8s/apps/seaweedfs-default/_configs/desired-state.json",
   ]
-  working_directory = "terraform/seaweedfs-default"
+  working_directory = "terraform/workspaces/seaweedfs-default"
 
   vcs_repo {
     github_app_installation_id = "ghain-otUXZF8BAGagh2Vn"
@@ -105,10 +105,10 @@ resource "tfe_workspace" "seaweedfs_biscuit" {
   structured_run_output_enabled = true
   terraform_version             = "~>1.15.0"
   trigger_patterns = [
-    "terraform/seaweedfs-biscuit/**",
+    "terraform/workspaces/seaweedfs-biscuit/**",
     "terraform/modules/seaweedfs-biscuit/**",
   ]
-  working_directory = "terraform/seaweedfs-biscuit"
+  working_directory = "terraform/workspaces/seaweedfs-biscuit"
 
   vcs_repo {
     github_app_installation_id = "ghain-otUXZF8BAGagh2Vn"

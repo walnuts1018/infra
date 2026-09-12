@@ -2,9 +2,9 @@
 
 ## Workspace構成
 
-Terraform Cloudでは`infra`、`seaweedfs-default`、`seaweedfs-biscuit`の3workspaceを使用します。既存の`terraform/`は`infra`workspaceのworking directoryとして維持し、4つ目の`cloud`workspaceは作成しません。
+Terraform Cloudでは`infra`、`seaweedfs-default`、`seaweedfs-biscuit`の3workspaceを使用します。既存の`terraform/`は`infra`workspaceのworking directoryとして維持し、SeaweedFS用のrootは`terraform/workspaces/`へ配置します。4つ目の`cloud`workspaceは作成しません。
 
-`infra`workspaceはTerraform Cloudのremote executionで外部インフラ、1Password、Terraform Cloud自身を管理します。`seaweedfs-default`workspaceはberryのAgent Pool`home`を使ってkurumiのSeaweedFS STSに接続し、bucket policyとCORSを管理します。`seaweedfs-biscuit`workspaceも同じAgent Poolを使い、biscuitのS3 credentialでbucket、versioning、lifecycle、multipart cleanupを管理します。
+`infra`workspaceはTerraform Cloudのremote executionで外部インフラ、1Password、Terraform Cloud自身を管理します。`seaweedfs-default`workspaceはkurumi上のAgent Pool`home`を使ってkurumiのSeaweedFS STSに接続し、bucket policyとCORSを管理します。`seaweedfs-biscuit`workspaceも同じAgent Poolを使い、biscuitのS3 credentialでbucket、versioning、lifecycle、multipart cleanupを管理します。
 
 通常の変更では`infra`workspaceのapplyが下流workspaceのinitial runまたはrun triggerをqueueします。`tfe_workspace_run`は`wait_for_run = false`なので、`infra`workspaceのapplyは下流workspaceの完了を待ちません。下流runの待機や成功確認はTerraform Cloudと各clusterの状態を別に確認します。
 
@@ -12,7 +12,7 @@ Terraform Cloudでは`infra`、`seaweedfs-default`、`seaweedfs-biscuit`の3work
 
 SeaweedFS biscuit用Terraform credentialは`infra`workspaceの`random_id`と`random_password`で生成され、1Password item`terraform-external-secrets`と`seaweedfs-biscuit`workspaceのsensitive variableへ同じ値が保存されます。手入力のcredentialは使用しません。
 
-Terraform Cloud Agent Pool`home`とAgent tokenも`infra`workspaceで作成します。tokenは同じ1Password itemの`terraform_cloud_agent_token`として保存され、berryの`terraform-cloud-agent`DeploymentはExternalSecret経由で`TFC_AGENT_TOKEN`へ読み込みます。Secretが更新されるとReloaderがDeploymentを再起動します。
+Terraform Cloud Agent Pool`home`とAgent tokenも`infra`workspaceで作成します。tokenは同じ1Password itemの`terraform_cloud_agent_token`として保存され、kurumiの`terraform-cloud-agent`DeploymentはExternalSecret経由で`TFC_AGENT_TOKEN`へ読み込みます。Secretが更新されるとReloaderがDeploymentを再起動します。
 
 AWS IAMのVariable Setは`infra`workspaceだけに割り当てます。SeaweedFS STSのVariable Setは`seaweedfs-default`workspaceだけに割り当てます。Agent Poolはorganization-wideにせず、2つのSeaweedFS workspaceだけを許可します。
 
@@ -76,7 +76,7 @@ terraform -chdir=terraform state list | rg '^module\.seaweedfs\[0\]\.'
 
 ### 一時import block
 
-`terraform/seaweedfs-default/import.tf`に次を追加します。policyの対象は現行の`desired-state.json`に合わせてください。
+`terraform/workspaces/seaweedfs-default/import.tf`に次を追加します。policyの対象は現行の`desired-state.json`に合わせてください。
 
 ```hcl
 import {
@@ -100,7 +100,7 @@ import {
 }
 ```
 
-`terraform/seaweedfs-biscuit/import.tf`には4 bucket、4 versioning、4 lifecycleを追加します。`aws_s3_bucket`、`aws_s3_bucket_versioning`、`aws_s3_bucket_lifecycle_configuration`のimport idはいずれもbucket名です。
+`terraform/workspaces/seaweedfs-biscuit/import.tf`には4 bucket、4 versioning、4 lifecycleを追加します。`aws_s3_bucket`、`aws_s3_bucket_versioning`、`aws_s3_bucket_lifecycle_configuration`のimport idはいずれもbucket名です。
 
 ```hcl
 import {
@@ -186,10 +186,10 @@ import {
 ```bash
 terraform fmt -check -recursive terraform
 terraform -chdir=terraform init -backend=false
-terraform -chdir=terraform/seaweedfs-default init -backend=false
-terraform -chdir=terraform/seaweedfs-biscuit init -backend=false
-terraform -chdir=terraform/seaweedfs-default validate
-terraform -chdir=terraform/seaweedfs-biscuit validate
+terraform -chdir=terraform/workspaces/seaweedfs-default init -backend=false
+terraform -chdir=terraform/workspaces/seaweedfs-biscuit init -backend=false
+terraform -chdir=terraform/workspaces/seaweedfs-default validate
+terraform -chdir=terraform/workspaces/seaweedfs-biscuit validate
 ```
 
 `infra`rootの`cloud`設定はTerraform Cloud organizationの認証を要求するため、credentialがない環境では`init -backend=false`でも`unauthorized`で停止することがあります。その場合は認証を直してからrootを検証し、下流rootと独立moduleのvalidate成功だけでinfra rootの検証完了とはみなしません。

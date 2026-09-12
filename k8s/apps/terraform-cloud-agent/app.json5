@@ -2,6 +2,6 @@
   name: "terraform-cloud-agent",
   namespace: "terraform-cloud-agent",
   clusters: {
-    berry: {},
+    kurumi: {},
   },
 }

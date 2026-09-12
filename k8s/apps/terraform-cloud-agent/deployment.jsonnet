@@ -28,6 +28,36 @@ local componentLabels = labels(app.name) + {
       },
       spec: {
         automountServiceAccountToken: false,
+        affinity: {
+          nodeAffinity: {
+            preferredDuringSchedulingIgnoredDuringExecution: [
+              {
+                weight: 100,
+                preference: {
+                  matchExpressions: [
+                    {
+                      key: 'kubernetes.io/hostname',
+                      operator: 'In',
+                      values: ['rusk'],
+                    },
+                  ],
+                },
+              },
+              {
+                weight: 50,
+                preference: {
+                  matchExpressions: [
+                    {
+                      key: 'kubernetes.io/hostname',
+                      operator: 'In',
+                      values: ['cake'],
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
         securityContext: {
           seccompProfile: {
             type: 'RuntimeDefault',

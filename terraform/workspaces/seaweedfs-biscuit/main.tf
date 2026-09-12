@@ -46,5 +46,5 @@ provider "aws" {
 }
 
 module "seaweedfs_biscuit" {
-  source = "../modules/seaweedfs-biscuit"
+  source = "../../modules/seaweedfs-biscuit"
 }
