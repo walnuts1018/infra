@@ -63,38 +63,6 @@ local componentLabels = labels(app.name) + {
             type: 'RuntimeDefault',
           },
         },
-        initContainers: [
-          {
-            name: 'check-seaweedfs-endpoints',
-            image: 'curlimages/curl:8.16.0',
-            command: ['sh', '-ec'],
-            args: [
-              |||
-                for endpoint in \
-                  https://seaweedfs.walnuts.dev/healthz \
-                  https://seaweedfs-biscuit.local.walnuts.dev/healthz; do
-                  curl --fail --silent --show-error --retry 60 --retry-delay 5 --connect-timeout 5 "$endpoint"
-                done
-              |||,
-            ],
-            securityContext: {
-              allowPrivilegeEscalation: false,
-              capabilities: {
-                drop: ['ALL'],
-              },
-            },
-            resources: {
-              requests: {
-                cpu: '10m',
-                memory: '16Mi',
-              },
-              limits: {
-                cpu: '100m',
-                memory: '64Mi',
-              },
-            },
-          },
-        ],
         containers: [
           {
             name: 'terraform-cloud-agent',

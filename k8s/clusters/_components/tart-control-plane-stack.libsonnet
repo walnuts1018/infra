@@ -11,7 +11,12 @@
 //   podCIDRs, serviceCIDRs: 省略時はbiscuit/kurumi共通のデフォルト値
 function(cluster, opts) {
   local baseName = cluster.name + '-control-plane',
-  local templateHash = std.md5(opts.patches + '\n' + opts.schematicID)[0:10],
+  local templateHash = std.md5(std.manifestJson({
+    patches: opts.patches,
+    schematicID: opts.schematicID,
+    talosVersion: cluster.talosVersion,
+    hostSelectorLabels: opts.hostSelectorLabels,
+  }))[0:10],
   local machineTemplateName = baseName + '-' + templateHash,
   local bootstrapConfigTemplateName = baseName + '-' + templateHash,
   // Tart v0.3.16 requires the referenced Secret to be immutable. Include the
