@@ -118,9 +118,18 @@ CNIとKubernetes APIのReady、Longhornのreplica状態、SeaweedFSの`/readyz`�
 
 ## VIPとBGP
 
-VyOSから`192.168.4.11/32`がcontrol plane 3台から見えることと、各経路のnodeへ`/readyz`が成功することを確認する。Ciliumのservice-BGPはcontrol planeを含む全nodeで動作し、CiliumはlocalPort`1790`、Talosは`179`を使用するため、同じnode上でもlistenerを共有しない。
+Talosの`fabric` BGP instanceだけがVyOS(ASN 65001)とpeerし、control plane 3台から`192.168.4.11/32`を広告する。Ciliumのservice-BGPは標準のcontrol-plane node labelを持つcontrol planeで動作し、node内の`veth-cilium`(`10.255.255.0/31`)からTalosの`cilium` instance(`10.255.255.1/31`、VRF table 89)へ接続する。Talosの`cilium` instanceは`installRoutes: false`でLB pool(`192.168.12.0/24`)を受信し、`fabric` instanceの`importRoutes`がVyOSへ再広告するため、VyOSとの外向きservice-BGP sessionはTalosだけが持つ。
 
-control plane 1台のkube-apiserverだけを停止する障害試験では、停止nodeから`192.168.4.11/32`の経路が残らず、残り2台へのAPI接続が安定することを確認する。TalosのBGP広告は標準ではインターフェースとBGPセッションの状態に基づくため、`/readyz`との連動はこの構成だけでは証明されない。経路が残る場合は、health-awareなVIP広告または外部health checkを導入するまで移行を完了扱いにしない。
+`fabric`のBGP router-idは3台で重複させない。control planeで共有するpatchにはnode固有のrouter-idを表現できないため、生成されたTalos configとVyOSのBGP neighbor stateで各nodeのrouter-idが異なることを確認できるまで、実機構築を完了扱いにしない。
+
+次のコマンドで、control plane全台のTalos側peerとCilium側peerがEstablishedになり、Talosのfabric側にAPI VIPとLB pool内の経路が存在することを確認する。
+
+```bash
+talosctl --nodes 192.168.0.25,192.168.0.26,192.168.0.19 get bgppeerstatus
+kubectl --context kurumi -n cilium-system exec daemonset/cilium -- cilium bgp peers
+```
+
+control plane 1台のkube-apiserverだけを停止する障害試験では、停止nodeの`192.168.4.11/32`広告が残るか、残り2台へのAPI接続が安定するかを別々に確認する。TalosのBGP広告は標準ではインターフェースとBGP sessionの状態に基づくため、kube-apiserverの`/readyz`とは連動しない。停止nodeの経路が残る場合にECMP経由のAPI接続が失敗するなら、health-awareなVIP広告または外部health checkを導入するまで移行を完了扱いにしない。
 
 ## ロールバック境界
 

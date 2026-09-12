@@ -41,22 +41,65 @@ name: dummy-vip
 addresses:
   - address: 192.168.4.11/32
 ---
-# dummy-vipのアドレスをconnected networkとしてvyos(ASN 65001)へBGP広告する。
-# cake/hotate/lemonの3台が同時に同じ/32を広告するECMP構成。ノード障害時はBGPセッション断で
-# 経路が自動的に引き上げられ、残りのノードへトラフィックが寄る。
-# localASNは65010(vyos側のpeer-group "CILIUM"のremote-as)に合わせる。
-# Ciliumのservice-BGPはlocalPort 1790、Talosは標準の179を使い、control-planeを含む全nodeで
-# 2つのspeakerを同時に動かす。
+# Ciliumのservice-BGPとTalosのfabric-BGPをnode内で接続するveth pair。
+# veth-ciliumはCilium Agent、veth-crouterはTalosのVRF側で使用する。
+apiVersion: v1alpha1
+kind: VethConfig
+name: veth-cilium
+up: true
+addresses:
+  - address: 10.255.255.0/31
+peer:
+  name: veth-crouter
+  up: true
+  addresses:
+    - address: 10.255.255.1/31
+---
+apiVersion: v1alpha1
+kind: VRFConfig
+name: vrf-cilium
+links:
+  - veth-crouter
+table: "89"
+up: true
+---
+# CiliumからLB VIPを受信するだけのTalos側BGP instance。受信経路はLinux FIBへ入れず、
+# fabric instanceのimportRoutesからVyOS向けに再広告する。
 apiVersion: v1alpha1
 kind: BGPInstanceConfig
-name: control-plane-vip
+name: cilium
+vrf: vrf-cilium
+localASN: 4200000002
+routerID: 10.255.255.1
+installRoutes: false
+neighbors:
+  - address: 10.255.255.0
+    peerASN: 4200000003
+    passive: true
+    holdTime: 9s
+---
+# dummy-vipのアドレスをconnected networkとしてVyOS(ASN 65001)へ広告し、Ciliumから受信した
+# LoadBalancer IP poolの経路だけをdefault routing domainへ取り込む。VyOSとのBGP sessionは
+# Talosだけが持ち、Ciliumはnode内のveth経由でこのinstanceへ接続する。
+apiVersion: v1alpha1
+kind: BGPInstanceConfig
+name: fabric
 localASN: 65010
 advertise:
   - dummy-vip
+importRoutes:
+  - bgpInstance: cilium
+    prefixes:
+      - 192.168.12.0/24
 multipath: true
 neighbors:
   - address: 192.168.0.1
     peerASN: 65001
+    holdTime: 9s
+    bfd:
+      transmitInterval: 300ms
+      receiveInterval: 300ms
+      detectMultiplier: 3
 ---
 # control planeにも通常のworkloadとCilium Agentを配置する。
 apiVersion: v1alpha1
@@ -86,7 +129,8 @@ provisioning:
   maxSize: 4GiB
 ---
 # SeaweedFS STSと外部OIDC検証で使用する、移行後のcontrol plane VIPをissuerにする。
-cluster:
-  apiServer:
-    extraArgs:
-      service-account-issuer: https://192.168.4.11:6443
+# Talos v1.14ではkube-apiserverの追加引数はKubeAPIServerConfig documentで指定する。
+apiVersion: v1alpha1
+kind: KubeAPIServerConfig
+extraArgs:
+  service-account-issuer: https://192.168.4.11:6443
