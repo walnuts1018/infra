@@ -1,40 +1,31 @@
 local peerConfig = import 'bgp-peer-config.jsonnet';
-local cluster = std.extVar('cluster');
-local kurumi = cluster == 'kurumi';
-local nodeSelectorLabels = if kurumi then {
-  'node-role.kubernetes.io/control-plane': '',
-} else {
-  'kubernetes.io/os': 'linux',
-};
+local configs = import 'config/bgp.libsonnet';
+local config = configs[std.extVar('cluster')];
 local instance = {
-  name: if kurumi then 'talos' else 'server-vlan',
-  localASN: if kurumi then 4200000003 else 65010,
+  name: config.instanceName,
+  localASN: config.localASN,
   peers: [
     {
       name: peerConfig.metadata.name,
-      peerASN: if kurumi then 4200000002 else 65001,
-      peerAddress: if kurumi then '10.255.255.1' else '192.168.0.1',
+      peerASN: config.peerASN,
+      peerAddress: config.peerAddress,
       peerConfigRef: {
         name: peerConfig.metadata.name,
       },
     },
   ],
-} + if kurumi then {} else {
-  localPort: 1790,
-};
+} + if std.objectHas(config, 'localPort') then {
+  localPort: config.localPort,
+} else {};
 
-{
+if config.enabled then {
   apiVersion: 'cilium.io/v2',
   kind: 'CiliumBGPClusterConfig',
   metadata: {
-    name: if kurumi then 'talos' else 'server-vlan',
+    name: config.instanceName,
   },
   spec: {
-    nodeSelector: {
-      matchLabels: nodeSelectorLabels,
-    },
-    // Kurumi uses an active Cilium-to-Talos veth session; biscuit keeps its
-    // direct Cilium-to-upstream session.
+    nodeSelector: config.nodeSelector,
     bgpInstances: [instance],
   },
-}
+} else null

@@ -2,8 +2,35 @@
   name: "external-secrets-store",
   namespace: "external-secrets",
   clusters: {
-    kurumi: {},
-    berry: {},
-    biscuit: {},
+    kurumi: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "onePasswordVaults",
+            value: '{"kurumi":1}',
+          },
+        ],
+      },
+    },
+    berry: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "onePasswordVaults",
+            value: '{"kurumi":1}',
+          },
+        ],
+      },
+    },
+    biscuit: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "onePasswordVaults",
+            value: '{"kurumi":1}',
+          },
+        ],
+      },
+    },
   },
 }

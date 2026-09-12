@@ -12,13 +12,22 @@
     },
   },
   clusters: {
-    kurumi: {},
+    kurumi: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "cloudflareOriginCert",
+            value: "true",
+          },
+        ],
+      },
+    },
     biscuit: {
       jsonnet: {
         tlas: [
           {
-            name: "cluster",
-            value: "biscuit",
+            name: "cloudflareOriginCert",
+            value: "false",
           },
         ],
       },

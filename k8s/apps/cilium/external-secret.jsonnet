@@ -1,9 +1,8 @@
-// Only kurumi's cilium runs ingressController (defaultSecretName:
-// cloudflare-origin-cert); biscuit disables it and terminates TLS via its own
-// cert-manager Certificate, so shipping the Cloudflare origin private key
-// there too would needlessly widen its blast radius.
-function(cluster='kurumi')
-  if cluster == 'biscuit' then null else
+// The Cloudflare origin secret is enabled only for the Cilium deployment whose
+// ingressController consumes cloudflare-origin-cert. Other deployments use
+// their own certificate source and must not receive this private key.
+function(cloudflareOriginCert='false')
+  if cloudflareOriginCert != 'true' then null else
     std.mergePatch((import '../../components/external-secret.libsonnet') {
       name: 'cloudflare-origin-cert',
       namespace: (import 'app.json5').namespace,

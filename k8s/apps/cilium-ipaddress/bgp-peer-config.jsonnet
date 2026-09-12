@@ -1,11 +1,12 @@
 local advertisement = import 'bgp-advertisement.jsonnet';
-local cluster = std.extVar('cluster');
+local configs = import 'config/bgp.libsonnet';
+local config = configs[std.extVar('cluster')];
 
-{
+if config.enabled then {
   apiVersion: 'cilium.io/v2',
   kind: 'CiliumBGPPeerConfig',
   metadata: {
-    name: if cluster == 'kurumi' then 'talos' else 'vanilla',
+    name: config.peerConfigName,
   },
   spec: {
     families: [
@@ -17,15 +18,7 @@ local cluster = std.extVar('cluster');
         },
       },
     ],
-  } + if cluster == 'kurumi' then {
-    transport: {
-      peerPort: 179,
-      sourceInterface: 'veth-cilium',
-    },
-    timers: {
-      connectRetryTimeSeconds: 3,
-      holdTimeSeconds: 9,
-      keepAliveTimeSeconds: 3,
-    },
+  } + if std.objectHas(config, 'transport') then {
+    transport: config.transport,
   } else {},
-}
+} else null

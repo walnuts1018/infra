@@ -1,5 +1,5 @@
 function(
-  clusterName='kurumi',
+  clusterName,
 )
   local base = (import '_base.libsonnet')(clusterName);
   std.mergePatch(base, {
