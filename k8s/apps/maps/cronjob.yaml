@@ -1,0 +1,108 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: maps-update
+  namespace: maps
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 86400
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app: maps-update
+            app.kubernetes.io/name: maps-update
+        spec:
+          containers:
+            - args:
+                - rollout
+                - restart
+                - deployment/maps-versatiles-server
+                - --namespace=maps
+              command:
+                - kubectl
+              image: registry.k8s.io/kubectl:v1.37.0
+              name: rollout-restart
+              resources:
+                limits:
+                  memory: 128Mi
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+          initContainers:
+            - args:
+                - --config=/config/rclone.conf
+                - copyto
+                - :http,url='https://download.versatiles.org/':osm-landcover.versatiles
+                - seaweedmaps:maps/osm-landcover.versatiles
+                - --retries=5
+                - --low-level-retries=20
+                - --retries-sleep=30s
+                - --timeout=10m
+                - --contimeout=30s
+                - --s3-chunk-size=64M
+                - --s3-upload-concurrency=4
+                - -v
+                - --stats=1m
+              command:
+                - rclone
+              env:
+                - name: AWS_WEB_IDENTITY_TOKEN_FILE
+                  value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+                - name: AWS_ENDPOINT_URL_STS
+                  value: http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+                - name: AWS_ROLE_ARN
+                  value: arn:aws:iam::role/maps
+              image: ghcr.io/rclone/rclone:1.75.1
+              name: rclone-sync
+              resources:
+                limits:
+                  memory: 512Mi
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /config
+                  name: rclone-config
+                  readOnly: true
+                - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+                  name: seaweedfs-sts-token
+                  readOnly: true
+          restartPolicy: Never
+          serviceAccountName: maps-updater
+          volumes:
+            - configMap:
+                name: maps-rclone-config-29db02
+              name: rclone-config
+            - name: seaweedfs-sts-token
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      audience: sts.seaweedfs.com
+                      expirationSeconds: 86400
+                      path: token
+  schedule: 0 3 1 * *
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  timeZone: Asia/Tokyo

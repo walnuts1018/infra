@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app: walnuts-dev
+    app.kubernetes.io/name: walnuts-dev
+  name: walnuts-dev
+  namespace: walnuts-dev
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: walnuts-dev
+      app.kubernetes.io/name: walnuts-dev

@@ -1,7 +1,0 @@
-{
-  name: "velero",
-  namespace: "velero",
-  clusters: {
-    kurumi: {},
-  },
-}

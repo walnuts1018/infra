@@ -1,0 +1,72 @@
+apiVersion: pingcap.com/v1alpha1
+kind: TidbCluster
+metadata:
+  name: tikv-cluster
+  namespace: databases
+spec:
+  configUpdateStrategy: RollingUpdate
+  discovery: {}
+  enableDynamicConfiguration: true
+  helper:
+    image: alpine:3.24.1
+  pd:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: storage.walnuts.dev/slow
+                  operator: DoesNotExist
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: pd
+                app.kubernetes.io/instance: tikv-cluster
+            topologyKey: kubernetes.io/hostname
+    baseImage: pingcap/pd
+    config: |
+      [security]
+        cert-allowed-cn = ["TiDB", "SeaweedFS"]
+    limits:
+      memory: 512Mi
+    maxFailoverCount: 0
+    replicas: 3
+    requests:
+      cpu: 45m
+      memory: 110Mi
+      storage: 1Gi
+    storageClassName: local-path
+  pvReclaimPolicy: Retain
+  tikv:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: storage.walnuts.dev/slow
+                  operator: DoesNotExist
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: tikv
+                app.kubernetes.io/instance: tikv-cluster
+            topologyKey: kubernetes.io/hostname
+    baseImage: pingcap/tikv
+    config: |
+      [security]
+        cert-allowed-cn = ["TiDB", "SeaweedFS"]
+    limits:
+      memory: 2Gi
+    maxFailoverCount: 0
+    replicas: 3
+    requests:
+      cpu: 30m
+      memory: 1900Mi
+      storage: 8Gi
+    storageClassName: local-path
+  timezone: Asia/Tokyo
+  tlsCluster:
+    enabled: true
+  version: v8.5.7

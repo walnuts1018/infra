@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: oekaki-dengon-game-front
+    app.kubernetes.io/name: oekaki-dengon-game-front
+  name: oekaki-dengon-game-front
+  namespace: oekaki-dengon-game
+spec:
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: oekaki-dengon-game-front
+    app.kubernetes.io/name: oekaki-dengon-game-front
+  type: ClusterIP

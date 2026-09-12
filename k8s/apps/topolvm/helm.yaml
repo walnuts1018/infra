@@ -1,0 +1,128 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: topolvm-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: topolvm-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: topolvm
+    helm:
+      releaseName: topolvm
+      valuesObject:
+        cert-manager:
+          enabled: false
+        controller:
+          podDisruptionBudget:
+            enabled: true
+          prometheus:
+            podMonitor:
+              enabled: true
+          replicaCount: 1
+        lvmd:
+          additionalConfigs: []
+          deviceClasses:
+            - default: true
+              lvcreate-options:
+                - --alloc=normal
+              name: hdd
+              spare-gb: 10
+              volume-group: hdd
+          managed: true
+          nodeSelector:
+            topolvm.io/lvmd-config: rusk
+          prometheus:
+            podMonitor:
+              enabled: true
+        node:
+          kubeletWorkDirectory: /var/lib/kubelet
+          lvmdEmbedded: false
+          nodeSelector:
+            topolvm.io/enabled: "true"
+          prometheus:
+            podMonitor:
+              enabled: true
+        resources:
+          csi_provisioner:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          csi_registrar:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 5m
+              memory: 16Mi
+          csi_resizer:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 5m
+              memory: 16Mi
+          csi_snapshotter:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 5m
+              memory: 16Mi
+          liveness_probe:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 2m
+              memory: 8Mi
+          lvmd:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          topolvm_controller:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          topolvm_node:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+        scheduler:
+          enabled: false
+        snapshot:
+          enabled: false
+        storageClasses:
+          - name: topolvm-hdd
+            storageClass:
+              additionalParameters:
+                topolvm.io/device-class: hdd
+              allowVolumeExpansion: true
+              fsType: xfs
+              isDefaultClass: false
+              mountOptions:
+                - noatime
+              reclaimPolicy: Retain
+              volumeBindingMode: WaitForFirstConsumer
+        useLegacy: false
+        webhook:
+          certManager: true
+          podMutatingWebhook:
+            enabled: false
+    repoURL: https://topolvm.github.io/topolvm
+    targetRevision: 17.2.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: misskey-valkey
+    app.kubernetes.io/name: misskey-valkey
+  name: misskey-valkey-headless
+  namespace: misskey
+spec:
+  clusterIP: None
+  ports:
+    - name: valkey
+      port: 6379
+      targetPort: valkey
+  selector:
+    app: misskey-valkey
+    app.kubernetes.io/name: misskey-valkey

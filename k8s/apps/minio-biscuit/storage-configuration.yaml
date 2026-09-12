@@ -1,0 +1,35 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: minio-biscuit-storage-config-376136
+  namespace: minio-biscuit
+spec:
+  data:
+    - remoteRef:
+        key: minio-biscuit
+        property: rootUser
+      secretKey: rootUser
+    - remoteRef:
+        key: minio-biscuit
+        property: rootPassword
+      secretKey: rootPassword
+    - remoteRef:
+        key: minio-biscuit
+        property: client-secret
+      secretKey: clientSecret
+  refreshInterval: 1m
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: onepassword
+  target:
+    name: minio-biscuit-storage-config-376136
+    template:
+      data:
+        config.env: |
+          export MINIO_ROOT_USER="{{ .rootUser }}"
+          export MINIO_ROOT_PASSWORD="{{ .rootPassword }}"
+          export MINIO_IDENTITY_OPENID_CLIENT_SECRET="{{ .clientSecret }}"
+          export MINIO_STORAGE_CLASS_STANDARD="EC:0"
+          export MINIO_STORAGE_CLASS_RRS="EC:0"
+      engineVersion: v2
+      type: Opaque

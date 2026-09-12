@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: qdrant-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: qdrant
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: qdrant
+    helm:
+      releaseName: qdrant
+      values: |
+        replicaCount: 1
+        useUnprivilegedImage: true
+
+        readinessProbe:
+          enabled: true
+
+        livenessProbe:
+          enabled: true
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: "1"
+            memory: 2Gi
+
+        persistence:
+          size: 10Gi
+          storageClassName: longhorn
+
+        snapshotPersistence:
+          enabled: true
+          size: 10Gi
+          storageClassName: longhorn
+
+        metrics:
+          serviceMonitor:
+            enabled: true
+    repoURL: https://qdrant.github.io/qdrant-helm
+    targetRevision: 1.19.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

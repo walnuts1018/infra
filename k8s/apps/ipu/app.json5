@@ -1,7 +1,0 @@
-{
-  name: "ipu",
-  namespace: "ipu",
-  clusters: {
-    kurumi: {},
-  },
-}

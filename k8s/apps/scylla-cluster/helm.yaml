@@ -1,0 +1,67 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: scylla-cluster-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: databases
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: scylla
+    helm:
+      releaseName: scylla-cluster
+      valuesObject:
+        datacenter: iwakura
+        developerMode: true
+        racks:
+          - members: 3
+            name: iwakura-a
+            placement:
+              nodeAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                    - matchExpressions:
+                        - key: storage.walnuts.dev/slow
+                          operator: DoesNotExist
+              podAffinity: {}
+              podAntiAffinity:
+                preferredDuringSchedulingIgnoredDuringExecution:
+                  - podAffinityTerm:
+                      labelSelector:
+                        matchExpressions:
+                          - key: scylla/cluster
+                            operator: In
+                            values:
+                              - scylla-cluster
+                      topologyKey: kubernetes.io/hostname
+                    weight: 100
+              tolerations: []
+            resources:
+              limits:
+                cpu: "1"
+                memory: 2Gi
+              requests:
+                cpu: 20m
+                memory: 300Mi
+            scyllaConfig: scylla-config-f2b364
+            storage:
+              capacity: 8Gi
+              storageClassName: local-path
+        scyllaImage:
+          repository: scylladb/scylla
+          tag: 2025.4.10
+        serviceMonitor:
+          create: true
+    repoURL: https://scylla-operator-charts.storage.googleapis.com/stable
+    targetRevision: v1.21.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

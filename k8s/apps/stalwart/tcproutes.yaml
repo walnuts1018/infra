@@ -1,0 +1,59 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: stalwart-smtp
+  namespace: stalwart
+spec:
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: smtp
+  rules:
+    - backendRefs:
+        - name: stalwart
+          port: 25
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: stalwart-smtps
+  namespace: stalwart
+spec:
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: smtps
+  rules:
+    - backendRefs:
+        - name: stalwart
+          port: 465
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: stalwart-submission
+  namespace: stalwart
+spec:
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: submission
+  rules:
+    - backendRefs:
+        - name: stalwart
+          port: 587
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TCPRoute
+metadata:
+  name: stalwart-imaps
+  namespace: stalwart
+spec:
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: imaps
+  rules:
+    - backendRefs:
+        - name: stalwart
+          port: 993

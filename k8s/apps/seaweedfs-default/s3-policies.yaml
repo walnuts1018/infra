@@ -1,0 +1,180 @@
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Policy
+metadata:
+  name: mac-hatena-access-key
+  namespace: seaweedfs
+spec:
+  name: mac-hatena-access-key
+  policyDocument: |-
+    {
+        "Statement": [
+            {
+                "Action": [
+                    "s3:*"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "*"
+                ]
+            }
+        ],
+        "Version": "2012-10-17"
+    }
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Policy
+metadata:
+  name: maps-read-access-key
+  namespace: seaweedfs
+spec:
+  name: maps-read-access-key
+  policyDocument: |-
+    {
+        "Statement": [
+            {
+                "Action": [
+                    "s3:Get*"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::maps",
+                    "arn:aws:s3:::maps/*"
+                ]
+            }
+        ],
+        "Version": "2012-10-17"
+    }
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Policy
+metadata:
+  name: misskey-access-key
+  namespace: seaweedfs
+spec:
+  name: misskey-access-key
+  policyDocument: |-
+    {
+        "Statement": [
+            {
+                "Action": [
+                    "s3:Get*",
+                    "s3:Put*",
+                    "s3:Delete*",
+                    "s3:AbortMultipartUpload",
+                    "s3:List*",
+                    "s3:*Tagging"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::misskey",
+                    "arn:aws:s3:::misskey/*"
+                ]
+            }
+        ],
+        "Version": "2012-10-17"
+    }
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Policy
+metadata:
+  name: oekaki-dengon-game-access-key
+  namespace: seaweedfs
+spec:
+  name: oekaki-dengon-game-access-key
+  policyDocument: |-
+    {
+        "Statement": [
+            {
+                "Action": [
+                    "s3:Get*",
+                    "s3:Put*",
+                    "s3:Delete*",
+                    "s3:AbortMultipartUpload",
+                    "s3:List*",
+                    "s3:*Tagging"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::oekaki-dengon-game",
+                    "arn:aws:s3:::oekaki-dengon-game/*"
+                ]
+            }
+        ],
+        "Version": "2012-10-17"
+    }
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Policy
+metadata:
+  name: stalwart-access-key
+  namespace: seaweedfs
+spec:
+  name: stalwart-access-key
+  policyDocument: |-
+    {
+        "Statement": [
+            {
+                "Action": [
+                    "s3:Get*",
+                    "s3:Put*",
+                    "s3:Delete*",
+                    "s3:AbortMultipartUpload",
+                    "s3:List*",
+                    "s3:*Tagging"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::stalwart",
+                    "arn:aws:s3:::stalwart/*"
+                ]
+            }
+        ],
+        "Version": "2012-10-17"
+    }
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Policy
+metadata:
+  name: visual-regression-tracker-access-key
+  namespace: seaweedfs
+spec:
+  name: visual-regression-tracker-access-key
+  policyDocument: |-
+    {
+        "Statement": [
+            {
+                "Action": [
+                    "s3:Get*",
+                    "s3:Put*",
+                    "s3:Delete*",
+                    "s3:AbortMultipartUpload",
+                    "s3:List*",
+                    "s3:*Tagging"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::visual-regression-tracker",
+                    "arn:aws:s3:::visual-regression-tracker/*"
+                ]
+            }
+        ],
+        "Version": "2012-10-17"
+    }
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default

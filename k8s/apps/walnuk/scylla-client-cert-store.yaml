@@ -1,0 +1,19 @@
+apiVersion: external-secrets.io/v1
+kind: SecretStore
+metadata:
+  name: scylla-client-cert
+  namespace: walnuk
+spec:
+  provider:
+    kubernetes:
+      auth:
+        serviceAccount:
+          name: walnuk-scylla-secret-reader
+          namespace: walnuk
+      remoteNamespace: databases
+      server:
+        caProvider:
+          key: ca.crt
+          name: kube-root-ca.crt
+          type: ConfigMap
+        url: https://kubernetes.default.svc

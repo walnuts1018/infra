@@ -1,0 +1,26 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  labels:
+    app: misskey
+    app.kubernetes.io/name: misskey
+  name: misskey
+  namespace: misskey
+spec:
+  resourcePolicy:
+    containerPolicies:
+      - containerName: misskey
+        controlledResources:
+          - memory
+        maxAllowed:
+          cpu: 500m
+          memory: 2Gi
+        minAllowed:
+          cpu: 50m
+          memory: 256Mi
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: misskey
+  updatePolicy:
+    updateMode: Auto

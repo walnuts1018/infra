@@ -1,0 +1,68 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: trivy-operator-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: trivy-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: trivy-operator
+    helm:
+      releaseName: trivy-operator
+      valuesObject:
+        excludeNamespaces: kube-system,cilium-system,longhorn-system,scylla-operator-node-tuning
+        nodeCollector:
+          tolerations:
+            - operator: Exists
+        operator:
+          clusterSbomCacheEnabled: false
+          exposedSecretScannerEnabled: false
+          metricsClusterComplianceInfo: true
+          metricsConfigAuditInfo: true
+          metricsExposedSecretInfo: false
+          metricsFindingsEnabled: true
+          metricsImageInfo: false
+          metricsInfraAssessmentInfo: true
+          metricsRbacAssessmentInfo: true
+          metricsVulnIdEnabled: false
+          sbomGenerationEnabled: false
+          vulnerabilityScannerEnabled: false
+        resources:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 2m
+            memory: 685Mi
+        serviceMonitor:
+          enabled: true
+        trivy:
+          ignoreUnfixed: true
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          server:
+            resources:
+              limits:
+                cpu: "1"
+                memory: 1Gi
+              requests:
+                cpu: 200m
+                memory: 512Mi
+    repoURL: https://aquasecurity.github.io/helm-charts/
+    targetRevision: 0.36.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

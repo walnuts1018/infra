@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: visual-regression-tracker-api
+    app.kubernetes.io/name: visual-regression-tracker-api
+  name: visual-regression-tracker-api
+  namespace: visual-regression-tracker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: visual-regression-tracker-api
+      app.kubernetes.io/name: visual-regression-tracker-api
+  template:
+    metadata:
+      labels:
+        app: visual-regression-tracker-api
+        app.kubernetes.io/name: visual-regression-tracker-api
+    spec:
+      containers:
+        - env:
+            - name: APP_FRONTEND_URL
+              value: https://vrt.local.walnuts.dev
+            - name: AUTO_APPROVE_BASED_ON_HISTORY
+              value: "true"
+            - name: BODY_PARSER_JSON_LIMIT
+              value: 5mb
+            - name: JWT_LIFE_TIME
+              value: 1d
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: DATABASE_URL
+                  name: visual-regression-tracker-2afdbd
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: jwt_secret
+                  name: visual-regression-tracker-2afdbd
+            - name: STATIC_SERVICE
+              value: s3
+            - name: AWS_S3_BUCKET_NAME
+              value: visual-regression-tracker
+            - name: AWS_REGION
+              value: us-east-1
+            - name: AWS_ENDPOINT_URL_S3
+              value: https://seaweedfs.local.walnuts.dev
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_ACCESS_KEY_ID
+                  name: visual-regression-tracker-s3-credentials
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_SECRET_ACCESS_KEY
+                  name: visual-regression-tracker-s3-credentials
+          image: docker.io/visualregressiontracker/api:5.6.3
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            tcpSocket:
+              port: 3000
+          name: api
+          ports:
+            - containerPort: 3000
+              name: http
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            tcpSocket:
+              port: 3000
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 10m
+              memory: 128Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: false
+            seccompProfile:
+              type: RuntimeDefault

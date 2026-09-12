@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: netbird
+    app.kubernetes.io/name: netbird
+  name: netbird-headless
+  namespace: netbird
+spec:
+  clusterIP: None
+  ports:
+    - name: wireguard
+      port: 51820
+      protocol: UDP
+  selector:
+    app: netbird
+    app.kubernetes.io/name: netbird

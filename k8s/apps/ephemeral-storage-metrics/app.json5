@@ -1,7 +1,0 @@
-{
-  name: "ephemeral-storage-metrics",
-  namespace: "monitoring",
-  clusters: {
-    kurumi: {},
-  },
-}

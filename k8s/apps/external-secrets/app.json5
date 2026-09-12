@@ -1,7 +1,0 @@
-{
-  name: "external-secrets",
-  namespace: "external-secrets",
-  clusters: {
-    kurumi: {},
-  },
-}
