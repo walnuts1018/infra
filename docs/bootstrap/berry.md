@@ -81,3 +81,9 @@ helm upgrade --install argocd argo/argo-cd --version 10.8.2 \
   --values k8s/_argocd/argocd_components/values.berry.yaml
 kubectl --context berry apply -f k8s/_argocd/entrypoint/base.yaml
 ```
+
+### Application登録
+
+```bash
+kubectl --context berry apply -f k8s/_argocd/entrypoint/base.yaml
+```
