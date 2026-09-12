@@ -1,10 +1,13 @@
-# berry bootstrap
+# berry のブートストラップ手順
 
-`berry`はRaspberry Pi OS上のmanagement clusterとする。ここで行うのはOS固有設定、ネットワーク、k3s、root Secret、Argo CDの初回導入、base Applicationの投入だけとする。
+Raspberry Pi OS 上で動作する管理クラスタ（Management Cluster）`berry` の初期セットアップ手順です。
 
-## 物理とOS
+この手順では、OS固有の基本設定、ネットワーク、k3s のインストール、1Password Connect 用の root Secret 作成、Argo CD の初回導入、およびベースマニフェスト（`base.yaml`）の適用までを行います。
 
-Raspberry Pi ImagerでRaspberry Pi OS Lite 64bitをインストールし、管理用ネットワーク、ホスト名、DHCP予約または固定アドレスを設定する。`/boot/firmware/cmdline.txt`のcgroup設定、`config.txt`の不要なBluetoothとWi-Fiの無効化、watchdog、Timezone`Asia/Tokyo`を設定して再起動する。
+## 1. OSの初期設定
+
+Raspberry Pi Imager を使って **Raspberry Pi OS Lite (64-bit)** をインストールします。  
+管理用ネットワーク、ホスト名、固定IP（またはDHCP予約）を設定した後、以下のコマンドで cgroup、ファームウェア更新、不要なインターフェース（Bluetooth / Wi-Fi）の無効化、ハードウェアウォッチドッグ、タイムゾーン（Asia/Tokyo）を設定して再起動します。
 
 ```bash
 sudo sed -i 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/g' /boot/firmware/cmdline.txt
@@ -16,11 +19,13 @@ dtoverlay=disable-wifi
 dtparam=watchdog=on
 EOF
 sudo timedatectl set-timezone Asia/Tokyo
+sudo reboot
 ```
 
-## k3s
+## 2. k3s のインストール
 
-`/etc/rancher/k3s/config.yaml`を作成してからk3sをインストールする。berryでは組み込みServiceLB、local-storage、metrics-serverを使用せず、既存のTraefikはGateway APIだけを有効にする。
+k3s をインストールする前に、設定ファイル `/etc/rancher/k3s/config.yaml` を作成します。  
+`berry` では組み込みの ServiceLB、local-storage、metrics-server は使用しません。
 
 ```yaml
 write-kubeconfig-mode: "0644"
@@ -32,7 +37,7 @@ disable-network-policy: true
 flannel-backend: host-gw
 ```
 
-`/var/lib/rancher/k3s/server/manifests/traefik-config.yaml`を作成し、組み込みTraefikのIngress providerを無効化してGateway providerを有効化する。
+組み込みの Traefik については、Ingress provider を無効化し、Gateway API provider のみを有効化します。`/var/lib/rancher/k3s/server/manifests/traefik-config.yaml` を作成してください。
 
 ```yaml
 apiVersion: helm.cattle.io/v1
@@ -49,17 +54,20 @@ spec:
         enabled: true
 ```
 
+設定ファイルを配置後、k3s をインストールします。
+
 ```bash
 curl -sfL https://get.k3s.io | sh -
 ```
 
-## root Secret
+## 3. root Secret の作成
 
-berryの`onepassword` namespaceへ、1Password Connectが最初に読む2つのSecretだけを作成する。次の環境変数はシェルへ直接設定し、ファイルや値をGitへ保存しない。
+1Password Connect が起動時に参照する 2 つの Secret を `onepassword` Namespace に作成します。  
+※ シークレットの値や認証ファイルを誤って Git にコミットしないよう注意してください。
 
 ```bash
-: "${ONEPASSWORD_CREDENTIALS_FILE:?set the path to 1password-credentials.json}"
-: "${ONEPASSWORD_CONNECT_TOKEN:?set the 1Password Connect token}"
+: "${ONEPASSWORD_CREDENTIALS_FILE:?1password-credentials.json へのパスを指定してください}"
+: "${ONEPASSWORD_CONNECT_TOKEN:?1Password Connect token を指定してください}"
 
 kubectl --context berry create namespace onepassword --dry-run=client -o yaml \
   | kubectl --context berry apply -f -
@@ -71,11 +79,13 @@ kubectl --context berry create secret generic onepassword-token -n onepassword \
   --dry-run=client -o yaml | kubectl --context berry apply -f -
 ```
 
-`argocd-agent-jwt`は手動作成しない。Argo CD Agent用のExternalSecretが、1Passwordの`argocd-agent-jwt`Document itemにある`jwt.key`ファイルをberry上の`argocd-agent-jwt` Secretへ同期する。
+> **Note:**  
+> `argocd-agent-jwt` Secret の手動作成は不要です。Argo CD Agent 用の ExternalSecret が、1Password の Document アイテム `argocd-agent-jwt` (`jwt.key`) から `berry` クラスタへ自動的に同期します。
 
-## Argo CD
+## 4. Argo CD の初期導入とハンドオフ
 
-Argo CDを一度だけberryへ導入する。導入後のArgo CD、Principal、証明書、ApplicationSetはbase Applicationが管理する。
+Argo CD を初期インストールし、GitOps のエントリポイントとなる `base.yaml` を適用します。  
+これ以降の Argo CD 自体、Principal、各種証明書、ApplicationSet、および各ワークロードの管理はすべて GitOps に移譲されます。
 
 ```bash
 helm repo add argo https://argoproj.github.io/argo-helm
@@ -86,4 +96,4 @@ helm upgrade --install argocd argo/argo-cd --version 10.8.2 \
 kubectl --context berry apply -f k8s/_argocd/entrypoint/base.yaml
 ```
 
-最後の`base.yaml`適用後は個別のApplication、Cluster、Secretを手動で適用しない。
+`base.yaml` の適用が完了した後は、個別の Application、Cluster、Secret などを手動で適用する必要はありません。

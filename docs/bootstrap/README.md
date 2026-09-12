@@ -1,24 +1,40 @@
 # Bootstrap
 
-この手順は、完全に初期化された物理マシンから`berry`を起動し、GitOpsへhandoffするまでを扱う。既存クラスター、既存PV、Longhorn、SeaweedFSのデータ移行は対象外とする。
+物理マシンのクリーンインストール状態から管理クラスタ（`berry`）をセットアップし、GitOpsによる自動管理へ引き渡す（ハンドオフする）までの手順です。
 
-## 前提
+※ 既存クラスタや既存PV、Longhorn、SeaweedFSのデータ移行手順は含みません。
 
-- `berry`はRaspberry Pi OS上のmanagement clusterとする。
-- `kurumi`と`biscuit`の物理ホストは、各クラスター文書に記載したPXE、BMC、AMT、WoL、ディスク接続を設定する。
-- 1Password vault`kurumi`から、berryのConnect root credentialとAgent JWT signing keyを取得できる状態にする。JWT signing keyは`argocd-agent-jwt`というDocument itemの`jwt.key`ファイルにPKCS#8 PEM形式で保存する。
-- `docs/bootstrap/berry.md`のroot Secretを作成できる入力ファイルとConnect tokenを用意する。secret valueはGitへ保存しない。
+## 前提条件
+
+- **管理クラスタ (`berry`)**: Raspberry Pi OS 上にセットアップします。
+- **物理ホスト (`kurumi` / `biscuit`)**: 各クラスタのドキュメント（[kurumi](../clusters/kurumi.md) / [biscuit](../clusters/biscuit.md)）に記載の物理要件（PXE、BMC / AMT / WoL、ディスク配線など）を設定済みであること。
+- **1Password**: 
+  - Vault `kurumi` から、`berry` 用の Connect root 認証情報および Argo CD Agent の JWT 署名鍵が取得できる状態であること。
+  - JWT 署名鍵は、Document アイテム `argocd-agent-jwt` の `jwt.key`（PKCS#8 PEM形式）として保存されている必要があります。
+- **シークレット準備**:
+  - `docs/bootstrap/berry.md` で使用する root Secret 作成用ファイルと Connect トークンを手元に用意してください（※機密情報はGitにコミットしないでください）。
 
 ## 手順
 
-1. `docs/bootstrap/berry.md`に従って`berry`のOS、ネットワーク、k3s、root Secret、Argo CDを準備する。
-2. `berry`でArgo CDが起動した後、次のコマンドだけをhandoff pointとして実行する。
+1. **berry のセットアップ**  
+   [docs/bootstrap/berry.md](./berry.md) に従って、OS設定、ネットワーク、k3s、root Secret、Argo CD の初期セットアップを行います。
+
+2. **GitOps へのハンドオフ**  
+   `berry` 上で Argo CD が起動したら、以下のコマンドを1回だけ実行してベース設定を流し込みます。
 
    ```bash
    kubectl --context berry apply -f k8s/_argocd/entrypoint/base.yaml
    ```
 
-3. 以後はGitとberry上のArgo CDに任せる。Cluster API Operator、Tart provider、Cluster、Cilium、Argo CD Spoke、Argo CD Agent、workload clusterの1Password root credential、ApplicationSet、workload applicationは、リポジトリの定義から自動的に収束する。1Password root credentialは、Agent bootstrapと同じCAPI addon経路で`onepassword-connect`の起動前に配送される。
-4. 完了確認はberry上のCAPIリソースとArgo CD Applicationの状態で行う。workload clusterへ個別の`kubectl`、`helm`、Secret投入、TLS Secretコピー、Agent CLIを実行しない。
+3. **自動収束の待機**  
+   これ以降の構築は、Argo CD と GitOps に任せます。  
+   Cluster API Operator、Tart provider、Cluster、Cilium、Argo CD Spoke / Agent、各ワークロードクラスタ用の 1Password 認証情報、ApplicationSet、各種アプリケーションなどは、すべてリポジトリの定義に従って自動的にデプロイ・収束します。  
+   （※ 1Password の root 認証情報は、Agent bootstrap と同様に CAPI addon 経由で `onepassword-connect` 起動前に自動配布されます）
 
-障害調査、証明書更新後のAgent再起動、Principalの状態確認は[Argo CD Agent運用](../operations/argocd-agent.md)で扱う。
+4. **完了確認**  
+   `berry` 上の CAPI リソースおよび Argo CD Application のステータスを確認します。ワークロードクラスタに対して個別に `kubectl` や `helm` を実行したり、Secret の手動コピーや Agent CLI の実行を行ったりする必要はありません。
+
+---
+
+障害調査や証明書更新後の Agent 再起動、Principal の状態確認などは [Argo CD Agent運用](../operations/argocd-agent.md) を参照してください。
+

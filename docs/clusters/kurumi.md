@@ -1,27 +1,37 @@
 # kurumi
 
-`kurumi`は`berry`をmanagement clusterとするCluster API + Tart管理のworkload clusterである。正常系の構築はGit、berry上のArgo CD、CAPI、Tart、Talos、CAPI addon、Argo CD Agentの収束に任せ、kurumiへリソースを手動投入しない。
+`kurumi` は、管理クラスタ `berry` の Cluster API (CAPI) と Tart provider によって管理されるメインのワークロードクラスタです。
 
-## 構成
+クラスタの構築や運用は、Git、berry 上の Argo CD、CAPI、Tart、Talos、CAPI addon、Argo CD Agent による GitOps で自動収束します。そのため、クラスタに対して直接手動でリソースを投入する必要はありません。
 
-- control planeは`cake`、`hotate`、`lemon`の3台で、workerは`rusk`の1台とする。
-- TartHostのMAC、管理用IP、ホストラベル、WoLまたはRedfishの設定は`k8s/clusters/kurumi/tart-hosts.jsonnet`が正本である。
-- Kubernetes API endpointは`192.168.4.11:6443`で、Talosのfabric BGPがcontrol plane 3台から広告する。
-- Pod CIDR、Service CIDR、Talos version、Kubernetes versionは`k8s/clusters/kurumi/cluster.json5`が正本である。
-- control planeとworkerのディスクselector、WWID、TopoLVM、Longhorn用extensionは`k8s/clusters/kurumi/_patches/`と各Tart定義が正本である。
-- Cilium bootstrap、Argo CD Spoke、Argo CD Agent、1Password root credentialは、`k8s/clusters/kurumi/argocd-agent-bootstrap.jsonnet`から共通componentを通じて配送する。
+## クラスタ構成
 
-## 物理要件
+- **ノード構成**: Control Plane 3台（`cake`, `hotate`, `lemon`）、Worker 1台（`rusk`）。
+- **ホスト管理**: MACアドレス、管理用IP、ホストラベル、WoL / Redfish 設定などは [`k8s/clusters/kurumi/tart-hosts.jsonnet`](../../k8s/clusters/kurumi/tart-hosts.jsonnet) で定義。
+- **クラスタ設定**: Kubernetes / Talos のバージョン、Pod / Service CIDR は [`k8s/clusters/kurumi/cluster.json5`](../../k8s/clusters/kurumi/cluster.json5) で管理。
+- **API エンドポイント**: `192.168.4.11:6443`（Talos の Fabric BGP により Control Plane 3台から広報）。
+- **ストレージ構成**:
+  - 各ノードのディスク selector、WWID、TopoLVM、Longhorn 用 extension 設定は [`k8s/clusters/kurumi/_patches/`](../../k8s/clusters/kurumi/_patches/) および各 Tart 定義ファイルで管理。
+- **共通コンポーネント**:
+  - Cilium、Argo CD Spoke / Agent、1Password root 認証情報は、[`k8s/clusters/kurumi/argocd-agent-bootstrap.jsonnet`](../../k8s/clusters/kurumi/argocd-agent-bootstrap.jsonnet) 経由で自動配布されます。
 
-`cake`と`hotate`はWoLで電源投入し、`lemon`は初回enrollment前にBIOSでPXEまたはNetwork Bootを有効化してboot orderへ追加する。`rusk`はiLO Redfishの初期設定、PXE、電源操作、対象ディスクの物理接続を完了させる。初回設定後の電源投入、Talos、CNI、Agent、workload applicationの操作はCAPIとGitOpsが担う。
+## 物理要件・事前準備
 
-## 最終確認
+各物理マシンの事前準備として以下を設定します。
 
-berry上のCAPIリソースがReadyになり、Argo CDのkurumi向けApplicationが`Synced`かつ`Healthy`になれば正常系の最低限の確認を満たす。
+- **`cake`, `hotate`**: Wake-on-LAN (WoL) による電源投入が可能な状態にしておく。
+- **`lemon`**: 初回登録（enrollment）前に、BIOS で PXE / Network Boot を有効化し、ブート順序（Boot Order）に追加しておく。
+- **`rusk`**: iLO (Redfish) の初期設定、PXE ブート設定、電源管理設定、および対象ディスクの物理接続を完了させておく。
+
+初期設定完了後の電源投入、Talos のインストール、CNI、Agent、各種ワークロードのデプロイは、すべて CAPI と GitOps が自動で行います。
+
+## 動作確認
+
+`berry` 上で CAPI リソースが `Ready` になり、Argo CD の kurumi 向け Application が `Synced` かつ `Healthy` になっていれば正常に起動・連携されています。
 
 ```bash
 kubectl --context berry -n kurumi get cluster,tartcluster,tartcontrolplane,machine,machinedeployment
 kubectl --context berry -n argocd get applications -l argocd-agent=true
 ```
 
-詳細なAgent状態、証明書更新、障害調査は[Argo CD Agent運用](../operations/argocd-agent.md)を参照する。
+詳しい Agent の稼働状態確認や証明書の更新手順、トラブルシューティングについては [Argo CD Agent運用](../operations/argocd-agent.md) を参照してください。

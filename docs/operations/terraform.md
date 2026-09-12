@@ -1,9 +1,21 @@
-# Terraform運用
+# Terraform 運用ガイド
 
-## 分離
+## SeaweedFS (biscuit) のライフサイクル分離
 
-Terraformの通常実行では`manage_biscuit_seaweedfs=false`を使用する。AWS、B2、Cloudflare、ZITADEL、1Password itemなど外部インフラの管理は、biscuitのSeaweedFS endpointへ接続せずに完了できる。
+本環境の Terraform 管理では、通常時の実行変数として `manage_biscuit_seaweedfs = false` を設定しています。  
+これにより、AWS、Backblaze B2、Cloudflare、ZITADEL、1Password などの外部インフラ管理を、biscuit クラスタ上の SeaweedFS エンドポイントへの接続を伴わずに安全に実行できます。
 
-`biscuit`のSeaweedFSはworkload cluster起動後に宣言される単一Pod構成で、現在のbucket作成はSeaweedFS OperatorのBucket CRではなくS3 APIを使うTerraform moduleが担当する。そのため、biscuitのSeaweedFSがReadyになった後にだけ`manage_biscuit_seaweedfs=true`を永続的なTerraform workspace variableとして設定し、同じworkspaceをapplyする。
+### 分離している背景
 
-このpost-bootstrap処理はberry bootstrap、CAPI、Argo CD Agentのhandoffに含めない。初回applyの途中でTerraformを停止してKubernetesの状態を確認し、暗黙に再実行する手順も採用しない。将来SeaweedFS Operatorがこの構成のbucketとlifecycleを安全に管理できるようになった場合は、Terraform moduleを削除してGitOps管理へ移行する。
+`biscuit` クラスタの SeaweedFS は、クラスタ起動後にデプロイされる単一 Pod 構成です。  
+現在、バケットの作成には SeaweedFS Operator の Bucket CR ではなく、S3 API を叩く Terraform モジュールを採用しています。そのため、biscuit クラスタおよび SeaweedFS が正常に稼働（Ready）していない段階では、これらのリソースを作成できません。
+
+### 初回構築時（Post-bootstrap）の手順
+
+クラスタの初回ブートストラップ（berry のセットアップ、CAPI、Argo CD Agent の同期）完了後、SeaweedFS が Ready になったことを確認してから以下の手順を行います。
+
+1. Terraform ワークスペースの変数で `manage_biscuit_seaweedfs = true` に変更・設定する。
+2. 同一ワークスペースで `terraform apply` を実行する。
+
+※ クラスタ起動前の `apply` 途中で一時停止して手動でクラスタ状態を確認するような不安定な運用を避けるため、初回ブートストラップ処理とは明示的にフェーズを分けています。  
+※ 将来的に SeaweedFS Operator がこの構成におけるバケットやライフサイクルポリシーを宣言的に安全管理できるようになれば、本 Terraform モジュールは廃止し、GitOps 側へ移行する予定です。
