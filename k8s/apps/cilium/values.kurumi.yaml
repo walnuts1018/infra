@@ -67,9 +67,6 @@ hubble:
     dashboards:
       enabled: true
 envoy:
-  log:
-    # Increase the buffer for verbose ingress access logs that exceed Envoy's default limit.
-    accessLogBufferSize: 16384
   prometheus:
     serviceMonitor:
       enabled: true

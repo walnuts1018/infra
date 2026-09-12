@@ -1,5 +1,4 @@
 lvmd:
-  nodeSelector: null
   deviceClasses:
   - name: ssd
     volume-group: ssd
@@ -13,9 +12,6 @@ lvmd:
     default: false
     lvcreate-options:
     - --alloc=normal
-node:
-  nodeSelector: null
-
 storageClasses:
 - name: topolvm-ssd
   storageClass:

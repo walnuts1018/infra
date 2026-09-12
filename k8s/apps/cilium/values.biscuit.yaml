@@ -6,10 +6,14 @@ hubble:
   tls:
     enabled: false
 envoy:
+  prometheus:
+    enabled: false
   resources:
     requests:
       memory: 64Mi
 operator:
+  prometheus:
+    enabled: false
 gatewayAPI:
   enabled: true
   secretsNamespace:
