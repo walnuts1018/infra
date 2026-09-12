@@ -13,6 +13,13 @@
   },
   clusters: {
     kurumi: {
+      additionalSources: {
+        helm: {
+          additionalValueFiles: [
+            "values.kurumi.yaml",
+          ],
+        },
+      },
       jsonnet: {
         tlas: [
           {

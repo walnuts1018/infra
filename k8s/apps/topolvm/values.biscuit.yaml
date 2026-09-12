@@ -13,15 +13,8 @@ lvmd:
     default: false
     lvcreate-options:
     - --alloc=normal
-  prometheus:
-    podMonitor:
-      enabled: false
-
 node:
   nodeSelector: null
-  prometheus:
-    podMonitor:
-      enabled: false
 
 storageClasses:
 - name: topolvm-ssd
@@ -46,8 +39,3 @@ storageClasses:
       "topolvm.io/device-class": hdd
     mountOptions:
     - noatime
-
-controller:
-  prometheus:
-    podMonitor:
-      enabled: false

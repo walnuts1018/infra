@@ -21,7 +21,23 @@
         },
       },
     },
-    berry: {},
-    biscuit: {},
+    berry: {
+      additionalSources: {
+        helm: {
+          additionalValueFiles: [
+            "values.berry.yaml",
+          ],
+        },
+      },
+    },
+    biscuit: {
+      additionalSources: {
+        helm: {
+          additionalValueFiles: [
+            "values.biscuit.yaml",
+          ],
+        },
+      },
+    },
   },
 }

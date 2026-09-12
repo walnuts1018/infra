@@ -2,42 +2,14 @@ k8sServiceHost: 192.168.0.15
 cluster:
   id: 2
   name: biscuit
-l2announcements:
-  enabled: false
-ingressController:
-  enabled: false
-nodePort:
-  enabled: false
 hubble:
   tls:
     enabled: false
-  relay:
-    enabled: false
-  ui:
-    enabled: false
-  metrics:
-    enabled: []
 envoy:
-  enabled: true
-  prometheus:
-    enabled: false
-    serviceMonitor:
-      enabled: false
   resources:
     requests:
       memory: 64Mi
 operator:
-  replicas: 1
-  prometheus:
-    enabled: false
-    serviceMonitor:
-      enabled: false
-prometheus:
-  enabled: false
-  serviceMonitor:
-    enabled: false
-envoyConfig:
-  enabled: false
 gatewayAPI:
   enabled: true
   secretsNamespace:
