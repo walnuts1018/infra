@@ -14,5 +14,6 @@
   clusters: {
     berry: {},
     biscuit: {},
+    kurumi: {},
   },
 }

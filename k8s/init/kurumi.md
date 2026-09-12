@@ -90,6 +90,20 @@ kubectl --context kurumi -n argocd get secret argocd-agent-client-tls argocd-age
 kubectl --context berry get secret cluster-kurumi
 ```
 
+## 1Password Connect
+
+`onepassword-connect`は`kurumi`上で動作し、External Secretsの`ClusterSecretStore`から参照される。fresh buildではArgo CD同期前にroot credential seedだけを手動で作成する。
+
+```bash
+kubectl create namespace onepassword --context kurumi
+kubectl create secret generic op-credentials -n onepassword --context kurumi \
+  --from-literal=1password-credentials.json="$(op read 'op://kurumi/k8s Credentials File/1password-credentials.json')"
+kubectl create secret generic onepassword-token -n onepassword --context kurumi \
+  --from-literal=token="$(op read 'op://kurumi/pcookjymtl2zwyozhofaco5yhy/credential')"
+```
+
+`onepassword-connect` Applicationが同期され、Connectのreadinessと`ClusterSecretStore`のReadyを確認してから、Connectを参照するExternalSecretを同期する。
+
 通常のNamespaceは公開・privateのApplicationSetが`app.json5`の`namespace`を配置先として`CreateNamespace=true`で作成する。`namespaces-kurumi`はCiliumのPSA設定が必要な`cilium-system`と、Ciliumが自動作成しない`cilium-secrets`だけを明示manifestで管理する。private側の`adguard`もNamespace Applicationの明示manifestで管理する。
 
 証明書更新後はAgentを再起動する。
@@ -104,7 +118,7 @@ CNIとKubernetes APIのReady、Longhornのreplica状態、SeaweedFSの`/readyz`�
 
 ## VIPとBGP
 
-VyOSから`192.168.4.11/32`がcontrol plane 3台から見えることと、各経路のnodeへ`/readyz`が成功することを確認する。Ciliumのservice-BGPは同一nodeでTalos BGPと競合しないようworkerだけをspeakerにする。
+VyOSから`192.168.4.11/32`がcontrol plane 3台から見えることと、各経路のnodeへ`/readyz`が成功することを確認する。Ciliumのservice-BGPはcontrol planeを含む全nodeで動作し、CiliumはlocalPort`1790`、Talosは`179`を使用するため、同じnode上でもlistenerを共有しない。
 
 control plane 1台のkube-apiserverだけを停止する障害試験では、停止nodeから`192.168.4.11/32`の経路が残らず、残り2台へのAPI接続が安定することを確認する。TalosのBGP広告は標準ではインターフェースとBGPセッションの状態に基づくため、`/readyz`との連動はこの構成だけでは証明されない。経路が残る場合は、health-awareなVIP広告または外部health checkを導入するまで移行を完了扱いにしない。
 

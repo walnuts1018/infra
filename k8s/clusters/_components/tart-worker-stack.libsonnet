@@ -7,7 +7,10 @@ function(cluster, name, opts) {
   local baseName = cluster.name + '-' + name,
   local machineTemplateName = baseName,
   local bootstrapConfigTemplateName = baseName,
-  local patchesSecretName = baseName + '-patches',
+  // Tart v0.3.16 requires the referenced Secret to be immutable. Include the
+  // patch content in the name so a patch change creates a new Secret instead
+  // of attempting to update an immutable one.
+  local patchesSecretName = baseName + '-patches-' + std.md5(opts.patches)[0:10],
 
   machineTemplate: (import '_internal/tart-machine-template.libsonnet')(
     cluster, machineTemplateName, opts.hostSelectorLabels, opts.schematicID
@@ -19,6 +22,7 @@ function(cluster, name, opts) {
     apiVersion: 'v1',
     kind: 'Secret',
     metadata: { name: patchesSecretName, namespace: cluster.namespace },
+    immutable: true,
     type: 'Opaque',
     stringData: { patches: opts.patches },
   },

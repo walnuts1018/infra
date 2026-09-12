@@ -20,8 +20,6 @@ fresh installではTerraformの1Passwordへの書き込み完了後にExternal S
 
 Gateway API CRDは`gateway-api-crds` Applicationがv1.6.1を導入する。Cilium bootstrapはGateway APIを無効にして起動し、CRD導入後にAgent経由の通常ApplicationがCiliumを最終値へ更新する。bootstrap Jobを手動で作成しない。
 
-`cluster:decommission biscuit`を実行する前に、`k8s/clusters/biscuit/cluster.json5`を削除してコミットし、各`app.json5`から`biscuit`を削除してコミットする。これにより`clusters`と`apps-biscuit`の両方が対象Applicationを生成しなくなる。コマンドはその状態を検査し、残存するbiscuit向けApplicationをworkload resourceを残したまま削除してからbootstrap resourceとClusterを削除する。
-
 PrincipalのJWT signing keyが未作成の場合だけ、次のコマンドを一度実行する。
 
 ```bash
@@ -41,12 +39,6 @@ kubectl --context biscuit -n argocd get pods
 
 ```bash
 mise run argocd-agent:restart biscuit
-```
-
-クラスターを削除するときは、Cluster本体だけ`Prune=confirm,Delete=confirm`であることと、self-registered SecretにownerReferenceがないことを考慮し、次のコマンドで依存順に削除する。
-
-```bash
-mise run cluster:decommission biscuit
 ```
 
 登録後は`k8s/_argocd/applications/biscuit`の`argocd-spoke-biscuit`と`argocd-agent-biscuit`がbootstrapのHelmChartProxyを引き継ぎ、その後ApplicationSetがCilium、TopoLVM、SeaweedFS、証明書、External SecretsをAgent経由で`biscuit`へ適用する。

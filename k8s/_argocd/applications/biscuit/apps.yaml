@@ -54,6 +54,10 @@ spec:
             {{- range $tla := dig "clusters" "biscuit" "jsonnet" "tlas" (list) . }}
             - {{ $tla | toJson }}
             {{- end }}
+            extVars:
+            {{- range $extVar := dig "clusters" "biscuit" "jsonnet" "extVars" (list) . }}
+            - {{ $extVar | toJson }}
+            {{- end }}
         ref: infra
       {{- with (dig "additionalSources" "helm" (dict) .) }}
       - repoURL: '{{ .repoURL }}'

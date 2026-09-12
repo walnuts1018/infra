@@ -84,11 +84,11 @@ argocd app get argocd-spoke-kurumi --refresh
 argocd app get argocd-agent-kurumi --refresh
 ```
 
-以後はGitの変更をberryの`base` Applicationへ同期する。対象クラスターへ直接Helmを実行したり、Spoke上でApplicationを手動作成したりしない。
+以後はGitの変更をberryの`base` Applicationへ同期する。対象クラスターへ直接Helmを実行したり、Spoke上でApplicationを手動作成したりしない。クラスター廃止時は、対象ApplicationとCAPIリソースを依存関係を確認しながら手動で削除する。
 
 ## 移行順序
 
-既存の直接管理用Argo CDがリモートクラスターで動作している場合は、先にそのApplicationの自動pruneを停止する。次にリモート側の旧Argo CDが管理していたapplication-controllerとrepo-serverをSpoke構成へ置き換え、Agent接続を確認してから旧来の`argocd cluster add`で作成したクラスターSecretとApplicationをGitから削除する。同期後にアプリケーション、PVC、ExternalSecret、Secretの状態を確認し、旧リソースの削除が発生していないことを確認する。`biscuit`を削除するときは`mise run cluster:decommission biscuit`を使用する。
+既存の直接管理用Argo CDがリモートクラスターで動作している場合は、先にそのApplicationの自動pruneを停止する。次にリモート側の旧Argo CDが管理していたapplication-controllerとrepo-serverをSpoke構成へ置き換え、Agent接続を確認してから旧来の`argocd cluster add`で作成したクラスターSecretとApplicationをGitから削除する。同期後にアプリケーション、PVC、ExternalSecret、Secretの状態を確認し、旧リソースの削除が発生していないことを確認する。クラスターを廃止する場合は、対象ApplicationとCAPIリソースを依存関係を確認しながら手動で削除する。
 
 ## 確認
 

@@ -4,7 +4,7 @@
   clusters: {
     kurumi: {
       jsonnet: {
-        tlas: [
+        extVars: [
           {
             name: "cluster",
             value: "kurumi",
@@ -14,6 +14,12 @@
     },
     biscuit: {
       jsonnet: {
+        extVars: [
+          {
+            name: "cluster",
+            value: "biscuit",
+          },
+        ],
         tlas: [
           {
             name: "start",

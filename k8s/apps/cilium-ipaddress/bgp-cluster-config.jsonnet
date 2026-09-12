@@ -9,12 +9,9 @@ local cluster = std.extVar('cluster');
   },
   spec: {
     nodeSelector: {
-      matchLabels: if cluster == 'kurumi' then {
-        // Talos advertises the API VIP from control-plane nodes. Keep the
-        // Cilium service-BGP speaker on workers to avoid two speakers using
-        // the same node address and ASN on the same VyOS neighbor.
-        'kurumi.walnuts.dev/pool': 'worker',
-      } else {
+      // Talos listens on the standard BGP port 179. Cilium uses a separate
+      // local port so it can run on control-plane nodes as well as workers.
+      matchLabels: {
         'kubernetes.io/os': 'linux',
       },
     },
@@ -22,6 +19,7 @@ local cluster = std.extVar('cluster');
       {
         name: 'server-vlan',
         localASN: 65010,
+        localPort: 1790,
         peers: [
           {
             name: peerConfig.metadata.name,
