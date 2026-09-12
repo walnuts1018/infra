@@ -1,0 +1,7 @@
+{
+  name: "terraform-cloud-agent",
+  namespace: "terraform-cloud-agent",
+  clusters: {
+    kurumi: {},
+  },
+}

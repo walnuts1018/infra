@@ -17,9 +17,6 @@ configs:
     resource.customizations.ignoreDifferences.apps_StatefulSet: |
       jsonPointers:
       - /spec/replicas
-    resource.customizations.ignoreDifferences.argoproj.io_Application: |
-      jsonPointers:
-      - /spec/syncPolicy
     oidc.config: |
       name: walnuts-dev
       issuer: https://auth.walnuts.dev
@@ -41,6 +38,7 @@ configs:
     controller.diff.server.side: "true"
     controller.resource.health.persist: "false"
     applicationsetcontroller.enable.new.git.file.globbing: "true"
+    redis.server: "argocd-agent-redis-proxy:6379"
 
   rbac:
     create: true
@@ -69,10 +67,11 @@ controller:
       cpu: "2"
       memory: 4Gi
 dex:
+  enabled: false
   metrics:
-    enabled: true
+    enabled: false
     serviceMonitor:
-      enabled: true
+      enabled: false
   resources:
     requests:
       cpu: 1m
@@ -81,7 +80,7 @@ dex:
       cpu: 500m
       memory: 256Mi
 redis:
-  enabled: false
+  enabled: true
   metrics:
     enabled: true
     serviceMonitor:
@@ -97,15 +96,26 @@ redis:
 redis-ha:
   enabled: false
 
-externalRedis:
-  host: valkey-argocd-valkey.argocd.svc.cluster.local
-
 server:
   ingress:
     enabled: false
     controller: generic
     ingressClassName: "cilium"
     tls: false
+  httproute:
+    enabled: true
+    parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+    hostnames:
+    - argocd.walnuts.dev
+    rules:
+    - matches:
+      - path:
+          type: PathPrefix
+          value: /
+  grpcroute:
+    enabled: false
   metrics:
     enabled: true
     serviceMonitor:
@@ -196,7 +206,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             },
             {
@@ -235,7 +245,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             }
             {{range $index, $c := .app.status.conditions}}
@@ -269,7 +279,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             }
             {{range $index, $c := .app.status.conditions}}
@@ -303,7 +313,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             }
             {{range $index, $c := .app.status.conditions}}
@@ -342,7 +352,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             }
             {{range $index, $c := .app.status.conditions}}
@@ -376,7 +386,7 @@ notifications:
             },
             {
               "title": "Repository",
-              "value": "{{.app.spec.source.repoURL}}",
+              "value": "{{if .app.spec.sources}}{{(index .app.spec.sources 0).repoURL}}{{else}}{{.app.spec.source.repoURL}}{{end}}",
               "short": true
             }
             {{range $index, $c := .app.status.conditions}}

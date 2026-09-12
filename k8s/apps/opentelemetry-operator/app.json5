@@ -1,6 +1,16 @@
 {
   name: "opentelemetry-operator",
   namespace: "opentelemetry-operator-system",
+  additionalSources: {
+    helm: {
+      repoURL: "https://open-telemetry.github.io/opentelemetry-helm-charts",
+      chart: "opentelemetry-operator",
+      targetRevision: "0.122.0",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

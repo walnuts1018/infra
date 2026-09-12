@@ -1,6 +1,16 @@
 {
   name: "opencost",
   namespace: "opencost",
+  additionalSources: {
+    helm: {
+      repoURL: "https://opencost.github.io/opencost-helm-chart",
+      chart: "opencost",
+      targetRevision: "2.5.30",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

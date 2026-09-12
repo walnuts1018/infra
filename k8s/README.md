@@ -8,12 +8,12 @@ Kubernetes クラスタに適用される Manifest 群です。
   - `applications`: ArgoCD Application リソース
     - `[<cluster>]`:
       - `apps.yaml`: ApplicationSet / `apps`ディレクトリの`app.json5`を見てApplicationを生成
-      - `argodcd.yaml`: `argocd_components`を見るApplication
+      - `argocd.yaml`: `argocd_components`を見るApplication
       - `namespaces.yaml`: `namespace` を見る Application
   - `argocd_components`: ArgoCD 用のコンポーネント
     - `appproject.jsonnet`: ArgoCD AppProject
     - `externalsecret.jsonnet`: ArgoCD用のSecret
-    - `helm.jsonnet`: ArgoCD
+    - `app.json5`: ApplicationのmetadataとHelm/Kustomizeのsource定義
     - `notification-externalsecret.jsonnet`: Secret
     - `values.yaml`: ArgoCDの Helm values
   - `clusters`: クラスタ固有の設定
@@ -26,19 +26,27 @@ Kubernetes クラスタに適用される Manifest 群です。
   - `helm.libsonnet`: Helm 用のArgoCD Applicationテンプレート
   - `labels.libsonnet`: ラベル生成用テンプレート
   - `oauth2-proxy/`: OAuth2 Proxy 用コンポーネント
-- `init`: [./init](./init)
+- [初期構築と運用](../docs)
+  - [初期構築](../docs/init/berry.md)
+  - [クラスター情報](../docs/init/)
+  - [運用](../docs/operations/)
 - `namespaces`: namespace たち
 - `utils`: ユーティリティlibsonnet
 
 ## クラスタ構成
 
-| HostName | Model                        | CPU                                     | Memory    | Disk                                              | OS                             | ControlPlane |
-| :------- | :--------------------------- | :-------------------------------------- | :-------- | :-------------------------------------------------| :----------------------------- | :----------- |
-| cake     | HP ProDesk 400 G4 DM (Japan) | Intel Core i5-8500T Processor (6 cores) | 64GB      | KIOXIA-EXCERIA G2 (1TB), CT1000MX500SSD1/JP (1TB) | Ubuntu 24.04 LTS             | ○            |
-| hotate   | TRIGKEY Key-N100             | Intel Processor N100 (4 cores)          | 16GB      | KIOXIA-EXCERIA G3 (1TB)                           | Ubuntu 24.04 LTS             | ○            |
-| lemon    | Lenovo IdeaPad 5 15ITL05      | Intel Tiger Lake (8 threads)           | 16GB   | Samsung MZALQ512HALU 512GB                        | Ubuntu 24.04 LTS | ○           |
-| rusk     | HP ProLiant DL120 Gen9        | Intel (20 threads)                     | 32GB   | HP Smart Array 論理ドライブ(OS/TopoLVM)           | Ubuntu 26.04 |              |
+### berry クラスタ
 
+### kurumi クラスタ
+
+| HostName | Model                         | CPU                            | Memory | Disk                                              | OS         | ControlPlane |
+| :------- | :---------------------------- | :------------------------------| :----- | :------------------------------------------------ | :--------- | :--- |
+| cake     | ASRock B660M Phantom Gaming 4 | Intel (12 threads)              | 48GB   | 512GB SSD(OS), KIOXIA EXCERIA G2 1TB, CT1000MX500SSD1 1TB | Talos v1.14 | ○           |
+| hotate   | TRIGKEY Key-N100             | Intel Processor N100 (4 cores)          | 32GB   | KIOXIA EXCERIA PLUS G3                            | Talos v1.14 | ○           |
+| lemon    | Lenovo IdeaPad 5 15ITL05      | Intel Tiger Lake (8 threads)    | 16GB   | Samsung MZALQ512HALU 512GB                        | Talos v1.14 | ○           |
+| rusk     | HP ProLiant DL120 Gen9        | Intel (20 threads)              | 32GB   | HP Smart Array 論理ドライブ(OS/TopoLVM)           | Talos v1.14 |              |
+
+### biscuit クラスタ
 
 ## 稼働サービス
 
@@ -110,10 +118,8 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **cloudnative-pg-barman-cloud-plugin**: PostgreSQL バックアッププラグイン
 - **cloudnative-pg-image-catalog**
 - **influxdb**: 時系列データベース
-- **minio-biscuit**
-- **minio-biscuit-backup**
-- **minio-biscuit-backup-trigger**
-- **minio-default-backup**
+- **seaweedfs-biscuit**
+- **seaweedfs-default-backup**
 - **moco**: MySQL オペレーター
 - **postgresql-default**: 複数サービスで共用の PostgreSQL インスタンス
 - **rabbitmq-cluster-operator**

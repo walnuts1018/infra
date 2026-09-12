@@ -1,7 +1,50 @@
 {
   name: "cilium",
   namespace: "cilium-system",
+  additionalSources: {
+    helm: {
+      repoURL: "https://helm.cilium.io/",
+      chart: "cilium",
+      targetRevision: "1.20.1",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
-    kurumi: {},
+    kurumi: {
+      additionalSources: {
+        helm: {
+          additionalValueFiles: [
+            "values.kurumi.yaml",
+          ],
+        },
+      },
+      jsonnet: {
+        tlas: [
+          {
+            name: "cloudflareOriginCert",
+            value: "true",
+          },
+        ],
+      },
+    },
+    biscuit: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "cloudflareOriginCert",
+            value: "false",
+          },
+        ],
+      },
+      additionalSources: {
+        helm: {
+          additionalValueFiles: [
+            "values.biscuit.yaml",
+          ],
+        },
+      },
+    },
   },
 }

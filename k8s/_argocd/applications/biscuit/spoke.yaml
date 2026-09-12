@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-spoke-biscuit
+  namespace: argocd
+  labels:
+    argocd-agent: "true"
+spec:
+  project: biscuit
+  destination:
+    name: biscuit
+    namespace: argocd
+  sources:
+  - repoURL: https://github.com/walnuts1018/infra
+    targetRevision: clusterapi
+    ref: infra
+  - repoURL: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    targetRevision: 10.8.2
+    helm:
+      releaseName: argocd
+      valueFiles:
+      - $infra/k8s/_argocd/spoke/values.yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - ServerSideApply=true
+    - FailOnSharedResource=true

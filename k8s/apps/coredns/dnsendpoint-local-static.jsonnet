@@ -9,27 +9,11 @@ local app = import 'app.json5';
   spec: {
     endpoints: [
       {
-        dnsName: 'minio-biscuit.local.walnuts.dev',
+        dnsName: 'seaweedfs-biscuit.local.walnuts.dev',
         recordTTL: 60,
         recordType: 'A',
         targets: [
           '192.168.16.159',
-        ],
-      },
-      {
-        dnsName: 'minio-biscuit-console.local.walnuts.dev',
-        recordTTL: 60,
-        recordType: 'A',
-        targets: [
-          '192.168.16.159',
-        ],
-      },
-      {
-        dnsName: 'sts-minio.local.walnuts.dev',
-        recordTTL: 60,
-        recordType: 'A',
-        targets: [
-          '192.168.12.138',
         ],
       },
       {

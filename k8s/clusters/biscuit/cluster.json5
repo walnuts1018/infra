@@ -1,0 +1,8 @@
+{
+    name: "biscuit",
+    namespace: "biscuit",
+    kubernetesVersion: "v1.36.4",
+    talosVersion: "v1.14.0",
+    controlPlaneMachineCount: 1,
+    workerMachineCount: 0,
+}

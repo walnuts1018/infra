@@ -2,6 +2,15 @@
   name: "envoy-gateway-class",
   namespace: "envoy-gateway-system",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "loadBalancerIP",
+            value: "192.168.8.2",
+          },
+        ],
+      },
+    },
   },
 }

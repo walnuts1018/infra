@@ -1,5 +1,5 @@
 function(
-  clusterName='kurumi',
+  clusterName,
 ) {
   apiVersion: 'opentelemetry.io/v1beta1',
   kind: 'OpenTelemetryCollector',

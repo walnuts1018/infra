@@ -1,0 +1,24 @@
+k8sServiceHost: 192.168.0.15
+cluster:
+  id: 2
+  name: biscuit
+hubble:
+  tls:
+    enabled: false
+envoy:
+  prometheus:
+    enabled: false
+  resources:
+    requests:
+      memory: 64Mi
+operator:
+  prometheus:
+    enabled: false
+gatewayAPI:
+  enabled: true
+  secretsNamespace:
+    create: true
+    name: cilium-secrets
+    sync: true
+  gatewayClass:
+    create: false

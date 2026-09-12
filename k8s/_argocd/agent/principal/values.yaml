@@ -1,0 +1,38 @@
+fullnameOverride: argocd-agent
+
+image:
+  tag: v0.10.0
+
+principal:
+  listen:
+    host: ""
+  log:
+    format: json
+  tls:
+    clientCert:
+      require: true
+      matchSubject: true
+  auth: "mtls:CN=([^,]+)"
+  destinationBasedMapping: true
+  labelSelector: "argocd-agent=true"
+  selfRegistration:
+    enabled: true
+    clientCertSecretName: argocd-agent-shared-client-cert
+  jwt:
+    allowGenerate: false
+    secretName: argocd-agent-jwt
+
+service:
+  type: LoadBalancer
+  port: 443
+
+serviceMonitor:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

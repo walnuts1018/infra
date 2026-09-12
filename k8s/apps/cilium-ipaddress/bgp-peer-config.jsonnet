@@ -1,10 +1,12 @@
 local advertisement = import 'bgp-advertisement.jsonnet';
+local configs = import 'config/bgp.libsonnet';
+local config = configs[std.extVar('cluster')];
 
-{
+if config.enabled then {
   apiVersion: 'cilium.io/v2',
   kind: 'CiliumBGPPeerConfig',
   metadata: {
-    name: 'vanilla',
+    name: config.peerConfigName,
   },
   spec: {
     families: [
@@ -16,5 +18,7 @@ local advertisement = import 'bgp-advertisement.jsonnet';
         },
       },
     ],
-  },
-}
+  } + if std.objectHas(config, 'transport') then {
+    transport: config.transport,
+  } else {},
+} else null

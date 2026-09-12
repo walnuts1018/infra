@@ -1,6 +1,16 @@
 {
   name: "eck-operator",
   namespace: "elasticsearch",
+  additionalSources: {
+    helm: {
+      repoURL: "https://helm.elastic.co",
+      chart: "eck-operator",
+      targetRevision: "3.5.0",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

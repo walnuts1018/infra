@@ -15,7 +15,7 @@ log() {
     local msg="$2"
     local timestamp
     timestamp=$(date '+%Y-%m-%dT%H:%M:%S%z')
-    
+
     shift 2
     local json="{\"level\":\"$level\",\"time\":\"$timestamp\",\"msg\":\"$msg\""
     while [[ $# -gt 0 ]]; do
@@ -59,13 +59,13 @@ wait_for_cluster() {
     local retries=0
 
     log "info" "Waiting for ScyllaDB cluster to be ready..."
-    
+
     while [ $retries -lt $MAX_RETRIES ]; do
     if cqlsh --cqlshrc="${cqlshrc}" -e "DESCRIBE CLUSTER" 2>/dev/null; then
         log "info" "ScyllaDB cluster is ready!"
         return 0
     fi
-    
+
     retries=$((retries + 1))
     log "info" "Attempt ${retries}/${MAX_RETRIES}:  Cluster not ready yet.  Waiting ${RETRY_INTERVAL}s..."
     sleep $RETRY_INTERVAL
@@ -78,7 +78,7 @@ wait_for_cluster() {
 
 migration() {
     local cqlshrc="$1"
-    
+
     log "info" "Applying migrations from ${SCHEMA_FILE}..."
     cqlsh --cqlshrc="${cqlshrc}" -f "${SCHEMA_FILE}"
     log "info" "Migrations applied successfully."

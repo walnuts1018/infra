@@ -1,0 +1,94 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps-berry
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+  - missingkey=error
+  generators:
+  - matrix:
+      generators:
+      - git:
+          repoURL: https://github.com/walnuts1018/infra
+          revision: clusterapi
+          files:
+          - path: "k8s/apps/*/app.json5"
+      - list:
+          elements:
+          - berryEnabled: '{{ hasKey (default dict .clusters) "berry" }}'
+    selector:
+      matchLabels:
+        berryEnabled: "true"
+  template:
+    metadata:
+      name: '{{ printf "%s-berry" .name }}'
+      # annotations:
+      #   argocd.argoproj.io/manifest-generate-paths: .;../components
+    spec:
+      project: berry
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.namespace}}'
+      sources: []
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+        - ServerSideApply=true
+        - FailOnSharedResource=true
+        - CreateNamespace=true
+  templatePatch: |
+    {{- with (dig "annotations" (dict) .) }}
+    metadata:
+      annotations:
+        {{- range $key, $value := . }}
+        {{ $key }}: {{ $value | quote }}
+        {{- end }}
+    {{- end }}
+    spec:
+      sources:
+      - repoURL: 'https://github.com/walnuts1018/infra'
+        targetRevision: clusterapi
+        path: '{{.path.path}}'
+        directory:
+          recurse: true
+          exclude: '{config/*,_*/*,values*.yaml}'
+          jsonnet:
+            tlas:
+            {{- range $tla := dig "clusters" "berry" "jsonnet" "tlas" (list) . }}
+            - {{ $tla | toJson }}
+            {{- end }}
+            extVars:
+            {{- range $extVar := dig "clusters" "berry" "jsonnet" "extVars" (list) . }}
+            - {{ $extVar | toJson }}
+            {{- end }}
+        ref: infra
+      {{- with (dig "additionalSources" "helm" (dict) .) }}
+      - repoURL: '{{ .repoURL }}'
+        chart: '{{ .chart }}'
+        targetRevision: '{{ .targetRevision }}'
+        helm:
+          releaseName: '{{ $.name }}'
+          valueFiles:
+          {{- range (dig "valueFiles" (list) .) }}
+          # - $infra/path/to/file/values.yaml
+          - {{ printf "$infra/%s/%s" $.path.path . }}
+          {{- end }}
+          {{- with (dig "clusters" "berry" "additionalSources" "helm" "additionalValueFiles" (list) $) }}
+          {{- range . }}
+          - {{ printf "$infra/%s/%s" $.path.path . }}
+          {{- end }}
+          {{- end }}
+      {{- end }}
+      {{- range (dig "additionalSources" "kustomize" (list) .) }}
+      - repoURL: '{{ .repoURL }}'
+        path: '{{ .path }}'
+        targetRevision: '{{ .targetRevision }}'
+        {{- with (dig "patches" (list) .) }}
+        kustomize:
+          patches: {{ . | toJson }}
+        {{- end }}
+      {{- end }}

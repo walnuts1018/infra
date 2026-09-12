@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: namespaces-berry
+  namespace: argocd
+spec:
+  project: berry
+  destination:
+    server: https://kubernetes.default.svc
+  source:
+    path: k8s/namespaces/berry
+    repoURL: 'https://github.com/walnuts1018/infra'
+    targetRevision: clusterapi # TODO
+    directory:
+      recurse: true
+      exclude: '{config/*,_*/*,values*.yaml}'
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - ServerSideApply=true
+    - FailOnSharedResource=true
