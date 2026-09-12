@@ -6,6 +6,9 @@
     annotations: {
       'snapshot.storage.kubernetes.io/is-default-class': 'true',  // TODO: 複数Classができたらどうにかしたくなるだろう
     },
+    labels: {
+      'velero.io/csi-volumesnapshot-class': 'true',
+    },
   },
   driver: 'driver.longhorn.io',
   deletionPolicy: 'Retain',

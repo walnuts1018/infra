@@ -39,6 +39,9 @@ redis:
     serviceMonitor:
       enabled: false
 
+# 初回Helm導入ではvalues.bootstrap.yamlでローカルRedisを指定し、
+# Principalが利用可能になった後に共通valuesのRedis proxyへ切り替える。
+
 applicationSet:
   metrics:
     serviceMonitor:

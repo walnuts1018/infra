@@ -27,8 +27,8 @@ Walnuts 家の自宅サーバ全般のリポジトリです。
 
 ## 初期構築と運用
 
-- [初期構築](./docs/bootstrap/README.md)
-- [クラスター情報](./docs/clusters/)
+- [初期構築](./docs/init/berry.md)
+- [クラスター情報](./docs/init/)
 - [運用](./docs/operations/)
 
 ## Renovate

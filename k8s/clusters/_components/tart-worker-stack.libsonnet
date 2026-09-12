@@ -1,16 +1,17 @@
 // TartベースのTalos worker(MachineDeployment)を1組まるごと作るための公開API。
 // tart-control-plane-stack.libsonnetのworker版。nameはMachineDeployment/TartMachineTemplate/
-// TartBootstrapConfigTemplate/patches Secretの名前のsuffixとして使う(例: 'worker' -> 'kurumi-worker')。
+// TartBootstrapConfigTemplate/patches Secretの名前のsuffixとして使う(例: 'worker' -> 'kurumi-worker-<hash>')。
 //
 // opts: hostSelectorLabels, schematicID, patches, replicas
 function(cluster, name, opts) {
   local baseName = cluster.name + '-' + name,
-  local machineTemplateName = baseName,
-  local bootstrapConfigTemplateName = baseName,
+  local templateHash = std.md5(opts.patches + '\n' + opts.schematicID)[0:10],
+  local machineTemplateName = baseName + '-' + templateHash,
+  local bootstrapConfigTemplateName = baseName + '-' + templateHash,
   // Tart v0.3.16 requires the referenced Secret to be immutable. Include the
   // patch content in the name so a patch change creates a new Secret instead
   // of attempting to update an immutable one.
-  local patchesSecretName = baseName + '-patches-' + std.md5(opts.patches)[0:10],
+  local patchesSecretName = baseName + '-patches-' + templateHash,
 
   machineTemplate: (import '_internal/tart-machine-template.libsonnet')(
     cluster, machineTemplateName, opts.hostSelectorLabels, opts.schematicID
@@ -21,7 +22,11 @@ function(cluster, name, opts) {
   patchesSecret: {
     apiVersion: 'v1',
     kind: 'Secret',
-    metadata: { name: patchesSecretName, namespace: cluster.namespace },
+    metadata: {
+      name: patchesSecretName,
+      namespace: cluster.namespace,
+      annotations: { 'argocd.argoproj.io/sync-options': 'Prune=false' },
+    },
     immutable: true,
     type: 'Opaque',
     stringData: { patches: opts.patches },

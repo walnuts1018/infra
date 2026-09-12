@@ -40,16 +40,8 @@ configuration:
     credential:
       name: velero-seaweedfs-biscuit
       key: credentials
-  volumeSnapshotLocation:
-  - name: seaweedfs-biscuit
-    provider: aws
-    config:
-      s3Url: https://seaweedfs-biscuit.local.walnuts.dev
-      region: ap-northeast-1
-      s3ForcePathStyle: "true"
-    credential:
-      name: velero-seaweedfs-biscuit
-      key: credentials
+
+  volumeSnapshotLocation: []
 
 schedules:
   seaweedfs-biscuit:

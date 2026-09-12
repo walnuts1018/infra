@@ -11,12 +11,13 @@
 //   podCIDRs, serviceCIDRs: 省略時はbiscuit/kurumi共通のデフォルト値
 function(cluster, opts) {
   local baseName = cluster.name + '-control-plane',
-  local machineTemplateName = baseName,
-  local bootstrapConfigTemplateName = baseName,
+  local templateHash = std.md5(opts.patches + '\n' + opts.schematicID)[0:10],
+  local machineTemplateName = baseName + '-' + templateHash,
+  local bootstrapConfigTemplateName = baseName + '-' + templateHash,
   // Tart v0.3.16 requires the referenced Secret to be immutable. Include the
   // patch content in the name so a patch change creates a new Secret instead
   // of attempting to update an immutable one.
-  local patchesSecretName = baseName + '-patches-' + std.md5(opts.patches)[0:10],
+  local patchesSecretName = baseName + '-patches-' + templateHash,
 
   cluster: (import '_internal/cluster.libsonnet')(
     cluster,
@@ -37,7 +38,11 @@ function(cluster, opts) {
   patchesSecret: {
     apiVersion: 'v1',
     kind: 'Secret',
-    metadata: { name: patchesSecretName, namespace: cluster.namespace },
+    metadata: {
+      name: patchesSecretName,
+      namespace: cluster.namespace,
+      annotations: { 'argocd.argoproj.io/sync-options': 'Prune=false' },
+    },
     immutable: true,
     type: 'Opaque',
     stringData: { patches: opts.patches },

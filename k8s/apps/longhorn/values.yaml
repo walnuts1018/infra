@@ -1,4 +1,6 @@
 defaultSettings:
+  createDefaultDiskLabeledNodes: true
+  defaultDataPath: /var/lib/longhorn/
   allowNodeDrainWithLastHealthyReplica: true
   orphanAutoDeletion: true
   defaultReplicaCount: '2'

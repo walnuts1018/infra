@@ -4,6 +4,7 @@ function(cluster, name, patchesSecretName) {
   metadata: {
     name: name,
     namespace: cluster.namespace,
+    annotations: { 'argocd.argoproj.io/sync-options': 'Prune=false' },
   },
   spec: {
     template: {

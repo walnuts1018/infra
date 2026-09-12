@@ -17,9 +17,9 @@
 
 各物理マシンの事前準備として以下を設定します。
 
-- `cake`および`hotate`はWake-on-LAN(WoL)による電源投入が可能な状態にしておきます。
+- `cake`、`hotate`、`lemon`はWake-on-LAN(WoL)による電源投入が可能な状態にしておきます。
 - `lemon`は初回登録(enrollment)前にBIOSでPXE/Network Bootを有効化し、ブート順序(Boot Order)に追加しておきます。
-- `rusk`はiLO(Redfish)の初期設定、PXEブート設定、電源管理設定、および対象ディスクの物理接続を完了させておきます。
+- `rusk`はiLO(Redfish)の初期設定、PXEブート設定、電源管理設定、および対象ディスクの物理接続を完了させておきます。iLOのCAは1Passwordの`rusk iLO CA` itemへ登録します。
 
 初期設定完了後の電源投入、Talosのインストール、CNI、Agent、各種ワークロードのデプロイは、すべてCAPIとGitOpsが自動で行います。
 

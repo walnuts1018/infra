@@ -2,20 +2,25 @@
 
 ## SeaweedFS(biscuit)のライフサイクル分離
 
-本環境のTerraform管理では、通常時の実行変数として`manage_biscuit_seaweedfs = false`を設定しています。
-これにより、AWS、Backblaze B2、Cloudflare、ZITADEL、1Passwordなどの外部インフラ管理を、biscuitクラスタ上のSeaweedFSエンドポイントへの接続を伴わずに安全に実行できます。
+`biscuit`のSeaweedFSはクラスタ起動後にデプロイされる単一Podで、bucketとlifecycleの作成にはSeaweedFS endpointへのS3接続が必要です。そのため、外部インフラとcluster bootstrapをPhase 1、SeaweedFS内のS3 resourceをPhase 2として分離します。
 
-### 分離の背景
+### Phase 1 外部インフラと1Passwordのseed
 
-`biscuit`クラスタのSeaweedFSは、クラスタ起動後にデプロイされる単一Pod構成です。
-現在、バケットの作成にはSeaweedFS OperatorのBucket CRではなく、S3 APIを叩くTerraformモジュールを採用しています。そのため、biscuitクラスタおよびSeaweedFSが正常に稼働(Ready)していない段階では、これらのリソースを作成できません。
+クラスタbootstrapより前に、`manage_biscuit_seaweedfs = false`でTerraformをapplyします。このapplyで外部インフラと1Password item`terraform-external-secrets`を作成し、biscuitのExternal Secretsが参照するcredentialをseedします。
 
-### 初回構築時(Post-bootstrap)の手順
+`manage_biscuit_seaweedfs`が`false`でも、AWS providerと1Password moduleが変数を参照するため、次のbiscuit用Terraform S3 credentialは必須です。
 
-クラスタの初回ブートストラップ(`berry`のセットアップ、CAPI、Argo CD Agentの同期)完了後、SeaweedFSがReadyになったことを確認してから以下の手順を行います。
+```
+export TF_VAR_seaweedfs_biscuit_terraform_access_key=...
+export TF_VAR_seaweedfs_biscuit_terraform_secret_key=...
+```
 
-1. Terraformワークスペースの変数で`manage_biscuit_seaweedfs = true`に変更・設定する。
-2. 同一ワークスペースで`terraform apply`を実行する。
+その他のTerraform必須変数を設定したうえで、同じworkspaceから`terraform apply`を実行します。
 
-(※クラスタ起動前の`apply`途中で一時停止して手動でクラスタ状態を確認するような不安定な運用を避けるため、初回ブートストラップ処理とは明示的にフェーズを分けています)
-(※将来的にSeaweedFS Operatorがこの構成におけるバケットやライフサイクルポリシーを宣言的に安全管理できるようになれば、本Terraformモジュールは廃止し、GitOps側へ移行する予定です)
+### Phase 2 SeaweedFS resource
+
+berry、CAPI、Argo CD Agentが同期し、biscuitのSeaweedFSが`Ready`になった後に、`manage_biscuit_seaweedfs = true`へ変更して同じworkspaceで`terraform apply`を実行します。ここでSeaweedFSのbucketとlifecycleを作成します。
+
+このPhase 2はcluster起動後に必要なTerraform操作です。bootstrap途中でapplyを停止したり、Kubernetesの状態確認後に同じapplyを再実行したりする手順はありません。
+
+将来SeaweedFS OperatorのBucket CRで安全に管理できる範囲が明確になった場合は、Phase 2をGitOpsへ移行できます。

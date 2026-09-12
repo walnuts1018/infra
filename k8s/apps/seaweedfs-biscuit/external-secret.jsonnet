@@ -65,50 +65,13 @@ externalSecret {
   ],
   template_data: {
     'seaweedfs_s3_config.json': |||
-      {
-        "identities": [
-          {
-            "name": "terraform",
-            "credentials": [
-              {
-                "accessKey": "{{ .terraform_access_key }}",
-                "secretKey": "{{ .terraform_secret_key }}"
-              }
-            ],
-            "actions": ["Admin", "Read", "Write", "List", "Tagging"]
-          },
-          {
-            "name": "velero",
-            "credentials": [
-              {
-                "accessKey": "{{ .velero_access_key }}",
-                "secretKey": "{{ .velero_secret_key }}"
-              }
-            ],
-            "actions": ["Read:velero-backup", "Write:velero-backup", "List:velero-backup", "Tagging:velero-backup"]
-          },
-          {
-            "name": "longhorn",
-            "credentials": [
-              {
-                "accessKey": "{{ .longhorn_access_key }}",
-                "secretKey": "{{ .longhorn_secret_key }}"
-              }
-            ],
-            "actions": ["Read:longhorn-backup", "Write:longhorn-backup", "List:longhorn-backup", "Tagging:longhorn-backup"]
-          },
-          {
-            "name": "seaweedfs-default-backup",
-            "credentials": [
-              {
-                "accessKey": "{{ .default_backup_access_key }}",
-                "secretKey": "{{ .default_backup_secret_key }}"
-              }
-            ],
-            "actions": ["Read:seaweedfs-default-backup", "Write:seaweedfs-default-backup", "List:seaweedfs-default-backup", "Tagging:seaweedfs-default-backup"]
-          }
-        ]
-      }
+      {{- $identities := list
+        (dict "name" "terraform" "credentials" (list (dict "accessKey" .terraform_access_key "secretKey" .terraform_secret_key)) "actions" (list "Admin" "Read" "Write" "List" "Tagging"))
+        (dict "name" "velero" "credentials" (list (dict "accessKey" .velero_access_key "secretKey" .velero_secret_key)) "actions" (list "Read:velero-backup" "Write:velero-backup" "List:velero-backup" "Tagging:velero-backup"))
+        (dict "name" "longhorn" "credentials" (list (dict "accessKey" .longhorn_access_key "secretKey" .longhorn_secret_key)) "actions" (list "Read:longhorn-backup" "Write:longhorn-backup" "List:longhorn-backup" "Tagging:longhorn-backup"))
+        (dict "name" "seaweedfs-default-backup" "credentials" (list (dict "accessKey" .default_backup_access_key "secretKey" .default_backup_secret_key)) "actions" (list "Read:seaweedfs-default-backup" "Write:seaweedfs-default-backup" "List:seaweedfs-default-backup" "Tagging:seaweedfs-default-backup"))
+      -}}
+      {{ dict "identities" $identities | toJson }}
     |||,
   },
 }

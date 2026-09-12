@@ -43,6 +43,7 @@ flatten({
         // rusk(HP ProLiant DL120 Gen9)のiLO。ipmitool lan printで確認済み(management VLAN、DHCP)。
         address: 'https://192.168.4.101',
         credentialSecretRef: { name: ruskRedfishSecretName },
+        caSecretRef: { name: ruskRedfishSecretName },
       },
     },
   ),
@@ -53,6 +54,7 @@ flatten({
     data: [
       { secretKey: 'username', remoteRef: { key: 'rusk iLO', property: 'username' } },
       { secretKey: 'password', remoteRef: { key: 'rusk iLO', property: 'password' } },
+      { secretKey: 'ca.crt', remoteRef: { key: 'rusk iLO CA', property: 'file/ca.crt' } },
     ],
   },
 })

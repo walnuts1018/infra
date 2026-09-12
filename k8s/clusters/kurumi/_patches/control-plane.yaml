@@ -21,8 +21,7 @@ provisioning:
 # UserVolumeConfigはTalosが自動でフォーマット・マウントし、/var/mnt/longhorn-extraとして公開する
 # (パーティション単位のRawVolumeConfig+手動LVMより、Kubernetesワークロード向けにはこちらが標準)。
 # hotate/lemonにはこのWWIDのディスクが存在しないため、単純にvolumeが作られないだけで無害。
-# 移行後、Longhorn側でこのnodeに/var/mnt/longhorn-extraを追加ディスクとして登録すること
-# (Longhorn UIまたはnodes.longhorn.io CRDで、現行のsata-disk-1と同じ役割)。
+# LonghornのNode設定はk8s/apps/longhorn-backup/node-*.jsonnetでGitOps管理する。
 apiVersion: v1alpha1
 kind: UserVolumeConfig
 name: longhorn-extra

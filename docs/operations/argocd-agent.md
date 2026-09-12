@@ -44,7 +44,7 @@ mise run argocd-agent:restart biscuit
 ```bash
 # berry: PrincipalおよびSecretの状態確認
 kubectl --context berry -n argocd get deployment argocd-agent
-kubectl --context berry -n argocd get externalsecret argocd-agent-jwt secret argocd-agent-jwt
+kubectl --context berry -n argocd get externalsecret/argocd-agent-jwt secret/argocd-agent-jwt
 kubectl --context berry -n argocd get secret cluster-kurumi cluster-biscuit
 
 # berry: 各ワークロードクラスタ向けCAPIリソースの状態確認
