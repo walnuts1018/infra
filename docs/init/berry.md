@@ -1,6 +1,6 @@
 # berryの初期セットアップ
 
-完全に初期化されたberryをmanagement clusterとして構築します。作業開始前に、外部インフラと1Passwordのcredentialを作成するTerraformのPhase 1を`manage_biscuit_seaweedfs = false`で完了させてください。
+完全に初期化されたberryをmanagement clusterとして構築します。作業開始前に、外部インフラ、Terraform Cloudのworkspace、1Passwordのcredentialを作成する`infra`workspaceのapplyを完了させてください。SeaweedFSのstate移行は[Terraform運用ガイド](../operations/terraform.md)の手順に従って別途実施します。
 
 ## OS設定
 

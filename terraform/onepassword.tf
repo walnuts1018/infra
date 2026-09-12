@@ -30,6 +30,7 @@ module "onepassword" {
   picca_dev_client_secret                = module.zitadel.picca_dev_oidc_client_secret
   shumoku_client_id                      = module.zitadel.shumoku_oidc_client_id
   shumoku_client_secret                  = module.zitadel.shumoku_oidc_client_secret
-  seaweedfs_biscuit_terraform_access_key = var.seaweedfs_biscuit_terraform_access_key
-  seaweedfs_biscuit_terraform_secret_key = var.seaweedfs_biscuit_terraform_secret_key
+  seaweedfs_biscuit_terraform_access_key = random_id.seaweedfs_biscuit_terraform_access_key.hex
+  seaweedfs_biscuit_terraform_secret_key = random_password.seaweedfs_biscuit_terraform_secret_key.result
+  terraform_cloud_agent_token            = module.terraform_cloud.agent_token
 }

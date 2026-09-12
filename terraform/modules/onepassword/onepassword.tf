@@ -140,6 +140,7 @@ resource "onepassword_item" "external_secret" {
         "shumoku-client-secret"                       = { type = "CONCEALED", value = var.shumoku_client_secret }
         "seaweedfs_biscuit_terraform_access_key"      = { type = "CONCEALED", value = var.seaweedfs_biscuit_terraform_access_key }
         "seaweedfs_biscuit_terraform_secret_key"      = { type = "CONCEALED", value = var.seaweedfs_biscuit_terraform_secret_key }
+        "terraform_cloud_agent_token"                 = { type = "CONCEALED", value = var.terraform_cloud_agent_token }
         "seaweedfs_biscuit_velero_access_key"         = { type = "CONCEALED", value = random_id.seaweedfs_biscuit_velero_access_key.hex }
         "seaweedfs_biscuit_velero_secret_key"         = { type = "CONCEALED", value = random_password.seaweedfs_biscuit_velero_secret_key.result }
         "seaweedfs_biscuit_longhorn_access_key"       = { type = "CONCEALED", value = random_id.seaweedfs_biscuit_longhorn_access_key.hex }

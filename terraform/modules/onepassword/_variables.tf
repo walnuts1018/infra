@@ -23,3 +23,9 @@ variable "seaweedfs_biscuit_terraform_secret_key" {
   sensitive   = true
   description = "SeaweedFS biscuit Terraform S3 secret key supplied by the root Terraform variable"
 }
+
+variable "terraform_cloud_agent_token" {
+  type        = string
+  sensitive   = true
+  description = "Terraform Cloud Agent Pool token"
+}

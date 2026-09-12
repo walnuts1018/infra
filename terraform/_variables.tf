@@ -43,24 +43,6 @@ variable "onepassword_service_account_token" {
   description = "1Password service account token with access to the External Secrets vault"
 }
 
-variable "seaweedfs_biscuit_terraform_access_key" {
-  type        = string
-  sensitive   = true
-  description = "SeaweedFS biscuit Terraform S3 access key, supplied through TF_VAR_seaweedfs_biscuit_terraform_access_key"
-}
-
-variable "seaweedfs_biscuit_terraform_secret_key" {
-  type        = string
-  sensitive   = true
-  description = "SeaweedFS biscuit Terraform S3 secret key, supplied through TF_VAR_seaweedfs_biscuit_terraform_secret_key"
-}
-
-variable "manage_biscuit_seaweedfs" {
-  type        = bool
-  default     = false
-  description = "Enable Terraform resources that require the post-bootstrap biscuit SeaweedFS endpoint"
-}
-
 # variable "zitadel_github_idp_client_secret" {
 #   type        = string
 #   sensitive   = true
