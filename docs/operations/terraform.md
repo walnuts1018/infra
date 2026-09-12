@@ -4,7 +4,7 @@
 
 Terraform Cloudでは`infra`、`seaweedfs-default`、`seaweedfs-biscuit`の3workspaceを使用します。既存の`terraform/`は`infra`workspaceのworking directoryとして維持し、SeaweedFS用のrootは`terraform/workspaces/`へ配置します。4つ目の`cloud`workspaceは作成しません。
 
-`infra`workspaceはTerraform Cloudのremote executionで外部インフラ、1Password、Terraform Cloud自身を管理します。`seaweedfs-default`workspaceはkurumi上のAgent Pool`home`を使ってkurumiのSeaweedFS STSに接続し、bucket policyとCORSを管理します。`seaweedfs-biscuit`workspaceも同じAgent Poolを使い、biscuitのS3 credentialでbucket、versioning、lifecycle、multipart cleanupを管理します。
+`infra`workspaceはTerraform Cloudのremote executionで外部インフラ、1Password、Terraform Cloud自身を管理します。`seaweedfs-default`workspaceはkurumi上のAgentがAgent Pool`home`を使ってkurumiのSeaweedFS STSに接続し、bucket policyとCORSを管理します。`seaweedfs-biscuit`workspaceも同じAgent Poolを使い、biscuitのS3 credentialでbucket、versioning、lifecycle、multipart cleanupを管理します。
 
 通常の変更では`infra`workspaceのapplyが下流workspaceのinitial runまたはrun triggerをqueueします。`tfe_workspace_run`は`wait_for_run = false`なので、`infra`workspaceのapplyは下流workspaceの完了を待ちません。下流runの待機や成功確認はTerraform Cloudと各clusterの状態を別に確認します。
 
