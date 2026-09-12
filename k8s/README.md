@@ -34,10 +34,11 @@ Kubernetes クラスタに適用される Manifest 群です。
 
 | HostName | Model                        | CPU                                     | Memory    | Disk                                              | OS                             | ControlPlane |
 | :------- | :--------------------------- | :-------------------------------------- | :-------- | :-------------------------------------------------| :----------------------------- | :----------- |
-| cake     | HP ProDesk 400 G4 DM (Japan) | Intel Core i5-8500T Processor (6 cores) | 64GB      | KIOXIA-EXCERIA G2 (1TB), CT1000MX500SSD1/JP (1TB) | Ubuntu 24.04.3 LTS             | ○            |
-| hotate   | TRIGKEY Key-N100             | Intel Processor N100 (4 cores)          | 16GB      | KIOXIA-EXCERIA G3 (1TB)                           | Ubuntu 24.04.3 LTS             | ○            |
-| cheese   | Raspberry Pi 4B              | BCM2835 (4 cores)                       | 4GB       | CSSD-S6O240NCG1Q (240GB)                          | Debian GNU/Linux 12            | ○            |
-| donut    | Raspberry Pi 4B              | BCM2835 (4 cores)                       | 2GB       | Apacer AS340 (120GB)                              | Debian GNU/Linux 12            |              |
+| cake     | HP ProDesk 400 G4 DM (Japan) | Intel Core i5-8500T Processor (6 cores) | 64GB      | KIOXIA-EXCERIA G2 (1TB), CT1000MX500SSD1/JP (1TB) | Ubuntu 24.04 LTS             | ○            |
+| hotate   | TRIGKEY Key-N100             | Intel Processor N100 (4 cores)          | 16GB      | KIOXIA-EXCERIA G3 (1TB)                           | Ubuntu 24.04 LTS             | ○            |
+| lemon    | Lenovo IdeaPad 5 15ITL05      | Intel Tiger Lake (8 threads)           | 16GB   | Samsung MZALQ512HALU 512GB                        | Ubuntu 24.04 LTS | ○           |
+| rusk     | HP ProLiant DL120 Gen9        | Intel (20 threads)                     | 32GB   | HP Smart Array 論理ドライブ(OS/TopoLVM)           | Ubuntu 26.04 |              |
+
 
 ## 稼働サービス
 
