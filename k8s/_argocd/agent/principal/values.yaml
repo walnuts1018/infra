@@ -18,6 +18,9 @@ principal:
   selfRegistration:
     enabled: true
     clientCertSecretName: argocd-agent-shared-client-cert
+  jwt:
+    allowGenerate: false
+    secretName: argocd-agent-jwt
 
 serviceMonitor:
   enabled: false

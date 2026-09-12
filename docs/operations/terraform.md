@@ -1,0 +1,9 @@
+# Terraform運用
+
+## 分離
+
+Terraformの通常実行では`manage_biscuit_seaweedfs=false`を使用する。AWS、B2、Cloudflare、ZITADEL、1Password itemなど外部インフラの管理は、biscuitのSeaweedFS endpointへ接続せずに完了できる。
+
+`biscuit`のSeaweedFSはworkload cluster起動後に宣言される単一Pod構成で、現在のbucket作成はSeaweedFS OperatorのBucket CRではなくS3 APIを使うTerraform moduleが担当する。そのため、biscuitのSeaweedFSがReadyになった後にだけ`manage_biscuit_seaweedfs=true`を永続的なTerraform workspace variableとして設定し、同じworkspaceをapplyする。
+
+このpost-bootstrap処理はberry bootstrap、CAPI、Argo CD Agentのhandoffに含めない。初回applyの途中でTerraformを停止してKubernetesの状態を確認し、暗黙に再実行する手順も採用しない。将来SeaweedFS Operatorがこの構成のbucketとlifecycleを安全に管理できるようになった場合は、Terraform moduleを削除してGitOps管理へ移行する。

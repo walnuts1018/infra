@@ -1,4 +1,5 @@
 module "seaweedfs" {
+  count  = var.manage_biscuit_seaweedfs ? 1 : 0
   source = "./modules/seaweedfs"
 
   providers = {

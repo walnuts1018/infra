@@ -26,7 +26,10 @@ Kubernetes クラスタに適用される Manifest 群です。
   - `helm.libsonnet`: Helm 用のArgoCD Applicationテンプレート
   - `labels.libsonnet`: ラベル生成用テンプレート
   - `oauth2-proxy/`: OAuth2 Proxy 用コンポーネント
-- `init`: [./init](./init)
+- [初期構築と運用](../docs)
+  - [初期構築](../docs/bootstrap/)
+  - [クラスター情報](../docs/clusters/)
+  - [運用](../docs/operations/)
 - `namespaces`: namespace たち
 - `utils`: ユーティリティlibsonnet
 
