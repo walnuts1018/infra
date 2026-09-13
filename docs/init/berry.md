@@ -6,6 +6,8 @@
 
 Raspberry Pi Imagerを使ってRaspberry Pi OS Lite(64-bit)をインストールする。ユーザーとかIPアドレスとかはいい感じに設定する。
 
+berryのserver VLAN側アドレスは`192.168.0.14`で固定してください。k3sのServiceLBがPrincipalの`LoadBalancer` Serviceをこのnode addressで公開し、外部DNSの`argocd-agent.local.walnuts.dev`もこのアドレスを参照します。
+
 ```bash
 sudo sed -i 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/g' /boot/firmware/cmdline.txt
 sudo rpi-eeprom-update -a

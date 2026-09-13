@@ -9,7 +9,7 @@
 
 ワークロードクラスタへのSpokeやAgentのデプロイは、CAPIのClusterResourceSetおよびHelmChartProxyにより自動で行われます。
 
-Agentは`argocd-agent.local.walnuts.dev:443`経由でPrincipalに接続します。通信に必要なmTLS証明書(Principal証明書、CA、各ワークロードクラスタ用のクライアント証明書)は、すべて`berry`上のcert-managerが発行・管理します。
+Agentは`argocd-agent.local.walnuts.dev:443`経由でPrincipalに接続します。この名前のAレコードはAgentや`kurumi`/`biscuit`のApplicationに依存しない外部DNSで管理し、berryのServiceLBアドレスを参照します。通信に必要なmTLS証明書(Principal証明書、CA、各ワークロードクラスタ用のクライアント証明書)は、すべて`berry`上のcert-managerが発行・管理します。
 また、Principalがクラスタ自動登録(Self-registration)時に生成するcluster Secretには、Argo CDがResource Proxyに接続するための共有クライアント証明書が含まれます。
 
 ## 自動登録(Self-registration)の仕組み
