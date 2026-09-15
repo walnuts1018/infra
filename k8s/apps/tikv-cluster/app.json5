@@ -1,7 +1,0 @@
-{
-  name: "tikv-cluster",
-  namespace: "databases",
-  clusters: {
-    kurumi: {},
-  },
-}

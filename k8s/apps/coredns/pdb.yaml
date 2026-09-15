@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app: coredns
+    app.kubernetes.io/name: coredns
+  name: coredns
+  namespace: coredns
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: coredns
+      app.kubernetes.io/name: coredns

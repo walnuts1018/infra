@@ -1,0 +1,145 @@
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Seaweed
+metadata:
+  labels:
+    app: seaweedfs-default
+    app.kubernetes.io/name: seaweedfs-default
+  name: seaweedfs-default
+  namespace: seaweedfs
+spec:
+  filer:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: storage.walnuts.dev/slow
+                  operator: DoesNotExist
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: filer
+                  app.kubernetes.io/instance: seaweedfs-default
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+    config: ""
+    extraArgs:
+      - -s3.iam.config=/etc/seaweedfs/iam.json
+      - -s3.domainName=seaweedfs.local.walnuts.dev
+    limits:
+      memory: 2Gi
+    metricsPort: 9327
+    replicas: 2
+    requests:
+      cpu: 60m
+      memory: 512Mi
+    s3:
+      enabled: true
+    service:
+      type: ClusterIP
+    volumeMounts:
+      - mountPath: /etc/seaweedfs
+        name: filer-config-custom
+        readOnly: true
+      - mountPath: /etc/seaweedfs/tikv-client
+        name: tikv-client-cert
+        readOnly: true
+    volumes:
+      - name: filer-config-custom
+        secret:
+          secretName: seaweedfs-default-filer-config-945ef5
+      - name: tikv-client-cert
+        secret:
+          items:
+            - key: ca.crt
+              path: ca.crt
+            - key: tls.crt
+              path: tls.crt
+            - key: tls.key
+              path: tls.key
+          secretName: seaweedfs-tikv-client
+  image: chrislusf/seaweedfs:4.45_large_disk_full
+  master:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: storage.walnuts.dev/slow
+                  operator: DoesNotExist
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: master
+                  app.kubernetes.io/instance: seaweedfs-default
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+    defaultReplication: "001"
+    env:
+      - name: WEED_MASTER_VOLUME_GROWTH_COPY_1
+        value: "1"
+      - name: WEED_MASTER_VOLUME_GROWTH_COPY_2
+        value: "1"
+      - name: WEED_MASTER_VOLUME_GROWTH_COPY_3
+        value: "1"
+      - name: WEED_MASTER_VOLUME_GROWTH_COPY_OTHER
+        value: "1"
+    limits:
+      memory: 2Gi
+    metricsPort: 9327
+    replicas: 3
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    volumeSizeLimitMB: 1024
+  volume:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: storage.walnuts.dev/slow
+                  operator: DoesNotExist
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: volume
+                  app.kubernetes.io/instance: seaweedfs-default
+              topologyKey: topology.kubernetes.io/zone
+            weight: 50
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: volume
+                  app.kubernetes.io/instance: seaweedfs-default
+              topologyKey: kubernetes.io/region
+            weight: 40
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: volume
+                app.kubernetes.io/instance: seaweedfs-default
+            topologyKey: kubernetes.io/hostname
+    extraArgs:
+      - -disk=ssd
+    limits:
+      memory: 2Gi
+    maxVolumeCounts: 1000
+    metricsPort: 9327
+    minFreeSpacePercent: 10
+    replicas: 3
+    requests:
+      cpu: 10m
+      memory: 300Mi
+      storage: 300Gi
+    storageClassName: local-path
+    tolerations:
+      - effect: NoSchedule
+        key: node.kubernetes.io/disk-pressure
+        operator: Exists

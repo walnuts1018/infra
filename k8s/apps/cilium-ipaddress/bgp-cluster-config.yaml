@@ -1,0 +1,17 @@
+apiVersion: cilium.io/v2
+kind: CiliumBGPClusterConfig
+metadata:
+  name: server-vlan
+spec:
+  bgpInstances:
+    - localASN: 65010
+      name: server-vlan
+      peers:
+        - name: vanilla
+          peerASN: 65001
+          peerAddress: 192.168.0.1
+          peerConfigRef:
+            name: vanilla
+  nodeSelector:
+    matchLabels:
+      kubernetes.io/os: linux

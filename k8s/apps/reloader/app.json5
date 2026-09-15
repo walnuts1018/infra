@@ -1,7 +1,0 @@
-{
-  name: "reloader",
-  namespace: "reloader",
-  clusters: {
-    kurumi: {},
-  },
-}

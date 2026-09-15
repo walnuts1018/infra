@@ -1,0 +1,78 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tikv-cluster-pd-cluster-secret
+  namespace: databases
+spec:
+  commonName: TiDB
+  dnsNames:
+    - tikv-cluster-pd
+    - tikv-cluster-pd.databases
+    - tikv-cluster-pd.databases.svc
+    - tikv-cluster-pd.databases.svc.cluster.local
+    - tikv-cluster-pd-peer
+    - tikv-cluster-pd-peer.databases
+    - tikv-cluster-pd-peer.databases.svc
+    - tikv-cluster-pd-peer.databases.svc.cluster.local
+    - '*.tikv-cluster-pd-peer'
+    - '*.tikv-cluster-pd-peer.databases'
+    - '*.tikv-cluster-pd-peer.databases.svc'
+    - '*.tikv-cluster-pd-peer.databases.svc.cluster.local'
+  duration: 8760h
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: local
+  renewBefore: 360h
+  secretName: tikv-cluster-pd-cluster-secret
+  usages:
+    - server auth
+    - client auth
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tikv-cluster-tikv-cluster-secret
+  namespace: databases
+spec:
+  commonName: TiDB
+  dnsNames:
+    - tikv-cluster-tikv
+    - tikv-cluster-tikv.databases
+    - tikv-cluster-tikv.databases.svc
+    - tikv-cluster-tikv.databases.svc.cluster.local
+    - tikv-cluster-tikv-peer
+    - tikv-cluster-tikv-peer.databases
+    - tikv-cluster-tikv-peer.databases.svc
+    - tikv-cluster-tikv-peer.databases.svc.cluster.local
+    - '*.tikv-cluster-tikv-peer'
+    - '*.tikv-cluster-tikv-peer.databases'
+    - '*.tikv-cluster-tikv-peer.databases.svc'
+    - '*.tikv-cluster-tikv-peer.databases.svc.cluster.local'
+  duration: 8760h
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: local
+  renewBefore: 360h
+  secretName: tikv-cluster-tikv-cluster-secret
+  usages:
+    - server auth
+    - client auth
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tikv-cluster-cluster-client-secret
+  namespace: databases
+spec:
+  commonName: TiDB
+  duration: 8760h
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: local
+  renewBefore: 360h
+  secretName: tikv-cluster-cluster-client-secret
+  usages:
+    - client auth

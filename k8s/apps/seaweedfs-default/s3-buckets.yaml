@@ -1,0 +1,271 @@
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: picca
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: picca-dev
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: cloudnative-pg-backup
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: gha-cache
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "000"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: ipu
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: loki-admin
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: loki-chunks
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: hdd
+    replication: "000"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: loki-ruler
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: maps
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: misskey
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: netbox-media
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: netbox-scripts
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: oekaki-dengon-game
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: pyroscope
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: hdd
+    replication: "000"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: stalwart
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "001"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: tempo
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: hdd
+    replication: "000"
+  reclaimPolicy: Retain
+  versioning: "Off"
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: Bucket
+metadata:
+  name: visual-regression-tracker
+  namespace: seaweedfs
+spec:
+  adoptExisting: true
+  clusterRef:
+    name: seaweedfs-default
+  objectLock: false
+  placement:
+    diskType: ssd
+    replication: "000"
+  reclaimPolicy: Retain
+  versioning: "Off"

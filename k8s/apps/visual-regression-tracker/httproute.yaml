@@ -1,0 +1,39 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  labels:
+    app: visual-regression-tracker
+    app.kubernetes.io/name: visual-regression-tracker
+  name: visual-regression-tracker
+  namespace: visual-regression-tracker
+spec:
+  hostnames:
+    - vrt.local.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: visual-regression-tracker-api
+          port: 3000
+          weight: 1
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              replacePrefixMatch: /
+              type: ReplacePrefixMatch
+      matches:
+        - path:
+            type: PathPrefix
+            value: /api
+    - backendRefs:
+        - kind: Service
+          name: visual-regression-tracker-ui
+          port: 8080
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

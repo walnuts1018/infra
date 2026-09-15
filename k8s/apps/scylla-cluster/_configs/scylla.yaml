@@ -1,2 +1,0 @@
-authenticator: PasswordAuthenticator
-authorizer: CassandraAuthorizer
