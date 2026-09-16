@@ -16,7 +16,7 @@ local secret = import 'external-secret.jsonnet';
               job_name: 'iwashi',
               scrape_interval: '30s',
               metrics_path: '/probe',
-              params: { module: ['http'] },
+              params: { module: ['http_2xx'] },
               http_sd_configs: [{
                 url: 'http://iwashi.iwashi.svc.cluster.local:8080/internal/prometheus-targets',
                 refresh_interval: '30s',

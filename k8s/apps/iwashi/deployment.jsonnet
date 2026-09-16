@@ -14,13 +14,13 @@ local secret = import 'external-secret.jsonnet';
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         initContainers: [{
           name: 'migrations',
-          image: 'ghcr.io/walnuts1018/iwashi:245a181dde8f3035c4bf10f6e4366d7b068076d5-migrations',
+          image: 'ghcr.io/walnuts1018/iwashi-migration:00808b1b119ec5e2837ca5a77b2b0685efc67ab0',
           envFrom: [{ secretRef: { name: secret.spec.target.name } }],
           securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, runAsNonRoot: true, capabilities: { drop: ['ALL'] } },
         }],
         containers: [{
           name: app.name,
-          image: 'ghcr.io/walnuts1018/iwashi:245a181dde8f3035c4bf10f6e4366d7b068076d5',
+          image: 'ghcr.io/walnuts1018/iwashi:00808b1b119ec5e2837ca5a77b2b0685efc67ab0',
           imagePullPolicy: 'IfNotPresent',
           envFrom: [{ secretRef: { name: secret.spec.target.name } }],
           env: [

@@ -71,6 +71,9 @@ server:
       memory: 32Mi
     limits:
       memory: 128Mi
+  podSecurityContext:
+    enabled: true
+    fsGroup: 102
   securityContext:
     enabled: true
     allowPrivilegeEscalation: false
@@ -130,3 +133,5 @@ alertmanager:
       drop: [ALL]
     readOnlyRootFilesystem: true
     runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
