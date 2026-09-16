@@ -15,10 +15,7 @@ server:
       image: curlimages/curl:8.16.0
       command: [/bin/sh, -ec]
       args:
-        - >-
-          curl -fsS -H "Authorization: Bearer $DISCOVERY_KEY"
-          http://iwashi.iwashi.svc.cluster.local:8080/internal/alert-rules
-          -o /rules/rules.yaml
+        - curl -fsS -H "Authorization: Bearer $DISCOVERY_KEY" -o /rules/rules.yaml http://iwashi.iwashi.svc.cluster.local:8080/internal/alert-rules
       envFrom:
         - secretRef:
             name: victoria-metrics-alert
@@ -40,9 +37,7 @@ server:
         - >-
           while true; do
             sleep 30;
-            if curl -fsS -H "Authorization: Bearer $DISCOVERY_KEY"
-              http://iwashi.iwashi.svc.cluster.local:8080/internal/alert-rules
-              -o /rules/rules.yaml.tmp;
+            if curl -fsS -H "Authorization: Bearer $DISCOVERY_KEY" -o /rules/rules.yaml.tmp http://iwashi.iwashi.svc.cluster.local:8080/internal/alert-rules;
             then
               mv /rules/rules.yaml.tmp /rules/rules.yaml;
               curl -fsS -X POST http://127.0.0.1:8880/-/reload;
