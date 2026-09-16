@@ -12,7 +12,7 @@ local labels = (import '../../components/labels.libsonnet')(app.name + '-blackbo
       spec: {
         containers: [{
           name: 'blackbox-exporter',
-          image: 'quay.io/prometheus/blackbox-exporter:v0.27.0',
+          image: 'quay.io/prometheus/blackbox-exporter:v0.28.0',
           args: ['--config.file=/etc/blackbox/blackbox.yaml'],
           ports: [{ name: 'http', containerPort: 9115 }],
           volumeMounts: [{ name: 'config', mountPath: '/etc/blackbox', readOnly: true }],
