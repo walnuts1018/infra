@@ -13,7 +13,7 @@ local secret = import 'external-secret.jsonnet';
       spec: {
         containers: [{
           name: 'alertmanager',
-          image: 'quay.io/prometheus/alertmanager:v0.28.1',
+          image: 'quay.io/prometheus/alertmanager:v0.34.0',
           args: ['--config.file=/etc/alertmanager/alertmanager.yaml', '--storage.path=/tmp/alertmanager'],
           ports: [{ name: 'http', containerPort: 9093 }],
           volumeMounts: [
