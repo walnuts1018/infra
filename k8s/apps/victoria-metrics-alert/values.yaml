@@ -12,7 +12,7 @@ server:
         name: victoria-metrics-alert
   initContainers:
     - name: fetch-rules
-      image: curlimages/curl:8.16.0
+      image: curlimages/curl:8.22.0
       command: [/bin/sh, -ec]
       args:
         - >-
@@ -27,7 +27,7 @@ server:
           mountPath: /rules
   extraContainers:
     - name: rule-reloader
-      image: curlimages/curl:8.16.0
+      image: curlimages/curl:8.22.0
       command: [/bin/sh, -ec]
       args:
         - >-
