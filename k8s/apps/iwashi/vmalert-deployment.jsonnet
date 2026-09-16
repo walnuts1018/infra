@@ -27,7 +27,7 @@ local fetchCommand = |||
         containers: [
           {
             name: 'vmalert',
-            image: 'victoriametrics/vmalert:v1.129.0',
+            image: 'victoriametrics/vmalert:v1.152.0',
             args: [
               '-rule=/rules/rules.yaml',
               '-datasource.url=http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/multitenant/prometheus',
