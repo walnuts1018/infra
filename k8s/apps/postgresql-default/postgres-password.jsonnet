@@ -5,8 +5,8 @@ local gen = function(database) std.mergePatch((import '../../components/external
     {
       secretKey: 'password',
       remoteRef: {
-        key: 'postgres_passwords',
-        property: database.user_name,
+        key: if 'secret_source_key' in database then database.secret_source_key else 'postgres_passwords',
+        property: if 'secret_source_property' in database then database.secret_source_property else database.user_name,
       },
     },
   ],

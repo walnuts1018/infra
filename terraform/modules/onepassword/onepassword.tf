@@ -65,6 +65,21 @@ resource "random_password" "radar_auth_secret" {
   special = false
 }
 
+resource "random_password" "iwashi_database_password" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "iwashi_session_key" {
+  length  = 64
+  special = false
+}
+
+resource "random_password" "iwashi_discovery_key" {
+  length  = 48
+  special = false
+}
+
 resource "onepassword_item" "external_secret" {
   vault    = var.vault
   title    = "terraform-external-secrets"
@@ -81,6 +96,11 @@ resource "onepassword_item" "external_secret" {
         "hubble-client-secret"                   = { type = "CONCEALED", value = var.hubble_client_secret }
         "ipu-client-id"                          = { type = "STRING", value = var.ipu_client_id }
         "ipu-client-secret"                      = { type = "CONCEALED", value = var.ipu_client_secret }
+        "iwashi-client-id"                       = { type = "STRING", value = var.iwashi_client_id }
+        "iwashi-client-secret"                   = { type = "CONCEALED", value = var.iwashi_client_secret }
+        "iwashi-database-password"               = { type = "CONCEALED", value = random_password.iwashi_database_password.result }
+        "iwashi-session-key"                     = { type = "CONCEALED", value = random_password.iwashi_session_key.result }
+        "iwashi-discovery-key"                   = { type = "CONCEALED", value = random_password.iwashi_discovery_key.result }
         "longhorn-client-id"                     = { type = "STRING", value = var.longhorn_client_id }
         "longhorn-client-secret"                 = { type = "CONCEALED", value = var.longhorn_client_secret }
         "netbird-setup-key"                      = { type = "CONCEALED", value = var.netbird_setup_key }

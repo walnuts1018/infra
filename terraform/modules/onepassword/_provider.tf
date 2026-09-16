@@ -79,6 +79,11 @@ variable "opencost_client_secret" {
   sensitive = true
 }
 variable "picca_client_id" { type = string }
+variable "iwashi_client_id" { type = string }
+variable "iwashi_client_secret" {
+  type      = string
+  sensitive = true
+}
 variable "picca_client_secret" {
   type      = string
   sensitive = true

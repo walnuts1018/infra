@@ -26,6 +26,12 @@
     user_name: 'hedgedoc',
   },
   {
+    db_name: 'iwashi',
+    user_name: 'iwashi',
+    secret_source_key: 'terraform-external-secrets',
+    secret_source_property: 'iwashi-database-password',
+  },
+  {
     db_name: 'nextcloud',
     user_name: 'nextcloud',
   },

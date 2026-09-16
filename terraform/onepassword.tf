@@ -13,6 +13,8 @@ module "onepassword" {
   hubble_client_secret    = module.zitadel.hubble_oidc_client_secret
   ipu_client_id           = module.zitadel.ipu_oauth2_proxy_client_id
   ipu_client_secret       = module.zitadel.ipu_oauth2_proxy_client_secret
+  iwashi_client_id        = module.zitadel.iwashi_oidc_client_id
+  iwashi_client_secret    = module.zitadel.iwashi_oidc_client_secret
   longhorn_client_id      = module.zitadel.longhorn_oidc_client_id
   longhorn_client_secret  = module.zitadel.longhorn_oidc_client_secret
   netbird_setup_key       = module.netbird.kubernetes_router_setup_key
