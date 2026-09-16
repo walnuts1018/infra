@@ -25,6 +25,13 @@ server:
       volumeMounts:
         - name: rules
           mountPath: /rules
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: [ALL]
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 102
   extraContainers:
     - name: rule-reloader
       image: curlimages/curl:8.16.0
@@ -58,6 +65,8 @@ server:
         capabilities:
           drop: [ALL]
         runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 102
   extraVolumes:
     - name: rules
       emptyDir: {}
@@ -81,6 +90,8 @@ server:
       drop: [ALL]
     readOnlyRootFilesystem: true
     runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
 
 alertmanager:
   enabled: true
