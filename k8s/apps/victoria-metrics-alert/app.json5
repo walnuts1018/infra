@@ -1,0 +1,7 @@
+{
+  name: "victoria-metrics-alert",
+  namespace: "monitoring",
+  clusters: {
+    kurumi: {},
+  },
+}

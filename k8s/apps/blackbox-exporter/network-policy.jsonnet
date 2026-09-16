@@ -1,13 +1,21 @@
 local app = import 'app.json5';
-local labels = (import '../../components/labels.libsonnet')(app.name + '-blackbox');
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'NetworkPolicy',
-  metadata: { name: app.name + '-blackbox', namespace: app.namespace },
+  metadata: { name: app.name, namespace: app.namespace },
   spec: {
-    podSelector: { matchLabels: labels },
+    podSelector: { matchLabels: {
+      'app.kubernetes.io/name': 'prometheus-blackbox-exporter',
+      'app.kubernetes.io/instance': app.name,
+    } },
     policyTypes: ['Ingress', 'Egress'],
-    ingress: [{ from: [{ podSelector: {} }], ports: [{ protocol: 'TCP', port: 9115 }] }],
+    ingress: [{
+      from: [
+        { namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'monitoring' } } },
+        { namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'iwashi' } } },
+      ],
+      ports: [{ protocol: 'TCP', port: 9115 }],
+    }],
     egress: [
       {
         to: [{ namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'kube-system' } }, podSelector: { matchLabels: { 'k8s-app': 'kube-dns' } } }],

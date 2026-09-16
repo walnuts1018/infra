@@ -14,15 +14,13 @@ local secret = import 'external-secret.jsonnet';
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         initContainers: [{
           name: 'migrations',
-          image: 'postgres:18.0-alpine',
-          command: ['/bin/sh', '/migrations/migrate.sh'],
+          image: 'ghcr.io/walnuts1018/iwashi:245a181dde8f3035c4bf10f6e4366d7b068076d5-migrations',
           envFrom: [{ secretRef: { name: secret.spec.target.name } }],
-          volumeMounts: [{ name: 'migrations', mountPath: '/migrations', readOnly: true }],
-          securityContext: { allowPrivilegeEscalation: false, runAsNonRoot: true, runAsUser: 65534, capabilities: { drop: ['ALL'] } },
+          securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, runAsNonRoot: true, capabilities: { drop: ['ALL'] } },
         }],
         containers: [{
           name: app.name,
-          image: 'ghcr.io/walnuts1018/iwashi:43845617864ad08172b1e666350fbe7749ba33eb',
+          image: 'ghcr.io/walnuts1018/iwashi:245a181dde8f3035c4bf10f6e4366d7b068076d5',
           imagePullPolicy: 'IfNotPresent',
           envFrom: [{ secretRef: { name: secret.spec.target.name } }],
           env: [
@@ -36,7 +34,6 @@ local secret = import 'external-secret.jsonnet';
           resources: { requests: { cpu: '10m', memory: '32Mi' }, limits: { memory: '256Mi' } },
           securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, runAsNonRoot: true, capabilities: { drop: ['ALL'] } },
         }],
-        volumes: [{ name: 'migrations', configMap: { name: (import 'migrations.jsonnet').metadata.name, defaultMode: 365 } }],
         securityContext: { seccompProfile: { type: 'RuntimeDefault' } },
       },
     },

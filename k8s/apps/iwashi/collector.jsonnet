@@ -25,7 +25,7 @@ local secret = import 'external-secret.jsonnet';
               relabel_configs: [
                 { source_labels: ['__address__'], target_label: '__param_target' },
                 { source_labels: ['__param_target'], target_label: 'target' },
-                { target_label: '__address__', replacement: 'iwashi-blackbox.iwashi.svc.cluster.local:9115' },
+                { target_label: '__address__', replacement: 'blackbox-exporter-prometheus-blackbox-exporter.monitoring.svc.cluster.local:9115' },
               ],
             }],
           },
