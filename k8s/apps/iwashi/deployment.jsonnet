@@ -14,7 +14,7 @@ local secret = import 'external-secret.jsonnet';
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         initContainers: [{
           name: 'migrations',
-          image: 'postgres:18.0-alpine',
+          image: 'postgres:18.6-alpine',
           command: ['/bin/sh', '/migrations/migrate.sh'],
           envFrom: [{ secretRef: { name: secret.spec.target.name } }],
           volumeMounts: [{ name: 'migrations', mountPath: '/migrations', readOnly: true }],
