@@ -137,18 +137,6 @@ function(
                   },
                 ],
               },
-              {
-                job_name: 'synthetic-blackbox-exporter',
-                scrape_interval: '30s',
-                metrics_path: '/metrics',
-                static_configs: [
-                  {
-                    targets: [
-                      'iwashi-synthetic-blackbox-prometheus-blackbox-exporter.synthetic-monitoring.svc.cluster.local:9115',
-                    ],
-                  },
-                ],
-              },
             ],
           },
         },

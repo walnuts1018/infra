@@ -3,10 +3,6 @@ local collectorLabels = {
   'app.kubernetes.io/component': 'opentelemetry-collector',
   'app.kubernetes.io/instance': 'synthetic-monitoring.synthetic-otel-collector',
 };
-local prometheusCollectorLabels = {
-  'app.kubernetes.io/component': 'opentelemetry-collector',
-  'app.kubernetes.io/instance': 'opentelemetry-collector.prometheus',
-};
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'NetworkPolicy',
@@ -15,15 +11,7 @@ local prometheusCollectorLabels = {
     podSelector: { matchLabels: { 'app.kubernetes.io/name': 'prometheus-blackbox-exporter', 'app.kubernetes.io/instance': app.name + '-blackbox' } },
     policyTypes: ['Ingress', 'Egress'],
     ingress: [{
-      from: [
-        { podSelector: { matchLabels: collectorLabels } },
-        {
-          namespaceSelector: {
-            matchLabels: { 'kubernetes.io/metadata.name': 'opentelemetry-collector' },
-          },
-          podSelector: { matchLabels: prometheusCollectorLabels },
-        },
-      ],
+      from: [{ podSelector: { matchLabels: collectorLabels } }],
       ports: [{ protocol: 'TCP', port: 9115 }],
     }],
     egress: [
