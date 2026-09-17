@@ -17,8 +17,22 @@ config:
     enabled: false
   ruler:
     enable_api: true
+    ring:
+      kvstore:
+        store: memberlist
   alertmanager:
     enable_api: true
+    sharding_ring:
+      kvstore:
+        store: memberlist
+  distributor:
+    ring:
+      kvstore:
+        store: memberlist
+  compactor:
+    sharding_ring:
+      kvstore:
+        store: memberlist
   limits:
     ingestion_rate: 1000
     ingestion_burst_size: 5000
@@ -38,6 +52,9 @@ config:
     timeout: 2m
   store_gateway:
     sharding_enabled: false
+    sharding_ring:
+      kvstore:
+        store: memberlist
   blocks_storage:
     backend: s3
     s3:
