@@ -15,13 +15,13 @@ local secret = import 'external-secret.jsonnet';
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         initContainers: [{
           name: 'migrations',
-          image: 'ghcr.io/walnuts1018/iwashi-migration:3eeaad4996d2b72211f0e545d3d40301d19901e5@sha256:b03a0ee0f3e6fd07a4980050dae5c5b61733f07491cc0599eab6676c049385f8',
+          image: 'ghcr.io/walnuts1018/iwashi-migration:b800bd8f72ac984087c5e32f9d564936c54b0c39@sha256:2b9f8f690d4dd63817d41aeb2a35d9d3b5d600029de7b8acd72a2371831cca1a',
           envFrom: [{ secretRef: { name: secret.spec.target.name } }],
           securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, runAsNonRoot: true, capabilities: { drop: ['ALL'] } },
         }],
         containers: [{
           name: app.name,
-          image: 'ghcr.io/walnuts1018/iwashi:3eeaad4996d2b72211f0e545d3d40301d19901e5@sha256:b9962ab48baca72ecfc6c3229dd58c1105e608ccd8d451bb58eefc9e81b008c3',
+          image: 'ghcr.io/walnuts1018/iwashi:b800bd8f72ac984087c5e32f9d564936c54b0c39@sha256:b220dd58998f29c396f0420ce6412f6ee624999e30c5901fd245ccadd22eec80',
           imagePullPolicy: 'IfNotPresent',
           envFrom: [{ secretRef: { name: secret.spec.target.name } }],
           env: [
