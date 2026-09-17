@@ -36,6 +36,8 @@ config:
     alertmanager_notification_rate_limit: 10
   querier:
     timeout: 2m
+  store_gateway:
+    sharding_enabled: false
   blocks_storage:
     backend: s3
     s3:
@@ -50,8 +52,6 @@ config:
       sync_dir: /data/tsdb-sync
       bucket_index:
         enabled: true
-    store_gateway:
-      sharding_enabled: false
   ruler_storage:
     backend: s3
     s3:
