@@ -17,7 +17,7 @@ jobs:
         if: ${{ github.ref_name == 'main' }}
         id: generate_token
         with:
-          app-id: ${{ secrets.APP_ID }}
+          client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
 
       - name: Set env
