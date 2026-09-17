@@ -35,6 +35,16 @@ local app = import 'app.json5';
         { port: 53, protocol: 'UDP' },
         { port: 53, protocol: 'TCP' },
       ],
+    }, {
+      to: [{
+        podSelector: {
+          matchLabels: {
+            'app.kubernetes.io/name': 'mail',
+            'app.kubernetes.io/instance': 'iwashi-smtp-relay',
+          },
+        },
+      }],
+      ports: [{ port: 587, protocol: 'TCP' }],
     }],
   },
 }

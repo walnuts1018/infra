@@ -28,7 +28,13 @@ local app = import 'app.json5';
         }],
       },
       {
-        toFQDNs: [{ matchName: 'smtp.resend.com' }],
+        toEndpoints: [{
+          matchLabels: {
+            'k8s:io.kubernetes.pod.namespace': app.namespace,
+            'k8s:app.kubernetes.io/name': 'mail',
+            'k8s:app.kubernetes.io/instance': 'iwashi-smtp-relay',
+          },
+        }],
         toPorts: [{ ports: [{ port: '587', protocol: 'TCP' }] }],
       },
     ],

@@ -48,6 +48,8 @@ config:
     ruler_max_rule_groups_per_tenant: 20
     ruler_max_rules_per_rule_group: 20
     alertmanager_notification_rate_limit: 10
+    alertmanager_notification_rate_limit_per_integration:
+      email: 0.1
   querier:
     timeout: 2m
   store_gateway:
@@ -374,16 +376,9 @@ alertmanager:
           audience: sts.seaweedfs.com
           expirationSeconds: 3600
           path: token
-  - name: smtp-password
-    secret:
-      secretName: iwashi-cortex-smtp
-      defaultMode: 0440
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
-    readOnly: true
-  - name: smtp-password
-    mountPath: /etc/iwashi-smtp
     readOnly: true
 
 memcached-frontend:

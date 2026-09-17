@@ -15,13 +15,13 @@ local secret = import 'external-secret.jsonnet';
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         initContainers: [{
           name: 'migrations',
-          image: 'ghcr.io/walnuts1018/iwashi-migration:a2c46d15dd495d99224e654b7bbc0027dc2bde53',
+          image: 'ghcr.io/walnuts1018/iwashi-migration:3eeaad4996d2b72211f0e545d3d40301d19901e5@sha256:b03a0ee0f3e6fd07a4980050dae5c5b61733f07491cc0599eab6676c049385f8',
           envFrom: [{ secretRef: { name: secret.spec.target.name } }],
           securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, runAsNonRoot: true, capabilities: { drop: ['ALL'] } },
         }],
         containers: [{
           name: app.name,
-          image: 'ghcr.io/walnuts1018/iwashi:a2c46d15dd495d99224e654b7bbc0027dc2bde53',
+          image: 'ghcr.io/walnuts1018/iwashi:3eeaad4996d2b72211f0e545d3d40301d19901e5@sha256:b9962ab48baca72ecfc6c3229dd58c1105e608ccd8d451bb58eefc9e81b008c3',
           imagePullPolicy: 'IfNotPresent',
           envFrom: [{ secretRef: { name: secret.spec.target.name } }],
           env: [
@@ -31,10 +31,8 @@ local secret = import 'external-secret.jsonnet';
             { name: 'CORTEX_OTLP_URL', value: 'http://iwashi-cortex-distributor.cortex.svc.cluster.local:8080/api/v1/otlp/v1/metrics' },
             { name: 'CORTEX_RULER_URL', value: 'http://iwashi-cortex-ruler.cortex.svc.cluster.local:8080' },
             { name: 'CORTEX_ALERTMANAGER_URL', value: 'http://iwashi-cortex-alertmanager.cortex.svc.cluster.local:8080' },
-            { name: 'SMTP_SMARTHOST', value: 'smtp.resend.com:587' },
+            { name: 'SMTP_SMARTHOST', value: 'iwashi-smtp-relay-mail.cortex.svc.cluster.local:587' },
             { name: 'SMTP_FROM', value: 'netbox@resend.walnuts.dev' },
-            { name: 'SMTP_USERNAME', value: 'resend' },
-            { name: 'SMTP_PASSWORD_FILE', value: '/etc/iwashi-smtp/smtp_password' },
           ],
           ports: [{ name: 'http', containerPort: 8080 }],
           readinessProbe: { httpGet: { path: '/healthz', port: 'http' }, initialDelaySeconds: 2 },

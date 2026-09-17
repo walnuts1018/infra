@@ -1,6 +1,6 @@
 local app = import 'app.json5';
 (import '../../components/external-secret.libsonnet') {
-  name: 'iwashi-cortex-smtp',
+  name: 'iwashi-smtp-relay',
   namespace: app.namespace,
   use_suffix: false,
   data: [
