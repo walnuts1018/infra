@@ -132,7 +132,7 @@ function(
                 static_configs: [
                   {
                     targets: [
-                      'synthetic-otel-collector-headless.synthetic-monitoring.svc.cluster.local:8888',
+                      'synthetic-otel-collector-collector-monitoring.synthetic-monitoring.svc.cluster.local:8888',
                     ],
                   },
                 ],
