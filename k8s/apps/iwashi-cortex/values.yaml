@@ -376,10 +376,15 @@ alertmanager:
           audience: sts.seaweedfs.com
           expirationSeconds: 3600
           path: token
+  - name: tmp
+    emptyDir:
+      sizeLimit: 16Mi
   extraVolumeMounts:
   - name: seaweedfs-sts-token
     mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
     readOnly: true
+  - name: tmp
+    mountPath: /tmp
 
 memcached-frontend:
   networkPolicy:
