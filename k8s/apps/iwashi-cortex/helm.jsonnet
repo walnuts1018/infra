@@ -2,9 +2,8 @@ local app = import 'app.json5';
 (import '../../components/helm.libsonnet') {
   name: app.name,
   namespace: app.namespace,
-
-  chart: 'victoria-metrics-alert',
-  repoURL: 'https://victoriametrics.github.io/helm-charts/',
-  targetRevision: '0.48.0',
+  chart: 'cortex',
+  repoURL: 'https://cortexproject.github.io/cortex-helm-chart',
+  targetRevision: '3.3.8',
   values: (importstr 'values.yaml'),
 }

@@ -97,6 +97,27 @@ jobs:
         run: |
           kubeconform -ignore-missing-schemas -strict -summary ./k8s/snapshots/apps
 
+      - name: Validate OpenTelemetry Collector config
+        shell: bash
+        run: |
+          set -o pipefail
+          config="$(mise exec -- jsonnet -e '(import "k8s/apps/iwashi-synthetic/collector.jsonnet").spec.config')"
+          if grep -Eiq 'tenant[-_]?id|x-scope-orgid' <<<"$config"; then
+            echo "Collector config must not contain tenant routing or tenant identity labels." >&2
+            exit 1
+          fi
+          jq -e '
+            .service.pipelines as $pipelines
+            | ($pipelines | keys) == ["metrics"]
+              and $pipelines.metrics.receivers == ["prometheus"]
+              and $pipelines.metrics.processors == null
+              and $pipelines.metrics.exporters == ["otlp_http"]
+          ' <<<"$config" >/dev/null
+          printf '%s\n' "$config" \
+            | docker run --rm -i --env DISCOVERY_KEY=validation-placeholder \
+                ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.160.0 \
+                validate --config=/dev/stdin
+
   # auto merge用
   # auto megeはskipもsuccessとみなす
   status-check:

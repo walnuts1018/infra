@@ -73,6 +73,30 @@
       }
     },
     {
+      "name": "cortex-blocks",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
+      }
+    },
+    {
+      "name": "cortex-ruler",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
+      }
+    },
+    {
+      "name": "cortex-alertmanager",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
+      }
+    },
+    {
       "name": "gha-cache",
       "publicRead": [],
       "placement": {
@@ -389,6 +413,11 @@
             "claim": "sub",
             "value": "system:serviceaccount:arc-systems:gha-cache-server",
             "role": "gha-cache-server"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:cortex:iwashi-cortex",
+            "role": "cortex"
           }
         ]
       },
@@ -609,6 +638,27 @@
             ]
           }
         ]
+      },
+      {
+        "name": "cortex",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:Get*",
+              "s3:Put*",
+              "s3:Delete*",
+              "s3:List*",
+              "s3:*Tagging",
+              "s3:AbortMultipartUpload"
+            ],
+            "buckets": [
+              "cortex-blocks",
+              "cortex-ruler",
+              "cortex-alertmanager"
+            ]
+          }
+        ]
       }
     ],
     "roles": [
@@ -702,6 +752,13 @@
         "name": "gha-cache-server",
         "policies": [
           "gha-cache-server"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "cortex",
+        "policies": [
+          "cortex"
         ],
         "provider": "k8s"
       }

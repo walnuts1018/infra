@@ -1,6 +1,6 @@
 {
   name: "iwashi",
-  namespace: "iwashi",
+  namespace: "monitoring-app",
   clusters: {
     kurumi: {},
   },
