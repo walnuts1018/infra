@@ -81,11 +81,16 @@ distributor:
   securityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
     seccompProfile:
       type: RuntimeDefault
   containerSecurityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     capabilities:
@@ -104,11 +109,16 @@ ingester:
   securityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
     seccompProfile:
       type: RuntimeDefault
   containerSecurityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     capabilities:
@@ -140,11 +150,16 @@ querier:
   securityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
     seccompProfile:
       type: RuntimeDefault
   containerSecurityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     capabilities:
@@ -182,11 +197,16 @@ store_gateway:
   securityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
     seccompProfile:
       type: RuntimeDefault
   containerSecurityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     capabilities:
@@ -224,11 +244,16 @@ compactor:
   securityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
     seccompProfile:
       type: RuntimeDefault
   containerSecurityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     capabilities:
@@ -260,11 +285,16 @@ ruler:
   securityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
     seccompProfile:
       type: RuntimeDefault
   containerSecurityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     capabilities:
@@ -296,11 +326,16 @@ alertmanager:
   securityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
     seccompProfile:
       type: RuntimeDefault
   containerSecurityContext:
     enabled: true
     runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     capabilities:
