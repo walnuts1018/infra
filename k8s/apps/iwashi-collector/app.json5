@@ -1,5 +1,5 @@
 {
-  name: "iwashi",
+  name: "iwashi-collector",
   namespace: "iwashi-system",
   clusters: {
     kurumi: {},

@@ -71,43 +71,43 @@ function(
                 static_configs: [
                   {
                     targets: [
-                      'iwashi-cortex-distributor.cortex.svc.cluster.local:8080',
+                      'iwashi-cortex-distributor.iwashi-system.svc.cluster.local:8080',
                     ],
                     labels: { cortex_component: 'distributor' },
                   },
                   {
                     targets: [
-                      'iwashi-cortex-ingester.cortex.svc.cluster.local:8080',
+                      'iwashi-cortex-ingester.iwashi-system.svc.cluster.local:8080',
                     ],
                     labels: { cortex_component: 'ingester' },
                   },
                   {
                     targets: [
-                      'iwashi-cortex-querier.cortex.svc.cluster.local:8080',
+                      'iwashi-cortex-querier.iwashi-system.svc.cluster.local:8080',
                     ],
                     labels: { cortex_component: 'querier' },
                   },
                   {
                     targets: [
-                      'iwashi-cortex-store-gateway.cortex.svc.cluster.local:8080',
+                      'iwashi-cortex-store-gateway.iwashi-system.svc.cluster.local:8080',
                     ],
                     labels: { cortex_component: 'store-gateway' },
                   },
                   {
                     targets: [
-                      'iwashi-cortex-compactor.cortex.svc.cluster.local:8080',
+                      'iwashi-cortex-compactor.iwashi-system.svc.cluster.local:8080',
                     ],
                     labels: { cortex_component: 'compactor' },
                   },
                   {
                     targets: [
-                      'iwashi-cortex-ruler.cortex.svc.cluster.local:8080',
+                      'iwashi-cortex-ruler.iwashi-system.svc.cluster.local:8080',
                     ],
                     labels: { cortex_component: 'ruler' },
                   },
                   {
                     targets: [
-                      'iwashi-cortex-alertmanager.cortex.svc.cluster.local:8080',
+                      'iwashi-cortex-alertmanager.iwashi-system.svc.cluster.local:8080',
                     ],
                     labels: { cortex_component: 'alertmanager' },
                   },
@@ -120,19 +120,19 @@ function(
                 static_configs: [
                   {
                     targets: [
-                      'iwashi.monitoring-app.svc.cluster.local:8080',
+                      'iwashi.iwashi-system.svc.cluster.local:8080',
                     ],
                   },
                 ],
               },
               {
-                job_name: 'synthetic-otel-collector',
+                job_name: 'iwashi-collector',
                 scrape_interval: '30s',
                 metrics_path: '/metrics',
                 static_configs: [
                   {
                     targets: [
-                      'synthetic-otel-collector-collector-monitoring.synthetic-monitoring.svc.cluster.local:8888',
+                      'iwashi-collector-collector-monitoring.iwashi-system.svc.cluster.local:8888',
                     ],
                   },
                 ],

@@ -1,7 +1,0 @@
-{
-  name: "iwashi-synthetic",
-  namespace: "synthetic-monitoring",
-  clusters: {
-    kurumi: {},
-  },
-}

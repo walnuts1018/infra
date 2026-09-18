@@ -1,17 +1,20 @@
 local app = import 'app.json5';
 local collectorLabels = {
   'app.kubernetes.io/component': 'opentelemetry-collector',
-  'app.kubernetes.io/instance': 'synthetic-monitoring.synthetic-otel-collector',
+  'app.kubernetes.io/instance': 'iwashi-system.iwashi-collector',
 };
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'NetworkPolicy',
-  metadata: { name: app.name + '-blackbox', namespace: app.namespace },
+  metadata: { name: app.name, namespace: app.namespace },
   spec: {
-    podSelector: { matchLabels: { 'app.kubernetes.io/name': 'prometheus-blackbox-exporter', 'app.kubernetes.io/instance': app.name + '-blackbox' } },
+    podSelector: { matchLabels: { 'app.kubernetes.io/name': 'prometheus-blackbox-exporter', 'app.kubernetes.io/instance': app.name } },
     policyTypes: ['Ingress', 'Egress'],
     ingress: [{
-      from: [{ podSelector: { matchLabels: collectorLabels } }],
+      from: [{
+        namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'iwashi-system' } },
+        podSelector: { matchLabels: collectorLabels },
+      }],
       ports: [{ protocol: 'TCP', port: 9115 }],
     }],
     egress: [

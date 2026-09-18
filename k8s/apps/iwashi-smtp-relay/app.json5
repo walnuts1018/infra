@@ -1,6 +1,6 @@
 {
   name: "iwashi-smtp-relay",
-  namespace: "cortex",
+  namespace: "iwashi-system",
   clusters: {
     kurumi: {},
   },

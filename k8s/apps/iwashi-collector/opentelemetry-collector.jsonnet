@@ -4,15 +4,15 @@ local secret = import 'discovery-secret.jsonnet';
   apiVersion: 'opentelemetry.io/v1beta1',
   kind: 'OpenTelemetryCollector',
   metadata: {
-    name: 'synthetic-otel-collector',
+    name: 'iwashi-collector',
     namespace: app.namespace,
   },
   spec: {
     mode: 'statefulset',
     replicas: 1,
-    serviceName: 'synthetic-otel-collector-headless',
+    serviceName: 'iwashi-collector-headless',
     image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.160.0',
-    serviceAccount: 'synthetic-otel-collector',
+    serviceAccount: 'iwashi-collector',
     ports: [{
       name: 'metrics',
       port: 8888,
@@ -53,7 +53,7 @@ local secret = import 'discovery-secret.jsonnet';
               metrics_path: '/probe',
               params: { module: ['http_2xx'] },
               http_sd_configs: [{
-                url: 'http://iwashi.monitoring-app.svc.cluster.local:8080/internal/discovery/standard',
+                url: 'http://iwashi.iwashi-system.svc.cluster.local:8080/internal/discovery/standard',
                 refresh_interval: '15s',
                 authorization: {
                   type: 'Bearer',
@@ -71,7 +71,7 @@ local secret = import 'discovery-secret.jsonnet';
                 },
                 {
                   target_label: '__address__',
-                  replacement: 'iwashi-synthetic-blackbox-prometheus-blackbox-exporter.synthetic-monitoring.svc.cluster.local:9115',
+                  replacement: 'iwashi-blackbox-prometheus-blackbox-exporter.iwashi-blackbox.svc.cluster.local:9115',
                 },
               ],
             }],
@@ -80,7 +80,7 @@ local secret = import 'discovery-secret.jsonnet';
       },
       exporters: {
         otlp_http: {
-          metrics_endpoint: 'http://iwashi.monitoring-app.svc.cluster.local:8080/internal/otlp/v1/metrics',
+          metrics_endpoint: 'http://iwashi.iwashi-system.svc.cluster.local:8080/internal/otlp/v1/metrics',
           headers: { Authorization: 'Bearer ${env:DISCOVERY_KEY}' },
           compression: 'none',
         },

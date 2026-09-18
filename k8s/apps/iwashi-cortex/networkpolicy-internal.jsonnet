@@ -40,7 +40,7 @@ local dns = {
     policyTypes: ['Ingress', 'Egress'],
     ingress: [
       {
-        from: [{ podSelector: {} }],
+        from: [{ podSelector: cortexSelector }],
         ports: [
           { port: 8080, protocol: 'TCP' },
           { port: 9095, protocol: 'TCP' },
@@ -55,7 +55,7 @@ local dns = {
     ],
     egress: [
       {
-        to: [{ podSelector: {} }],
+        to: [{ podSelector: cortexSelector }],
         ports: [
           { port: 8080, protocol: 'TCP' },
           { port: 9095, protocol: 'TCP' },

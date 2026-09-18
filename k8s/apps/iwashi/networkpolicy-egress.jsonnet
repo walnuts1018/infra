@@ -27,7 +27,6 @@ local dns = {
       },
       {
         to: [{
-          namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'cortex' } },
           podSelector: {
             matchLabels: {
               'app.kubernetes.io/name': 'cortex',

@@ -18,7 +18,6 @@ local app = import 'app.json5';
     ingress: [{
       from: [
         {
-          namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'monitoring-app' } },
           podSelector: { matchLabels: { 'app.kubernetes.io/name': 'iwashi' } },
         },
       ],

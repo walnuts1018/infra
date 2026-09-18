@@ -1,7 +1,7 @@
 local app = import 'app.json5';
 local collectorLabels = {
   'app.kubernetes.io/component': 'opentelemetry-collector',
-  'app.kubernetes.io/instance': 'synthetic-monitoring.synthetic-otel-collector',
+  'app.kubernetes.io/instance': 'iwashi-system.iwashi-collector',
 };
 local prometheusCollectorLabels = {
   'app.kubernetes.io/component': 'opentelemetry-collector',
@@ -16,10 +16,7 @@ local prometheusCollectorLabels = {
     policyTypes: ['Ingress'],
     ingress: [{
       from: [
-        {
-          namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'synthetic-monitoring' } },
-          podSelector: { matchLabels: collectorLabels },
-        },
+        { podSelector: { matchLabels: collectorLabels } },
         {
           namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'envoy-gateway-system' } },
           podSelector: { matchLabels: { 'app.kubernetes.io/component': 'proxy', 'app.kubernetes.io/name': 'envoy' } },

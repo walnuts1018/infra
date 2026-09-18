@@ -16,7 +16,7 @@ local app = import 'app.json5';
     ingress: [{
       fromEndpoints: [{
         matchLabels: {
-          'k8s:io.kubernetes.pod.namespace': 'cortex',
+          'k8s:io.kubernetes.pod.namespace': 'iwashi-system',
           'k8s:app.kubernetes.io/name': 'cortex',
           'k8s:app.kubernetes.io/instance': 'iwashi-cortex',
           'k8s:app.kubernetes.io/component': 'alertmanager',
