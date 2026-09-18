@@ -2,6 +2,7 @@ resource "zitadel_project" "coder" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "Coder"
   project_role_assertion = false
+  project_role_check     = true
 }
 
 resource "zitadel_application_oidc" "coder" {
