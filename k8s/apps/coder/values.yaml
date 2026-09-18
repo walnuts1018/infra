@@ -25,8 +25,6 @@ coder:
       enableDeployments: true
 
   env:
-  - name: CODER_DISABLE_PASSWORD_AUTH
-    value: "true"
   - name: CODER_PG_CONNECTION_URL
     valueFrom:
       secretKeyRef:
