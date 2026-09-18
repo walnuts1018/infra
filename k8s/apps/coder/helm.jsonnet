@@ -6,7 +6,5 @@ local app = import 'app.json5';
   chart: 'coder',
   repoURL: 'https://helm.coder.com/v2',
   targetRevision: '2.36.5',
-  valuesObject: std.mergePatch(
-    std.parseYaml(importstr 'values.yaml'),
-  ),
+  values: (importstr 'values.yaml'),
 }
