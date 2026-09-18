@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: akvorado
+    app.kubernetes.io/component: inlet
+    app.kubernetes.io/name: akvorado
+  name: akvorado-inlet
+  namespace: akvorado
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: netflow
+      port: 2055
+      protocol: UDP
+      targetPort: 2055
+    - name: sflow
+      port: 6343
+      protocol: UDP
+      targetPort: 6343
+  selector:
+    app.kubernetes.io/component: inlet
+    app.kubernetes.io/name: akvorado

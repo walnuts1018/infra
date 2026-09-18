@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: prfexample
+    app.kubernetes.io/name: prfexample
+  name: prfexample
+  namespace: prfexample
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: prfexample
+    app.kubernetes.io/name: prfexample
+  type: ClusterIP

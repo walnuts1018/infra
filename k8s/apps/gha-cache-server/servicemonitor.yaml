@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: gha-cache-server
+    app.kubernetes.io/name: gha-cache-server
+  name: gha-cache-server
+  namespace: arc-systems
+spec:
+  endpoints:
+    - interval: 15s
+      path: /metrics
+      port: cache
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: gha-cache-server
+      app.kubernetes.io/name: github-actions-cache-server

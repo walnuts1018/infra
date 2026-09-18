@@ -1,7 +1,0 @@
-{
-  name: "seaweedfs-operator",
-  namespace: "seaweedfs-operator",
-  clusters: {
-    kurumi: {},
-  },
-}

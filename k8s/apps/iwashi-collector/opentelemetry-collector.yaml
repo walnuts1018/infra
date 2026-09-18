@@ -1,0 +1,90 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: iwashi-collector
+  namespace: iwashi-system
+spec:
+  config:
+    exporters:
+      otlp_http:
+        compression: none
+        headers:
+          Authorization: Bearer ${env:DISCOVERY_KEY}
+        metrics_endpoint: http://iwashi.iwashi-system.svc.cluster.local:8080/internal/otlp/v1/metrics
+    receivers:
+      prometheus:
+        config:
+          scrape_configs:
+            - http_sd_configs:
+                - authorization:
+                    credentials: ${env:DISCOVERY_KEY}
+                    type: Bearer
+                  refresh_interval: 15s
+                  url: http://iwashi.iwashi-system.svc.cluster.local:8080/internal/discovery/standard
+              job_name: iwashi-http-probes
+              metrics_path: /probe
+              params:
+                module:
+                  - http_2xx
+              relabel_configs:
+                - source_labels:
+                    - __address__
+                  target_label: __param_target
+                - source_labels:
+                    - __param_target
+                  target_label: instance
+                - replacement: iwashi-blackbox-prometheus-blackbox-exporter.iwashi-blackbox.svc.cluster.local:9115
+                  target_label: __address__
+              scrape_interval: 60s
+              scrape_timeout: 10s
+    service:
+      pipelines:
+        metrics:
+          exporters:
+            - otlp_http
+          receivers:
+            - prometheus
+      telemetry:
+        metrics:
+          readers:
+            - pull:
+                exporter:
+                  prometheus:
+                    host: 0.0.0.0
+                    port: 8888
+                    without_scope_info: true
+                    without_type_suffix: true
+                    without_units: true
+  env:
+    - name: DISCOVERY_KEY
+      valueFrom:
+        secretKeyRef:
+          key: DISCOVERY_KEY
+          name: iwashi-collector-discovery-8f6730
+  image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.160.0
+  mode: statefulset
+  podSecurityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  ports:
+    - name: metrics
+      port: 8888
+      protocol: TCP
+      targetPort: 8888
+  replicas: 1
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      cpu: 20m
+      memory: 128Mi
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+  serviceAccount: iwashi-collector
+  serviceName: iwashi-collector-headless

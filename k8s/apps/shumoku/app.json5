@@ -1,7 +1,0 @@
-{
-    name: "shumoku",
-    namespace: "netbox",
-    clusters: {
-        kurumi: {},
-    },
-}

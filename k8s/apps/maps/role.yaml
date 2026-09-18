@@ -1,0 +1,15 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: maps-rollout-restart
+  namespace: maps
+rules:
+  - apiGroups:
+      - apps
+    resourceNames:
+      - maps-versatiles-server
+    resources:
+      - deployments
+    verbs:
+      - get
+      - patch

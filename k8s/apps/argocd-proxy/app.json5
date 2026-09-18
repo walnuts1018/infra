@@ -1,7 +1,0 @@
-{
-  name: "argocd-proxy",
-  namespace: "argocd",
-  clusters: {
-    kurumi: {},
-  },
-}

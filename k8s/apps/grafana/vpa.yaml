@@ -1,0 +1,24 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  labels:
+    app: grafana
+    app.kubernetes.io/name: grafana
+  name: grafana
+  namespace: monitoring
+spec:
+  resourcePolicy:
+    containerPolicies:
+      - containerName: grafana
+        controlledResources:
+          - memory
+        maxAllowed:
+          memory: 1Gi
+        minAllowed:
+          memory: 256Mi
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: grafana
+  updatePolicy:
+    updateMode: Auto
