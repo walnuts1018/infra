@@ -3,6 +3,11 @@ local gen = function(namespace) {
   kind: 'Namespace',
   metadata: {
     name: namespace,
+    [if namespace == 'coder-workspaces' then 'labels']: {
+      'pod-security.kubernetes.io/enforce': 'privileged',
+      'pod-security.kubernetes.io/audit': 'restricted',
+      'pod-security.kubernetes.io/warn': 'restricted',
+    },
   },
 };
 

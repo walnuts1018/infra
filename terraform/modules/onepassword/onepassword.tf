@@ -70,6 +70,11 @@ resource "random_password" "iwashi_database_password" {
   special = false
 }
 
+resource "random_password" "coder_database_password" {
+  length  = 32
+  special = false
+}
+
 resource "random_password" "iwashi_session_key" {
   length  = 64
   special = false
@@ -92,6 +97,9 @@ resource "onepassword_item" "external_secret" {
         "akvorado-client-secret"                 = { type = "CONCEALED", value = var.akvorado_client_secret }
         "argocd-cli-client-id"                   = { type = "STRING", value = var.argocd_cli_client_id }
         "b2-application-key"                     = { type = "CONCEALED", value = var.b2_application_key }
+        "coder-client-id"                        = { type = "STRING", value = var.coder_client_id }
+        "coder-client-secret"                    = { type = "CONCEALED", value = var.coder_client_secret }
+        "coder-database-password"                = { type = "CONCEALED", value = random_password.coder_database_password.result }
         "hubble-client-id"                       = { type = "STRING", value = var.hubble_client_id }
         "hubble-client-secret"                   = { type = "CONCEALED", value = var.hubble_client_secret }
         "ipu-client-id"                          = { type = "STRING", value = var.ipu_client_id }

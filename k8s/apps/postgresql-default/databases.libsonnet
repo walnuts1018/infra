@@ -80,6 +80,12 @@
     user_name: 'netbird',
   },
   {
+    db_name: 'coder',
+    user_name: 'coder',
+    secret_source_key: 'terraform-external-secrets',
+    secret_source_property: 'coder-database-password',
+  },
+  {
     db_name: 'visual_regression_tracker',
     user_name: 'visual_regression_tracker',
   },

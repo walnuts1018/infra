@@ -43,6 +43,17 @@ output "radar_oidc_client_secret" {
   description = "OIDC client secret for Radar"
 }
 
+output "coder_oidc_client_id" {
+  value       = module.zitadel.coder_oidc_client_id
+  description = "OIDC client ID for Coder"
+}
+
+output "coder_oidc_client_secret" {
+  value       = module.zitadel.coder_oidc_client_secret
+  sensitive   = true
+  description = "OIDC client secret for Coder"
+}
+
 output "kubernetes_oidc_issuer_audience" {
   value       = module.zitadel.kubernetes_oidc_issuer_audience
   description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy (passed to --oidc-client-id)"

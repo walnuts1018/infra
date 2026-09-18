@@ -33,6 +33,13 @@ variable "akvorado_client_secret" {
   sensitive = true
 }
 
+variable "coder_client_id" { type = string }
+
+variable "coder_client_secret" {
+  type      = string
+  sensitive = true
+}
+
 variable "b2_application_key" {
   type      = string
   sensitive = true
