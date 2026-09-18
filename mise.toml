@@ -6,6 +6,7 @@ terraform = "1.15.9"
 go-jsonnet = "0.22.0"
 tanka = "0.39.0"
 jsonnet-bundler = "0.6.0"
+coder = "2.36.5"
 
 [tasks.build-infrautil]
 description = "Build infrautil"
