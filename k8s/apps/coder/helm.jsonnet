@@ -8,6 +8,5 @@ local app = import 'app.json5';
   targetRevision: '2.36.5',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'),
-    std.parseYaml(importstr '_config/values.kurumi.yaml'),
   ),
 }
