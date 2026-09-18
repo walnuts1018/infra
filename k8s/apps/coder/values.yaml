@@ -50,3 +50,30 @@ coder:
     value: "false"
   - name: CODER_OIDC_SIGN_IN_TEXT
     value: "Sign in with ZITADEL"
+
+  - name: CODER_OAUTH2_GITHUB_DEFAULT_PROVIDER_ENABLE
+    value: "false"
+
+  - name: CODER_EXTERNAL_AUTH_GITHUB_DEFAULT_PROVIDER_ENABLE
+    value: "false"
+
+  - name: CODER_EXTERNAL_AUTH_0_ID
+    value: github
+
+  - name: CODER_EXTERNAL_AUTH_0_TYPE
+    value: github
+
+  - name: CODER_EXTERNAL_AUTH_0_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: coder-github
+        key: client-id
+
+  - name: CODER_EXTERNAL_AUTH_0_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: coder-github
+        key: client-secret
+
+  - name: CODER_EXTERNAL_AUTH_0_APP_INSTALL_URL
+    value: https://github.com/apps/kurumi-coder-app/installations/new
