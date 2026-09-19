@@ -51,7 +51,7 @@ resource "zitadel_application_oidc" "picca_dev" {
   project_id = zitadel_project.picca.id
   name       = "picca-dev"
 
-  redirect_uris               = [
+  redirect_uris = [
     "https://picca-dev.walnuts.dev/auth/callback",
     "https://picca-dev.walnuts.dev/oauth2/callback",
   ]
@@ -66,13 +66,6 @@ resource "zitadel_application_oidc" "picca_dev" {
   access_token_role_assertion = true
   id_token_role_assertion     = true
   id_token_userinfo_assertion = true
-}
-
-resource "zitadel_user_grant" "walnuts_picca_dev" {
-  org_id     = zitadel_org.ZITADEL.id
-  project_id = zitadel_project.picca.id
-  user_id    = local.zitadel_human_user_ids.walnuts
-  role_keys  = [zitadel_project_role.picca_admin.role_key]
 }
 
 output "picca_dev_oidc_client_id" {

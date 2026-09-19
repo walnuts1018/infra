@@ -63,7 +63,81 @@ function(
       receivers: {
         prometheus: {
           config: {
-            scrape_configs: [],
+            scrape_configs: [
+              {
+                job_name: 'cortex',
+                scrape_interval: '30s',
+                metrics_path: '/metrics',
+                static_configs: [
+                  {
+                    targets: [
+                      'iwashi-cortex-distributor.iwashi-system.svc.cluster.local:8080',
+                    ],
+                    labels: { cortex_component: 'distributor' },
+                  },
+                  {
+                    targets: [
+                      'iwashi-cortex-ingester.iwashi-system.svc.cluster.local:8080',
+                    ],
+                    labels: { cortex_component: 'ingester' },
+                  },
+                  {
+                    targets: [
+                      'iwashi-cortex-querier.iwashi-system.svc.cluster.local:8080',
+                    ],
+                    labels: { cortex_component: 'querier' },
+                  },
+                  {
+                    targets: [
+                      'iwashi-cortex-store-gateway.iwashi-system.svc.cluster.local:8080',
+                    ],
+                    labels: { cortex_component: 'store-gateway' },
+                  },
+                  {
+                    targets: [
+                      'iwashi-cortex-compactor.iwashi-system.svc.cluster.local:8080',
+                    ],
+                    labels: { cortex_component: 'compactor' },
+                  },
+                  {
+                    targets: [
+                      'iwashi-cortex-ruler.iwashi-system.svc.cluster.local:8080',
+                    ],
+                    labels: { cortex_component: 'ruler' },
+                  },
+                  {
+                    targets: [
+                      'iwashi-cortex-alertmanager.iwashi-system.svc.cluster.local:8080',
+                    ],
+                    labels: { cortex_component: 'alertmanager' },
+                  },
+                ],
+              },
+              {
+                job_name: 'iwashi',
+                scrape_interval: '30s',
+                metrics_path: '/metrics',
+                static_configs: [
+                  {
+                    targets: [
+                      'iwashi.iwashi-system.svc.cluster.local:8080',
+                    ],
+                  },
+                ],
+              },
+              {
+                job_name: 'iwashi-collector',
+                scrape_interval: '30s',
+                metrics_path: '/metrics',
+                static_configs: [
+                  {
+                    targets: [
+                      'iwashi-collector-collector-monitoring.iwashi-system.svc.cluster.local:8888',
+                    ],
+                  },
+                ],
+              },
+            ],
           },
         },
       },

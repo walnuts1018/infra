@@ -1,0 +1,410 @@
+image:
+  repository: quay.io/cortexproject/cortex
+  tag: v1.21.1@sha256:acb0b50c2228d33eafe233f6791cfe61ee1644e62f027f845228d4a9ffa76004
+  pullPolicy: IfNotPresent
+
+ingress:
+  enabled: false
+
+serviceAccount:
+  create: true
+  name: iwashi-cortex
+  automountServiceAccountToken: false
+
+config:
+  auth_enabled: true
+  tenant_federation:
+    enabled: false
+  ruler:
+    enable_api: true
+    ring:
+      kvstore:
+        store: memberlist
+  alertmanager:
+    enable_api: true
+    sharding_ring:
+      kvstore:
+        store: memberlist
+  distributor:
+    ring:
+      kvstore:
+        store: memberlist
+  compactor:
+    sharding_ring:
+      kvstore:
+        store: memberlist
+  limits:
+    ingestion_rate: 1000
+    ingestion_burst_size: 5000
+    ingestion_rate_strategy: global
+    max_series_per_user: 100000
+    max_label_names_per_series: 30
+    max_label_name_length: 256
+    max_label_value_length: 2048
+    max_query_length: 168h
+    reject_old_samples: true
+    reject_old_samples_max_age: 168h
+    compactor_blocks_retention_period: 48h
+    ruler_max_rule_groups_per_tenant: 20
+    ruler_max_rules_per_rule_group: 20
+    alertmanager_notification_rate_limit: 10
+    alertmanager_notification_rate_limit_per_integration:
+      email: 0.1
+  querier:
+    timeout: 2m
+  store_gateway:
+    sharding_enabled: false
+    sharding_ring:
+      kvstore:
+        store: memberlist
+  blocks_storage:
+    backend: s3
+    s3:
+      endpoint: seaweedfs.local.walnuts.dev
+      region: us-east-1
+      bucket_name: cortex-blocks
+      bucket_lookup_type: path
+    tsdb:
+      dir: /data/tsdb
+      retention_period: 6h
+    bucket_store:
+      sync_dir: /data/tsdb-sync
+      bucket_index:
+        enabled: true
+  ruler_storage:
+    backend: s3
+    s3:
+      endpoint: seaweedfs.local.walnuts.dev
+      region: us-east-1
+      bucket_name: cortex-ruler
+      bucket_lookup_type: path
+  alertmanager_storage:
+    backend: s3
+    s3:
+      endpoint: seaweedfs.local.walnuts.dev
+      region: us-east-1
+      bucket_name: cortex-alertmanager
+      bucket_lookup_type: path
+
+query_frontend:
+  enabled: false
+
+query_scheduler:
+  enabled: false
+
+nginx:
+  enabled: false
+
+distributor:
+  replicas: 2
+  securityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
+
+ingester:
+  replicas: 3
+  statefulSet:
+    enabled: true
+  persistentVolume:
+    enabled: true
+    size: 10Gi
+    retentionPolicy:
+      whenDeleted: Retain
+      whenScaled: Retain
+  securityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
+  env:
+  - name: AWS_WEB_IDENTITY_TOKEN_FILE
+    value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+  - name: AWS_ENDPOINT_URL_STS
+    value: https://seaweedfs.local.walnuts.dev
+  - name: AWS_ROLE_ARN
+    value: arn:aws:iam::role/cortex
+  - name: AWS_REGION
+    value: us-east-1
+  extraVolumes:
+  - name: seaweedfs-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 3600
+          path: token
+  extraVolumeMounts:
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+    readOnly: true
+
+querier:
+  replicas: 2
+  securityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
+  env:
+  - name: AWS_WEB_IDENTITY_TOKEN_FILE
+    value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+  - name: AWS_ENDPOINT_URL_STS
+    value: https://seaweedfs.local.walnuts.dev
+  - name: AWS_ROLE_ARN
+    value: arn:aws:iam::role/cortex
+  - name: AWS_REGION
+    value: us-east-1
+  extraVolumes:
+  - name: seaweedfs-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 3600
+          path: token
+  extraVolumeMounts:
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+    readOnly: true
+
+store_gateway:
+  replicas: 2
+  persistentVolume:
+    enabled: true
+    size: 10Gi
+    retentionPolicy:
+      whenDeleted: Retain
+      whenScaled: Retain
+  securityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
+  env:
+  - name: AWS_WEB_IDENTITY_TOKEN_FILE
+    value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+  - name: AWS_ENDPOINT_URL_STS
+    value: https://seaweedfs.local.walnuts.dev
+  - name: AWS_ROLE_ARN
+    value: arn:aws:iam::role/cortex
+  - name: AWS_REGION
+    value: us-east-1
+  extraVolumes:
+  - name: seaweedfs-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 3600
+          path: token
+  extraVolumeMounts:
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+    readOnly: true
+
+compactor:
+  replicas: 1
+  persistentVolume:
+    enabled: true
+    size: 10Gi
+    retentionPolicy:
+      whenDeleted: Retain
+      whenScaled: Retain
+  securityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
+  env:
+  - name: AWS_WEB_IDENTITY_TOKEN_FILE
+    value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+  - name: AWS_ENDPOINT_URL_STS
+    value: https://seaweedfs.local.walnuts.dev
+  - name: AWS_ROLE_ARN
+    value: arn:aws:iam::role/cortex
+  - name: AWS_REGION
+    value: us-east-1
+  extraVolumes:
+  - name: seaweedfs-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 3600
+          path: token
+  extraVolumeMounts:
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+    readOnly: true
+
+ruler:
+  replicas: 1
+  securityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
+  env:
+  - name: AWS_WEB_IDENTITY_TOKEN_FILE
+    value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+  - name: AWS_ENDPOINT_URL_STS
+    value: https://seaweedfs.local.walnuts.dev
+  - name: AWS_ROLE_ARN
+    value: arn:aws:iam::role/cortex
+  - name: AWS_REGION
+    value: us-east-1
+  extraVolumes:
+  - name: seaweedfs-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 3600
+          path: token
+  extraVolumeMounts:
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+    readOnly: true
+
+alertmanager:
+  replicas: 1
+  securityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    enabled: true
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop: [ALL]
+  env:
+  - name: AWS_WEB_IDENTITY_TOKEN_FILE
+    value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+  - name: AWS_ENDPOINT_URL_STS
+    value: https://seaweedfs.local.walnuts.dev
+  - name: AWS_ROLE_ARN
+    value: arn:aws:iam::role/cortex
+  - name: AWS_REGION
+    value: us-east-1
+  extraVolumes:
+  - name: seaweedfs-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 3600
+          path: token
+  - name: tmp
+    emptyDir:
+      sizeLimit: 16Mi
+  extraVolumeMounts:
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+    readOnly: true
+  - name: tmp
+    mountPath: /tmp
+
+memcached-frontend:
+  networkPolicy:
+    enabled: false
+  serviceAccount:
+    automountServiceAccountToken: false
+memcached-blocks-index:
+  networkPolicy:
+    enabled: false
+  serviceAccount:
+    automountServiceAccountToken: false
+memcached-blocks:
+  networkPolicy:
+    enabled: false
+  serviceAccount:
+    automountServiceAccountToken: false
+memcached-blocks-metadata:
+  networkPolicy:
+    enabled: false
+  serviceAccount:
+    automountServiceAccountToken: false
+memcached-parquet-labels:
+  enabled: false

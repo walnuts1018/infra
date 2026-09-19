@@ -161,7 +161,7 @@ local app = import 'app.json5';
               {
                 name: 'aws-cli',
                 image: {
-                  reference: 'public.ecr.aws/aws-cli/aws-cli:2.36.41',
+                  reference: 'public.ecr.aws/aws-cli/aws-cli:2.36.49',
                 },
               },
               {

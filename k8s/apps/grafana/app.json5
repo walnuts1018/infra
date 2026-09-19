@@ -5,7 +5,7 @@
     helm: {
       repoURL: "https://grafana-community.github.io/helm-charts",
       chart: "grafana",
-      targetRevision: "13.2.2",
+      targetRevision: "13.2.5",
       valueFiles: [
         "values.yaml",
       ],

@@ -21,6 +21,7 @@ nodePort:
   enabled: true
 hubble:
   tls:
+    enabled: true
     auto:
       method: cronJob
   relay:
@@ -68,10 +69,12 @@ hubble:
       enabled: true
 envoy:
   prometheus:
+    enabled: true
     serviceMonitor:
       enabled: true
 operator:
   prometheus:
+    enabled: true
     serviceMonitor:
       enabled: true
 prometheus:

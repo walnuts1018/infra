@@ -92,6 +92,26 @@ resource "random_password" "seaweedfs_biscuit_default_backup_secret_key" {
   special = false
 }
 
+resource "random_password" "iwashi_database_password" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "coder_database_password" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "iwashi_session_key" {
+  length  = 64
+  special = false
+}
+
+resource "random_password" "iwashi_discovery_key" {
+  length  = 64
+  special = false
+}
+
 resource "onepassword_item" "external_secret" {
   vault    = var.vault
   title    = "terraform-external-secrets"
@@ -147,6 +167,14 @@ resource "onepassword_item" "external_secret" {
         "seaweedfs_biscuit_longhorn_secret_key"       = { type = "CONCEALED", value = random_password.seaweedfs_biscuit_longhorn_secret_key.result }
         "seaweedfs_biscuit_default_backup_access_key" = { type = "CONCEALED", value = random_id.seaweedfs_biscuit_default_backup_access_key.hex }
         "seaweedfs_biscuit_default_backup_secret_key" = { type = "CONCEALED", value = random_password.seaweedfs_biscuit_default_backup_secret_key.result }
+        "coder-client-id"                             = { type = "STRING", value = var.coder_client_id }
+        "coder-client-secret"                         = { type = "CONCEALED", value = var.coder_client_secret }
+        "coder-database-password"                     = { type = "CONCEALED", value = random_password.coder_database_password.result }
+        "iwashi-client-id"                            = { type = "STRING", value = var.iwashi_client_id }
+        "iwashi-client-secret"                        = { type = "CONCEALED", value = var.iwashi_client_secret }
+        "iwashi-database-password"                    = { type = "CONCEALED", value = random_password.iwashi_database_password.result }
+        "iwashi-session-key"                          = { type = "CONCEALED", value = random_password.iwashi_session_key.result }
+        "iwashi-discovery-key"                        = { type = "CONCEALED", value = random_password.iwashi_discovery_key.result }
 
         "visual-regression-tracker-jwt-secret"     = { type = "CONCEALED", value = random_password.visual_regression_tracker_jwt_secret.result }
         "visual-regression-tracker-admin-password" = { type = "CONCEALED", value = random_password.visual_regression_tracker_admin_password.result }

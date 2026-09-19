@@ -5,7 +5,7 @@
     helm: {
       repoURL: "https://opencost.github.io/opencost-helm-chart",
       chart: "opencost",
-      targetRevision: "2.5.30",
+      targetRevision: "2.5.31",
       valueFiles: [
         "values.yaml",
       ],

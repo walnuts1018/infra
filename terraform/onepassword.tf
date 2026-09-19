@@ -33,4 +33,8 @@ module "onepassword" {
   seaweedfs_biscuit_terraform_access_key = random_id.seaweedfs_biscuit_terraform_access_key.hex
   seaweedfs_biscuit_terraform_secret_key = random_password.seaweedfs_biscuit_terraform_secret_key.result
   terraform_cloud_agent_token            = module.terraform_cloud.agent_token
+  coder_client_id                        = module.zitadel.coder_oidc_client_id
+  coder_client_secret                    = module.zitadel.coder_oidc_client_secret
+  iwashi_client_id                       = module.zitadel.iwashi_oidc_client_id
+  iwashi_client_secret                   = module.zitadel.iwashi_oidc_client_secret
 }

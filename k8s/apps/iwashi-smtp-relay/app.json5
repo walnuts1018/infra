@@ -1,0 +1,7 @@
+{
+  name: "iwashi-smtp-relay",
+  namespace: "iwashi-system",
+  clusters: {
+    kurumi: {},
+  },
+}
