@@ -32,3 +32,18 @@ output "coder_oidc_client_secret" {
   value     = zitadel_application_oidc.coder.client_secret
   sensitive = true
 }
+
+resource "zitadel_project_role" "coder_admin" {
+  org_id       = zitadel_org.ZITADEL.id
+  project_id   = zitadel_project.coder.id
+  role_key     = "coder-admin"
+  display_name = "Coder Admin"
+}
+
+
+resource "zitadel_user_grant" "walnuts_coder" {
+  org_id     = zitadel_org.ZITADEL.id
+  project_id = zitadel_project.coder.id
+  user_id    = local.zitadel_human_user_ids.walnuts
+  role_keys  = [zitadel_project_role.coder_admin.role_key]
+}
