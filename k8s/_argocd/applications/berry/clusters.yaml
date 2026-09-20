@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: clusters
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+  - missingkey=error
+  generators:
+  - git:
+      repoURL: https://github.com/walnuts1018/infra
+      revision: clusterapi # TODO
+      files:
+      - path: "k8s/clusters/*/cluster.json5"
+  template:
+    metadata:
+      name: '{{.name}}'
+    spec:
+      project: berry
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.namespace}}'
+      source:
+        repoURL: 'https://github.com/walnuts1018/infra'
+        targetRevision: clusterapi # TODO
+        path: '{{.path.path}}'
+        directory:
+          recurse: true
+          exclude: '{config/*,_*/*,values*.yaml}'
+          jsonnet:
+            tlas: []
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        syncOptions:
+        - ServerSideApply=true
+        - FailOnSharedResource=true
+        - SkipDryRunOnMissingResource=true
+        - CreateNamespace=true

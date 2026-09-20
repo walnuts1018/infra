@@ -1,7 +1,0 @@
-{
-  name: "minio-biscuit-backup",
-  namespace: "minio-biscuit",
-  clusters: {
-    biscuit: {},
-  },
-}

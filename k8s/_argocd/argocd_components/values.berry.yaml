@@ -1,0 +1,48 @@
+global:
+  domain: argocd.local.walnuts.dev
+
+notifications:
+  argocdUrl: https://argocd.local.walnuts.dev
+  metrics:
+    serviceMonitor:
+      enabled: false
+
+server:
+  metrics:
+    serviceMonitor:
+      enabled: false
+  ingress:
+    enabled: false
+  httproute:
+    enabled: false
+  autoscaling:
+    enabled: false
+  service:
+    type: NodePort
+    nodePortHttp: 30080
+    nodePortHttps: 30443
+
+repoServer:
+  metrics:
+    serviceMonitor:
+      enabled: false
+  autoscaling:
+    enabled: false
+
+controller:
+  metrics:
+    serviceMonitor:
+      enabled: false
+
+redis:
+  metrics:
+    serviceMonitor:
+      enabled: false
+
+# 初回Helm導入ではvalues.bootstrap.yamlでローカルRedisを指定し、
+# Principalが利用可能になった後に共通valuesのRedis proxyへ切り替える。
+
+applicationSet:
+  metrics:
+    serviceMonitor:
+      enabled: false

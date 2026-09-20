@@ -1,6 +1,16 @@
 {
   name: "qdrant",
   namespace: "qdrant",
+  additionalSources: {
+    helm: {
+      repoURL: "https://qdrant.github.io/qdrant-helm",
+      chart: "qdrant",
+      targetRevision: "1.19.1",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

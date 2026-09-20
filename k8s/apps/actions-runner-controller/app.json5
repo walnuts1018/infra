@@ -1,6 +1,16 @@
 {
   name: "actions-runner-controller",
   namespace: "arc-systems",
+  additionalSources: {
+    helm: {
+      repoURL: "ghcr.io/actions/actions-runner-controller-charts",
+      chart: "gha-runner-scale-set-controller",
+      targetRevision: "0.14.2",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

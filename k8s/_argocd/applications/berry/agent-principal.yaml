@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-agent-principal
+  namespace: argocd
+spec:
+  project: berry
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  sources:
+  - repoURL: https://github.com/walnuts1018/infra
+    targetRevision: clusterapi
+    ref: infra
+  - repoURL: https://github.com/argoproj-labs/argocd-agent
+    targetRevision: v0.10.0
+    path: install/helm-repo/argocd-agent-principal
+    helm:
+      releaseName: argocd-agent-principal
+      valueFiles:
+      - $infra/k8s/_argocd/agent/principal/values.yaml
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - ServerSideApply=true
+    - FailOnSharedResource=true

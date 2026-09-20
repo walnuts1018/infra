@@ -1,6 +1,16 @@
 {
   name: "nvidia-gpu-operator",
   namespace: "nvidia-gpu-operator",
+  additionalSources: {
+    helm: {
+      repoURL: "https://helm.ngc.nvidia.com/nvidia",
+      chart: "gpu-operator",
+      targetRevision: "v26.7.0",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

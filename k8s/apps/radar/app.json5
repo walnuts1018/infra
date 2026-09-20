@@ -1,6 +1,16 @@
 {
   name: "radar",
   namespace: "radar",
+  additionalSources: {
+    helm: {
+      repoURL: "https://skyhook-io.github.io/helm-charts",
+      chart: "radar",
+      targetRevision: "1.12.2",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

@@ -1,0 +1,26 @@
+fullnameOverride: argocd-agent
+
+image:
+  tag: v0.10.0 # TODO: appVersionがちゃんと上がったらそっちに合わせる
+
+agentMode: managed
+logFormat: json
+server: argocd-agent.local.walnuts.dev
+destinationBasedMapping: true
+createNamespace: true
+allowedNamespaces: "*"
+labelSelector: "argocd-agent=true"
+
+serviceMonitor:
+  enabled: false
+
+deploymentAnnotations:
+  reloader.stakater.com/auto: "true"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

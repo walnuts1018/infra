@@ -1,7 +1,19 @@
 {
   name: "external-secrets",
   namespace: "external-secrets",
+  additionalSources: {
+    helm: {
+      repoURL: "https://charts.external-secrets.io",
+      chart: "external-secrets",
+      targetRevision: "2.10.0",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
+    berry: {},
+    biscuit: {},
   },
 }

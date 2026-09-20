@@ -348,7 +348,7 @@
       {
         "name": "k8s",
         "type": "oidc",
-        "issuer": "https://192.168.0.17:16443",
+        "issuer": "https://192.168.4.11:6443",
         "clientId": "sts.seaweedfs.com",
         "jwksUri": "https://kubernetes.default.svc/openid/v1/jwks",
         "tlsCaCert": "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt",
@@ -416,7 +416,12 @@
           },
           {
             "claim": "sub",
-            "value": "system:serviceaccount:cortex:iwashi-cortex",
+            "value": "system:serviceaccount:seaweedfs:seaweedfs-default-backup",
+            "role": "seaweedfs-default-backup"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:iwashi-system:iwashi-cortex",
             "role": "cortex"
           }
         ]
@@ -640,6 +645,22 @@
         ]
       },
       {
+        "name": "seaweedfs-default-backup",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:Get*",
+              "s3:List*",
+              "s3:*Tagging"
+            ],
+            "resources": [
+              "*"
+            ]
+          }
+        ]
+      },
+      {
         "name": "cortex",
         "statements": [
           {
@@ -752,6 +773,13 @@
         "name": "gha-cache-server",
         "policies": [
           "gha-cache-server"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "seaweedfs-default-backup",
+        "policies": [
+          "seaweedfs-default-backup"
         ],
         "provider": "k8s"
       },

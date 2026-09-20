@@ -1,0 +1,135 @@
+# OSインストール先ディスク(ssh + udevadmで実機確認済み、2026-09-11時点):
+#   cake:   nvme1n1 512GB SSD (nvme.126f-4e4a4d333538523031353432385037304758-353132474220535344-00000001)
+#   hotate: nvme0n1 KIOXIA EXCERIA PLUS G3 (eui.00000000000000008ce38e0300b2ecea)
+#   lemon:  nvme0n1 SAMSUNG MZALQ512HALU (eui.002538a611b7054b)
+# 3台で1つのSecretを共有するため、ORでつないだCEL式にして各ホストが自分のディスクにだけマッチさせる。
+# EPHEMERALのmaxSizeは特に制限しない(システムディスク全体をそのまま使い、/var/lib/longhornも
+# その中に収まる。現行のhotate/lemonと同じ形)。
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+provisioning:
+  diskSelector:
+    match: >-
+      !disk.readonly && (
+        disk.wwid == "nvme.126f-4e4a4d333538523031353432385037304758-353132474220535344-00000001" ||
+        disk.wwid == "eui.00000000000000008ce38e0300b2ecea" ||
+        disk.wwid == "eui.002538a611b7054b"
+      )
+  wipe: false
+---
+# cakeだけが持つ追加のLonghorn用ディスク(現行構成の/mnt/data/longhornに相当、CT1000MX500SSD1 1TB)。
+# UserVolumeConfigはTalosが自動でフォーマット・マウントし、/var/mnt/longhorn-extraとして公開する
+# (パーティション単位のRawVolumeConfig+手動LVMより、Kubernetesワークロード向けにはこちらが標準)。
+# hotate/lemonにはこのWWIDのディスクが存在しないため、単純にvolumeが作られないだけで無害。
+# LonghornのNode設定はk8s/apps/longhorn-backup/node-*.jsonnetでGitOps管理する。
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: longhorn-extra
+volumeType: disk
+provisioning:
+  diskSelector:
+    match: '!disk.readonly && disk.wwid == "naa.500a0751e625c7e6"'
+filesystem:
+  type: xfs
+---
+# control planeのVIP(192.168.4.11/32)を保持するためだけの仮想リンク。
+# kube-vipは使わず、TalosネイティブのBGP機能でこのリンクのアドレスをそのままvyosへ広告する。
+apiVersion: v1alpha1
+kind: DummyLinkConfig
+name: dummy-vip
+addresses:
+  - address: 192.168.4.11/32
+---
+# Ciliumのservice-BGPとTalosのfabric-BGPをnode内で接続するveth pair。
+# veth-ciliumはCilium Agent、veth-crouterはTalosのVRF側で使用する。
+apiVersion: v1alpha1
+kind: VethConfig
+name: veth-cilium
+up: true
+addresses:
+  - address: 10.255.255.0/31
+peer:
+  name: veth-crouter
+  up: true
+  addresses:
+    - address: 10.255.255.1/31
+---
+apiVersion: v1alpha1
+kind: VRFConfig
+name: vrf-cilium
+links:
+  - veth-crouter
+table: "89"
+up: true
+---
+# CiliumからLB VIPを受信するだけのTalos側BGP instance。受信経路はLinux FIBへ入れず、
+# fabric instanceのimportRoutesからVyOS向けに再広告する。
+apiVersion: v1alpha1
+kind: BGPInstanceConfig
+name: cilium
+vrf: vrf-cilium
+localASN: 4200000002
+routerID: 10.255.255.1
+installRoutes: false
+neighbors:
+  - address: 10.255.255.0
+    peerASN: 4200000003
+    passive: true
+    holdTime: 9s
+---
+# dummy-vipのアドレスをconnected networkとしてVyOS(ASN 65001)へ広告し、Ciliumから受信した
+# LoadBalancer IP poolの経路だけをdefault routing domainへ取り込む。VyOSとのBGP sessionは
+# Talosだけが持ち、Ciliumはnode内のveth経由でこのinstanceへ接続する。
+apiVersion: v1alpha1
+kind: BGPInstanceConfig
+name: fabric
+localASN: 65010
+advertise:
+  - dummy-vip
+importRoutes:
+  - bgpInstance: cilium
+    prefixes:
+      - 192.168.12.0/24
+multipath: true
+neighbors:
+  - address: 192.168.0.1
+    peerASN: 65001
+    holdTime: 9s
+    bfd:
+      transmitInterval: 300ms
+      receiveInterval: 300ms
+      detectMultiplier: 3
+---
+# control planeにも通常のworkloadとCilium Agentを配置する。
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+taints:
+  $patch: delete
+---
+# SeaweedFS/バックアップ転送等の瞬間的なメモリ圧迫でkube-apiserver等がOOMKillされるのを避けるための安全弁。
+apiVersion: v1alpha1
+kind: KubeletConfig
+config:
+  memorySwap:
+    swapBehavior: LimitedSwap
+---
+apiVersion: v1alpha1
+kind: SwapVolumeConfig
+name: swap
+provisioning:
+  diskSelector:
+    match: >-
+      !disk.readonly && (
+        disk.wwid == "nvme.126f-4e4a4d333538523031353432385037304758-353132474220535344-00000001" ||
+        disk.wwid == "eui.00000000000000008ce38e0300b2ecea" ||
+        disk.wwid == "eui.002538a611b7054b"
+      )
+  minSize: 4GiB
+  maxSize: 4GiB
+---
+# SeaweedFS STSと外部OIDC検証で使用する、移行後のcontrol plane VIPをissuerにする。
+# Talos v1.14ではkube-apiserverの追加引数はKubeAPIServerConfig documentで指定する。
+apiVersion: v1alpha1
+kind: KubeAPIServerConfig
+extraArgs:
+  service-account-issuer: https://192.168.4.11:6443

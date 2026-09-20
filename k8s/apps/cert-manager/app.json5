@@ -1,7 +1,43 @@
 {
   name: "cert-manager",
   namespace: "cert-manager",
+  additionalSources: {
+    helm: {
+      repoURL: "https://charts.jetstack.io",
+      chart: "cert-manager",
+      targetRevision: "v1.21.2",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
-    kurumi: {},
+    kurumi: {
+      additionalSources: {
+        helm: {
+          additionalValueFiles: [
+            "values.kurumi.yaml",
+          ],
+        },
+      },
+    },
+    berry: {
+      additionalSources: {
+        helm: {
+          additionalValueFiles: [
+            "values.berry.yaml",
+          ],
+        },
+      },
+    },
+    biscuit: {
+      additionalSources: {
+        helm: {
+          additionalValueFiles: [
+            "values.biscuit.yaml",
+          ],
+        },
+      },
+    },
   },
 }

@@ -1,6 +1,16 @@
 {
   name: "kafka-operator",
   namespace: "strimzi-system",
+  additionalSources: {
+    helm: {
+      repoURL: "https://strimzi.io/charts/",
+      chart: "strimzi-kafka-operator",
+      targetRevision: "1.2.0",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

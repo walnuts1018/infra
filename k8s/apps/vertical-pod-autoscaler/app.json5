@@ -1,6 +1,16 @@
 {
   name: "vertical-pod-autoscaler",
   namespace: "kube-system",
+  additionalSources: {
+    helm: {
+      repoURL: "https://kubernetes.github.io/autoscaler",
+      chart: "vertical-pod-autoscaler",
+      targetRevision: "0.12.0",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

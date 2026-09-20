@@ -2,6 +2,15 @@
   name: "opentelemetry-collectors",
   namespace: "opentelemetry-collector",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      jsonnet: {
+        tlas: [
+          {
+            name: "clusterName",
+            value: "kurumi",
+          },
+        ],
+      },
+    },
   },
 }

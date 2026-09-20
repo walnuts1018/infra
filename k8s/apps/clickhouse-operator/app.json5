@@ -1,6 +1,16 @@
 {
   name: "clickhouse-operator",
   namespace: "clickhouse-operator-system",
+  additionalSources: {
+    helm: {
+      repoURL: "ghcr.io/clickhouse",
+      chart: "clickhouse-operator-helm",
+      targetRevision: "0.0.6",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

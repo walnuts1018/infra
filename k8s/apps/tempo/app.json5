@@ -1,6 +1,16 @@
 {
   name: "tempo",
   namespace: "tempo",
+  additionalSources: {
+    helm: {
+      repoURL: "https://grafana-community.github.io/helm-charts",
+      chart: "tempo-distributed",
+      targetRevision: "2.26.2",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

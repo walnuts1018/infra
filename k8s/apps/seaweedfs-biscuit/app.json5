@@ -1,0 +1,7 @@
+{
+  name: "seaweedfs-biscuit",
+  namespace: "seaweedfs",
+  clusters: {
+    biscuit: {},
+  },
+}

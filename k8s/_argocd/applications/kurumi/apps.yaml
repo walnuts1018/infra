@@ -1,48 +1,37 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: apps
+  name: apps-kurumi
   namespace: argocd
 spec:
-  syncPolicy:
-    preserveResourcesOnDeletion: false
   goTemplate: true
+  goTemplateOptions:
+  - missingkey=error
   generators:
   - matrix:
       generators:
       - git:
           repoURL: https://github.com/walnuts1018/infra
-          revision: main
+          revision: clusterapi
           files:
           - path: "k8s/apps/*/app.json5"
       - list:
           elements:
-          - kurumiEnabled: '{{ hasKey .clusters "kurumi" }}'
+          - kurumiEnabled: '{{ hasKey (default dict .clusters) "kurumi" }}'
     selector:
       matchLabels:
         kurumiEnabled: "true"
-  ignoreApplicationDifferences:
-  - jsonPointers:
-    - /spec/syncPolicy
   template:
     metadata:
-      name: '{{.name}}'
-      # annotations:
-      #   argocd.argoproj.io/manifest-generate-paths: .;../components
+      name: '{{ printf "%s-kurumi" .name }}'
+      labels:
+        argocd-agent: "true"
     spec:
-      project: default
+      project: kurumi
       destination:
-        server: https://kubernetes.default.svc
+        name: kurumi
         namespace: '{{.namespace}}'
-      source:
-        repoURL: 'https://github.com/walnuts1018/infra'
-        targetRevision: main
-        path: '{{.path.path}}'
-        directory:
-          recurse: true
-          exclude: '{config/*,_*/*}'
-          jsonnet:
-            tlas: []
+      sources: []
       syncPolicy:
         automated:
           selfHeal: true
@@ -50,8 +39,52 @@ spec:
         syncOptions:
         - ServerSideApply=true
         - FailOnSharedResource=true
+        - CreateNamespace=true
   templatePatch: |
-    {{- with  .annotations }}
+    spec:
+      sources:
+      - repoURL: 'https://github.com/walnuts1018/infra'
+        targetRevision: clusterapi
+        path: '{{.path.path}}'
+        directory:
+          recurse: true
+          exclude: '{config/*,_*/*,values*.yaml}'
+          jsonnet:
+            tlas:
+            {{- range $tla := dig "clusters" "kurumi" "jsonnet" "tlas" (list) . }}
+            - {{ $tla | toJson }}
+            {{- end }}
+            extVars:
+            {{- range $extVar := dig "clusters" "kurumi" "jsonnet" "extVars" (list) . }}
+            - {{ $extVar | toJson }}
+            {{- end }}
+        ref: infra
+      {{- with (dig "additionalSources" "helm" (dict) .) }}
+      - repoURL: '{{ .repoURL }}'
+        chart: '{{ .chart }}'
+        targetRevision: '{{ .targetRevision }}'
+        helm:
+          releaseName: '{{ $.name }}'
+          valueFiles:
+          {{- range (dig "valueFiles" (list) .) }}
+          - {{ printf "$infra/%s/%s" $.path.path . }}
+          {{- end }}
+          {{- with (dig "clusters" "kurumi" "additionalSources" "helm" "additionalValueFiles" (list) $) }}
+          {{- range . }}
+          - {{ printf "$infra/%s/%s" $.path.path . }}
+          {{- end }}
+          {{- end }}
+      {{- end }}
+      {{- range (dig "additionalSources" "kustomize" (list) .) }}
+      - repoURL: '{{ .repoURL }}'
+        path: '{{ .path }}'
+        targetRevision: '{{ .targetRevision }}'
+        {{- with (dig "patches" (list) .) }}
+        kustomize:
+          patches: {{ . | toJson }}
+        {{- end }}
+      {{- end }}
+    {{- with (dig "annotations" (dict) .) }}
     metadata:
       annotations:
         {{- range $key, $value := . }}

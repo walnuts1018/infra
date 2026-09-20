@@ -1,6 +1,16 @@
 {
   name: "descheduler",
   namespace: "kube-system",
+  additionalSources: {
+    helm: {
+      repoURL: "https://kubernetes-sigs.github.io/descheduler/",
+      chart: "descheduler",
+      targetRevision: "0.36.0",
+      valueFiles: [
+        "values.yaml",
+      ],
+    },
+  },
   clusters: {
     kurumi: {},
   },

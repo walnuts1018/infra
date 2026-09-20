@@ -9,7 +9,7 @@ function flatRoles(ctx, api) {
   let grants = [];
   ctx.v1.user.grants.grants.forEach(claim => {
     claim.roles.forEach(role => {
-        grants.push(claim.projectId+':'+role)  
+        grants.push(claim.projectId+':'+role)
     })
   })
   api.v1.claims.setClaim('my:zitadel:grants', grants)

@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: base
+  namespace: argocd
+spec:
+  # The entrypoint is the first manifest on a fresh Argo CD installation.
+  # Keep it in the built-in project because the berry AppProject is created
+  # by a child Application sourced by this Application.
+  project: default
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  sources:
+  - path: k8s/_argocd/applications
+    repoURL: 'https://github.com/walnuts1018/infra'
+    targetRevision: clusterapi # TODO
+    directory:
+      recurse: true
+  - path: k8s/_argocd/entrypoint
+    repoURL: 'https://github.com/walnuts1018/infra'
+    targetRevision: clusterapi # TODO
+    directory:
+      recurse: true
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - ServerSideApply=true
+    - FailOnSharedResource=true

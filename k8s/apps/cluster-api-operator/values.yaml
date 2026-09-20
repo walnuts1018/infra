@@ -1,0 +1,30 @@
+core:
+  cluster-api:
+    version: v1.14.2
+    # tart control-plane providerがRuntime SDK extension(ExtensionConfig)を登録するため、CAPI core側でも有効化する必要がある。
+    manager:
+      featureGates:
+        RuntimeSDK: true
+bootstrap:
+  tart:
+    version: v0.3.16
+    fetchConfig:
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/bootstrap-components.yaml
+controlPlane:
+  tart:
+    version: v0.3.16
+    fetchConfig:
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/control-plane-components.yaml
+infrastructure:
+  tart:
+    version: v0.3.16
+    fetchConfig:
+      url: https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/infrastructure-components.yaml
+addon:
+  helm:
+    version: v0.6.4
+    fetchConfig:
+      url: https://github.com/kubernetes-sigs/cluster-api-addon-provider-helm/releases/download/v0.6.4/addon-components.yaml
+resources:
+  manager: {}
+enableHelmHook: false # これをつけないと、毎回Syncする時にnamespaceごと消える

@@ -28,13 +28,27 @@ metrics:
 configuration:
   features: EnableCSI
   # logLevel: debug
+  backupStorageLocation:
+  - name: seaweedfs-biscuit
+    default: true
+    provider: aws
+    bucket: velero-backup
+    config:
+      s3Url: https://seaweedfs-biscuit.local.walnuts.dev
+      region: ap-northeast-1
+      s3ForcePathStyle: "true"
+    credential:
+      name: velero-seaweedfs-biscuit
+      key: credentials
+
+  volumeSnapshotLocation: []
 
 schedules:
-  minio-biscuit:
+  seaweedfs-biscuit:
     schedule: "10 17 * * *" # 2:10 JST
     template:
       ttl: "336h" # 14 days
-      storageLocation: minio-biscuit
+      storageLocation: seaweedfs-biscuit
       excludedNamespaceScopedResources:
       - secret
       snapshotVolumes: true

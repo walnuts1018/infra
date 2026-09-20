@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tart-infrastructure-system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kurumi
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: biscuit

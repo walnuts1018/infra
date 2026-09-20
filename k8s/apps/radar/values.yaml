@@ -40,6 +40,11 @@ auth:
     usernamePrefix: "zitadel:"
     groupsPrefix: "zitadel:"
     enablePKCE: true
+    scopes:
+    - openid
+    - email
+    - profile
+    - urn:zitadel:iam:org:project:id:385225927988084784:aud
 
 timeline:
   storage: memory

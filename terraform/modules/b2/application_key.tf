@@ -22,6 +22,19 @@ resource "b2_application_key" "minio_biscuit_backup" {
   ]
 }
 
+resource "b2_application_key" "seaweedfs_biscuit_backup" {
+  key_name   = "seaweedfs-biscuit-backup"
+  bucket_ids = [b2_bucket.seaweedfs_biscuit_backup.id]
+  capabilities = [
+    "deleteFiles",
+    "listBuckets",
+    "listFiles",
+    "readBuckets",
+    "readFiles",
+    "writeFiles"
+  ]
+}
+
 output "application_key" {
   value = {
     application_key_id = b2_application_key.minio_biscuit_backup.application_key_id
@@ -29,6 +42,17 @@ output "application_key" {
     key_name           = b2_application_key.minio_biscuit_backup.key_name
     bucket_ids         = b2_application_key.minio_biscuit_backup.bucket_ids
     capabilities       = b2_application_key.minio_biscuit_backup.capabilities
+  }
+  sensitive = true
+}
+
+output "seaweedfs_application_key" {
+  value = {
+    application_key_id = b2_application_key.seaweedfs_biscuit_backup.application_key_id
+    application_key    = b2_application_key.seaweedfs_biscuit_backup.application_key
+    key_name           = b2_application_key.seaweedfs_biscuit_backup.key_name
+    bucket_ids         = b2_application_key.seaweedfs_biscuit_backup.bucket_ids
+    capabilities       = b2_application_key.seaweedfs_biscuit_backup.capabilities
   }
   sensitive = true
 }

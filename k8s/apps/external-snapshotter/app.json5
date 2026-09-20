@@ -1,6 +1,20 @@
 {
   name: "external-snapshotter",
   namespace: "kube-system",
+  additionalSources: {
+    kustomize: [
+      {
+        repoURL: "https://github.com/kubernetes-csi/external-snapshotter",
+        path: "client/config/crd",
+        targetRevision: "v8.3.0",
+      },
+      {
+        repoURL: "https://github.com/kubernetes-csi/external-snapshotter",
+        path: "deploy/kubernetes/snapshot-controller",
+        targetRevision: "v8.3.0",
+      },
+    ],
+  },
   clusters: {
     kurumi: {},
   },
