@@ -1,0 +1,123 @@
+listen:
+  hostname: 0.0.0.0
+  port: 9000
+
+webserver:
+  https: true
+  hostname: peertube.walnuts.dev
+  port: 443
+
+trust_proxy:
+  - loopback
+
+http_timeouts:
+  request: 30 minutes
+
+private_files_require_auth: true
+
+database:
+  hostname: postgresql-default-rw.databases.svc.cluster.local
+  port: 5432
+  ssl: false
+  name: peertube
+  pool:
+    max: 10
+
+redis:
+  hostname: valkey-peertube-valkey.peertube.svc.cluster.local
+  port: 6379
+  db: 0
+
+object_storage:
+  enabled: true
+  endpoint: http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+  region: us-east-1
+  force_path_style: true
+  upload_acl:
+    public: null
+    private: null
+  proxy:
+    proxify_private_files: true
+  streaming_playlists:
+    bucket_name: peertube
+    prefix: streaming-playlists/
+  web_videos:
+    bucket_name: peertube
+    prefix: web-videos/
+  user_exports:
+    bucket_name: peertube
+    prefix: user-exports/
+  original_video_files:
+    bucket_name: peertube
+    prefix: original-video-files/
+  captions:
+    bucket_name: peertube
+    prefix: captions/
+
+admin:
+  email: admin@walnuts.dev
+
+signup:
+  enabled: false
+
+user:
+  disable_root_auth: true
+  allow_cross_provider_auth: false
+
+federation:
+  enabled: false
+
+tracker:
+  enabled: false
+
+transcoding:
+  enabled: true
+  original_file:
+    keep: false
+  remote_runners:
+    enabled: true
+  resolutions:
+    0p: false
+    144p: false
+    240p: false
+    360p: false
+    480p: false
+    720p: false
+    1080p: false
+    1440p: false
+    2160p: false
+  always_transcode_original_resolution: true
+  web_videos:
+    enabled: false
+  hls:
+    enabled: true
+
+live:
+  enabled: false
+
+video_studio:
+  enabled: false
+
+video_transcription:
+  enabled: false
+
+storyboards:
+  enabled: false
+
+defaults:
+  publish:
+    privacy: 4
+  p2p:
+    webapp:
+      enabled: false
+    embed:
+      enabled: false
+
+webadmin:
+  configuration:
+    edition:
+      allowed: false
+
+plugins:
+  index:
+    enabled: false
