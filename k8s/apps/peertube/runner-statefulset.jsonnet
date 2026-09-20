@@ -1,5 +1,5 @@
 local app = import 'app.json5';
-local runnerSecret = import 'external-secret-runner.jsonnet';
+local secrets = import 'external-secret-secrets.jsonnet';
 local runnerConfigMap = import 'runner-configmap.jsonnet';
 local baseLabels = {
   'app.kubernetes.io/name': app.name,
@@ -11,7 +11,8 @@ local runnerLabels = {
   'peertube.runner/group': 'vod',
 };
 local labels = baseLabels + runnerLabels;
-local runnerImage = 'docker.io/zendet/peertube-runner:0.4.0-ctranslate2';
+local runnerImage = 'docker.io/zendet/peertube-runner:0.4.0-ctranslate2@sha256:37867f4f3c9e283cca1204f6bb88a630fc04da5176f1b9b9aeeb9a9a0cd16778';
+local peertubeURL = 'http://peertube.peertube.svc.cluster.local:9000';
 local runnerProbeCommand = [
   'sh',
   '-ec',
@@ -45,25 +46,11 @@ local runnerEnv = [
   },
   {
     name: 'PEERTUBE_URL',
-    valueFrom: {
-      secretKeyRef: {
-        name: runnerSecret.spec.target.name,
-        key: 'runner-url',
-      },
-    },
-  },
-  {
-    name: 'REGISTRATION_TOKEN',
-    valueFrom: {
-      secretKeyRef: {
-        name: runnerSecret.spec.target.name,
-        key: 'registration-token',
-      },
-    },
+    value: peertubeURL,
   },
   {
     name: 'ENABLE_JOBS',
-    value: 'vod-web-video-transcoding,vod-hls-transcoding,vod-audio-merge-transcoding',
+    value: 'vod-hls-transcoding,vod-audio-merge-transcoding',
   },
   {
     name: 'UNREGISTER_ON_EXIT',
@@ -80,7 +67,7 @@ local runnerEnv = [
   },
   spec: {
     serviceName: app.name + '-runner-headless',
-    replicas: 2,
+    replicas: 1,
     selector: {
       matchLabels: labels,
     },
@@ -102,8 +89,22 @@ local runnerEnv = [
             name: 'register',
             image: runnerImage,
             imagePullPolicy: 'IfNotPresent',
-            args: ['bootstrap'],
-            env: runnerEnv,
+            command: [
+              'sh',
+              '-ec',
+            ],
+            args: [importstr './_scripts/bootstrap-runner.sh'],
+            env: runnerEnv + [
+              {
+                name: 'PEERTUBE_ROOT_PASSWORD',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: secrets.spec.target.name,
+                    key: 'admin-password',
+                  },
+                },
+              },
+            ],
             volumeMounts: [
               {
                 name: 'home',

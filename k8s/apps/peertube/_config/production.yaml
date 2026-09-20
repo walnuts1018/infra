@@ -13,7 +13,8 @@ trust_proxy:
 http_timeouts:
   request: 30 minutes
 
-private_files_require_auth: true
+static_files:
+  private_files_require_auth: true
 
 database:
   hostname: postgresql-default-rw.databases.svc.cluster.local
@@ -61,11 +62,28 @@ signup:
   enabled: false
 
 user:
-  disable_root_auth: true
+  disable_root_auth: false
   allow_cross_provider_auth: false
 
 federation:
   enabled: false
+
+remote_redundancy:
+  videos:
+    accept_from: nobody
+
+followers:
+  instance:
+    enabled: false
+  channels:
+    enabled: false
+
+search:
+  remote_uri:
+    users: false
+    anonymous: false
+  search_index:
+    enabled: false
 
 tracker:
   enabled: false

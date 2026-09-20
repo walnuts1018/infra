@@ -1,5 +1,6 @@
 local app = import 'app.json5';
 local deployment = import 'deployment.jsonnet';
+local valkeyCluster = import 'valkeycluster.jsonnet';
 {
   apiVersion: 'cilium.io/v2',
   kind: 'CiliumNetworkPolicy',
@@ -67,7 +68,9 @@ local deployment = import 'deployment.jsonnet';
         toEndpoints: [{
           matchLabels: {
             'k8s:io.kubernetes.pod.namespace': app.namespace,
-            'k8s:app.kubernetes.io/name': 'peertube-valkey',
+            'k8s:app.kubernetes.io/name': 'valkey',
+            'k8s:app.kubernetes.io/instance': valkeyCluster.metadata.name,
+            'k8s:app.kubernetes.io/component': 'valkey-cluster',
           },
         }],
         toPorts: [
