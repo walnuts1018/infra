@@ -1,6 +1,7 @@
 local app = import 'app.json5';
 local secrets = import 'external-secret-secrets.jsonnet';
 local runnerConfigMap = import 'runner-configmap.jsonnet';
+local runnerID = 'vod';
 local labels = {
   'app.kubernetes.io/name': app.name,
   'app.kubernetes.io/instance': app.name,
@@ -13,7 +14,7 @@ local peertubeURL = 'http://peertube.peertube.svc.cluster.local:9000';
 local runnerProbeCommand = [
   'peertube-runner',
   '--id',
-  'vod',
+  runnerID,
   'list-registered',
 ];
 local runnerEnv = [
@@ -34,16 +35,12 @@ local runnerEnv = [
     value: '/run/peertube-runner',
   },
   {
-    name: 'POD_NAME',
-    valueFrom: { fieldRef: { fieldPath: 'metadata.name' } },
-  },
-  {
     name: 'RUNNER_NAME',
     valueFrom: { fieldRef: { fieldPath: 'metadata.name' } },
   },
   {
     name: 'RUNNER_ID',
-    value: 'vod',
+    value: runnerID,
   },
   {
     name: 'PEERTUBE_URL',
@@ -74,7 +71,6 @@ local runnerEnv = [
         labels: labels,
       },
       spec: {
-        serviceAccountName: (import 'serviceaccount.jsonnet').metadata.name,
         automountServiceAccountToken: false,
         securityContext: {
           runAsNonRoot: true,
@@ -137,6 +133,7 @@ local runnerEnv = [
               limits: {
                 cpu: '500m',
                 memory: '512Mi',
+                'ephemeral-storage': '1Gi',
               },
             },
           },
@@ -151,7 +148,7 @@ local runnerEnv = [
             ],
             args: [
               '--id',
-              'vod',
+              runnerID,
               'server',
               '--enable-job',
               'vod-hls-transcoding',
@@ -213,12 +210,14 @@ local runnerEnv = [
             },
             resources: {
               requests: {
-                cpu: '100m',
-                memory: '256Mi',
+                cpu: '1',
+                memory: '512Mi',
+                'ephemeral-storage': '1Gi',
               },
               limits: {
                 cpu: '4',
                 memory: '4Gi',
+                'ephemeral-storage': '22Gi',
               },
             },
           },
@@ -232,15 +231,21 @@ local runnerEnv = [
           },
           {
             name: 'cache',
-            emptyDir: {},
+            emptyDir: {
+              sizeLimit: '20Gi',
+            },
           },
           {
             name: 'data',
-            emptyDir: {},
+            emptyDir: {
+              sizeLimit: '1Gi',
+            },
           },
           {
             name: 'tmp',
-            emptyDir: {},
+            emptyDir: {
+              sizeLimit: '1Gi',
+            },
           },
         ],
       },

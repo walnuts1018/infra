@@ -25,10 +25,7 @@ local oidcSecret = import 'external-secret-oidc.jsonnet';
       },
       scopes: [
         'openid',
-        'email',
-        'profile',
         'offline_access',
-        'urn:zitadel:iam:org:projects:roles',
       ],
       redirectURL: 'https://peertube.walnuts.dev/oauth2/callback',
       logoutPath: '/oauth2/logout',

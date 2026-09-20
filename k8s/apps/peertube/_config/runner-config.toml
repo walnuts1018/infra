@@ -1,5 +1,5 @@
 [jobs]
-concurrency = 2
+concurrency = 1
 
 [ffmpeg]
 threads = 0

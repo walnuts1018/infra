@@ -54,21 +54,10 @@ async function login() {
 }
 
 async function getRegistrationToken(headers) {
-  let tokens = await request('/api/v1/runners/registration-tokens?count=100', { headers })
+  const tokens = await request('/api/v1/runners/registration-tokens?count=1', { headers })
     .then(response => response.json())
 
-  if (tokens.total === 0) {
-    await request('/api/v1/runners/registration-tokens/generate', {
-      method: 'POST',
-      headers,
-    })
-    tokens = await request('/api/v1/runners/registration-tokens?count=100', { headers })
-      .then(response => response.json())
-  }
-
-  const token = tokens.data
-    .sort((left, right) => new Date(right.createdAt) - new Date(left.createdAt))[0]
-    ?.registrationToken
+  const token = tokens.data?.[0]?.registrationToken
   if (!token) throw new Error('PeerTube did not return a runner registration token')
   return token
 }
@@ -80,7 +69,6 @@ async function registerRunner(registrationToken) {
     body: JSON.stringify({
       name: runnerName,
       registrationToken,
-      version: '0.6.0',
     }),
   }).then(response => response.json())
 
