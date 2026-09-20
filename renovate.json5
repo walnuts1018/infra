@@ -95,6 +95,17 @@
       versioning: 'semver',
     },
     {
+      groupName: 'peertube images',
+      groupSlug: 'peertube-images',
+      matchManagers: [
+        'npm',
+      ],
+      matchPackageNames: [
+        '@peertube/peertube-runner',
+      ],
+      versioning: 'npm',
+    },
+    {
       groupName: 'netbird',
       matchPackageNames: [
         '/netbird/',
