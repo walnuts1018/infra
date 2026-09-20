@@ -25,6 +25,8 @@ local app = import 'app.json5';
     S3_ENDPOINT: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333',
     AWS_ENDPOINT_URL: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333',
     AUTH_MODE: 'introspection',
+    OIDC_REQUIRED_ROLE: '391616443902329228:beast-user',
+    OIDC_ROLE_CLAIM: 'my:zitadel:grants',
     OIDC_INTROSPECTION_URL: 'https://auth.walnuts.dev/oauth/v2/introspect',
     POSTGRES_HOST: 'postgresql-default-rw.databases.svc.cluster.local',
     RABBITMQ_ENCODE_JOB_QUEUE: 'beast.encoder.jobs',

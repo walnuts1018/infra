@@ -1,5 +1,4 @@
 local app = import 'app.json5';
-local images = import 'images.libsonnet';
 local labels = {
   'app.kubernetes.io/name': 'backend',
   'app.kubernetes.io/part-of': app.name,
@@ -31,7 +30,7 @@ local labels = {
         },
         containers: [{
           name: 'apiserver',
-          image: images.backend + ':' + images.tag,
+          image: 'ghcr.io/walnuts1018/beast/backend:9e7246e-amd64',
           imagePullPolicy: 'Always',
           envFrom: [
             { configMapRef: { name: app.name + '-config' } },

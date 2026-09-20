@@ -1,5 +1,4 @@
 local app = import 'app.json5';
-local images = import 'images.libsonnet';
 local labels = {
   'app.kubernetes.io/name': 'encoder',
   'app.kubernetes.io/part-of': app.name,
@@ -27,7 +26,7 @@ local labels = {
         },
         containers: [{
           name: 'encoder',
-          image: images.encoder + ':' + images.tag,
+          image: 'ghcr.io/walnuts1018/beast/encoder:18de2a4-amd64',
           imagePullPolicy: 'Always',
           envFrom: [
             { configMapRef: { name: app.name + '-config' } },

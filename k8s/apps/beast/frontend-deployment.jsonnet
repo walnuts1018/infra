@@ -1,5 +1,4 @@
 local app = import 'app.json5';
-local images = import 'images.libsonnet';
 local labels = {
   'app.kubernetes.io/name': 'frontend',
   'app.kubernetes.io/part-of': app.name,
@@ -26,7 +25,7 @@ local labels = {
         },
         containers: [{
           name: 'frontend',
-          image: images.frontend + ':' + images.tag,
+          image: 'ghcr.io/walnuts1018/beast/frontend:50f61d9-amd64',
           imagePullPolicy: 'Always',
           ports: [{ name: 'http', containerPort: 8080 }],
           readinessProbe: { httpGet: { path: '/livez', port: 'http' }, periodSeconds: 5, timeoutSeconds: 3 },
