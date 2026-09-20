@@ -2,7 +2,7 @@
   "name": "peertube-runner-image",
   "private": true,
   "engines": {
-    "node": ">=22"
+    "node": ">=24.21.0"
   },
   "dependencies": {
     "@peertube/peertube-runner": "0.6.0"
