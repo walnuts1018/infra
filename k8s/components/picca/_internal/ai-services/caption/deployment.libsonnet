@@ -5,28 +5,28 @@ function(app)
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
-      name: app.name + '-caption-service',
+      name: app.name + '-caption-worker',
       namespace: app.namespace,
-      labels: labels(app.name + '-caption-service'),
+      labels: labels(app.name + '-caption-worker'),
     },
     spec: {
       replicas: 1,
       selector: {
-        matchLabels: labels(app.name + '-caption-service'),
+        matchLabels: labels(app.name + '-caption-worker'),
       },
       template: {
         metadata: {
-          labels: labels(app.name + '-caption-service'),
+          labels: labels(app.name + '-caption-worker'),
         },
         spec: {
           serviceAccountName: sa.metadata.name,
           imagePullSecrets: [{ name: 'ghcr-login-secret' }],
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
-              name: 'caption-service',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.52',
+              name: 'caption-worker',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.53',
               imagePullPolicy: 'IfNotPresent',
-              command: ['python', 'scripts/run_caption_service.py'],
+              command: ['python', 'scripts/run_caption_worker.py'],
               env: [
                 { name: 'HOME', value: '/tmp' },
                 { name: 'HF_HOME', value: '/tmp/huggingface' },

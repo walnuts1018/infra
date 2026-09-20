@@ -22,11 +22,11 @@ function(app)
       value: 'http://picca-sparse-service.' + app.namespace + '.svc.cluster.local:8002',
     },
     {
-      name: 'OCR_SERVICE_URL',
-      value: 'http://picca-ocr-service.' + app.namespace + '.svc.cluster.local:8003',
+      name: 'OCR_WORKER_URL',
+      value: 'http://picca-ocr-worker.' + app.namespace + '.svc.cluster.local:8080',
     },
     {
-      name: 'CAPTION_SERVICE_URL',
-      value: 'http://picca-caption-service.' + app.namespace + '.svc.cluster.local:8004',
+      name: 'CAPTION_WORKER_URL',
+      value: 'http://picca-caption-worker.' + app.namespace + '.svc.cluster.local:8080',
     },
   ]

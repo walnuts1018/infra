@@ -24,7 +24,7 @@ function(app)
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: 'dense-service',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.52',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.53',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_dense_service.py'],
               env: [

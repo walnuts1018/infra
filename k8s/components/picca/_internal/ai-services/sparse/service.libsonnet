@@ -1,18 +1,17 @@
 function(app)
   local labels = import '../../../../labels.libsonnet';
+  local name = app.name + '-sparse-service';
   {
     apiVersion: 'v1',
     kind: 'Service',
     metadata: {
-      name: app.name + '-sparse-service',
+      name: name,
       namespace: app.namespace,
-      labels: labels(app.name + '-sparse-service'),
+      labels: labels(name),
     },
     spec: {
-      selector: labels(app.name + '-sparse-service'),
-      ports: [
-        { name: 'http', port: 8002, targetPort: 'http' },
-      ],
+      selector: labels(name),
+      ports: [{ name: 'http', port: 8002, targetPort: 'http' }],
       type: 'ClusterIP',
     },
   }

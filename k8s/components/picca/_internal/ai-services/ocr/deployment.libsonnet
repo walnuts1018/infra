@@ -5,28 +5,28 @@ function(app)
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
-      name: app.name + '-ocr-service',
+      name: app.name + '-ocr-worker',
       namespace: app.namespace,
-      labels: labels(app.name + '-ocr-service'),
+      labels: labels(app.name + '-ocr-worker'),
     },
     spec: {
       replicas: 1,
       selector: {
-        matchLabels: labels(app.name + '-ocr-service'),
+        matchLabels: labels(app.name + '-ocr-worker'),
       },
       template: {
         metadata: {
-          labels: labels(app.name + '-ocr-service'),
+          labels: labels(app.name + '-ocr-worker'),
         },
         spec: {
           serviceAccountName: sa.metadata.name,
           imagePullSecrets: [{ name: 'ghcr-login-secret' }],
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
-              name: 'ocr-service',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.52',
+              name: 'ocr-worker',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.53',
               imagePullPolicy: 'IfNotPresent',
-              command: ['python', 'scripts/run_ocr_service.py'],
+              command: ['python', 'scripts/run_ocr_worker.py'],
               env: [
                 { name: 'HOME', value: '/tmp' },
                 { name: 'PADDLEX_HOME', value: '/models/paddlex' },

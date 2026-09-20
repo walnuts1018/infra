@@ -82,6 +82,13 @@ function(app) {
           {
             namespaceSelector: {
               matchLabels: {
+                'kubernetes.io/metadata.name': 'keda',
+              },
+            },
+          },
+          {
+            namespaceSelector: {
+              matchLabels: {
                 'kubernetes.io/metadata.name': 'seaweedfs',
               },
             },

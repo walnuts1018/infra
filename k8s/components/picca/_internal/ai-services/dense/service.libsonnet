@@ -1,18 +1,17 @@
 function(app)
   local labels = import '../../../../labels.libsonnet';
+  local name = app.name + '-dense-service';
   {
     apiVersion: 'v1',
     kind: 'Service',
     metadata: {
-      name: app.name + '-dense-service',
+      name: name,
       namespace: app.namespace,
-      labels: labels(app.name + '-dense-service'),
+      labels: labels(name),
     },
     spec: {
-      selector: labels(app.name + '-dense-service'),
-      ports: [
-        { name: 'http', port: 8001, targetPort: 'http' },
-      ],
+      selector: labels(name),
+      ports: [{ name: 'http', port: 8001, targetPort: 'http' }],
       type: 'ClusterIP',
     },
   }
