@@ -93,10 +93,4 @@
     db_name: 'gha_cache_server',
     user_name: 'gha_cache_server',
   },
-  {
-    db_name: 'peertube',
-    user_name: 'peertube',
-    secret_source_key: 'terraform-external-secrets',
-    secret_source_property: 'peertube-database-password',
-  },
 ]

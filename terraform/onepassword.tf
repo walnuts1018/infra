@@ -32,6 +32,4 @@ module "onepassword" {
   picca_dev_client_secret = module.zitadel.picca_dev_oidc_client_secret
   shumoku_client_id       = module.zitadel.shumoku_oidc_client_id
   shumoku_client_secret   = module.zitadel.shumoku_oidc_client_secret
-  peertube_client_id      = module.zitadel.peertube_oidc_client_id
-  peertube_client_secret  = module.zitadel.peertube_oidc_client_secret
 }

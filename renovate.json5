@@ -79,33 +79,6 @@
   ],
   packageRules: [
     {
-      groupName: 'peertube images',
-      groupSlug: 'peertube-images',
-      matchManagers: [
-        'kubernetes',
-      ],
-      matchDatasources: [
-        'docker',
-      ],
-      matchPackageNames: [
-        'docker.io/chocobozzz/peertube',
-        'chocobozzz/peertube',
-        'ghcr.io/walnuts1018/infra/peertube-runner',
-      ],
-      versioning: 'semver',
-    },
-    {
-      groupName: 'peertube images',
-      groupSlug: 'peertube-images',
-      matchManagers: [
-        'npm',
-      ],
-      matchPackageNames: [
-        '@peertube/peertube-runner',
-      ],
-      versioning: 'npm',
-    },
-    {
       groupName: 'netbird',
       matchPackageNames: [
         '/netbird/',

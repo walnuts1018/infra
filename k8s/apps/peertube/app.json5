@@ -1,7 +1,0 @@
-{
-  name: "peertube",
-  namespace: "peertube",
-  clusters: {
-    kurumi: {},
-  },
-}

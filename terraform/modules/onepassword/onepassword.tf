@@ -75,26 +75,6 @@ resource "random_password" "coder_database_password" {
   special = false
 }
 
-resource "random_password" "peertube_database_password" {
-  length  = 32
-  special = false
-}
-
-resource "random_password" "peertube_redis_password" {
-  length  = 32
-  special = false
-}
-
-resource "random_password" "peertube_root_password" {
-  length  = 32
-  special = false
-}
-
-resource "random_password" "peertube_secret" {
-  length  = 64
-  special = false
-}
-
 resource "random_password" "iwashi_session_key" {
   length  = 64
   special = false
@@ -152,12 +132,6 @@ resource "onepassword_item" "external_secret" {
         "picca-dev-imgproxy-salt"                = { type = "CONCEALED", value = random_id.picca_dev_imgproxy_salt.hex }
         "picca-dev-redis-password"               = { type = "CONCEALED", value = random_password.picca_dev_redis_password.result }
         "picca-dev-rabbitmq-password"            = { type = "CONCEALED", value = random_password.picca_dev_rabbitmq_password.result }
-        "peertube-client-id"                     = { type = "STRING", value = var.peertube_client_id }
-        "peertube-client-secret"                 = { type = "CONCEALED", value = var.peertube_client_secret }
-        "peertube-database-password"             = { type = "CONCEALED", value = random_password.peertube_database_password.result }
-        "peertube-redis-password"                = { type = "CONCEALED", value = random_password.peertube_redis_password.result }
-        "peertube-root-password"                 = { type = "CONCEALED", value = random_password.peertube_root_password.result }
-        "peertube-secret"                        = { type = "CONCEALED", value = random_password.peertube_secret.result }
         "radar-auth-secret"                      = { type = "CONCEALED", value = random_password.radar_auth_secret.result }
         "radar-client-id"                        = { type = "STRING", value = var.radar_client_id }
         "radar-client-secret"                    = { type = "CONCEALED", value = var.radar_client_secret }
