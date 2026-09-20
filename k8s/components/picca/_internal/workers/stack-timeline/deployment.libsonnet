@@ -1,6 +1,6 @@
 function(app)
   local labels = import '../../../../labels.libsonnet';
-  local commonEnv = (import '../../env/common.libsonnet')(app);
+  local commonEnv = (import '../../env/common.libsonnet')(app, '8');
   local postgresSecret = (import '../../postgres/external-secret.libsonnet')(app);
   local scyllaSecret = (import '../../scylla/external-secret.libsonnet')(app);
   local valkeySecret = (import '../../valkey/external-secret.libsonnet')(app);

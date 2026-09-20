@@ -1,4 +1,4 @@
-function(app)
+function(app, postgresMaxConns='2')
   local dbName = std.strReplace(app.name, '-', '_');
   [
     {
@@ -15,6 +15,6 @@ function(app)
     },
     {
       name: 'POSTGRES_MAX_CONNS',
-      value: '2',
+      value: postgresMaxConns,
     },
   ]

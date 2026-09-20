@@ -1,6 +1,6 @@
-function(app)
+function(app, postgresMaxConns='2')
   (import 'observability.libsonnet')(app)
   + (import 'storage.libsonnet')(app)
-  + (import 'database.libsonnet')(app)
+  + (import 'database.libsonnet')(app, postgresMaxConns)
   + (import 'oidc.libsonnet')(app)
   + (import 'search-ai.libsonnet')(app)
