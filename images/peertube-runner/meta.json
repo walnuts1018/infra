@@ -1,0 +1,5 @@
+{
+  "name": "peertube-runner",
+  "tag_strategy": "package",
+  "tag_dependency": "@peertube/peertube-runner"
+}
