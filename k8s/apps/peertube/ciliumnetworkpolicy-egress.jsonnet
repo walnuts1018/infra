@@ -103,20 +103,6 @@ local valkeyCluster = import 'valkeycluster.jsonnet';
           },
         ],
       },
-      {
-        toFQDNs: [
-          { matchName: 'auth.walnuts.dev' },
-          { matchName: 'registry.npmjs.org' },
-        ],
-        toPorts: [
-          { ports: [
-            {
-              port: '443',
-              protocol: 'TCP',
-            },
-          ] },
-        ],
-      },
     ],
   },
 }

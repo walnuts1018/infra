@@ -26,4 +26,4 @@ ZITADELの`peertube-user`ロールを持つユーザーだけがEnvoy Gatewayを
 
 ## Remote Runner
 
-Runner registration tokenは公式PeerTubeイメージのinitContainerがPeerTube APIから取得します。PeerTube側でtokenが存在しない場合だけAPIで生成し、RunnerのLonghorn領域へ保存します。第三者Runnerイメージにはrootパスワードを渡しません。Terraformや1Passwordでtokenを生成・管理しません。
+Runnerは`images/peertube-runner`でビルドした公式`@peertube/peertube-runner`イメージを使用します。initContainerの`bootstrap.mjs`がPeerTube APIでregistration tokenとrunner tokenを取得し、Longhornにはrunner設定だけを保存します。FFmpegのtranscoding作業領域とIPC領域は`emptyDir`です。Terraformや1Passwordでtokenを生成・管理しません。

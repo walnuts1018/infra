@@ -41,6 +41,10 @@ local runnerStatefulSet = import 'runner-statefulset.jsonnet';
         }],
         toPorts: [{ ports: [{ port: '9000', protocol: 'TCP' }] }],
       },
+      {
+        toFQDNs: [{ matchName: 'peertube.walnuts.dev' }],
+        toPorts: [{ ports: [{ port: '443', protocol: 'TCP' }] }],
+      },
     ],
   },
 }

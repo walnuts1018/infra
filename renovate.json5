@@ -90,8 +90,7 @@
       matchPackageNames: [
         'docker.io/chocobozzz/peertube',
         'chocobozzz/peertube',
-        'docker.io/zendet/peertube-runner',
-        'zendet/peertube-runner',
+        'ghcr.io/walnuts1018/infra/peertube-runner',
       ],
       versioning: 'semver',
     },

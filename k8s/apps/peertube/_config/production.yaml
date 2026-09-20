@@ -14,6 +14,9 @@ trust_proxy:
 http_timeouts:
   request: 30 minutes
 
+geo_ip:
+  enabled: false
+
 static_files:
   private_files_require_auth: true
 
@@ -141,4 +144,8 @@ webadmin:
 
 plugins:
   index:
+    enabled: false
+
+peertube:
+  check_latest_version:
     enabled: false

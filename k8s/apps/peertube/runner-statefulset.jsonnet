@@ -1,8 +1,6 @@
 local app = import 'app.json5';
-local deployment = import 'deployment.jsonnet';
 local secrets = import 'external-secret-secrets.jsonnet';
 local runnerConfigMap = import 'runner-configmap.jsonnet';
-local peertubeImage = deployment.spec.template.spec.containers[0].image;
 local labels = {
   'app.kubernetes.io/name': app.name,
   'app.kubernetes.io/instance': app.name,
@@ -13,10 +11,10 @@ local labels = {
 };
 local peertubeURL = 'http://peertube.peertube.svc.cluster.local:9000';
 local runnerProbeCommand = [
-  'sh',
-  '-ec',
-  'id="${RUNNER_GROUP_ID}-$(echo "$POD_NAME" | sed \'s/.*-//\')"; ' +
-  'timeout 2 peertube-runner --id "$id" list-registered >/dev/null',
+  'peertube-runner',
+  '--id',
+  'vod',
+  'list-registered',
 ];
 local runnerEnv = [
   {
@@ -29,18 +27,22 @@ local runnerEnv = [
   },
   {
     name: 'XDG_CACHE_HOME',
-    value: '/home/peertube/.cache',
+    value: '/cache',
   },
   {
     name: 'XDG_DATA_HOME',
-    value: '/home/peertube/.local/share',
+    value: '/run/peertube-runner',
   },
   {
     name: 'POD_NAME',
     valueFrom: { fieldRef: { fieldPath: 'metadata.name' } },
   },
   {
-    name: 'RUNNER_GROUP_ID',
+    name: 'RUNNER_NAME',
+    valueFrom: { fieldRef: { fieldPath: 'metadata.name' } },
+  },
+  {
+    name: 'RUNNER_ID',
     value: 'vod',
   },
   {
@@ -48,14 +50,11 @@ local runnerEnv = [
     value: peertubeURL,
   },
   {
-    name: 'ENABLE_JOBS',
-    value: 'vod-hls-transcoding,vod-audio-merge-transcoding',
-  },
-  {
-    name: 'UNREGISTER_ON_EXIT',
-    value: 'false',
+    name: 'RUNNER_STATIC_CONFIG_FILE',
+    value: '/bootstrap/config.toml',
   },
 ];
+
 {
   apiVersion: 'apps/v1',
   kind: 'StatefulSet',
@@ -85,14 +84,15 @@ local runnerEnv = [
         },
         initContainers: [
           {
-            name: 'get-registration-token',
-            image: peertubeImage,
+            name: 'bootstrap',
+            image: 'ghcr.io/walnuts1018/infra/peertube-runner:0.6.0',
             imagePullPolicy: 'IfNotPresent',
             command: [
-              'sh',
-              '-ec',
+              'node',
             ],
-            args: [importstr './_scripts/get-runner-registration-token.sh'],
+            args: [
+              '/opt/peertube-runner/bootstrap.mjs',
+            ],
             env: runnerEnv + [
               {
                 name: 'PEERTUBE_ROOT_PASSWORD',
@@ -106,54 +106,8 @@ local runnerEnv = [
             ],
             volumeMounts: [
               {
-                name: 'runner-bootstrap',
-                mountPath: '/runner-bootstrap',
-              },
-              {
-                name: 'tmp',
-                mountPath: '/tmp',
-              },
-            ],
-            securityContext: {
-              allowPrivilegeEscalation: false,
-              readOnlyRootFilesystem: true,
-              capabilities: {
-                drop: ['ALL'],
-              },
-              seccompProfile: {
-                type: 'RuntimeDefault',
-              },
-            },
-            resources: {
-              requests: {
-                cpu: '100m',
-                memory: '256Mi',
-              },
-              limits: {
-                cpu: '500m',
-                memory: '512Mi',
-              },
-            },
-          },
-          {
-            name: 'register-runner',
-            image: 'docker.io/zendet/peertube-runner:0.4.0-ctranslate2@sha256:37867f4f3c9e283cca1204f6bb88a630fc04da5176f1b9b9aeeb9a9a0cd16778',
-            imagePullPolicy: 'IfNotPresent',
-            command: [
-              'sh',
-              '-ec',
-            ],
-            args: [importstr './_scripts/bootstrap-runner.sh'],
-            env: runnerEnv,
-            volumeMounts: [
-              {
                 name: 'home',
                 mountPath: '/home/peertube',
-              },
-              {
-                name: 'runner-bootstrap',
-                mountPath: '/runner-bootstrap',
-                readOnly: true,
               },
               {
                 name: 'runner-config',
@@ -181,7 +135,7 @@ local runnerEnv = [
                 memory: '256Mi',
               },
               limits: {
-                cpu: '1',
+                cpu: '500m',
                 memory: '512Mi',
               },
             },
@@ -190,13 +144,33 @@ local runnerEnv = [
         containers: [
           {
             name: 'runner',
-            image: 'docker.io/zendet/peertube-runner:0.4.0-ctranslate2@sha256:37867f4f3c9e283cca1204f6bb88a630fc04da5176f1b9b9aeeb9a9a0cd16778',
+            image: 'ghcr.io/walnuts1018/infra/peertube-runner:0.6.0',
             imagePullPolicy: 'IfNotPresent',
+            command: [
+              'peertube-runner',
+            ],
+            args: [
+              '--id',
+              'vod',
+              'server',
+              '--enable-job',
+              'vod-hls-transcoding',
+              '--enable-job',
+              'vod-audio-merge-transcoding',
+            ],
             env: runnerEnv,
             volumeMounts: [
               {
                 name: 'home',
                 mountPath: '/home/peertube',
+              },
+              {
+                name: 'cache',
+                mountPath: '/cache',
+              },
+              {
+                name: 'data',
+                mountPath: '/run/peertube-runner',
               },
               {
                 name: 'tmp',
@@ -257,7 +231,11 @@ local runnerEnv = [
             },
           },
           {
-            name: 'runner-bootstrap',
+            name: 'cache',
+            emptyDir: {},
+          },
+          {
+            name: 'data',
             emptyDir: {},
           },
           {
@@ -277,7 +255,7 @@ local runnerEnv = [
           storageClassName: 'longhorn',
           resources: {
             requests: {
-              storage: '16Gi',
+              storage: '1Gi',
             },
           },
         },
