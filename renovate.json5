@@ -81,6 +81,9 @@
     {
       groupName: 'peertube images',
       groupSlug: 'peertube-images',
+      matchManagers: [
+        'kubernetes',
+      ],
       matchDatasources: [
         'docker',
       ],
