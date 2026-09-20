@@ -108,7 +108,7 @@ jobs:
                   tag="v1.0.${{ github.run_number }}"
                   ;;
                 *)
-                  echo "::error file=${meta}::.tag_strategy must be either from or run_number"
+                  echo "::error file=${meta}::.tag_strategy must be from or run_number"
                   exit 1
                   ;;
               esac

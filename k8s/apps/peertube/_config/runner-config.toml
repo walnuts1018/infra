@@ -1,0 +1,6 @@
+[jobs]
+concurrency = 1
+
+[ffmpeg]
+threads = 0
+nice = 10

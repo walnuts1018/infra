@@ -110,5 +110,3 @@ variable "peertube_client_secret" {
   type      = string
   sensitive = true
 }
-variable "peertube_role_claim" { type = string }
-variable "peertube_role_claim_property" { type = string }
