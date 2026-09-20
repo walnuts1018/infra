@@ -99,6 +99,10 @@ resource "random_id" "beast_staging_encryption_key" {
   byte_length = 32
 }
 
+resource "random_id" "beast_media_encryption_key" {
+  byte_length = 32
+}
+
 resource "onepassword_item" "external_secret" {
   vault    = var.vault
   title    = "terraform-external-secrets"
@@ -114,6 +118,7 @@ resource "onepassword_item" "external_secret" {
         "beast-client-id"                        = { type = "STRING", value = var.beast_client_id }
         "beast-client-secret"                    = { type = "CONCEALED", value = var.beast_client_secret }
         "beast-database-password"                = { type = "CONCEALED", value = random_password.beast_database_password.result }
+        "beast-media-encryption-key"             = { type = "CONCEALED", value = random_id.beast_media_encryption_key.hex }
         "beast-rabbitmq-password"                = { type = "CONCEALED", value = random_password.beast_rabbitmq_password.result }
         "beast-staging-encryption-key"           = { type = "CONCEALED", value = random_id.beast_staging_encryption_key.hex }
         "coder-client-id"                        = { type = "STRING", value = var.coder_client_id }

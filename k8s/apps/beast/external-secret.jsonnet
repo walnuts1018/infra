@@ -35,9 +35,17 @@ local app = import 'app.json5';
           property: app.name + '-staging-encryption-key',
         },
       },
+      {
+        secretKey: 'media_encryption_key',
+        remoteRef: {
+          key: 'terraform-external-secrets',
+          property: app.name + '-media-encryption-key',
+        },
+      },
     ],
     template_data: {
       STAGING_ENCRYPTION_KEY: '{{ .staging_encryption_key }}',
+      MEDIA_ENCRYPTION_KEY: '{{ .media_encryption_key }}',
     },
   },
 ]

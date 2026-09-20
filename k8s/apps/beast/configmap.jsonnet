@@ -31,7 +31,7 @@ local app = import 'app.json5';
     RABBITMQ_ENCODE_EVENT_QUEUE: 'beast.encoder.events',
     ENCODER_POLL_INTERVAL: '5s',
     ENCODER_WORK_DIR: '/tmp/beast-encoder',
-    ENCODER_DASH_SEGMENT_SECONDS: '4',
+    ENCODER_HLS_SEGMENT_SECONDS: '4',
     FFMPEG_PATH: 'ffmpeg',
     FFPROBE_PATH: 'ffprobe',
   },

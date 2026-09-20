@@ -8,7 +8,7 @@ resource "zitadel_application_oidc" "beast" {
   project_id = zitadel_project.beast.id
   name       = "beast"
 
-  redirect_uris             = ["https://beast.walnuts.dev/auth/callback"]
+  redirect_uris             = ["https://beast.walnuts.dev/api/auth/callback"]
   response_types            = ["OIDC_RESPONSE_TYPE_CODE"]
   grant_types               = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
   auth_method_type          = "OIDC_AUTH_METHOD_TYPE_BASIC"
