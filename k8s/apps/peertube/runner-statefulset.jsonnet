@@ -1,17 +1,14 @@
 local app = import 'app.json5';
 local secrets = import 'external-secret-secrets.jsonnet';
 local runnerConfigMap = import 'runner-configmap.jsonnet';
-local baseLabels = {
+local labels = {
   'app.kubernetes.io/name': app.name,
   'app.kubernetes.io/instance': app.name,
   'app.kubernetes.io/part-of': app.name,
   'app.kubernetes.io/component': 'runner',
-};
-local runnerLabels = {
+} + {
   'peertube.runner/group': 'vod',
 };
-local labels = baseLabels + runnerLabels;
-local runnerImage = 'docker.io/zendet/peertube-runner:0.4.0-ctranslate2@sha256:37867f4f3c9e283cca1204f6bb88a630fc04da5176f1b9b9aeeb9a9a0cd16778';
 local peertubeURL = 'http://peertube.peertube.svc.cluster.local:9000';
 local runnerProbeCommand = [
   'sh',
@@ -87,7 +84,7 @@ local runnerEnv = [
         initContainers: [
           {
             name: 'register',
-            image: runnerImage,
+            image: 'docker.io/zendet/peertube-runner:0.4.0-ctranslate2@sha256:37867f4f3c9e283cca1204f6bb88a630fc04da5176f1b9b9aeeb9a9a0cd16778',
             imagePullPolicy: 'IfNotPresent',
             command: [
               'sh',
@@ -145,7 +142,7 @@ local runnerEnv = [
         containers: [
           {
             name: 'runner',
-            image: runnerImage,
+            image: 'docker.io/zendet/peertube-runner:0.4.0-ctranslate2@sha256:37867f4f3c9e283cca1204f6bb88a630fc04da5176f1b9b9aeeb9a9a0cd16778',
             imagePullPolicy: 'IfNotPresent',
             env: runnerEnv,
             volumeMounts: [
