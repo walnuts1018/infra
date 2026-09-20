@@ -47,6 +47,10 @@ local runnerEnv = [
     value: peertubeURL,
   },
   {
+    name: 'PEERTUBE_HOST',
+    value: 'peertube.walnuts.dev',
+  },
+  {
     name: 'RUNNER_STATIC_CONFIG_FILE',
     value: '/bootstrap/config.toml',
   },

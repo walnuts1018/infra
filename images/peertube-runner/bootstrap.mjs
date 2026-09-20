@@ -1,7 +1,9 @@
+import http from 'node:http'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname } from 'node:path'
 
 const baseURL = process.env.PEERTUBE_URL
+const host = process.env.PEERTUBE_HOST
 const password = process.env.PEERTUBE_ROOT_PASSWORD
 const runnerID = process.env.RUNNER_ID ?? 'vod'
 const runnerName = process.env.RUNNER_NAME ?? `peertube-runner-${runnerID}`
@@ -9,15 +11,50 @@ const staticConfigFile = process.env.RUNNER_STATIC_CONFIG_FILE ?? '/bootstrap/co
 const configHome = process.env.XDG_CONFIG_HOME ?? '/home/peertube/.config'
 const configFile = `${configHome}/peertube-runner-nodejs/${runnerID}/config.toml`
 
-if (!baseURL || !password) throw new Error('PEERTUBE_URL and PEERTUBE_ROOT_PASSWORD are required')
+if (!baseURL || !host || !password) {
+  throw new Error('PEERTUBE_URL, PEERTUBE_HOST, and PEERTUBE_ROOT_PASSWORD are required')
+}
 
 async function request(path, options = {}) {
-  const response = await fetch(`${baseURL}${path}`, options)
-  if (!response.ok) {
-    const body = await response.text()
-    throw new Error(`${options.method ?? 'GET'} ${path}: ${response.status} ${body}`)
+  const url = new URL(path, baseURL)
+  const body = options.body instanceof URLSearchParams
+    ? options.body.toString()
+    : options.body
+  const headers = {
+    ...(options.headers ?? {}),
+    host,
   }
-  return response
+
+  return new Promise((resolve, reject) => {
+    const req = http.request(url, {
+      method: options.method ?? 'GET',
+      headers,
+    }, response => {
+      const chunks = []
+
+      response.on('data', chunk => chunks.push(chunk))
+      response.on('end', () => {
+        const text = Buffer.concat(chunks).toString('utf8')
+        const status = response.statusCode ?? 0
+
+        if (status < 200 || status >= 300) {
+          reject(new Error(`${options.method ?? 'GET'} ${path}: ${status} ${text}`))
+          return
+        }
+
+        resolve({
+          json: async () => JSON.parse(text),
+          text: async () => text,
+        })
+      })
+    })
+
+    req.on('error', reject)
+
+    if (body !== undefined) req.write(body)
+
+    req.end()
+  })
 }
 
 function tomlString(value) {
