@@ -211,6 +211,14 @@
         "diskType": "ssd",
         "replication": "000"
       }
+    },
+    {
+      "name": "peertube",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
+      }
     }
   ],
   "accessKeyIdentities": [
@@ -418,6 +426,11 @@
             "claim": "sub",
             "value": "system:serviceaccount:cortex:iwashi-cortex",
             "role": "cortex"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:peertube:peertube",
+            "role": "peertube"
           }
         ]
       },
@@ -659,6 +672,25 @@
             ]
           }
         ]
+      },
+      {
+        "name": "peertube",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:Get*",
+              "s3:Put*",
+              "s3:Delete*",
+              "s3:List*",
+              "s3:*Tagging",
+              "s3:AbortMultipartUpload"
+            ],
+            "buckets": [
+              "peertube"
+            ]
+          }
+        ]
       }
     ],
     "roles": [
@@ -759,6 +791,13 @@
         "name": "cortex",
         "policies": [
           "cortex"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "peertube",
+        "policies": [
+          "peertube"
         ],
         "provider": "k8s"
       }
