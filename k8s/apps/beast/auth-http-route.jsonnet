@@ -7,10 +7,7 @@ local app = import 'app.json5';
     parentRefs: [{ name: 'envoy-gateway', namespace: 'envoy-gateway-system' }],
     hostnames: ['beast.walnuts.dev'],
     rules: [{
-      matches: [
-        { path: { type: 'Exact', value: '/api/auth/mobile/login' } },
-        { path: { type: 'Exact', value: '/api/auth/callback' } },
-      ],
+      matches: [{ path: { type: 'PathPrefix', value: '/api/auth/' } }],
       timeouts: { request: '0s', backendRequest: '0s' },
       backendRefs: [{ name: app.name + '-apiserver', port: 8080 }],
     }],

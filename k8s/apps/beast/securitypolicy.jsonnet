@@ -19,10 +19,10 @@ local app = import 'app.json5';
         issuer: 'https://auth.walnuts.dev',
       },
       clientIDRef: {
-        name: app.name + '-oidc',
+        name: app.name + '-oidc-gateway',
       },
       clientSecret: {
-        name: app.name + '-oidc',
+        name: app.name + '-oidc-gateway',
       },
       scopes: [
         'openid',
