@@ -14,7 +14,8 @@ local redisSecret = import 'external-secret-redis.jsonnet';
   },
   spec: {
     shards: 1,
-    replicas: 2,
+    // PeerTubeがstandalone Redis clientを使っているのでreplicasは0にする
+    replicas: 0,
     users: [
       {
         name: 'default',
