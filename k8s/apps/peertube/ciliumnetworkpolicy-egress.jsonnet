@@ -68,9 +68,7 @@ local valkeyCluster = import 'valkeycluster.jsonnet';
         toEndpoints: [{
           matchLabels: {
             'k8s:io.kubernetes.pod.namespace': app.namespace,
-            'k8s:app.kubernetes.io/name': 'valkey',
-            'k8s:app.kubernetes.io/instance': valkeyCluster.metadata.name,
-            'k8s:app.kubernetes.io/component': 'valkey-cluster',
+            'k8s:valkey.io/cluster': valkeyCluster.metadata.name,
           },
         }],
         toPorts: [
