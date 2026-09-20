@@ -1,4 +1,5 @@
 local app = import 'app.json5';
+
 {
   apiVersion: 'v1',
   kind: 'PersistentVolumeClaim',
@@ -11,7 +12,7 @@ local app = import 'app.json5';
     storageClassName: 'longhorn',
     resources: {
       requests: {
-        storage: '16Gi',
+        storage: '200Gi',
       },
     },
   },
