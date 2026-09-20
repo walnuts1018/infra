@@ -1,5 +1,5 @@
 {
-  tag: 'f62ab6b-amd64',
+  tag: '9c0d175-amd64',
   backend: 'ghcr.io/walnuts1018/beast/backend',
   encoder: 'ghcr.io/walnuts1018/beast/encoder',
   frontend: 'ghcr.io/walnuts1018/beast/frontend',
