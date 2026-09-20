@@ -44,7 +44,7 @@ local labels = {
         containers: [
           {
             name: 'server',
-            image: 'docker.io/chocobozzz/peertube:v8.3.0',
+            image: 'docker.io/chocobozzz/peertube:v8.3.0@sha256:dd14f2ccbac3bcbf42e9c6db597a51e8e82f667db872475ac8fa759360caf636',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {

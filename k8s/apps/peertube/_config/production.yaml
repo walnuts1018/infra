@@ -9,6 +9,7 @@ webserver:
 
 trust_proxy:
   - loopback
+  - uniquelocal
 
 http_timeouts:
   request: 30 minutes
@@ -59,7 +60,9 @@ admin:
   email: admin@walnuts.dev
 
 signup:
-  enabled: false
+  enabled: true
+  requires_approval: false
+  requires_email_verification: false
 
 user:
   disable_root_auth: false

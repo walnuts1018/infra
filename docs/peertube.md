@@ -22,8 +22,8 @@ secret_name="$(kubectl -n peertube get externalsecret peertube-secrets -o jsonpa
 kubectl -n peertube get secret "${secret_name}" -o jsonpath='{.data.admin-password}' | base64 -d
 ```
 
-rootでログインした後、管理画面から通常ユーザーを作成してください。signupは無効のままです。
+ZITADELの`peertube-user`ロールを持つユーザーだけがEnvoy Gatewayを通過できます。PeerTubeのsignupは有効にしているため、各ユーザーが初回アクセス時にPeerTube用のローカルパスワードを設定できます。
 
 ## Remote Runner
 
-Runner registration tokenはPeerTube APIからRunner起動時に取得します。PeerTube側でtokenが存在しない場合だけAPIで生成し、RunnerのLonghorn領域へ保存します。Terraformや1Passwordでtokenを生成・管理しません。
+Runner registration tokenは公式PeerTubeイメージのinitContainerがPeerTube APIから取得します。PeerTube側でtokenが存在しない場合だけAPIで生成し、RunnerのLonghorn領域へ保存します。第三者Runnerイメージにはrootパスワードを渡しません。Terraformや1Passwordでtokenを生成・管理しません。

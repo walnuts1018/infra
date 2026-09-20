@@ -30,7 +30,6 @@ local oidcSecret = import 'external-secret-oidc.jsonnet';
         'offline_access',
         'urn:zitadel:iam:org:projects:roles',
       ],
-      forwardAccessToken: true,
       redirectURL: 'https://peertube.walnuts.dev/oauth2/callback',
       logoutPath: '/oauth2/logout',
     },

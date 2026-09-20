@@ -1,6 +1,8 @@
 local app = import 'app.json5';
+local deployment = import 'deployment.jsonnet';
 local secrets = import 'external-secret-secrets.jsonnet';
 local runnerConfigMap = import 'runner-configmap.jsonnet';
+local peertubeImage = deployment.spec.template.spec.containers[0].image;
 local labels = {
   'app.kubernetes.io/name': app.name,
   'app.kubernetes.io/instance': app.name,
@@ -83,14 +85,14 @@ local runnerEnv = [
         },
         initContainers: [
           {
-            name: 'register',
-            image: 'docker.io/zendet/peertube-runner:0.4.0-ctranslate2@sha256:37867f4f3c9e283cca1204f6bb88a630fc04da5176f1b9b9aeeb9a9a0cd16778',
+            name: 'get-registration-token',
+            image: peertubeImage,
             imagePullPolicy: 'IfNotPresent',
             command: [
               'sh',
               '-ec',
             ],
-            args: [importstr './_scripts/bootstrap-runner.sh'],
+            args: [importstr './_scripts/get-runner-registration-token.sh'],
             env: runnerEnv + [
               {
                 name: 'PEERTUBE_ROOT_PASSWORD',
@@ -104,8 +106,54 @@ local runnerEnv = [
             ],
             volumeMounts: [
               {
+                name: 'runner-bootstrap',
+                mountPath: '/runner-bootstrap',
+              },
+              {
+                name: 'tmp',
+                mountPath: '/tmp',
+              },
+            ],
+            securityContext: {
+              allowPrivilegeEscalation: false,
+              readOnlyRootFilesystem: true,
+              capabilities: {
+                drop: ['ALL'],
+              },
+              seccompProfile: {
+                type: 'RuntimeDefault',
+              },
+            },
+            resources: {
+              requests: {
+                cpu: '100m',
+                memory: '256Mi',
+              },
+              limits: {
+                cpu: '500m',
+                memory: '512Mi',
+              },
+            },
+          },
+          {
+            name: 'register-runner',
+            image: 'docker.io/zendet/peertube-runner:0.4.0-ctranslate2@sha256:37867f4f3c9e283cca1204f6bb88a630fc04da5176f1b9b9aeeb9a9a0cd16778',
+            imagePullPolicy: 'IfNotPresent',
+            command: [
+              'sh',
+              '-ec',
+            ],
+            args: [importstr './_scripts/bootstrap-runner.sh'],
+            env: runnerEnv,
+            volumeMounts: [
+              {
                 name: 'home',
                 mountPath: '/home/peertube',
+              },
+              {
+                name: 'runner-bootstrap',
+                mountPath: '/runner-bootstrap',
+                readOnly: true,
               },
               {
                 name: 'runner-config',
@@ -133,8 +181,8 @@ local runnerEnv = [
                 memory: '256Mi',
               },
               limits: {
-                cpu: '4',
-                memory: '4Gi',
+                cpu: '1',
+                memory: '512Mi',
               },
             },
           },
@@ -207,6 +255,10 @@ local runnerEnv = [
             configMap: {
               name: runnerConfigMap.metadata.name,
             },
+          },
+          {
+            name: 'runner-bootstrap',
+            emptyDir: {},
           },
           {
             name: 'tmp',
