@@ -9,10 +9,22 @@ local service = import 'service.jsonnet';
     namespace: app.namespace,
   },
   spec: {
-    parentRefs: [{ name: gateway.metadata.name, namespace: gateway.metadata.namespace }],
+    parentRefs: [
+      {
+        name: gateway.metadata.name,
+        namespace: gateway.metadata.namespace,
+      },
+    ],
     hostnames: ['peertube.walnuts.dev'],
     rules: [{
-      matches: [{ path: { type: 'PathPrefix', value: '/' } }],
+      matches: [
+        {
+          path: {
+            type: 'PathPrefix',
+            value: '/',
+          },
+        },
+      ],
       backendRefs: [
         {
           name: service.metadata.name,

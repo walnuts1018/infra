@@ -15,14 +15,33 @@ local deployment = import 'deployment.jsonnet';
     ingress: [{
       from: [
         {
-          namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'envoy-gateway-system' } },
-          podSelector: { matchLabels: { 'app.kubernetes.io/component': 'proxy', 'app.kubernetes.io/name': 'envoy' } },
+          namespaceSelector: {
+            matchLabels: {
+              'kubernetes.io/metadata.name': 'envoy-gateway-system',
+            },
+          },
+          podSelector: {
+            matchLabels: {
+              'app.kubernetes.io/component': 'proxy',
+              'app.kubernetes.io/name': 'envoy',
+            },
+          },
         },
         {
-          podSelector: { matchLabels: { 'app.kubernetes.io/part-of': app.name, 'app.kubernetes.io/component': 'runner' } },
+          podSelector: {
+            matchLabels: {
+              'app.kubernetes.io/part-of': app.name,
+              'app.kubernetes.io/component': 'runner',
+            },
+          },
         },
       ],
-      ports: [{ port: 9000, protocol: 'TCP' }],
+      ports: [
+        {
+          port: 9000,
+          protocol: 'TCP',
+        },
+      ],
     }],
   },
 }

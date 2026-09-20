@@ -24,21 +24,44 @@ local deployment = import 'deployment.jsonnet';
         }],
         toPorts: [{
           ports: [
-            { port: '53', protocol: 'UDP' },
-            { port: '53', protocol: 'TCP' },
+            {
+              port: '53',
+              protocol: 'UDP',
+            },
+            {
+              port: '53',
+              protocol: 'TCP',
+            },
           ],
-          rules: { dns: [{ matchPattern: '*' }] },
+          rules: {
+            dns: [
+              {
+                matchPattern: '*',
+              },
+            ],
+          },
         }],
       },
       {
-        toEndpoints: [{
-          matchLabels: {
-            'k8s:io.kubernetes.pod.namespace': 'databases',
-            'k8s:cnpg.io/cluster': 'postgresql-default',
-            'k8s:cnpg.io/instanceRole': 'primary',
+        toEndpoints: [
+          {
+            matchLabels: {
+              'k8s:io.kubernetes.pod.namespace': 'databases',
+              'k8s:cnpg.io/cluster': 'postgresql-default',
+              'k8s:cnpg.io/instanceRole': 'primary',
+            },
           },
-        }],
-        toPorts: [{ ports: [{ port: '5432', protocol: 'TCP' }] }],
+        ],
+        toPorts: [
+          {
+            ports: [
+              {
+                port: '5432',
+                protocol: 'TCP',
+              },
+            ],
+          },
+        ],
       },
       {
         toEndpoints: [{
@@ -47,7 +70,16 @@ local deployment = import 'deployment.jsonnet';
             'k8s:app.kubernetes.io/name': 'peertube-valkey',
           },
         }],
-        toPorts: [{ ports: [{ port: '6379', protocol: 'TCP' }] }],
+        toPorts: [
+          {
+            ports: [
+              {
+                port: '6379',
+                protocol: 'TCP',
+              },
+            ],
+          },
+        ],
       },
       {
         toEndpoints: [{
@@ -57,14 +89,30 @@ local deployment = import 'deployment.jsonnet';
             'k8s:app.kubernetes.io/instance': 'seaweedfs-default',
           },
         }],
-        toPorts: [{ ports: [{ port: '8333', protocol: 'TCP' }] }],
+        toPorts: [
+          {
+            ports: [
+              {
+                port: '8333',
+                protocol: 'TCP',
+              },
+            ],
+          },
+        ],
       },
       {
         toFQDNs: [
           { matchName: 'auth.walnuts.dev' },
           { matchName: 'registry.npmjs.org' },
         ],
-        toPorts: [{ ports: [{ port: '443', protocol: 'TCP' }] }],
+        toPorts: [
+          { ports: [
+            {
+              port: '443',
+              protocol: 'TCP',
+            },
+          ] },
+        ],
       },
     ],
   },
