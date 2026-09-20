@@ -73,6 +73,14 @@
       }
     },
     {
+      "name": "beast",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
+      }
+    },
+    {
       "name": "cortex-blocks",
       "publicRead": [],
       "placement": {
@@ -246,6 +254,29 @@
           ],
           "buckets": [
             "maps"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "beast",
+      "secretTarget": {
+        "namespace": "beast",
+        "secretName": "beast-s3-credentials",
+        "accessKeyField": "AWS_ACCESS_KEY_ID",
+        "secretKeyField": "AWS_SECRET_ACCESS_KEY"
+      },
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "Read",
+            "Write",
+            "List",
+            "Tagging"
+          ],
+          "buckets": [
+            "beast"
           ]
         }
       ]

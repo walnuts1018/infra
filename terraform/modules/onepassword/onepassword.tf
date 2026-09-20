@@ -85,6 +85,20 @@ resource "random_password" "iwashi_discovery_key" {
   special = false
 }
 
+resource "random_password" "beast_database_password" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "beast_rabbitmq_password" {
+  length  = 32
+  special = false
+}
+
+resource "random_id" "beast_staging_encryption_key" {
+  byte_length = 32
+}
+
 resource "onepassword_item" "external_secret" {
   vault    = var.vault
   title    = "terraform-external-secrets"
@@ -97,6 +111,11 @@ resource "onepassword_item" "external_secret" {
         "akvorado-client-secret"                 = { type = "CONCEALED", value = var.akvorado_client_secret }
         "argocd-cli-client-id"                   = { type = "STRING", value = var.argocd_cli_client_id }
         "b2-application-key"                     = { type = "CONCEALED", value = var.b2_application_key }
+        "beast-client-id"                        = { type = "STRING", value = var.beast_client_id }
+        "beast-client-secret"                    = { type = "CONCEALED", value = var.beast_client_secret }
+        "beast-database-password"                = { type = "CONCEALED", value = random_password.beast_database_password.result }
+        "beast-rabbitmq-password"                = { type = "CONCEALED", value = random_password.beast_rabbitmq_password.result }
+        "beast-staging-encryption-key"           = { type = "CONCEALED", value = random_id.beast_staging_encryption_key.hex }
         "coder-client-id"                        = { type = "STRING", value = var.coder_client_id }
         "coder-client-secret"                    = { type = "CONCEALED", value = var.coder_client_secret }
         "coder-database-password"                = { type = "CONCEALED", value = random_password.coder_database_password.result }

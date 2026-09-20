@@ -45,6 +45,13 @@ variable "b2_application_key" {
   sensitive = true
 }
 
+variable "beast_client_id" { type = string }
+
+variable "beast_client_secret" {
+  type      = string
+  sensitive = true
+}
+
 variable "radar_client_id" { type = string }
 
 variable "radar_client_secret" {

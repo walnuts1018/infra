@@ -9,6 +9,8 @@ module "onepassword" {
   coder_client_secret     = module.zitadel.coder_oidc_client_secret
   argocd_cli_client_id    = module.zitadel.argocd_cli_client_id
   b2_application_key      = module.b2.application_key.application_key
+  beast_client_id         = module.zitadel.beast_oidc_client_id
+  beast_client_secret     = module.zitadel.beast_oidc_client_secret
   radar_client_id         = module.zitadel.radar_oidc_client_id
   radar_client_secret     = module.zitadel.radar_oidc_client_secret
   hubble_client_id        = module.zitadel.hubble_oidc_client_id

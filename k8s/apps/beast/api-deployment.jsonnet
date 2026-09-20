@@ -35,7 +35,11 @@ local labels = {
           imagePullPolicy: 'Always',
           envFrom: [
             { configMapRef: { name: app.name + '-config' } },
-            { secretRef: { name: app.name + '-runtime' } },
+            { secretRef: { name: app.name + '-postgres' } },
+            { secretRef: { name: app.name + '-rabbitmq' } },
+            { secretRef: { name: app.name + '-oidc' } },
+            { secretRef: { name: app.name + '-crypto' } },
+            { secretRef: { name: app.name + '-s3-credentials' } },
           ],
           env: [
             { name: 'AWS_ENDPOINT_URL', valueFrom: { configMapKeyRef: { name: app.name + '-config', key: 'S3_ENDPOINT', optional: true } } },

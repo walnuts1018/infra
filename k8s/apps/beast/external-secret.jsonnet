@@ -1,48 +1,27 @@
 local app = import 'app.json5';
-local secret = app.name + '-runtime';
-local fields = [
-  ['DATABASE_URL', 'database_url'],
-  ['POSTGRES_USER', 'database_user'],
-  ['POSTGRES_PASSWORD', 'database_password'],
-  ['POSTGRES_DB', 'database_name'],
-  ['RABBITMQ_URL', 'rabbitmq_url'],
-  ['S3_ACCESS_KEY_ID', 's3_access_key_id'],
-  ['S3_SECRET_ACCESS_KEY', 's3_secret_access_key'],
-  ['S3_ACCESS_KEY', 's3_access_key_id'],
-  ['S3_SECRET_KEY', 's3_secret_access_key'],
-  ['AWS_ACCESS_KEY_ID', 's3_access_key_id'],
-  ['AWS_SECRET_ACCESS_KEY', 's3_secret_access_key'],
-  ['STAGING_ENCRYPTION_KEY', 'staging_encryption_key'],
-  ['OIDC_CLIENT_ID', 'oidc_client_id'],
-  ['OIDC_CLIENT_SECRET', 'oidc_client_secret'],
-];
-{
-  apiVersion: 'external-secrets.io/v1',
-  kind: 'ExternalSecret',
-  metadata: {
-    name: secret,
+[
+  (import '../../components/picca/_internal/postgres/external-secret.libsonnet')(app, false),
+  (import '../../components/picca/_internal/rabbitmq/external-secret.libsonnet')(app, false),
+  (import '../../components/picca/_internal/rabbitmq/credentials-secret.libsonnet')(app),
+  (import '../../components/picca/_internal/rabbitmq/vhost.libsonnet')(app),
+  (import '../../components/picca/_internal/rabbitmq/user.libsonnet')(app),
+  (import '../../components/picca/_internal/rabbitmq/permission.libsonnet')(app),
+  (import '../../components/picca/_internal/oidc/external-secret.libsonnet')(app, false),
+  (import '../../components/external-secret.libsonnet') {
+    name: app.name + '-crypto',
     namespace: app.namespace,
-  },
-  spec: {
-    refreshInterval: '1h',
-    secretStoreRef: {
-      name: 'onepassword',
-      kind: 'ClusterSecretStore',
-    },
-    target: {
-      name: secret,
-      creationPolicy: 'Owner',
-      deletionPolicy: 'Retain',
-    },
+    use_suffix: false,
     data: [
       {
-        secretKey: item[0],
+        secretKey: 'staging_encryption_key',
         remoteRef: {
-          key: app.name,
-          property: item[1],
+          key: 'terraform-external-secrets',
+          property: app.name + '-staging-encryption-key',
         },
-      }
-      for item in fields
+      },
     ],
+    template_data: {
+      STAGING_ENCRYPTION_KEY: '{{ .staging_encryption_key }}',
+    },
   },
-}
+]

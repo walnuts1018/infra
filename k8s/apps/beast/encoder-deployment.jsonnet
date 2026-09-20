@@ -31,7 +31,9 @@ local labels = {
           imagePullPolicy: 'Always',
           envFrom: [
             { configMapRef: { name: app.name + '-config' } },
-            { secretRef: { name: app.name + '-runtime' } },
+            { secretRef: { name: app.name + '-rabbitmq' } },
+            { secretRef: { name: app.name + '-crypto' } },
+            { secretRef: { name: app.name + '-s3-credentials' } },
           ],
           resources: {
             requests: { cpu: '100m', memory: '256Mi' },
