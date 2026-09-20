@@ -3,7 +3,7 @@ local app = import 'app.json5';
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'Application',
   metadata: {
-    name: app.name,
+    name: app.name + '-external',
     namespace: 'argocd',
     finalizers: [
       'resources-finalizer.argocd.argoproj.io',
