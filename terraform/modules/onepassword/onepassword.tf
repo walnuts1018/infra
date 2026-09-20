@@ -3,6 +3,14 @@ resource "random_password" "picca_graphql_query_signing_secret" {
   special = false
 }
 
+resource "random_id" "picca_album_capability_key" {
+  byte_length = 32
+}
+
+resource "random_id" "picca_dev_album_capability_key" {
+  byte_length = 32
+}
+
 // imgproxyのIMGPROXY_KEY/IMGPROXY_SALTはhexエンコードされた値である必要があるためrandom_idを使う
 resource "random_id" "picca_imgproxy_key" {
   byte_length = 32
@@ -111,56 +119,60 @@ resource "onepassword_item" "external_secret" {
   section_map = {
     terraform = {
       field_map = {
-        "akvorado-client-id"                     = { type = "STRING", value = var.akvorado_client_id }
-        "akvorado-client-secret"                 = { type = "CONCEALED", value = var.akvorado_client_secret }
-        "argocd-cli-client-id"                   = { type = "STRING", value = var.argocd_cli_client_id }
-        "b2-application-key"                     = { type = "CONCEALED", value = var.b2_application_key }
-        "beast-client-id"                        = { type = "STRING", value = var.beast_client_id }
-        "beast-client-secret"                    = { type = "CONCEALED", value = var.beast_client_secret }
-        "beast-database-password"                = { type = "CONCEALED", value = random_password.beast_database_password.result }
-        "beast-media-encryption-key"             = { type = "CONCEALED", value = random_id.beast_media_encryption_key.hex }
-        "beast-rabbitmq-password"                = { type = "CONCEALED", value = random_password.beast_rabbitmq_password.result }
-        "beast-staging-encryption-key"           = { type = "CONCEALED", value = random_id.beast_staging_encryption_key.hex }
-        "coder-client-id"                        = { type = "STRING", value = var.coder_client_id }
-        "coder-client-secret"                    = { type = "CONCEALED", value = var.coder_client_secret }
-        "coder-database-password"                = { type = "CONCEALED", value = random_password.coder_database_password.result }
-        "hubble-client-id"                       = { type = "STRING", value = var.hubble_client_id }
-        "hubble-client-secret"                   = { type = "CONCEALED", value = var.hubble_client_secret }
-        "ipu-client-id"                          = { type = "STRING", value = var.ipu_client_id }
-        "ipu-client-secret"                      = { type = "CONCEALED", value = var.ipu_client_secret }
-        "iwashi-client-id"                       = { type = "STRING", value = var.iwashi_client_id }
-        "iwashi-client-secret"                   = { type = "CONCEALED", value = var.iwashi_client_secret }
-        "iwashi-database-password"               = { type = "CONCEALED", value = random_password.iwashi_database_password.result }
-        "iwashi-session-key"                     = { type = "CONCEALED", value = random_password.iwashi_session_key.result }
-        "iwashi-discovery-key"                   = { type = "CONCEALED", value = random_password.iwashi_discovery_key.result }
-        "longhorn-client-id"                     = { type = "STRING", value = var.longhorn_client_id }
-        "longhorn-client-secret"                 = { type = "CONCEALED", value = var.longhorn_client_secret }
-        "netbird-setup-key"                      = { type = "CONCEALED", value = var.netbird_setup_key }
-        "netbox-oidc-client-id"                  = { type = "STRING", value = var.netbox_client_id }
-        "netbox-oidc-client-secret"              = { type = "CONCEALED", value = var.netbox_client_secret }
-        "oekaki-client-id"                       = { type = "STRING", value = var.oekaki_client_id }
-        "oekaki-client-secret"                   = { type = "CONCEALED", value = var.oekaki_client_secret }
-        "opencost-client-id"                     = { type = "STRING", value = var.opencost_client_id }
-        "opencost-client-secret"                 = { type = "CONCEALED", value = var.opencost_client_secret }
-        "picca-client-id"                        = { type = "STRING", value = var.picca_client_id }
-        "picca-client-secret"                    = { type = "CONCEALED", value = var.picca_client_secret }
-        "picca-graphql-query-signing-secret"     = { type = "CONCEALED", value = random_password.picca_graphql_query_signing_secret.result }
-        "picca-imgproxy-key"                     = { type = "CONCEALED", value = random_id.picca_imgproxy_key.hex }
-        "picca-imgproxy-salt"                    = { type = "CONCEALED", value = random_id.picca_imgproxy_salt.hex }
-        "picca-redis-password"                   = { type = "CONCEALED", value = random_password.picca_redis_password.result }
-        "picca-rabbitmq-password"                = { type = "CONCEALED", value = random_password.picca_rabbitmq_password.result }
-        "picca-dev-client-id"                    = { type = "STRING", value = var.picca_dev_client_id }
-        "picca-dev-client-secret"                = { type = "CONCEALED", value = var.picca_dev_client_secret }
-        "picca-dev-graphql-query-signing-secret" = { type = "CONCEALED", value = random_password.picca_dev_graphql_query_signing_secret.result }
-        "picca-dev-imgproxy-key"                 = { type = "CONCEALED", value = random_id.picca_dev_imgproxy_key.hex }
-        "picca-dev-imgproxy-salt"                = { type = "CONCEALED", value = random_id.picca_dev_imgproxy_salt.hex }
-        "picca-dev-redis-password"               = { type = "CONCEALED", value = random_password.picca_dev_redis_password.result }
-        "picca-dev-rabbitmq-password"            = { type = "CONCEALED", value = random_password.picca_dev_rabbitmq_password.result }
-        "radar-auth-secret"                      = { type = "CONCEALED", value = random_password.radar_auth_secret.result }
-        "radar-client-id"                        = { type = "STRING", value = var.radar_client_id }
-        "radar-client-secret"                    = { type = "CONCEALED", value = var.radar_client_secret }
-        "shumoku-client-id"                      = { type = "STRING", value = var.shumoku_client_id }
-        "shumoku-client-secret"                  = { type = "CONCEALED", value = var.shumoku_client_secret }
+        "akvorado-client-id"                       = { type = "STRING", value = var.akvorado_client_id }
+        "akvorado-client-secret"                   = { type = "CONCEALED", value = var.akvorado_client_secret }
+        "argocd-cli-client-id"                     = { type = "STRING", value = var.argocd_cli_client_id }
+        "b2-application-key"                       = { type = "CONCEALED", value = var.b2_application_key }
+        "beast-client-id"                          = { type = "STRING", value = var.beast_client_id }
+        "beast-client-secret"                      = { type = "CONCEALED", value = var.beast_client_secret }
+        "beast-database-password"                  = { type = "CONCEALED", value = random_password.beast_database_password.result }
+        "beast-media-encryption-key"               = { type = "CONCEALED", value = random_id.beast_media_encryption_key.hex }
+        "beast-rabbitmq-password"                  = { type = "CONCEALED", value = random_password.beast_rabbitmq_password.result }
+        "beast-staging-encryption-key"             = { type = "CONCEALED", value = random_id.beast_staging_encryption_key.hex }
+        "coder-client-id"                          = { type = "STRING", value = var.coder_client_id }
+        "coder-client-secret"                      = { type = "CONCEALED", value = var.coder_client_secret }
+        "coder-database-password"                  = { type = "CONCEALED", value = random_password.coder_database_password.result }
+        "hubble-client-id"                         = { type = "STRING", value = var.hubble_client_id }
+        "hubble-client-secret"                     = { type = "CONCEALED", value = var.hubble_client_secret }
+        "ipu-client-id"                            = { type = "STRING", value = var.ipu_client_id }
+        "ipu-client-secret"                        = { type = "CONCEALED", value = var.ipu_client_secret }
+        "iwashi-client-id"                         = { type = "STRING", value = var.iwashi_client_id }
+        "iwashi-client-secret"                     = { type = "CONCEALED", value = var.iwashi_client_secret }
+        "iwashi-database-password"                 = { type = "CONCEALED", value = random_password.iwashi_database_password.result }
+        "iwashi-session-key"                       = { type = "CONCEALED", value = random_password.iwashi_session_key.result }
+        "iwashi-discovery-key"                     = { type = "CONCEALED", value = random_password.iwashi_discovery_key.result }
+        "longhorn-client-id"                       = { type = "STRING", value = var.longhorn_client_id }
+        "longhorn-client-secret"                   = { type = "CONCEALED", value = var.longhorn_client_secret }
+        "netbird-setup-key"                        = { type = "CONCEALED", value = var.netbird_setup_key }
+        "netbox-oidc-client-id"                    = { type = "STRING", value = var.netbox_client_id }
+        "netbox-oidc-client-secret"                = { type = "CONCEALED", value = var.netbox_client_secret }
+        "oekaki-client-id"                         = { type = "STRING", value = var.oekaki_client_id }
+        "oekaki-client-secret"                     = { type = "CONCEALED", value = var.oekaki_client_secret }
+        "opencost-client-id"                       = { type = "STRING", value = var.opencost_client_id }
+        "opencost-client-secret"                   = { type = "CONCEALED", value = var.opencost_client_secret }
+        "picca-client-id"                          = { type = "STRING", value = var.picca_client_id }
+        "picca-client-secret"                      = { type = "CONCEALED", value = var.picca_client_secret }
+        "picca-graphql-query-signing-secret"       = { type = "CONCEALED", value = random_password.picca_graphql_query_signing_secret.result }
+        "picca-album-capability-keys"              = { type = "CONCEALED", value = "v1=${random_id.picca_album_capability_key.b64_url}" }
+        "picca-album-capability-active-key-id"     = { type = "STRING", value = "v1" }
+        "picca-imgproxy-key"                       = { type = "CONCEALED", value = random_id.picca_imgproxy_key.hex }
+        "picca-imgproxy-salt"                      = { type = "CONCEALED", value = random_id.picca_imgproxy_salt.hex }
+        "picca-redis-password"                     = { type = "CONCEALED", value = random_password.picca_redis_password.result }
+        "picca-rabbitmq-password"                  = { type = "CONCEALED", value = random_password.picca_rabbitmq_password.result }
+        "picca-dev-client-id"                      = { type = "STRING", value = var.picca_dev_client_id }
+        "picca-dev-client-secret"                  = { type = "CONCEALED", value = var.picca_dev_client_secret }
+        "picca-dev-graphql-query-signing-secret"   = { type = "CONCEALED", value = random_password.picca_dev_graphql_query_signing_secret.result }
+        "picca-dev-album-capability-keys"          = { type = "CONCEALED", value = "v1=${random_id.picca_dev_album_capability_key.b64_url}" }
+        "picca-dev-album-capability-active-key-id" = { type = "STRING", value = "v1" }
+        "picca-dev-imgproxy-key"                   = { type = "CONCEALED", value = random_id.picca_dev_imgproxy_key.hex }
+        "picca-dev-imgproxy-salt"                  = { type = "CONCEALED", value = random_id.picca_dev_imgproxy_salt.hex }
+        "picca-dev-redis-password"                 = { type = "CONCEALED", value = random_password.picca_dev_redis_password.result }
+        "picca-dev-rabbitmq-password"              = { type = "CONCEALED", value = random_password.picca_dev_rabbitmq_password.result }
+        "radar-auth-secret"                        = { type = "CONCEALED", value = random_password.radar_auth_secret.result }
+        "radar-client-id"                          = { type = "STRING", value = var.radar_client_id }
+        "radar-client-secret"                      = { type = "CONCEALED", value = var.radar_client_secret }
+        "shumoku-client-id"                        = { type = "STRING", value = var.shumoku_client_id }
+        "shumoku-client-secret"                    = { type = "CONCEALED", value = var.shumoku_client_secret }
 
         "visual-regression-tracker-jwt-secret"     = { type = "CONCEALED", value = random_password.visual_regression_tracker_jwt_secret.result }
         "visual-regression-tracker-admin-password" = { type = "CONCEALED", value = random_password.visual_regression_tracker_admin_password.result }

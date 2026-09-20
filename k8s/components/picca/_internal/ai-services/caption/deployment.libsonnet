@@ -28,6 +28,9 @@ function(app)
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_caption_service.py'],
               env: [
+                { name: 'HOME', value: '/tmp' },
+                { name: 'HF_HOME', value: '/tmp/huggingface' },
+                { name: 'HF_MODULES_CACHE', value: '/tmp/huggingface/modules' },
                 { name: 'PORT', value: '8004' },
                 { name: 'MODEL_DEVICE', value: 'cpu' },
                 { name: 'FLORENCE2_MODEL_NAME', value: '/models/Florence-2-base-ft' },

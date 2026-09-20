@@ -28,6 +28,10 @@ function(app)
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_ocr_service.py'],
               env: [
+                { name: 'HOME', value: '/tmp' },
+                { name: 'PADDLEX_HOME', value: '/models/paddlex' },
+                { name: 'PADDLE_HOME', value: '/models/paddlex' },
+                { name: 'PADDLE_PDX_HOME', value: '/models/paddlex' },
                 { name: 'PORT', value: '8003' },
                 { name: 'MODEL_DEVICE', value: 'cpu' },
               ],
@@ -44,9 +48,14 @@ function(app)
                 periodSeconds: 10,
                 failureThreshold: 3,
               },
+              startupProbe: {
+                httpGet: { path: '/healthz', port: 'http' },
+                periodSeconds: 10,
+                failureThreshold: 60,
+              },
               resources: {
                 requests: { cpu: '1', memory: '2Gi' },
-                limits: { cpu: '4', memory: '6Gi' },
+                limits: { cpu: '4', memory: '12Gi' },
               },
               volumeMounts: [
                 { name: 'tmp', mountPath: '/tmp' },

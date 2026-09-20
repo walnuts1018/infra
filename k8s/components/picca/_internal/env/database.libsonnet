@@ -13,4 +13,8 @@ function(app)
       name: 'SCYLLA_USER',
       value: dbName,
     },
+    {
+      name: 'POSTGRES_MAX_CONNS',
+      value: '2',
+    },
   ]

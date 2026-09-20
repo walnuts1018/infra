@@ -6,6 +6,7 @@ function(app)
   local rabbitmqSecret = (import '../../rabbitmq/external-secret.libsonnet')(app);
   local oidcSecret = (import '../../oidc/external-secret.libsonnet')(app);
   local graphqlSigningSecret = (import '../../common/graphql-signing-secret.libsonnet')(app);
+  local albumCapabilitySecret = (import '../../common/album-capability-secret.libsonnet')(app);
   local s3Irsa = (import '../../s3-irsa.libsonnet')(app);
   local sa = (import '../../sa.libsonnet')(app);
   {
@@ -39,6 +40,7 @@ function(app)
                 { secretRef: { name: rabbitmqSecret.spec.target.name } },
                 { secretRef: { name: oidcSecret.spec.target.name } },
                 { secretRef: { name: graphqlSigningSecret.spec.target.name } },
+                { secretRef: { name: albumCapabilitySecret.spec.target.name } },
               ],
               env: commonEnv + s3Irsa.env + [
                 {
