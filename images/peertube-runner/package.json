@@ -5,6 +5,6 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@peertube/peertube-runner": "0.6.0"
+    "@peertube/peertube-runner": "0.7.0"
   }
 }

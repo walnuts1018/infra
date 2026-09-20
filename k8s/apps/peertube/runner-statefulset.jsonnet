@@ -85,7 +85,7 @@ local runnerEnv = [
         initContainers: [
           {
             name: 'bootstrap',
-            image: 'ghcr.io/walnuts1018/infra/peertube-runner:v1.0.35',
+            image: 'ghcr.io/walnuts1018/infra/peertube-runner:v1.0.36',
             imagePullPolicy: 'IfNotPresent',
             command: [
               'node',
@@ -145,7 +145,7 @@ local runnerEnv = [
         containers: [
           {
             name: 'runner',
-            image: 'ghcr.io/walnuts1018/infra/peertube-runner:v1.0.35',
+            image: 'ghcr.io/walnuts1018/infra/peertube-runner:v1.0.36',
             imagePullPolicy: 'IfNotPresent',
             command: [
               'peertube-runner',
