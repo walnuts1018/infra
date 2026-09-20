@@ -1,11 +1,11 @@
 local app = import 'app.json5';
 local configMap = import 'configmap.jsonnet';
-local pvc = import 'pvc.jsonnet';
-local serviceAccount = import 'serviceaccount.jsonnet';
+local oidcSecret = import 'external-secret-oidc.jsonnet';
 local postgresSecret = import 'external-secret-postgres.jsonnet';
 local redisSecret = import 'external-secret-redis.jsonnet';
 local secrets = import 'external-secret-secrets.jsonnet';
-local oidcSecret = import 'external-secret-oidc.jsonnet';
+local pvc = import 'pvc.jsonnet';
+local serviceAccount = import 'serviceaccount.jsonnet';
 local labels = {
   'app.kubernetes.io/name': app.name,
   'app.kubernetes.io/instance': app.name,
