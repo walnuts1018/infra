@@ -7,9 +7,10 @@ local baseLabels = {
   'app.kubernetes.io/part-of': app.name,
   'app.kubernetes.io/component': 'runner',
 };
-local labels = baseLabels + {
+local runnerLabels = {
   'peertube.runner/group': 'vod',
 };
+local labels = baseLabels + runnerLabels;
 local runnerImage = 'docker.io/zendet/peertube-runner:0.4.0-ctranslate2';
 local runnerProbeCommand = [
   'sh',
