@@ -6,9 +6,16 @@ local app = import 'app.json5';
   spec: {
     parentRefs: [{ name: 'envoy-gateway', namespace: 'envoy-gateway-system' }],
     hostnames: ['beast.walnuts.dev'],
-    rules: [{
-      matches: [{ path: { type: 'PathPrefix', value: '/' } }],
-      backendRefs: [{ name: app.name + '-frontend', port: 8080 }],
-    }],
+    rules: [
+      {
+        matches: [{ path: { type: 'Exact', value: '/api/videos/upload' } }],
+        timeouts: { request: '0s', backendRequest: '0s' },
+        backendRefs: [{ name: app.name + '-apiserver', port: 8080 }],
+      },
+      {
+        matches: [{ path: { type: 'PathPrefix', value: '/' } }],
+        backendRefs: [{ name: app.name + '-frontend', port: 8080 }],
+      },
+    ],
   },
 }
