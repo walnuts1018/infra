@@ -12,6 +12,7 @@ local fields = [
   ['S3_SECRET_KEY', 's3_secret_access_key'],
   ['AWS_ACCESS_KEY_ID', 's3_access_key_id'],
   ['AWS_SECRET_ACCESS_KEY', 's3_secret_access_key'],
+  ['STAGING_ENCRYPTION_KEY', 'staging_encryption_key'],
   ['OIDC_CLIENT_ID', 'oidc_client_id'],
   ['OIDC_CLIENT_SECRET', 'oidc_client_secret'],
 ];
