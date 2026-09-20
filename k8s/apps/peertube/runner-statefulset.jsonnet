@@ -217,7 +217,7 @@ local runnerEnv = [
               limits: {
                 cpu: '4',
                 memory: '4Gi',
-                'ephemeral-storage': '22Gi',
+                'ephemeral-storage': '32Gi',
               },
             },
           },
