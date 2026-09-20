@@ -79,6 +79,20 @@
   ],
   packageRules: [
     {
+      groupName: 'peertube images',
+      groupSlug: 'peertube-images',
+      matchDatasources: [
+        'docker',
+      ],
+      matchPackageNames: [
+        'docker.io/chocobozzz/peertube',
+        'chocobozzz/peertube',
+        'docker.io/zendet/peertube-runner',
+        'zendet/peertube-runner',
+      ],
+      versioning: 'semver',
+    },
+    {
       groupName: 'netbird',
       matchPackageNames: [
         '/netbird/',

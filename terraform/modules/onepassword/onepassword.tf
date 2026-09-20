@@ -154,8 +154,6 @@ resource "onepassword_item" "external_secret" {
         "picca-dev-rabbitmq-password"            = { type = "CONCEALED", value = random_password.picca_dev_rabbitmq_password.result }
         "peertube-client-id"                     = { type = "STRING", value = var.peertube_client_id }
         "peertube-client-secret"                 = { type = "CONCEALED", value = var.peertube_client_secret }
-        "peertube-role-claim"                    = { type = "STRING", value = var.peertube_role_claim }
-        "peertube-role-claim-property"           = { type = "STRING", value = var.peertube_role_claim_property }
         "peertube-database-password"             = { type = "CONCEALED", value = random_password.peertube_database_password.result }
         "peertube-redis-password"                = { type = "CONCEALED", value = random_password.peertube_redis_password.result }
         "peertube-root-password"                 = { type = "CONCEALED", value = random_password.peertube_root_password.result }

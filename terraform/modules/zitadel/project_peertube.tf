@@ -18,7 +18,6 @@ resource "zitadel_application_oidc" "peertube" {
   name       = "peertube"
 
   redirect_uris = [
-    "https://peertube.walnuts.dev/plugins/auth-openid-connect/router/code-cb",
     "https://peertube.walnuts.dev/oauth2/callback",
   ]
   response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
@@ -48,12 +47,4 @@ output "peertube_oidc_client_id" {
 output "peertube_oidc_client_secret" {
   value     = zitadel_application_oidc.peertube.client_secret
   sensitive = true
-}
-
-output "peertube_role_claim" {
-  value = format("%s:%s", zitadel_project.peertube.id, zitadel_project_role.peertube_user.role_key)
-}
-
-output "peertube_role_claim_property" {
-  value = format("urn:zitadel:iam:org:project:%s:roles", zitadel_project.peertube.id)
 }

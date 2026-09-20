@@ -18,25 +18,9 @@ local app = import 'app.json5';
         property: 'peertube-client-secret',
       },
     },
-    {
-      secretKey: 'role_claim',
-      remoteRef: {
-        key: 'terraform-external-secrets',
-        property: 'peertube-role-claim',
-      },
-    },
-    {
-      secretKey: 'role_claim_property',
-      remoteRef: {
-        key: 'terraform-external-secrets',
-        property: 'peertube-role-claim-property',
-      },
-    },
   ],
   template_data: {
     'client-id': '{{ .client_id }}',
     'client-secret': '{{ .client_secret }}',
-    'role-claim': '{{ .role_claim }}',
-    'role-claim-property': '{{ .role_claim_property }}',
   },
 }
