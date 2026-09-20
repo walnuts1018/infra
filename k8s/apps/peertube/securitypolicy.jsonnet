@@ -1,4 +1,5 @@
 local app = import 'app.json5';
+local oidcSecret = import 'external-secret-oidc.jsonnet';
 {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'SecurityPolicy',
@@ -17,10 +18,10 @@ local app = import 'app.json5';
         issuer: 'https://auth.walnuts.dev',
       },
       clientIDRef: {
-        name: app.name + '-oidc',
+        name: oidcSecret.spec.target.name,
       },
       clientSecret: {
-        name: app.name + '-oidc',
+        name: oidcSecret.spec.target.name,
       },
       scopes: [
         'openid',

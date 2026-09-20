@@ -1,4 +1,5 @@
 local app = import 'app.json5';
+local deployment = import 'deployment.jsonnet';
 {
   apiVersion: 'cilium.io/v2',
   kind: 'CiliumNetworkPolicy',
@@ -9,8 +10,8 @@ local app = import 'app.json5';
   spec: {
     endpointSelector: {
       matchLabels: {
-        'k8s:app.kubernetes.io/name': app.name,
-        'k8s:app.kubernetes.io/component': 'server',
+        'k8s:app.kubernetes.io/name': deployment.metadata.labels['app.kubernetes.io/name'],
+        'k8s:app.kubernetes.io/component': deployment.metadata.labels['app.kubernetes.io/component'],
       },
     },
     egress: [

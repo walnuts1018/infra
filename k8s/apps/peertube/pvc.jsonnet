@@ -12,7 +12,7 @@ local app = import 'app.json5';
     storageClassName: 'longhorn',
     resources: {
       requests: {
-        storage: '200Gi',
+        storage: '16Gi',
       },
     },
   },

@@ -1,13 +1,13 @@
 local app = import 'app.json5';
-local runnerConfigMap = import 'runner-configmap.jsonnet';
 local runnerSecret = import 'external-secret-runner.jsonnet';
+local runnerConfigMap = import 'runner-configmap.jsonnet';
 local baseLabels = {
   'app.kubernetes.io/name': app.name,
   'app.kubernetes.io/instance': app.name,
   'app.kubernetes.io/part-of': app.name,
   'app.kubernetes.io/component': 'runner',
 };
-local labels = baseLabels + {
+local labels = baseLabels {
   'peertube.runner/group': 'vod',
 };
 local runnerImage = 'docker.io/zendet/peertube-runner:0.4.0-ctranslate2';
@@ -130,8 +130,8 @@ local runnerEnv = [
             },
             resources: {
               requests: {
-                cpu: '1',
-                memory: '1Gi',
+                cpu: '100m',
+                memory: '256Mi',
               },
               limits: {
                 cpu: '4',
@@ -192,8 +192,8 @@ local runnerEnv = [
             },
             resources: {
               requests: {
-                cpu: '1',
-                memory: '1Gi',
+                cpu: '100m',
+                memory: '256Mi',
               },
               limits: {
                 cpu: '4',
@@ -226,7 +226,7 @@ local runnerEnv = [
           storageClassName: 'longhorn',
           resources: {
             requests: {
-              storage: '100Gi',
+              storage: '16Gi',
             },
           },
         },

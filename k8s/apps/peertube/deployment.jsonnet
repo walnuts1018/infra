@@ -238,8 +238,8 @@ local labels = {
             },
             resources: {
               requests: {
-                cpu: '500m',
-                memory: '1Gi',
+                cpu: '100m',
+                memory: '256Mi',
               },
               limits: {
                 cpu: '2',

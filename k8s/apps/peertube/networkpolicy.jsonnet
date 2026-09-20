@@ -1,9 +1,5 @@
 local app = import 'app.json5';
-local serverLabels = {
-  'app.kubernetes.io/name': app.name,
-  'app.kubernetes.io/instance': app.name,
-  'app.kubernetes.io/component': 'server',
-};
+local deployment = import 'deployment.jsonnet';
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'NetworkPolicy',
@@ -12,7 +8,9 @@ local serverLabels = {
     namespace: app.namespace,
   },
   spec: {
-    podSelector: { matchLabels: serverLabels },
+    podSelector: {
+      matchLabels: deployment.spec.selector.matchLabels,
+    },
     policyTypes: ['Ingress'],
     ingress: [{
       from: [
