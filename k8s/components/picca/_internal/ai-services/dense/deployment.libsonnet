@@ -1,33 +1,35 @@
-function(app)
+function(app, role='query')
   local labels = import '../../../../labels.libsonnet';
   local sa = (import '../../sa.libsonnet')(app);
   local rabbitmqSecret = (import '../../rabbitmq/external-secret.libsonnet')(app);
   local storageEnv = (import '../../env/storage.libsonnet')(app);
+  local isImageWorker = role == 'image';
+  local deploymentName = app.name + if isImageWorker then '-dense-worker' else '-dense-service';
   {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
-      name: app.name + '-dense-service',
+      name: deploymentName,
       namespace: app.namespace,
-      labels: labels(app.name + '-dense-service'),
+      labels: labels(deploymentName),
     },
     spec: {
       // モデルイメージを同一ノード上で重複してロードしないよう、更新時は旧Podを先に停止する。
       strategy: { type: 'Recreate' },
-      replicas: 1,
+      replicas: if isImageWorker then 0 else 1,
       selector: {
-        matchLabels: labels(app.name + '-dense-service'),
+        matchLabels: labels(deploymentName),
       },
       template: {
         metadata: {
-          labels: labels(app.name + '-dense-service'),
+          labels: labels(deploymentName),
         },
         spec: {
           serviceAccountName: sa.metadata.name,
           imagePullSecrets: [{ name: 'ghcr-login-secret' }],
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
-              name: 'dense-service',
+              name: if isImageWorker then 'dense-worker' else 'dense-service',
               image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.61',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_dense_service.py'],
@@ -41,6 +43,7 @@ function(app)
                 { name: 'TRANSFORMERS_CACHE', value: '/tmp/huggingface/transformers' },
                 { name: 'PORT', value: '8001' },
                 { name: 'MODEL_DEVICE', value: 'cpu' },
+                { name: 'DENSE_ROLE', value: role },
                 { name: 'DENSE_INFERENCE_BACKEND', value: 'openvino' },
                 { name: 'AI_INFERENCE_THREADS', value: '2' },
                 { name: 'OMP_NUM_THREADS', value: '2' },
@@ -51,18 +54,21 @@ function(app)
                 { name: 'OPENVINO_TENSOR_CACHE_PATH', value: '/tmp/runtime-cache/openvino' },
                 { name: 'OPENVINO_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
                 { name: 'OV_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
-                { name: 'DENSE_OPENVINO_TEXT_MODEL', value: '/models/waon-siglip2-base-patch16-256/openvino/text_model.xml' },
-                { name: 'DENSE_OPENVINO_IMAGE_MODEL', value: '/models/waon-siglip2-base-patch16-256/openvino/image_model.xml' },
+                { name: 'AI_OPENVINO_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
                 { name: 'DENSE_MODEL_NAME', value: '/models/waon-siglip2-base-patch16-256' },
-                { name: 'CAT_TRANSLATE_MODEL_NAME', value: '/models/CAT-Translate-0.8b' },
-                { name: 'CAT_SOURCE_LANGUAGE', value: 'Japanese' },
-                { name: 'CAT_TARGET_LANGUAGE', value: 'English' },
-                { name: 'CAT_TRANSLATE_IDLE_SECONDS', value: '300' },
-                { name: 'AI_DENSE_TASK_QUEUE', value: 'picca.ai-dense' },
-                { name: 'AI_DENSE_TASK_ROUTING_KEY', value: 'media.processing.ai.dense.requested.v1' },
-                { name: 'AI_DENSE_RESULT_ROUTING_KEY', value: 'media.processing.ai.result.v1' },
-                { name: 'AI_RABBITMQ_EXCHANGE', value: 'picca.events' },
-              ],
+              ] + (if isImageWorker then [
+                     { name: 'DENSE_OPENVINO_IMAGE_MODEL', value: '/models/waon-siglip2-base-patch16-256/openvino/image_model.xml' },
+                     { name: 'AI_DENSE_TASK_QUEUE', value: 'picca.ai-dense' },
+                     { name: 'AI_DENSE_TASK_ROUTING_KEY', value: 'media.processing.ai.dense.requested.v1' },
+                     { name: 'AI_DENSE_RESULT_ROUTING_KEY', value: 'media.processing.ai.result.v1' },
+                     { name: 'AI_RABBITMQ_EXCHANGE', value: 'picca.events' },
+                   ] else [
+                     { name: 'DENSE_OPENVINO_TEXT_MODEL', value: '/models/waon-siglip2-base-patch16-256/openvino/text_model.xml' },
+                     { name: 'CAT_TRANSLATE_MODEL_NAME', value: '/models/CAT-Translate-0.8b' },
+                     { name: 'CAT_SOURCE_LANGUAGE', value: 'Japanese' },
+                     { name: 'CAT_TARGET_LANGUAGE', value: 'English' },
+                     { name: 'CAT_TRANSLATE_IDLE_SECONDS', value: '300' },
+                   ]),
               ports: [
                 { name: 'http', containerPort: 8001 },
               ],
@@ -81,9 +87,12 @@ function(app)
                 periodSeconds: 10,
                 failureThreshold: 180,
               },
-              resources: {
+              resources: if isImageWorker then {
                 requests: { cpu: '2', memory: '8Gi' },
                 limits: { cpu: '4', memory: '16Gi' },
+              } else {
+                requests: { cpu: '1', memory: '4Gi' },
+                limits: { cpu: '2', memory: '8Gi' },
               },
               volumeMounts: [
                 { name: 'tmp', mountPath: '/tmp' },

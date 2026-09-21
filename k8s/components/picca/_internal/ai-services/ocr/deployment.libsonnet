@@ -61,7 +61,7 @@ function(app)
                 { name: 'PADDLE_PDX_HOME', value: '/models/paddlex' },
                 { name: 'PADDLE_CPU_THREADS', value: '2' },
                 { name: 'PADDLE_ENABLE_HPI', value: 'true' },
-                { name: 'PADDLE_ENABLE_MKLDNN', value: 'false' },
+                { name: 'PADDLE_ENABLE_MKLDNN', value: 'true' },
                 { name: 'PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK', value: '1' },
                 { name: 'PORT', value: '8003' },
                 { name: 'MODEL_DEVICE', value: 'cpu' },
@@ -129,7 +129,7 @@ function(app)
             {
               name: 'model-source',
               image: {
-                reference: 'ghcr.io/walnuts1018/picca/ai-models-ocr:v0.0.61',
+                reference: 'ghcr.io/walnuts1018/picca/ai-models-ocr-primary:v0.0.61',
                 pullPolicy: 'IfNotPresent',
               },
             },
