@@ -3,6 +3,7 @@ function(app)
   local sa = (import '../../sa.libsonnet')(app);
   local rabbitmqSecret = (import '../../rabbitmq/external-secret.libsonnet')(app);
   local storageEnv = (import '../../env/storage.libsonnet')(app);
+  local s3Irsa = (import '../../s3-irsa.libsonnet')(app);
   {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
@@ -33,7 +34,7 @@ function(app)
               envFrom: [
                 { secretRef: { name: rabbitmqSecret.spec.target.name } },
               ],
-              env: storageEnv + [
+              env: s3Irsa.env + storageEnv + [
                 { name: 'HOME', value: '/tmp' },
                 { name: 'HF_HOME', value: '/tmp/huggingface' },
                 { name: 'HF_MODULES_CACHE', value: '/tmp/huggingface/modules' },
@@ -81,7 +82,7 @@ function(app)
                 { name: 'tmp', mountPath: '/tmp' },
                 { name: 'runtime-cache', mountPath: '/tmp/runtime-cache' },
                 { name: 'models', mountPath: '/models', readOnly: true },
-              ],
+              ] + s3Irsa.volumeMounts,
             }, {
               securityContext: {
                 allowPrivilegeEscalation: false,
@@ -104,7 +105,7 @@ function(app)
                 pullPolicy: 'IfNotPresent',
               },
             },
-          ],
+          ] + s3Irsa.volumes,
         },
       },
     },
