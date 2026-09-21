@@ -4,6 +4,9 @@ function(app, role='query')
   local rabbitmqSecret = (import '../../rabbitmq/external-secret.libsonnet')(app);
   local storageEnv = (import '../../env/storage.libsonnet')(app);
   local isImageWorker = role == 'image';
+  local serviceImage = if isImageWorker
+  then 'ghcr.io/walnuts1018/picca/ai-services-dense-image:v0.0.65'
+  else 'ghcr.io/walnuts1018/picca/ai-services-dense-query:v0.0.65';
   local deploymentName = app.name + if isImageWorker then '-dense-worker' else '-dense-service';
   {
     apiVersion: 'apps/v1',
@@ -30,7 +33,7 @@ function(app, role='query')
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: if isImageWorker then 'dense-worker' else 'dense-service',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.64',
+              image: serviceImage,
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_dense_service.py'],
               envFrom: [
