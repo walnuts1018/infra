@@ -95,8 +95,9 @@ function(app)
               },
               livenessProbe: {
                 httpGet: { path: '/healthz', port: 'http' },
-                periodSeconds: 10,
-                failureThreshold: 3,
+                periodSeconds: 30,
+                failureThreshold: 20,
+                timeoutSeconds: 5,
               },
               startupProbe: {
                 httpGet: { path: '/healthz', port: 'http' },
