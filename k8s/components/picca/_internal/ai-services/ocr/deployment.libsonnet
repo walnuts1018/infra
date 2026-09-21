@@ -54,7 +54,7 @@ function(app)
                 failureThreshold: 60,
               },
               resources: {
-                requests: { cpu: '1', memory: '2Gi' },
+                requests: { cpu: '1', memory: '6Gi' },
                 limits: { cpu: '4', memory: '12Gi' },
               },
               volumeMounts: [
