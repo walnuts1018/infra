@@ -4,9 +4,7 @@ function(app, role='query')
   local rabbitmqSecret = (import '../../rabbitmq/external-secret.libsonnet')(app);
   local storageEnv = (import '../../env/storage.libsonnet')(app);
   local isImageWorker = role == 'image';
-  local serviceImage = if isImageWorker
-  then 'ghcr.io/walnuts1018/picca/ai-services-dense-image:v0.0.66'
-  else 'ghcr.io/walnuts1018/picca/ai-services-dense-query:v0.0.66';
+  local serviceImage = 'ghcr.io/walnuts1018/picca/ai-openvino:v0.0.68';
   local deploymentName = app.name + if isImageWorker then '-dense-worker' else '-dense-service';
   {
     apiVersion: 'apps/v1',
