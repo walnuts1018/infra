@@ -100,7 +100,7 @@ function(app)
             {
               name: 'models',
               image: {
-                reference: 'ghcr.io/walnuts1018/picca/ai-models-caption:v0.0.60',
+                reference: 'ghcr.io/walnuts1018/picca/ai-models-caption:v0.0.61',
                 pullPolicy: 'IfNotPresent',
               },
             },
