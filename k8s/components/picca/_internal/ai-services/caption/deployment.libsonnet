@@ -51,8 +51,6 @@ function(app)
                 { name: 'OPENVINO_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
                 { name: 'OV_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
                 { name: 'FLORENCE2_MODEL_NAME', value: '/models/Florence-2-large-ft' },
-                { name: 'FLORENCE2_NUM_BEAMS', value: '1' },
-                { name: 'FLORENCE2_MAX_NEW_TOKENS', value: '256' },
                 { name: 'FLORENCE2_USE_CACHE', value: 'false' },
                 { name: 'AI_CAPTION_TASK_QUEUE', value: 'picca.ai-caption' },
                 { name: 'AI_CAPTION_TASK_ROUTING_KEY', value: 'media.processing.ai.caption.requested.v1' },
