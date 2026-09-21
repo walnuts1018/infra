@@ -62,7 +62,7 @@ function(app)
                 { name: 'PADDLE_PDX_HOME', value: '/models/paddlex' },
                 { name: 'PADDLE_CPU_THREADS', value: '2' },
                 { name: 'PADDLE_ENABLE_HPI', value: 'false' },
-                { name: 'PADDLE_ENABLE_MKLDNN', value: 'true' },
+                { name: 'PADDLE_ENABLE_MKLDNN', value: 'false' },
                 { name: 'PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK', value: '1' },
                 { name: 'PORT', value: '8003' },
                 { name: 'MODEL_DEVICE', value: 'cpu' },
