@@ -24,7 +24,7 @@ function(app)
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: 'ocr-worker',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.54',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.55',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_ocr_worker.py'],
               env: [
