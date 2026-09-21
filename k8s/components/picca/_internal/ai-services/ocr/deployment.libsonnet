@@ -1,6 +1,8 @@
 function(app)
   local labels = import '../../../../labels.libsonnet';
   local sa = (import '../../sa.libsonnet')(app);
+  local rabbitmqSecret = (import '../../rabbitmq/external-secret.libsonnet')(app);
+  local storageEnv = (import '../../env/storage.libsonnet')(app);
   {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
@@ -10,7 +12,7 @@ function(app)
       labels: labels(app.name + '-ocr-worker'),
     },
     spec: {
-      replicas: 1,
+      replicas: 0,
       selector: {
         matchLabels: labels(app.name + '-ocr-worker'),
       },
@@ -24,16 +26,23 @@ function(app)
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: 'ocr-worker',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.56',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.57',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_ocr_worker.py'],
-              env: [
+              envFrom: [
+                { secretRef: { name: rabbitmqSecret.spec.target.name } },
+              ],
+              env: storageEnv + [
                 { name: 'HOME', value: '/tmp' },
                 { name: 'PADDLEX_HOME', value: '/models/paddlex' },
                 { name: 'PADDLE_HOME', value: '/models/paddlex' },
                 { name: 'PADDLE_PDX_HOME', value: '/models/paddlex' },
                 { name: 'PORT', value: '8003' },
                 { name: 'MODEL_DEVICE', value: 'cpu' },
+                { name: 'AI_OCR_TASK_QUEUE', value: 'picca.ai-ocr' },
+                { name: 'AI_OCR_TASK_ROUTING_KEY', value: 'media.processing.ai.ocr.requested.v1' },
+                { name: 'AI_OCR_RESULT_ROUTING_KEY', value: 'media.processing.ai.result.v1' },
+                { name: 'AI_RABBITMQ_EXCHANGE', value: 'picca.events' },
               ],
               ports: [
                 { name: 'http', containerPort: 8003 },

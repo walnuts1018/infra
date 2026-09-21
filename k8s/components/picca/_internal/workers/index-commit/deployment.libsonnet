@@ -9,30 +9,27 @@ function(app)
   local albumCapabilitySecret = (import '../../common/album-capability-secret.libsonnet')(app);
   local s3Irsa = (import '../../s3-irsa.libsonnet')(app);
   local sa = (import '../../sa.libsonnet')(app);
+  local workerName = app.name + '-index-commit-worker';
   {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
-      name: app.name + '-embedding-worker',
+      name: workerName,
       namespace: app.namespace,
-      labels: labels(app.name + '-embedding-worker'),
+      labels: labels(workerName),
     },
     spec: {
       replicas: 0,
-      selector: {
-        matchLabels: labels(app.name + '-embedding-worker'),
-      },
+      selector: { matchLabels: labels(workerName) },
       template: {
-        metadata: {
-          labels: labels(app.name + '-embedding-worker'),
-        },
+        metadata: { labels: labels(workerName) },
         spec: {
           serviceAccountName: sa.metadata.name,
           imagePullSecrets: [{ name: 'ghcr-login-secret' }],
           containers: [
             (import '../../../../container.libsonnet') {
-              name: 'embedding-worker',
-              image: 'ghcr.io/walnuts1018/picca/embedding-worker:v0.0.57',
+              name: 'index-commit-worker',
+              image: 'ghcr.io/walnuts1018/picca/index-commit-worker:v0.0.57',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
@@ -43,48 +40,28 @@ function(app)
                 { secretRef: { name: albumCapabilitySecret.spec.target.name } },
               ],
               env: commonEnv + s3Irsa.env + [
-                {
-                  name: 'OTEL_SERVICE_NAME',
-                  value: 'picca-embedding-worker',
-                },
+                { name: 'OTEL_SERVICE_NAME', value: workerName },
+                { name: 'AI_INDEX_COMMIT_QUEUE', value: 'picca.ai-result' },
+                { name: 'AI_RESULT_ROUTING_KEY', value: 'media.processing.ai.result.v1' },
+                { name: 'AI_RABBITMQ_EXCHANGE', value: 'picca.events' },
               ],
               resources: {
-                requests: {
-                  cpu: '250m',
-                  memory: '256Mi',
-                },
-                limits: {
-                  cpu: '1',
-                  memory: '512Mi',
-                },
+                requests: { cpu: '250m', memory: '256Mi' },
+                limits: { cpu: '2', memory: '1Gi' },
               },
-              ports: [
-                {
-                  containerPort: 8080,
-                  name: 'health',
-                },
-              ],
+              ports: [{ containerPort: 8080, name: 'health' }],
               startupProbe: {
-                httpGet: {
-                  path: '/healthz',
-                  port: 8080,
-                },
+                httpGet: { path: '/healthz', port: 'health' },
                 periodSeconds: 10,
                 failureThreshold: 18,
               },
               livenessProbe: {
-                httpGet: {
-                  path: '/healthz',
-                  port: 8080,
-                },
+                httpGet: { path: '/healthz', port: 'health' },
                 periodSeconds: 15,
                 failureThreshold: 3,
               },
               volumeMounts: [
-                {
-                  name: 'tmp',
-                  mountPath: '/tmp',
-                },
+                { name: 'tmp', mountPath: '/tmp' },
               ] + s3Irsa.volumeMounts,
             },
           ],

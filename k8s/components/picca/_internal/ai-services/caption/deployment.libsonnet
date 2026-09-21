@@ -1,6 +1,8 @@
 function(app)
   local labels = import '../../../../labels.libsonnet';
   local sa = (import '../../sa.libsonnet')(app);
+  local rabbitmqSecret = (import '../../rabbitmq/external-secret.libsonnet')(app);
+  local storageEnv = (import '../../env/storage.libsonnet')(app);
   {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
@@ -10,7 +12,7 @@ function(app)
       labels: labels(app.name + '-caption-worker'),
     },
     spec: {
-      replicas: 1,
+      replicas: 0,
       selector: {
         matchLabels: labels(app.name + '-caption-worker'),
       },
@@ -24,10 +26,13 @@ function(app)
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: 'caption-worker',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.56',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.57',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_caption_worker.py'],
-              env: [
+              envFrom: [
+                { secretRef: { name: rabbitmqSecret.spec.target.name } },
+              ],
+              env: storageEnv + [
                 { name: 'HOME', value: '/tmp' },
                 { name: 'HF_HOME', value: '/tmp/huggingface' },
                 { name: 'HF_MODULES_CACHE', value: '/tmp/huggingface/modules' },
@@ -35,6 +40,10 @@ function(app)
                 { name: 'MODEL_DEVICE', value: 'cpu' },
                 { name: 'FLORENCE2_MODEL_NAME', value: '/models/Florence-2-base-ft' },
                 { name: 'TRANSLATE_MODEL_NAME', value: '/models/CAT-Translate-0.8b' },
+                { name: 'AI_CAPTION_TASK_QUEUE', value: 'picca.ai-caption' },
+                { name: 'AI_CAPTION_TASK_ROUTING_KEY', value: 'media.processing.ai.caption.requested.v1' },
+                { name: 'AI_CAPTION_RESULT_ROUTING_KEY', value: 'media.processing.ai.result.v1' },
+                { name: 'AI_RABBITMQ_EXCHANGE', value: 'picca.events' },
               ],
               ports: [
                 { name: 'http', containerPort: 8004 },
