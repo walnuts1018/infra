@@ -1,4 +1,4 @@
-function(app, workerName, queueName, minReplicaCount, maxReplicaCount, value)
+function(app, workerName, queueName, minReplicaCount, maxReplicaCount, value, cooldownPeriod=300)
   {
     apiVersion: 'keda.sh/v1alpha1',
     kind: 'ScaledObject',
@@ -8,7 +8,7 @@ function(app, workerName, queueName, minReplicaCount, maxReplicaCount, value)
     },
     spec: {
       pollingInterval: 5,
-      cooldownPeriod: 300,
+      cooldownPeriod: cooldownPeriod,
       minReplicaCount: minReplicaCount,
       maxReplicaCount: maxReplicaCount,
       scaleTargetRef: { name: workerName },

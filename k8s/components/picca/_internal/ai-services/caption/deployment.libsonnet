@@ -40,6 +40,15 @@ function(app)
                 { name: 'TRANSFORMERS_CACHE', value: '/tmp/huggingface/transformers' },
                 { name: 'PORT', value: '8004' },
                 { name: 'MODEL_DEVICE', value: 'cpu' },
+                { name: 'AI_INFERENCE_THREADS', value: '2' },
+                { name: 'OMP_NUM_THREADS', value: '2' },
+                { name: 'MKL_NUM_THREADS', value: '2' },
+                { name: 'OPENBLAS_NUM_THREADS', value: '2' },
+                { name: 'NUMEXPR_NUM_THREADS', value: '2' },
+                { name: 'TOKENIZERS_PARALLELISM', value: 'false' },
+                { name: 'OPENVINO_TENSOR_CACHE_PATH', value: '/tmp/runtime-cache/openvino' },
+                { name: 'OPENVINO_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
+                { name: 'OV_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
                 { name: 'FLORENCE2_MODEL_NAME', value: '/models/Florence-2-large-ft' },
                 { name: 'AI_CAPTION_TASK_QUEUE', value: 'picca.ai-caption' },
                 { name: 'AI_CAPTION_TASK_ROUTING_KEY', value: 'media.processing.ai.caption.requested.v1' },
@@ -70,6 +79,7 @@ function(app)
               },
               volumeMounts: [
                 { name: 'tmp', mountPath: '/tmp' },
+                { name: 'runtime-cache', mountPath: '/tmp/runtime-cache' },
                 { name: 'models', mountPath: '/models', readOnly: true },
               ],
             }, {
@@ -86,6 +96,7 @@ function(app)
           },
           volumes: [
             { name: 'tmp', emptyDir: {} },
+            { name: 'runtime-cache', emptyDir: { sizeLimit: '2Gi' } },
             {
               name: 'models',
               image: {

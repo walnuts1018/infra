@@ -41,10 +41,23 @@ function(app)
                 { name: 'TRANSFORMERS_CACHE', value: '/tmp/huggingface/transformers' },
                 { name: 'PORT', value: '8001' },
                 { name: 'MODEL_DEVICE', value: 'cpu' },
+                { name: 'DENSE_INFERENCE_BACKEND', value: 'openvino' },
+                { name: 'AI_INFERENCE_THREADS', value: '2' },
+                { name: 'OMP_NUM_THREADS', value: '2' },
+                { name: 'MKL_NUM_THREADS', value: '2' },
+                { name: 'OPENBLAS_NUM_THREADS', value: '2' },
+                { name: 'NUMEXPR_NUM_THREADS', value: '2' },
+                { name: 'TOKENIZERS_PARALLELISM', value: 'false' },
+                { name: 'OPENVINO_TENSOR_CACHE_PATH', value: '/tmp/runtime-cache/openvino' },
+                { name: 'OPENVINO_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
+                { name: 'OV_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
+                { name: 'DENSE_OPENVINO_TEXT_MODEL', value: '/models/waon-siglip2-base-patch16-256/openvino/text_model.xml' },
+                { name: 'DENSE_OPENVINO_IMAGE_MODEL', value: '/models/waon-siglip2-base-patch16-256/openvino/image_model.xml' },
                 { name: 'DENSE_MODEL_NAME', value: '/models/waon-siglip2-base-patch16-256' },
                 { name: 'CAT_TRANSLATE_MODEL_NAME', value: '/models/CAT-Translate-0.8b' },
                 { name: 'CAT_SOURCE_LANGUAGE', value: 'Japanese' },
                 { name: 'CAT_TARGET_LANGUAGE', value: 'English' },
+                { name: 'CAT_TRANSLATE_IDLE_SECONDS', value: '300' },
                 { name: 'AI_DENSE_TASK_QUEUE', value: 'picca.ai-dense' },
                 { name: 'AI_DENSE_TASK_ROUTING_KEY', value: 'media.processing.ai.dense.requested.v1' },
                 { name: 'AI_DENSE_RESULT_ROUTING_KEY', value: 'media.processing.ai.result.v1' },
@@ -74,6 +87,7 @@ function(app)
               },
               volumeMounts: [
                 { name: 'tmp', mountPath: '/tmp' },
+                { name: 'runtime-cache', mountPath: '/tmp/runtime-cache' },
                 { name: 'models', mountPath: '/models', readOnly: true },
               ],
             }, {
@@ -90,6 +104,7 @@ function(app)
           },
           volumes: [
             { name: 'tmp', emptyDir: {} },
+            { name: 'runtime-cache', emptyDir: { sizeLimit: '2Gi' } },
             {
               name: 'models',
               image: {

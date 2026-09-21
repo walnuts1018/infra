@@ -7,19 +7,19 @@ function(app)
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
-      name: app.name + '-ocr-worker',
+      name: app.name + '-ocr-vl-worker',
       namespace: app.namespace,
-      labels: labels(app.name + '-ocr-worker'),
+      labels: labels(app.name + '-ocr-vl-worker'),
     },
     spec: {
       strategy: { type: 'Recreate' },
       replicas: 0,
       selector: {
-        matchLabels: labels(app.name + '-ocr-worker'),
+        matchLabels: labels(app.name + '-ocr-vl-worker'),
       },
       template: {
         metadata: {
-          labels: labels(app.name + '-ocr-worker'),
+          labels: labels(app.name + '-ocr-vl-worker'),
         },
         spec: {
           serviceAccountName: sa.metadata.name,
@@ -44,10 +44,10 @@ function(app)
           ],
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
-              name: 'ocr-worker',
+              name: 'ocr-vl-worker',
               image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.60',
               imagePullPolicy: 'IfNotPresent',
-              command: ['python', 'scripts/run_ocr_worker.py'],
+              command: ['python', 'scripts/run_ocr_vl_worker.py'],
               envFrom: [
                 { secretRef: { name: rabbitmqSecret.spec.target.name } },
               ],
@@ -63,7 +63,12 @@ function(app)
                 { name: 'PADDLE_ENABLE_HPI', value: 'true' },
                 { name: 'PADDLE_ENABLE_MKLDNN', value: 'false' },
                 { name: 'PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK', value: '1' },
-                { name: 'PORT', value: '8003' },
+                { name: 'PADDLE_CACHE_DIR', value: '/tmp/runtime-cache/paddle' },
+                { name: 'PADDLEOCR_HOME', value: '/tmp/runtime-cache/paddleocr' },
+                { name: 'OPENVINO_TENSOR_CACHE_PATH', value: '/tmp/runtime-cache/openvino' },
+                { name: 'OPENVINO_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
+                { name: 'OV_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
+                { name: 'PORT', value: '8005' },
                 { name: 'MODEL_DEVICE', value: 'cpu' },
                 { name: 'AI_INFERENCE_THREADS', value: '2' },
                 { name: 'OMP_NUM_THREADS', value: '2' },
@@ -71,20 +76,15 @@ function(app)
                 { name: 'OPENBLAS_NUM_THREADS', value: '2' },
                 { name: 'NUMEXPR_NUM_THREADS', value: '2' },
                 { name: 'TOKENIZERS_PARALLELISM', value: 'false' },
-                { name: 'OCR_TEXT_DETECTION_MODEL_NAME', value: 'PP-OCRv6_medium_det' },
-                { name: 'OCR_TEXT_RECOGNITION_MODEL_NAME', value: 'PP-OCRv6_medium_rec' },
-                { name: 'PADDLE_CACHE_DIR', value: '/tmp/runtime-cache/paddle' },
-                { name: 'PADDLEOCR_HOME', value: '/tmp/runtime-cache/paddleocr' },
-                { name: 'OPENVINO_TENSOR_CACHE_PATH', value: '/tmp/runtime-cache/openvino' },
-                { name: 'OPENVINO_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
-                { name: 'OV_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
-                { name: 'AI_OCR_TASK_QUEUE', value: 'picca.ai-ocr' },
-                { name: 'AI_OCR_TASK_ROUTING_KEY', value: 'media.processing.ai.ocr.requested.v1' },
-                { name: 'AI_OCR_RESULT_ROUTING_KEY', value: 'media.processing.ai.result.v1' },
+                { name: 'OCR_VL_MODEL_NAME', value: 'PaddleOCR-VL-1.6' },
+                { name: 'OCR_VL_LAYOUT_MODEL_NAME', value: 'PP-DocLayoutV3' },
+                { name: 'AI_OCR_VL_TASK_QUEUE', value: 'picca.ai-ocr-vl' },
+                { name: 'AI_OCR_VL_TASK_ROUTING_KEY', value: 'media.processing.ai.ocr-vl.requested.v1' },
+                { name: 'AI_OCR_VL_RESULT_ROUTING_KEY', value: 'media.processing.ai.result.v1' },
                 { name: 'AI_RABBITMQ_EXCHANGE', value: 'picca.events' },
               ],
               ports: [
-                { name: 'http', containerPort: 8003 },
+                { name: 'http', containerPort: 8005 },
               ],
               readinessProbe: {
                 httpGet: { path: '/healthz', port: 'http' },
@@ -99,11 +99,11 @@ function(app)
               startupProbe: {
                 httpGet: { path: '/healthz', port: 'http' },
                 periodSeconds: 10,
-                failureThreshold: 60,
+                failureThreshold: 180,
               },
               resources: {
-                requests: { cpu: '1', memory: '6Gi' },
-                limits: { cpu: '4', memory: '12Gi' },
+                requests: { cpu: '2', memory: '8Gi' },
+                limits: { cpu: '4', memory: '16Gi' },
               },
               volumeMounts: [
                 { name: 'tmp', mountPath: '/tmp' },

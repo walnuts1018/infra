@@ -1,6 +1,12 @@
 replicaCount: 1
 useUnprivilegedImage: true
 
+env:
+  - name: QDRANT__STORAGE__PERFORMANCE__IO_URING
+    value: auto
+  - name: QDRANT__STORAGE__OPTIMIZERS__MAX_OPTIMIZATION_THREADS
+    value: "1"
+
 readinessProbe:
   enabled: true
 
@@ -9,11 +15,11 @@ livenessProbe:
 
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: "1"
+    cpu: 500m
     memory: 2Gi
+  limits:
+    cpu: "2"
+    memory: 8Gi
 
 persistence:
   size: 10Gi
