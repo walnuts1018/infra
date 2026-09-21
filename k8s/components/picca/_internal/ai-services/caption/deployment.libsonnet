@@ -12,6 +12,7 @@ function(app)
       labels: labels(app.name + '-caption-worker'),
     },
     spec: {
+      strategy: { type: 'Recreate' },
       replicas: 0,
       selector: {
         matchLabels: labels(app.name + '-caption-worker'),
@@ -26,7 +27,7 @@ function(app)
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: 'caption-worker',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.57',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.59',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_caption_worker.py'],
               envFrom: [
@@ -36,10 +37,10 @@ function(app)
                 { name: 'HOME', value: '/tmp' },
                 { name: 'HF_HOME', value: '/tmp/huggingface' },
                 { name: 'HF_MODULES_CACHE', value: '/tmp/huggingface/modules' },
+                { name: 'TRANSFORMERS_CACHE', value: '/tmp/huggingface/transformers' },
                 { name: 'PORT', value: '8004' },
                 { name: 'MODEL_DEVICE', value: 'cpu' },
-                { name: 'FLORENCE2_MODEL_NAME', value: '/models/Florence-2-base-ft' },
-                { name: 'TRANSLATE_MODEL_NAME', value: '/models/CAT-Translate-0.8b' },
+                { name: 'FLORENCE2_MODEL_NAME', value: '/models/Florence-2-large-ft' },
                 { name: 'AI_CAPTION_TASK_QUEUE', value: 'picca.ai-caption' },
                 { name: 'AI_CAPTION_TASK_ROUTING_KEY', value: 'media.processing.ai.caption.requested.v1' },
                 { name: 'AI_CAPTION_RESULT_ROUTING_KEY', value: 'media.processing.ai.result.v1' },
@@ -64,8 +65,8 @@ function(app)
                 failureThreshold: 180,
               },
               resources: {
-                requests: { cpu: '2', memory: '4Gi' },
-                limits: { cpu: '4', memory: '8Gi' },
+                requests: { cpu: '2', memory: '8Gi' },
+                limits: { cpu: '4', memory: '16Gi' },
               },
               volumeMounts: [
                 { name: 'tmp', mountPath: '/tmp' },
@@ -88,7 +89,7 @@ function(app)
             {
               name: 'models',
               image: {
-                reference: 'ghcr.io/walnuts1018/picca/ai-models-caption:v0.0.1',
+                reference: 'ghcr.io/walnuts1018/picca/ai-models-caption:v0.0.3',
                 pullPolicy: 'IfNotPresent',
               },
             },
