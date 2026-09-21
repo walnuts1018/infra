@@ -27,7 +27,7 @@ function(app)
           initContainers: [
             {
               name: 'prepare-paddlex-models',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.61',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.62',
               command: ['sh', '-c', 'cp -a /model-source/paddlex/. /models/paddlex/ && chmod -R a+rwX /models/paddlex'],
               securityContext: {
                 allowPrivilegeEscalation: false,
@@ -45,7 +45,7 @@ function(app)
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: 'ocr-worker',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.61',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.62',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_ocr_worker.py'],
               envFrom: [
@@ -129,7 +129,7 @@ function(app)
             {
               name: 'model-source',
               image: {
-                reference: 'ghcr.io/walnuts1018/picca/ai-models-ocr-primary:v0.0.61',
+                reference: 'ghcr.io/walnuts1018/picca/ai-models-ocr-primary:v0.0.62',
                 pullPolicy: 'IfNotPresent',
               },
             },
