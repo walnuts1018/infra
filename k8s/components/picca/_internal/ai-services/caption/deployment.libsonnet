@@ -28,7 +28,7 @@ function(app)
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: 'caption-worker',
-              image: 'ghcr.io/walnuts1018/picca/ai-caption:v0.0.72',
+              image: 'ghcr.io/walnuts1018/picca/ai-caption:v0.0.73',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_caption_worker.py'],
               envFrom: [
@@ -53,6 +53,7 @@ function(app)
                 { name: 'FLORENCE2_MODEL_NAME', value: '/models/Florence-2-large-ft' },
                 { name: 'FLORENCE2_NUM_BEAMS', value: '1' },
                 { name: 'FLORENCE2_MAX_NEW_TOKENS', value: '256' },
+                { name: 'FLORENCE2_USE_CACHE', value: 'false' },
                 { name: 'AI_CAPTION_TASK_QUEUE', value: 'picca.ai-caption' },
                 { name: 'AI_CAPTION_TASK_ROUTING_KEY', value: 'media.processing.ai.caption.requested.v1' },
                 { name: 'AI_CAPTION_RESULT_ROUTING_KEY', value: 'media.processing.ai.result.v1' },
