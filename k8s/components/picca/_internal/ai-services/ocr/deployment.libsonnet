@@ -27,7 +27,7 @@ function(app)
           initContainers: [
             {
               name: 'prepare-paddlex-models',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.62',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.63',
               command: ['sh', '-c', 'cp -a /model-source/paddlex/. /models/paddlex/ && chmod -R a+rwX /models/paddlex'],
               securityContext: {
                 allowPrivilegeEscalation: false,
@@ -45,7 +45,7 @@ function(app)
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: 'ocr-worker',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.62',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.63',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_ocr_worker.py'],
               envFrom: [
@@ -60,7 +60,7 @@ function(app)
                 { name: 'PADDLE_HOME', value: '/models/paddlex' },
                 { name: 'PADDLE_PDX_HOME', value: '/models/paddlex' },
                 { name: 'PADDLE_CPU_THREADS', value: '2' },
-                { name: 'PADDLE_ENABLE_HPI', value: 'true' },
+                { name: 'PADDLE_ENABLE_HPI', value: 'false' },
                 { name: 'PADDLE_ENABLE_MKLDNN', value: 'true' },
                 { name: 'PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK', value: '1' },
                 { name: 'PORT', value: '8003' },
