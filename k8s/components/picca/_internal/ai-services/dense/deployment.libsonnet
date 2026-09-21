@@ -118,7 +118,7 @@ function(app, role='query')
             {
               name: 'models',
               image: {
-                reference: 'ghcr.io/walnuts1018/picca/ai-models-dense:v0.0.62',
+                reference: 'ghcr.io/walnuts1018/picca/ai-models-dense-' + (if isImageWorker then 'vision' else 'text') + ':v0.0.69',
                 pullPolicy: 'IfNotPresent',
               },
             },
