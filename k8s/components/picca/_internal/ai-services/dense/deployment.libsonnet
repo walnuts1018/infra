@@ -12,6 +12,8 @@ function(app)
       labels: labels(app.name + '-dense-service'),
     },
     spec: {
+      // モデルイメージを同一ノード上で重複してロードしないよう、更新時は旧Podを先に停止する。
+      strategy: { type: 'Recreate' },
       replicas: 1,
       selector: {
         matchLabels: labels(app.name + '-dense-service'),
