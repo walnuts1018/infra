@@ -49,6 +49,11 @@ function(app)
                 periodSeconds: 10,
                 failureThreshold: 3,
               },
+              startupProbe: {
+                httpGet: { path: '/healthz', port: 'http' },
+                periodSeconds: 10,
+                failureThreshold: 180,
+              },
               resources: {
                 requests: { cpu: '1', memory: '2Gi' },
                 limits: { cpu: '4', memory: '6Gi' },
