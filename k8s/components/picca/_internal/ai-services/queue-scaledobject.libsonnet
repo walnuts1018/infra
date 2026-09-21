@@ -1,4 +1,4 @@
-function(app, workerName, queueName, minReplicaCount=0, maxReplicaCount=4, value='1')
+function(app, workerName, queueName, minReplicaCount, maxReplicaCount, value)
   {
     apiVersion: 'keda.sh/v1alpha1',
     kind: 'ScaledObject',

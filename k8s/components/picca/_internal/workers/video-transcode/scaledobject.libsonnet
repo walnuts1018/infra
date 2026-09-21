@@ -7,7 +7,7 @@ function(app)
     spec: {
       pollingInterval: 5,
       minReplicaCount: 0,
-      maxReplicaCount: 4,
+      maxReplicaCount: 2,
       scaleTargetRef: { name: worker.metadata.name },
       triggers: [{
         type: 'rabbitmq',
@@ -16,7 +16,7 @@ function(app)
           protocol: 'http',
           queueName: 'picca.video-transcode',
           mode: 'QueueLength',
-          value: '1',
+          value: '5',
         },
         authenticationRef: { name: app.name + '-rabbitmq-worker-auth' },
       }],
