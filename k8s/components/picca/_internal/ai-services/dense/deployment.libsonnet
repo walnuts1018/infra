@@ -93,7 +93,7 @@ function(app)
             {
               name: 'models',
               image: {
-                reference: 'ghcr.io/walnuts1018/picca/ai-models-dense:v0.0.3',
+                reference: 'ghcr.io/walnuts1018/picca/ai-models-dense:v0.0.59',
                 pullPolicy: 'IfNotPresent',
               },
             },
