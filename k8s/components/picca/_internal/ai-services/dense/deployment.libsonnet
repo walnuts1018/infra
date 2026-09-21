@@ -30,7 +30,7 @@ function(app, role='query')
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: if isImageWorker then 'dense-worker' else 'dense-service',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.63',
+              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.64',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_dense_service.py'],
               envFrom: [
