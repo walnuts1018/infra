@@ -34,7 +34,7 @@ function(app)
           containers: [
             (import '../../../../container.libsonnet') {
               name: 'download-worker',
-              image: 'ghcr.io/walnuts1018/picca/download-worker:v0.0.95@sha256:8e244b59e0c1637265362ae136ca03284eb8c5f30ef0fc3ea740720c87a36088',
+              image: 'ghcr.io/walnuts1018/picca/download-worker:v0.0.96@sha256:c0641914a46aab8f1471c5843676a738b2aaed9231dfcf249e01b243d45373a8',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
