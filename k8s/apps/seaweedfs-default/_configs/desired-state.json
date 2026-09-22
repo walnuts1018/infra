@@ -111,14 +111,6 @@
       }
     },
     {
-      "name": "gha-cache",
-      "publicRead": [],
-      "placement": {
-        "diskType": "ssd",
-        "replication": "000"
-      }
-    },
-    {
       "name": "ipu",
       "publicRead": [],
       "placement": {
@@ -448,11 +440,6 @@
           },
           {
             "claim": "sub",
-            "value": "system:serviceaccount:arc-systems:gha-cache-server",
-            "role": "gha-cache-server"
-          },
-          {
-            "claim": "sub",
             "value": "system:serviceaccount:cortex:iwashi-cortex",
             "role": "cortex"
           }
@@ -663,20 +650,6 @@
         ]
       },
       {
-        "name": "gha-cache-server",
-        "statements": [
-          {
-            "effect": "Allow",
-            "actions": [
-              "s3:*"
-            ],
-            "buckets": [
-              "gha-cache"
-            ]
-          }
-        ]
-      },
-      {
         "name": "cortex",
         "statements": [
           {
@@ -782,13 +755,6 @@
         "name": "stalwart",
         "policies": [
           "stalwart"
-        ],
-        "provider": "k8s"
-      },
-      {
-        "name": "gha-cache-server",
-        "policies": [
-          "gha-cache-server"
         ],
         "provider": "k8s"
       },
