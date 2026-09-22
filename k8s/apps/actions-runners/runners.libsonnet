@@ -331,10 +331,6 @@ local makeRunnerSet(repo, runner) =
                   value: '120',
                 },
                 {
-                  name: 'CUSTOM_ACTIONS_RESULTS_URL',
-                  value: 'https://gha-cache-server.local.walnuts.dev/',
-                },
-                {
                   name: 'ACTIONS_RUNNER_HOOK_JOB_STARTED',
                   value: '/etc/arc/hooks/job-started.sh',
                 },
