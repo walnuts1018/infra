@@ -28,7 +28,10 @@
             "HEAD"
           ],
           "allowedHeaders": [
-            "Content-Type"
+            "Content-Type",
+            "traceparent",
+            "tracestate",
+            "baggage"
           ],
           "exposeHeaders": [
             "ETag"
@@ -55,7 +58,10 @@
             "HEAD"
           ],
           "allowedHeaders": [
-            "Content-Type"
+            "Content-Type",
+            "traceparent",
+            "tracestate",
+            "baggage"
           ],
           "exposeHeaders": [
             "ETag"
