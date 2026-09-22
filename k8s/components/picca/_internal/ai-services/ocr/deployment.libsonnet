@@ -28,7 +28,7 @@ function(app)
           initContainers: [
             {
               name: 'prepare-paddlex-models',
-              image: 'ghcr.io/walnuts1018/picca/ai-paddle:v0.0.91@sha256:c1ac9dc900d239b3711aa386681a537586bbc5f0b473321898af4753274ef836',
+              image: 'ghcr.io/walnuts1018/picca/ai-paddle:v0.0.93@sha256:ea6ee02a99d85399ebac2da70d47f78277962dda0f3884d079aff29263a46d48',
               command: ['sh', '-c', 'cp -a /model-source/paddlex/. /models/paddlex/ && chmod -R a+rwX /models/paddlex'],
               securityContext: {
                 allowPrivilegeEscalation: false,
@@ -46,7 +46,7 @@ function(app)
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: 'ocr-worker',
-              image: 'ghcr.io/walnuts1018/picca/ai-paddle:v0.0.91@sha256:c1ac9dc900d239b3711aa386681a537586bbc5f0b473321898af4753274ef836',
+              image: 'ghcr.io/walnuts1018/picca/ai-paddle:v0.0.93@sha256:ea6ee02a99d85399ebac2da70d47f78277962dda0f3884d079aff29263a46d48',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_ocr_worker.py'],
               envFrom: [
