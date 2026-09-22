@@ -62,7 +62,7 @@ function(app)
           containers: [
             (import '../../../container.libsonnet') {
               name: 'apiserver',
-              image: 'ghcr.io/walnuts1018/picca/apiserver:v0.0.91@sha256:386df6c2d0ed0b3ccd8e197b25d1e28d63b79f5ad70671a600b5a0ef35d61177',
+              image: 'ghcr.io/walnuts1018/picca/apiserver:v0.0.92@sha256:6fc6b26b4d5f792522c19d3a7eb3ebe0b9f48bba3e86d71cd864d78dcdd22989',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
