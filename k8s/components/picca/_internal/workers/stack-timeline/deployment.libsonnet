@@ -34,7 +34,7 @@ function(app)
           containers: [
             (import '../../../../container.libsonnet') {
               name: 'stack-timeline-worker',
-              image: 'ghcr.io/walnuts1018/picca/stack-timeline-worker:v0.0.96@sha256:2ef5434cb72b7e4aea85aecee6b1cae6578194cad415be5afeb1cd818a09a778',
+              image: 'ghcr.io/walnuts1018/picca/stack-timeline-worker:v0.0.96@sha256:4f4142446af2c0a5021d1244af7a1b201983390cc28ae5762d90e86802af5311',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },

@@ -34,7 +34,7 @@ function(app)
           containers: [
             (import '../../container.libsonnet') {
               name: 'outbox-worker',
-              image: 'ghcr.io/walnuts1018/picca/outbox-worker:v0.0.96@sha256:2b14538e0ca97e97ba52f14fb55abcd20bac7152fd2ead2615782ed90b4a7b5a',
+              image: 'ghcr.io/walnuts1018/picca/outbox-worker:v0.0.96@sha256:d7f4a9f827ea5000189d0f1ed9b2920bf71b24f64df4b389a471566d8efae2f5',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },

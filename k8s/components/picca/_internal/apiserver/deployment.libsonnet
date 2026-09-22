@@ -35,7 +35,7 @@ function(app)
           initContainers: [
             (import '../../../container.libsonnet') {
               name: 'migrations',
-              image: 'ghcr.io/walnuts1018/picca/migrations:v0.0.96@sha256:a2b0df74521dfb7a7e4d61409a2cf1922e6393621803713282ae9a21bfa40b23',
+              image: 'ghcr.io/walnuts1018/picca/migrations:v0.0.96@sha256:7d5aa77b3e55930e67d491a1a01548c337dd79309ab3bd5c2b3d31f06f5eaca3',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 {
@@ -61,7 +61,7 @@ function(app)
           containers: [
             (import '../../../container.libsonnet') {
               name: 'apiserver',
-              image: 'ghcr.io/walnuts1018/picca/apiserver:v0.0.96@sha256:6a41a3f6a90fd6f0dc262aac495f4aa48c1318eafdde5c26b581617597df11c9',
+              image: 'ghcr.io/walnuts1018/picca/apiserver:v0.0.96@sha256:a01366fe6a8cd4926d32aff5610a32ae3bafcd07bea2b62a38c91528efe81f2a',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
