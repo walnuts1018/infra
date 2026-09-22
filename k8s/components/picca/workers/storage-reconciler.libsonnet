@@ -35,7 +35,7 @@ function(app)
           containers: [
             (import '../../container.libsonnet') {
               name: 'storage-reconciler',
-              image: 'ghcr.io/walnuts1018/picca/storage-reconciler:v0.0.91',
+              image: 'ghcr.io/walnuts1018/picca/storage-reconciler:v0.0.93@sha256:5fc9065e157519188b25cac3e29235e9fe4d25b08d4294f1d82907f702d7ecc6',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
