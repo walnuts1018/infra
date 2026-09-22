@@ -35,7 +35,7 @@ function(app)
           containers: [
             (import '../../../../container.libsonnet') {
               name: 'image-processing-worker',
-              image: 'ghcr.io/walnuts1018/picca/image-processing-worker:v0.0.93@sha256:0ce14b079db6a74f61f590d52af09bfcad6360a62f1bdedac6262b7c53c858c7',
+              image: 'ghcr.io/walnuts1018/picca/image-processing-worker:v0.0.94@sha256:0825807bbf6f88b9b3ea336ab69303dbdae35ebd7470f813c40b0f9539414bab',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
