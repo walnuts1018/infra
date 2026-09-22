@@ -36,7 +36,7 @@ function(app)
           initContainers: [
             (import '../../../container.libsonnet') {
               name: 'migrations',
-              image: 'ghcr.io/walnuts1018/picca/migrations:v0.0.71',
+              image: 'ghcr.io/walnuts1018/picca/migrations:v0.0.76',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 {
