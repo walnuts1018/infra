@@ -74,6 +74,10 @@ function(app)
               ],
               env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
                 {
+                  name: 'IMGPROXY_PUBLIC_URL',
+                  value: 'https://imgproxy-' + app.name + '.walnuts.dev',
+                },
+                {
                   name: 'OTEL_SERVICE_NAME',
                   value: 'picca-apiserver',
                 },
