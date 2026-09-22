@@ -1,6 +1,6 @@
 function(app, useSuffix=true)
   (import '../../../external-secret.libsonnet') {
-    name: app.name + '-graphql-signing-secret',
+    name: app.name + '-graphql-query-signing-public-keys',
     namespace: app.namespace,
     use_suffix: useSuffix,
     data: [
