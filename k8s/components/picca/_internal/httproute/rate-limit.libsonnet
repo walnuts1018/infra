@@ -39,7 +39,7 @@ function(app)
       ],
       rateLimit: {
         global: {
-          rules: rule('/auth', 2) + rule('/query', 20),
+          rules: rule('/auth', 2) + rule('/query', 20) + rule('/api/telemetry', 2),
         },
       },
     },

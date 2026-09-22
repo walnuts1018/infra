@@ -15,7 +15,9 @@ function(
             grpc: {
               max_recv_msg_size_mib: 100,
             },
-            http: {},
+            http: {
+              include_metadata: true,
+            },
           },
         },
       },
@@ -32,6 +34,39 @@ function(
               'k8s.cluster.uid',
             ],
           },
+        },
+        'transform/picca_identity': {
+          error_mode: 'ignore',
+          trace_statements: [
+            'delete_key(resource.attributes, "user.id")',
+            'delete_key(resource.attributes, "user.email")',
+            'delete_key(span.attributes, "user.id")',
+            'delete_key(span.attributes, "user.email")',
+            'delete_key(scope.attributes, "user.id")',
+            'delete_key(scope.attributes, "user.email")',
+            'set(resource.attributes["user.id"], metadata["x-picca-authenticated-user-id"])',
+            'set(resource.attributes["user.email"], metadata["x-picca-authenticated-user-email"])',
+          ],
+          metric_statements: [
+            'delete_key(resource.attributes, "user.id")',
+            'delete_key(resource.attributes, "user.email")',
+            'delete_key(metric.attributes, "user.id")',
+            'delete_key(metric.attributes, "user.email")',
+            'delete_key(scope.attributes, "user.id")',
+            'delete_key(scope.attributes, "user.email")',
+            'set(resource.attributes["user.id"], metadata["x-picca-authenticated-user-id"])',
+            'set(resource.attributes["user.email"], metadata["x-picca-authenticated-user-email"])',
+          ],
+          log_statements: [
+            'delete_key(resource.attributes, "user.id")',
+            'delete_key(resource.attributes, "user.email")',
+            'delete_key(log.attributes, "user.id")',
+            'delete_key(log.attributes, "user.email")',
+            'delete_key(scope.attributes, "user.id")',
+            'delete_key(scope.attributes, "user.email")',
+            'set(resource.attributes["user.id"], metadata["x-picca-authenticated-user-id"])',
+            'set(resource.attributes["user.email"], metadata["x-picca-authenticated-user-email"])',
+          ],
         },
       },
       connectors: {
@@ -79,6 +114,7 @@ function(
             processors: [
               'memory_limiter',
               'k8s_attributes',
+              'transform/picca_identity',
               'resource/cluster_name',
             ],
             exporters: [
@@ -95,6 +131,7 @@ function(
             processors: [
               'memory_limiter',
               'k8s_attributes',
+              'transform/picca_identity',
               'resource/cluster_name',
             ],
             exporters: [
@@ -110,6 +147,7 @@ function(
             processors: [
               'memory_limiter',
               'k8s_attributes',
+              'transform/picca_identity',
               'resource/cluster_name',
             ],
             exporters: [
@@ -123,6 +161,7 @@ function(
             processors: [
               'memory_limiter',
               'k8s_attributes',
+              'transform/picca_identity',
               'resource/cluster_name',
               'probabilistic_sampler/mackerel',
             ],
