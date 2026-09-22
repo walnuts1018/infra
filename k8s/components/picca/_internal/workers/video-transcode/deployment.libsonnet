@@ -35,7 +35,7 @@ function(app)
           containers: [
             (import '../../../../container.libsonnet') {
               name: 'video-transcode-worker',
-              image: 'ghcr.io/walnuts1018/picca/video-transcode-worker:v0.0.93@sha256:c15a5c1199fa1cbd800fe5ee3ad2e911707e2b0a32681575a4f2f876970d5298',
+              image: 'ghcr.io/walnuts1018/picca/video-transcode-worker:v0.0.94@sha256:c70ef3ab40da91ea9caa94c6e628c0d265119e7ed7ce1539040bb70c9e8d24a1',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
