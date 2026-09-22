@@ -28,7 +28,7 @@ function(app)
           containers: [
             (import '../../../../container.libsonnet') {
               name: 'index-commit-worker',
-              image: 'ghcr.io/walnuts1018/picca/index-commit-worker:v0.0.94@sha256:a557cf5f27d3687e35199fb8ffa145c009d80c1d7f98c64a8027870deec165f1',
+              image: 'ghcr.io/walnuts1018/picca/index-commit-worker:v0.0.95@sha256:4ef52bc1052ee16f689b8b8206da253b444e93e00556d798217fad4c6cddb8d1',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
