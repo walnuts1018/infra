@@ -1,8 +1,3 @@
-resource "random_password" "picca_graphql_query_signing_secret" {
-  length  = 64
-  special = false
-}
-
 resource "random_id" "picca_album_capability_key" {
   byte_length = 32
 }
@@ -27,11 +22,6 @@ resource "random_password" "picca_redis_password" {
 
 resource "random_password" "picca_rabbitmq_password" {
   length  = 32
-  special = false
-}
-
-resource "random_password" "picca_dev_graphql_query_signing_secret" {
-  length  = 64
   special = false
 }
 
@@ -152,7 +142,7 @@ resource "onepassword_item" "external_secret" {
         "opencost-client-secret"                   = { type = "CONCEALED", value = var.opencost_client_secret }
         "picca-client-id"                          = { type = "STRING", value = var.picca_client_id }
         "picca-client-secret"                      = { type = "CONCEALED", value = var.picca_client_secret }
-        "picca-graphql-query-signing-secret"       = { type = "CONCEALED", value = random_password.picca_graphql_query_signing_secret.result }
+        "picca-graphql-query-signing-public-keys"  = { type = "STRING", value = var.picca_graphql_query_signing_public_keys }
         "picca-album-capability-keys"              = { type = "CONCEALED", value = "v1=${random_id.picca_album_capability_key.b64_url}" }
         "picca-album-capability-active-key-id"     = { type = "STRING", value = "v1" }
         "picca-imgproxy-key"                       = { type = "CONCEALED", value = random_id.picca_imgproxy_key.hex }
@@ -161,7 +151,7 @@ resource "onepassword_item" "external_secret" {
         "picca-rabbitmq-password"                  = { type = "CONCEALED", value = random_password.picca_rabbitmq_password.result }
         "picca-dev-client-id"                      = { type = "STRING", value = var.picca_dev_client_id }
         "picca-dev-client-secret"                  = { type = "CONCEALED", value = var.picca_dev_client_secret }
-        "picca-dev-graphql-query-signing-secret"   = { type = "CONCEALED", value = random_password.picca_dev_graphql_query_signing_secret.result }
+        "picca-dev-graphql-query-signing-public-keys" = { type = "STRING", value = var.picca_dev_graphql_query_signing_public_keys }
         "picca-dev-album-capability-keys"          = { type = "CONCEALED", value = "v1=${random_id.picca_dev_album_capability_key.b64_url}" }
         "picca-dev-album-capability-active-key-id" = { type = "STRING", value = "v1" }
         "picca-dev-imgproxy-key"                   = { type = "CONCEALED", value = random_id.picca_dev_imgproxy_key.hex }

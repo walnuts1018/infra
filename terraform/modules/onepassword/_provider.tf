@@ -102,6 +102,16 @@ variable "picca_client_secret" {
   type      = string
   sensitive = true
 }
+
+variable "picca_graphql_query_signing_public_keys" {
+  type        = string
+  description = "Ed25519 GraphQL署名公開鍵のallowlist。key-id=base64url-public-keyをカンマ区切りで指定する。"
+}
+
+variable "picca_dev_graphql_query_signing_public_keys" {
+  type        = string
+  description = "開発環境用Ed25519 GraphQL署名公開鍵のallowlist。key-id=base64url-public-keyをカンマ区切りで指定する。"
+}
 variable "picca_dev_client_id" { type = string }
 variable "picca_dev_client_secret" {
   type      = string

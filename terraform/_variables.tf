@@ -43,6 +43,16 @@ variable "onepassword_service_account_token" {
   description = "1Password service account token with access to the External Secrets vault"
 }
 
+variable "picca_graphql_query_signing_public_keys" {
+  type        = string
+  description = "Picca本番GraphQLのEd25519署名公開鍵allowlist。key-id=base64url-public-keyをカンマ区切りで指定する。"
+}
+
+variable "picca_dev_graphql_query_signing_public_keys" {
+  type        = string
+  description = "Picca開発環境GraphQLのEd25519署名公開鍵allowlist。key-id=base64url-public-keyをカンマ区切りで指定する。"
+}
+
 # variable "zitadel_github_idp_client_secret" {
 #   type        = string
 #   sensitive   = true

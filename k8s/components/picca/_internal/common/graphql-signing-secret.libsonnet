@@ -5,15 +5,14 @@ function(app, useSuffix=true)
     use_suffix: useSuffix,
     data: [
       {
-        secretKey: 'graphql_query_signing_secret',
+        secretKey: 'graphql_query_signing_public_keys',
         remoteRef: {
           key: 'terraform-external-secrets',
-          property: app.name + '-graphql-query-signing-secret',
+          property: app.name + '-graphql-query-signing-public-keys',
         },
       },
     ],
     template_data: {
-      GRAPHQL_QUERY_SIGNING_SECRET: '{{ .graphql_query_signing_secret }}',
-      PICCA_GRAPHQL_QUERY_SIGNING_SECRET: '{{ .graphql_query_signing_secret }}',
+      GRAPHQL_QUERY_SIGNING_PUBLIC_KEYS: '{{ .graphql_query_signing_public_keys }}',
     },
   }

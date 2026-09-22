@@ -30,8 +30,10 @@ module "onepassword" {
   opencost_client_secret  = module.zitadel.opencost_oidc_client_secret
   picca_client_id         = module.zitadel.picca_oidc_client_id
   picca_client_secret     = module.zitadel.picca_oidc_client_secret
+  picca_graphql_query_signing_public_keys = var.picca_graphql_query_signing_public_keys
   picca_dev_client_id     = module.zitadel.picca_dev_oidc_client_id
   picca_dev_client_secret = module.zitadel.picca_dev_oidc_client_secret
+  picca_dev_graphql_query_signing_public_keys = var.picca_dev_graphql_query_signing_public_keys
   shumoku_client_id       = module.zitadel.shumoku_oidc_client_id
   shumoku_client_secret   = module.zitadel.shumoku_oidc_client_secret
 }
