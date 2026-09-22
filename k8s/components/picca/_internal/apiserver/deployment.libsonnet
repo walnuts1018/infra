@@ -6,7 +6,6 @@ function(app)
   local valkeySecret = (import '../valkey/external-secret.libsonnet')(app);
   local rabbitmqSecret = (import '../rabbitmq/external-secret.libsonnet')(app);
   local oidcSecret = (import '../oidc/external-secret.libsonnet')(app);
-  local graphqlSigningSecret = (import '../common/graphql-signing-secret.libsonnet')(app);
   local albumCapabilitySecret = (import '../common/album-capability-secret.libsonnet')(app);
   local imgproxySecret = (import '../imgproxy/external-secret.libsonnet')(app);
   local plans = (import '../common/plans/mount.libsonnet')(app);
@@ -70,7 +69,6 @@ function(app)
                 { secretRef: { name: valkeySecret.spec.target.name } },
                 { secretRef: { name: rabbitmqSecret.spec.target.name } },
                 { secretRef: { name: oidcSecret.spec.target.name } },
-                { secretRef: { name: graphqlSigningSecret.spec.target.name } },
                 { secretRef: { name: albumCapabilitySecret.spec.target.name } },
                 { secretRef: { name: imgproxySecret.spec.target.name } },
               ],
