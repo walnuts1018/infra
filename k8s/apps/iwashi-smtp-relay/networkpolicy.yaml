@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: iwashi-smtp-relay
+  namespace: iwashi-system
+spec:
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: alertmanager
+              app.kubernetes.io/instance: iwashi-cortex
+              app.kubernetes.io/name: cortex
+      ports:
+        - port: 587
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: iwashi-smtp-relay
+      app.kubernetes.io/name: mail
+  policyTypes:
+    - Ingress

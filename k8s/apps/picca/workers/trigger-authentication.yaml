@@ -1,0 +1,10 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: picca-rabbitmq-worker-auth
+  namespace: picca
+spec:
+  secretTargetRef:
+    - key: KEDA_RABBITMQ_HOST
+      name: picca-rabbitmq-94d271
+      parameter: host

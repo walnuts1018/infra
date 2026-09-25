@@ -1,0 +1,193 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: picca-caption-worker
+    app.kubernetes.io/name: picca-caption-worker
+  name: picca-caption-worker
+  namespace: picca
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: picca-caption-worker
+      app.kubernetes.io/name: picca-caption-worker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: picca-caption-worker
+        app.kubernetes.io/name: picca-caption-worker
+    spec:
+      containers:
+        - command:
+            - python
+            - scripts/run_caption_worker.py
+          env:
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ENDPOINT_URL_STS
+              value: http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/picca
+            - name: AWS_ENDPOINT_URL_S3
+              value: http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+            - name: AWS_REGION
+              value: us-east-1
+            - name: S3_REGION
+              value: us-east-1
+            - name: S3_BUCKET
+              value: picca
+            - name: S3_USE_PATH_STYLE
+              value: "true"
+            - name: S3_EXTERNAL_ENDPOINT
+              value: https://picca.seaweedfs.walnuts.dev
+            - name: IMGPROXY_BUCKET
+              value: picca
+            - name: IMGPROXY_TTL
+              value: "900"
+            - name: HOME
+              value: /tmp
+            - name: HF_HOME
+              value: /tmp/huggingface
+            - name: HF_MODULES_CACHE
+              value: /tmp/huggingface/modules
+            - name: TRANSFORMERS_CACHE
+              value: /tmp/huggingface/transformers
+            - name: PORT
+              value: "8004"
+            - name: MODEL_DEVICE
+              value: cpu
+            - name: AI_INFERENCE_THREADS
+              value: "2"
+            - name: OMP_NUM_THREADS
+              value: "2"
+            - name: MKL_NUM_THREADS
+              value: "2"
+            - name: OPENBLAS_NUM_THREADS
+              value: "2"
+            - name: NUMEXPR_NUM_THREADS
+              value: "2"
+            - name: TOKENIZERS_PARALLELISM
+              value: "false"
+            - name: OPENVINO_TENSOR_CACHE_PATH
+              value: /tmp/runtime-cache/openvino
+            - name: OPENVINO_CACHE_DIR
+              value: /tmp/runtime-cache/openvino
+            - name: OV_CACHE_DIR
+              value: /tmp/runtime-cache/openvino
+            - name: FLORENCE2_MODEL_NAME
+              value: /models/Florence-2-large-ft
+            - name: FLORENCE2_USE_CACHE
+              value: "false"
+            - name: AI_CAPTION_TASK_QUEUE
+              value: picca.ai-caption
+            - name: AI_CAPTION_TASK_ROUTING_KEY
+              value: media.processing.ai.caption.requested.v1
+            - name: AI_CAPTION_RESULT_ROUTING_KEY
+              value: media.processing.ai.result.v1
+            - name: AI_RABBITMQ_EXCHANGE
+              value: picca.events
+          envFrom:
+            - secretRef:
+                name: picca-rabbitmq-94d271
+          image: ghcr.io/walnuts1018/picca/ai-caption:v0.0.96@sha256:56068704cd6e9c012f2151fc662f3ed534cbd2a39150a85e2cd87b01a655cbf9
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          name: caption-worker
+          ports:
+            - containerPort: 8004
+              name: http
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "4"
+              memory: 16Gi
+            requests:
+              cpu: "1"
+              memory: 6Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: false
+            seccompProfile:
+              type: RuntimeDefault
+          startupProbe:
+            failureThreshold: 180
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /tmp/runtime-cache
+              name: runtime-cache
+            - mountPath: /models
+              name: models
+              readOnly: true
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      securityContext:
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+      serviceAccountName: picca
+      volumes:
+        - emptyDir: {}
+          name: tmp
+        - emptyDir:
+            sizeLimit: 2Gi
+          name: runtime-cache
+        - image:
+            pullPolicy: IfNotPresent
+            reference: ghcr.io/walnuts1018/picca/ai-models-caption:v0.0.62
+          name: models
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 86400
+                  path: token
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: picca-caption-worker
+  namespace: picca
+spec:
+  cooldownPeriod: 60
+  maxReplicaCount: 1
+  minReplicaCount: 0
+  pollingInterval: 5
+  scaleTargetRef:
+    name: picca-caption-worker
+  triggers:
+    - authenticationRef:
+        name: picca-rabbitmq-worker-auth
+      metadata:
+        mode: QueueLength
+        protocol: http
+        queueName: picca.ai-caption
+        value: "1"
+      metricType: AverageValue
+      type: rabbitmq

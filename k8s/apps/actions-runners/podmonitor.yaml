@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app: actions-runners
+    app.kubernetes.io/name: actions-runners
+  name: arc-runner-set-listener
+  namespace: arc-runners
+spec:
+  namespaceSelector:
+    matchNames:
+      - arc-systems
+  podMetricsEndpoints:
+    - interval: 15s
+      path: /metrics
+      port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: runner-scale-set-listener
