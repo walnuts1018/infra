@@ -28,7 +28,7 @@ function(app)
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
               name: 'caption-worker',
-              image: 'ghcr.io/walnuts1018/picca/ai-caption:v0.0.96@sha256:56068704cd6e9c012f2151fc662f3ed534cbd2a39150a85e2cd87b01a655cbf9',
+              image: 'ghcr.io/walnuts1018/picca/ai-caption:v0.0.96@sha256:4a86a0406d1ea1f2f8448d4d80a82789d6780828aed761ba7726a154a61e25ff',
               imagePullPolicy: 'IfNotPresent',
               command: ['python', 'scripts/run_caption_worker.py'],
               envFrom: [
