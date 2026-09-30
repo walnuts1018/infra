@@ -9,6 +9,7 @@ local app = import 'app.json5';
     labels: labels(app.name),
   },
   spec: {
+    externalTrafficPolicy: 'Local',
     ports: [
       {
         port: 445,
