@@ -47,6 +47,7 @@ resource "zitadel_trigger_actions" "pre_userinfo_creation" {
   action_ids = [
     zitadel_action.flat_roles.id,
     zitadel_action.flat_minio_roles.id,
+    zitadel_action.webtop_role_claim.id,
   ]
 }
 
@@ -57,5 +58,6 @@ resource "zitadel_trigger_actions" "pre_access_token_creation" {
   action_ids = [
     zitadel_action.flat_roles.id,
     zitadel_action.flat_minio_roles.id,
+    zitadel_action.webtop_role_claim.id,
   ]
 }

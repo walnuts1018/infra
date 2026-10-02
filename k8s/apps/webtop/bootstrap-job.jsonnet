@@ -33,13 +33,13 @@ local jobName = app.name + '-bootstrap';
         containers: [
           {
             name: 'bootstrap',
-            image: images.archlinux,
+            image: images.webtop,
             imagePullPolicy: 'IfNotPresent',
             command: ['/usr/bin/bash', '/scripts/bootstrap.sh'],
             env: [
               {
                 name: 'ROOTFS_IMAGE_REFERENCE',
-                value: images.archlinux,
+                value: images.webtop,
               },
             ],
             securityContext: {
@@ -49,14 +49,11 @@ local jobName = app.name + '-bootstrap';
               capabilities: {
                 drop: ['ALL'],
                 add: [
-                  'SYS_ADMIN',
-                  'SYS_CHROOT',
                   'CHOWN',
                   'DAC_OVERRIDE',
                   'FOWNER',
-                  'SETUID',
-                  'SETGID',
                   'SETFCAP',
+                  'FSETID',
                 ],
               },
             },
@@ -74,9 +71,6 @@ local jobName = app.name + '-bootstrap';
               { name: 'rootfs-source', mountPath: '/source', readOnly: true },
               { name: 'rootfs-target', mountPath: '/target' },
               { name: 'bootstrap-scripts', mountPath: '/scripts', readOnly: true },
-              { name: 'run', mountPath: '/run' },
-              { name: 'tmp', mountPath: '/tmp' },
-              { name: 'dev-shm', mountPath: '/dev/shm' },
             ],
           },
         ],
@@ -84,7 +78,7 @@ local jobName = app.name + '-bootstrap';
           {
             name: 'rootfs-source',
             image: {
-              reference: images.archlinux,
+              reference: images.webtop,
               pullPolicy: 'IfNotPresent',
             },
           },
@@ -99,23 +93,6 @@ local jobName = app.name + '-bootstrap';
             configMap: {
               name: bootstrapConfig.metadata.name,
               defaultMode: 292,
-            },
-          },
-          {
-            name: 'run',
-            emptyDir: {
-              medium: 'Memory',
-            },
-          },
-          {
-            name: 'tmp',
-            emptyDir: {},
-          },
-          {
-            name: 'dev-shm',
-            emptyDir: {
-              medium: 'Memory',
-              sizeLimit: '1Gi',
             },
           },
         ],

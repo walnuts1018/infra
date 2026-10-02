@@ -13,13 +13,13 @@ local app = import 'app.json5';
     },
   },
   spec: {
-    storageClassName: 'local-path',
+    storageClassName: 'longhorn',
     accessModes: [
       'ReadWriteOnce',
     ],
     resources: {
       requests: {
-        storage: '64Gi',
+        storage: '128Gi',
       },
     },
   },

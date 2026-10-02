@@ -79,8 +79,9 @@
   ],
   packageRules: [
     {
+      // Webtop image is both the bootstrap source and the launcher; update it only with a planned rootfs migration.
       matchPackageNames: [
-        'docker.io/library/archlinux',
+        'lscr.io/linuxserver/webtop',
       ],
       enabled: false,
     },

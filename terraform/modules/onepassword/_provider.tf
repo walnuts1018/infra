@@ -73,8 +73,8 @@ variable "longhorn_client_secret" {
   type      = string
   sensitive = true
 }
-variable "linux_desktop_client_id" { type = string }
-variable "linux_desktop_client_secret" {
+variable "webtop_client_id" { type = string }
+variable "webtop_client_secret" {
   type      = string
   sensitive = true
 }

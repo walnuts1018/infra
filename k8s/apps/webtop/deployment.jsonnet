@@ -32,22 +32,44 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
         },
         containers: [
           {
-            name: 'desktop',
-            image: images.archlinux,
+            name: 'webtop',
+            image: images.webtop,
             imagePullPolicy: 'IfNotPresent',
-            command: ['/usr/bin/bash', '/launcher/runtime-launcher.sh'],
+            command: ['/bin/bash', '/launcher/runtime-launcher.sh'],
+            env: [
+              { name: 'PUID', value: '1000' },
+              { name: 'PGID', value: '1000' },
+              { name: 'TZ', value: 'Asia/Tokyo' },
+              { name: 'LC_ALL', value: 'ja_JP.UTF-8' },
+              { name: 'PIXELFLUX_WAYLAND', value: 'true' },
+              { name: 'START_DOCKER', value: 'false' },
+              { name: 'SELKIES_ENABLE_BASIC_AUTH', value: 'false' },
+              { name: 'SELKIES_MODE', value: 'websockets' },
+              { name: 'TITLE', value: 'Linux Desktop' },
+              { name: 'UMASK', value: '022' },
+            ],
+            ports: [
+              {
+                name: 'http',
+                containerPort: 3000,
+                protocol: 'TCP',
+              },
+            ],
             securityContext: {
               runAsUser: 0,
               allowPrivilegeEscalation: true,
               readOnlyRootFilesystem: true,
               capabilities: {
                 drop: ['ALL'],
+                // SYS_ADMIN is required for the runtime bind mounts. SETUID and SETGID let LinuxServer start abc as PUID/PGID.
                 add: [
                   'SYS_ADMIN',
                   'SYS_CHROOT',
                   'CHOWN',
                   'DAC_OVERRIDE',
                   'FOWNER',
+                  'FSETID',
+                  'KILL',
                   'SETUID',
                   'SETGID',
                   'SETFCAP',
@@ -55,28 +77,31 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
               },
             },
             startupProbe: {
-              exec: {
-                command: [
-                  '/usr/bin/bash',
-                  '-ec',
-                  'echo >/dev/tcp/127.0.0.1/5900',
-                ],
+              httpGet: {
+                path: '/',
+                port: 'http',
               },
               periodSeconds: 10,
-              timeoutSeconds: 2,
+              timeoutSeconds: 5,
               failureThreshold: 60,
             },
             readinessProbe: {
-              exec: {
-                command: [
-                  '/usr/bin/bash',
-                  '-ec',
-                  'echo >/dev/tcp/127.0.0.1/5900',
-                ],
+              httpGet: {
+                path: '/',
+                port: 'http',
               },
               periodSeconds: 10,
-              timeoutSeconds: 2,
-              failureThreshold: 3,
+              timeoutSeconds: 5,
+              failureThreshold: 6,
+            },
+            livenessProbe: {
+              httpGet: {
+                path: '/',
+                port: 'http',
+              },
+              periodSeconds: 60,
+              timeoutSeconds: 10,
+              failureThreshold: 5,
             },
             resources: {
               requests: {
@@ -94,55 +119,6 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
               { name: 'run', mountPath: '/run' },
               { name: 'tmp', mountPath: '/tmp' },
               { name: 'dev-shm', mountPath: '/dev/shm' },
-            ],
-          },
-          {
-            name: 'novnc',
-            image: images.novnc,
-            imagePullPolicy: 'IfNotPresent',
-            env: [
-              { name: 'VNCADDR', value: '127.0.0.1:5900' },
-            ],
-            ports: [
-              { name: 'http', containerPort: 8080, protocol: 'TCP' },
-            ],
-            securityContext: {
-              allowPrivilegeEscalation: false,
-              readOnlyRootFilesystem: true,
-              capabilities: {
-                drop: ['ALL'],
-              },
-            },
-            startupProbe: {
-              httpGet: {
-                path: '/vnc.html',
-                port: 'http',
-              },
-              periodSeconds: 10,
-              timeoutSeconds: 3,
-              failureThreshold: 30,
-            },
-            readinessProbe: {
-              httpGet: {
-                path: '/vnc.html',
-                port: 'http',
-              },
-              periodSeconds: 10,
-              timeoutSeconds: 3,
-              failureThreshold: 3,
-            },
-            resources: {
-              requests: {
-                cpu: '10m',
-                memory: '32Mi',
-              },
-              limits: {
-                cpu: '500m',
-                memory: '512Mi',
-              },
-            },
-            volumeMounts: [
-              { name: 'tmp', mountPath: '/tmp' },
             ],
           },
         ],

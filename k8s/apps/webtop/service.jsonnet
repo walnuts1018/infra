@@ -14,7 +14,7 @@ local app = import 'app.json5';
     ports: [
       {
         name: 'http',
-        port: 8080,
+        port: 3000,
         targetPort: 'http',
         protocol: 'TCP',
       },

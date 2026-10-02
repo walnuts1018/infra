@@ -1,7 +1,0 @@
-{
-  name: "linux-desktop",
-  namespace: "linux-desktop",
-  clusters: {
-    kurumi: {},
-  },
-}

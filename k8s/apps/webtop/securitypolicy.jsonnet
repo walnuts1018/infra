@@ -56,9 +56,9 @@ local secret = import 'external-secret.jsonnet';
               provider: 'zitadel',
               claims: [
                 {
-                  name: 'sub',
-                  valueType: 'String',
-                  values: ['237477703714865517'],
+                  name: 'my:zitadel:webtop-roles',
+                  valueType: 'StringArray',
+                  values: ['webtop-user'],
                 },
               ],
             },

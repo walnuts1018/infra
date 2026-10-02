@@ -23,7 +23,7 @@ local app = import 'app.json5';
         backendRefs: [
           {
             name: app.name,
-            port: 8080,
+            port: 3000,
           },
         ],
       },
