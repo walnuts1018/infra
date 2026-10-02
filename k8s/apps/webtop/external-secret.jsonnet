@@ -8,14 +8,14 @@ local app = import 'app.json5';
       secretKey: 'client-id',
       remoteRef: {
         key: 'terraform-external-secrets',
-        property: app.name + '-client-id',
+        property: 'webtop-client-id',
       },
     },
     {
       secretKey: 'client-secret',
       remoteRef: {
         key: 'terraform-external-secrets',
-        property: app.name + '-client-secret',
+        property: 'webtop-client-secret',
       },
     },
   ],

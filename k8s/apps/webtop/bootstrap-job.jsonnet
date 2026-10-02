@@ -1,7 +1,6 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local bootstrapConfig = import 'bootstrap-configmap.jsonnet';
-local images = import 'images.libsonnet';
 local jobName = app.name + '-bootstrap';
 {
   apiVersion: 'batch/v1',
@@ -33,13 +32,13 @@ local jobName = app.name + '-bootstrap';
         containers: [
           {
             name: 'bootstrap',
-            image: images.webtop,
+            image: 'lscr.io/linuxserver/webtop:arch-kde@sha256:d55dd7f34fe70e9e39fb004e3f7ef5eb0fd74b24a771ba972a25a24ce24f65a6',
             imagePullPolicy: 'IfNotPresent',
             command: ['/usr/bin/bash', '/scripts/bootstrap.sh'],
             env: [
               {
                 name: 'ROOTFS_IMAGE_REFERENCE',
-                value: images.webtop,
+                value: 'lscr.io/linuxserver/webtop:arch-kde@sha256:d55dd7f34fe70e9e39fb004e3f7ef5eb0fd74b24a771ba972a25a24ce24f65a6',
               },
             ],
             securityContext: {
@@ -78,7 +77,7 @@ local jobName = app.name + '-bootstrap';
           {
             name: 'rootfs-source',
             image: {
-              reference: images.webtop,
+              reference: 'lscr.io/linuxserver/webtop:arch-kde@sha256:d55dd7f34fe70e9e39fb004e3f7ef5eb0fd74b24a771ba972a25a24ce24f65a6',
               pullPolicy: 'IfNotPresent',
             },
           },

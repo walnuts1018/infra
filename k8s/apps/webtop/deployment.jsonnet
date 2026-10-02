@@ -1,6 +1,5 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local images = import 'images.libsonnet';
 local launcherConfig = import 'launcher-configmap.jsonnet';
 {
   apiVersion: 'apps/v1',
@@ -33,7 +32,7 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
         containers: [
           {
             name: 'webtop',
-            image: images.webtop,
+            image: 'lscr.io/linuxserver/webtop:arch-kde@sha256:d55dd7f34fe70e9e39fb004e3f7ef5eb0fd74b24a771ba972a25a24ce24f65a6',
             imagePullPolicy: 'IfNotPresent',
             command: ['/bin/bash', '/launcher/runtime-launcher.sh'],
             env: [
@@ -61,7 +60,6 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
               readOnlyRootFilesystem: true,
               capabilities: {
                 drop: ['ALL'],
-                // Keep the standard Docker capability set expected by desktop software, plus SYS_ADMIN for runtime bind mounts.
                 add: [
                   'AUDIT_WRITE',
                   'SYS_ADMIN',
