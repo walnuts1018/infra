@@ -29,7 +29,7 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
         terminationGracePeriodSeconds: 30,
         securityContext: {
           seccompProfile: {
-            type: 'RuntimeDefault',
+            type: 'Unconfined',
           },
         },
         containers: [
