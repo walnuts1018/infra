@@ -13,7 +13,7 @@ local app = import 'app.json5';
     },
   },
   spec: {
-    storageClassName: 'longhorn',
+    storageClassName: 'local-path',
     accessModes: [
       'ReadWriteOnce',
     ],
