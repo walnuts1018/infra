@@ -79,6 +79,12 @@
   ],
   packageRules: [
     {
+      matchPackageNames: [
+        'docker.io/library/archlinux',
+      ],
+      enabled: false,
+    },
+    {
       groupName: 'netbird',
       matchPackageNames: [
         '/netbird/',

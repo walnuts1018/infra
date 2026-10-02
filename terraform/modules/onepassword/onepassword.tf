@@ -133,6 +133,8 @@ resource "onepassword_item" "external_secret" {
         "iwashi-discovery-key"                     = { type = "CONCEALED", value = random_password.iwashi_discovery_key.result }
         "longhorn-client-id"                       = { type = "STRING", value = var.longhorn_client_id }
         "longhorn-client-secret"                   = { type = "CONCEALED", value = var.longhorn_client_secret }
+        "linux-desktop-client-id"                  = { type = "STRING", value = var.linux_desktop_client_id }
+        "linux-desktop-client-secret"              = { type = "CONCEALED", value = var.linux_desktop_client_secret }
         "netbird-setup-key"                        = { type = "CONCEALED", value = var.netbird_setup_key }
         "netbox-oidc-client-id"                    = { type = "STRING", value = var.netbox_client_id }
         "netbox-oidc-client-secret"                = { type = "CONCEALED", value = var.netbox_client_secret }
