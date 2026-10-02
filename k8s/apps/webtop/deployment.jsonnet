@@ -29,7 +29,7 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
         terminationGracePeriodSeconds: 30,
         securityContext: {
           seccompProfile: {
-            type: 'Unconfined',
+            type: 'RuntimeDefault',
           },
         },
         containers: [
@@ -61,6 +61,9 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
               runAsUser: 0,
               allowPrivilegeEscalation: true,
               readOnlyRootFilesystem: true,
+              appArmorProfile: {
+                type: 'Unconfined',
+              },
               capabilities: {
                 drop: ['ALL'],
                 add: [
