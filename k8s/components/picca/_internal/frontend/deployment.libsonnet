@@ -24,7 +24,7 @@ function(app)
           containers: [
             (import '../../../container.libsonnet') {
               name: 'frontend',
-              image: 'ghcr.io/walnuts1018/picca/frontend:v0.0.96@sha256:31022284d4b6fc175b3a5598be2235ffdafba90a78206608371389cf2aa731a8',
+              image: 'ghcr.io/walnuts1018/picca/frontend:v0.0.96@sha256:3e8832b4eda350039d69f50ce53dad6eae40d7f44b5e7e1c0d9231a1c1dd4532',
               imagePullPolicy: 'IfNotPresent',
               env: [
                 {
