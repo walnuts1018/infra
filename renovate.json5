@@ -79,7 +79,6 @@
   ],
   packageRules: [
     {
-      // Webtop image is both the bootstrap source and the launcher; update it only with a planned rootfs migration.
       matchPackageNames: [
         'lscr.io/linuxserver/webtop',
       ],
