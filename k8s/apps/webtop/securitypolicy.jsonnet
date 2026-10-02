@@ -19,6 +19,9 @@ local secret = import 'external-secret.jsonnet';
       provider: {
         issuer: 'https://auth.walnuts.dev',
       },
+      cookieNames: {
+        accessToken: 'webtop-access-token',
+      },
       clientIDRef: {
         name: secret.spec.target.name,
       },
@@ -34,6 +37,7 @@ local secret = import 'external-secret.jsonnet';
       ],
       refreshToken: true,
       logoutPath: '/oauth2/logout',
+      disableTokenEncryption: true,
     },
     jwt: {
       providers: [
@@ -42,6 +46,9 @@ local secret = import 'external-secret.jsonnet';
           issuer: 'https://auth.walnuts.dev',
           remoteJWKS: {
             uri: 'https://auth.walnuts.dev/oauth/v2/keys',
+          },
+          extractFrom: {
+            cookies: ['webtop-access-token'],
           },
         },
       ],
