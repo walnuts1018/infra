@@ -9,9 +9,6 @@ local jobName = app.name + '-bootstrap';
     name: jobName + '-' + std.md5(std.toString($.spec) + std.toString(bootstrapConfig))[0:10],
     namespace: app.namespace,
     labels: labels(jobName),
-    annotations: {
-      'argocd.argoproj.io/sync-wave': '-1',
-    },
   },
   spec: {
     activeDeadlineSeconds: 7200,
