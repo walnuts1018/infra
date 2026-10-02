@@ -51,26 +51,3 @@ output "webtop_project_id" {
   value       = zitadel_project.webtop.id
   description = "Set this as <project-id> in k8s/apps/webtop/securitypolicy.jsonnet"
 }
-
-resource "zitadel_action" "webtop_role_claim" {
-  org_id          = zitadel_org.ZITADEL.id
-  name            = "webtopRoleClaim"
-  script          = <<-EOT
-function webtopRoleClaim(ctx, api) {
-  if (ctx.v1.user.grants == undefined || ctx.v1.user.grants.count == 0) {
-    return;
-  }
-  let roles = [];
-  ctx.v1.user.grants.grants.forEach(grant => {
-    if (grant.projectId === "${zitadel_project.webtop.id}") {
-      grant.roles.forEach(role => roles.push(role));
-    }
-  });
-  if (roles.length > 0) {
-    api.v1.claims.setClaim("my:zitadel:webtop-roles", roles);
-  }
-}
-  EOT
-  timeout         = "10s"
-  allowed_to_fail = true
-}
