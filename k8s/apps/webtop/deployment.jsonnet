@@ -8,6 +8,9 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
     name: app.name,
     namespace: app.namespace,
     labels: labels(app.name),
+    annotations: {
+      'argocd.argoproj.io/sync-wave': '1',
+    },
   },
   spec: {
     replicas: 1,
