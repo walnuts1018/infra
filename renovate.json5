@@ -79,6 +79,12 @@
   ],
   packageRules: [
     {
+      matchPackageNames: [
+        'lscr.io/linuxserver/webtop',
+      ],
+      enabled: false,
+    },
+    {
       groupName: 'netbird',
       matchPackageNames: [
         '/netbird/',
