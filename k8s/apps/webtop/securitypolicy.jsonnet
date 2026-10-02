@@ -1,6 +1,5 @@
 local app = import 'app.json5';
 local secret = import 'external-secret.jsonnet';
-local webtopProjectID = '<webtop-project-id>';
 {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'SecurityPolicy',
@@ -59,7 +58,7 @@ local webtopProjectID = '<webtop-project-id>';
                 {
                   name: 'my:zitadel:grants',
                   valueType: 'StringArray',
-                  values: [webtopProjectID + ':webtop-user'],
+                  values: ['393366993551491741:webtop-user'],
                 },
               ],
             },
