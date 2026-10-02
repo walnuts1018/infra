@@ -59,11 +59,6 @@ output "kubernetes_oidc_issuer_audience" {
   description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy (passed to --oidc-client-id)"
 }
 
-output "webtop_project_id" {
-  value       = module.zitadel.webtop_project_id
-  description = "ZITADEL project ID used by Webtop's SecurityPolicy role claim"
-}
-
 output "terraform_cloud_saml_metadata_url" {
   value       = module.zitadel.terraform_cloud_saml_metadata_url
   description = "Zitadel SAML metadata URL for Terraform Cloud"
