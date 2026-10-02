@@ -47,6 +47,11 @@ output "webtop_oidc_client_secret" {
   sensitive = true
 }
 
+output "webtop_project_id" {
+  value       = zitadel_project.webtop.id
+  description = "Set this as <project-id> in k8s/apps/webtop/securitypolicy.jsonnet"
+}
+
 resource "zitadel_action" "webtop_role_claim" {
   org_id          = zitadel_org.ZITADEL.id
   name            = "webtopRoleClaim"

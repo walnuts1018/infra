@@ -61,8 +61,9 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
               readOnlyRootFilesystem: true,
               capabilities: {
                 drop: ['ALL'],
-                // SYS_ADMIN is required for the runtime bind mounts. SETUID and SETGID let LinuxServer start abc as PUID/PGID.
+                // Keep the standard Docker capability set expected by desktop software, plus SYS_ADMIN for runtime bind mounts.
                 add: [
+                  'AUDIT_WRITE',
                   'SYS_ADMIN',
                   'SYS_CHROOT',
                   'CHOWN',
@@ -70,6 +71,10 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
                   'FOWNER',
                   'FSETID',
                   'KILL',
+                  'MKNOD',
+                  'NET_BIND_SERVICE',
+                  'NET_RAW',
+                  'SETPCAP',
                   'SETUID',
                   'SETGID',
                   'SETFCAP',
