@@ -11,7 +11,7 @@ local secret = import 'discovery-secret.jsonnet';
     mode: 'statefulset',
     replicas: 1,
     serviceName: 'iwashi-collector-headless',
-    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.160.0',
+    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.161.0',
     serviceAccount: 'iwashi-collector',
     ports: [{
       name: 'metrics',
