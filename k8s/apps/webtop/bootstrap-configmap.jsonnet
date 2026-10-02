@@ -7,9 +7,4 @@ configmap {
   data: {
     'bootstrap.sh': importstr '_scripts/bootstrap.sh',
   },
-  metadata+: {
-    annotations: {
-      'argocd.argoproj.io/sync-wave': '-2',
-    },
-  },
 }

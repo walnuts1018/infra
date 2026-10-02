@@ -7,9 +7,4 @@ configmap {
   data: {
     'runtime-launcher.sh': importstr '_scripts/runtime-launcher.sh',
   },
-  metadata+: {
-    annotations: {
-      'argocd.argoproj.io/sync-wave': '-2',
-    },
-  },
 }

@@ -9,7 +9,6 @@ local app = import 'app.json5';
     labels: labels(app.name),
     annotations: {
       'argocd.argoproj.io/sync-options': 'Prune=false',
-      'argocd.argoproj.io/sync-wave': '-2',
     },
   },
   spec: {
