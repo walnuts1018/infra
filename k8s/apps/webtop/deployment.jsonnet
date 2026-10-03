@@ -42,6 +42,7 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
               { name: 'PUID', value: '1000' },
               { name: 'PGID', value: '1000' },
               { name: 'TZ', value: 'Asia/Tokyo' },
+              { name: 'LC_ALL', value: 'ja_JP.UTF-8' },
               { name: 'PIXELFLUX_WAYLAND', value: 'true' },
               { name: 'START_DOCKER', value: 'false' },
               { name: 'SELKIES_ENABLE_BASIC_AUTH', value: 'false' },
