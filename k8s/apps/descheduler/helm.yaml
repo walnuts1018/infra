@@ -1,0 +1,160 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: descheduler-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: descheduler
+    helm:
+      releaseName: descheduler
+      values: |
+        schedule: "*/5 * * * *"
+
+        deschedulerPolicy:
+          # 1回の実行でevectできるのは、1Nodeあたり3Podまでとする
+          maxNoOfPodsToEvictPerNode: 3
+          metricsProviders:
+          - source: KubernetesMetrics
+          profiles:
+          - name: request-balance
+            plugins:
+              balance:
+                enabled:
+                - RemoveDuplicates
+                - RemovePodsViolatingTopologySpreadConstraint
+                - LowNodeUtilization
+              deschedule:
+                enabled:
+                - RemovePodsViolatingInterPodAntiAffinity
+                - RemovePodsViolatingNodeAffinity
+                - RemovePodsViolatingNodeTaints
+                - RemovePodsHavingTooManyRestarts
+            pluginConfig:
+            - name: DefaultEvictor
+              args:
+                nodeFit: true
+                namespaceLabelSelector:
+                  matchExpressions:
+                  # GitHub Actions Runnerは除外
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                    - arc-runners
+                labelSelector:
+                  matchExpressions:
+                  # Job系は除外
+                  - key: batch.kubernetes.io/controller-uid
+                    operator: DoesNotExist
+                podProtections:
+                  defaultDisabled:
+                  - PodsWithLocalStorage
+                  extraEnabled:
+                  - PodsWithPVC
+                  config:
+                    PodsWithPVC:
+                      # local path provisionerのPodは他のNodeに移動できないので意味なし
+                      protectedStorageClasses:
+                      - name: local-path
+            - name: RemoveDuplicates
+            - name: RemovePodsViolatingTopologySpreadConstraint
+              args:
+                constraints:
+                - DoNotSchedule
+                - ScheduleAnyway
+            - name: LowNodeUtilization
+              args:
+                useDeviationThresholds: false
+                thresholds:
+                  cpu: 60
+                  memory: 70
+                targetThresholds:
+                  cpu: 75
+                  memory: 80
+            - name: RemovePodsViolatingInterPodAntiAffinity
+            - name: RemovePodsViolatingNodeAffinity
+              args:
+                nodeAffinityType:
+                - requiredDuringSchedulingIgnoredDuringExecution
+            - name: RemovePodsViolatingNodeTaints
+            - name: RemovePodsHavingTooManyRestarts
+              args:
+                podRestartThreshold: 100
+                includingInitContainers: true
+            - name: PodLifeTime
+              args:
+                maxPodLifeTimeSeconds: 86400
+                includingInitContainers: true
+                states:
+                - Succeeded
+                - Failed
+                - Unknown
+                - Completed
+                - Error
+                - Evicted
+                - CrashLoopBackOff
+                - ImagePullBackOff
+                - ErrImagePull
+                - CreateContainerConfigError
+                - CreateContainerError
+                - InvalidImageName
+                - OOMKilled
+                - ContainerCannotRun
+                - StartError
+
+          - name: actual-usage
+            plugins:
+              balance:
+                enabled:
+                - LowNodeUtilization
+            pluginConfig:
+            - name: DefaultEvictor
+              args:
+                nodeFit: true
+                namespaceLabelSelector:
+                  matchExpressions:
+                  # github actions runnerは除外
+                  - key: kubernetes.io/metadata.name
+                    operator: NotIn
+                    values:
+                    - arc-runners
+                labelSelector:
+                  matchExpressions:
+                  # Job系は除外
+                  - key: batch.kubernetes.io/controller-uid
+                    operator: DoesNotExist
+                podProtections:
+                  defaultDisabled:
+                  - PodsWithLocalStorage
+                  extraEnabled:
+                  - PodsWithPVC
+                  config:
+                    PodsWithPVC:
+                      protectedStorageClasses:
+                      - name: local-path
+            - name: LowNodeUtilization
+              args:
+                metricsUtilization:
+                  source: KubernetesMetrics
+                useDeviationThresholds: false
+                thresholds:
+                  cpu: 70
+                  memory: 70
+                targetThresholds:
+                  cpu: 90
+                  memory: 90
+    repoURL: https://kubernetes-sigs.github.io/descheduler/
+    targetRevision: 0.36.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

@@ -1,0 +1,74 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: webtop-bootstrap
+    app.kubernetes.io/name: webtop-bootstrap
+  name: webtop-bootstrap-e9baa5e1f1
+  namespace: webtop
+spec:
+  activeDeadlineSeconds: 7200
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: webtop-bootstrap
+        app.kubernetes.io/name: webtop-bootstrap
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - command:
+            - /usr/bin/bash
+            - /scripts/bootstrap.sh
+          env:
+            - name: ROOTFS_IMAGE_REFERENCE
+              value: lscr.io/linuxserver/webtop:arch-kde@sha256:d55dd7f34fe70e9e39fb004e3f7ef5eb0fd74b24a771ba972a25a24ce24f65a6
+          image: lscr.io/linuxserver/webtop:arch-kde@sha256:d55dd7f34fe70e9e39fb004e3f7ef5eb0fd74b24a771ba972a25a24ce24f65a6
+          imagePullPolicy: IfNotPresent
+          name: bootstrap
+          resources:
+            limits:
+              cpu: "2"
+              memory: 4Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - CHOWN
+                - DAC_OVERRIDE
+                - FOWNER
+                - SETFCAP
+                - FSETID
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsUser: 0
+          volumeMounts:
+            - mountPath: /source
+              name: rootfs-source
+              readOnly: true
+            - mountPath: /target
+              name: rootfs-target
+            - mountPath: /scripts
+              name: bootstrap-scripts
+              readOnly: true
+      restartPolicy: Never
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - image:
+            pullPolicy: IfNotPresent
+            reference: lscr.io/linuxserver/webtop:arch-kde@sha256:d55dd7f34fe70e9e39fb004e3f7ef5eb0fd74b24a771ba972a25a24ce24f65a6
+          name: rootfs-source
+        - name: rootfs-target
+          persistentVolumeClaim:
+            claimName: webtop-root
+        - configMap:
+            defaultMode: 292
+            name: webtop-bootstrap-6f35ba
+          name: bootstrap-scripts

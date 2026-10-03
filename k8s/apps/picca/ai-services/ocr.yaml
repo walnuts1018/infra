@@ -1,0 +1,235 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: picca-ocr-worker
+    app.kubernetes.io/name: picca-ocr-worker
+  name: picca-ocr-worker
+  namespace: picca
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: picca-ocr-worker
+      app.kubernetes.io/name: picca-ocr-worker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: picca-ocr-worker
+        app.kubernetes.io/name: picca-ocr-worker
+    spec:
+      containers:
+        - command:
+            - python
+            - scripts/run_ocr_worker.py
+          env:
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ENDPOINT_URL_STS
+              value: http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/picca
+            - name: AWS_ENDPOINT_URL_S3
+              value: http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+            - name: AWS_REGION
+              value: us-east-1
+            - name: S3_REGION
+              value: us-east-1
+            - name: S3_BUCKET
+              value: picca
+            - name: S3_USE_PATH_STYLE
+              value: "true"
+            - name: S3_EXTERNAL_ENDPOINT
+              value: https://picca.seaweedfs.walnuts.dev
+            - name: IMGPROXY_BUCKET
+              value: picca
+            - name: IMGPROXY_TTL
+              value: "900"
+            - name: HOME
+              value: /tmp
+            - name: HF_HOME
+              value: /tmp/huggingface
+            - name: HF_MODULES_CACHE
+              value: /tmp/huggingface/modules
+            - name: TRANSFORMERS_CACHE
+              value: /tmp/huggingface/transformers
+            - name: PADDLEX_HOME
+              value: /models/paddlex
+            - name: PADDLE_HOME
+              value: /models/paddlex
+            - name: PADDLE_PDX_HOME
+              value: /models/paddlex
+            - name: PADDLE_CPU_THREADS
+              value: "2"
+            - name: PADDLE_ENABLE_HPI
+              value: "false"
+            - name: PADDLE_ENABLE_MKLDNN
+              value: "false"
+            - name: FLAGS_use_mkldnn
+              value: "0"
+            - name: PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK
+              value: "1"
+            - name: PORT
+              value: "8003"
+            - name: MODEL_DEVICE
+              value: cpu
+            - name: AI_INFERENCE_THREADS
+              value: "2"
+            - name: OMP_NUM_THREADS
+              value: "2"
+            - name: MKL_NUM_THREADS
+              value: "2"
+            - name: OPENBLAS_NUM_THREADS
+              value: "2"
+            - name: NUMEXPR_NUM_THREADS
+              value: "2"
+            - name: TOKENIZERS_PARALLELISM
+              value: "false"
+            - name: OCR_TEXT_DETECTION_MODEL_NAME
+              value: PP-OCRv6_medium_det
+            - name: OCR_TEXT_RECOGNITION_MODEL_NAME
+              value: PP-OCRv6_medium_rec
+            - name: PADDLE_CACHE_DIR
+              value: /tmp/runtime-cache/paddle
+            - name: PADDLEOCR_HOME
+              value: /tmp/runtime-cache/paddleocr
+            - name: OPENVINO_TENSOR_CACHE_PATH
+              value: /tmp/runtime-cache/openvino
+            - name: OPENVINO_CACHE_DIR
+              value: /tmp/runtime-cache/openvino
+            - name: OV_CACHE_DIR
+              value: /tmp/runtime-cache/openvino
+            - name: AI_OCR_TASK_QUEUE
+              value: picca.ai-ocr
+            - name: AI_OCR_TASK_ROUTING_KEY
+              value: media.processing.ai.ocr.requested.v1
+            - name: AI_OCR_RESULT_ROUTING_KEY
+              value: media.processing.ai.result.v1
+            - name: AI_RABBITMQ_EXCHANGE
+              value: picca.events
+          envFrom:
+            - secretRef:
+                name: picca-rabbitmq-94d271
+          image: ghcr.io/walnuts1018/picca/ai-paddle:v0.0.96@sha256:a67058e0377f0012161a94684a649ba8cd3d35f525033ac43573895c4f222069
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 20
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 30
+            timeoutSeconds: 5
+          name: ocr-worker
+          ports:
+            - containerPort: 8003
+              name: http
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "4"
+              memory: 12Gi
+            requests:
+              cpu: "1"
+              memory: 6Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: false
+            seccompProfile:
+              type: RuntimeDefault
+          startupProbe:
+            failureThreshold: 60
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /tmp/runtime-cache
+              name: runtime-cache
+            - mountPath: /models/paddlex
+              name: paddlex-models
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      initContainers:
+        - command:
+            - sh
+            - -c
+            - cp -a /model-source/paddlex/. /models/paddlex/ && chmod -R a+rwX /models/paddlex
+          image: ghcr.io/walnuts1018/picca/ai-paddle:v0.0.96@sha256:a67058e0377f0012161a94684a649ba8cd3d35f525033ac43573895c4f222069
+          name: prepare-paddlex-models
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsGroup: 0
+            runAsNonRoot: false
+            runAsUser: 0
+          volumeMounts:
+            - mountPath: /model-source
+              name: model-source
+              readOnly: true
+            - mountPath: /models/paddlex
+              name: paddlex-models
+      securityContext:
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+      serviceAccountName: picca
+      volumes:
+        - emptyDir: {}
+          name: tmp
+        - emptyDir:
+            sizeLimit: 4Gi
+          name: runtime-cache
+        - emptyDir:
+            sizeLimit: 8Gi
+          name: paddlex-models
+        - image:
+            pullPolicy: IfNotPresent
+            reference: ghcr.io/walnuts1018/picca/ai-models-ocr-primary:v0.0.62
+          name: model-source
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 86400
+                  path: token
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: picca-ocr-worker
+  namespace: picca
+spec:
+  cooldownPeriod: 45
+  maxReplicaCount: 1
+  minReplicaCount: 0
+  pollingInterval: 5
+  scaleTargetRef:
+    name: picca-ocr-worker
+  triggers:
+    - authenticationRef:
+        name: picca-rabbitmq-worker-auth
+      metadata:
+        mode: QueueLength
+        protocol: http
+        queueName: picca.ai-ocr
+        value: "1"
+      metricType: AverageValue
+      type: rabbitmq

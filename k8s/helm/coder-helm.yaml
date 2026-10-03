@@ -1,0 +1,273 @@
+---
+# Source: coder/templates/coder.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/instance: coder
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: coder
+    app.kubernetes.io/part-of: coder
+    app.kubernetes.io/version: 2.36.5
+    helm.sh/chart: coder-2.36.5
+  name: coder
+  namespace: coder
+---
+# Source: coder/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: coder-workspace-perms
+  namespace: coder-workspaces
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - apiGroups:
+    - apps
+    resources:
+    - deployments
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+---
+# Source: coder/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "coder"
+  namespace: coder-workspaces
+subjects:
+  - kind: ServiceAccount
+    name: "coder"
+    namespace: coder
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: coder-workspace-perms
+---
+# Source: coder/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: coder
+  namespace: coder
+  labels:
+    helm.sh/chart: coder-2.36.5
+    app.kubernetes.io/name: coder
+    app.kubernetes.io/instance: coder
+    app.kubernetes.io/part-of: coder
+    app.kubernetes.io/version: "2.36.5"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+    - name: "http"
+      port: 80
+      targetPort: "http"
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: coder
+    app.kubernetes.io/instance: coder
+---
+# Source: coder/templates/coder.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/instance: coder
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: coder
+    app.kubernetes.io/part-of: coder
+    app.kubernetes.io/version: 2.36.5
+    helm.sh/chart: coder-2.36.5
+  name: coder
+  namespace: coder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: coder
+      app.kubernetes.io/name: coder
+  template:
+    metadata:
+      annotations:
+        app.kubernetes.io/component: coderd
+      labels:
+        app.kubernetes.io/instance: coder
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: coder
+        app.kubernetes.io/part-of: coder
+        app.kubernetes.io/version: 2.36.5
+        helm.sh/chart: coder-2.36.5
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - coder
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      containers:
+      - args:
+        - server
+        command:
+        - /opt/coder
+        env:
+        - name: CODER_HTTP_ADDRESS
+          value: 0.0.0.0:8080
+        - name: CODER_PROMETHEUS_ADDRESS
+          value: 0.0.0.0:2112
+        - name: CODER_PPROF_ADDRESS
+          value: 0.0.0.0:6060
+        - name: KUBE_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: CODER_DERP_SERVER_RELAY_URL
+          value: http://$(KUBE_POD_IP):8080
+        - name: CODER_CLUSTER_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: CODER_PG_CONNECTION_URL
+          valueFrom:
+            secretKeyRef:
+              key: url
+              name: coder-db-url
+        - name: CODER_ACCESS_URL
+          value: https://coder.walnuts.dev
+        - name: CODER_OIDC_ISSUER_URL
+          value: https://auth.walnuts.dev
+        - name: CODER_OIDC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: client-id
+              name: coder-oidc
+        - name: CODER_OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: client-secret
+              name: coder-oidc
+        - name: CODER_DISABLE_PASSWORD_AUTH
+          value: "true"
+        - name: CODER_OAUTH2_GITHUB_DEFAULT_PROVIDER_ENABLE
+          value: "false"
+        - name: CODER_OIDC_SIGN_IN_TEXT
+          value: Sign in with ZITADEL
+        - name: CODER_OAUTH2_GITHUB_DEFAULT_PROVIDER_ENABLE
+          value: "false"
+        - name: CODER_EXTERNAL_AUTH_GITHUB_DEFAULT_PROVIDER_ENABLE
+          value: "false"
+        - name: CODER_EXTERNAL_AUTH_0_ID
+          value: github
+        - name: CODER_EXTERNAL_AUTH_0_TYPE
+          value: github
+        - name: CODER_EXTERNAL_AUTH_0_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: client-id
+              name: coder-github
+        - name: CODER_EXTERNAL_AUTH_0_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: client-secret
+              name: coder-github
+        - name: CODER_EXTERNAL_AUTH_0_APP_INSTALL_URL
+          value: https://github.com/apps/kurumi-coder-app/installations/new
+        image: ghcr.io/coder/coder:v2.36.5
+        imagePullPolicy: IfNotPresent
+        lifecycle: {}
+        name: coder
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 0
+        resources:
+          limits:
+            cpu: 2
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: null
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts: []
+      restartPolicy: Always
+      serviceAccountName: coder
+      terminationGracePeriodSeconds: 60
+      volumes: []
+---
+# Source: coder/templates/httproute.yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: coder
+  namespace: coder
+  labels:
+    helm.sh/chart: coder-2.36.5
+    app.kubernetes.io/name: coder
+    app.kubernetes.io/instance: coder
+    app.kubernetes.io/part-of: coder
+    app.kubernetes.io/version: "2.36.5"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    {}
+spec:
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  rules:
+    - backendRefs:
+        - name: coder
+          # gateway api does not support named ports
+          port: 80
+  hostnames:
+    - "coder.walnuts.dev"

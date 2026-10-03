@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: rabbitmq-cluster-operator-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: rabbitmq-operator
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: rabbitmq-cluster-operator
+    helm:
+      releaseName: rabbitmq-cluster-operator
+      values: |
+        msgTopologyOperator:
+          enabled: false
+
+        clusterOperator:
+          watchAllNamespaces: true
+          resources:
+            requests:
+              cpu: 5m
+              memory: 48Mi
+            limits:
+              memory: 512Mi
+          tolerations:
+          - key: "node.walnuts.dev/low-performance"
+            operator: "Exists"
+    repoURL: https://klicktipp.github.io/helm-charts/
+    targetRevision: 0.4.2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

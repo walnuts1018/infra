@@ -1,0 +1,143 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    app: webtop
+    app.kubernetes.io/name: webtop
+  name: webtop
+  namespace: webtop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webtop
+      app.kubernetes.io/name: webtop
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: webtop
+        app.kubernetes.io/name: webtop
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - command:
+            - /bin/bash
+            - /launcher/runtime-launcher.sh
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: Asia/Tokyo
+            - name: LC_ALL
+              value: ja_JP.UTF-8
+            - name: PIXELFLUX_WAYLAND
+              value: "true"
+            - name: START_DOCKER
+              value: "false"
+            - name: SELKIES_ENABLE_BASIC_AUTH
+              value: "false"
+            - name: SELKIES_MODE
+              value: websockets
+            - name: TITLE
+              value: Linux Desktop
+            - name: UMASK
+              value: "022"
+          image: lscr.io/linuxserver/webtop:arch-kde@sha256:d55dd7f34fe70e9e39fb004e3f7ef5eb0fd74b24a771ba972a25a24ce24f65a6
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 60
+            timeoutSeconds: 10
+          name: webtop
+          ports:
+            - containerPort: 3000
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "4"
+              memory: 8Gi
+            requests:
+              cpu: 500m
+              memory: 2Gi
+          securityContext:
+            allowPrivilegeEscalation: true
+            appArmorProfile:
+              type: Unconfined
+            capabilities:
+              add:
+                - AUDIT_WRITE
+                - SYS_ADMIN
+                - SYS_CHROOT
+                - CHOWN
+                - DAC_OVERRIDE
+                - FOWNER
+                - FSETID
+                - KILL
+                - MKNOD
+                - NET_BIND_SERVICE
+                - NET_RAW
+                - SETPCAP
+                - SETUID
+                - SETGID
+                - SETFCAP
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsUser: 0
+          startupProbe:
+            failureThreshold: 60
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          volumeMounts:
+            - mountPath: /sysroot
+              name: rootfs
+            - mountPath: /launcher
+              name: launcher
+              readOnly: true
+            - mountPath: /run
+              name: run
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /dev/shm
+              name: dev-shm
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: rootfs
+          persistentVolumeClaim:
+            claimName: webtop-root
+        - configMap:
+            defaultMode: 292
+            name: webtop-launcher-f1501c
+          name: launcher
+        - emptyDir:
+            medium: Memory
+          name: run
+        - emptyDir: {}
+          name: tmp
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+          name: dev-shm

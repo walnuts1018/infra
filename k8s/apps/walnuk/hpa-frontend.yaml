@@ -1,0 +1,22 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  labels:
+    app: walnuk-frontend
+    app.kubernetes.io/name: walnuk-frontend
+  name: walnuk-frontend
+  namespace: walnuk
+spec:
+  maxReplicaCount: 5
+  minReplicaCount: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: walnuk-frontend
+  triggers:
+    - metadata:
+        metricName: envoy_cluster_upstream_rq_total_frontend
+        query: sum(rate(envoy_cluster_upstream_rq_total{envoy_cluster_name="httproute/walnuk/walnuk/rule/2",envoy_response_code=~"2..|5.."}[2m]))
+        serverAddress: http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus
+        threshold: "10"
+      type: prometheus

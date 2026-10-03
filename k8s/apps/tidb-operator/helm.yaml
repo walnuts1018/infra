@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: tidb-operator-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: tidb-operator
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: tidb-operator
+    helm:
+      releaseName: tidb-operator
+      valuesObject:
+        controllerManager:
+          create: true
+          replicas: 1
+          resources:
+            requests:
+              cpu: 20m
+              memory: 80Mi
+        scheduler:
+          create: false
+    repoURL: https://charts.pingcap.com/
+    targetRevision: v1.6.6
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

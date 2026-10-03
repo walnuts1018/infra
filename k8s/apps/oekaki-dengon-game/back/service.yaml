@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: oekaki-dengon-game-back
+    app.kubernetes.io/name: oekaki-dengon-game-back
+  name: oekaki-dengon-game-back
+  namespace: oekaki-dengon-game
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: oekaki-dengon-game-back
+    app.kubernetes.io/name: oekaki-dengon-game-back
+  type: ClusterIP

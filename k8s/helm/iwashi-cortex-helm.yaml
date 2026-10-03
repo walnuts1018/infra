@@ -1,0 +1,2353 @@
+---
+# Source: cortex/templates/distributor/distributor-poddisruptionbudget.yaml
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: iwashi-cortex-distributor
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: distributor
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cortex
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/component: distributor
+  maxUnavailable: 30%
+---
+# Source: cortex/templates/ingester/ingester-poddisruptionbudget.yaml
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: iwashi-cortex-ingester
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ingester
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cortex
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/component: ingester
+  maxUnavailable: 1
+---
+# Source: cortex/templates/querier/querier-poddisruptionbudget.yaml
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: iwashi-cortex-querier
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: querier
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cortex
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/component: querier
+  maxUnavailable: 30%
+---
+# Source: cortex/templates/store-gateway/store-gateway-poddisruptionbudget.yaml
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: iwashi-cortex-store-gateway
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: store-gateway
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cortex
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/component: store-gateway
+  maxUnavailable: 1
+---
+# Source: cortex/charts/memcached-blocks-index/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+automountServiceAccountToken: false
+metadata:
+  name: iwashi-cortex-memcached-blocks-index
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks-index
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-index-6.14.0
+---
+# Source: cortex/charts/memcached-blocks-metadata/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+automountServiceAccountToken: false
+metadata:
+  name: iwashi-cortex-memcached-blocks-metadata
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks-metadata
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-metadata-6.14.0
+---
+# Source: cortex/charts/memcached-blocks/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+automountServiceAccountToken: false
+metadata:
+  name: iwashi-cortex-memcached-blocks
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-6.14.0
+---
+# Source: cortex/charts/memcached-frontend/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+automountServiceAccountToken: false
+metadata:
+  name: iwashi-cortex-memcached-frontend
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-frontend
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-frontend-6.14.0
+---
+# Source: cortex/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: iwashi-cortex
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    {}
+automountServiceAccountToken: false
+---
+# Source: cortex/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: iwashi-cortex
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+data:
+  cortex.yaml: YWxlcnRtYW5hZ2VyOgogIGNsdXN0ZXI6CiAgICBsaXN0ZW5fYWRkcmVzczogMC4wLjAuMDo5MDk0CiAgZW5hYmxlX2FwaTogdHJ1ZQogIGV4dGVybmFsX3VybDogL2FwaS9wcm9tL2FsZXJ0bWFuYWdlcgogIHNoYXJkaW5nX3Jpbmc6CiAgICBrdnN0b3JlOgogICAgICBzdG9yZTogbWVtYmVybGlzdAphbGVydG1hbmFnZXJfc3RvcmFnZToKICBiYWNrZW5kOiBzMwogIHMzOgogICAgYnVja2V0X2xvb2t1cF90eXBlOiBwYXRoCiAgICBidWNrZXRfbmFtZTogY29ydGV4LWFsZXJ0bWFuYWdlcgogICAgZW5kcG9pbnQ6IHNlYXdlZWRmcy5sb2NhbC53YWxudXRzLmRldgogICAgcmVnaW9uOiB1cy1lYXN0LTEKYXBpOgogIHByb21ldGhldXNfaHR0cF9wcmVmaXg6IC9wcm9tZXRoZXVzCiAgcmVzcG9uc2VfY29tcHJlc3Npb25fZW5hYmxlZDogdHJ1ZQphdXRoX2VuYWJsZWQ6IHRydWUKYmxvY2tzX3N0b3JhZ2U6CiAgYmFja2VuZDogczMKICBidWNrZXRfc3RvcmU6CiAgICBidWNrZXRfaW5kZXg6CiAgICAgIGVuYWJsZWQ6IHRydWUKICAgIHN5bmNfZGlyOiAvZGF0YS90c2RiLXN5bmMKICBzMzoKICAgIGJ1Y2tldF9sb29rdXBfdHlwZTogcGF0aAogICAgYnVja2V0X25hbWU6IGNvcnRleC1ibG9ja3MKICAgIGVuZHBvaW50OiBzZWF3ZWVkZnMubG9jYWwud2FsbnV0cy5kZXYKICAgIHJlZ2lvbjogdXMtZWFzdC0xCiAgdHNkYjoKICAgIGRpcjogL2RhdGEvdHNkYgogICAgcmV0ZW50aW9uX3BlcmlvZDogNmgKY29tcGFjdG9yOgogIHNoYXJkaW5nX3Jpbmc6CiAgICBrdnN0b3JlOgogICAgICBzdG9yZTogbWVtYmVybGlzdApkaXN0cmlidXRvcjoKICBwb29sOgogICAgaGVhbHRoX2NoZWNrX2luZ2VzdGVyczogdHJ1ZQogIHJpbmc6CiAgICBrdnN0b3JlOgogICAgICBzdG9yZTogbWVtYmVybGlzdAogIHNoYXJkX2J5X2FsbF9sYWJlbHM6IHRydWUKZnJvbnRlbmQ6CiAgbG9nX3F1ZXJpZXNfbG9uZ2VyX3RoYW46IDEwcwppbmdlc3RlcjoKICBsaWZlY3ljbGVyOgogICAgZmluYWxfc2xlZXA6IDMwcwogICAgam9pbl9hZnRlcjogMTBzCiAgICBvYnNlcnZlX3BlcmlvZDogMTBzCiAgICByaW5nOgogICAgICBrdnN0b3JlOgogICAgICAgIHN0b3JlOiBtZW1iZXJsaXN0CiAgICAgIHJlcGxpY2F0aW9uX2ZhY3RvcjogMwppbmdlc3Rlcl9jbGllbnQ6CiAgZ3JwY19jbGllbnRfY29uZmlnOgogICAgbWF4X3JlY3ZfbXNnX3NpemU6IDEwNDg1NzYwCiAgICBtYXhfc2VuZF9tc2dfc2l6ZTogMTA0ODU3NjAKbGltaXRzOgogIGFsZXJ0bWFuYWdlcl9ub3RpZmljYXRpb25fcmF0ZV9saW1pdDogMTAKICBhbGVydG1hbmFnZXJfbm90aWZpY2F0aW9uX3JhdGVfbGltaXRfcGVyX2ludGVncmF0aW9uOgogICAgZW1haWw6IDAuMQogIGNvbXBhY3Rvcl9ibG9ja3NfcmV0ZW50aW9uX3BlcmlvZDogNDhoCiAgZW5mb3JjZV9tZXRyaWNfbmFtZTogdHJ1ZQogIGluZ2VzdGlvbl9idXJzdF9zaXplOiA1MDAwCiAgaW5nZXN0aW9uX3JhdGU6IDEwMDAKICBpbmdlc3Rpb25fcmF0ZV9zdHJhdGVneTogZ2xvYmFsCiAgbWF4X2xhYmVsX25hbWVfbGVuZ3RoOiAyNTYKICBtYXhfbGFiZWxfbmFtZXNfcGVyX3NlcmllczogMzAKICBtYXhfbGFiZWxfdmFsdWVfbGVuZ3RoOiAyMDQ4CiAgbWF4X3F1ZXJ5X2xlbmd0aDogMTY4aAogIG1heF9xdWVyeV9sb29rYmFjazogMHMKICBtYXhfc2VyaWVzX3Blcl91c2VyOiAxMDAwMDAKICByZWplY3Rfb2xkX3NhbXBsZXM6IHRydWUKICByZWplY3Rfb2xkX3NhbXBsZXNfbWF4X2FnZTogMTY4aAogIHJ1bGVyX21heF9ydWxlX2dyb3Vwc19wZXJfdGVuYW50OiAyMAogIHJ1bGVyX21heF9ydWxlc19wZXJfcnVsZV9ncm91cDogMjAKbWVtYmVybGlzdDoKICBiaW5kX3BvcnQ6IDc5NDYKICBqb2luX21lbWJlcnM6CiAgLSAnaXdhc2hpLWNvcnRleC1tZW1iZXJsaXN0JwpxdWVyaWVyOgogIGFjdGl2ZV9xdWVyeV90cmFja2VyX2RpcjogL2RhdGEvYWN0aXZlLXF1ZXJ5LXRyYWNrZXIKICBzdG9yZV9nYXRld2F5X2FkZHJlc3NlczogfC0KICAgIGRucytpd2FzaGktY29ydGV4LXN0b3JlLWdhdGV3YXktaGVhZGxlc3M6OTA5NQogIHRpbWVvdXQ6IDJtCnF1ZXJ5X3JhbmdlOgogIGFsaWduX3F1ZXJpZXNfd2l0aF9zdGVwOiBmYWxzZQogIGNhY2hlX3Jlc3VsdHM6IHRydWUKICByZXN1bHRzX2NhY2hlOgogICAgY2FjaGU6CiAgICAgIG1lbWNhY2hlZDoKICAgICAgICBleHBpcmF0aW9uOiAxaAogICAgICBtZW1jYWNoZWRfY2xpZW50OgogICAgICAgIHRpbWVvdXQ6IDFzCiAgc3BsaXRfcXVlcmllc19ieV9pbnRlcnZhbDogMjRoCnJ1bGVyOgogIGVuYWJsZV9hbGVydG1hbmFnZXJfZGlzY292ZXJ5OiBmYWxzZQogIGVuYWJsZV9hcGk6IHRydWUKICByaW5nOgogICAga3ZzdG9yZToKICAgICAgc3RvcmU6IG1lbWJlcmxpc3QKcnVsZXJfc3RvcmFnZToKICBiYWNrZW5kOiBzMwogIHMzOgogICAgYnVja2V0X2xvb2t1cF90eXBlOiBwYXRoCiAgICBidWNrZXRfbmFtZTogY29ydGV4LXJ1bGVyCiAgICBlbmRwb2ludDogc2Vhd2VlZGZzLmxvY2FsLndhbG51dHMuZGV2CiAgICByZWdpb246IHVzLWVhc3QtMQpydW50aW1lX2NvbmZpZzoKICBmaWxlOiAvZXRjL2NvcnRleC1ydW50aW1lLWNvbmZpZy9ydW50aW1lX2NvbmZpZy55YW1sCnNlcnZlcjoKICBncnBjX2xpc3Rlbl9wb3J0OiA5MDk1CiAgZ3JwY19zZXJ2ZXJfbWF4X2NvbmN1cnJlbnRfc3RyZWFtczogMTAwMDAKICBncnBjX3NlcnZlcl9tYXhfcmVjdl9tc2dfc2l6ZTogMTA0ODU3NjAKICBncnBjX3NlcnZlcl9tYXhfc2VuZF9tc2dfc2l6ZTogMTA0ODU3NjAKICBodHRwX2xpc3Rlbl9wb3J0OiA4MDgwCnN0b3JlX2dhdGV3YXk6CiAgc2hhcmRpbmdfZW5hYmxlZDogZmFsc2UKICBzaGFyZGluZ19yaW5nOgogICAga3ZzdG9yZToKICAgICAgc3RvcmU6IG1lbWJlcmxpc3QKdGVuYW50X2ZlZGVyYXRpb246CiAgZW5hYmxlZDogZmFsc2U=
+---
+# Source: cortex/templates/runtime-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: iwashi-cortex-runtime-config
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+data:
+  runtime_config.yaml: |
+    {}
+---
+# Source: cortex/charts/memcached-blocks-index/templates/metrics-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-memcached-blocks-index-metrics
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks-index
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-index-6.14.0
+    app.kubernetes.io/component: metrics
+  annotations:
+    prometheus.io/port: "9150"
+    prometheus.io/scrape: "true"
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+    - name: metrics
+      port: 9150
+      targetPort: metrics
+  selector:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/name: memcached-blocks-index
+---
+# Source: cortex/charts/memcached-blocks-index/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-memcached-blocks-index
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks-index
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-index-6.14.0
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: memcache
+      port: 11211
+      targetPort: memcache
+      nodePort: null
+  selector:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/name: memcached-blocks-index
+---
+# Source: cortex/charts/memcached-blocks-metadata/templates/metrics-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-memcached-blocks-metadata-metrics
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks-metadata
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-metadata-6.14.0
+    app.kubernetes.io/component: metrics
+  annotations:
+    prometheus.io/port: "9150"
+    prometheus.io/scrape: "true"
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+    - name: metrics
+      port: 9150
+      targetPort: metrics
+  selector:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/name: memcached-blocks-metadata
+---
+# Source: cortex/charts/memcached-blocks-metadata/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-memcached-blocks-metadata
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks-metadata
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-metadata-6.14.0
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: memcache
+      port: 11211
+      targetPort: memcache
+      nodePort: null
+  selector:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/name: memcached-blocks-metadata
+---
+# Source: cortex/charts/memcached-blocks/templates/metrics-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-memcached-blocks-metrics
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-6.14.0
+    app.kubernetes.io/component: metrics
+  annotations:
+    prometheus.io/port: "9150"
+    prometheus.io/scrape: "true"
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+    - name: metrics
+      port: 9150
+      targetPort: metrics
+  selector:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/name: memcached-blocks
+---
+# Source: cortex/charts/memcached-blocks/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-memcached-blocks
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-6.14.0
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: memcache
+      port: 11211
+      targetPort: memcache
+      nodePort: null
+  selector:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/name: memcached-blocks
+---
+# Source: cortex/charts/memcached-frontend/templates/metrics-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-memcached-frontend-metrics
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-frontend
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-frontend-6.14.0
+    app.kubernetes.io/component: metrics
+  annotations:
+    prometheus.io/port: "9150"
+    prometheus.io/scrape: "true"
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+    - name: metrics
+      port: 9150
+      targetPort: metrics
+  selector:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/name: memcached-frontend
+---
+# Source: cortex/charts/memcached-frontend/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-memcached-frontend
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-frontend
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-frontend-6.14.0
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: memcache
+      port: 11211
+      targetPort: memcache
+      nodePort: null
+  selector:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/name: memcached-frontend
+---
+# Source: cortex/templates/alertmanager/alertmanager-svc-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-alertmanager-headless
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: alertmanager
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - port: 8080
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+    - port: 9095
+      protocol: TCP
+      name: grpc
+      targetPort: grpc
+    - port: 9094
+      protocol: UDP
+      name: alert-clu-udp
+      targetPort: alert-clu-udp
+    - port: 9094
+      protocol: TCP
+      name: alert-clu-tcp
+      targetPort: alert-clu-tcp
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/component: alertmanager
+---
+# Source: cortex/templates/alertmanager/alertmanager-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-alertmanager
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: alertmanager
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/component: alertmanager
+---
+# Source: cortex/templates/compactor/compactor-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-compactor
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: compactor
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/component: compactor
+---
+# Source: cortex/templates/distributor/distributor-svc-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-distributor-headless
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: distributor
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - port: 9095
+      protocol: TCP
+      name: grpc
+      targetPort: grpc
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/component: distributor
+---
+# Source: cortex/templates/distributor/distributor-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-distributor
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: distributor
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/component: distributor
+---
+# Source: cortex/templates/ingester/ingester-svc-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-ingester-headless
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ingester
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 9095
+      protocol: TCP
+      name: grpc
+      targetPort: grpc
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/component: ingester
+---
+# Source: cortex/templates/ingester/ingester-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-ingester
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ingester
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/component: ingester
+---
+# Source: cortex/templates/querier/querier-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-querier
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: querier
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/component: querier
+---
+# Source: cortex/templates/ruler/ruler-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-ruler
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ruler
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/component: ruler
+---
+# Source: cortex/templates/store-gateway/store-gateway-svc-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-store-gateway-headless
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: store-gateway
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 9095
+      protocol: TCP
+      name: grpc
+      targetPort: grpc
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/component: store-gateway
+---
+# Source: cortex/templates/store-gateway/store-gateway-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-store-gateway
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: store-gateway
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      protocol: TCP
+      name: http-metrics
+      targetPort: http-metrics
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/component: store-gateway
+---
+# Source: cortex/templates/svc-memberlist-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: iwashi-cortex-memberlist
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    {}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 7946
+      protocol: TCP
+      appProtocol: tcp
+      name: gossip
+      targetPort: gossip
+  selector:
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/part-of: memberlist
+---
+# Source: cortex/templates/alertmanager/alertmanager-dep.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iwashi-cortex-alertmanager
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: alertmanager
+    app.kubernetes.io/part-of: memberlist
+  annotations:
+    {}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cortex
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/component: alertmanager
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: cortex-3.3.8
+        app.kubernetes.io/name: cortex
+        app.kubernetes.io/instance: iwashi-cortex
+        app.kubernetes.io/version: "v1.21.1"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: alertmanager
+        app.kubernetes.io/part-of: memberlist
+      annotations:
+        checksum/config: 7cd2566d918ade551926bae86fc60881b951401b47d4d6169d272c3461aa7f07
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: iwashi-cortex
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        []
+      containers:
+        - name: alertmanager
+          image: "quay.io/cortexproject/cortex:v1.21.1@sha256:acb0b50c2228d33eafe233f6791cfe61ee1644e62f027f845228d4a9ffa76004"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-target=alertmanager"
+            - "-config.file=/etc/cortex/cortex.yaml"
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+            - mountPath: /tmp
+              name: tmp
+            - name: config
+              mountPath: /etc/cortex
+            - name: runtime-config
+              mountPath: /etc/cortex-runtime-config
+            - name: storage
+              mountPath: "/data"
+          ports:
+            - name: http-metrics
+              containerPort: 8080
+              protocol: TCP
+            - name: gossip
+              containerPort: 7946
+              protocol: TCP
+          startupProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /ready
+              port: http-metrics
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+          resources:
+            {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          env:
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ENDPOINT_URL_STS
+              value: https://seaweedfs.local.walnuts.dev
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/cortex
+            - name: AWS_REGION
+              value: us-east-1
+      nodeSelector:
+        {}
+      affinity:
+        {}
+      tolerations:
+        []
+      terminationGracePeriodSeconds: 60
+      volumes:
+        - name: config
+          secret:
+            secretName: iwashi-cortex
+        - name: runtime-config
+          configMap:
+            name: iwashi-cortex-runtime-config
+        - name: storage
+          emptyDir: {}
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                audience: sts.seaweedfs.com
+                expirationSeconds: 3600
+                path: token
+        - emptyDir:
+            sizeLimit: 16Mi
+          name: tmp
+---
+# Source: cortex/templates/distributor/distributor-dep.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iwashi-cortex-distributor
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: distributor
+    app.kubernetes.io/part-of: memberlist
+  annotations:
+    {}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cortex
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/component: distributor
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: cortex-3.3.8
+        app.kubernetes.io/name: cortex
+        app.kubernetes.io/instance: iwashi-cortex
+        app.kubernetes.io/version: "v1.21.1"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: distributor
+        app.kubernetes.io/part-of: memberlist
+      annotations:
+        checksum/config: 7cd2566d918ade551926bae86fc60881b951401b47d4d6169d272c3461aa7f07
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: iwashi-cortex
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        []
+      containers:
+        - name: distributor
+          image: "quay.io/cortexproject/cortex:v1.21.1@sha256:acb0b50c2228d33eafe233f6791cfe61ee1644e62f027f845228d4a9ffa76004"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-target=distributor"
+            - "-config.file=/etc/cortex/cortex.yaml"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/cortex
+            - name: runtime-config
+              mountPath: /etc/cortex-runtime-config
+            - name: storage
+              mountPath: "/data"
+              subPath: 
+          ports:
+            - name: http-metrics
+              containerPort: 8080
+              protocol: TCP
+            - name: gossip
+              containerPort: 7946
+              protocol: TCP
+            - name: grpc
+              containerPort: 9095
+              protocol: TCP
+          startupProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /ready
+              port: http-metrics
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+          resources:
+            {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+      nodeSelector:
+        {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - distributor
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      tolerations:
+        []
+      terminationGracePeriodSeconds: 60
+      volumes:
+        - name: config
+          secret:
+            secretName: iwashi-cortex
+        - name: runtime-config
+          configMap:
+            name: iwashi-cortex-runtime-config
+        - name: storage
+          emptyDir: {}
+---
+# Source: cortex/templates/querier/querier-dep.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iwashi-cortex-querier
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: querier
+  annotations:
+    {}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cortex
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/component: querier
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: cortex-3.3.8
+        app.kubernetes.io/name: cortex
+        app.kubernetes.io/instance: iwashi-cortex
+        app.kubernetes.io/version: "v1.21.1"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: querier
+      annotations:
+        checksum/config: 7cd2566d918ade551926bae86fc60881b951401b47d4d6169d272c3461aa7f07
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: iwashi-cortex
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        []
+      containers:
+        - name: querier
+          image: "quay.io/cortexproject/cortex:v1.21.1@sha256:acb0b50c2228d33eafe233f6791cfe61ee1644e62f027f845228d4a9ffa76004"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-target=querier"
+            - "-config.file=/etc/cortex/cortex.yaml"
+            
+            - "-blocks-storage.bucket-store.index-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.index-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks-index.iwashi-system.svc.cluster.local:11211"
+            - "-blocks-storage.bucket-store.chunks-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.chunks-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks.iwashi-system.svc.cluster.local:11211"
+            - "-blocks-storage.bucket-store.metadata-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks-metadata.iwashi-system.svc.cluster.local:11211"
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+            - name: config
+              mountPath: /etc/cortex
+            - name: runtime-config
+              mountPath: /etc/cortex-runtime-config
+            - name: storage
+              mountPath: "/data"
+              subPath: 
+          ports:
+            - name: http-metrics
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /ready
+              port: http-metrics
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+          resources:
+            {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          env:
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ENDPOINT_URL_STS
+              value: https://seaweedfs.local.walnuts.dev
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/cortex
+            - name: AWS_REGION
+              value: us-east-1
+      nodeSelector:
+        {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - ingester
+                  - querier
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      tolerations:
+        []
+      terminationGracePeriodSeconds: 180
+      volumes:
+        - name: config
+          secret:
+            secretName: iwashi-cortex
+        - name: runtime-config
+          configMap:
+            name: iwashi-cortex-runtime-config
+        - name: storage
+          emptyDir: {}
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                audience: sts.seaweedfs.com
+                expirationSeconds: 3600
+                path: token
+---
+# Source: cortex/templates/ruler/ruler-dep.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iwashi-cortex-ruler
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ruler
+    app.kubernetes.io/part-of: memberlist
+  annotations:
+    {}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cortex
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/component: ruler
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: cortex-3.3.8
+        app.kubernetes.io/name: cortex
+        app.kubernetes.io/instance: iwashi-cortex
+        app.kubernetes.io/version: "v1.21.1"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: ruler
+        app.kubernetes.io/part-of: memberlist
+      annotations:
+        checksum/config: 7cd2566d918ade551926bae86fc60881b951401b47d4d6169d272c3461aa7f07
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: iwashi-cortex
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        []
+      containers:
+        - name: rules
+          image: "quay.io/cortexproject/cortex:v1.21.1@sha256:acb0b50c2228d33eafe233f6791cfe61ee1644e62f027f845228d4a9ffa76004"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-target=ruler"
+            - "-config.file=/etc/cortex/cortex.yaml"
+            - "-ruler.alertmanager-url=http://iwashi-cortex-alertmanager.iwashi-system.svc.cluster.local:8080/api/prom/alertmanager/"
+            
+            - "-blocks-storage.bucket-store.index-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.index-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks-index.iwashi-system.svc.cluster.local:11211"
+            - "-blocks-storage.bucket-store.chunks-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.chunks-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks.iwashi-system.svc.cluster.local:11211"
+            - "-blocks-storage.bucket-store.metadata-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks-metadata.iwashi-system.svc.cluster.local:11211"
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+            - name: config
+              mountPath: /etc/cortex
+            - name: runtime-config
+              mountPath: /etc/cortex-runtime-config
+            - name: storage
+              mountPath: /data
+            - name: tmp
+              mountPath: /rules
+          ports:
+            - name: http-metrics
+              containerPort: 8080
+              protocol: TCP
+            - name: gossip
+              containerPort: 7946
+              protocol: TCP
+          startupProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /ready
+              port: http-metrics
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+          resources:
+            {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          env:
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ENDPOINT_URL_STS
+              value: https://seaweedfs.local.walnuts.dev
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/cortex
+            - name: AWS_REGION
+              value: us-east-1
+      nodeSelector:
+        {}
+      affinity:
+        {}
+      tolerations:
+        []
+      terminationGracePeriodSeconds: 180
+      volumes:
+        - name: config
+          secret:
+            secretName: iwashi-cortex
+        - name: runtime-config
+          configMap:
+            name: iwashi-cortex-runtime-config
+        - name: tmp
+          emptyDir: {}
+        - name: storage
+          emptyDir: {}
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                audience: sts.seaweedfs.com
+                expirationSeconds: 3600
+                path: token
+---
+# Source: cortex/charts/memcached-blocks-index/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: iwashi-cortex-memcached-blocks-index
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks-index
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-index-6.14.0
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/name: memcached-blocks-index
+  replicas: 2
+  podManagementPolicy: "Parallel"
+  serviceName: iwashi-cortex-memcached-blocks-index
+  updateStrategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: iwashi-cortex
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: memcached-blocks-index
+        app.kubernetes.io/version: 1.6.24
+        helm.sh/chart: memcached-blocks-index-6.14.0
+      annotations:
+        prometheus.io/port: '9150'
+        prometheus.io/scrape: "true"
+    spec:
+      
+      automountServiceAccountToken: false
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: iwashi-cortex
+                    app.kubernetes.io/name: memcached-blocks-index
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+        supplementalGroups: []
+        sysctls: []
+      serviceAccountName: iwashi-cortex-memcached-blocks-index
+      containers:
+        - name: memcached
+          image: docker.io/memcached:1.6.45
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: null
+            seccompProfile:
+              type: RuntimeDefault
+          args:
+            - -m 1024
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: MEMCACHED_PORT_NUMBER
+              value: "11211"
+          ports:
+            - name: memcache
+              containerPort: 11211
+          livenessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            tcpSocket:
+              port: memcache
+          readinessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+            tcpSocket:
+              port: memcache
+          volumeMounts:
+            - name: empty-dir
+              mountPath: /opt/bitnami/memcached/conf
+              subPath: app-conf-dir
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: tmp-dir
+        - name: metrics
+          image: docker.io/prom/memcached-exporter:v0.17.0
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: null
+            seccompProfile:
+              type: RuntimeDefault
+          ports:
+            - name: metrics
+              containerPort: 9150
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            httpGet:
+              path: /metrics
+              port: 9150
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+            httpGet:
+              path: /metrics
+              port: 9150
+      volumes:
+        - name: empty-dir
+          emptyDir: {}
+---
+# Source: cortex/charts/memcached-blocks-metadata/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: iwashi-cortex-memcached-blocks-metadata
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks-metadata
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-metadata-6.14.0
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/name: memcached-blocks-metadata
+  replicas: 2
+  podManagementPolicy: "Parallel"
+  serviceName: iwashi-cortex-memcached-blocks-metadata
+  updateStrategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: iwashi-cortex
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: memcached-blocks-metadata
+        app.kubernetes.io/version: 1.6.24
+        helm.sh/chart: memcached-blocks-metadata-6.14.0
+      annotations:
+        prometheus.io/port: '9150'
+        prometheus.io/scrape: "true"
+    spec:
+      
+      automountServiceAccountToken: false
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: iwashi-cortex
+                    app.kubernetes.io/name: memcached-blocks-metadata
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+        supplementalGroups: []
+        sysctls: []
+      serviceAccountName: iwashi-cortex-memcached-blocks-metadata
+      containers:
+        - name: memcached
+          image: docker.io/memcached:1.6.45
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: null
+            seccompProfile:
+              type: RuntimeDefault
+          args:
+            - -m 1024
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: MEMCACHED_PORT_NUMBER
+              value: "11211"
+          ports:
+            - name: memcache
+              containerPort: 11211
+          livenessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            tcpSocket:
+              port: memcache
+          readinessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+            tcpSocket:
+              port: memcache
+          volumeMounts:
+            - name: empty-dir
+              mountPath: /opt/bitnami/memcached/conf
+              subPath: app-conf-dir
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: tmp-dir
+        - name: metrics
+          image: docker.io/prom/memcached-exporter:v0.17.0
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: null
+            seccompProfile:
+              type: RuntimeDefault
+          ports:
+            - name: metrics
+              containerPort: 9150
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            httpGet:
+              path: /metrics
+              port: 9150
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+            httpGet:
+              path: /metrics
+              port: 9150
+      volumes:
+        - name: empty-dir
+          emptyDir: {}
+---
+# Source: cortex/charts/memcached-blocks/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: iwashi-cortex-memcached-blocks
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-blocks
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-blocks-6.14.0
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/name: memcached-blocks
+  replicas: 2
+  podManagementPolicy: "Parallel"
+  serviceName: iwashi-cortex-memcached-blocks
+  updateStrategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: iwashi-cortex
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: memcached-blocks
+        app.kubernetes.io/version: 1.6.24
+        helm.sh/chart: memcached-blocks-6.14.0
+      annotations:
+        prometheus.io/port: '9150'
+        prometheus.io/scrape: "true"
+    spec:
+      
+      automountServiceAccountToken: false
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: iwashi-cortex
+                    app.kubernetes.io/name: memcached-blocks
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+        supplementalGroups: []
+        sysctls: []
+      serviceAccountName: iwashi-cortex-memcached-blocks
+      containers:
+        - name: memcached
+          image: docker.io/memcached:1.6.45
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: null
+            seccompProfile:
+              type: RuntimeDefault
+          args:
+            - -m 1024
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: MEMCACHED_PORT_NUMBER
+              value: "11211"
+          ports:
+            - name: memcache
+              containerPort: 11211
+          livenessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            tcpSocket:
+              port: memcache
+          readinessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+            tcpSocket:
+              port: memcache
+          volumeMounts:
+            - name: empty-dir
+              mountPath: /opt/bitnami/memcached/conf
+              subPath: app-conf-dir
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: tmp-dir
+        - name: metrics
+          image: docker.io/prom/memcached-exporter:v0.17.0
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: null
+            seccompProfile:
+              type: RuntimeDefault
+          ports:
+            - name: metrics
+              containerPort: 9150
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            httpGet:
+              path: /metrics
+              port: 9150
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+            httpGet:
+              path: /metrics
+              port: 9150
+      volumes:
+        - name: empty-dir
+          emptyDir: {}
+---
+# Source: cortex/charts/memcached-frontend/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: iwashi-cortex-memcached-frontend
+  namespace: iwashi-system
+  labels:
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: memcached-frontend
+    app.kubernetes.io/version: 1.6.24
+    helm.sh/chart: memcached-frontend-6.14.0
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/name: memcached-frontend
+  replicas: 2
+  podManagementPolicy: "Parallel"
+  serviceName: iwashi-cortex-memcached-frontend
+  updateStrategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: iwashi-cortex
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: memcached-frontend
+        app.kubernetes.io/version: 1.6.24
+        helm.sh/chart: memcached-frontend-6.14.0
+      annotations:
+        prometheus.io/port: '9150'
+        prometheus.io/scrape: "true"
+    spec:
+      
+      automountServiceAccountToken: false
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: iwashi-cortex
+                    app.kubernetes.io/name: memcached-frontend
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+        supplementalGroups: []
+        sysctls: []
+      serviceAccountName: iwashi-cortex-memcached-frontend
+      containers:
+        - name: memcached
+          image: docker.io/memcached:1.6.45
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: null
+            seccompProfile:
+              type: RuntimeDefault
+          args:
+            - -m 1024
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: MEMCACHED_PORT_NUMBER
+              value: "11211"
+          ports:
+            - name: memcache
+              containerPort: 11211
+          livenessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            tcpSocket:
+              port: memcache
+          readinessProbe:
+            failureThreshold: 6
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+            tcpSocket:
+              port: memcache
+          volumeMounts:
+            - name: empty-dir
+              mountPath: /opt/bitnami/memcached/conf
+              subPath: app-conf-dir
+            - name: empty-dir
+              mountPath: /tmp
+              subPath: tmp-dir
+        - name: metrics
+          image: docker.io/prom/memcached-exporter:v0.17.0
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: null
+            seccompProfile:
+              type: RuntimeDefault
+          ports:
+            - name: metrics
+              containerPort: 9150
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+            httpGet:
+              path: /metrics
+              port: 9150
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+            httpGet:
+              path: /metrics
+              port: 9150
+      volumes:
+        - name: empty-dir
+          emptyDir: {}
+---
+# Source: cortex/templates/compactor/compactor-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: iwashi-cortex-compactor
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: compactor
+    app.kubernetes.io/part-of: memberlist
+  annotations:
+    {}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cortex
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/component: compactor
+  updateStrategy:
+    type: RollingUpdate
+  serviceName: iwashi-cortex-compactor
+  volumeClaimTemplates:
+    - metadata:
+        name: storage
+      spec:
+        accessModes:
+          
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "10Gi"
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: cortex-3.3.8
+        app.kubernetes.io/name: cortex
+        app.kubernetes.io/instance: iwashi-cortex
+        app.kubernetes.io/version: "v1.21.1"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: compactor
+        app.kubernetes.io/part-of: memberlist
+      annotations:
+        checksum/config: 7cd2566d918ade551926bae86fc60881b951401b47d4d6169d272c3461aa7f07
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: iwashi-cortex
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        []
+      nodeSelector:
+        {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - compactor
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      tolerations:
+        []
+      terminationGracePeriodSeconds: 240
+      volumes:
+        - name: config
+          secret:
+            secretName: iwashi-cortex
+        - name: runtime-config
+          configMap:
+            name: iwashi-cortex-runtime-config
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                audience: sts.seaweedfs.com
+                expirationSeconds: 3600
+                path: token
+      containers:
+        - name: compactor
+          image: "quay.io/cortexproject/cortex:v1.21.1@sha256:acb0b50c2228d33eafe233f6791cfe61ee1644e62f027f845228d4a9ffa76004"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-target=compactor"
+            - "-config.file=/etc/cortex/cortex.yaml"
+            
+            - "-blocks-storage.bucket-store.index-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.index-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks-index.iwashi-system.svc.cluster.local:11211"
+            - "-blocks-storage.bucket-store.chunks-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.chunks-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks.iwashi-system.svc.cluster.local:11211"
+            - "-blocks-storage.bucket-store.metadata-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks-metadata.iwashi-system.svc.cluster.local:11211"
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+            - name: config
+              mountPath: /etc/cortex
+            - name: runtime-config
+              mountPath: /etc/cortex-runtime-config
+            - name: storage
+              mountPath: "/data"
+          ports:
+            - name: http-metrics
+              containerPort: 8080
+              protocol: TCP
+            - name: gossip
+              containerPort: 7946
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+          resources:
+            {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          env:
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ENDPOINT_URL_STS
+              value: https://seaweedfs.local.walnuts.dev
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/cortex
+            - name: AWS_REGION
+              value: us-east-1
+---
+# Source: cortex/templates/ingester/ingester-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: iwashi-cortex-ingester
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ingester
+    app.kubernetes.io/part-of: memberlist
+  annotations:
+    {}
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cortex
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/component: ingester
+  updateStrategy:
+    type: RollingUpdate          
+  podManagementPolicy: "OrderedReady"
+  serviceName: iwashi-cortex-ingester-headless
+  volumeClaimTemplates:
+    - metadata:
+        name: storage
+      spec:
+        accessModes:
+          
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "10Gi"
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: cortex-3.3.8
+        app.kubernetes.io/name: cortex
+        app.kubernetes.io/instance: iwashi-cortex
+        app.kubernetes.io/version: "v1.21.1"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: ingester
+        app.kubernetes.io/part-of: memberlist
+      annotations:
+        checksum/config: 7cd2566d918ade551926bae86fc60881b951401b47d4d6169d272c3461aa7f07
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: iwashi-cortex
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        []
+      nodeSelector:
+        {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - ingester
+                  - querier
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      tolerations:
+        []
+      terminationGracePeriodSeconds: 240
+      volumes:
+        - name: config
+          secret:
+            secretName: iwashi-cortex
+        - name: runtime-config
+          configMap:
+            name: iwashi-cortex-runtime-config
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                audience: sts.seaweedfs.com
+                expirationSeconds: 3600
+                path: token
+      containers:
+        - name: ingester
+          image: "quay.io/cortexproject/cortex:v1.21.1@sha256:acb0b50c2228d33eafe233f6791cfe61ee1644e62f027f845228d4a9ffa76004"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-target=ingester"
+            - "-config.file=/etc/cortex/cortex.yaml"
+            
+            - "-blocks-storage.bucket-store.index-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.index-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks-index.iwashi-system.svc.cluster.local:11211"
+            - "-blocks-storage.bucket-store.chunks-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.chunks-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks.iwashi-system.svc.cluster.local:11211"
+            - "-blocks-storage.bucket-store.metadata-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks-metadata.iwashi-system.svc.cluster.local:11211"
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+            - name: config
+              mountPath: /etc/cortex
+            - name: runtime-config
+              mountPath: /etc/cortex-runtime-config
+            - name: storage
+              mountPath: "/data"
+          ports:
+            - name: http-metrics
+              containerPort: 8080
+              protocol: TCP
+            - name: grpc
+              containerPort: 9095
+              protocol: TCP
+            - name: gossip
+              containerPort: 7946
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+          resources:
+            {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          env:
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ENDPOINT_URL_STS
+              value: https://seaweedfs.local.walnuts.dev
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/cortex
+            - name: AWS_REGION
+              value: us-east-1
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /ingester/shutdown
+                port: http-metrics
+---
+# Source: cortex/templates/store-gateway/store-gateway-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: iwashi-cortex-store-gateway
+  namespace: iwashi-system
+  labels:
+    helm.sh/chart: cortex-3.3.8
+    app.kubernetes.io/name: cortex
+    app.kubernetes.io/instance: iwashi-cortex
+    app.kubernetes.io/version: "v1.21.1"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: store-gateway
+    app.kubernetes.io/part-of: memberlist
+  annotations:
+    {}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cortex
+      app.kubernetes.io/instance: iwashi-cortex
+      app.kubernetes.io/component: store-gateway
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: "OrderedReady"
+  serviceName: iwashi-cortex-store-gateway-headless
+  volumeClaimTemplates:
+    - metadata:
+        name: storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "10Gi"
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: cortex-3.3.8
+        app.kubernetes.io/name: cortex
+        app.kubernetes.io/instance: iwashi-cortex
+        app.kubernetes.io/version: "v1.21.1"
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: store-gateway
+        app.kubernetes.io/part-of: memberlist
+      annotations:
+        checksum/config: 7cd2566d918ade551926bae86fc60881b951401b47d4d6169d272c3461aa7f07
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+    spec:
+      serviceAccountName: iwashi-cortex
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        []
+      nodeSelector:
+        {}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - store-gateway
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      tolerations:
+        []
+      terminationGracePeriodSeconds: 240
+      volumes:
+        - name: config
+          secret:
+            secretName: iwashi-cortex
+        - name: runtime-config
+          configMap:
+            name: iwashi-cortex-runtime-config
+        - name: seaweedfs-sts-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                audience: sts.seaweedfs.com
+                expirationSeconds: 3600
+                path: token
+      containers:
+        - name: store-gateway
+          image: "quay.io/cortexproject/cortex:v1.21.1@sha256:acb0b50c2228d33eafe233f6791cfe61ee1644e62f027f845228d4a9ffa76004"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-target=store-gateway"
+            - "-config.file=/etc/cortex/cortex.yaml"
+            
+            - "-blocks-storage.bucket-store.index-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.index-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks-index.iwashi-system.svc.cluster.local:11211"
+            - "-blocks-storage.bucket-store.chunks-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.chunks-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks.iwashi-system.svc.cluster.local:11211"
+            - "-blocks-storage.bucket-store.metadata-cache.backend=memcached"
+            - "-blocks-storage.bucket-store.metadata-cache.memcached.addresses=dns+iwashi-cortex-memcached-blocks-metadata.iwashi-system.svc.cluster.local:11211"
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+            - name: config
+              mountPath: /etc/cortex
+            - name: runtime-config
+              mountPath: /etc/cortex-runtime-config
+            - name: storage
+              mountPath: "/data"
+          ports:
+            - name: http-metrics
+              containerPort: 8080
+              protocol: TCP
+            - name: grpc
+              containerPort: 9095
+              protocol: TCP
+            - name: gossip
+              containerPort: 7946
+              protocol: TCP
+          startupProbe:
+            failureThreshold: 60
+            httpGet:
+              path: /ready
+              port: http-metrics
+              scheme: HTTP
+            initialDelaySeconds: 120
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http-metrics
+          resources:
+            {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          env:
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ENDPOINT_URL_STS
+              value: https://seaweedfs.local.walnuts.dev
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/cortex
+            - name: AWS_REGION
+              value: us-east-1

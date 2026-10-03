@@ -1,0 +1,153 @@
+---
+# Source: tenant/templates/api-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: biscuit
+  annotations: 
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cf-tunnel-operator.walnuts.dev/ignore: "true"
+spec:
+  ingressClassName: cilium
+  tls:
+    - hosts:
+        - "minio-biscuit.local.walnuts.dev"
+      secretName: minio-biscuit-tls
+  rules:
+    - host: minio-biscuit.local.walnuts.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port:
+                  name: http-minio
+    - host: "*.minio-biscuit.local.walnuts.dev"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port:
+                  name: http-minio
+---
+# Source: tenant/templates/console-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: biscuit-console
+  annotations: 
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cf-tunnel-operator.walnuts.dev/ignore: "true"
+spec:
+  ingressClassName: cilium
+  tls:
+    - hosts:
+        - "minio-biscuit-console.local.walnuts.dev"
+      secretName: minio-biscuit-console-tls
+  rules:
+    - host: minio-biscuit-console.local.walnuts.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: biscuit-console
+                port:
+                  name: http-console
+---
+# Source: tenant/templates/checks.yaml
+# If an existing secret is used, do not set access-key and secret-key explicitly
+# (note that we allow the default settings in values.yaml)
+
+# If configuration.name is set and not the same as configSecret.name,
+# then we should raise an error and abort
+---
+# Source: tenant/templates/tenant.yaml
+apiVersion: minio.min.io/v2
+kind: Tenant
+metadata:
+  name: biscuit
+  ## Optionally pass labels to be applied to the statefulset pods
+  labels:
+    app: minio
+  ## Annotations for MinIO Tenant Pods
+  annotations:
+    prometheus.io/path: /minio/v2/metrics/cluster
+    prometheus.io/port: "9000"
+    prometheus.io/scrape: "true"
+    prometheus.io/scheme: "http"
+spec:
+  image: "quay.io/minio/minio:RELEASE.2025-04-08T15-41-24Z"
+  imagePullPolicy: IfNotPresent
+  ## Secret with default environment variable configurations
+  configuration:
+    name: minio-biscuit-storage-config-376136
+  poolsMetadata:
+    annotations: {}
+    labels: {}
+  pools:
+    - servers: 1
+      name: pool-0
+      volumesPerServer: 1
+      volumeClaimTemplate:
+        metadata:
+          name: data
+        spec:
+          storageClassName: manual-minio-hostpath
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 32Gi
+      resources:
+        limits:
+          cpu: "1"
+          memory: 4Gi
+        requests:
+          cpu: 100m
+          memory: 1Gi
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+  mountPath: /export
+  subPath: /data
+  requestAutoCert: false
+  features:
+    bucketDNS: true
+    domains:
+      console: minio-biscuit-console.local.walnuts.dev
+      minio:
+      - minio-biscuit.local.walnuts.dev
+    enableSFTP: false
+  buckets:
+    - name: longhorn-backup
+      region: ap-northeast-1
+    - name: minio-default-backup
+      region: ap-northeast-1
+    - name: velero-backup
+      region: ap-northeast-1
+  podManagementPolicy: Parallel
+  prometheusOperator: false
+  env:
+    - name: MINIO_SERVER_URL
+      value: https://minio-biscuit.local.walnuts.dev
+    - name: MINIO_BROWSER_REDIRECT_URL
+      value: https://minio-biscuit-console.local.walnuts.dev
+    - name: MINIO_IDENTITY_OPENID_CONFIG_URL
+      value: https://auth.walnuts.dev/.well-known/openid-configuration
+    - name: MINIO_IDENTITY_OPENID_CLIENT_ID
+      value: "340410953382297837"
+    - name: MINIO_IDENTITY_OPENID_CLAIM_NAME
+      value: minio-policy
+    - name: MINIO_IDENTITY_OPENID_SCOPES
+      value: openid,profile,email
+    - name: MINIO_IDENTITY_OPENID_REDIRECT_URI
+      value: https://minio-biscuit-console.local.walnuts.dev/oauth_callback
+    - name: MINIO_IDENTITY_OPENID_DISPLAY_NAME
+      value: Walnuts.dev

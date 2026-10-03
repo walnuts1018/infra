@@ -1,0 +1,22 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  labels:
+    app: coredns
+    app.kubernetes.io/name: coredns
+  name: coredns
+  namespace: coredns
+spec:
+  maxReplicaCount: 4
+  minReplicaCount: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: coredns
+  triggers:
+    - metadata:
+        metricName: coredns_dns_requests_total
+        query: sum(rate(coredns_dns_requests_total[2m]))
+        serverAddress: http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus
+        threshold: "100"
+      type: prometheus

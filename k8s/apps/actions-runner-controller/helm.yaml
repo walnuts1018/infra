@@ -1,0 +1,61 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: actions-runner-controller-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: arc-systems
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: gha-runner-scale-set-controller
+    helm:
+      releaseName: actions-runner-controller
+      values: |
+        replicaCount: 1
+
+        resources:
+          requests:
+            cpu: 5m
+            memory: 52Mi
+          limits:
+            memory: 512Mi
+
+        topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: 'kubernetes.io/hostname'
+          whenUnsatisfiable: 'ScheduleAnyway'
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: gha-rs-controller
+              app.kubernetes.io/instance: actions-runner-controller
+
+        flags:
+          logLevel: "info"
+          logFormat: "json"
+
+          ## Defines a list of prefixes that should not be propagated to internal resources.
+          ## This is useful when you have labels that are used for internal purposes and should not be propagated to internal resources.
+          ## See https://github.com/actions/actions-runner-controller/issues/3533 for more information.
+          ##
+          ## By default, all labels are propagated to internal resources
+          ## Labels that match prefix specified in the list are excluded from propagation.
+          excludeLabelPropagationPrefixes:
+          - "argocd.argoproj.io/instance"
+
+        metrics:
+          controllerManagerAddr: ":8080"
+          listenerAddr: ":8080"
+          listenerEndpoint: "/metrics"
+    repoURL: ghcr.io/actions/actions-runner-controller-charts
+    targetRevision: 0.14.2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

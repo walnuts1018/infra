@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: backend
+    app.kubernetes.io/part-of: beast
+  name: beast-apiserver
+  namespace: beast
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: backend
+      app.kubernetes.io/part-of: beast
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: backend
+        app.kubernetes.io/part-of: beast
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - env:
+            - name: AWS_ENDPOINT_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: S3_ENDPOINT
+                  name: beast-config
+                  optional: true
+            - name: S3_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  key: S3_ENDPOINT
+                  name: beast-config
+                  optional: true
+          envFrom:
+            - configMapRef:
+                name: beast-config
+            - secretRef:
+                name: beast-postgres
+            - secretRef:
+                name: beast-rabbitmq
+            - secretRef:
+                name: beast-oidc
+            - secretRef:
+                name: beast-crypto
+            - secretRef:
+                name: beast-s3-credentials
+          image: ghcr.io/walnuts1018/beast/backend:9e7246e-amd64
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /livez
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+          name: apiserver
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /livez
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+      securityContext:
+        fsGroup: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: beast
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - emptyDir: {}
+          name: tmp

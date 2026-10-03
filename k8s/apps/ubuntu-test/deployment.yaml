@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ubuntu-test
+    app.kubernetes.io/name: ubuntu-test
+  name: ubuntu-test
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu-test
+      app.kubernetes.io/name: ubuntu-test
+  template:
+    metadata:
+      labels:
+        app: ubuntu-test
+        app.kubernetes.io/name: ubuntu-test
+    spec:
+      containers:
+        - command:
+            - sleep
+            - infinity
+          image: ghcr.io/cybozu/ubuntu-debug:24.04
+          name: ubuntu-debug
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              memory: 5Mi
+          volumeMounts:
+            - mountPath: /etc/ssl/certs/trust-bundle.pem
+              name: local-ca-bundle
+              readOnly: true
+              subPath: trust-bundle.pem
+      volumes:
+        - configMap:
+            name: local-ca-bundle
+          name: local-ca-bundle

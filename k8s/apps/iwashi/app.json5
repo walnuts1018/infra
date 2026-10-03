@@ -1,7 +1,0 @@
-{
-  name: "iwashi",
-  namespace: "iwashi-system",
-  clusters: {
-    kurumi: {},
-  },
-}

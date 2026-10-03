@@ -1,0 +1,23 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: picca-dev
+  namespace: picca-dev
+spec:
+  oidc:
+    clientIDRef:
+      name: picca-dev-oidc-filter-d222e5
+    clientSecret:
+      name: picca-dev-oidc-filter-d222e5
+    logoutPath: /oauth2/logout
+    provider:
+      issuer: https://auth.walnuts.dev
+    redirectURL: https://picca-dev.walnuts.dev/oauth2/callback
+    scopes:
+      - openid
+      - email
+      - profile
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: picca-dev

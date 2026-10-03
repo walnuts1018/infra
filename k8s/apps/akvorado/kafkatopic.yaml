@@ -1,0 +1,17 @@
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app: akvorado-kafka-topic
+    app.kubernetes.io/name: akvorado-kafka-topic
+    strimzi.io/cluster: akvorado-kafka
+  name: flows-v5
+  namespace: akvorado
+spec:
+  config:
+    retention.ms: 6.048e+08
+    segment.bytes: 1.073741824e+09
+  partitions: 2
+  replicas: 1

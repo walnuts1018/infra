@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: iwashi-blackbox-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: iwashi-blackbox
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: prometheus-blackbox-exporter
+    helm:
+      releaseName: iwashi-blackbox
+      values: |
+        serviceMonitor:
+          enabled: false
+          selfMonitor:
+            enabled: false
+        resources:
+          requests:
+            cpu: 2m
+            memory: 39Mi
+          limits:
+            memory: 128Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+        podSecurityContext:
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 11.18.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

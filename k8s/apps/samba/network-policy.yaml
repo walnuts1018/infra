@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: samba
+  namespace: samba
+spec:
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 192.168.100.0/24
+      ports:
+        - port: 10445
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      app: samba
+      app.kubernetes.io/name: samba
+  policyTypes:
+    - Ingress
+    - Egress
