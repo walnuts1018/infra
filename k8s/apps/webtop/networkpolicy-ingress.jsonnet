@@ -36,6 +36,14 @@ local app = import 'app.json5';
           },
         ],
       },
+      {
+        ports: [
+          {
+            protocol: 'UDP',
+            port: 59000,
+          },
+        ],
+      },
     ],
   },
 }

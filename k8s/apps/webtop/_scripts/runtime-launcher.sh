@@ -26,6 +26,17 @@ bind_tree() {
   mount --make-rslave "$target_path"
 }
 
+cat > /tmp/rtc.json <<'EOF'
+{
+  "lifetimeDuration": "86400s",
+  "iceServers": [],
+  "blockStatus": "NOT_BLOCKED",
+  "iceTransportPolicy": "all"
+}
+EOF
+chmod 0644 /tmp/rtc.json
+chown 0:0 /tmp/rtc.json
+
 bind_tree /proc "$sysroot/proc"
 bind_tree /sys "$sysroot/sys"
 bind_tree /dev "$sysroot/dev"
