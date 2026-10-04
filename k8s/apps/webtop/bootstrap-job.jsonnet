@@ -81,7 +81,7 @@ local jobName = app.name + '-bootstrap';
           {
             name: 'rootfs-target',
             persistentVolumeClaim: {
-              claimName: app.name + '-root',
+              claimName: (import 'root-pvc.jsonnet').metadata.name,
             },
           },
           {

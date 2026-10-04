@@ -135,7 +135,7 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
           {
             name: 'rootfs',
             persistentVolumeClaim: {
-              claimName: app.name + '-root',
+              claimName: (import 'root-pvc.jsonnet').metadata.name,
             },
           },
           {
