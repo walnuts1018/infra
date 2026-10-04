@@ -91,7 +91,7 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
             },
             startupProbe: {
               httpGet: {
-                path: '/',
+                path: '/api/status',
                 port: 'http',
               },
               periodSeconds: 10,
@@ -100,7 +100,7 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
             },
             readinessProbe: {
               httpGet: {
-                path: '/',
+                path: '/api/status',
                 port: 'http',
               },
               periodSeconds: 10,
@@ -109,7 +109,7 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
             },
             livenessProbe: {
               httpGet: {
-                path: '/',
+                path: '/api/status',
                 port: 'http',
               },
               periodSeconds: 60,
