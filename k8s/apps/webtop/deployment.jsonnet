@@ -39,9 +39,11 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
             imagePullPolicy: 'IfNotPresent',
             command: ['/bin/bash', '/launcher/runtime-launcher.sh'],
             env: [
+              { name: 'DISPLAY', value: ':1' },
               { name: 'HOME', value: '/config' },
               { name: 'PUID', value: '1000' },
               { name: 'PGID', value: '1000' },
+              { name: 'PULSE_RUNTIME_PATH', value: '/defaults' },
               { name: 'TZ', value: 'Asia/Tokyo' },
               { name: 'LC_ALL', value: 'ja_JP.UTF-8' },
               { name: 'PIXELFLUX_WAYLAND', value: 'true' },
