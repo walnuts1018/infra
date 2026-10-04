@@ -41,6 +41,7 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
             env: [
               { name: 'DISPLAY', value: ':1' },
               { name: 'HOME', value: '/config' },
+              { name: 'PATH', value: '/lsiopy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' },
               { name: 'PUID', value: '1000' },
               { name: 'PGID', value: '1000' },
               { name: 'PULSE_RUNTIME_PATH', value: '/defaults' },
