@@ -35,7 +35,7 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
         containers: [
           {
             name: 'webtop',
-            image: 'lscr.io/linuxserver/webtop:arch-kde@sha256:d55dd7f34fe70e9e39fb004e3f7ef5eb0fd74b24a771ba972a25a24ce24f65a6',
+            image: 'debian:13.7-slim@sha256:a99cfc517144bc59b1978475ec53b46ecabec7e43635402ee5b77cc54cd1b20a',
             imagePullPolicy: 'IfNotPresent',
             command: ['/bin/bash', '/launcher/runtime-launcher.sh'],
             env: [

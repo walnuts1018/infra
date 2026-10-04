@@ -49,4 +49,4 @@ for name in resolv.conf hosts hostname; do
   mount --bind "$source_path" "$target_path"
 done
 
-exec /usr/bin/chroot "$sysroot" /init
+exec /usr/sbin/chroot "$sysroot" /init
