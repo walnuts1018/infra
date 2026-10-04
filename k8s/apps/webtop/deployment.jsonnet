@@ -39,6 +39,7 @@ local launcherConfig = import 'launcher-configmap.jsonnet';
             imagePullPolicy: 'IfNotPresent',
             command: ['/bin/bash', '/launcher/runtime-launcher.sh'],
             env: [
+              { name: 'HOME', value: '/config' },
               { name: 'PUID', value: '1000' },
               { name: 'PGID', value: '1000' },
               { name: 'TZ', value: 'Asia/Tokyo' },
