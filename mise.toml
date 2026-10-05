@@ -7,7 +7,7 @@ go-jsonnet = "0.22.0"
 tanka = "0.39.0"
 jsonnet-bundler = "0.6.0"
 coder = "2.36.5"
-kubectl = "1.37.0"
+kubectl = "1.37.1"
 trivy = "0.75.0"
 
 [tasks.build-infrautil]
