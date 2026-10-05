@@ -49,7 +49,7 @@ local readSecretName = (import '../../components/seaweedfs-s3-credentials.libson
         initContainers: [
           (import '../../components/container.libsonnet') {
             name: 'envoy-s3-proxy',
-            image: 'docker.io/envoyproxy/envoy:distroless-v1.39.0',
+            image: 'docker.io/envoyproxy/envoy:distroless-v1.39.0@sha256:7877ad87afd7459e1bd2a077ff601fec7c93aeecd62e71664560d96328c62cf4',
             imagePullPolicy: 'IfNotPresent',
             restartPolicy: 'Always',
             command: ['envoy'],
