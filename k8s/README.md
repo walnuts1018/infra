@@ -39,7 +39,6 @@ Kubernetes クラスタに適用される Manifest 群です。
 | lemon    | Lenovo IdeaPad 5 15ITL05      | Intel Tiger Lake (8 threads)           | 16GB   | Samsung MZALQ512HALU 512GB                        | Ubuntu 24.04 LTS | ○           |
 | rusk     | HP ProLiant DL120 Gen9        | Intel (20 threads)                     | 32GB   | HP Smart Array 論理ドライブ(OS/TopoLVM)           | Ubuntu 26.04 |              |
 
-
 ## 稼働サービス
 
 ### システム・インフラ
