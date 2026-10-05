@@ -34,7 +34,7 @@ function(app)
           containers: [
             (import '../../container.libsonnet') {
               name: 'processing-reconciler',
-              image: 'ghcr.io/walnuts1018/picca/processing-reconciler:v0.0.96@sha256:078da238520fccbcf038082091bbc5c8ec61347deff3a83239af12aebd18b49a',
+              image: 'ghcr.io/walnuts1018/picca/processing-reconciler:v0.0.96@sha256:9d7a83e7af5bf50909c559098cbdf86eb8d0e39e52d1c54ecd01447163727ba2',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
