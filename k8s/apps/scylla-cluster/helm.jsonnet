@@ -12,6 +12,10 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
       repository: 'scylladb/scylla',
       tag: '2025.4.10',  // TODO: Operatorのサポートバージョンがあるので、手動で指定するのをやめる？
     },
+    agentImage: {
+      repository: 'scylladb/scylla-manager-agent',
+      tag: '3.12.1@sha256:b04eedb439652d1c949dead49de4837cf3f2a3656c8ecc5f574c340556da7673',
+    },
     datacenter: 'iwakura',
     racks: [
       {
