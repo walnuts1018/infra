@@ -1,12 +1,13 @@
 function(
   clusterName='kurumi',
-) std.mergePatch((import '_base.libsonnet')(
+) std.mergePatch((import '../collector.libsonnet')(
   clusterName,
 ), {
   metadata: {
     name: 'daemonset',
   },
   spec: {
+    serviceAccount: (import 'sa.jsonnet').metadata.name,
     mode: 'daemonset',
     config: {
       receivers: {

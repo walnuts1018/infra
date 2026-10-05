@@ -5,7 +5,7 @@ function(
   kind: 'OpenTelemetryCollector',
   spec: {
     managementState: 'managed',
-    serviceAccount: (import '../sa.jsonnet').metadata.name,
+    serviceAccount: (import 'sa.jsonnet').metadata.name,
     image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.162.0',
     config: {
       processors: {

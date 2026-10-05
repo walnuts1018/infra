@@ -1,6 +1,6 @@
 function(
   clusterName='kurumi',
-) std.mergePatch((import '_base.libsonnet')(
+) std.mergePatch((import '../collector.libsonnet')(
   clusterName,
 ), {
   metadata: {
