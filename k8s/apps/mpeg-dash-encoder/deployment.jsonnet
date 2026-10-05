@@ -19,6 +19,7 @@ local externalSecret = import 'external-secret.jsonnet';
         labels: labels(app.name),
       },
       spec: {
+        automountServiceAccountToken: false,
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'mpeg-dash-encoder',
