@@ -10,7 +10,7 @@ function(enableServiceMonitor=true) (import '../../components/helm.libsonnet') {
     developerMode: true,
     scyllaImage: {
       repository: 'scylladb/scylla',
-      tag: '2026.1.14',  // TODO: Operatorのサポートバージョンがあるので、手動で指定するのをやめる？
+      tag: '2026.2.8',  // TODO: Operatorのサポートバージョンがあるので、手動で指定するのをやめる？
     },
     agentImage: {
       repository: 'scylladb/scylla-manager-agent',
