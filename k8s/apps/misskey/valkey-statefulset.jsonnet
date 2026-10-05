@@ -37,6 +37,12 @@ local valkeyLabels = labels(app.name + '-valkey');
             args: [
               '--maxmemory-policy',
               'noeviction',
+              // Keep the unreadable dump.rdb intact while Valkey writes a fresh snapshot.
+              '--dbfilename',
+              'dump-recovered.rdb',
+              // Avoid unloadable RDB snapshots caused by the 9.1.2 compression race.
+              '--rdbcompression',
+              'no',
               '--requirepass',
               '$(REDIS_PASSWORD)',
             ],
