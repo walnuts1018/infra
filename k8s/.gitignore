@@ -4,3 +4,4 @@ secrets.*
 ./tmp
 
 snapshots/
+trivy-config-report.json

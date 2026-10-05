@@ -1,0 +1,11 @@
+[mcp_servers.grafana]
+command = "mise"
+args = [
+  "exec",
+  "--",
+  "mcp-grafana",
+  "--usage-stats=disabled",
+  "-t",
+  "stdio",
+]
+startup_timeout_sec = 60

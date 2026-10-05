@@ -33,7 +33,7 @@ local updaterSa = import 'updater-sa.jsonnet';
             initContainers: [
               (container) {
                 name: 'rclone-sync',
-                image: 'ghcr.io/rclone/rclone:1.75.1',
+                image: 'ghcr.io/rclone/rclone:1.75.1@sha256:45401ad7410db1d67ffdb58e19059ad20b0d8e0285a60e38bbec55cc1019c7a5',
                 command: ['rclone'],
                 args: [
                   '--config=/config/rclone.conf',
@@ -63,7 +63,7 @@ local updaterSa = import 'updater-sa.jsonnet';
             containers: [
               (container) {
                 name: 'rollout-restart',
-                image: 'registry.k8s.io/kubectl:v1.37.0',
+                image: 'registry.k8s.io/kubectl:v1.37.1',
                 command: ['kubectl'],
                 args: [
                   'rollout',

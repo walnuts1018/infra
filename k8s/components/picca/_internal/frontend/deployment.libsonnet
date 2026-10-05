@@ -1,6 +1,5 @@
 function(app)
   local labels = import '../../../labels.libsonnet';
-  local graphqlSigningSecret = (import '../common/graphql-signing-secret.libsonnet')(app);
   {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
@@ -25,7 +24,7 @@ function(app)
           containers: [
             (import '../../../container.libsonnet') {
               name: 'frontend',
-              image: 'ghcr.io/walnuts1018/picca/frontend:v0.0.49',
+              image: 'ghcr.io/walnuts1018/picca/frontend:v0.0.96@sha256:3e8832b4eda350039d69f50ce53dad6eae40d7f44b5e7e1c0d9231a1c1dd4532',
               imagePullPolicy: 'IfNotPresent',
               env: [
                 {
@@ -55,15 +54,6 @@ function(app)
                 {
                   name: 'OTEL_SERVICE_NAME',
                   value: 'picca-frontend',
-                },
-                {
-                  name: 'PICCA_GRAPHQL_QUERY_SIGNING_SECRET',
-                  valueFrom: {
-                    secretKeyRef: {
-                      name: graphqlSigningSecret.spec.target.name,
-                      key: 'PICCA_GRAPHQL_QUERY_SIGNING_SECRET',
-                    },
-                  },
                 },
               ],
               ports: [
