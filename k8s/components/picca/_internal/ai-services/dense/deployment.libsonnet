@@ -16,7 +16,6 @@ function(app, role='query')
       labels: labels(deploymentName),
     },
     spec: {
-      // モデルイメージを同一ノード上で重複してロードしないよう、更新時は旧Podを先に停止する。
       strategy: { type: 'Recreate' },
       replicas: if isImageWorker then 0 else 1,
       selector: {

@@ -1,6 +1,3 @@
-// Builds SeaweedFS STS config (OIDC providers, trust policies, roles) from
-// the desired-state.json `sts` section.
-
 local policy = import 'policy.libsonnet';
 
 local providerByName(providers, name) = std.filter(
