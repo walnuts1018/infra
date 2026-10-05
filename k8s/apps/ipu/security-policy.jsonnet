@@ -34,7 +34,7 @@ local externalSecret = import 'external-secret.jsonnet';
         accessToken: 'ipu-access-token',
         idToken: 'ipu-id-token',
       },
-      disableTokenEncryption: true,
+      disableTokenEncryption: false,
       forwardAccessToken: false,
       scopes: [
         'openid',
@@ -49,6 +49,7 @@ local externalSecret = import 'external-secret.jsonnet';
         {
           name: 'zitadel',
           issuer: 'https://auth.walnuts.dev',
+          audiences: ['385244306622906793'],
           remoteJWKS: {
             uri: 'https://auth.walnuts.dev/oauth/v2/keys',
           },

@@ -1,5 +1,5 @@
-local serviceAccount = import 'sa.jsonnet';
 local clusterRole = import 'cluster-role.jsonnet';
+local serviceAccount = import 'sa.jsonnet';
 {
   apiVersion: 'rbac.authorization.k8s.io/v1',
   kind: 'ClusterRoleBinding',
