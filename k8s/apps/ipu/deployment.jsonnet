@@ -44,7 +44,7 @@ local envoyConfig = import 'configmap-envoy.jsonnet';
         initContainers: [
           {
             name: 's3-credentials',
-            image: 'docker.io/library/busybox:1.37.0',
+            image: 'docker.io/library/busybox:1.38.0@sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e',
             imagePullPolicy: 'IfNotPresent',
             restartPolicy: 'Always',
             command: ['/bin/sh', '-c'],
