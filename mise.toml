@@ -7,6 +7,8 @@ go-jsonnet = "0.22.0"
 tanka = "0.39.0"
 jsonnet-bundler = "0.6.0"
 coder = "2.36.5"
+kubectl = "1.37.0"
+trivy = "0.75.0"
 
 [tasks.build-infrautil]
 description = "Build infrautil"
@@ -50,6 +52,15 @@ find k8s \\( -name '*.jsonnet' -o -name '*.libsonnet' \\) -type f | xargs jsonne
 description = "Lint k8s apps"
 depends = ["snapshot"]
 run = "kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps"
+
+[tasks.trivy-config]
+description = "Scan rendered Kubernetes manifests with Trivy"
+depends = ["snapshot"]
+run = "trivy config k8s/snapshots"
+
+[tasks.trivy-config-report]
+description = "Write a non-blocking Trivy report for rendered manifests"
+run = "trivy config --exit-code 0 --format json --output k8s/trivy-config-report.json k8s/snapshots"
 
 [tasks.terraform]
 run = "terraform -chdir=terraform"

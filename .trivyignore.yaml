@@ -1,23 +1,11 @@
 misconfigurations:
-- id: KSV017
-  paths:
-  - "k8s/apps/machine-status-api/deployment.yaml"
-  statement: 特定のコンテナはPrivilegedを許可する
-- id: KSV023
-  paths:
-  - "k8s/apps/samba/deployment.yaml"
-  statement: 特定のコンテナはホストマウントを許可する
-- id: AVD-KSV-0109
-  statement: Disable "ConfigMap with secrets" as there are many false positives.
-- id: AVD-KSV-01010
-  statement: Disable "ConfigMap with sensitive content" as there are many false positives.
-- id: KSV022
-  paths:
-  - "k8s/helm/cilium-helm.yaml"
-  statement: accept capabilities.add in cilium
-- id: AVD-KSV-0022
-  statement: "`NET_BIND_SERVICE` should be added to the capabilities.add list in the securityContext"
-- id: AVD-KSV-0020
-  statement: runAsUserのチェックは要らない
-- id: AVD-KSV-0021
-  statement: runAsGroupのチェックは要らない
+  - id: KSV-0017
+    paths:
+      - apps/actions-runners/runners.yaml
+    statement: ARCのDocker-in-Dockerは現在のrunner実行条件で`privileged`を必要とするため維持する。
+    expired_at: 2027-01-31
+  - id: KSV-0017
+    paths:
+      - apps/mpeg-dash-encoder/deployment.yaml
+    statement: mpeg-dash-encoderのimage tagに対応するsourceはQSVを選択して`h264_qsv`と`scale_qsv`を使用する。GPU canaryでnon-privilegedのQSVを実証できていないため`privileged`を維持する。
+    expired_at: 2027-01-31

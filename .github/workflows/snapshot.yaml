@@ -97,6 +97,17 @@ jobs:
         run: |
           kubeconform -ignore-missing-schemas -strict -summary ./k8s/snapshots/apps
 
+      - name: Generate Trivy config report
+        run: mise run trivy-config-report
+
+      - name: Upload Trivy config report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          if-no-files-found: error
+          name: trivy-config-report
+          path: k8s/trivy-config-report.json
+          retention-days: 14
+
   # auto merge用
   # auto megeはskipもsuccessとみなす
   status-check:
