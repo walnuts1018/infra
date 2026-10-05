@@ -49,7 +49,7 @@ local externalSecret = import 'external-secret.jsonnet';
         {
           name: 'zitadel',
           issuer: 'https://auth.walnuts.dev',
-          audiences: ['385244306220253385'],
+          audiences: ['385244306622906793'],
           remoteJWKS: {
             uri: 'https://auth.walnuts.dev/oauth/v2/keys',
           },
