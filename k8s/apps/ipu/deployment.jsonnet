@@ -1,6 +1,6 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
-local envoyConfig = import 'configmap-envoy.jsonnet';
+local envoyConfig = import 'configmap.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -24,9 +24,6 @@ local envoyConfig = import 'configmap-envoy.jsonnet';
     template: {
       metadata: {
         labels: labels(app.name),
-        annotations: {
-          'checksum/config': std.md5(envoyConfig.data['envoy.yaml']),
-        },
       },
       spec: {
         serviceAccountName: (import 'sa.jsonnet').metadata.name,
@@ -41,60 +38,6 @@ local envoyConfig = import 'configmap-envoy.jsonnet';
             type: 'RuntimeDefault',
           },
         },
-        initContainers: [
-          {
-            name: 's3-credentials',
-            image: 'docker.io/library/busybox:1.37.0',
-            imagePullPolicy: 'IfNotPresent',
-            restartPolicy: 'Always',
-            command: ['/bin/sh', '-c'],
-            args: [
-              |||
-                set -eu
-                umask 077
-
-                credentials_dir=/var/run/aws
-                credentials_file="${credentials_dir}/credentials"
-                secret_dir=/var/run/s3-credentials
-
-                while true; do
-                  access_key="$(cat "${secret_dir}/AWS_ACCESS_KEY_ID" 2>/dev/null || true)"
-                  secret_key="$(cat "${secret_dir}/AWS_SECRET_ACCESS_KEY" 2>/dev/null || true)"
-                  if [ -n "${access_key}" ] && [ -n "${secret_key}" ]; then
-                    printf '[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n' "${access_key}" "${secret_key}" > "${credentials_file}.tmp"
-                    chmod 0640 "${credentials_file}.tmp"
-                    mv -f "${credentials_file}.tmp" "${credentials_file}"
-                  fi
-                  sleep 30
-                done
-              |||,
-            ],
-            startupProbe: {
-              exec: {
-                command: ['/bin/sh', '-c', 'test -s /var/run/aws/credentials'],
-              },
-              periodSeconds: 2,
-              failureThreshold: 90,
-            },
-            securityContext: {
-              allowPrivilegeEscalation: false,
-              capabilities: { drop: ['ALL'] },
-              readOnlyRootFilesystem: true,
-              runAsNonRoot: true,
-              runAsUser: 65532,
-              runAsGroup: 65532,
-            },
-            resources: {
-              requests: { cpu: '5m', memory: '64Mi' },
-              limits: { memory: '256Mi' },
-            },
-            volumeMounts: [
-              { name: 's3-credentials', mountPath: '/var/run/s3-credentials', readOnly: true },
-              { name: 'aws-credentials', mountPath: '/var/run/aws' },
-              { name: 'tmp', mountPath: '/tmp' },
-            ],
-          },
-        ],
         containers: [
           {
             name: 'envoy',
@@ -102,6 +45,26 @@ local envoyConfig = import 'configmap-envoy.jsonnet';
             imagePullPolicy: 'IfNotPresent',
             command: ['envoy'],
             args: ['-c', '/etc/envoy/envoy.yaml'],
+            env: [
+              {
+                name: 'AWS_ACCESS_KEY_ID',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: app.name + '-s3-credentials',
+                    key: 'AWS_ACCESS_KEY_ID',
+                  },
+                },
+              },
+              {
+                name: 'AWS_SECRET_ACCESS_KEY',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: app.name + '-s3-credentials',
+                    key: 'AWS_SECRET_ACCESS_KEY',
+                  },
+                },
+              },
+            ],
             ports: [
               {
                 name: 'http',
@@ -144,7 +107,6 @@ local envoyConfig = import 'configmap-envoy.jsonnet';
                 mountPath: '/etc/envoy',
                 readOnly: true,
               },
-              { name: 'aws-credentials', mountPath: '/var/run/aws', readOnly: true },
               { name: 'tmp', mountPath: '/tmp' },
             ],
           },
@@ -154,15 +116,7 @@ local envoyConfig = import 'configmap-envoy.jsonnet';
             name: 'envoy-config',
             configMap: { name: envoyConfig.metadata.name },
           },
-          {
-            name: 'aws-credentials',
-            emptyDir: { medium: 'Memory' },
-          },
           { name: 'tmp', emptyDir: {} },
-          {
-            name: 's3-credentials',
-            secret: { secretName: app.name + '-s3-credentials' },
-          },
         ],
       },
     },
