@@ -1,5 +1,10 @@
 (import '../../components/external-secret.libsonnet') {
   name: (import 'app.json5').name,
+  metadata+: {
+    annotations: {
+      'argocd.argoproj.io/sync-wave': '-2',
+    },
+  },
   data: [
     {
       secretKey: 'client-id',
@@ -13,13 +18,6 @@
       remoteRef: {
         key: 'terraform-external-secrets',
         property: 'ipu-client-secret',
-      },
-    },
-    {
-      secretKey: 'session-secret',
-      remoteRef: {
-        key: 'ipu-oauth2-proxy',
-        property: 'cookie-secret',
       },
     },
   ],

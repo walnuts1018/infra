@@ -20,11 +20,6 @@ local scyllaClientCertExternalSecret = import 'scylla-client-cert-external-secre
         labels: labels(app.name),
       },
       spec: {
-        imagePullSecrets: [
-          {
-            name: 'ghcr-login-secret',
-          },
-        ],
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'apiserver',

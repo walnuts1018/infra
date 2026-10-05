@@ -3,7 +3,7 @@ local app = import 'app.json5';
 local service = import 'service.jsonnet';
 
 local route(listener, port) = {
-  apiVersion: 'gateway.networking.k8s.io/v1alpha2',
+  apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'TCPRoute',
   metadata: {
     name: 'stalwart-' + listener,

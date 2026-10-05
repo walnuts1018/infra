@@ -2,7 +2,7 @@
   apiVersion: 'rbac.authorization.k8s.io/v1',
   kind: 'ClusterRole',
   metadata: {
-    name: (import 'app.json5').name,
+    name: (import '../app.json5').name,
   },
   rules: [
     {
@@ -15,9 +15,7 @@
         'namespaces/status',
         'nodes',
         'nodes/spec',
-        'nodes/stats',
         'nodes/metrics',
-        'nodes/proxy',
         'pods',
         'pods/status',
         'replicationcontrollers',
@@ -34,6 +32,18 @@
         'get',
         'watch',
         'list',
+      ],
+    },
+    {
+      apiGroups: [
+        '',
+      ],
+      resources: [
+        'nodes/stats',
+        'nodes/pods',
+      ],
+      verbs: [
+        'get',
       ],
     },
     {

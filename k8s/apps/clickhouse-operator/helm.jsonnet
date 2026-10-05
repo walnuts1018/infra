@@ -3,6 +3,6 @@ local app = import 'app.json5';
   name: app.name,
   namespace: app.namespace,
   ociChartURL: 'ghcr.io/clickhouse/clickhouse-operator-helm',
-  targetRevision: '0.0.6',
+  targetRevision: '0.0.8',
   values: (importstr 'values.yaml'),
 }

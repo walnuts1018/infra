@@ -23,7 +23,7 @@ local app = import 'app.json5';
             initContainers: [
               (container) {
                 name: 'copy-rclone',
-                image: 'ghcr.io/rclone/rclone:1.75.1',
+                image: 'ghcr.io/rclone/rclone:1.75.1@sha256:45401ad7410db1d67ffdb58e19059ad20b0d8e0285a60e38bbec55cc1019c7a5',
                 command: [
                   '/bin/sh',
                   '-c',
