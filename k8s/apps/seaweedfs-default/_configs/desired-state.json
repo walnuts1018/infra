@@ -548,8 +548,7 @@
           {
             "effect": "Allow",
             "actions": [
-              "s3:Get*",
-              "s3:List*"
+              "s3:GetObject"
             ],
             "buckets": [
               "ipu"

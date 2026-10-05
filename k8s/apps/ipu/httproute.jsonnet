@@ -6,6 +6,9 @@ local app = import 'app.json5';
   metadata: {
     name: app.name,
     namespace: app.namespace,
+    annotations: {
+      'argocd.argoproj.io/sync-wave': '0',
+    },
   },
   spec: {
     parentRefs: [
@@ -21,8 +24,7 @@ local app = import 'app.json5';
       {
         backendRefs: [
           {
-            name: 'keda-add-ons-http-interceptor-proxy',
-            namespace: 'keda',
+            name: app.name,
             port: 8080,
           },
         ],
