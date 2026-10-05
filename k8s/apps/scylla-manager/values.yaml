@@ -12,7 +12,7 @@ serviceAccount:
 scylla:
   developerMode: true
   scyllaImage:
-    tag: 2026.1.14
+    tag: 2026.2.8
   agentImage:
     tag: 3.12.1@sha256:b04eedb439652d1c949dead49de4837cf3f2a3656c8ecc5f574c340556da7673
   datacenter: iwakura
