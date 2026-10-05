@@ -15,6 +15,10 @@ local valkeyLabels = labels(app.name + '-valkey');
   spec: {
     serviceName: app.name + '-valkey-headless',
     replicas: 1,
+    persistentVolumeClaimRetentionPolicy: {
+      whenDeleted: 'Retain',
+      whenScaled: 'Retain',
+    },
     selector: {
       matchLabels: valkeyLabels,
     },
