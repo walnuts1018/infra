@@ -34,7 +34,7 @@ local app = import 'app.json5';
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'ghcr.io/walnuts1018/walnuts.dev:38d80028a32b1defa3a2e1a8d3421912a45a1d1d-728',
+            image: 'ghcr.io/walnuts1018/walnuts.dev:ce7867230d13dc16794d4689015b7e8de541db5b-730',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {

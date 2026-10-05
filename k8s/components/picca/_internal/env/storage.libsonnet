@@ -24,10 +24,6 @@ function(app) [
     value: 'https://' + app.name + '.seaweedfs.walnuts.dev',
   },
   {
-    name: 'IMGPROXY_PUBLIC_URL',
-    value: 'https://imgproxy-' + app.name + '.walnuts.dev',
-  },
-  {
     name: 'IMGPROXY_BUCKET',
     value: app.name,
   },

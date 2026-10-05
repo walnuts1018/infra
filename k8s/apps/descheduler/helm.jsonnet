@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'descheduler',
   repoURL: 'https://kubernetes-sigs.github.io/descheduler/',
-  targetRevision: '0.36.0',
+  targetRevision: '0.37.0',
   values: (importstr 'values.yaml'),
 }

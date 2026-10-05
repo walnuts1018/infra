@@ -1,18 +1,17 @@
 function(app)
   local labels = import '../../../../labels.libsonnet';
+  local name = app.name + '-ocr-worker';
   {
     apiVersion: 'v1',
     kind: 'Service',
     metadata: {
-      name: app.name + '-ocr-service',
+      name: name,
       namespace: app.namespace,
-      labels: labels(app.name + '-ocr-service'),
+      labels: labels(name),
     },
     spec: {
-      selector: labels(app.name + '-ocr-service'),
-      ports: [
-        { name: 'http', port: 8003, targetPort: 'http' },
-      ],
+      selector: labels(name),
+      ports: [{ name: 'http', port: 8003, targetPort: 'http' }],
       type: 'ClusterIP',
     },
   }

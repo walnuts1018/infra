@@ -8,14 +8,14 @@ local app = import 'app.json5';
     namespace: app.namespace,
     annotations: {
       'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
-      'rabbitmq.com/topology-allowed-namespaces': 'picca,picca-dev',
+      'rabbitmq.com/topology-allowed-namespaces': 'picca,picca-dev,beast',
     },
     labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
     affinity: storage.avoidSlowNodeAffinity,
     replicas: 1,
-    image: 'docker.io/rabbitmq:4.3.5-management',
+    image: 'docker.io/rabbitmq:4.3.6-management',
     persistence: {
       storage: '10Gi',
     },

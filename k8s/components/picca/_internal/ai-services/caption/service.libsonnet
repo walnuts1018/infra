@@ -1,18 +1,17 @@
 function(app)
   local labels = import '../../../../labels.libsonnet';
+  local name = app.name + '-caption-worker';
   {
     apiVersion: 'v1',
     kind: 'Service',
     metadata: {
-      name: app.name + '-caption-service',
+      name: name,
       namespace: app.namespace,
-      labels: labels(app.name + '-caption-service'),
+      labels: labels(name),
     },
     spec: {
-      selector: labels(app.name + '-caption-service'),
-      ports: [
-        { name: 'http', port: 8004, targetPort: 'http' },
-      ],
+      selector: labels(name),
+      ports: [{ name: 'http', port: 8004, targetPort: 'http' }],
       type: 'ClusterIP',
     },
   }

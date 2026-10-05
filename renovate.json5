@@ -43,8 +43,8 @@
       ],
       matchStringsStrategy: 'combination',
       matchStrings: [
-        'ociChartURL:\\s+["\']?(?<packageName>\\S+)["\']?',
-        'targetRevision:\\s+["\']?(?<currentValue>\\S+)["\']?',
+        'ociChartURL:\\s+["\']?(?<packageName>[^\\s,"\']+)["\']?',
+        'targetRevision:\\s+["\']?(?<currentValue>[^\\s,"\']+)["\']?',
       ],
       datasourceTemplate: 'docker',
     },
@@ -78,6 +78,22 @@
     },
   ],
   packageRules: [
+    {
+      description: 'Pin digests for Kubernetes container images',
+      matchDatasources: [
+        'docker'
+      ],
+      matchManagers: [
+        'kubernetes'
+      ],
+      pinDigests: true,
+    },
+    {
+      matchPackageNames: [
+        'lscr.io/linuxserver/webtop',
+      ],
+      enabled: false,
+    },
     {
       groupName: 'netbird',
       matchPackageNames: [

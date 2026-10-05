@@ -8,7 +8,7 @@ function(app, useSuffix=true)
     valkeySecret: valkeySecret,
     oidcSecret: (import '_internal/oidc/external-secret.libsonnet')(app, useSuffix),
     rabbitmqSecret: rabbitmqSecret,
-    graphqlSigningSecret: (import '_internal/common/graphql-signing-secret.libsonnet')(app, useSuffix),
+    albumCapabilitySecret: (import '_internal/common/album-capability-secret.libsonnet')(app, useSuffix),
     imgproxySecret: (import '_internal/imgproxy/external-secret.libsonnet')(app, useSuffix),
 
     configmapPlans: (import '_internal/common/plans/configmap.libsonnet')(app, useSuffix),
@@ -16,6 +16,7 @@ function(app, useSuffix=true)
     networkpolicy: (import '_internal/networkpolicy.libsonnet')(app),
     valkeyCluster: (import '_internal/valkey/cluster.libsonnet')(app, valkeySecret.spec.target.name),
     httprouteMain: (import '_internal/httproute/main.libsonnet')(app),
+    httprouteRateLimit: (import '_internal/httproute/rate-limit.libsonnet')(app),
     httprouteRedirect: (import '_internal/httproute/redirect.libsonnet')(app),
     httprouteImgproxy: (import '_internal/httproute/imgproxy.libsonnet')(app),
     scyllaClientCertSa: (import '_internal/scylla/client-cert-sa.libsonnet')(app),

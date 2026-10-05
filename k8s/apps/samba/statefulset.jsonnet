@@ -27,7 +27,7 @@ local app = import 'app.json5';
         },
         containers: [
           (import '../../components/container.libsonnet') {
-            image: 'ghcr.io/servercontainers/samba:a3.24.1-s4.23.8-r0',
+            image: 'ghcr.io/servercontainers/samba:a3.24.2-s4.23.8-r0',
             imagePullPolicy: 'IfNotPresent',
             name: 'samba',
             env: [
@@ -111,13 +111,6 @@ local app = import 'app.json5';
           },
         ],
         volumes: [
-          {
-            name: 'samba-local-dir',
-            hostPath: {
-              path: '/mnt/data/share',
-              type: 'Directory',
-            },
-          },
           {
             name: 'root',
             persistentVolumeClaim: {

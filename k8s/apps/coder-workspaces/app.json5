@@ -1,0 +1,7 @@
+{
+  name: "coder-workspaces",
+  namespace: "coder-workspaces",
+  clusters: {
+    kurumi: {},
+  },
+}

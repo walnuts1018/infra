@@ -26,7 +26,7 @@ local app = import 'app.json5';
           (import '../../components/container.libsonnet') {
             name: 'tailscale',
             imagePullPolicy: 'IfNotPresent',
-            image: 'ghcr.io/tailscale/tailscale:v1.102.3',
+            image: 'ghcr.io/tailscale/tailscale:v1.102.5@sha256:c507f3a2a6ab1cabd8d809b98edeb41edbd5c3fb6ad9632ffd098b4c7d0b4065',
             env: [
               {
                 name: 'TS_KUBE_SECRET',

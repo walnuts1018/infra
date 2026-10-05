@@ -65,7 +65,7 @@ ingester:
               {{- include "tempo.selectorLabels" (dict "ctx" . "component" "ingester") | nindent 14 }}
           topologyKey: topology.kubernetes.io/zone
   config:
-    replication_factor: 3
+    replication_factor: 1
 
 metricsGenerator:
   enabled: true
