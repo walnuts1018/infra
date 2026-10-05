@@ -1,88 +1,47 @@
 function(
   clusterName='kurumi',
-) std.mergePatch((import '../collector.libsonnet')(
-  clusterName,
-), {
+) {
+  apiVersion: 'opentelemetry.io/v1beta1',
+  kind: 'OpenTelemetryCollector',
   metadata: {
     name: 'daemonset',
   },
   spec: {
+    managementState: 'managed',
+    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.162.0',
     serviceAccount: (import 'sa.jsonnet').metadata.name,
     mode: 'daemonset',
     config: {
-      receivers: {
-        file_log: {
-          include_file_path: true,
-          include: [
-            '/var/log/pods/*/*/*.log',
-          ],
-          operators: [
-            {
-              id: 'container-parser',
-              type: 'container',
-            },
-          ],
-        },
-        host_metrics: {
-          collection_interval: '10s',
-          scrapers: {
-            cpu: {
-              metrics: {
-                'system.cpu.logical.count': {
-                  enabled: true,
-                },
-              },
-            },
-            load: null,
-            memory: {
-              metrics: {
-                'system.memory.limit': {
-                  enabled: true,
-                },
-                'system.linux.memory.available': {
-                  enabled: true,
-                },
-              },
-            },
-            disk: null,
-            filesystem: null,
-            network: null,
-            system: {
-              metrics: {
-                'system.uptime': {
-                  enabled: true,
-                },
-              },
-            },
-          },
-        },
-        kubelet_stats: {
-          collection_interval: '10s',
-          auth_type: 'serviceAccount',
-          endpoint: '${env:K8S_NODE_IP}:10250',
-          insecure_skip_verify: true,
-          extra_metadata_labels: [
-            'k8s.volume.type',
-          ],
-          k8s_api_config: {
-            auth_type: 'serviceAccount',
-          },
-          metric_groups: [
-            'node',
-            'pod',
-            'container',
-            'volume',
-          ],
-        },
-        journald: {
-          directory: '/var/log/journal',
-          units: [
-            'kubelet.service',
-          ],
-          priority: 'info',
-        },
-      },
       processors: {
+        'resource/cluster_name': {
+          attributes: [
+            {
+              key: 'k8s.cluster.name',
+              action: 'upsert',
+              value: clusterName,
+            },
+          ],
+        },
+        'transform/add_sample_key': {
+          error_mode: 'ignore',
+          log_statements: [
+            'set(log.attributes["_sample_key"], UUID())',
+          ],
+        },
+        'probabilistic_sampler/mackerel': {
+          sampling_percentage: 1,
+          mode: 'hash_seed',
+          attribute_source: 'record',
+          from_attribute: '_sample_key',
+          hash_seed: 1018,
+          fail_closed: true,
+        },
+        'transform/remove_sample_key': {
+          error_mode: 'ignore',
+          log_statements: [
+            'delete_key(log.attributes, "_sample_key")',
+          ],
+        },
         memory_limiter: {
           check_interval: '1s',
           limit_mib: 2000,
@@ -174,6 +133,171 @@ function(
               value: 'journald',
             },
           ],
+        },
+      },
+      exporters: {
+        'otlp_grpc/tempo': {
+          endpoint: 'tempo-gateway.tempo.svc.cluster.local:4317',
+          tls: {
+            insecure: true,
+          },
+          sending_queue: {
+            batch: {
+              flush_timeout: '10s',
+              min_size: 5000,
+              max_size: 5000,
+            },
+          },
+        },
+        'otlp_http/loki': {
+          endpoint: 'http://loki-gateway.loki.svc.cluster.local/otlp',
+          tls: {
+            insecure: true,
+          },
+          timeout: '5s',
+          retry_on_failure: {
+            enabled: true,
+            initial_interval: '1s',
+            max_interval: '30s',
+            max_elapsed_time: '0s',
+          },
+          sending_queue: {
+            enabled: true,
+            num_consumers: 4,
+            sizer: 'items',
+            queue_size: 50000,
+            block_on_overflow: true,
+            wait_for_result: false,
+            batch: {
+              sizer: 'bytes',
+              flush_timeout: '500ms',
+              min_size: 524288,  // 512 KiB
+              max_size: 1048576,  // 1 MiB
+            },
+          },
+        },
+        'otlp_http/mackerel': {
+          endpoint: 'https://otlp-vaxila.mackerelio.com',
+          headers: {
+            Accept: '*/*',
+            'Mackerel-Api-Key': '${env:MACKEREL_APIKEY}',
+          },
+          sending_queue: {
+            batch: {
+              flush_timeout: '10s',
+              min_size: 5000,
+              max_size: 5000,
+            },
+          },
+        },
+        'otlp_grpc/mackerel': {
+          endpoint: 'otlp.mackerelio.com:4317',
+          compression: 'gzip',
+          headers: {
+            'Mackerel-Api-Key': '${env:MACKEREL_APIKEY}',
+          },
+          sending_queue: {
+            batch: {
+              flush_timeout: '10s',
+              min_size: 5000,
+              max_size: 5000,
+            },
+          },
+        },
+        'prometheus_remote_write/victoriametrics': {
+          endpoint: 'http://victoria-metrics-victoria-metrics-cluster-vminsert.victoria-metrics.svc.cluster.local:8480/insert/0/prometheus/api/v1/write',
+          timeout: '30s',
+          resource_to_telemetry_conversion: {
+            enabled: true,
+          },
+        },
+        'otlp_grpc/pyroscope': {
+          endpoint: 'http://pyroscope.pyroscope.svc.cluster.local:4317',
+          tls: {
+            insecure: true,
+          },
+          sending_queue: {
+            batch: {
+              flush_timeout: '10s',
+              min_size: 5000,
+              max_size: 5000,
+            },
+          },
+        },
+        file: {
+          path: '/tmp/debug.json',
+          format: 'json',
+        },
+        debug: {
+          verbosity: 'detailed',
+        },
+      },
+      receivers: {
+        file_log: {
+          include_file_path: true,
+          include: [
+            '/var/log/pods/*/*/*.log',
+          ],
+          operators: [
+            {
+              id: 'container-parser',
+              type: 'container',
+            },
+          ],
+        },
+        host_metrics: {
+          collection_interval: '10s',
+          scrapers: {
+            cpu: {
+              metrics: {
+                'system.cpu.logical.count': {
+                  enabled: true,
+                },
+              },
+            },
+            memory: {
+              metrics: {
+                'system.memory.limit': {
+                  enabled: true,
+                },
+                'system.linux.memory.available': {
+                  enabled: true,
+                },
+              },
+            },
+            system: {
+              metrics: {
+                'system.uptime': {
+                  enabled: true,
+                },
+              },
+            },
+          },
+        },
+        kubelet_stats: {
+          collection_interval: '10s',
+          auth_type: 'serviceAccount',
+          endpoint: '${env:K8S_NODE_IP}:10250',
+          insecure_skip_verify: true,
+          extra_metadata_labels: [
+            'k8s.volume.type',
+          ],
+          k8s_api_config: {
+            auth_type: 'serviceAccount',
+          },
+          metric_groups: [
+            'node',
+            'pod',
+            'container',
+            'volume',
+          ],
+        },
+        journald: {
+          directory: '/var/log/journal',
+          units: [
+            'kubelet.service',
+          ],
+          priority: 'info',
         },
       },
       service: {
@@ -371,4 +495,4 @@ function(
       runAsGroup: 0,
     },
   },
-})
+}
