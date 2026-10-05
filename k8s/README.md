@@ -139,7 +139,6 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **komga**: 電子書籍管理 / <https://komga.org/>
 - **machine-status-api**: GPIOで物理サーバーを起動するためのAPIサーバー
 - **misskey**: <https://misskey.walnuts.dev>
-- **mpeg-dash-encoder**: MPEG-DASH のエンコードを行うAPI サーバー
 - **mucaron**: 音楽アプリ
 - **oekaki-dengon-game**: NF2023で開催したお絵描き伝言ゲーム / <https://oekaki.walnuts.dev/public>
 - **openchokin**: 家計簿アプリ
