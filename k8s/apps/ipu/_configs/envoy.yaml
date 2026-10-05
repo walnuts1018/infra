@@ -185,12 +185,7 @@ static_resources:
                 use_unsigned_payload: true
                 credential_provider:
                   custom_credential_provider_chain: true
-                  credentials_file_provider:
-                    credentials_data_source:
-                      filename: /var/run/aws/credentials
-                      watched_directory:
-                        path: /var/run/aws
-                    profile: default
+                  environment_credential_provider: {}
             - name: envoy.filters.http.upstream_codec
               typed_config:
                 "@type": type.googleapis.com/envoy.extensions.filters.http.upstream_codec.v3.UpstreamCodec

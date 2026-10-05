@@ -4,8 +4,3 @@ misconfigurations:
       - apps/actions-runners/runners.yaml
     statement: ARCのDocker-in-Dockerは現在のrunner実行条件で`privileged`を必要とするため維持する。
     expired_at: 2027-01-31
-  - id: KSV-0017
-    paths:
-      - apps/mpeg-dash-encoder/deployment.yaml
-    statement: mpeg-dash-encoderのimage tagに対応するsourceはQSVを選択して`h264_qsv`と`scale_qsv`を使用する。GPU canaryでnon-privilegedのQSVを実証できていないため`privileged`を維持する。
-    expired_at: 2027-01-31
