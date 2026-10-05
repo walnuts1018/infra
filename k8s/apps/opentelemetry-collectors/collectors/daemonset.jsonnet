@@ -291,12 +291,6 @@ function(
         },
       },
       {
-        name: 'varlibdockercontainers',
-        hostPath: {
-          path: '/var/lib/docker/containers',
-        },
-      },
-      {
         name: 'varlogjournal',
         hostPath: {
           path: '/var/log/journal',
@@ -339,11 +333,6 @@ function(
       {
         name: 'varlogpods',
         mountPath: '/var/log/pods',
-        readOnly: true,
-      },
-      {
-        name: 'varlibdockercontainers',
-        mountPath: '/var/lib/docker/containers',
         readOnly: true,
       },
       {
