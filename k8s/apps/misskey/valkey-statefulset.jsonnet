@@ -37,8 +37,10 @@ local valkeyLabels = labels(app.name + '-valkey');
             args: [
               '--maxmemory-policy',
               'noeviction',
-              '--dbfilename',
-              'dump-recovered.rdb',
+              '--appendonly',
+              'yes',
+              '--appendfsync',
+              'everysec',
               '--rdbcompression',
               'no',
               '--requirepass',
