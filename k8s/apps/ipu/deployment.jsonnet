@@ -43,60 +43,35 @@ local envoyConfig = import 'configmap-envoy.jsonnet';
         },
         initContainers: [
           {
-            name: 'sts-credentials',
-            image: 'public.ecr.aws/aws-cli/aws-cli:2.37.9',
+            name: 's3-credentials',
+            image: 'docker.io/library/busybox:1.37.0',
             imagePullPolicy: 'IfNotPresent',
             restartPolicy: 'Always',
-            command: ['/usr/bin/bash', '-c'],
+            command: ['/bin/sh', '-c'],
             args: [
               |||
                 set -eu
-                set -f
                 umask 077
 
-                token_file=/var/run/secrets/sts.seaweedfs.com/serviceaccount/token
                 credentials_dir=/var/run/aws
                 credentials_file="${credentials_dir}/credentials"
-                refresh_seconds=2400
+                secret_dir=/var/run/s3-credentials
 
                 while true; do
-                  token="$(cat "${token_file}")"
-                  if credentials="$(aws sts assume-role-with-web-identity \
-                    --endpoint-url "${AWS_ENDPOINT_URL_STS}" \
-                    --region "${AWS_REGION}" \
-                    --role-arn "${AWS_ROLE_ARN}" \
-                    --role-session-name ipu-envoy \
-                    --web-identity-token "${token}" \
-                    --duration-seconds 3600 \
-                    --no-sign-request \
-                    --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
-                    --output text 2>/dev/null)"; then
-                    old_ifs="${IFS}"
-                    IFS="$(printf '\t')"
-                    set -- ${credentials}
-                    IFS="${old_ifs}"
-                    if [ "$#" -eq 3 ]; then
-                      printf '[default]\naws_access_key_id = %s\naws_secret_access_key = %s\naws_session_token = %s\n' "$1" "$2" "$3" > "${credentials_file}.tmp"
-                      chmod 0640 "${credentials_file}.tmp"
-                      mv -f "${credentials_file}.tmp" "${credentials_file}"
-                      sleep "${refresh_seconds}"
-                    else
-                      sleep 30
-                    fi
-                  else
-                    sleep 30
+                  access_key="$(cat "${secret_dir}/AWS_ACCESS_KEY_ID" 2>/dev/null || true)"
+                  secret_key="$(cat "${secret_dir}/AWS_SECRET_ACCESS_KEY" 2>/dev/null || true)"
+                  if [ -n "${access_key}" ] && [ -n "${secret_key}" ]; then
+                    printf '[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n' "${access_key}" "${secret_key}" > "${credentials_file}.tmp"
+                    chmod 0640 "${credentials_file}.tmp"
+                    mv -f "${credentials_file}.tmp" "${credentials_file}"
                   fi
+                  sleep 30
                 done
               |||,
             ],
-            env: [
-              { name: 'AWS_ENDPOINT_URL_STS', value: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333' },
-              { name: 'AWS_REGION', value: 'us-east-1' },
-              { name: 'AWS_ROLE_ARN', value: 'arn:aws:iam::role/ipu' },
-            ],
             startupProbe: {
               exec: {
-                command: ['/usr/bin/bash', '-c', 'test -s /var/run/aws/credentials'],
+                command: ['/bin/sh', '-c', 'test -s /var/run/aws/credentials'],
               },
               periodSeconds: 2,
               failureThreshold: 90,
@@ -106,7 +81,7 @@ local envoyConfig = import 'configmap-envoy.jsonnet';
               capabilities: { drop: ['ALL'] },
               readOnlyRootFilesystem: true,
               runAsNonRoot: true,
-              runAsUser: 1000,
+              runAsUser: 65532,
               runAsGroup: 65532,
             },
             resources: {
@@ -114,7 +89,7 @@ local envoyConfig = import 'configmap-envoy.jsonnet';
               limits: { memory: '256Mi' },
             },
             volumeMounts: [
-              { name: 'seaweedfs-sts-token', mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount', readOnly: true },
+              { name: 's3-credentials', mountPath: '/var/run/s3-credentials', readOnly: true },
               { name: 'aws-credentials', mountPath: '/var/run/aws' },
               { name: 'tmp', mountPath: '/tmp' },
             ],
@@ -185,18 +160,8 @@ local envoyConfig = import 'configmap-envoy.jsonnet';
           },
           { name: 'tmp', emptyDir: {} },
           {
-            name: 'seaweedfs-sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 86400,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
+            name: 's3-credentials',
+            secret: { secretName: app.name + '-s3-credentials' },
           },
         ],
       },
