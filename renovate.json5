@@ -79,6 +79,12 @@
   ],
   packageRules: [
     {
+      description: 'Pin digests for Kubernetes container images',
+      matchDatasources: ['docker'],
+      matchManagers: ['kubernetes'],
+      pinDigests: true,
+    },
+    {
       matchPackageNames: [
         'lscr.io/linuxserver/webtop',
       ],
