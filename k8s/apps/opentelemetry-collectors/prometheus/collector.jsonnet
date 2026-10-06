@@ -17,6 +17,7 @@ function(
       serviceAccount: (import 'targetallocator-sa.jsonnet').metadata.name,
       prometheusCR: {
         enabled: true,
+        denyFSAccessThroughSMs: true,
         serviceMonitorSelector: {
           matchExpressions: [
             {

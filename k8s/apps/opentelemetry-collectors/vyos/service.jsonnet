@@ -8,6 +8,7 @@
     },
   },
   spec: {
+    loadBalancerSourceRanges: ['192.168.0.1/32'],
     selector: {
       'app.kubernetes.io/component': 'opentelemetry-collector',
       'app.kubernetes.io/instance': 'opentelemetry-collector.vyos',

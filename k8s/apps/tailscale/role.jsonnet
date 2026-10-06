@@ -13,17 +13,6 @@ local app = import 'app.json5';
         '',
       ],
       resources: [
-        'secrets',
-      ],
-      verbs: [
-        'create',
-      ],
-    },
-    {
-      apiGroups: [
-        '',
-      ],
-      resources: [
         'events',
       ],
       verbs: [
@@ -38,22 +27,6 @@ local app = import 'app.json5';
       ],
       resourceNames: [
         'tailscale',
-      ],
-      resources: [
-        'secrets',
-      ],
-      verbs: [
-        'get',
-        'update',
-        'patch',
-      ],
-    },
-    {
-      apiGroups: [
-        '',
-      ],
-      resourceNames: [
-        'tailscale-auth1',
       ],
       resources: [
         'secrets',

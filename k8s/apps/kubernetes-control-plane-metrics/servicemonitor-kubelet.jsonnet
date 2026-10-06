@@ -51,7 +51,12 @@ local authorization = import 'authorization.libsonnet';
         ],
         scheme: 'https',
         tlsConfig: {
-          caFile: '/etc/otel/kubernetes/ca.crt',
+          ca: {
+            configMap: {
+              name: 'kube-root-ca.crt',
+              key: 'ca.crt',
+            },
+          },
           insecureSkipVerify: true,
         },
       },
@@ -127,7 +132,12 @@ local authorization = import 'authorization.libsonnet';
         ],
         scheme: 'https',
         tlsConfig: {
-          caFile: '/etc/otel/kubernetes/ca.crt',
+          ca: {
+            configMap: {
+              name: 'kube-root-ca.crt',
+              key: 'ca.crt',
+            },
+          },
           insecureSkipVerify: true,
         },
         trackTimestampsStaleness: true,
@@ -152,7 +162,12 @@ local authorization = import 'authorization.libsonnet';
         ],
         scheme: 'https',
         tlsConfig: {
-          caFile: '/etc/otel/kubernetes/ca.crt',
+          ca: {
+            configMap: {
+              name: 'kube-root-ca.crt',
+              key: 'ca.crt',
+            },
+          },
           insecureSkipVerify: true,
         },
       },

@@ -20,6 +20,18 @@
     {
       customType: 'regex',
       managerFilePatterns: [
+        '/^\\.github/workflows/build-images\\.yaml$/',
+      ],
+      matchStrings: [
+        'version:\\s+(?<currentValue>v\\d+\\.\\d+\\.\\d+)',
+      ],
+      depNameTemplate: 'docker/buildx',
+      datasourceTemplate: 'github-releases',
+      versioningTemplate: 'semver',
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
         '/^k8s/.*/helm.jsonnet$/',
         '/^k8s/.*/helm.libsonnet$/',
         '/^k8s/.*/helm.yaml$/',
