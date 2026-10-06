@@ -36,15 +36,14 @@ jobs:
         with:
           install_args: go go-jsonnet kubeconform trivy ghalint dyff
 
-      - parallel:
-          - name: Check Jsonnet format
-            run: mise run jsonnet-fmt-check
+      - name: Check Jsonnet format
+        run: mise run jsonnet-fmt-check
 
-          - name: Lint GitHub Actions workflows
-            run: mise run github-actions-lint
+      - name: Lint GitHub Actions workflows
+        run: mise run github-actions-lint
 
-          - name: Generate snapshots
-            run: mise run snapshot
+      - name: Generate snapshots
+        run: mise run snapshot
 
       - name: Check out snapshot base
         id: snapshot-base
@@ -56,23 +55,22 @@ jobs:
           path: snapshot-base
           persist-credentials: false
 
-      - parallel:
-          - name: Validate application manifests
-            run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
+      - name: Validate application manifests
+        run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
 
-          - name: Scan rendered manifests with Trivy
-            run: |
-              if [[ "$GITHUB_EVENT_NAME" == "pull_request" && \
-                -f snapshot-base/trivy.yaml && -f snapshot-base/.trivyignore.yaml ]]; then
-                TRIVY_CONFIG=snapshot-base/trivy.yaml \
-                TRIVY_IGNOREFILE=snapshot-base/.trivyignore.yaml \
-                  mise run trivy-config-report
-              else
-                if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-                  echo "::warning::The main Trivy policy was unavailable; using the pull request policy."
-                fi
-                mise run trivy-config-report
-              fi
+      - name: Scan rendered manifests with Trivy
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" && \
+            -f snapshot-base/trivy.yaml && -f snapshot-base/.trivyignore.yaml ]]; then
+            TRIVY_CONFIG=snapshot-base/trivy.yaml \
+            TRIVY_IGNOREFILE=snapshot-base/.trivyignore.yaml \
+              mise run trivy-config-report
+          else
+            if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+              echo "::warning::The main Trivy policy was unavailable; using the pull request policy."
+            fi
+            mise run trivy-config-report
+          fi
 
       - name: Upload snapshots
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
