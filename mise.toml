@@ -59,6 +59,10 @@ description = "Lint k8s apps"
 depends = ["snapshot"]
 run = "kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps"
 
+[tasks.github-actions-lint]
+description = "Lint GitHub Actions workflows"
+run = "actionlint && ghalint run"
+
 [tasks.trivy-config]
 description = "Scan rendered Kubernetes manifests with Trivy"
 depends = ["snapshot"]
