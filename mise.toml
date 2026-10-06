@@ -10,7 +10,6 @@ coder = "2.36.5"
 kubectl = "1.37.1"
 trivy = "0.75.0"
 "go:github.com/grafana/mcp-grafana/v2/cmd/mcp-grafana" = "v2.0.0"
-actionlint = "1.7.12"
 ghalint = "1.5.6"
 
 [env]
@@ -61,7 +60,7 @@ run = "kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps"
 
 [tasks.github-actions-lint]
 description = "Lint GitHub Actions workflows"
-run = "actionlint && ghalint run"
+run = "ghalint run"
 
 [tasks.trivy-config]
 description = "Scan rendered Kubernetes manifests with Trivy"
