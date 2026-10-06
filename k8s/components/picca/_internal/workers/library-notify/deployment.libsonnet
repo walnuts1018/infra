@@ -34,7 +34,7 @@ function(app)
           containers: [
             (import '../../../../container.libsonnet') {
               name: 'library-notify-worker',
-              image: 'ghcr.io/walnuts1018/picca/library-notify-worker:v0.0.96@sha256:90f42847a53a97054720759d646f672ae7fcbf7ee5d275739fc00d4fd736dd00',
+              image: 'ghcr.io/walnuts1018/picca/library-notify-worker:v0.0.96@sha256:18904f7cc7c8ce5f68a843c86080b76032685e9b31c8cf8ff5b2f638206b220c',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },

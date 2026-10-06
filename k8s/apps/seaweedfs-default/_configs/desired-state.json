@@ -237,6 +237,26 @@
       ]
     },
     {
+      "name": "ipu",
+      "secretTarget": {
+        "namespace": "ipu",
+        "secretName": "ipu-s3-credentials",
+        "accessKeyField": "AWS_ACCESS_KEY_ID",
+        "secretKeyField": "AWS_SECRET_ACCESS_KEY"
+      },
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "s3:GetObject"
+          ],
+          "resources": [
+            "arn:aws:s3:::ipu/*"
+          ]
+        }
+      ]
+    },
+    {
       "name": "maps_read",
       "secretTarget": {
         "namespace": "maps",
@@ -390,11 +410,6 @@
           },
           {
             "claim": "sub",
-            "value": "system:serviceaccount:ipu:ipu",
-            "role": "ipu"
-          },
-          {
-            "claim": "sub",
             "value": "system:serviceaccount:picca:picca",
             "role": "picca"
           },
@@ -543,21 +558,6 @@
         ]
       },
       {
-        "name": "ipu",
-        "statements": [
-          {
-            "effect": "Allow",
-            "actions": [
-              "s3:Get*",
-              "s3:List*"
-            ],
-            "buckets": [
-              "ipu"
-            ]
-          }
-        ]
-      },
-      {
         "name": "maps",
         "statements": [
           {
@@ -692,13 +692,6 @@
         "name": "loki",
         "policies": [
           "loki"
-        ],
-        "provider": "k8s"
-      },
-      {
-        "name": "ipu",
-        "policies": [
-          "ipu"
         ],
         "provider": "k8s"
       },

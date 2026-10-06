@@ -31,7 +31,7 @@ function(app)
           containers: [
             (import '../../../../container.libsonnet') {
               name: 'embedding-worker',
-              image: 'ghcr.io/walnuts1018/picca/embedding-worker:v0.0.96@sha256:23e2cb1ad58fadd04dd6612fd81d95dd2d59c62e7f60a59d5a152e69a178d49c',
+              image: 'ghcr.io/walnuts1018/picca/embedding-worker:v0.0.96@sha256:f7bcc390840e5d38192cd9eec033e7126f4a64e62a88ff614eccb90c89e19236',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },

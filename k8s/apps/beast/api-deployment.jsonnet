@@ -30,7 +30,7 @@ local labels = {
         },
         containers: [{
           name: 'apiserver',
-          image: 'ghcr.io/walnuts1018/beast/backend:9e7246e-amd64',
+          image: 'ghcr.io/walnuts1018/beast/backend:9e7246e-amd64@sha256:6415e7ab1a07c734c8400a2745e27a51684dc407dff336762836380251ea95aa',
           imagePullPolicy: 'Always',
           envFrom: [
             { configMapRef: { name: app.name + '-config' } },

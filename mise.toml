@@ -2,11 +2,17 @@
 go = "1.27.1"
 dyff = "1.12.0"
 kubeconform = "0.8.0"
-terraform = "1.15.9"
+terraform = "1.16.5"
 go-jsonnet = "0.22.0"
-tanka = "0.39.0"
+tanka = "0.39.3"
 jsonnet-bundler = "0.6.0"
 coder = "2.36.5"
+kubectl = "1.37.1"
+trivy = "0.75.0"
+"go:github.com/grafana/mcp-grafana/v2/cmd/mcp-grafana" = "v2.0.0"
+
+[env]
+_.file = { path = ".env", redact = true }
 
 [tasks.build-infrautil]
 description = "Build infrautil"
@@ -50,6 +56,15 @@ find k8s \\( -name '*.jsonnet' -o -name '*.libsonnet' \\) -type f | xargs jsonne
 description = "Lint k8s apps"
 depends = ["snapshot"]
 run = "kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps"
+
+[tasks.trivy-config]
+description = "Scan rendered Kubernetes manifests with Trivy"
+depends = ["snapshot"]
+run = "trivy config k8s/snapshots"
+
+[tasks.trivy-config-report]
+description = "Write a non-blocking Trivy report for rendered manifests"
+run = "trivy config --exit-code 0 --format json --output k8s/trivy-config-report.json k8s/snapshots"
 
 [tasks.terraform]
 run = "terraform -chdir=terraform"

@@ -43,6 +43,26 @@
         },
       },
       {
+        name: 'tls-passthrough',
+        hostname: '*.tls.walnuts.dev',
+        protocol: 'TLS',
+        port: 8443,
+        allowedRoutes: {
+          kinds: [
+            {
+              group: 'gateway.networking.k8s.io',
+              kind: 'TLSRoute',
+            },
+          ],
+          namespaces: {
+            from: 'All',
+          },
+        },
+        tls: {
+          mode: 'Passthrough',
+        },
+      },
+      {
         name: 'smtp',
         protocol: 'TCP',
         port: 25,

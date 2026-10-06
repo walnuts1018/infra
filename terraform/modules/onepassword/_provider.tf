@@ -6,7 +6,7 @@ terraform {
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.9.0"
+      version = "3.9.1"
     }
   }
 }
@@ -70,6 +70,11 @@ variable "ipu_client_secret" {
 }
 variable "longhorn_client_id" { type = string }
 variable "longhorn_client_secret" {
+  type      = string
+  sensitive = true
+}
+variable "webtop_client_id" { type = string }
+variable "webtop_client_secret" {
   type      = string
   sensitive = true
 }

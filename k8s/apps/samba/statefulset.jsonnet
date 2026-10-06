@@ -112,13 +112,6 @@ local app = import 'app.json5';
         ],
         volumes: [
           {
-            name: 'samba-local-dir',
-            hostPath: {
-              path: '/mnt/data/share',
-              type: 'Directory',
-            },
-          },
-          {
             name: 'root',
             persistentVolumeClaim: {
               claimName: (import 'pvc-root.jsonnet').metadata.name,

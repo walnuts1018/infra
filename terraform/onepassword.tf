@@ -21,6 +21,8 @@ module "onepassword" {
   iwashi_client_secret    = module.zitadel.iwashi_oidc_client_secret
   longhorn_client_id      = module.zitadel.longhorn_oidc_client_id
   longhorn_client_secret  = module.zitadel.longhorn_oidc_client_secret
+  webtop_client_id        = module.zitadel.webtop_oidc_client_id
+  webtop_client_secret    = module.zitadel.webtop_oidc_client_secret
   netbird_setup_key       = module.netbird.kubernetes_router_setup_key
   netbox_client_id        = module.zitadel.netbox_oidc_client_id
   netbox_client_secret    = module.zitadel.netbox_oidc_client_secret

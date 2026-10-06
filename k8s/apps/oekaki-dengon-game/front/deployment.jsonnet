@@ -18,11 +18,6 @@ local service = import '../back/service.jsonnet';
         labels: labels(app.name + '-front'),
       },
       spec: {
-        imagePullSecrets: [
-          {
-            name: 'ghcr-login-secret',
-          },
-        ],
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'oekaki-dengon-game-front',

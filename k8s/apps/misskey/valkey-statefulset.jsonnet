@@ -15,6 +15,10 @@ local valkeyLabels = labels(app.name + '-valkey');
   spec: {
     serviceName: app.name + '-valkey-headless',
     replicas: 1,
+    persistentVolumeClaimRetentionPolicy: {
+      whenDeleted: 'Retain',
+      whenScaled: 'Retain',
+    },
     selector: {
       matchLabels: valkeyLabels,
     },
@@ -37,6 +41,12 @@ local valkeyLabels = labels(app.name + '-valkey');
             args: [
               '--maxmemory-policy',
               'noeviction',
+              '--appendonly',
+              'yes',
+              '--appendfsync',
+              'everysec',
+              '--rdbcompression',
+              'no',
               '--requirepass',
               '$(REDIS_PASSWORD)',
             ],

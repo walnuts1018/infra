@@ -6,4 +6,5 @@ local app = import 'app.json5';
     name: app.name,
     namespace: app.namespace,
   },
+  automountServiceAccountToken: false,
 }

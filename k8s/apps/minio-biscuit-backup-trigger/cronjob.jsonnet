@@ -24,7 +24,7 @@ local app = import 'app.json5';
             initContainers: [
               (container) {
                 name: 'wait-minio-default-backup',
-                image: 'debian:13.6-slim',
+                image: 'debian:13.7-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f',
                 command: [
                   '/usr/bin/bash',
                   '-c',
@@ -64,7 +64,7 @@ local app = import 'app.json5';
               std.mergePatch(
                 (container) {
                   name: 'trigger-and-wait-minio-biscuit-backup',
-                  image: 'debian:13.6-slim',
+                  image: 'debian:13.7-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f',
                   command: [
                     '/usr/bin/bash',
                     '-c',
