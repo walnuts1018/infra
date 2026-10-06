@@ -31,7 +31,7 @@ local service = import '../back/service.jsonnet';
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-10b57aae4bfe56124907ac1b03bc822a635e173f-95',
+            image: 'ghcr.io/kmc-jp/oekaki-dengon-game-front:v0.0.0-10b57aae4bfe56124907ac1b03bc822a635e173f-95@sha256:a80062b5c5069a62fbc181f70e9897cc2cbfcab3fd625b1e4438dfe9b93906ef',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {

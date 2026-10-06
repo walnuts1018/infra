@@ -22,7 +22,7 @@ local app = import 'app.json5';
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'http-dump',
-            image: 'ghcr.io/walnuts1018/http-dump:2940b4a2f1f5f4fdfd6c41e6dd2d8c456837f3e1-46',
+            image: 'ghcr.io/walnuts1018/http-dump:2940b4a2f1f5f4fdfd6c41e6dd2d8c456837f3e1-46@sha256:f8feacfb9901c05e2cf076b3936aaaaea9945626d6781d80ebb77452a76feb91',
             ports: [
               {
                 name: 'http',

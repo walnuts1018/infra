@@ -27,7 +27,7 @@ local app = import 'app.json5';
         },
         containers: [
           (import '../../components/container.libsonnet') {
-            image: 'ghcr.io/servercontainers/samba:a3.24.2-s4.23.8-r0',
+            image: 'ghcr.io/servercontainers/samba:a3.24.2-s4.23.8-r0@sha256:ea1b37536729f16b2f45a601ea45a37d34b9fce5cc51f2d686a347dd77131be1',
             imagePullPolicy: 'IfNotPresent',
             name: 'samba',
             env: [
