@@ -24,7 +24,7 @@ local externalSecret = import 'external-secret.jsonnet';
             initContainers: [
               (container) {
                 name: 'disk-cleaner',
-                image: 'debian:13.7-slim@sha256:a99cfc517144bc59b1978475ec53b46ecabec7e43635402ee5b77cc54cd1b20a',
+                image: 'debian:13.7-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f',
                 command: [
                   'sh',
                   '/scripts/disk-cleaner.sh',
