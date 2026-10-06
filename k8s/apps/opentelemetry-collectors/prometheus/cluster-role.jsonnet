@@ -2,7 +2,7 @@
   apiVersion: 'rbac.authorization.k8s.io/v1',
   kind: 'ClusterRole',
   metadata: {
-    name: 'otel-prometheus-targetallocator',
+    name: (import '../app.json5').name,
   },
   rules: [
     {
