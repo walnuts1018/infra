@@ -52,6 +52,7 @@ local app = import 'app.json5';
             ],
             securityContext: (import '../../components/container.libsonnet').securityContext {
               runAsNonRoot: true,
+              runAsUser: 1000,
               allowPrivilegeEscalation: false,
             },
           },
