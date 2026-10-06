@@ -25,7 +25,7 @@ local app = import 'app.json5';
       spec: {
         containers: [{
           name: 'console',
-          image: 'quay.io/akvorado/akvorado:2.4.1',
+          image: 'quay.io/akvorado/akvorado:2.4.1@sha256:8acf8b7312ee3331bf4d348678949d4dcb134b533a1c882beb830b6d7d8a8428',
           args: ['console', 'http://akvorado-orchestrator:8080'],
           ports: [
             { name: 'http', containerPort: 8080, protocol: 'TCP' },

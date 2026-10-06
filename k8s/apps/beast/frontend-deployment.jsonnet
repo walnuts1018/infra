@@ -25,7 +25,7 @@ local labels = {
         },
         containers: [{
           name: 'frontend',
-          image: 'ghcr.io/walnuts1018/beast/frontend:50f61d9-amd64',
+          image: 'ghcr.io/walnuts1018/beast/frontend:50f61d9-amd64@sha256:3312a79d83a012d6572820a44f808e6c82922e5328dd313183355cb5851b39d5',
           imagePullPolicy: 'Always',
           ports: [{ name: 'http', containerPort: 8080 }],
           readinessProbe: { httpGet: { path: '/livez', port: 'http' }, periodSeconds: 5, timeoutSeconds: 3 },

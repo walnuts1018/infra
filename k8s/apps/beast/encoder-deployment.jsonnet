@@ -26,7 +26,7 @@ local labels = {
         },
         containers: [{
           name: 'encoder',
-          image: 'ghcr.io/walnuts1018/beast/encoder:18de2a4-amd64',
+          image: 'ghcr.io/walnuts1018/beast/encoder:18de2a4-amd64@sha256:d65345f89543076be0564de50202d0eb159c1ea5df88fba581330389def670ab',
           imagePullPolicy: 'Always',
           envFrom: [
             { configMapRef: { name: app.name + '-config' } },
