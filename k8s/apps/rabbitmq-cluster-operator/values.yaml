@@ -3,6 +3,11 @@ msgTopologyOperator:
 
 clusterOperator:
   watchAllNamespaces: true
+  networkPolicy:
+    extraIngress:
+    - ports:
+      - port: 9443
+        protocol: TCP
   resources:
     requests:
       cpu: 5m
