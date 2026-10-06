@@ -15,7 +15,7 @@ local app = import 'app.json5';
     {
       apiGroup: 'rbac.authorization.k8s.io',
       kind: 'Group',
-      name: 'zitadel:' + app.params.oidcIssuerAudience + ':cluster-admin',
+      name: 'zitadel:' + app.params.oidcProjectId + ':cluster-admin',
     },
   ],
 }

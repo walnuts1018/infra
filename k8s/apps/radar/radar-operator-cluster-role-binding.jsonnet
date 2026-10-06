@@ -1,6 +1,6 @@
 local zitadelKubernetesRbacApp = import '../zitadel-kubernetes-rbac/app.json5';
 
-local radarOperatorGroup = 'zitadel:' + zitadelKubernetesRbacApp.params.oidcIssuerAudience + ':radar-operator';
+local radarOperatorGroup = 'zitadel:' + zitadelKubernetesRbacApp.params.oidcProjectId + ':radar-operator';
 
 [
   {

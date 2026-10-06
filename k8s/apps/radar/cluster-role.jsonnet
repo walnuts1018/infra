@@ -220,7 +220,7 @@ local app = import 'app.json5';
       apiGroups: [''],
       resources: ['groups'],
       verbs: ['impersonate'],
-      resourceNames: ['zitadel:' + zitadelKubernetesRbacApp.params.oidcIssuerAudience + ':radar-operator'],
+      resourceNames: ['zitadel:' + zitadelKubernetesRbacApp.params.oidcProjectId + ':radar-operator'],
     },
     {
       apiGroups: [''],

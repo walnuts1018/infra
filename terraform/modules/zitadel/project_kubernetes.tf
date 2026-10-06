@@ -21,6 +21,26 @@ resource "zitadel_user_grant" "walnuts_kubernetes_cluster_admin" {
   ]
 }
 
+resource "zitadel_application_oidc" "kubernetes_cli" {
+  org_id     = zitadel_org.ZITADEL.id
+  project_id = zitadel_project.kubernetes.id
+  name       = "Kubernetes CLI"
+
+  redirect_uris               = ["http://localhost"]
+  response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
+  grant_types                 = ["OIDC_GRANT_TYPE_DEVICE_CODE", "OIDC_GRANT_TYPE_REFRESH_TOKEN"]
+  post_logout_redirect_uris   = []
+  app_type                    = "OIDC_APP_TYPE_NATIVE"
+  auth_method_type            = "OIDC_AUTH_METHOD_TYPE_NONE"
+  version                     = "OIDC_VERSION_1_0"
+  clock_skew                  = "0s"
+  dev_mode                    = false
+  access_token_type           = "OIDC_TOKEN_TYPE_JWT"
+  access_token_role_assertion = true
+  id_token_role_assertion     = true
+  id_token_userinfo_assertion = true
+}
+
 resource "zitadel_project_role" "kubernetes_radar_operator" {
   org_id       = zitadel_org.ZITADEL.id
   project_id   = zitadel_project.kubernetes.id
@@ -28,9 +48,14 @@ resource "zitadel_project_role" "kubernetes_radar_operator" {
   display_name = "Radar dashboard operator (scoped, non-admin)"
 }
 
-output "kubernetes_oidc_issuer_audience" {
+output "kubernetes_oidc_project_id" {
   value       = nonsensitive(zitadel_project.kubernetes.id)
-  description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy (passed to --oidc-client-id)"
+  description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy"
+}
+
+output "kubernetes_oidc_cli_client_id" {
+  value       = nonsensitive(zitadel_application_oidc.kubernetes_cli.client_id)
+  description = "Public OIDC client ID for Kubernetes CLI device authorization"
 }
 
 moved {

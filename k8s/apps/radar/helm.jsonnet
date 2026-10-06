@@ -14,7 +14,7 @@ local app = import 'app.json5';
           'openid',
           'email',
           'profile',
-          'urn:zitadel:iam:org:project:id:' + zitadelKubernetesRbacApp.params.oidcIssuerAudience + ':aud',
+          'urn:zitadel:iam:org:project:id:' + zitadelKubernetesRbacApp.params.oidcProjectId + ':aud',
         ],
       },
     },

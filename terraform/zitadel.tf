@@ -54,9 +54,9 @@ output "coder_oidc_client_secret" {
   description = "OIDC client secret for Coder"
 }
 
-output "kubernetes_oidc_issuer_audience" {
-  value       = module.zitadel.kubernetes_oidc_issuer_audience
-  description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy (passed to --oidc-client-id)"
+output "kubernetes_oidc_project_id" {
+  value       = module.zitadel.kubernetes_oidc_project_id
+  description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy"
 }
 
 output "terraform_cloud_saml_metadata_url" {

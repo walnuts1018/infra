@@ -5,6 +5,6 @@
     kurumi: {},
   },
   params: {
-    oidcIssuerAudience: "385225927988084784",
+    oidcProjectId: "385225927988084784",
   },
 }
