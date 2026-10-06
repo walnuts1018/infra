@@ -2,7 +2,7 @@
   apiVersion: 'rbac.authorization.k8s.io/v1',
   kind: 'ClusterRole',
   metadata: {
-    name: (import '../app.json5').name,
+    name: (import 'targetallocator-sa.jsonnet').metadata.name,
   },
   rules: [
     {
