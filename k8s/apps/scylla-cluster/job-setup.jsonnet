@@ -26,7 +26,7 @@ local appname = app.name + '-setup';
         containers: [
           {
             name: 'setup',
-            image: 'scylladb/scylla:2025.4.10',
+            image: 'scylladb/scylla:2026.3.2',
             command: ['/bin/bash'],
             args: [
               '-c',
