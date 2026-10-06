@@ -41,7 +41,7 @@ local app = import 'app.json5';
         containers: [
           {
             name: 'netbird',
-            image: 'netbirdio/netbird:0.79.0',
+            image: 'netbirdio/netbird:0.80.0@sha256:4976692ea44bb93871743d0b742b4a8f97f6425bfc458ca2d78e28fdb8bdf4ad',
             imagePullPolicy: 'IfNotPresent',
             env: [
               {
