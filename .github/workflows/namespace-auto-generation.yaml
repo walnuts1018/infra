@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   generate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
       contents: read
@@ -20,55 +20,49 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: switch to auto-gen-namespace branch
+      - name: Create automation branch
         run: git switch -c auto-gen-namespace
 
-      - name: setup-go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with:
-          go-version-file: "scripts/infrautil/go.mod"
-          cache-dependency-path: "scripts/infrautil/go.sum"
-
       - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
-      - name: run namespace
-        run: |
-          mise run namespace
+        with:
+          install_args: go
+      - name: Generate namespace manifest
+        run: mise run namespace
 
-      - name: check diff
+      - name: Check namespace changes
         id: check-diff
         run: |
-          echo "diff=$(git diff --name-only | wc -l)" >> "$GITHUB_OUTPUT"
+          if git diff --quiet -- k8s/namespaces/namespaces.json5; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        id: generate_token
-        if: steps.check-diff.outputs.diff > 0
+        id: generate-token
+        if: steps.check-diff.outputs.changed == 'true'
         with:
           client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
 
-      - name: Configure GitHub App token
-        if: steps.check-diff.outputs.diff > 0
+      - name: Push namespace changes
+        if: steps.check-diff.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
-          echo "GH_TOKEN=${GH_TOKEN}" >> "$GITHUB_ENV"
           gh auth setup-git
-
-      - name: push
-        if: steps.check-diff.outputs.diff > 0
-        run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
+          git add -- k8s/namespaces/namespaces.json5
           git commit -m "auto-gen-namespace"
           git push origin auto-gen-namespace --force
 
-      - name: create PR
-        if: steps.check-diff.outputs.diff > 0
+      - name: Create namespace pull request
+        if: steps.check-diff.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
           gh pr create --title "auto-gen-namespace" --body "auto-gen-namespace" --base main --head auto-gen-namespace
           gh pr merge --merge --auto

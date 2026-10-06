@@ -1,0 +1,235 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    outputs:
+      snapshot-diff-ready: ${{ steps.upload-snapshot-diff.outcome == 'success' }}
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        with:
+          install_args: go go-jsonnet kubeconform trivy ghalint dyff
+
+      - parallel:
+          - name: Check Jsonnet format
+            run: mise run jsonnet-fmt-check
+
+          - name: Lint GitHub Actions workflows
+            run: mise run github-actions-lint
+
+          - name: Generate snapshots
+            run: mise run snapshot
+
+      - parallel:
+          - name: Validate application manifests
+            run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
+
+          - name: Generate Trivy config report
+            run: mise run trivy-config-report
+
+      - name: Upload snapshots
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: snapshots
+          path: k8s/snapshots
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload Trivy config report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: trivy-config-report
+          path: k8s/trivy-config-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Check out snapshot base
+        id: snapshot-base
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: snapshot
+          path: snapshot-base
+          persist-credentials: false
+
+      - name: Build snapshot diff artifacts
+        id: build-snapshot-diff
+        if: github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+
+          manifest_diff="$(while IFS= read -r -d '' head_file; do
+            relative_path="${head_file#k8s/snapshots/apps/}"
+            base_file="snapshot-base/k8s/apps/${relative_path}"
+            dyff between --output github "$base_file" "$head_file"
+          done < <(find k8s/snapshots/apps -type f -print0))"
+
+          {
+            printf '%s\n' '# Manifest (k8s/apps) diff' '' '<details>' '<summary>Click to expand</summary>' '' '```diff'
+            printf '%s\n' "$manifest_diff"
+            printf '%s\n' '```' '</details>'
+          } > /tmp/manifest-diff.md
+
+          helm_diff="$(while IFS= read -r -d '' head_file; do
+            relative_path="${head_file#k8s/snapshots/helm/}"
+            base_file="snapshot-base/k8s/helm/${relative_path}"
+            dyff between --output github \
+              --exclude-regexp '.metadata.labels.app.kubernetes.io/version|.metadata.labels.chart|.metadata.labels.helm.sh/chart|\.spec\.compliance\.controls' \
+              "$base_file" "$head_file"
+          done < <(find k8s/snapshots/helm -type f -print0))"
+
+          {
+            printf '%s\n' '# Helm diff' '' '<details>' '<summary>Click to expand</summary>' '' '```diff'
+            printf '%s\n' "$helm_diff"
+            printf '%s\n' '```' '</details>'
+          } > /tmp/helm-diff.md
+
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload snapshot diff artifacts
+        id: upload-snapshot-diff
+        if: steps.build-snapshot-diff.outputs.ready == 'true'
+        continue-on-error: true
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: snapshot-diffs
+          path: |
+            /tmp/manifest-diff.md
+            /tmp/helm-diff.md
+          if-no-files-found: error
+          retention-days: 1
+
+  publish-snapshot:
+    name: Publish snapshot branch
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    if: github.ref == 'refs/heads/main'
+    needs: quality
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: generate-token
+        with:
+          client-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          permission-contents: write
+
+      - name: Download snapshots
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: snapshots
+          path: k8s/snapshots
+
+      - name: Update snapshot branch
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          gh auth setup-git
+          git switch --force-create snapshot
+          rm -rf k8s/apps k8s/helm
+          mv k8s/snapshots/apps k8s/apps
+          mv k8s/snapshots/helm k8s/helm
+          git add --all -- k8s/apps k8s/helm
+
+          if git diff --cached --quiet; then
+            echo "Snapshot branch is already current."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "snapshot"
+          git push origin snapshot --force
+
+  snapshot-diff:
+    name: Comment snapshot diff
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    if: github.event_name == 'pull_request' && needs.quality.outputs.snapshot-diff-ready == 'true'
+    needs: quality
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download snapshot diff artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: snapshot-diffs
+          path: diffs
+
+      - name: Comment manifest diff
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          jq -Rs '{"body": .}' < diffs/manifest-diff.md > /tmp/comment.json
+          gh api --method POST --input /tmp/comment.json \
+            "repos/${GITHUB_REPOSITORY}/issues/${PULL_REQUEST_NUMBER}/comments"
+
+      - name: Comment Helm diff
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          jq -Rs '{"body": .}' < diffs/helm-diff.md > /tmp/comment.json
+          gh api --method POST --input /tmp/comment.json \
+            "repos/${GITHUB_REPOSITORY}/issues/${PULL_REQUEST_NUMBER}/comments"
+
+  status-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 1
+    if: always()
+    needs:
+      - quality
+      - publish-snapshot
+    permissions: {}
+    steps:
+      - name: Verify required jobs
+        env:
+          QUALITY_RESULT: ${{ needs.quality.result }}
+          SNAPSHOT_RESULT: ${{ needs.publish-snapshot.result }}
+          SNAPSHOT_REQUIRED: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          if [[ "$QUALITY_RESULT" != "success" ]]; then
+            echo "Quality checks did not succeed: ${QUALITY_RESULT}"
+            exit 1
+          fi
+
+          if [[ "$SNAPSHOT_REQUIRED" == "true" && "$SNAPSHOT_RESULT" != "success" ]]; then
+            echo "Snapshot publishing did not succeed: ${SNAPSHOT_RESULT}"
+            exit 1
+          fi
