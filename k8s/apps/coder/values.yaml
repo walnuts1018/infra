@@ -24,6 +24,10 @@ coder:
       workspacePerms: true
       enableDeployments: true
 
+  commandArgs:
+    - server
+    - --external-auth-github-default-provider-enable=false
+
   env:
   - name: CODER_PG_CONNECTION_URL
     valueFrom:
@@ -51,9 +55,6 @@ coder:
   - name: CODER_OIDC_SIGN_IN_TEXT
     value: "Sign in with ZITADEL"
 
-
-  - name: CODER_EXTERNAL_AUTH_GITHUB_DEFAULT_PROVIDER_ENABLE
-    value: "false"
 
   - name: CODER_EXTERNAL_AUTH_0_ID
     value: github
