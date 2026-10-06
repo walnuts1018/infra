@@ -16,7 +16,7 @@ local app = import 'app.json5';
     keeperClusterRef: {
       name: (import 'keepercluster.jsonnet').metadata.name,
     },
-    replicas: 1,
+    replicas: 0,
     dataVolumeClaimSpec: {
       accessModes: ['ReadWriteOnce'],
       resources: {

@@ -16,7 +16,7 @@ local app = import 'app.json5';
     nodeSets: [
       {
         name: 'default',
-        count: 1,
+        count: 0,
         config: {
           'node.store.allow_mmap': false,
         },
