@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'cortex',
   repoURL: 'https://cortexproject.github.io/cortex-helm-chart',
-  targetRevision: '3.3.8',
+  targetRevision: '3.4.0',
   values: (importstr 'values.yaml'),
 }
