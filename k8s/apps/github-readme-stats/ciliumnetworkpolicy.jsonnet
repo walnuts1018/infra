@@ -23,7 +23,7 @@ local app = import 'app.json5';
           'k8s:app.kubernetes.io/name': 'envoy',
         },
       }],
-      toPorts: [{ ports: [{ port: '80', protocol: 'TCP' }] }],
+      toPorts: [{ ports: [{ port: '9000', protocol: 'TCP' }] }],
     }],
     egress: [
       {
