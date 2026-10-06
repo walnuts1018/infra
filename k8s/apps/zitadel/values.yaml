@@ -87,3 +87,8 @@ topologySpreadConstraints:
 # https://zitadel.com/docs/self-hosting/manage/login-client
 login:
   enabled: false # 一旦使うつもりはないのでいいかな
+
+tools:
+  kubectl:
+    image:
+      tag: "1.36.4"
