@@ -18,7 +18,7 @@ concurrency:
 jobs:
   quality:
     name: Quality checks
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
     outputs:
       snapshot-diff-ready: ${{ steps.upload-snapshot-diff.outcome == 'success' }}
@@ -162,7 +162,7 @@ jobs:
 
   publish-snapshot:
     name: Publish snapshot branch
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     if: github.ref == 'refs/heads/main'
     needs: quality
@@ -210,7 +210,7 @@ jobs:
 
   snapshot-diff:
     name: Comment snapshot diff
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     if: github.event_name == 'pull_request' && needs.quality.outputs.snapshot-diff-ready == 'true'
     needs: quality
@@ -246,7 +246,7 @@ jobs:
 
   trivy-findings-comment:
     name: Comment Trivy findings
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     if: github.event_name == 'pull_request' && needs.quality.outputs.trivy-diff-ready == 'true'
     needs: quality
@@ -293,7 +293,7 @@ jobs:
           fi
 
   status-check:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 1
     if: always()
     needs:
