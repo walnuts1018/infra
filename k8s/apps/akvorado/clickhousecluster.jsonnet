@@ -29,6 +29,10 @@ local app = import 'app.json5';
       affinity: storage.avoidSlowNodeAffinity,
     },
     containerTemplate: {
+      image: {
+        repository: 'docker.io/clickhouse/clickhouse-server',
+        tag: '26.8.2.7',
+      },
       resources: {
         requests: {
           cpu: '90m',

@@ -15,6 +15,10 @@ local app = import 'app.json5';
   spec: {
     replicas: 1,
     containerTemplate: {
+      image: {
+        repository: 'docker.io/clickhouse/clickhouse-keeper',
+        tag: '26.8.2.7',
+      },
       resources: {
         requests: {
           cpu: '15m',
