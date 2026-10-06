@@ -51,8 +51,6 @@ coder:
   - name: CODER_OIDC_SIGN_IN_TEXT
     value: "Sign in with ZITADEL"
 
-  - name: CODER_OAUTH2_GITHUB_DEFAULT_PROVIDER_ENABLE
-    value: "false"
 
   - name: CODER_EXTERNAL_AUTH_GITHUB_DEFAULT_PROVIDER_ENABLE
     value: "false"
