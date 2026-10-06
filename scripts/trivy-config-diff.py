@@ -27,7 +27,9 @@ def load_findings(report_path):
         for finding in result.get("Misconfigurations") or []:
             rule_id = finding.get("AVDID") or finding.get("ID") or "(unknown rule)"
             severity = (finding.get("Severity") or "UNKNOWN").upper()
-            title = finding.get("Title") or finding.get("Message") or "(untitled finding)"
+            title = (
+                finding.get("Title") or finding.get("Message") or "(untitled finding)"
+            )
             key = (target, rule_id, severity, title)
             counts[key] += 1
             details[key] = {
@@ -44,13 +46,7 @@ def load_findings(report_path):
 
 
 def markdown_cell(value, limit=240):
-    cell = (
-        str(value)
-        .replace("|", "\\|")
-        .replace("\r", " ")
-        .replace("\n", " ")
-        .strip()
-    )
+    cell = str(value).replace("|", "\\|").replace("\r", " ").replace("\n", " ").strip()
     if len(cell) > limit:
         return cell[: limit - 1] + "…"
     return cell
@@ -79,7 +75,7 @@ def render_markdown(additions, total_added):
         "",
         f"Trivy found **{total_added} additional finding instances** compared with "
         f"the manifests published from `main` on the `snapshot` branch "
-        f"({summary}). These findings do not fail CI.",
+        f"({summary}).",
         "",
         "| Severity | Rule | Rendered manifest | Finding | Remediation | Added |",
         "| --- | --- | --- | --- | --- | ---: |",
@@ -140,9 +136,7 @@ def main():
     if args.github_output:
         with args.github_output.open("a", encoding="utf-8") as output_file:
             output_file.write("ready=true\n")
-            output_file.write(
-                f"findings-added={'true' if total_added else 'false'}\n"
-            )
+            output_file.write(f"findings-added={'true' if total_added else 'false'}\n")
 
 
 if __name__ == "__main__":
