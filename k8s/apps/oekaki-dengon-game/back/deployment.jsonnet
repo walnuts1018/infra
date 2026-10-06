@@ -32,7 +32,7 @@ local s3Credentials = (import '../../../components/seaweedfs-s3-credentials.libs
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'ghcr.io/kmc-jp/oekaki-dengon-game-back:v0.0.0-a6d6d6e7d66e6d0dfafbf416b462be908b208489-13',
+            image: 'ghcr.io/kmc-jp/oekaki-dengon-game-back:v0.0.0-a6d6d6e7d66e6d0dfafbf416b462be908b208489-13@sha256:541d7a054d8deeb68cd7049262d54cc645809d98fb8b3bd52c90c4112edfddef',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {

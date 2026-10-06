@@ -23,7 +23,7 @@ local app = import 'app.json5';
             containers: [
               (import '../../components/container.libsonnet') {
                 name: 'fitbit-manager',
-                image: 'ghcr.io/walnuts1018/fitbit-manager:1.0.5',
+                image: 'ghcr.io/walnuts1018/fitbit-manager:1.0.5@sha256:08640c29786fcfbd23571f43c4b91e7f9ae1d6b755b398a0a9017839333636f6',
                 command: [
                   '/app/fitbit-manager-job',
                 ],

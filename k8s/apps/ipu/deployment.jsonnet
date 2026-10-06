@@ -41,7 +41,7 @@ local envoyConfig = import 'configmap.jsonnet';
         containers: [
           {
             name: 'envoy',
-            image: 'docker.io/envoyproxy/envoy:distroless-v1.39.0',
+            image: 'docker.io/envoyproxy/envoy:distroless-v1.39.0@sha256:7877ad87afd7459e1bd2a077ff601fec7c93aeecd62e71664560d96328c62cf4',
             imagePullPolicy: 'IfNotPresent',
             command: ['envoy'],
             args: ['-c', '/etc/envoy/envoy.yaml'],

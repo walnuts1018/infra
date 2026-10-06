@@ -30,7 +30,7 @@ local externalSecret = import 'external-secret.jsonnet';
         initContainers: [
           (container) {
             name: 'misskey-init',
-            image: 'misskey/misskey:2026.10.0',
+            image: 'misskey/misskey:2026.10.0@sha256:399a176e8e0e0a84829e8b7f27d2140bcd463ef58bdfb5bf1ce91b12567bd66f',
             imagePullPolicy: 'IfNotPresent',
             command: [
               'pnpm',
@@ -67,7 +67,7 @@ local externalSecret = import 'external-secret.jsonnet';
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'misskey/misskey:2026.10.0',
+            image: 'misskey/misskey:2026.10.0@sha256:399a176e8e0e0a84829e8b7f27d2140bcd463ef58bdfb5bf1ce91b12567bd66f',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {

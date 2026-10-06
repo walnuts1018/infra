@@ -31,7 +31,7 @@ local app = import 'app.json5';
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'coredns/coredns:1.14.7',
+            image: 'coredns/coredns:1.14.7@sha256:7efd3c635b03efd68c4e8398fc45f0d993d0e9ab016f72c1cefb0fd6d01aa286',
             args: [
               '-conf',
               '/etc/coredns/Corefile',
