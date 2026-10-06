@@ -18,6 +18,7 @@ local app = import 'app.json5';
         labels: labels(app.name),
       },
       spec: {
+        automountServiceAccountToken: false,
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'http-dump',
@@ -48,6 +49,11 @@ local app = import 'app.json5';
                 value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317',
               },
             ],
+            securityContext: (import '../../components/container.libsonnet').securityContext {
+              runAsNonRoot: true,
+              runAsUser: 1000,
+              allowPrivilegeEscalation: false,
+            },
           },
         ],
         tolerations: [

@@ -1,9 +1,11 @@
 local app = import '../app.json5';
+
 {
   apiVersion: 'rbac.authorization.k8s.io/v1',
-  kind: 'ClusterRoleBinding',
+  kind: 'RoleBinding',
   metadata: {
-    name: app.name,
+    name: 'otel-prometheus-targetallocator-secrets',
+    namespace: app.namespace,
   },
   subjects: [
     {
@@ -13,8 +15,8 @@ local app = import '../app.json5';
     },
   ],
   roleRef: {
-    kind: 'ClusterRole',
-    name: (import 'cluster-role.jsonnet').metadata.name,
+    kind: 'Role',
+    name: (import 'secret-role.jsonnet').metadata.name,
     apiGroup: 'rbac.authorization.k8s.io',
   },
 }

@@ -89,6 +89,16 @@
       pinDigests: true,
     },
     {
+      description: 'Pin digests for Dockerfile base images',
+      matchDatasources: [
+        'docker',
+      ],
+      matchManagers: [
+        'dockerfile',
+      ],
+      pinDigests: true,
+    },
+    {
       matchPackageNames: [
         'lscr.io/linuxserver/webtop',
       ],

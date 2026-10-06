@@ -68,13 +68,11 @@ local app = import 'app.json5';
             ],
             securityContext: {
               readOnlyRootFilesystem: false,
+              allowPrivilegeEscalation: false,
               capabilities: {
                 add: [
                   'NET_ADMIN',
-                  'NET_BIND_SERVICE',
                   'NET_RAW',
-                  'SYS_ADMIN',
-                  'SYS_RESOURCE',
                 ],
                 drop: ['ALL'],
               },

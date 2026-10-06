@@ -14,7 +14,7 @@ function(
     mode: 'statefulset',
     targetAllocator: {
       enabled: true,
-      serviceAccount: (import 'sa.jsonnet').metadata.name,
+      serviceAccount: (import 'targetallocator-sa.jsonnet').metadata.name,
       prometheusCR: {
         enabled: true,
         serviceMonitorSelector: {
@@ -49,6 +49,23 @@ function(
           cpu: '2',
           memory: '3Gi',
         },
+      },
+      securityContext: {
+        runAsNonRoot: true,
+        runAsUser: 65532,
+        runAsGroup: 65532,
+        allowPrivilegeEscalation: false,
+        readOnlyRootFilesystem: true,
+        capabilities: {
+          drop: ['ALL'],
+        },
+        seccompProfile: {
+          type: 'RuntimeDefault',
+        },
+      },
+      mtls: {
+        enabled: true,
+        useCertManager: true,
       },
     },
     config: {

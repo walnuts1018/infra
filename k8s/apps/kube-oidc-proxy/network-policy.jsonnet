@@ -16,17 +16,25 @@ local app = import 'app.json5';
     policyTypes: ['Ingress'],
     ingress: [
       {
+        from: [
+          {
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': 'envoy-gateway-system',
+              },
+            },
+            podSelector: {
+              matchLabels: {
+                'app.kubernetes.io/component': 'proxy',
+                'app.kubernetes.io/managed-by': 'envoy-gateway',
+                'app.kubernetes.io/name': 'envoy',
+              },
+            },
+          },
+        ],
         ports: [
           {
             port: 8443,
-            protocol: 'TCP',
-          },
-        ],
-      },
-      {
-        ports: [
-          {
-            port: 8080,
             protocol: 'TCP',
           },
         ],
