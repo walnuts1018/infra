@@ -11,7 +11,7 @@ local app = import 'app.json5';
     endpointSelector: {
       matchLabels: {
         'k8s:app.kubernetes.io/name': app.name,
-        'k8s:app.kubernetes.io/instance': app.name,
+        'k8s:app': app.name,
       },
     },
     ingress: [{
