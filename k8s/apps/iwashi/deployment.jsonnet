@@ -17,7 +17,7 @@ local secret = import 'external-secret.jsonnet';
           name: 'migrations',
           image: 'ghcr.io/walnuts1018/iwashi-migration:b800bd8f72ac984087c5e32f9d564936c54b0c39@sha256:2b9f8f690d4dd63817d41aeb2a35d9d3b5d600029de7b8acd72a2371831cca1a',
           envFrom: [{ secretRef: { name: secret.spec.target.name } }],
-          securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, runAsNonRoot: true, capabilities: { drop: ['ALL'] } },
+          securityContext: { allowPrivilegeEscalation: false, privileged: true, readOnlyRootFilesystem: true, runAsNonRoot: true, capabilities: { drop: ['ALL'] } },
         }],
         containers: [{
           name: app.name,
