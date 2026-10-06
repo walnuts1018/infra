@@ -6,7 +6,7 @@ function(app)
   local valkeySecret = (import '../_internal/valkey/external-secret.libsonnet')(app);
   local rabbitmqSecret = (import '../_internal/rabbitmq/external-secret.libsonnet')(app);
   local oidcSecret = (import '../_internal/oidc/external-secret.libsonnet')(app);
-  local graphqlSigningSecret = (import '../_internal/common/graphql-signing-secret.libsonnet')(app);
+  local albumCapabilitySecret = (import '../_internal/common/album-capability-secret.libsonnet')(app);
   local plans = (import '../_internal/common/plans/mount.libsonnet')(app);
   local s3Irsa = (import '../_internal/s3-irsa.libsonnet')(app);
   local scyllaTls = (import '../_internal/scylla/tls.libsonnet')(app);
@@ -34,7 +34,7 @@ function(app)
           containers: [
             (import '../../container.libsonnet') {
               name: 'outbox-worker',
-              image: 'ghcr.io/walnuts1018/picca/outbox-worker:v0.0.49',
+              image: 'ghcr.io/walnuts1018/picca/outbox-worker:v0.0.96@sha256:d7f4a9f827ea5000189d0f1ed9b2920bf71b24f64df4b389a471566d8efae2f5',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
@@ -42,7 +42,7 @@ function(app)
                 { secretRef: { name: valkeySecret.spec.target.name } },
                 { secretRef: { name: rabbitmqSecret.spec.target.name } },
                 { secretRef: { name: oidcSecret.spec.target.name } },
-                { secretRef: { name: graphqlSigningSecret.spec.target.name } },
+                { secretRef: { name: albumCapabilitySecret.spec.target.name } },
               ],
               env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
                 {

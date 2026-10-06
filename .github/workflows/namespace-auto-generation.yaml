@@ -1,0 +1,68 @@
+name: Namespace Auto Generation
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Create automation branch
+        run: git switch -c auto-gen-namespace
+
+      - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        with:
+          install_args: go
+      - name: Generate namespace manifest
+        run: mise run namespace
+
+      - name: Check namespace changes
+        id: check-diff
+        run: |
+          if git diff --quiet -- k8s/namespaces/namespaces.json5; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: generate-token
+        if: steps.check-diff.outputs.changed == 'true'
+        with:
+          client-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Push namespace changes
+        if: steps.check-diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          gh auth setup-git
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- k8s/namespaces/namespaces.json5
+          git commit -m "auto-gen-namespace"
+          git push origin auto-gen-namespace --force
+
+      - name: Create namespace pull request
+        if: steps.check-diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          gh pr create --title "auto-gen-namespace" --body "auto-gen-namespace" --base main --head auto-gen-namespace
+          gh pr merge --merge --auto

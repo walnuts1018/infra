@@ -5,7 +5,7 @@ function(app)
   local valkeySecret = (import '../../valkey/external-secret.libsonnet')(app);
   local rabbitmqSecret = (import '../../rabbitmq/external-secret.libsonnet')(app);
   local oidcSecret = (import '../../oidc/external-secret.libsonnet')(app);
-  local graphqlSigningSecret = (import '../../common/graphql-signing-secret.libsonnet')(app);
+  local albumCapabilitySecret = (import '../../common/album-capability-secret.libsonnet')(app);
   local s3Irsa = (import '../../s3-irsa.libsonnet')(app);
   local sa = (import '../../sa.libsonnet')(app);
   {
@@ -31,14 +31,14 @@ function(app)
           containers: [
             (import '../../../../container.libsonnet') {
               name: 'embedding-worker',
-              image: 'ghcr.io/walnuts1018/picca/embedding-worker:v0.0.49',
+              image: 'ghcr.io/walnuts1018/picca/embedding-worker:v0.0.96@sha256:f7bcc390840e5d38192cd9eec033e7126f4a64e62a88ff614eccb90c89e19236',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
                 { secretRef: { name: valkeySecret.spec.target.name } },
                 { secretRef: { name: rabbitmqSecret.spec.target.name } },
                 { secretRef: { name: oidcSecret.spec.target.name } },
-                { secretRef: { name: graphqlSigningSecret.spec.target.name } },
+                { secretRef: { name: albumCapabilitySecret.spec.target.name } },
               ],
               env: commonEnv + s3Irsa.env + [
                 {

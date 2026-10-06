@@ -7,16 +7,9 @@
   spec: {
     externalSecretName: 'ghcr-login-secret',
     namespaceSelector: {
-      matchExpressions: [
-        {
-          key: 'kubernetes.io/metadata.name',
-          operator: 'Exists',
-        },
-        {
-          key: 'walnuts.dev/public',
-          operator: 'DoesNotExist',
-        },
-      ],
+      matchLabels: {
+        'walnuts.dev/ghcr-login-secret': 'true',
+      },
     },
     externalSecretSpec: {
       secretStoreRef: {

@@ -19,11 +19,6 @@ local s3Credentials = (import '../../../components/seaweedfs-s3-credentials.libs
         labels: labels(app.name + '-back'),
       },
       spec: {
-        imagePullSecrets: [
-          {
-            name: 'ghcr-login-secret',
-          },
-        ],
         containers: [
           (import '../../../components/container.libsonnet') {
             name: 'oekaki-dengon-game-back',

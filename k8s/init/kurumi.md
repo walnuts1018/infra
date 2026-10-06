@@ -260,10 +260,12 @@ cat <<EOF | sudo tee /etc/modules-load.d/longhorn.conf
 nvme_tcp
 vfio_pci
 uio_pci_generic
+dm_crypt
 EOF
 sudo modprobe nvme_tcp
 sudo modprobe vfio_pci
 sudo modprobe uio_pci_generic
+sudo modprobe dm_crypt
 
 cat <<EOF | sudo tee /etc/sysctl.d/99-longhorn.conf
 vm.nr_hugepages = 1024

@@ -41,7 +41,7 @@ local app = import 'app.json5';
         containers: [
           {
             name: 'netbird',
-            image: 'netbirdio/netbird:0.78.1',
+            image: 'netbirdio/netbird:0.79.0',
             imagePullPolicy: 'IfNotPresent',
             env: [
               {
@@ -68,13 +68,11 @@ local app = import 'app.json5';
             ],
             securityContext: {
               readOnlyRootFilesystem: false,
+              allowPrivilegeEscalation: false,
               capabilities: {
                 add: [
                   'NET_ADMIN',
-                  'NET_BIND_SERVICE',
                   'NET_RAW',
-                  'SYS_ADMIN',
-                  'SYS_RESOURCE',
                 ],
                 drop: ['ALL'],
               },

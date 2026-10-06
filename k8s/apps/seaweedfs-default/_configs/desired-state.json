@@ -28,7 +28,10 @@
             "HEAD"
           ],
           "allowedHeaders": [
-            "Content-Type"
+            "Content-Type",
+            "traceparent",
+            "tracestate",
+            "baggage"
           ],
           "exposeHeaders": [
             "ETag"
@@ -55,7 +58,10 @@
             "HEAD"
           ],
           "allowedHeaders": [
-            "Content-Type"
+            "Content-Type",
+            "traceparent",
+            "tracestate",
+            "baggage"
           ],
           "exposeHeaders": [
             "ETag"
@@ -73,11 +79,35 @@
       }
     },
     {
-      "name": "gha-cache",
+      "name": "beast",
       "publicRead": [],
       "placement": {
         "diskType": "ssd",
-        "replication": "000"
+        "replication": "001"
+      }
+    },
+    {
+      "name": "cortex-blocks",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
+      }
+    },
+    {
+      "name": "cortex-ruler",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
+      }
+    },
+    {
+      "name": "cortex-alertmanager",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
       }
     },
     {
@@ -207,6 +237,26 @@
       ]
     },
     {
+      "name": "ipu",
+      "secretTarget": {
+        "namespace": "ipu",
+        "secretName": "ipu-s3-credentials",
+        "accessKeyField": "AWS_ACCESS_KEY_ID",
+        "secretKeyField": "AWS_SECRET_ACCESS_KEY"
+      },
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "s3:GetObject"
+          ],
+          "resources": [
+            "arn:aws:s3:::ipu/*"
+          ]
+        }
+      ]
+    },
+    {
       "name": "maps_read",
       "secretTarget": {
         "namespace": "maps",
@@ -222,6 +272,29 @@
           ],
           "buckets": [
             "maps"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "beast",
+      "secretTarget": {
+        "namespace": "beast",
+        "secretName": "beast-s3-credentials",
+        "accessKeyField": "AWS_ACCESS_KEY_ID",
+        "secretKeyField": "AWS_SECRET_ACCESS_KEY"
+      },
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "Read",
+            "Write",
+            "List",
+            "Tagging"
+          ],
+          "buckets": [
+            "beast"
           ]
         }
       ]
@@ -337,11 +410,6 @@
           },
           {
             "claim": "sub",
-            "value": "system:serviceaccount:ipu:ipu",
-            "role": "ipu"
-          },
-          {
-            "claim": "sub",
             "value": "system:serviceaccount:picca:picca",
             "role": "picca"
           },
@@ -387,8 +455,8 @@
           },
           {
             "claim": "sub",
-            "value": "system:serviceaccount:arc-systems:gha-cache-server",
-            "role": "gha-cache-server"
+            "value": "system:serviceaccount:cortex:iwashi-cortex",
+            "role": "cortex"
           }
         ]
       },
@@ -490,21 +558,6 @@
         ]
       },
       {
-        "name": "ipu",
-        "statements": [
-          {
-            "effect": "Allow",
-            "actions": [
-              "s3:Get*",
-              "s3:List*"
-            ],
-            "buckets": [
-              "ipu"
-            ]
-          }
-        ]
-      },
-      {
         "name": "maps",
         "statements": [
           {
@@ -597,15 +650,22 @@
         ]
       },
       {
-        "name": "gha-cache-server",
+        "name": "cortex",
         "statements": [
           {
             "effect": "Allow",
             "actions": [
-              "s3:*"
+              "s3:Get*",
+              "s3:Put*",
+              "s3:Delete*",
+              "s3:List*",
+              "s3:*Tagging",
+              "s3:AbortMultipartUpload"
             ],
             "buckets": [
-              "gha-cache"
+              "cortex-blocks",
+              "cortex-ruler",
+              "cortex-alertmanager"
             ]
           }
         ]
@@ -632,13 +692,6 @@
         "name": "loki",
         "policies": [
           "loki"
-        ],
-        "provider": "k8s"
-      },
-      {
-        "name": "ipu",
-        "policies": [
-          "ipu"
         ],
         "provider": "k8s"
       },
@@ -699,9 +752,9 @@
         "provider": "k8s"
       },
       {
-        "name": "gha-cache-server",
+        "name": "cortex",
         "policies": [
-          "gha-cache-server"
+          "cortex"
         ],
         "provider": "k8s"
       }

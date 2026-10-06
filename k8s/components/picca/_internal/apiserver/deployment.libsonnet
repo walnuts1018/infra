@@ -6,7 +6,7 @@ function(app)
   local valkeySecret = (import '../valkey/external-secret.libsonnet')(app);
   local rabbitmqSecret = (import '../rabbitmq/external-secret.libsonnet')(app);
   local oidcSecret = (import '../oidc/external-secret.libsonnet')(app);
-  local graphqlSigningSecret = (import '../common/graphql-signing-secret.libsonnet')(app);
+  local albumCapabilitySecret = (import '../common/album-capability-secret.libsonnet')(app);
   local imgproxySecret = (import '../imgproxy/external-secret.libsonnet')(app);
   local plans = (import '../common/plans/mount.libsonnet')(app);
   local s3Irsa = (import '../s3-irsa.libsonnet')(app);
@@ -35,7 +35,7 @@ function(app)
           initContainers: [
             (import '../../../container.libsonnet') {
               name: 'migrations',
-              image: 'ghcr.io/walnuts1018/picca/migrations:v0.0.49',
+              image: 'ghcr.io/walnuts1018/picca/migrations:v0.0.96@sha256:7d5aa77b3e55930e67d491a1a01548c337dd79309ab3bd5c2b3d31f06f5eaca3',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 {
@@ -61,7 +61,7 @@ function(app)
           containers: [
             (import '../../../container.libsonnet') {
               name: 'apiserver',
-              image: 'ghcr.io/walnuts1018/picca/apiserver:v0.0.49',
+              image: 'ghcr.io/walnuts1018/picca/apiserver:v0.0.96@sha256:a01366fe6a8cd4926d32aff5610a32ae3bafcd07bea2b62a38c91528efe81f2a',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 { secretRef: { name: postgresSecret.spec.target.name } },
@@ -69,13 +69,21 @@ function(app)
                 { secretRef: { name: valkeySecret.spec.target.name } },
                 { secretRef: { name: rabbitmqSecret.spec.target.name } },
                 { secretRef: { name: oidcSecret.spec.target.name } },
-                { secretRef: { name: graphqlSigningSecret.spec.target.name } },
+                { secretRef: { name: albumCapabilitySecret.spec.target.name } },
                 { secretRef: { name: imgproxySecret.spec.target.name } },
               ],
               env: commonEnv + s3Irsa.env + scyllaTls.env + plans.env + [
                 {
+                  name: 'IMGPROXY_PUBLIC_URL',
+                  value: 'https://imgproxy-' + app.name + '.walnuts.dev',
+                },
+                {
                   name: 'OTEL_SERVICE_NAME',
                   value: 'picca-apiserver',
+                },
+                {
+                  name: 'TRUSTED_PROXY_CIDRS',
+                  value: '10.0.0.0/24,10.0.1.0/24,10.0.2.0/24,10.0.3.0/24',
                 },
               ],
               ports: [

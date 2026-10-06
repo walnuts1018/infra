@@ -31,6 +31,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
       },
       spec: {
         serviceAccountName: (import 'sa.jsonnet').metadata.name,
+        automountServiceAccountToken: false,
         topologySpreadConstraints: [
           {
             maxSkew: 1,
@@ -54,7 +55,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'docker.io/stalwartlabs/stalwart:v0.16.22',
+            image: 'docker.io/stalwartlabs/stalwart:v0.16.25',
             imagePullPolicy: 'IfNotPresent',
             args: [
               '--config',
@@ -167,7 +168,19 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
               },
             },
           } + {
-            securityContext: null,
+            securityContext: {
+              runAsNonRoot: true,
+              runAsUser: 2000,
+              runAsGroup: 2000,
+              allowPrivilegeEscalation: false,
+              capabilities: {
+                drop: ['ALL'],
+                add: ['NET_BIND_SERVICE'],
+              },
+              seccompProfile: {
+                type: 'RuntimeDefault',
+              },
+            },
           },
         ],
         volumes: [

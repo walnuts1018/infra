@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "grafana": {
+      "command": "mise",
+      "args": [
+        "exec",
+        "--",
+        "mcp-grafana",
+        "--usage-stats=disabled",
+        "-t",
+        "stdio"
+      ]
+    }
+  }
+}

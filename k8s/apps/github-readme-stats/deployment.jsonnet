@@ -18,6 +18,7 @@ local app = import 'app.json5';
         labels: labels(app.name),
       },
       spec: {
+        automountServiceAccountToken: false,
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'github-readme-stats',
@@ -49,6 +50,11 @@ local app = import 'app.json5';
                 },
               },
             ],
+            securityContext: (import '../../components/container.libsonnet').securityContext {
+              runAsNonRoot: true,
+              runAsUser: 1000,
+              allowPrivilegeEscalation: false,
+            },
           },
         ],
       },

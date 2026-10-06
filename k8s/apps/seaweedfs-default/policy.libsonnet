@@ -1,7 +1,3 @@
-// Builds SeaweedFS IAM policy documents (AWS-style JSON policies) from the
-// compact { effect, actions, buckets|resources } shorthand used in
-// _configs/desired-state.json.
-
 local resourceArn(resource) =
   if resource == '*' || std.startsWith(resource, 'arn:') then resource
   else 'arn:aws:s3:::' + resource;
@@ -10,8 +6,6 @@ local bucketResources(buckets) =
   [resourceArn(bucket) for bucket in buckets]
   + [resourceArn(bucket + '/*') for bucket in buckets];
 
-// Shorthand action groups so statements can say `Read`/`Write`/... instead
-// of spelling out the underlying s3:* action list every time.
 local actionAliases = {
   Admin: ['s3:*'],
   List: ['s3:List*'],

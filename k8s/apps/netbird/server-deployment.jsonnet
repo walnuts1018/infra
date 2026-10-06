@@ -21,9 +21,10 @@ local app = import 'app.json5';
         labels: labels(app.name + '-server'),
       },
       spec: {
+        automountServiceAccountToken: false,
         containers: [{
           name: 'netbird-server',
-          image: 'netbirdio/netbird-server:0.78.1',
+          image: 'netbirdio/netbird-server:0.79.0',
           args: [
             '--config',
             '/etc/netbird/config.yaml',
@@ -57,6 +58,14 @@ local app = import 'app.json5';
           },
           securityContext: {
             readOnlyRootFilesystem: false,
+            allowPrivilegeEscalation: false,
+            capabilities: {
+              drop: ['ALL'],
+              add: ['NET_BIND_SERVICE'],
+            },
+            seccompProfile: {
+              type: 'RuntimeDefault',
+            },
           },
           resources: {
             requests: {

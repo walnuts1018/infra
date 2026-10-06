@@ -1,5 +1,7 @@
 # Scylla Manager log level, allowed values are: error, warn, info, debug, trace
 logLevel: info
+image:
+  tag: 3.12.1@sha256:3ec70ef48c31bae76472a1422c64946782b884c36aa3fad0ce69791c47a26370
 resources:
   requests:
     cpu: 10m
@@ -9,6 +11,10 @@ serviceAccount:
   name: ""
 scylla:
   developerMode: true
+  scyllaImage:
+    tag: 2026.3.2
+  agentImage:
+    tag: 3.12.1@sha256:b04eedb439652d1c949dead49de4837cf3f2a3656c8ecc5f574c340556da7673
   datacenter: iwakura
   racks:
   - name: iwakura-a

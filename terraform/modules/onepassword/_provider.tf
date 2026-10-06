@@ -6,7 +6,7 @@ terraform {
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.9.0"
+      version = "3.9.1"
     }
   }
 }
@@ -33,7 +33,21 @@ variable "akvorado_client_secret" {
   sensitive = true
 }
 
+variable "coder_client_id" { type = string }
+
+variable "coder_client_secret" {
+  type      = string
+  sensitive = true
+}
+
 variable "b2_application_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "beast_client_id" { type = string }
+
+variable "beast_client_secret" {
   type      = string
   sensitive = true
 }
@@ -56,6 +70,11 @@ variable "ipu_client_secret" {
 }
 variable "longhorn_client_id" { type = string }
 variable "longhorn_client_secret" {
+  type      = string
+  sensitive = true
+}
+variable "webtop_client_id" { type = string }
+variable "webtop_client_secret" {
   type      = string
   sensitive = true
 }
@@ -88,6 +107,7 @@ variable "picca_client_secret" {
   type      = string
   sensitive = true
 }
+
 variable "picca_dev_client_id" { type = string }
 variable "picca_dev_client_secret" {
   type      = string

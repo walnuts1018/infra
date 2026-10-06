@@ -5,8 +5,12 @@ module "onepassword" {
   service_account_token   = var.onepassword_service_account_token
   akvorado_client_id      = module.zitadel.akvorado_oidc_client_id
   akvorado_client_secret  = module.zitadel.akvorado_oidc_client_secret
+  coder_client_id         = module.zitadel.coder_oidc_client_id
+  coder_client_secret     = module.zitadel.coder_oidc_client_secret
   argocd_cli_client_id    = module.zitadel.argocd_cli_client_id
   b2_application_key      = module.b2.application_key.application_key
+  beast_client_id         = module.zitadel.beast_oidc_client_id
+  beast_client_secret     = module.zitadel.beast_oidc_client_secret
   radar_client_id         = module.zitadel.radar_oidc_client_id
   radar_client_secret     = module.zitadel.radar_oidc_client_secret
   hubble_client_id        = module.zitadel.hubble_oidc_client_id
@@ -17,6 +21,8 @@ module "onepassword" {
   iwashi_client_secret    = module.zitadel.iwashi_oidc_client_secret
   longhorn_client_id      = module.zitadel.longhorn_oidc_client_id
   longhorn_client_secret  = module.zitadel.longhorn_oidc_client_secret
+  webtop_client_id        = module.zitadel.webtop_oidc_client_id
+  webtop_client_secret    = module.zitadel.webtop_oidc_client_secret
   netbird_setup_key       = module.netbird.kubernetes_router_setup_key
   netbox_client_id        = module.zitadel.netbox_oidc_client_id
   netbox_client_secret    = module.zitadel.netbox_oidc_client_secret

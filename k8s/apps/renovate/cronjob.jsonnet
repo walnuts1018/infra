@@ -24,7 +24,7 @@ local externalSecret = import 'external-secret.jsonnet';
             initContainers: [
               (container) {
                 name: 'disk-cleaner',
-                image: 'debian:13.6-slim',
+                image: 'debian:13.7-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f',
                 command: [
                   'sh',
                   '/scripts/disk-cleaner.sh',
@@ -48,7 +48,7 @@ local externalSecret = import 'external-secret.jsonnet';
             containers: [
               (container) {
                 name: 'renovate',
-                image: 'ghcr.io/renovatebot/renovate:44.51.0',
+                image: 'ghcr.io/renovatebot/renovate:44.139.0@sha256:67e76082eded90c6fa1d1552cc9d8d93d1eb06e13e81591aab57b6f4994217be',
                 resources: {
                   requests: {
                     cpu: '1',

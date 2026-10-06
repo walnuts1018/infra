@@ -7,6 +7,12 @@
     ],
   },
   {
+    db_name: 'beast',
+    user_name: 'beast',
+    secret_source_key: 'terraform-external-secrets',
+    secret_source_property: 'beast-database-password',
+  },
+  {
     db_name: 'picca_dev',
     user_name: 'picca_dev',
     extensions: [
@@ -78,6 +84,12 @@
   {
     db_name: 'netbird',
     user_name: 'netbird',
+  },
+  {
+    db_name: 'coder',
+    user_name: 'coder',
+    secret_source_key: 'terraform-external-secrets',
+    secret_source_property: 'coder-database-password',
   },
   {
     db_name: 'visual_regression_tracker',

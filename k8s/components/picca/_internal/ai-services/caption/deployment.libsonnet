@@ -1,37 +1,61 @@
 function(app)
   local labels = import '../../../../labels.libsonnet';
   local sa = (import '../../sa.libsonnet')(app);
+  local rabbitmqSecret = (import '../../rabbitmq/external-secret.libsonnet')(app);
+  local storageEnv = (import '../../env/storage.libsonnet')(app);
+  local s3Irsa = (import '../../s3-irsa.libsonnet')(app);
   {
     apiVersion: 'apps/v1',
     kind: 'Deployment',
     metadata: {
-      name: app.name + '-caption-service',
+      name: app.name + '-caption-worker',
       namespace: app.namespace,
-      labels: labels(app.name + '-caption-service'),
+      labels: labels(app.name + '-caption-worker'),
     },
     spec: {
-      replicas: 1,
+      strategy: { type: 'Recreate' },
+      replicas: 0,
       selector: {
-        matchLabels: labels(app.name + '-caption-service'),
+        matchLabels: labels(app.name + '-caption-worker'),
       },
       template: {
         metadata: {
-          labels: labels(app.name + '-caption-service'),
+          labels: labels(app.name + '-caption-worker'),
         },
         spec: {
           serviceAccountName: sa.metadata.name,
           imagePullSecrets: [{ name: 'ghcr-login-secret' }],
           containers: [
             std.mergePatch((import '../../../../container.libsonnet') {
-              name: 'caption-service',
-              image: 'ghcr.io/walnuts1018/picca/ai-services:v0.0.49',
+              name: 'caption-worker',
+              image: 'ghcr.io/walnuts1018/picca/ai-caption:v0.0.96@sha256:4a86a0406d1ea1f2f8448d4d80a82789d6780828aed761ba7726a154a61e25ff',
               imagePullPolicy: 'IfNotPresent',
-              command: ['python', 'scripts/run_caption_service.py'],
-              env: [
+              command: ['python', 'scripts/run_caption_worker.py'],
+              envFrom: [
+                { secretRef: { name: rabbitmqSecret.spec.target.name } },
+              ],
+              env: s3Irsa.env + storageEnv + [
+                { name: 'HOME', value: '/tmp' },
+                { name: 'HF_HOME', value: '/tmp/huggingface' },
+                { name: 'HF_MODULES_CACHE', value: '/tmp/huggingface/modules' },
+                { name: 'TRANSFORMERS_CACHE', value: '/tmp/huggingface/transformers' },
                 { name: 'PORT', value: '8004' },
                 { name: 'MODEL_DEVICE', value: 'cpu' },
-                { name: 'FLORENCE2_MODEL_NAME', value: '/models/Florence-2-base-ft' },
-                { name: 'TRANSLATE_MODEL_NAME', value: '/models/CAT-Translate-0.8b' },
+                { name: 'AI_INFERENCE_THREADS', value: '2' },
+                { name: 'OMP_NUM_THREADS', value: '2' },
+                { name: 'MKL_NUM_THREADS', value: '2' },
+                { name: 'OPENBLAS_NUM_THREADS', value: '2' },
+                { name: 'NUMEXPR_NUM_THREADS', value: '2' },
+                { name: 'TOKENIZERS_PARALLELISM', value: 'false' },
+                { name: 'OPENVINO_TENSOR_CACHE_PATH', value: '/tmp/runtime-cache/openvino' },
+                { name: 'OPENVINO_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
+                { name: 'OV_CACHE_DIR', value: '/tmp/runtime-cache/openvino' },
+                { name: 'FLORENCE2_MODEL_NAME', value: '/models/Florence-2-large-ft' },
+                { name: 'FLORENCE2_USE_CACHE', value: 'false' },
+                { name: 'AI_CAPTION_TASK_QUEUE', value: 'picca.ai-caption' },
+                { name: 'AI_CAPTION_TASK_ROUTING_KEY', value: 'media.processing.ai.caption.requested.v1' },
+                { name: 'AI_CAPTION_RESULT_ROUTING_KEY', value: 'media.processing.ai.result.v1' },
+                { name: 'AI_RABBITMQ_EXCHANGE', value: 'picca.events' },
               ],
               ports: [
                 { name: 'http', containerPort: 8004 },
@@ -46,14 +70,20 @@ function(app)
                 periodSeconds: 10,
                 failureThreshold: 3,
               },
+              startupProbe: {
+                httpGet: { path: '/healthz', port: 'http' },
+                periodSeconds: 10,
+                failureThreshold: 180,
+              },
               resources: {
-                requests: { cpu: '1', memory: '2Gi' },
-                limits: { cpu: '4', memory: '6Gi' },
+                requests: { cpu: '1', memory: '6Gi' },
+                limits: { cpu: '4', memory: '16Gi' },
               },
               volumeMounts: [
                 { name: 'tmp', mountPath: '/tmp' },
+                { name: 'runtime-cache', mountPath: '/tmp/runtime-cache' },
                 { name: 'models', mountPath: '/models', readOnly: true },
-              ],
+              ] + s3Irsa.volumeMounts,
             }, {
               securityContext: {
                 allowPrivilegeEscalation: false,
@@ -68,14 +98,15 @@ function(app)
           },
           volumes: [
             { name: 'tmp', emptyDir: {} },
+            { name: 'runtime-cache', emptyDir: { sizeLimit: '2Gi' } },
             {
               name: 'models',
               image: {
-                reference: 'ghcr.io/walnuts1018/picca/ai-models-caption:v0.0.1',
+                reference: 'ghcr.io/walnuts1018/picca/ai-models-caption:v0.0.62',
                 pullPolicy: 'IfNotPresent',
               },
             },
-          ],
+          ] + s3Irsa.volumes,
         },
       },
     },
