@@ -10,6 +10,13 @@ local app = import 'app.json5';
   },
   spec: {
     replicas: 1,
+    strategy: {
+      type: 'RollingUpdate',
+      rollingUpdate: {
+        maxSurge: 0,
+        maxUnavailable: 1,
+      },
+    },
     selector: {
       matchLabels: {
         'app.kubernetes.io/name': 'akvorado',
