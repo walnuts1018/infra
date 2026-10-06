@@ -1,4 +1,5 @@
 [tools]
+actionlint = "1.7.12"
 go = "1.27.1"
 dyff = "1.12.0"
 kubeconform = "0.8.0"
@@ -60,7 +61,7 @@ run = "kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps"
 
 [tasks.github-actions-lint]
 description = "Lint GitHub Actions workflows"
-run = "ghalint run"
+run = "actionlint && ghalint run"
 
 [tasks.trivy-config]
 description = "Scan rendered Kubernetes manifests with Trivy"

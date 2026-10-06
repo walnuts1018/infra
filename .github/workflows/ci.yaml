@@ -32,24 +32,22 @@ jobs:
 
       - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
         with:
-          install_args: go go-jsonnet kubeconform trivy ghalint dyff
+          install_args: actionlint go go-jsonnet kubeconform trivy ghalint dyff
 
-      - parallel:
-          - name: Check Jsonnet format
-            run: mise run jsonnet-fmt-check
+      - name: Check Jsonnet format
+        run: mise run jsonnet-fmt-check
 
-          - name: Lint GitHub Actions workflows
-            run: mise run github-actions-lint
+      - name: Lint GitHub Actions workflows
+        run: mise run github-actions-lint
 
-          - name: Generate snapshots
-            run: mise run snapshot
+      - name: Generate snapshots
+        run: mise run snapshot
 
-      - parallel:
-          - name: Validate application manifests
-            run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
+      - name: Validate application manifests
+        run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
 
-          - name: Generate Trivy config report
-            run: mise run trivy-config-report
+      - name: Generate Trivy config report
+        run: mise run trivy-config-report
 
       - name: Upload snapshots
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
