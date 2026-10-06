@@ -9,6 +9,9 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   snapshot:
     runs-on: ubuntu-latest
@@ -19,14 +22,20 @@ jobs:
         with:
           client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
+          permission-contents: write
 
-      - name: Set env
+      - name: Configure GitHub App token
         if: ${{ github.ref_name == 'main' }}
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
-          echo "GITHUB_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
+          echo "GH_TOKEN=${GH_TOKEN}" >> "$GITHUB_ENV"
+          gh auth setup-git
 
       - name: Check out
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: switch to snapshot branch
         run: git switch -c snapshot
@@ -112,6 +121,7 @@ jobs:
   # auto megeはskipもsuccessとみなす
   status-check:
     runs-on: ubuntu-latest
+    permissions: {}
     needs: [lint, jsonnet-fmt]
     if: failure()
     steps:

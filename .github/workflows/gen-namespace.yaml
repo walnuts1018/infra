@@ -5,12 +5,17 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
       - name: Check out
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: switch to auto-gen-namespace branch
         run: git switch -c auto-gen-namespace
@@ -29,19 +34,24 @@ jobs:
       - name: check diff
         id: check-diff
         run: |
-          echo "diff=$(git diff --name-only | wc -l)" >> $GITHUB_OUTPUT
+          echo "diff=$(git diff --name-only | wc -l)" >> "$GITHUB_OUTPUT"
 
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: generate_token
         if: steps.check-diff.outputs.diff > 0
         with:
-          app-id: ${{ secrets.APP_ID }}
+          client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
 
-      - name: Set env
+      - name: Configure GitHub App token
         if: steps.check-diff.outputs.diff > 0
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
-          echo "GH_TOKEN=${{ steps.generate_token.outputs.token }}" >> $GITHUB_ENV
+          echo "GH_TOKEN=${GH_TOKEN}" >> "$GITHUB_ENV"
+          gh auth setup-git
 
       - name: push
         if: steps.check-diff.outputs.diff > 0
@@ -54,6 +64,8 @@ jobs:
 
       - name: create PR
         if: steps.check-diff.outputs.diff > 0
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           gh pr create --title "auto-gen-namespace" --body "auto-gen-namespace" --base main --head auto-gen-namespace
           gh pr merge --merge --auto
