@@ -11,6 +11,10 @@ manager:
     limits:
       cpu: 200m
       memory: 128Mi
+  deploymentAnnotations:
+    argocd.argoproj.io/sync-options: Replace=true
+  serviceAnnotations:
+    argocd.argoproj.io/sync-options: Replace=true
 
 tolerations:
 - key: "node.walnuts.dev/low-performance"
