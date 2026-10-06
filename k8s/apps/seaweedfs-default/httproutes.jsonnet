@@ -22,7 +22,7 @@ local route(name, hostname) = {
         backendRefs: [
           {
             kind: 'Service',
-            name: seaweed.metadata.name + '-filer',
+            name: seaweed.metadata.name + '-s3',
             port: 8333,
             weight: 1,
           },

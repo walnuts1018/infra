@@ -7,6 +7,9 @@ local app = import 'app.json5';
     name: app.name,
     namespace: app.namespace,
     labels: labels(app.name),
+    annotations: {
+      'lbipam.cilium.io/ips': '192.168.12.132',
+    },
   },
   spec: {
     externalTrafficPolicy: 'Local',
@@ -19,6 +22,5 @@ local app = import 'app.json5';
     ],
     selector: labels(app.name),
     type: 'LoadBalancer',
-    loadBalancerIP: '192.168.12.132',
   },
 }

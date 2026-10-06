@@ -27,7 +27,7 @@ local app = import 'app.json5';
         backendRefs: [
           {
             kind: 'Service',
-            name: app.name + '-filer',
+            name: app.name + '-s3',
             port: 8333,
           },
         ],

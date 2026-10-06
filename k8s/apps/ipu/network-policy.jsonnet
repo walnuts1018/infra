@@ -39,7 +39,7 @@ local app = import 'app.json5';
             },
             podSelector: {
               matchLabels: {
-                'app.kubernetes.io/component': 'filer',
+                'app.kubernetes.io/component': 's3',
                 'app.kubernetes.io/instance': 'seaweedfs-default',
                 'app.kubernetes.io/managed-by': 'seaweedfs-operator',
                 'app.kubernetes.io/name': 'seaweedfs',

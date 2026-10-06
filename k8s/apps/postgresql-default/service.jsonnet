@@ -8,6 +8,9 @@ local app = import 'app.json5';
     labels: {
       'cnpg.io/cluster': 'postgresql-default',
     },
+    annotations: {
+      'lbipam.cilium.io/ips': '192.168.12.141',
+    },
   },
   spec: {
     selector: {
@@ -23,6 +26,5 @@ local app = import 'app.json5';
       },
     ],
     type: 'LoadBalancer',
-    loadBalancerIP: '192.168.12.141',
   },
 }

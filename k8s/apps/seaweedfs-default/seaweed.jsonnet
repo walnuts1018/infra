@@ -131,9 +131,6 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
     },
     filer: {
       replicas: 2,
-      s3: {
-        enabled: true,
-      },
       requests: {
         cpu: '60m',
         memory: '512Mi',
@@ -145,10 +142,6 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         type: 'ClusterIP',
       },
       config: '',
-      extraArgs: [
-        '-s3.iam.config=/etc/seaweedfs/iam.json',
-        '-s3.domainName=seaweedfs.local.walnuts.dev',
-      ],
       affinity: {
         nodeAffinity: storage.avoidSlowNodeAffinity.nodeAffinity,
         podAntiAffinity: {
@@ -209,6 +202,55 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
           readOnly: true,
         },
       ],
+    },
+    s3: {
+      replicas: 2,
+      requests: {
+        cpu: '60m',
+        memory: '512Mi',
+      },
+      limits: {
+        memory: '2Gi',
+      },
+      domainName: 'seaweedfs.local.walnuts.dev',
+      extraArgs: [
+        '-iam.config=/etc/seaweedfs/iam.json',
+      ],
+      metricsPort: 9327,
+      volumes: [
+        {
+          name: 's3-config-custom',
+          secret: {
+            secretName: externalSecretConfig.spec.target.name,
+          },
+        },
+      ],
+      volumeMounts: [
+        {
+          mountPath: '/etc/seaweedfs',
+          name: 's3-config-custom',
+          readOnly: true,
+        },
+      ],
+      affinity: {
+        nodeAffinity: storage.avoidSlowNodeAffinity.nodeAffinity,
+        podAntiAffinity: {
+          preferredDuringSchedulingIgnoredDuringExecution: [
+            {
+              weight: 100,
+              podAffinityTerm: {
+                labelSelector: {
+                  matchLabels: {
+                    'app.kubernetes.io/component': 's3',
+                    'app.kubernetes.io/instance': $.metadata.name,
+                  },
+                },
+                topologyKey: 'kubernetes.io/hostname',
+              },
+            },
+          ],
+        },
+      },
     },
   },
 }

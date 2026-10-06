@@ -33,7 +33,7 @@ static_resources:
                       service_name: s3
                       region: us-east-1
                       use_unsigned_payload: true
-                      host_rewrite: seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+                      host_rewrite: seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
                       match_excluded_headers:
                         - prefix: x-envoy
                         - prefix: x-forwarded
@@ -53,5 +53,5 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: seaweedfs-default-filer.seaweedfs.svc.cluster.local
+                      address: seaweedfs-default-s3.seaweedfs.svc.cluster.local
                       port_value: 8333

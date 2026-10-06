@@ -21,7 +21,9 @@ function(
       k8sServicePort: k8sServicePort,
       ingressController: {
         service: {
-          loadBalancerIP: ingressLoadBalancerIP,
+          annotations: {
+            'lbipam.cilium.io/ips': ingressLoadBalancerIP,
+          },
         },
       },
       cluster: {

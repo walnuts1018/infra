@@ -11,6 +11,12 @@
   },
   spec: {
     gatewayClassName: (import 'gateway-class.jsonnet').metadata.name,
+    addresses: [
+      {
+        type: 'IPAddress',
+        value: '192.168.12.138',
+      },
+    ],
     listeners: [
       {
         name: 'http',

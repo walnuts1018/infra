@@ -1,4 +1,5 @@
 local app = import 'app.json5';
+local authorization = import 'authorization.libsonnet';
 
 {
   apiVersion: 'monitoring.coreos.com/v1',
@@ -9,6 +10,7 @@ local app = import 'app.json5';
     labels: (import '../../components/labels.libsonnet')(app.name),
   },
   spec: {
+    serviceDiscoveryRole: 'EndpointSlice',
     jobLabel: 'k8s-app',
     namespaceSelector: {
       matchNames: ['kube-system'],
@@ -21,7 +23,7 @@ local app = import 'app.json5';
     },
     endpoints: [
       {
-        bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+        authorization: authorization,
         honorLabels: true,
         honorTimestamps: true,
         metricRelabelings: [
@@ -54,7 +56,7 @@ local app = import 'app.json5';
         },
       },
       {
-        bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+        authorization: authorization,
         honorLabels: true,
         honorTimestamps: true,
         interval: '30s',
@@ -131,7 +133,7 @@ local app = import 'app.json5';
         trackTimestampsStaleness: true,
       },
       {
-        bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token',
+        authorization: authorization,
         honorLabels: true,
         honorTimestamps: true,
         path: '/metrics/probes',

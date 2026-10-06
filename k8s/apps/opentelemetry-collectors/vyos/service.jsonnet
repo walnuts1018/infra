@@ -3,6 +3,9 @@
   kind: 'Service',
   metadata: {
     name: 'vyos-collector-ingest',
+    annotations: {
+      'lbipam.cilium.io/ips': '192.168.12.136',
+    },
   },
   spec: {
     selector: {
@@ -19,6 +22,5 @@
       },
     ],
     type: 'LoadBalancer',
-    loadBalancerIP: '192.168.12.136',
   },
 }

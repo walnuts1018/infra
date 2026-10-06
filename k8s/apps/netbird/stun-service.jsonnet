@@ -6,10 +6,12 @@ local app = import 'app.json5';
   metadata: {
     name: app.name + '-stun',
     namespace: app.namespace,
+    annotations: {
+      'lbipam.cilium.io/ips': '192.168.12.142',
+    },
   },
   spec: {
     type: 'LoadBalancer',
-    loadBalancerIP: '192.168.12.142',
     selector: labels(app.name + '-server'),
     ports: [{
       name: 'stun',

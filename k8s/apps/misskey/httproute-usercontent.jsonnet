@@ -59,7 +59,7 @@ local seaweedS3DomainName = 'seaweedfs.local.walnuts.dev';
         backendRefs: [
           {
             kind: 'Service',
-            name: seaweed.metadata.name + '-filer',
+            name: seaweed.metadata.name + '-s3',
             namespace: seaweed.metadata.namespace,
             port: 8333,
             weight: 1,

@@ -5,7 +5,7 @@ local config = |||
   type = s3
   provider = Other
   env_auth = true
-  endpoint = http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+  endpoint = http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
   region = us-east-1
   no_check_bucket = true
 |||;

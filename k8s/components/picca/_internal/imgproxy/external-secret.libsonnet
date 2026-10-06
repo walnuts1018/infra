@@ -23,7 +23,7 @@ function(app, useSuffix=true)
       IMGPROXY_PROMETHEUS_BIND: ':8081',
       IMGPROXY_FAIL_ON_DEPRECATION: 'true',
       IMGPROXY_USE_S3: 'true',
-      IMGPROXY_S3_ENDPOINT: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333',
+      IMGPROXY_S3_ENDPOINT: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
       IMGPROXY_S3_REGION: 'us-east-1',
       IMGPROXY_S3_ALLOWED_BUCKETS: app.name,
       IMGPROXY_S3_ENDPOINT_USE_PATH_STYLE: 'true',

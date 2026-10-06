@@ -7,10 +7,12 @@ local app = import 'app.json5';
     name: app.name + '-webrtc',
     namespace: app.namespace,
     labels: labels(app.name),
+    annotations: {
+      'lbipam.cilium.io/ips': '192.168.12.143',
+    },
   },
   spec: {
     type: 'LoadBalancer',
-    loadBalancerIP: '192.168.12.143',
     selector: labels(app.name),
     ports: [
       {

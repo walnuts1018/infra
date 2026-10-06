@@ -74,7 +74,7 @@ static_resources:
                                 exact_match: GET
                           route:
                             cluster: seaweedfs_s3
-                            host_rewrite_literal: seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+                            host_rewrite_literal: seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
                             regex_rewrite:
                               pattern:
                                 regex: ^/$
@@ -87,7 +87,7 @@ static_resources:
                                 exact_match: HEAD
                           route:
                             cluster: seaweedfs_s3
-                            host_rewrite_literal: seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+                            host_rewrite_literal: seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
                             regex_rewrite:
                               pattern:
                                 regex: ^/$
@@ -101,7 +101,7 @@ static_resources:
                                 exact_match: GET
                           route:
                             cluster: seaweedfs_s3
-                            host_rewrite_literal: seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+                            host_rewrite_literal: seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
                             regex_rewrite:
                               pattern:
                                 regex: ^/(.*)/$
@@ -115,7 +115,7 @@ static_resources:
                                 exact_match: HEAD
                           route:
                             cluster: seaweedfs_s3
-                            host_rewrite_literal: seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+                            host_rewrite_literal: seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
                             regex_rewrite:
                               pattern:
                                 regex: ^/(.*)/$
@@ -128,7 +128,7 @@ static_resources:
                                 exact_match: GET
                           route:
                             cluster: seaweedfs_s3
-                            host_rewrite_literal: seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+                            host_rewrite_literal: seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
                             prefix_rewrite: /ipu/
                           request_headers_to_remove: [authorization, cookie]
                         - match:
@@ -138,7 +138,7 @@ static_resources:
                                 exact_match: HEAD
                           route:
                             cluster: seaweedfs_s3
-                            host_rewrite_literal: seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333
+                            host_rewrite_literal: seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
                             prefix_rewrite: /ipu/
                           request_headers_to_remove: [authorization, cookie]
                         - match:
@@ -169,7 +169,7 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: seaweedfs-default-filer.seaweedfs.svc.cluster.local
+                      address: seaweedfs-default-s3.seaweedfs.svc.cluster.local
                       port_value: 8333
       typed_extension_protocol_options:
         envoy.extensions.upstreams.http.v3.HttpProtocolOptions:

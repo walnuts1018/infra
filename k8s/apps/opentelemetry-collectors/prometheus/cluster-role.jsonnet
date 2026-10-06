@@ -14,7 +14,6 @@
         'nodes',
         'pods',
         'services',
-        'endpoints',
       ],
       verbs: [
         'get',

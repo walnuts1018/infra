@@ -1,6 +1,6 @@
 defaultSettings:
   allowNodeDrainWithLastHealthyReplica: true
-  orphanAutoDeletion: true
+  orphanResourceAutoDeletion: "replica-data"
   defaultReplicaCount: '2'
   autoCleanupSnapshotWhenDeleteBackup: true
   snapshotDataIntegrity: true

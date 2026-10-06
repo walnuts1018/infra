@@ -1,7 +1,7 @@
 function(app) [
   {
     name: 'AWS_ENDPOINT_URL_S3',
-    value: 'http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333',
+    value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
   },
   {
     name: 'AWS_REGION',
