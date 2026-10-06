@@ -10,6 +10,8 @@ coder = "2.36.5"
 kubectl = "1.37.1"
 trivy = "0.75.0"
 "go:github.com/grafana/mcp-grafana/v2/cmd/mcp-grafana" = "v2.0.0"
+actionlint = "1.7.12"
+ghalint = "1.5.6"
 
 [env]
 _.file = { path = ".env", redact = true }
