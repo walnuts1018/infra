@@ -26,7 +26,7 @@ local authorization = import 'authorization.libsonnet';
         port: 'http-metrics',
         scheme: 'https',
         tlsConfig: {
-          caFile: '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt',
+          caFile: '/etc/otel/kubernetes/ca.crt',
           insecureSkipVerify: true,
         },
       },

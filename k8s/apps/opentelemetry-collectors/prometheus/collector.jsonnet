@@ -357,11 +357,28 @@ function(
         name: 'tmp',
         emptyDir: {},
       },
+      {
+        name: 'kubernetes-ca',
+        configMap: {
+          name: 'kube-root-ca.crt',
+          items: [
+            {
+              key: 'ca.crt',
+              path: 'ca.crt',
+            },
+          ],
+        },
+      },
     ],
     volumeMounts: [
       {
         name: 'tmp',
         mountPath: '/tmp',
+      },
+      {
+        name: 'kubernetes-ca',
+        mountPath: '/etc/otel/kubernetes',
+        readOnly: true,
       },
     ],
   },
