@@ -59,6 +59,11 @@ output "kubernetes_oidc_project_id" {
   description = "ZITADEL project ID used as the OIDC audience by kube-oidc-proxy"
 }
 
+output "kubernetes_oidc_cli_client_id" {
+  value       = module.zitadel.kubernetes_oidc_cli_client_id
+  description = "Public OIDC client ID for Kubernetes CLI device authorization"
+}
+
 output "terraform_cloud_saml_metadata_url" {
   value       = module.zitadel.terraform_cloud_saml_metadata_url
   description = "Zitadel SAML metadata URL for Terraform Cloud"
