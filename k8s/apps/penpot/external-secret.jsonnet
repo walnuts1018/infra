@@ -54,7 +54,7 @@ externalSecret {
     'oidc-required-role': '{{ .oidcRequiredRole }}',
     username: 'penpot',
     password: '{{ .databasePassword }}',
-    'database-uri': 'postgresql://penpot:{{ .databasePassword }}@postgresql-default-rw.databases.svc.cluster.local:5432/penpot',
+    'database-uri': 'postgresql://postgresql-default-rw.databases.svc.cluster.local:5432/penpot',
     'redis-password': '{{ .redisPassword }}',
     'redis-uri': 'redis://:{{ .redisPassword }}@penpot-valkey.penpot.svc.cluster.local:6379/0',
   },
