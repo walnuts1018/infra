@@ -95,12 +95,12 @@ local valkeyLabels = (import '../../components/labels.libsonnet')(app.name + '-v
             },
             resources: {
               requests: {
-                cpu: '10m',
-                memory: '128Mi',
+                cpu: '5m',
+                memory: '16Mi',
               },
               limits: {
-                cpu: '500m',
-                memory: '384Mi',
+                cpu: '100m',
+                memory: '256Mi',
               },
             },
             volumeMounts: [
