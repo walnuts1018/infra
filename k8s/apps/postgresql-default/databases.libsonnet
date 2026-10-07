@@ -42,6 +42,12 @@
     user_name: 'nextcloud',
   },
   {
+    db_name: 'penpot',
+    user_name: 'penpot',
+    secret_source_key: 'terraform-external-secrets',
+    secret_source_property: 'penpot-database-password',
+  },
+  {
     db_name: 'oekaki_dengon_game',
     user_name: 'oekaki_dengon_game',
   },

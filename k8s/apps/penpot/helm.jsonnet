@@ -6,10 +6,4 @@ local app = import 'app.json5';
   repoURL: 'https://helm.penpot.app/',
   targetRevision: '1.11.3',
   values: (importstr 'values.yaml'),
-} + {
-  metadata+: {
-    annotations: {
-      'argocd.argoproj.io/sync-wave': '1',
-    },
-  },
 }

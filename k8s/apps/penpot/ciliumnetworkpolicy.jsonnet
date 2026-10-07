@@ -50,17 +50,14 @@ local seaweedS3 = {
   'k8s:app.kubernetes.io/name': 'seaweedfs',
 };
 local postgres = {
-  'k8s:io.kubernetes.pod.namespace': app.namespace,
-  'k8s:cnpg.io/cluster': app.name + '-postgresql',
+  'k8s:io.kubernetes.pod.namespace': 'databases',
+  'k8s:cnpg.io/cluster': 'postgresql-default',
+  'k8s:cnpg.io/instanceRole': 'primary',
 };
 local monitoring = {
   'k8s:io.kubernetes.pod.namespace': 'opentelemetry-collector',
   'k8s:app.kubernetes.io/name': 'prometheus-collector',
   'k8s:app.kubernetes.io/instance': 'opentelemetry-collector.prometheus',
-};
-local cloudNativePG = {
-  'k8s:io.kubernetes.pod.namespace': 'cloudnative-pg',
-  'k8s:app.kubernetes.io/name': 'cloudnative-pg',
 };
 local fqdn(name, port) = {
   toFQDNs: [{ matchName: name }],
@@ -136,24 +133,5 @@ local policy(name, endpoint, ingress, egress) = {
       from(component('mcp'), [6379]),
     ],
     [dns],
-  ),
-  policy(
-    'postgresql',
-    postgres,
-    [
-      from(component('backend'), [5432]),
-      from(postgres, [5432, 8000]),
-      from(cloudNativePG, [8000]),
-      from(monitoring, [9187]),
-    ],
-    [
-      dns,
-      to(postgres, [5432, 8000]),
-      fqdn('seaweedfs.local.walnuts.dev', 443),
-      {
-        toEntities: ['kube-apiserver'],
-        toPorts: [{ ports: ports([443]) }],
-      },
-    ],
   ),
 ]

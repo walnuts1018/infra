@@ -468,11 +468,6 @@
           },
           {
             "claim": "sub",
-            "value": "system:serviceaccount:penpot:penpot-postgresql",
-            "role": "cloudnative-pg-backup"
-          },
-          {
-            "claim": "sub",
             "value": "system:serviceaccount:tempo:tempo",
             "role": "tempo"
           },
