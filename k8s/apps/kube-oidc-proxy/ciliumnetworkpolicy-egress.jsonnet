@@ -15,10 +15,10 @@ local app = import 'app.json5';
     },
     egress: [
       {
-        toEndpoints: [{
-          matchLabels: {
-            'k8s:io.kubernetes.pod.namespace': 'kube-system',
-            'k8s:k8s-app': 'kube-dns',
+        toServices: [{
+          k8sService: {
+            serviceName: 'kube-dns',
+            namespace: 'kube-system',
           },
         }],
         toPorts: [{
