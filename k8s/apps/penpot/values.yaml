@@ -92,7 +92,7 @@ frontend:
     hpa:
       enabled: true
       minReplicas: 1
-      maxReplicas: 2
+      maxReplicas: 1
       metrics:
         - type: Resource
           resource:
@@ -102,6 +102,8 @@ frontend:
               averageUtilization: 70
 
 backend:
+  updateStrategy:
+    type: Recreate
   podSecurityContext:
     fsGroup: 1001
     seccompProfile:
@@ -112,9 +114,9 @@ backend:
         nodeSelectorTerms:
           - matchExpressions:
               - key: kubernetes.io/hostname
-                operator: NotIn
+                operator: In
                 values:
-                  - lemon
+                  - rusk
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
@@ -127,7 +129,7 @@ backend:
   resources:
     requests:
       cpu: 250m
-      memory: 1Gi
+      memory: 768Mi
     limits:
       cpu: "2"
       memory: 4Gi
@@ -138,7 +140,7 @@ backend:
     hpa:
       enabled: true
       minReplicas: 1
-      maxReplicas: 2
+      maxReplicas: 1
       metrics:
         - type: Resource
           resource:
@@ -184,9 +186,9 @@ exporter:
         nodeSelectorTerms:
           - matchExpressions:
               - key: kubernetes.io/hostname
-                operator: NotIn
+                operator: In
                 values:
-                  - lemon
+                  - rusk
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
@@ -199,7 +201,7 @@ exporter:
   resources:
     requests:
       cpu: 200m
-      memory: 512Mi
+      memory: 256Mi
     limits:
       cpu: "2"
       memory: 2Gi
@@ -210,7 +212,7 @@ exporter:
     hpa:
       enabled: true
       minReplicas: 1
-      maxReplicas: 2
+      maxReplicas: 1
       metrics:
         - type: Resource
           resource:
@@ -230,9 +232,9 @@ mcp:
         nodeSelectorTerms:
           - matchExpressions:
               - key: kubernetes.io/hostname
-                operator: NotIn
+                operator: In
                 values:
-                  - lemon
+                  - rusk
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
@@ -256,7 +258,7 @@ mcp:
     hpa:
       enabled: true
       minReplicas: 1
-      maxReplicas: 2
+      maxReplicas: 1
       metrics:
         - type: Resource
           resource:

@@ -23,6 +23,9 @@ local valkeyLabels = (import '../../components/labels.libsonnet')(app.name + '-v
         labels: valkeyLabels,
       },
       spec: {
+        nodeSelector: {
+          'kubernetes.io/hostname': 'rusk',
+        },
         serviceAccountName: app.name,
         securityContext: {
           runAsNonRoot: true,
