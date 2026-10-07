@@ -17,8 +17,8 @@ local app = import 'app.json5';
       {
         toEndpoints: [{
           matchLabels: {
-            'k8s:io.kubernetes.pod.namespace': 'coredns',
-            'k8s:app.kubernetes.io/name': 'coredns',
+            'k8s:io.kubernetes.pod.namespace': 'kube-system',
+            'k8s:k8s-app': 'kube-dns',
           },
         }],
         toPorts: [{
