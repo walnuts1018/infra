@@ -103,7 +103,10 @@ frontend:
 
 backend:
   updateStrategy:
-    type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   podSecurityContext:
     fsGroup: 1001
     seccompProfile:
