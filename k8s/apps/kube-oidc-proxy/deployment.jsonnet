@@ -25,6 +25,12 @@ local labels = {
       },
       spec: {
         automountServiceAccountToken: true,
+        dnsConfig: {
+          options: [{
+            name: 'ndots',
+            value: '1',
+          }],
+        },
         serviceAccountName: serviceAccount.metadata.name,
         containers: [
           {
