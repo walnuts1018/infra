@@ -36,4 +36,7 @@ module "onepassword" {
   picca_dev_client_secret = module.zitadel.picca_dev_oidc_client_secret
   shumoku_client_id       = module.zitadel.shumoku_oidc_client_id
   shumoku_client_secret   = module.zitadel.shumoku_oidc_client_secret
+  penpot_client_id        = module.zitadel.penpot_oidc_client_id
+  penpot_client_secret    = module.zitadel.penpot_oidc_client_secret
+  penpot_project_id       = module.zitadel.penpot_project_id
 }

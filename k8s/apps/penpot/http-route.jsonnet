@@ -5,9 +5,9 @@ local app = import 'app.json5';
   apiVersion: 'gateway.networking.k8s.io/v1',
   kind: 'HTTPRoute',
   metadata: {
-    name: app.name + '-s3',
+    name: app.name,
     namespace: app.namespace,
-    labels: labels(app.name + '-s3'),
+    labels: labels(app.name),
   },
   spec: {
     parentRefs: [
@@ -16,20 +16,17 @@ local app = import 'app.json5';
         namespace: gateway.metadata.namespace,
       },
     ],
-    // バケットごとに具体的な hostname を列挙する。バケットを追加したらここにも追記する。
-    hostnames: [
-      'visual-regression-tracker.seaweedfs.local.walnuts.dev',
-      'picca.seaweedfs.walnuts.dev',
-      'picca-dev.seaweedfs.walnuts.dev',
-      'penpot.seaweedfs.walnuts.dev',
-    ],
+    hostnames: ['penpot.walnuts.dev'],
     rules: [
       {
+        timeouts: {
+          request: '0s',
+          backendRequest: '0s',
+        },
         backendRefs: [
           {
-            kind: 'Service',
-            name: app.name + '-s3',
-            port: 8333,
+            name: app.name,
+            port: 8080,
           },
         ],
       },

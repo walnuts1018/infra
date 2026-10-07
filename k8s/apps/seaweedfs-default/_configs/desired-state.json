@@ -177,6 +177,34 @@
       }
     },
     {
+      "name": "penpot",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
+      },
+      "cors": [
+        {
+          "allowedOrigins": [
+            "https://penpot.walnuts.dev"
+          ],
+          "allowedMethods": [
+            "GET",
+            "PUT",
+            "HEAD"
+          ],
+          "allowedHeaders": [
+            "Content-Type",
+            "x-amz-*"
+          ],
+          "exposeHeaders": [
+            "ETag"
+          ],
+          "maxAgeSeconds": 3600
+        }
+      ]
+    },
+    {
       "name": "oekaki-dengon-game",
       "publicRead": [
         "*"
@@ -435,6 +463,16 @@
           },
           {
             "claim": "sub",
+            "value": "system:serviceaccount:penpot:penpot",
+            "role": "penpot"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:penpot:penpot-postgresql",
+            "role": "cloudnative-pg-backup"
+          },
+          {
+            "claim": "sub",
             "value": "system:serviceaccount:tempo:tempo",
             "role": "tempo"
           },
@@ -608,6 +646,25 @@
         ]
       },
       {
+        "name": "penpot",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:Get*",
+              "s3:Put*",
+              "s3:Delete*",
+              "s3:List*",
+              "s3:*Tagging",
+              "s3:AbortMultipartUpload"
+            ],
+            "buckets": [
+              "penpot"
+            ]
+          }
+        ]
+      },
+      {
         "name": "pyroscope",
         "statements": [
           {
@@ -741,6 +798,13 @@
         "name": "netbox",
         "policies": [
           "netbox"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "penpot",
+        "policies": [
+          "penpot"
         ],
         "provider": "k8s"
       },

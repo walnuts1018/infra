@@ -101,6 +101,20 @@ resource "random_id" "beast_media_encryption_key" {
   byte_length = 32
 }
 
+resource "random_password" "penpot_database_password" {
+  length  = 32
+  special = false
+}
+
+resource "random_password" "penpot_redis_password" {
+  length  = 32
+  special = false
+}
+
+resource "random_id" "penpot_api_secret_key" {
+  byte_length = 64
+}
+
 resource "onepassword_item" "external_secret" {
   vault    = var.vault
   title    = "terraform-external-secrets"
@@ -158,6 +172,12 @@ resource "onepassword_item" "external_secret" {
         "picca-dev-imgproxy-salt"                  = { type = "CONCEALED", value = random_id.picca_dev_imgproxy_salt.hex }
         "picca-dev-redis-password"                 = { type = "CONCEALED", value = random_password.picca_dev_redis_password.result }
         "picca-dev-rabbitmq-password"              = { type = "CONCEALED", value = random_password.picca_dev_rabbitmq_password.result }
+        "penpot-client-id"                         = { type = "STRING", value = var.penpot_client_id }
+        "penpot-client-secret"                     = { type = "CONCEALED", value = var.penpot_client_secret }
+        "penpot-oidc-required-role"                = { type = "STRING", value = "${var.penpot_project_id}:penpot-user" }
+        "penpot-api-secret-key"                    = { type = "CONCEALED", value = random_id.penpot_api_secret_key.hex }
+        "penpot-database-password"                 = { type = "CONCEALED", value = random_password.penpot_database_password.result }
+        "penpot-redis-password"                    = { type = "CONCEALED", value = random_password.penpot_redis_password.result }
         "radar-auth-secret"                        = { type = "CONCEALED", value = random_password.radar_auth_secret.result }
         "radar-client-id"                          = { type = "STRING", value = var.radar_client_id }
         "radar-client-secret"                      = { type = "CONCEALED", value = var.radar_client_secret }

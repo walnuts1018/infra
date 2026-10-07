@@ -118,3 +118,10 @@ variable "shumoku_client_secret" {
   type      = string
   sensitive = true
 }
+
+variable "penpot_client_id" { type = string }
+variable "penpot_client_secret" {
+  type      = string
+  sensitive = true
+}
+variable "penpot_project_id" { type = string }

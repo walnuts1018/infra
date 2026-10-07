@@ -68,3 +68,19 @@ output "terraform_cloud_saml_metadata_url" {
   value       = module.zitadel.terraform_cloud_saml_metadata_url
   description = "Zitadel SAML metadata URL for Terraform Cloud"
 }
+
+output "penpot_oidc_client_id" {
+  value       = module.zitadel.penpot_oidc_client_id
+  description = "Client ID for Penpot's ZITADEL OIDC application"
+}
+
+output "penpot_oidc_client_secret" {
+  value       = module.zitadel.penpot_oidc_client_secret
+  sensitive   = true
+  description = "Client secret for Penpot's ZITADEL OIDC application"
+}
+
+output "penpot_project_id" {
+  value       = module.zitadel.penpot_project_id
+  description = "ZITADEL project ID used by Penpot role restriction"
+}

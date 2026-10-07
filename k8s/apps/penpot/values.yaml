@@ -1,0 +1,234 @@
+serviceAccount:
+  enabled: false
+  name: penpot
+
+config:
+  publicUri: https://penpot.walnuts.dev
+  telemetryEnabled: false
+  flags: >-
+    disable-registration
+    disable-login-with-password
+    enable-login-with-oidc
+    enable-oidc-registration
+    enable-mcp
+  existingSecret: penpot-secrets
+  secretKeys:
+    apiSecretKey: api-secret-key
+  postgresql:
+    existingSecret: penpot-secrets
+    secretKeys:
+      postgresqlUriKey: database-uri
+      usernameKey: username
+      passwordKey: password
+  redis:
+    existingSecret: penpot-secrets
+    secretKeys:
+      redisUriKey: redis-uri
+  objectsStorage:
+    storageBackend: s3
+    s3:
+      accessKeyID: ""
+      secretAccessKey: ""
+      region: us-east-1
+      bucket: penpot
+      endpointURI: https://penpot.seaweedfs.walnuts.dev
+  fileDataBackend: legacy-db
+  providers:
+    existingSecret: penpot-secrets
+    secretKeys:
+      oidcClientIDKey: oidc-client-id
+      oidcClientSecretKey: oidc-client-secret
+    oidc:
+      enabled: true
+      baseURI: https://auth.walnuts.dev
+      roles: ""
+      rolesAttribute: my:zitadel:grants
+      scopes: openid profile email
+
+persistence:
+  assets:
+    enabled: false
+
+gateway:
+  enabled: false
+
+ingress:
+  enabled: false
+
+frontend:
+  podSecurityContext:
+    fsGroup: 1001
+    seccompProfile:
+      type: RuntimeDefault
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: penpot-frontend
+                app.kubernetes.io/instance: penpot
+            topologyKey: kubernetes.io/hostname
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  pdb:
+    enabled: true
+    maxUnavailable: 1
+  autoscaling:
+    hpa:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 2
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 70
+
+backend:
+  podSecurityContext:
+    fsGroup: 1001
+    seccompProfile:
+      type: RuntimeDefault
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: penpot-backend
+                app.kubernetes.io/instance: penpot
+            topologyKey: kubernetes.io/hostname
+  resources:
+    requests:
+      cpu: 250m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 4Gi
+  pdb:
+    enabled: true
+    maxUnavailable: 1
+  autoscaling:
+    hpa:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 2
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 70
+  extraEnvs:
+    - name: AWS_WEB_IDENTITY_TOKEN_FILE
+      value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+    - name: AWS_ENDPOINT_URL_STS
+      value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+    - name: AWS_ROLE_ARN
+      value: arn:aws:iam::role/penpot
+    - name: AWS_REGION
+      value: us-east-1
+    - name: PENPOT_OIDC_ROLES
+      valueFrom:
+        secretKeyRef:
+          name: penpot-secrets
+          key: oidc-required-role
+  volumes:
+    - name: seaweedfs-sts-token
+      projected:
+        sources:
+          - serviceAccountToken:
+              audience: sts.seaweedfs.com
+              expirationSeconds: 86400
+              path: token
+  volumeMounts:
+    - name: seaweedfs-sts-token
+      mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+      readOnly: true
+
+exporter:
+  podSecurityContext:
+    fsGroup: 1001
+    seccompProfile:
+      type: RuntimeDefault
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: penpot-exporter
+                app.kubernetes.io/instance: penpot
+            topologyKey: kubernetes.io/hostname
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+  pdb:
+    enabled: true
+    maxUnavailable: 1
+  autoscaling:
+    hpa:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 2
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 70
+
+mcp:
+  podSecurityContext:
+    fsGroup: 1001
+    seccompProfile:
+      type: RuntimeDefault
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: penpot-mcp
+                app.kubernetes.io/instance: penpot
+            topologyKey: kubernetes.io/hostname
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 512Mi
+  pdb:
+    enabled: true
+    maxUnavailable: 1
+  autoscaling:
+    hpa:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 2
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 70
