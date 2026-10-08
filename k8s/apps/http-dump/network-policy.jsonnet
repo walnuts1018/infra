@@ -1,3 +1,4 @@
+local networkPolicy = import '../../components/network-policy.libsonnet';
 local app = import 'app.json5';
 
 {
@@ -13,11 +14,7 @@ local app = import 'app.json5';
     },
     policyTypes: ['Ingress', 'Egress'],
     ingress: [{
-      from: [{
-        namespaceSelector: {
-          matchLabels: { 'kubernetes.io/metadata.name': 'keda' },
-        },
-      }],
+      from: [networkPolicy.kedaHttpInterceptor],
       ports: [{ protocol: 'TCP', port: 8080 }],
     }],
     egress: [
