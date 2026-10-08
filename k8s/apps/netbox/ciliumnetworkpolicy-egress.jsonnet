@@ -23,10 +23,7 @@ local app = import 'app.json5';
           },
         }],
         toPorts: [{
-          ports: [
-            { port: '53', protocol: 'UDP' },
-            { port: '53', protocol: 'TCP' },
-          ],
+          ports: [{ port: '53', protocol: 'ANY' }],
           rules: { dns: [{ matchPattern: '*' }] },
         }],
       },
