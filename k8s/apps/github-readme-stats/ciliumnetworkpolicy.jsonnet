@@ -1,4 +1,5 @@
 local app = import 'app.json5';
+local apiFqdn = 'api.github.com';
 
 {
   apiVersion: 'cilium.io/v2',
@@ -36,10 +37,10 @@ local app = import 'app.json5';
         toPorts: [{ ports: [
           { port: '53', protocol: 'UDP' },
           { port: '53', protocol: 'TCP' },
-        ] }],
+        ], rules: { dns: [{ matchName: apiFqdn }] } }],
       },
       {
-        toFQDNs: [{ matchName: 'api.github.com' }],
+        toFQDNs: [{ matchName: apiFqdn }],
         toPorts: [{ ports: [{ port: '443', protocol: 'TCP' }] }],
       },
     ],
