@@ -1,0 +1,47 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: zitadel-egress
+  namespace: "{{ .Release.Namespace }}"
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/instance: zitadel
+      k8s:app.kubernetes.io/name: zitadel
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kube-system
+        k8s:k8s-app: kube-dns
+    toPorts:
+    - ports:
+      - port: '53'
+        protocol: UDP
+      - port: '53'
+        protocol: TCP
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: databases
+        k8s:cnpg.io/cluster: postgresql-default
+        k8s:cnpg.io/instanceRole: primary
+    toPorts:
+    - ports:
+      - port: '5432'
+        protocol: TCP
+  - toEndpoints:
+    - matchLabels:
+        k8s:app.kubernetes.io/component: opentelemetry-collector
+        k8s:app.kubernetes.io/instance: opentelemetry-collector.default
+        k8s:app.kubernetes.io/name: default-collector
+        k8s:io.kubernetes.pod.namespace: opentelemetry-collector
+    toPorts:
+    - ports:
+      - port: '4317'
+        protocol: TCP
+  - toEntities:
+    - world
+    toPorts:
+    - ports:
+      # Zitadelは外部OIDC IdPの設定取得と認可コード交換に接続します。
+      - port: '443'
+        protocol: TCP
