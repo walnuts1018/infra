@@ -1,18 +1,6 @@
 local app = import 'app.json5';
 
-local namespace = 'maps';
-local s3Endpoint = 'seaweedfs-default-s3.seaweedfs.svc.cluster.local';
 local downloadHost = 'download.versatiles.org';
-local dnsNames = [
-  downloadHost,
-  downloadHost + '.' + namespace + '.svc.cluster.local',
-  downloadHost + '.svc.cluster.local',
-  downloadHost + '.cluster.local',
-  s3Endpoint,
-  s3Endpoint + '.' + namespace + '.svc.cluster.local',
-  s3Endpoint + '.svc.cluster.local',
-  s3Endpoint + '.cluster.local',
-];
 
 {
   apiVersion: 'cilium.io/v2',
@@ -41,7 +29,7 @@ local dnsNames = [
             { port: '53', protocol: 'TCP' },
           ],
           rules: {
-            dns: [{ matchName: name } for name in dnsNames],
+            dns: [{ matchPattern: '*' }],
           },
         }],
       },
