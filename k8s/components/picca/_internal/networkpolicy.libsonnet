@@ -41,6 +41,73 @@ function(app)
   }), 5432);
   local scyllaRule = egressRule(peer('databases', { 'scylla/cluster': 'scylla-cluster' }), 9142);
   local valkeyRule = egressRule(localPeer({ 'valkey.io/cluster': app.name + '-valkey' }), 6379);
+  local valkeyClientComponents = [
+    'apiserver',
+    'download-worker',
+    'image-processing-worker',
+    'library-notify-worker',
+    'stack-timeline-worker',
+    'video-processing-worker',
+  ];
+  local valkeyClientEndpoints = [
+    {
+      matchLabels: {
+        'k8s:io.kubernetes.pod.namespace': app.namespace,
+        'k8s:app.kubernetes.io/name': app.name + '-' + component,
+      },
+    }
+    for component in valkeyClientComponents
+  ];
+  local valkeyEndpoint = {
+    matchLabels: {
+      'k8s:io.kubernetes.pod.namespace': app.namespace,
+      'k8s:valkey.io/cluster': app.name + '-valkey',
+    },
+  };
+  local valkeyOperatorEndpoint = {
+    matchLabels: {
+      'k8s:io.kubernetes.pod.namespace': 'valkey-operator-system',
+      'k8s:app.kubernetes.io/instance': 'valkey-operator',
+      'k8s:app.kubernetes.io/name': 'valkey-operator',
+    },
+  };
+  local valkeyIngressPolicy = {
+    apiVersion: 'cilium.io/v2',
+    kind: 'CiliumNetworkPolicy',
+    metadata: {
+      name: app.name + '-ingress-valkey',
+      namespace: app.namespace,
+    },
+    spec: {
+      endpointSelector: {
+        matchLabels: {
+          'k8s:io.kubernetes.pod.namespace': app.namespace,
+          'k8s:valkey.io/cluster': app.name + '-valkey',
+        },
+      },
+      ingress: [
+        {
+          fromEndpoints: valkeyClientEndpoints,
+          toPorts: [{ ports: [{ port: '6379', protocol: 'TCP' }] }],
+        },
+        {
+          fromEndpoints: [valkeyEndpoint],
+          toPorts: [{ ports: [
+            { port: '6379', protocol: 'TCP' },
+            { port: '16379', protocol: 'TCP' },
+          ] }],
+        },
+        {
+          fromEndpoints: [valkeyOperatorEndpoint],
+          toPorts: [{ ports: [{ port: '6379', protocol: 'TCP' }] }],
+        },
+        {
+          fromEntities: ['host'],
+          toPorts: [{ ports: [{ port: '9121', protocol: 'TCP' }] }],
+        },
+      ],
+    },
+  };
   local rabbitmqRule = egressRule(peer('rabbitmq', { 'app.kubernetes.io/name': 'default' }), 5672);
   local seaweedfsRule = egressRule(peer('seaweedfs', {
     'app.kubernetes.io/component': 's3',
@@ -237,4 +304,5 @@ function(app)
         ],
       },
     },
+    valkeyIngressPolicy,
   ]
