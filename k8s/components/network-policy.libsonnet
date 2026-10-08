@@ -127,6 +127,18 @@ local ipv6NonPublic = [
       },
     },
   },
+  coderWorkspaceAgent: {
+    namespaceSelector: {
+      matchLabels: {
+        'kubernetes.io/metadata.name': 'coder-workspaces',
+      },
+    },
+    podSelector: {
+      matchLabels: {
+        'app.kubernetes.io/name': 'coder-workspace',
+      },
+    },
+  },
   grafana: {
     namespaceSelector: {
       matchLabels: {
