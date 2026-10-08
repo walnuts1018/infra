@@ -37,6 +37,13 @@ resource "zitadel_user_grant" "walnuts_penpot" {
   role_keys  = [zitadel_project_role.penpot_user.role_key]
 }
 
+resource "zitadel_user_grant" "k1h_penpot" {
+  org_id     = zitadel_org.ZITADEL.id
+  project_id = zitadel_project.penpot.id
+  user_id    = local.zitadel_human_user_ids.k1h
+  role_keys  = [zitadel_project_role.penpot_user.role_key]
+}
+
 output "penpot_oidc_client_id" {
   value = nonsensitive(zitadel_application_oidc.penpot.client_id)
 }
