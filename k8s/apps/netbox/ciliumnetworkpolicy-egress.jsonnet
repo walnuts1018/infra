@@ -23,8 +23,10 @@ local app = import 'app.json5';
           },
         }],
         toPorts: [{
-          ports: [{ port: '53', protocol: 'ANY' }],
-          rules: { dns: [{ matchPattern: '*' }] },
+          ports: [
+            { port: '53', protocol: 'UDP' },
+            { port: '53', protocol: 'TCP' },
+          ],
         }],
       },
       {
@@ -48,16 +50,13 @@ local app = import 'app.json5';
         toPorts: [{ ports: [{ port: '6379', protocol: 'TCP' }] }],
       },
       {
-        toFQDNs: [{ matchName: 'auth.walnuts.dev' }],
-        toPorts: [{ ports: [{ port: '443', protocol: 'TCP' }] }],
-      },
-      {
-        toFQDNs: [{ matchName: 'seaweedfs.local.walnuts.dev' }],
-        toPorts: [{ ports: [{ port: '443', protocol: 'TCP' }] }],
-      },
-      {
-        toFQDNs: [{ matchName: 'smtp.resend.com' }],
-        toPorts: [{ ports: [{ port: '587', protocol: 'TCP' }] }],
+        toEntities: ['world'],
+        toPorts: [{
+          ports: [
+            { port: '443', protocol: 'TCP' },
+            { port: '587', protocol: 'TCP' },
+          ],
+        }],
       },
     ],
   },
