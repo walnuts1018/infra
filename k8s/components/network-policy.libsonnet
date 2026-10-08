@@ -89,6 +89,18 @@ local ipv6NonPublic = [
       },
     },
   },
+  otelCollectors: {
+    namespaceSelector: {
+      matchLabels: {
+        'kubernetes.io/metadata.name': 'opentelemetry-collector',
+      },
+    },
+    podSelector: {
+      matchLabels: {
+        'app.kubernetes.io/component': 'opentelemetry-collector',
+      },
+    },
+  },
   otelPrometheusCollector: {
     namespaceSelector: {
       matchLabels: {
