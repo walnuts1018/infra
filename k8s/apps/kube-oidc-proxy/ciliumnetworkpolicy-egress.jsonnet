@@ -28,6 +28,9 @@ local app = import 'app.json5';
       },
       {
         toEntities: ['kube-apiserver'],
+        toPorts: [{
+          ports: [{ port: '6443', protocol: 'TCP' }],
+        }],
       },
       {
         toFQDNs: [{ matchName: 'auth.walnuts.dev' }],
