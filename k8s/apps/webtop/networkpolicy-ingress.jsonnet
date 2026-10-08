@@ -1,4 +1,5 @@
 local labels = import '../../components/labels.libsonnet';
+local networkPolicy = import '../../components/network-policy.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'networking.k8s.io/v1',
@@ -14,21 +15,7 @@ local app = import 'app.json5';
     policyTypes: ['Ingress'],
     ingress: [
       {
-        from: [
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'envoy-gateway-system',
-              },
-            },
-            podSelector: {
-              matchLabels: {
-                'app.kubernetes.io/component': 'proxy',
-                'app.kubernetes.io/name': 'envoy',
-              },
-            },
-          },
-        ],
+        from: [networkPolicy.envoyGatewayProxy],
         ports: [
           {
             protocol: 'TCP',
