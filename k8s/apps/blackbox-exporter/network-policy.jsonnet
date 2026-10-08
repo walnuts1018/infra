@@ -11,9 +11,7 @@ local app = import 'app.json5';
     } },
     policyTypes: ['Ingress', 'Egress'],
     ingress: [{
-      from: [
-        { namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'monitoring' } } },
-      ],
+      from: [networkPolicy.otelPrometheusCollector],
       ports: [{ protocol: 'TCP', port: 9115 }],
     }],
     egress: [
