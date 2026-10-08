@@ -25,6 +25,18 @@ local labels = {
       },
       spec: {
         automountServiceAccountToken: true,
+        affinity: {
+          nodeAffinity: {
+            requiredDuringSchedulingIgnoredDuringExecution: {
+              nodeSelectorTerms: [{
+                matchExpressions: [{
+                  key: 'node-role.kubernetes.io/control-plane',
+                  operator: 'DoesNotExist',
+                }],
+              }],
+            },
+          },
+        },
         dnsConfig: {
           options: [{
             name: 'ndots',
