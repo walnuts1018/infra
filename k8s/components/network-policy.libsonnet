@@ -114,6 +114,19 @@ local ipv6NonPublic = [
       },
     },
   },
+  grafana: {
+    namespaceSelector: {
+      matchLabels: {
+        'kubernetes.io/metadata.name': 'monitoring',
+      },
+    },
+    podSelector: {
+      matchLabels: {
+        'app.kubernetes.io/instance': 'grafana',
+        'app.kubernetes.io/name': 'grafana',
+      },
+    },
+  },
   kedaHttpInterceptor: {
     namespaceSelector: {
       matchLabels: {
