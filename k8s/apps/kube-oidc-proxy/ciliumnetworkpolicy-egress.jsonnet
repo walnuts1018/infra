@@ -15,20 +15,15 @@ local app = import 'app.json5';
     },
     egress: [
       {
-        toServices: [{
-          k8sService: {
-            serviceName: 'kube-dns',
-            namespace: 'kube-system',
+        toEndpoints: [{
+          matchLabels: {
+            'k8s:io.kubernetes.pod.namespace': 'kube-system',
+            'k8s:k8s-app': 'kube-dns',
           },
         }],
         toPorts: [{
-          ports: [
-            { port: '53', protocol: 'UDP' },
-            { port: '53', protocol: 'TCP' },
-          ],
-          rules: {
-            dns: [{ matchName: 'auth.walnuts.dev' }],
-          },
+          ports: [{ port: '53', protocol: 'ANY' }],
+          rules: { dns: [{ matchPattern: '*' }] },
         }],
       },
       {
