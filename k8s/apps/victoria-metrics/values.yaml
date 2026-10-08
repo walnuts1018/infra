@@ -2,6 +2,41 @@ vmselect:
   enabled: true
   mode: deployment
   replicaCount: 1
+  networkPolicy:
+    enabled: true
+    ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: monitoring
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/instance: grafana
+            app.kubernetes.io/name: grafana
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: opencost
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/instance: opencost
+            app.kubernetes.io/name: opencost
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: keda
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/instance: keda
+            app.kubernetes.io/name: keda-operator
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: opentelemetry-collector
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/component: opentelemetry-collector
+            app.kubernetes.io/instance: opentelemetry-collector.prometheus
+      ports:
+      - protocol: TCP
+        port: 8481
   horizontalPodAutoscaler:
     enabled: true
     minReplicas: 1
@@ -26,6 +61,19 @@ vminsert:
   enabled: true
   mode: deployment
   replicaCount: 1
+  networkPolicy:
+    enabled: true
+    ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: opentelemetry-collector
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/component: opentelemetry-collector
+      ports:
+      - protocol: TCP
+        port: 8480
   horizontalPodAutoscaler:
     enabled: true
     minReplicas: 1
