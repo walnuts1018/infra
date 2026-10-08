@@ -1,3 +1,4 @@
+local networkPolicy = import '../../components/network-policy.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'networking.k8s.io/v1',
@@ -15,13 +16,7 @@ local app = import 'app.json5';
     ingress: [
       {
         from: [
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'opentelemetry-collector',
-              },
-            },
-          },
+          networkPolicy.otelPrometheusCollector,
         ],
         ports: [
           {

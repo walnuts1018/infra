@@ -1,3 +1,4 @@
+local networkPolicy = import '../../components/network-policy.libsonnet';
 local app = import 'app.json5';
 
 {
@@ -18,20 +19,8 @@ local app = import 'app.json5';
     ingress: [
       {
         from: [
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'envoy-gateway-system',
-              },
-            },
-          },
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'keda',
-              },
-            },
-          },
+          networkPolicy.envoyGatewayProxy,
+          networkPolicy.kedaHttpInterceptor,
         ],
         ports: [
           {

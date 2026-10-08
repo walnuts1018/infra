@@ -1,4 +1,5 @@
 local labels = import '../../../components/labels.libsonnet';
+local networkPolicy = import '../../../components/network-policy.libsonnet';
 local app = import '../app.json5';
 
 {
@@ -13,9 +14,11 @@ local app = import '../app.json5';
     podSelector: {
       matchLabels: labels(app.name + '-front'),
     },
-    policyTypes: [
-      'Egress',
-    ],
+    policyTypes: ['Ingress', 'Egress'],
+    ingress: [{
+      from: [networkPolicy.envoyGatewayProxy],
+      ports: [{ protocol: 'TCP', port: 3000 }],
+    }],
     egress: [
       {
         to: [

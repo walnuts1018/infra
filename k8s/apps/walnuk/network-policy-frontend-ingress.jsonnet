@@ -1,15 +1,19 @@
+local labels = import '../../components/labels.libsonnet';
 local networkPolicy = import '../../components/network-policy.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'NetworkPolicy',
-  metadata: { name: app.name + '-frontend-ingress', namespace: app.namespace },
+  metadata: {
+    name: app.appname.frontend + '-ingress',
+    namespace: app.namespace,
+  },
   spec: {
-    podSelector: { matchLabels: { 'app.kubernetes.io/name': 'frontend' } },
+    podSelector: { matchLabels: labels(app.appname.frontend) },
     policyTypes: ['Ingress'],
     ingress: [{
       from: [networkPolicy.envoyGatewayProxy],
-      ports: [{ protocol: 'TCP', port: 8080 }],
+      ports: [{ protocol: 'TCP', port: 3000 }],
     }],
   },
 }

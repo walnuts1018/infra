@@ -13,9 +13,11 @@ local app = import '../app.json5';
     podSelector: {
       matchLabels: labels(app.name + '-back'),
     },
-    policyTypes: [
-      'Egress',
-    ],
+    policyTypes: ['Ingress', 'Egress'],
+    ingress: [{
+      from: [{ podSelector: { matchLabels: labels(app.name + '-front') } }],
+      ports: [{ protocol: 'TCP', port: 8080 }],
+    }],
     egress: [
       {
         to: [
