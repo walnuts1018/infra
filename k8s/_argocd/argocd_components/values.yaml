@@ -3,6 +3,8 @@ global:
   logging:
     format: json
     level: info
+  networkPolicy:
+    create: false
 
 configs:
   cm:
@@ -57,6 +59,8 @@ configs:
     policy.default: ''
 
 controller:
+  networkPolicy:
+    create: true
   metrics:
     enabled: true
     serviceMonitor:
@@ -69,6 +73,8 @@ controller:
       cpu: "2"
       memory: 4Gi
 dex:
+  networkPolicy:
+    create: true
   metrics:
     enabled: true
     serviceMonitor:
@@ -101,6 +107,8 @@ externalRedis:
   host: valkey-argocd-valkey.argocd.svc.cluster.local
 
 server:
+  networkPolicy:
+    create: false
   ingress:
     enabled: false
     controller: generic
@@ -125,6 +133,8 @@ server:
       memory: 512Mi
 
 repoServer:
+  networkPolicy:
+    create: true
   metrics:
     enabled: true
     serviceMonitor:
@@ -143,6 +153,8 @@ repoServer:
       memory: 1Gi
 
 applicationSet:
+  networkPolicy:
+    create: true
   metrics:
     enabled: true
     serviceMonitor:
@@ -156,6 +168,8 @@ applicationSet:
       memory: 512Mi
 
 notifications:
+  networkPolicy:
+    create: true
   argocdUrl: "https://argocd.walnuts.dev"
   context:
     cluster: "kurumi"
