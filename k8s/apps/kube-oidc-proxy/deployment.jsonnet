@@ -16,6 +16,13 @@ local labels = {
   },
   spec: {
     replicas: 2,
+    strategy: {
+      type: 'RollingUpdate',
+      rollingUpdate: {
+        maxSurge: 0,
+        maxUnavailable: 1,
+      },
+    },
     selector: {
       matchLabels: labels,
     },
@@ -96,7 +103,7 @@ local labels = {
             resources: {
               requests: {
                 cpu: '5m',
-                memory: '8Mi',
+                memory: '16Mi',
               },
               limits: {
                 memory: '256Mi',
