@@ -101,6 +101,19 @@ local ipv6NonPublic = [
       },
     },
   },
+  otelCollector: function(collector) {
+    namespaceSelector: {
+      matchLabels: {
+        'kubernetes.io/metadata.name': 'opentelemetry-collector',
+      },
+    },
+    podSelector: {
+      matchLabels: {
+        'app.kubernetes.io/component': 'opentelemetry-collector',
+        'app.kubernetes.io/instance': 'opentelemetry-collector.' + collector,
+      },
+    },
+  },
   otelPrometheusCollector: {
     namespaceSelector: {
       matchLabels: {
