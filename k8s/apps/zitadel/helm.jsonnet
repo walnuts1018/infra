@@ -10,6 +10,7 @@ local app = import 'app.json5';
     extraManifests: [
       std.parseYaml(importstr 'config/network-policy.yaml'),
       std.parseYaml(importstr 'config/network-policy-ingress.yaml'),
+      std.parseYaml(importstr 'config/network-policy-bootstrap-egress.yaml'),
     ],
   }),
 }
