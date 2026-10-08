@@ -21,6 +21,30 @@ local app = import 'app.json5';
           port: 9092,
           type: 'internal',
           tls: false,
+          networkPolicyPeers: [
+            {
+              podSelector: {
+                matchLabels: {
+                  app: 'akvorado',
+                  'app.kubernetes.io/name': 'akvorado',
+                },
+                matchExpressions: [{
+                  key: 'app.kubernetes.io/component',
+                  operator: 'In',
+                  values: ['inlet', 'outlet'],
+                }],
+              },
+            },
+            {
+              podSelector: {
+                matchLabels: {
+                  'strimzi.io/cluster': 'akvorado-kafka',
+                  'strimzi.io/kind': 'Kafka',
+                  'strimzi.io/name': 'akvorado-kafka-entity-operator',
+                },
+              },
+            },
+          ],
         },
       ],
       config: {
