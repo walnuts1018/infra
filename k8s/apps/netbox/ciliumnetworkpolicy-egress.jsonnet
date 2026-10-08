@@ -59,21 +59,17 @@ local app = import 'app.json5';
         }],
       },
       {
-        toServices: [{
-          k8sServiceSelector: {
-            selector: {
-              matchLabels: {
-                'k8s:app.kubernetes.io/component': 'proxy',
-                'k8s:app.kubernetes.io/managed-by': 'envoy-gateway',
-                'k8s:app.kubernetes.io/name': 'envoy',
-                'k8s:gateway.envoyproxy.io/owning-gateway-name': 'envoy-gateway',
-                'k8s:gateway.envoyproxy.io/owning-gateway-namespace': 'envoy-gateway-system',
-              },
-            },
-            namespace: 'envoy-gateway-system',
+        toEndpoints: [{
+          matchLabels: {
+            'k8s:io.kubernetes.pod.namespace': 'envoy-gateway-system',
+            'k8s:app.kubernetes.io/component': 'proxy',
+            'k8s:app.kubernetes.io/managed-by': 'envoy-gateway',
+            'k8s:app.kubernetes.io/name': 'envoy',
+            'k8s:gateway.envoyproxy.io/owning-gateway-name': 'envoy-gateway',
+            'k8s:gateway.envoyproxy.io/owning-gateway-namespace': 'envoy-gateway-system',
           },
         }],
-        toPorts: [{ ports: [{ port: '443', protocol: 'TCP' }] }],
+        toPorts: [{ ports: [{ port: '10443', protocol: 'TCP' }] }],
       },
     ],
   },
