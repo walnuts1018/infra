@@ -31,7 +31,7 @@ config:
       secretAccessKey: ""
       region: us-east-1
       bucket: penpot
-      endpointURI: https://penpot.seaweedfs.walnuts.dev
+      endpointURI: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
   fileDataBackend: legacy-db
   providers:
     existingSecret: penpot-secrets

@@ -87,6 +87,7 @@ local policy(name, endpoint, ingress, egress) = {
       to(component('backend'), [6060]),
       to(component('exporter'), [6061]),
       to(component('mcp'), [4401, 4402]),
+      to(seaweedS3, [8333]),
     ],
   ),
   policy(
@@ -101,7 +102,6 @@ local policy(name, endpoint, ingress, egress) = {
       to(postgres, [5432]),
       to(component('valkey'), [6379]),
       to(seaweedS3, [8333]),
-      fqdn('penpot.seaweedfs.walnuts.dev', 443),
       fqdn('auth.walnuts.dev', 443),
     ],
   ),
