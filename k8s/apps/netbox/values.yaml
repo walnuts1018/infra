@@ -46,8 +46,14 @@ externalDatabase:
 valkey:
   enabled: true
   networkPolicy:
-    # チャートのUDP/53 egressには宛先セレクターがないため、専用NetworkPolicyで管理する。
-    enabled: false
+    enabled: true
+    allowExternal: false
+    allowExternalEgress: false
+    ingressNSMatchLabels:
+      kubernetes.io/metadata.name: netbox
+    ingressNSPodMatchLabels:
+      app.kubernetes.io/instance: netbox
+      app.kubernetes.io/name: netbox
   auth:
     existingSecret: "netbox"
     existingSecretPasswordKey: valkey_password
