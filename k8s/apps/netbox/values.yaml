@@ -46,25 +46,8 @@ externalDatabase:
 valkey:
   enabled: true
   networkPolicy:
-    enabled: true
-    allowExternal: false
-    allowExternalEgress: false
-    ingressNSMatchLabels:
-      kubernetes.io/metadata.name: netbox
-    ingressNSPodMatchLabels:
-      app.kubernetes.io/instance: netbox
-      app.kubernetes.io/name: netbox
-    extraEgress:
-      - to:
-          - namespaceSelector:
-              matchLabels:
-                kubernetes.io/metadata.name: kube-system
-            podSelector:
-              matchLabels:
-                k8s-app: kube-dns
-        ports:
-          - protocol: TCP
-            port: 53
+    # チャートのUDP/53 egressには宛先セレクターがないため、専用NetworkPolicyで管理する。
+    enabled: false
   auth:
     existingSecret: "netbox"
     existingSecretPasswordKey: valkey_password
