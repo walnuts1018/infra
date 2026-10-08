@@ -4,10 +4,7 @@ msgTopologyOperator:
 clusterOperator:
   watchAllNamespaces: true
   networkPolicy:
-    extraIngress:
-    - ports:
-      - port: 9443
-        protocol: TCP
+    enabled: false
   resources:
     requests:
       cpu: 5m
