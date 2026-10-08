@@ -1,4 +1,3 @@
-local networkPolicy = import '../../components/network-policy.libsonnet';
 local app = import 'app.json5';
 
 {
@@ -40,7 +39,7 @@ local app = import 'app.json5';
         ] }],
       },
       {
-        toCIDRSet: networkPolicy.publicInternetCIDRSet,
+        toFQDNs: [{ matchName: 'api.github.com' }],
         toPorts: [{ ports: [{ port: '443', protocol: 'TCP' }] }],
       },
     ],
