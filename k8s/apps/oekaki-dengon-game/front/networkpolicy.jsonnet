@@ -22,45 +22,28 @@ local app = import '../app.json5';
     egress: [
       {
         to: [
-          {
-            ipBlock: {
-              cidr: '0.0.0.0/0',
-              except: [
-                '192.168.0.0/16',
-                '10.244.0.0/16',
-                '10.96.0.0/12',
-              ],
-            },
-          },
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'kube-system',
-              },
-            },
-            podSelector: {
-              matchLabels: {
-                'k8s-app': 'kube-dns',
-              },
-            },
-          },
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'opentelemetry-collector',
-              },
-            },
-            podSelector: {
-              matchLabels: {
-                'app.kubernetes.io/name': 'default-collector',
-              },
-            },
-          },
+          networkPolicy.otelDefaultCollector,
+        ],
+        ports: [
+          { protocol: 'TCP', port: 4317 },
+          { protocol: 'TCP', port: 4318 },
+        ],
+      },
+      {
+        to: [
           {
             podSelector: {
               matchLabels: labels(app.name + '-back'),
             },
           },
+        ],
+        ports: [{ protocol: 'TCP', port: 8080 }],
+      },
+      {
+        to: [networkPolicy.kubeDns],
+        ports: [
+          { protocol: 'UDP', port: 53 },
+          { protocol: 'TCP', port: 53 },
         ],
       },
     ],

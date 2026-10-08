@@ -7,7 +7,7 @@ local app = import 'app.json5';
     podSelector: { matchLabels: { 'app.kubernetes.io/name': 'frontend' } },
     policyTypes: ['Egress'],
     egress: [{
-      to: [{ namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': app.namespace } } }],
+      to: [{ podSelector: { matchLabels: { 'app.kubernetes.io/name': 'backend' } } }],
       ports: [{ protocol: 'TCP', port: 8080 }],
     }],
   },

@@ -28,18 +28,7 @@ local app = import 'app.json5';
     ],
     egress: [
       {
-        to: [
-          {
-            ipBlock: {
-              cidr: '0.0.0.0/0',
-              except: [
-                '192.168.0.0/16',
-                '10.244.0.0/16',
-                '10.96.0.0/12',
-              ],
-            },
-          },
-        ],
+        to: networkPolicy.publicInternet,
       },
       {
         to: [

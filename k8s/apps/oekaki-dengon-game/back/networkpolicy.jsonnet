@@ -1,4 +1,5 @@
 local labels = import '../../../components/labels.libsonnet';
+local networkPolicy = import '../../../components/network-policy.libsonnet';
 local app = import '../app.json5';
 
 {
@@ -21,40 +22,26 @@ local app = import '../app.json5';
     egress: [
       {
         to: [
-          {
-            ipBlock: {
-              cidr: '0.0.0.0/0',
-              except: [
-                '192.168.0.0/16',
-                '10.244.0.0/16',
-                '10.96.0.0/12',
-              ],
-            },
-          },
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'kube-system',
-              },
-            },
-            podSelector: {
-              matchLabels: {
-                'k8s-app': 'kube-dns',
-              },
-            },
-          },
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'opentelemetry-collector',
-              },
-            },
-            podSelector: {
-              matchLabels: {
-                'app.kubernetes.io/name': 'default-collector',
-              },
-            },
-          },
+          networkPolicy.kubeDns,
+        ],
+        ports: [
+          { protocol: 'UDP', port: 53 },
+          { protocol: 'TCP', port: 53 },
+        ],
+      },
+      {
+        to: [networkPolicy.otelDefaultCollector],
+        ports: [
+          { protocol: 'TCP', port: 4317 },
+          { protocol: 'TCP', port: 4318 },
+        ],
+      },
+      {
+        to: networkPolicy.publicInternet,
+        ports: [{ protocol: 'TCP', port: 443 }],
+      },
+      {
+        to: [
           {
             namespaceSelector: {
               matchLabels: {
@@ -64,10 +51,12 @@ local app = import '../app.json5';
             podSelector: {
               matchLabels: {
                 'cnpg.io/cluster': 'postgresql-default',
+                'cnpg.io/instanceRole': 'primary',
               },
             },
           },
         ],
+        ports: [{ protocol: 'TCP', port: 5432 }],
       },
     ],
   },

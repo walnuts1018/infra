@@ -1,3 +1,4 @@
+local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'batch/v1',
@@ -14,6 +15,9 @@ local app = import 'app.json5';
     jobTemplate: {
       spec: {
         template: {
+          metadata: {
+            labels: labels(app.name),
+          },
           spec: {
             restartPolicy: 'OnFailure',
             securityContext: {
