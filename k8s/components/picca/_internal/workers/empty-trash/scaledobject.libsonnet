@@ -8,10 +8,6 @@ function(app)
       pollingInterval: 5,
       minReplicaCount: 0,
       maxReplicaCount: 2,
-      fallback: {
-        failureThreshold: 3,
-        replicas: 1,
-      },
       scaleTargetRef: { name: worker.metadata.name },
       triggers: [{
         type: 'rabbitmq',
