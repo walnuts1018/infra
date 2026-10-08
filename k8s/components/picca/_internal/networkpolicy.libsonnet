@@ -23,6 +23,10 @@ function(app)
     to: [to],
     ports: [port(portNumber)],
   };
+  local ingressRule = function(from, portNumber) {
+    from: from,
+    ports: [port(portNumber)],
+  };
   local dnsRule = {
     to: [networkPolicy.kubeDns],
     ports: [
@@ -73,6 +77,23 @@ function(app)
       egress: [dnsRule] + dependencies,
     },
   };
+  local ingressPolicy = function(component, rules) {
+    apiVersion: 'networking.k8s.io/v1',
+    kind: 'NetworkPolicy',
+    metadata: {
+      name: app.name + '-ingress-' + component,
+      namespace: app.namespace,
+    },
+    spec: {
+      podSelector: {
+        matchLabels: {
+          'app.kubernetes.io/name': app.name + '-' + component,
+        },
+      },
+      policyTypes: ['Ingress'],
+      ingress: rules,
+    },
+  };
   [
     {
       apiVersion: 'networking.k8s.io/v1',
@@ -87,6 +108,16 @@ function(app)
         egress: [],
       },
     },
+    ingressPolicy('apiserver', [
+      ingressRule([
+        networkPolicy.envoyGatewayProxy,
+        localPeer({ 'app.kubernetes.io/name': app.name + '-frontend' }),
+      ], 8080),
+    ]),
+    ingressPolicy('imgproxy', [
+      ingressRule([networkPolicy.envoyGatewayProxy], 8080),
+      ingressRule([networkPolicy.otelPrometheusCollector], 8081),
+    ]),
     policy('apiserver', [
       otelRule,
       postgresRule,
