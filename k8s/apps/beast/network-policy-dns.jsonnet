@@ -1,3 +1,4 @@
+local networkPolicy = import '../../components/network-policy.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'networking.k8s.io/v1',
@@ -7,7 +8,7 @@ local app = import 'app.json5';
     podSelector: {},
     policyTypes: ['Egress'],
     egress: [{
-      to: [{ namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'kube-system' } } }],
+      to: [networkPolicy.kubeDns],
       ports: [
         { protocol: 'UDP', port: 53 },
         { protocol: 'TCP', port: 53 },
