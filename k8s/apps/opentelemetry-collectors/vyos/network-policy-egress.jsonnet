@@ -26,11 +26,7 @@ local app = import '../app.json5';
         ],
       },
       {
-        to: [{
-          ipBlock: {
-            cidr: '192.168.0.1/32',
-          },
-        }],
+        to: [networkPolicy.vyosRouter],
         ports: [{ protocol: 'TCP', port: 9273 }],
       },
       {

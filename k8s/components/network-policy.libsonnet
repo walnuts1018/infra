@@ -37,6 +37,11 @@ local ipv6NonPublic = [
       },
     },
   },
+  vyosRouter: {
+    ipBlock: {
+      cidr: '192.168.0.1/32',
+    },
+  },
   publicInternet: [
     {
       ipBlock: {
