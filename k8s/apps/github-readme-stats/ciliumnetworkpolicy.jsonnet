@@ -1,5 +1,11 @@
 local app = import 'app.json5';
 local apiFqdn = 'api.github.com';
+// The Alpine resolver tries these search domains first because the Pod uses ndots:5.
+local apiDnsSearchNames = [
+  apiFqdn + '.github-readme-stats.svc.cluster.local',
+  apiFqdn + '.svc.cluster.local',
+  apiFqdn + '.cluster.local',
+];
 
 {
   apiVersion: 'cilium.io/v2',
@@ -37,7 +43,7 @@ local apiFqdn = 'api.github.com';
         toPorts: [{ ports: [
           { port: '53', protocol: 'UDP' },
           { port: '53', protocol: 'TCP' },
-        ], rules: { dns: [{ matchName: apiFqdn }] } }],
+        ], rules: { dns: [{ matchName: name } for name in apiDnsSearchNames] + [{ matchName: apiFqdn }] } }],
       },
       {
         toFQDNs: [{ matchName: apiFqdn }],
