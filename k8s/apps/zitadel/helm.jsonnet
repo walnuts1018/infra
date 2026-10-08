@@ -7,6 +7,9 @@ local app = import 'app.json5';
   repoURL: 'https://charts.zitadel.com',
   targetRevision: '10.3.0',
   valuesObject: std.mergePatch(std.parseYaml(importstr 'values.yaml'), {
-    extraManifests: [std.parseYaml(importstr 'config/network-policy.yaml')],
+    extraManifests: [
+      std.parseYaml(importstr 'config/network-policy.yaml'),
+      std.parseYaml(importstr 'config/network-policy-ingress.yaml'),
+    ],
   }),
 }

@@ -1,0 +1,37 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: zitadel-ingress
+  namespace: "{{ .Release.Namespace }}"
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/component: start
+      k8s:app.kubernetes.io/instance: zitadel
+      k8s:app.kubernetes.io/name: zitadel
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: envoy-gateway-system
+        k8s:app.kubernetes.io/component: proxy
+        k8s:app.kubernetes.io/managed-by: envoy-gateway
+        k8s:app.kubernetes.io/name: envoy
+    toPorts:
+    - ports:
+      - port: '8080'
+        protocol: TCP
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: opentelemetry-collector
+        k8s:app.kubernetes.io/component: opentelemetry-collector
+        k8s:app.kubernetes.io/instance: opentelemetry-collector.prometheus
+    toPorts:
+    - ports:
+      - port: '8080'
+        protocol: TCP
+  - fromEntities:
+    - host
+    toPorts:
+    - ports:
+      - port: '8080'
+        protocol: TCP
