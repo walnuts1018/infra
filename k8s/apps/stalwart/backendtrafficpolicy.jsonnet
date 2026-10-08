@@ -1,4 +1,5 @@
 local app = import 'app.json5';
+local httpRoute = import 'httproute.jsonnet';
 local routes = import 'tcproutes.libsonnet';
 
 {
@@ -19,6 +20,21 @@ local routes = import 'tcproutes.libsonnet';
         group: 'gateway.networking.k8s.io',
         kind: 'TCPRoute',
         name: routes.smtps.metadata.name,
+      },
+      {
+        group: 'gateway.networking.k8s.io',
+        kind: 'TCPRoute',
+        name: routes.submission.metadata.name,
+      },
+      {
+        group: 'gateway.networking.k8s.io',
+        kind: 'TCPRoute',
+        name: routes.imaps.metadata.name,
+      },
+      {
+        group: 'gateway.networking.k8s.io',
+        kind: 'HTTPRoute',
+        name: httpRoute.metadata.name,
       },
     ],
     proxyProtocol: {
