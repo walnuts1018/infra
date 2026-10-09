@@ -1,6 +1,7 @@
 # The chart's built-in policies omit policyTypes. Keep egress isolation explicit so existing ingress policies remain ingress-only.
 extraObjects:
-- apiVersion: networking.k8s.io/v1
+- |
+  apiVersion: networking.k8s.io/v1
   kind: NetworkPolicy
   metadata:
     name: victoria-metrics-vminsert-egress
@@ -35,7 +36,8 @@ extraObjects:
       ports:
       - protocol: TCP
         port: 8400
-- apiVersion: networking.k8s.io/v1
+- |
+  apiVersion: networking.k8s.io/v1
   kind: NetworkPolicy
   metadata:
     name: victoria-metrics-vmselect-egress
