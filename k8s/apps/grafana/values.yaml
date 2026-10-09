@@ -110,6 +110,7 @@ datasources:
     apiVersion: 1
     datasources:
     - name: VictoriaMetrics
+      uid: P4169E866C3094E38
       type: prometheus
       url: http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus
       access: proxy

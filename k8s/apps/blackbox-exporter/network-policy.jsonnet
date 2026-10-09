@@ -16,6 +16,10 @@ local app = import 'app.json5';
     }],
     egress: [
       {
+        to: [networkPolicy.envoyGatewayProxy],
+        ports: [{ protocol: 'TCP', port: 10025 }, { protocol: 'TCP', port: 10993 }],
+      },
+      {
         to: [networkPolicy.kubeDns],
         ports: [{ protocol: 'UDP', port: 53 }, { protocol: 'TCP', port: 53 }],
       },

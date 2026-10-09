@@ -1,5 +1,6 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
+local clientMetricsConfig = import 'client-metrics-configmap.jsonnet';
 {
   apiVersion: 'apps/v1',
   kind: 'StatefulSet',
@@ -17,6 +18,9 @@ local app = import 'app.json5';
     template: {
       metadata: {
         labels: labels(app.name),
+        annotations: {
+          'checksum/client-metrics': std.md5(std.toString(clientMetricsConfig.data)),
+        },
       },
       spec: {
         /*
@@ -44,6 +48,10 @@ local app = import 'app.json5';
             image: 'netbirdio/netbird:0.80.0@sha256:4976692ea44bb93871743d0b742b4a8f97f6425bfc458ca2d78e28fdb8bdf4ad',
             imagePullPolicy: 'IfNotPresent',
             env: [
+              {
+                name: 'NETBIRD_BIN',
+                value: '/etc/netbird-monitoring/netbird-cli-wrapper.sh',
+              },
               {
                 name: 'NB_MANAGEMENT_URL',
                 value: 'https://netbird.walnuts.dev:443',
@@ -91,6 +99,11 @@ local app = import 'app.json5';
             },
             volumeMounts: [
               {
+                name: 'client-metrics-config',
+                mountPath: '/etc/netbird-monitoring',
+                readOnly: true,
+              },
+              {
                 name: 'state',
                 mountPath: '/var/lib/netbird',
               },
@@ -100,8 +113,69 @@ local app = import 'app.json5';
               },
             ],
           },
+          {
+            name: 'client-metrics-collector',
+            image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.162.0@sha256:39923a8e431bd1f57be82411999d389fcfe40857492e4365456d97a4c1f74be6',
+            imagePullPolicy: 'IfNotPresent',
+            args: ['--config=/etc/netbird-monitoring/collector.yaml'],
+            env: [
+              {
+                name: 'POD_NAME',
+                valueFrom: {
+                  fieldRef: {
+                    fieldPath: 'metadata.name',
+                  },
+                },
+              },
+              {
+                name: 'POD_NAMESPACE',
+                valueFrom: {
+                  fieldRef: {
+                    fieldPath: 'metadata.namespace',
+                  },
+                },
+              },
+            ],
+            securityContext: {
+              runAsNonRoot: true,
+              runAsUser: 10001,
+              runAsGroup: 10001,
+              readOnlyRootFilesystem: true,
+              allowPrivilegeEscalation: false,
+              capabilities: {
+                drop: ['ALL'],
+              },
+              seccompProfile: {
+                type: 'RuntimeDefault',
+              },
+            },
+            resources: {
+              requests: {
+                cpu: '10m',
+                memory: '64Mi',
+              },
+              limits: {
+                cpu: '100m',
+                memory: '128Mi',
+              },
+            },
+            volumeMounts: [
+              {
+                name: 'client-metrics-config',
+                mountPath: '/etc/netbird-monitoring',
+                readOnly: true,
+              },
+            ],
+          },
         ],
         volumes: [
+          {
+            name: 'client-metrics-config',
+            configMap: {
+              name: clientMetricsConfig.metadata.name,
+              defaultMode: 365,
+            },
+          },
           {
             name: 'tun',
             hostPath: {

@@ -18,6 +18,9 @@ local app = import 'app.json5';
     template: {
       metadata: {
         labels: labels(app.name),
+        annotations: {
+          'checksum/samba-monitor-config': std.md5(std.toString((import 'monitor-configmap.jsonnet').data)),
+        },
       },
       spec: {
         affinity: storage.avoidSlowNodeAffinity,
@@ -30,6 +33,8 @@ local app = import 'app.json5';
             image: 'ghcr.io/servercontainers/samba:a3.24.2-s4.23.8-r0@sha256:ea1b37536729f16b2f45a601ea45a37d34b9fce5cc51f2d686a347dd77131be1',
             imagePullPolicy: 'IfNotPresent',
             name: 'samba',
+            command: ['/bin/sh', '/config/samba-entrypoint.sh'],
+            args: ['runsvdir', '-P', '/container/config/runit'],
             env: [
               {
                 name: 'ACCOUNT_samba',
@@ -77,6 +82,16 @@ local app = import 'app.json5';
                 mountPath: '/samba-share',
               },
               {
+                name: 'monitor-entrypoint',
+                mountPath: '/config',
+                readOnly: true,
+              },
+              {
+                name: 'monitor-credentials',
+                mountPath: '/run/secrets',
+                readOnly: true,
+              },
+              {
                 name: 'books',
                 mountPath: '/samba-share/books',
               },
@@ -111,6 +126,29 @@ local app = import 'app.json5';
           },
         ],
         volumes: [
+          {
+            name: 'monitor-entrypoint',
+            configMap: {
+              name: 'samba-monitor',
+            },
+          },
+          {
+            name: 'monitor-credentials',
+            secret: {
+              secretName: (import 'external-secret.jsonnet').spec.target.name,
+              defaultMode: 288,
+              items: [
+                {
+                  key: 'monitor-username',
+                  path: 'username',
+                },
+                {
+                  key: 'monitor-password',
+                  path: 'password',
+                },
+              ],
+            },
+          },
           {
             name: 'root',
             persistentVolumeClaim: {

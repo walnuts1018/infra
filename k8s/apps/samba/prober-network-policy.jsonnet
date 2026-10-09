@@ -1,14 +1,15 @@
+local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'NetworkPolicy',
   metadata: {
-    name: app.name,
+    name: 'samba-prober',
     namespace: app.namespace,
   },
   spec: {
     podSelector: {
-      matchLabels: (import '../../components/labels.libsonnet')(app.name),
+      matchLabels: labels('samba-prober'),
     },
     policyTypes: [
       'Ingress',
@@ -20,38 +21,45 @@ local app = import 'app.json5';
           {
             namespaceSelector: {
               matchLabels: {
-                'kubernetes.io/metadata.name': app.namespace,
+                'kubernetes.io/metadata.name': 'opentelemetry-collector',
               },
             },
             podSelector: {
-              matchLabels: (import '../../components/labels.libsonnet')('samba-prober'),
+              matchLabels: {
+                'app.kubernetes.io/name': 'prometheus-collector',
+              },
             },
           },
         ],
         ports: [
           {
             protocol: 'TCP',
-            port: 10445,
-          },
-        ],
-      },
-      {
-        from: [
-          {
-            ipBlock: {
-              cidr: '192.168.100.0/24',
-            },
-          },
-        ],
-        ports: [
-          {
-            protocol: 'TCP',
-            port: 10445,
+            port: 9187,
           },
         ],
       },
     ],
     egress: [
+      {
+        to: [
+          {
+            namespaceSelector: {
+              matchLabels: {
+                'kubernetes.io/metadata.name': app.namespace,
+              },
+            },
+            podSelector: {
+              matchLabels: labels(app.name),
+            },
+          },
+        ],
+        ports: [
+          {
+            protocol: 'TCP',
+            port: 10445,
+          },
+        ],
+      },
       {
         to: [
           {
