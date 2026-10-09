@@ -133,10 +133,11 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
                 readOnly: true,
               },
             ],
+            // Kubelet health checks use a listener without PROXY protocol.
             livenessProbe: {
               httpGet: {
                 path: '/healthz/live',
-                port: 8080,
+                port: 8081,
               },
               initialDelaySeconds: 30,
               periodSeconds: 10,
@@ -144,7 +145,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
             startupProbe: {
               httpGet: {
                 path: '/healthz/live',
-                port: 8080,
+                port: 8081,
               },
               periodSeconds: 10,
               failureThreshold: 20,
@@ -152,7 +153,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
             readinessProbe: {
               httpGet: {
                 path: '/healthz/ready',
-                port: 8080,
+                port: 8081,
               },
               initialDelaySeconds: 5,
               periodSeconds: 10,
