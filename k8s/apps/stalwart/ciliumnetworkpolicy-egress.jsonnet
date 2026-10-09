@@ -24,7 +24,7 @@ local app = import 'app.json5';
         toPorts: [{ ports: [
           { port: '53', protocol: 'UDP' },
           { port: '53', protocol: 'TCP' },
-        ], rules: { dns: [{ matchPattern: '*' }] } }],
+        ] }],
       },
       {
         toEndpoints: [{
@@ -89,14 +89,11 @@ local app = import 'app.json5';
         toPorts: [{ ports: [{ port: '4317', protocol: 'TCP' }] }],
       },
       {
-        toFQDNs: [{ matchName: 'email-smtp.ap-northeast-1.amazonaws.com' }],
-        toPorts: [{ ports: [{ port: '587', protocol: 'TCP' }] }],
-      },
-      {
-        // Outbound SMTP and HTTPS policy retrieval for recipient-domain MTA-STS.
+        // Outbound SMTP, authenticated relay submission, and recipient-domain MTA-STS.
         toEntities: ['world'],
         toPorts: [{ ports: [
           { port: '25', protocol: 'TCP' },
+          { port: '587', protocol: 'TCP' },
           { port: '443', protocol: 'TCP' },
         ] }],
       },
