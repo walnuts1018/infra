@@ -52,6 +52,7 @@
         '/^k8s/.*/helm.libsonnet$/',
         '/^k8s/.*/helm.yaml$/',
         '/^k8s/.*/helm.yml$/',
+        '/^k8s/apps/actions-runners/runners\\.libsonnet$/',
       ],
       matchStringsStrategy: 'combination',
       matchStrings: [
@@ -90,6 +91,13 @@
     },
   ],
   packageRules: [
+    {
+      groupName: 'actions-runner-controller',
+      matchPackageNames: [
+        'ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller',
+        'ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set',
+      ],
+    },
     {
       description: 'Pin digests for Kubernetes container images',
       matchDatasources: [
