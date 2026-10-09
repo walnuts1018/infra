@@ -1,0 +1,7 @@
+{
+  name: "kube-system-coredns",
+  namespace: "kube-system",
+  clusters: {
+    kurumi: {},
+  },
+}
