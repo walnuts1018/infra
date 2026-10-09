@@ -1,11 +1,5 @@
 local app = import 'app.json5';
 local apiFqdn = 'api.cloudflare.com';
-// Go's resolver tries these search-list names before the absolute name with ndots:5.
-local apiDnsSearchNames = [
-  apiFqdn + '.' + app.namespace + '.svc.cluster.local',
-  apiFqdn + '.svc.cluster.local',
-  apiFqdn + '.cluster.local',
-];
 
 {
   apiVersion: 'cilium.io/v2',
@@ -30,15 +24,8 @@ local apiDnsSearchNames = [
           },
         }],
         toPorts: [{
-          ports: [
-            { port: '53', protocol: 'UDP' },
-            { port: '53', protocol: 'TCP' },
-          ],
-          rules: {
-            dns: [{ matchName: name } for name in apiDnsSearchNames] + [
-              { matchName: apiFqdn },
-            ],
-          },
+          ports: [{ port: '53', protocol: 'ANY' }],
+          rules: { dns: [{ matchPattern: '*' }] },
         }],
       },
       {
