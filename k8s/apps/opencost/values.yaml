@@ -42,6 +42,9 @@ opencost:
   metrics:
     serviceMonitor:
       enabled: true
+      metricRelabelings:
+      - action: labeldrop
+        regex: label_(.*_node_kubevirt_io_.*|feature_node_kubernetes_io_.*|nvidia_com_gpu_deploy_.*|nvidia_com_cuda_.*|nvidia_com_gfd_timestamp)
 
   prometheus:
     internal:
