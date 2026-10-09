@@ -1,4 +1,13 @@
 replicas: 1
+headlessService: true
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: kubernetes.io/hostname
+  whenUnsatisfiable: ScheduleAnyway
+  labelSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+      app.kubernetes.io/instance: grafana
 autoscaling:
   enabled: true
   minReplicas: 1
@@ -43,6 +52,11 @@ extraSecretMounts:
   mountPath: /etc/secrets
   readOnly: true
 grafana.ini:
+  unified_alerting:
+    enabled: true
+    ha_peers: grafana-headless.monitoring.svc.cluster.local:9094
+    ha_listen_address: ${POD_IP}:9094
+    ha_advertise_address: ${POD_IP}:9094
   server:
     domain: grafana.walnuts.dev
     root_url: https://grafana.walnuts.dev/
