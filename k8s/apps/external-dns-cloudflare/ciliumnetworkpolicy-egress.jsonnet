@@ -1,5 +1,5 @@
+local networkPolicy = import '../../components/network-policy.libsonnet';
 local app = import 'app.json5';
-local apiFqdn = 'api.cloudflare.com';
 
 {
   apiVersion: 'cilium.io/v2',
@@ -24,8 +24,10 @@ local apiFqdn = 'api.cloudflare.com';
           },
         }],
         toPorts: [{
-          ports: [{ port: '53', protocol: 'ANY' }],
-          rules: { dns: [{ matchPattern: '*' }] },
+          ports: [
+            { port: '53', protocol: 'UDP' },
+            { port: '53', protocol: 'TCP' },
+          ],
         }],
       },
       {
@@ -38,7 +40,7 @@ local apiFqdn = 'api.cloudflare.com';
         }],
       },
       {
-        toFQDNs: [{ matchName: apiFqdn }],
+        toCIDRSet: networkPolicy.publicInternetCIDRSet,
         toPorts: [{ ports: [{ port: '443', protocol: 'TCP' }] }],
       },
     ],
