@@ -14,7 +14,7 @@ local makeRunnerSet(repo, runner) =
     name: 'arc-%s-%s' % [repo.name, runner.name],
     namespace: app.namespace,
     ociChartURL: 'ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set',
-    targetRevision: '0.14.2',
+    targetRevision: '0.15.0',
     valuesObject: {
       controllerServiceAccount: {
         namespace: 'arc-systems',
