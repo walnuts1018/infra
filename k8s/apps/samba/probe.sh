@@ -75,6 +75,6 @@ while :; do
   {
     printf 'HTTP/1.0 200 OK\r\nContent-Type: text/plain; version=0.0.4; charset=utf-8\r\nContent-Length: %s\r\nConnection: close\r\n\r\n' "$content_length"
     cat /tmp/www/response
-  } | nc -l -p 9187 -w 5 >/dev/null || true
+  } | nc -l -p 9187 >/dev/null || true
   rm -f /tmp/www/response
 done

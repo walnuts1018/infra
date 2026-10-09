@@ -11,6 +11,13 @@ local app = import 'app.json5';
       #!/usr/bin/env bash
       set -euo pipefail
 
+      if [[ "${1:-}" == "service" && "${2:-}" == "run" && -f /var/lib/netbird/default.json ]]; then
+        sed -i -E \
+          -e 's/("LocalMetricsEnabled":[[:space:]]*)(true|false)/\1true/' \
+          -e 's/("LocalMetricsAddress":[[:space:]]*)"[^"]*"/\1"127.0.0.1:9191"/' \
+          /var/lib/netbird/default.json
+      fi
+
       if [[ "${1:-}" == "up" ]]; then
         shift
         exec /usr/local/bin/netbird up --enable-local-metrics --local-metrics-address 127.0.0.1:9191 "$@"
