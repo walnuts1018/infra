@@ -89,8 +89,12 @@ local app = import 'app.json5';
         toPorts: [{ ports: [{ port: '4317', protocol: 'TCP' }] }],
       },
       {
+        // Outbound SMTP and HTTPS policy retrieval for recipient-domain MTA-STS.
         toEntities: ['world'],
-        toPorts: [{ ports: [{ port: '25', protocol: 'TCP' }] }],
+        toPorts: [{ ports: [
+          { port: '25', protocol: 'TCP' },
+          { port: '443', protocol: 'TCP' },
+        ] }],
       },
     ],
   },
