@@ -29,13 +29,17 @@ chmod 600 "$auth_file"
 unset monitor_password monitor_username
 
 write_metrics() {
-  success=$1
-  last_run=$2
+  smb_success=$1
+  tcp_success=$2
+  last_run=$3
   tmp_file=/tmp/www/metrics.tmp
   cat > "$tmp_file" <<EOF
 # HELP samba_smb_probe_success Whether the last authenticated read-only SMB share listing succeeded.
 # TYPE samba_smb_probe_success gauge
-samba_smb_probe_success ${success}
+samba_smb_probe_success ${smb_success}
+# HELP samba_smb_probe_tcp_success Whether a TCP connection to the Samba service port succeeded.
+# TYPE samba_smb_probe_tcp_success gauge
+samba_smb_probe_tcp_success ${tcp_success}
 # HELP samba_smb_probe_last_run_timestamp_seconds Unix timestamp of the last SMB probe.
 # TYPE samba_smb_probe_last_run_timestamp_seconds gauge
 samba_smb_probe_last_run_timestamp_seconds ${last_run}
@@ -46,17 +50,22 @@ EOF
 probe_loop() {
   while :; do
     last_run=$(date +%s)
-    if timeout 15 smbclient -A "$auth_file" //samba.samba.svc.cluster.local/monitor -p 445 -t 10 -c 'ls' >/dev/null 2>&1; then
-      success=1
+    if nc -z -w 5 samba.samba.svc.cluster.local 445 >/dev/null 2>&1; then
+      tcp_success=1
     else
-      success=0
+      tcp_success=0
     fi
-    write_metrics "$success" "$last_run"
+    if timeout 15 smbclient -A "$auth_file" //samba.samba.svc.cluster.local/monitor -p 445 -t 10 -c 'ls' >/dev/null 2>&1; then
+      smb_success=1
+    else
+      smb_success=0
+    fi
+    write_metrics "$smb_success" "$tcp_success" "$last_run"
     sleep 30
   done
 }
 
-write_metrics 0 0
+write_metrics 0 0 0
 probe_loop &
 probe_pid=$!
 
