@@ -67,6 +67,18 @@ local app = import 'app.json5';
         toPorts: [{ ports: [{ port: '8333', protocol: 'TCP' }] }],
       },
       {
+        // The S3 endpoint uses the HTTPS route served by Envoy Gateway.
+        toEndpoints: [{
+          matchLabels: {
+            'k8s:io.kubernetes.pod.namespace': 'envoy-gateway-system',
+            'k8s:app.kubernetes.io/component': 'proxy',
+            'k8s:app.kubernetes.io/managed-by': 'envoy-gateway',
+            'k8s:app.kubernetes.io/name': 'envoy',
+          },
+        }],
+        toPorts: [{ ports: [{ port: '443', protocol: 'TCP' }] }],
+      },
+      {
         toEndpoints: [{
           matchLabels: {
             'k8s:io.kubernetes.pod.namespace': 'opentelemetry-collector',
