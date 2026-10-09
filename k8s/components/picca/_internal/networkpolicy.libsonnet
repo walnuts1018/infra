@@ -175,11 +175,27 @@ function(app)
         egress: [],
       },
     },
+    {
+      apiVersion: 'networking.k8s.io/v1',
+      kind: 'NetworkPolicy',
+      metadata: {
+        name: app.name + '-ingress-default-deny',
+        namespace: app.namespace,
+      },
+      spec: {
+        podSelector: {},
+        policyTypes: ['Ingress'],
+        ingress: [],
+      },
+    },
     ingressPolicy('apiserver', [
       ingressRule([
         networkPolicy.envoyGatewayProxy,
         localPeer({ 'app.kubernetes.io/name': app.name + '-frontend' }),
       ], 8080),
+    ]),
+    ingressPolicy('dense-service', [
+      ingressRule([localPeer({ 'app.kubernetes.io/name': app.name + '-apiserver' })], 8001),
     ]),
     ingressPolicy('imgproxy', [
       ingressRule([networkPolicy.envoyGatewayProxy], 8080),
