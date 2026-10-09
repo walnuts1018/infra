@@ -5,7 +5,7 @@ local app = import 'app.json5';
 
   chart: 'zitadel',
   repoURL: 'https://charts.zitadel.com',
-  targetRevision: '10.3.0',
+  targetRevision: '10.4.0',
   valuesObject: std.mergePatch(std.parseYaml(importstr 'values.yaml'), {
     extraManifests: [
       std.parseYaml(importstr 'config/network-policy.yaml'),
