@@ -9,6 +9,14 @@ local peer(namespace, podSelector) = {
   },
   podSelector: podSelector,
 };
+local filerPeer = peer(app.namespace, {
+  matchLabels: {
+    'app.kubernetes.io/component': 'filer',
+    'app.kubernetes.io/instance': app.name,
+    'app.kubernetes.io/managed-by': 'seaweedfs-operator',
+    'app.kubernetes.io/name': 'seaweedfs',
+  },
+});
 
 // Piccaのegress許可とこのIngress許可に同じcomponent名を使う。
 local piccaS3ClientNames = [
@@ -73,6 +81,10 @@ local piccaS3ClientNames = [
       {
         from: [networkPolicy.otelPrometheusCollector],
         ports: [{ protocol: 'TCP', port: 9327 }],
+      },
+      {
+        from: [filerPeer],
+        ports: [{ protocol: 'TCP', port: 18333 }],
       },
     ],
   },
