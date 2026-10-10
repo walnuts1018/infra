@@ -106,6 +106,7 @@ local policy(name, endpoint, ingress, egress) = {
       to(component('valkey'), [6379]),
       to(seaweedS3, [8333]),
       fqdn('auth.walnuts.dev', 443),
+      fqdn('images.unsplash.com', 443),
     ],
   ),
   policy(
