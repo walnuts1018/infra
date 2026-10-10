@@ -81,7 +81,10 @@ local policy(name, endpoint, ingress, egress) = {
   policy(
     'frontend',
     component('frontend'),
-    [from(envoy, [8080])],
+    [
+      from(envoy, [8080]),
+      from(component('exporter'), [8080]),
+    ],
     [
       dns,
       to(component('backend'), [6060]),
