@@ -91,6 +91,8 @@ local policy(name, endpoint, ingress, egress) = {
       to(component('exporter'), [6061]),
       to(component('mcp'), [4401, 4402]),
       to(seaweedS3, [8333]),
+      fqdn('fonts.googleapis.com', 443),
+      fqdn('fonts.gstatic.com', 443),
     ],
   ),
   policy(
