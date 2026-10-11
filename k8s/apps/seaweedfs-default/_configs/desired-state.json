@@ -13,6 +13,7 @@
     {
       "name": "horse",
       "publicRead": [],
+      "versioning": "Enabled",
       "placement": {
         "diskType": "ssd",
         "replication": "001"

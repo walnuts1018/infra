@@ -27,7 +27,10 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
             image: 'ghcr.io/walnuts1018/horse:latest',
             imagePullPolicy: 'Always',
             command: ['/app/worker'],
+            ports: [{ name: 'health', containerPort: 8081 }],
             env: [
+              { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317' },
+              { name: 'OTEL_EXPORTER_OTLP_INSECURE', value: 'true' },
               { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
               { name: 'S3_BUCKET', value: 'horse' },
               { name: 'OCR_URL', value: 'http://horse-ocr.horse.svc.cluster.local:8000' },
@@ -61,6 +64,14 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
               },
             ],
             volumeMounts: [{ name: 'tmp', mountPath: '/tmp' }],
+            livenessProbe: {
+              httpGet: { path: '/healthz', port: 'health' },
+              periodSeconds: 10,
+            },
+            readinessProbe: {
+              httpGet: { path: '/readyz', port: 'health' },
+              periodSeconds: 5,
+            },
             resources: {
               requests: { cpu: '100m', memory: '512Mi' },
               limits: { cpu: '2', memory: '2Gi' },

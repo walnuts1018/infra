@@ -57,6 +57,8 @@ local image = 'ghcr.io/walnuts1018/horse:latest';
               { name: 'PUBLIC_ORIGIN', value: 'https://horse.walnuts.dev' },
               { name: 'OIDC_ISSUER_URL', value: 'https://zitadel.walnuts.dev' },
               { name: 'OIDC_REDIRECT_URL', value: 'https://horse.walnuts.dev/auth/callback' },
+              { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317' },
+              { name: 'OTEL_EXPORTER_OTLP_INSECURE', value: 'true' },
               { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
               { name: 'S3_BUCKET', value: 'horse' },
               {

@@ -15,6 +15,7 @@ local app = import 'app.json5';
     rules: [
       {
         matches: [
+          { path: { type: 'Exact', value: '/healthz' } },
           { path: { type: 'PathPrefix', value: '/graphql' } },
           { path: { type: 'PathPrefix', value: '/events' } },
           { path: { type: 'PathPrefix', value: '/auth' } },
