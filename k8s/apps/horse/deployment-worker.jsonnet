@@ -34,6 +34,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
               { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
               { name: 'S3_BUCKET', value: 'horse' },
               { name: 'OCR_URL', value: 'http://horse-ocr.horse.svc.cluster.local:8000' },
+              { name: 'GEMINI_ENABLED', value: 'false' },
               {
                 name: 'DATABASE_URL',
                 valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'DATABASE_URL' } },
@@ -43,16 +44,36 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
                 valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'RABBITMQ_URL' } },
               },
               {
-                name: 'GEMINI_API_KEY',
-                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_API_KEY' } },
+                name: 'GEMINI_FREE_API_KEY',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_FREE_API_KEY', optional: true } },
               },
               {
-                name: 'GEMINI_MODEL',
-                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_MODEL' } },
+                name: 'GEMINI_PAID_API_KEY',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_PAID_API_KEY', optional: true } },
               },
               {
-                name: 'GEMINI_FALLBACK_MODEL',
-                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_FALLBACK_MODEL', optional: true } },
+                name: 'GEMINI_FREE_PROJECT_ID',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_FREE_PROJECT_ID', optional: true } },
+              },
+              {
+                name: 'GEMINI_PAID_PROJECT_ID',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_PAID_PROJECT_ID', optional: true } },
+              },
+              {
+                name: 'GEMINI_FLASH_MODEL',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_FLASH_MODEL', optional: true } },
+              },
+              {
+                name: 'GEMINI_LITE_MODEL',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_LITE_MODEL', optional: true } },
+              },
+              {
+                name: 'GEMINI_PRO_MODEL',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_PRO_MODEL', optional: true } },
+              },
+              {
+                name: 'USDJPY_RATE',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'USDJPY_RATE', optional: true } },
               },
               {
                 name: 'S3_ACCESS_KEY_ID',

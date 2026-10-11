@@ -6,6 +6,14 @@ terraform {
       source  = "coder/coderd"
       version = "0.0.30"
     }
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 7.24"
+    }
+    restapi = {
+      source  = "Mastercard/restapi"
+      version = "3.0.0"
+    }
   }
 
   cloud {

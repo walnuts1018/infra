@@ -14,26 +14,66 @@
     target: { name: 'horse-ai' },
     data: [
       {
-        secretKey: 'GEMINI_API_KEY',
+        secretKey: 'GEMINI_FREE_API_KEY',
         remoteRef: {
           key: 'terraform-external-secrets',
-          property: 'horse-gemini-api-key',
+          property: 'horse-gemini-free-api-key',
           optional: true,
         },
       },
       {
-        secretKey: 'GEMINI_MODEL',
+        secretKey: 'GEMINI_PAID_API_KEY',
         remoteRef: {
           key: 'terraform-external-secrets',
-          property: 'horse-gemini-model',
+          property: 'horse-gemini-paid-api-key',
           optional: true,
         },
       },
       {
-        secretKey: 'GEMINI_FALLBACK_MODEL',
+        secretKey: 'GEMINI_FREE_PROJECT_ID',
         remoteRef: {
           key: 'terraform-external-secrets',
-          property: 'horse-gemini-fallback-model',
+          property: 'horse-gemini-free-project-id',
+          optional: true,
+        },
+      },
+      {
+        secretKey: 'GEMINI_PAID_PROJECT_ID',
+        remoteRef: {
+          key: 'terraform-external-secrets',
+          property: 'horse-gemini-paid-project-id',
+          optional: true,
+        },
+      },
+      {
+        secretKey: 'GEMINI_FLASH_MODEL',
+        remoteRef: {
+          key: 'terraform-external-secrets',
+          property: 'horse-gemini-flash-model',
+          optional: true,
+        },
+      },
+      {
+        secretKey: 'GEMINI_LITE_MODEL',
+        remoteRef: {
+          key: 'terraform-external-secrets',
+          property: 'horse-gemini-lite-model',
+          optional: true,
+        },
+      },
+      {
+        secretKey: 'GEMINI_PRO_MODEL',
+        remoteRef: {
+          key: 'terraform-external-secrets',
+          property: 'horse-gemini-pro-model',
+          optional: true,
+        },
+      },
+      {
+        secretKey: 'USDJPY_RATE',
+        remoteRef: {
+          key: 'terraform-external-secrets',
+          property: 'horse-gemini-usdjpy-rate',
           optional: true,
         },
       },

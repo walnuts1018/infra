@@ -14,10 +14,6 @@ local name = app.name + '-worker';
     policyTypes: ['Egress'],
     egress: [
       {
-        to: [networkPolicy.kubeDns],
-        ports: [{ protocol: 'UDP', port: 53 }, { protocol: 'TCP', port: 53 }],
-      },
-      {
         to: [{
           namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'databases' } },
           podSelector: {
@@ -53,10 +49,6 @@ local name = app.name + '-worker';
           },
         }],
         ports: [{ protocol: 'TCP', port: 5672 }],
-      },
-      {
-        to: networkPolicy.publicInternet,
-        ports: [{ protocol: 'TCP', port: 443 }],
       },
       {
         to: [networkPolicy.otelDefaultCollector],

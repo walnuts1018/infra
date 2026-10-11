@@ -21,6 +21,7 @@ local app = import 'app.json5';
           { path: { type: 'PathPrefix', value: '/auth' } },
           { path: { type: 'PathPrefix', value: '/documents' } },
           { path: { type: 'PathPrefix', value: '/uploads' } },
+          { path: { type: 'PathPrefix', value: '/purchases' } },
         ],
         backendRefs: [{ kind: 'Service', name: app.name + '-api', port: 8080 }],
       },
