@@ -72,10 +72,6 @@ local image = 'ghcr.io/walnuts1018/horse:latest';
                 valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'OIDC_CLIENT_SECRET' } },
               },
               {
-                name: 'SESSION_SECRET',
-                valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'SESSION_SECRET' } },
-              },
-              {
                 name: 'S3_ACCESS_KEY_ID',
                 valueFrom: { secretKeyRef: { name: s3Credentials.secretName, key: s3Credentials.accessKeyField } },
               },

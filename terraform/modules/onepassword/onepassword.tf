@@ -120,11 +120,6 @@ resource "random_password" "horse_database_password" {
   special = false
 }
 
-resource "random_password" "horse_session_secret" {
-  length  = 64
-  special = false
-}
-
 resource "random_password" "horse_rabbitmq_password" {
   length  = 48
   special = false
@@ -156,7 +151,6 @@ resource "onepassword_item" "external_secret" {
         "horse-client-id"                          = { type = "STRING", value = var.horse_client_id }
         "horse-client-secret"                      = { type = "CONCEALED", value = var.horse_client_secret }
         "horse-database-password"                  = { type = "CONCEALED", value = random_password.horse_database_password.result }
-        "horse-session-secret"                     = { type = "CONCEALED", value = random_password.horse_session_secret.result }
         "horse-rabbitmq-password"                  = { type = "CONCEALED", value = random_password.horse_rabbitmq_password.result }
         "ipu-client-id"                            = { type = "STRING", value = var.ipu_client_id }
         "ipu-client-secret"                        = { type = "CONCEALED", value = var.ipu_client_secret }

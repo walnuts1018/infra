@@ -16,13 +16,6 @@
       },
     },
     {
-      secretKey: 'session_secret',
-      remoteRef: {
-        key: 'terraform-external-secrets',
-        property: 'horse-session-secret',
-      },
-    },
-    {
       secretKey: 'postgres_password',
       remoteRef: {
         key: 'terraform-external-secrets',
@@ -41,7 +34,6 @@
     DATABASE_URL: 'postgresql://horse:{{ .postgres_password }}@postgresql-default-rw.databases.svc.cluster.local:5432/horse',
     OIDC_CLIENT_ID: '{{ .client_id }}',
     OIDC_CLIENT_SECRET: '{{ .client_secret }}',
-    SESSION_SECRET: '{{ .session_secret }}',
     RABBITMQ_URL: 'amqp://horse:{{ .rabbitmq_password }}@default.rabbitmq.svc.cluster.local:5672/horse',
   },
 }
