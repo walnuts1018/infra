@@ -1,5 +1,11 @@
 [
   {
+    db_name: 'horse',
+    user_name: 'horse',
+    secret_source_key: 'terraform-external-secrets',
+    secret_source_property: 'horse-database-password',
+  },
+  {
     db_name: 'picca',
     user_name: 'picca',
     extensions: [

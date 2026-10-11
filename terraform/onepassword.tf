@@ -3,6 +3,8 @@ module "onepassword" {
 
   vault                   = var.onepassword_vault
   service_account_token   = var.onepassword_service_account_token
+  horse_client_id         = module.zitadel.horse_oidc_client_id
+  horse_client_secret     = module.zitadel.horse_oidc_client_secret
   akvorado_client_id      = module.zitadel.akvorado_oidc_client_id
   akvorado_client_secret  = module.zitadel.akvorado_oidc_client_secret
   coder_client_id         = module.zitadel.coder_oidc_client_id

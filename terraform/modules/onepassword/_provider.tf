@@ -26,6 +26,13 @@ variable "service_account_token" {
   description = "1Password service account token"
 }
 
+variable "horse_client_id" { type = string }
+
+variable "horse_client_secret" {
+  type      = string
+  sensitive = true
+}
+
 variable "akvorado_client_id" { type = string }
 
 variable "akvorado_client_secret" {

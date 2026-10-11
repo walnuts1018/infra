@@ -1,0 +1,73 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local name = app.name + '-worker';
+local externalSecret = import 'external-secret.jsonnet';
+local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonnet')('horse');
+{
+  apiVersion: 'apps/v1',
+  kind: 'Deployment',
+  metadata: {
+    name: name,
+    namespace: app.namespace,
+    labels: labels(name),
+    annotations: { 'argocd.argoproj.io/sync-wave': '2' },
+  },
+  spec: {
+    replicas: 1,
+    selector: { matchLabels: labels(name) },
+    template: {
+      metadata: { labels: labels(name) },
+      spec: {
+        imagePullSecrets: [{ name: 'ghcr-login-secret' }],
+        volumes: [{ name: 'tmp', emptyDir: { sizeLimit: '2Gi' } }],
+        containers: [
+          container {
+            name: 'worker',
+            image: 'ghcr.io/walnuts1018/horse:latest',
+            imagePullPolicy: 'Always',
+            command: ['/app/worker'],
+            env: [
+              { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
+              { name: 'S3_BUCKET', value: 'horse' },
+              { name: 'OCR_URL', value: 'http://horse-ocr.horse.svc.cluster.local:8000' },
+              {
+                name: 'DATABASE_URL',
+                valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'DATABASE_URL' } },
+              },
+              {
+                name: 'RABBITMQ_URL',
+                valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'RABBITMQ_URL' } },
+              },
+              {
+                name: 'GEMINI_API_KEY',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_API_KEY' } },
+              },
+              {
+                name: 'GEMINI_MODEL',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_MODEL' } },
+              },
+              {
+                name: 'GEMINI_FALLBACK_MODEL',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_FALLBACK_MODEL', optional: true } },
+              },
+              {
+                name: 'S3_ACCESS_KEY_ID',
+                valueFrom: { secretKeyRef: { name: s3Credentials.secretName, key: s3Credentials.accessKeyField } },
+              },
+              {
+                name: 'S3_SECRET_ACCESS_KEY',
+                valueFrom: { secretKeyRef: { name: s3Credentials.secretName, key: s3Credentials.secretKeyField } },
+              },
+            ],
+            volumeMounts: [{ name: 'tmp', mountPath: '/tmp' }],
+            resources: {
+              requests: { cpu: '100m', memory: '512Mi' },
+              limits: { cpu: '2', memory: '2Gi' },
+            },
+          },
+        ],
+      },
+    },
+  },
+}

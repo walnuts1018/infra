@@ -11,6 +11,14 @@
   },
   "buckets": [
     {
+      "name": "horse",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
+      }
+    },
+    {
       "name": "picca",
       "publicRead": [],
       "placement": {
@@ -248,6 +256,29 @@
     }
   ],
   "accessKeyIdentities": [
+    {
+      "name": "horse",
+      "secretTarget": {
+        "namespace": "horse",
+        "secretName": "horse-s3-credentials",
+        "accessKeyField": "AWS_ACCESS_KEY_ID",
+        "secretKeyField": "AWS_SECRET_ACCESS_KEY"
+      },
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": [
+            "Read",
+            "Write",
+            "List",
+            "Tagging"
+          ],
+          "buckets": [
+            "horse"
+          ]
+        }
+      ]
+    },
     {
       "name": "mac_hatena",
       "accessKeyProperty": "mac_hatena_accesskey",
