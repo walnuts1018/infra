@@ -35,7 +35,7 @@ local app = import 'app.json5';
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'ghcr.io/walnuts1018/walnuk-frontend:v0.0.176@sha256:9a2dd8c839db22183bb7417745562ca88ed5c57f377a774a45cbd592a9fa8921',
+            image: 'ghcr.io/walnuts1018/walnuk-frontend:v0.0.177@sha256:87091430121afc0e5dbe238387eed8705571afc103883f8b56fa15e7c5a449eb',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
