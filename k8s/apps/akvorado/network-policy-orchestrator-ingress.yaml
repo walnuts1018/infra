@@ -1,0 +1,49 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: akvorado-orchestrator-ingress
+  namespace: akvorado
+spec:
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: akvorado
+          podSelector:
+            matchLabels:
+              app: akvorado
+              app.kubernetes.io/component: console
+              app.kubernetes.io/name: akvorado
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: akvorado
+          podSelector:
+            matchLabels:
+              app: akvorado
+              app.kubernetes.io/component: outlet
+              app.kubernetes.io/name: akvorado
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: akvorado
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: clickhouse-server
+              clickhouse.com/cluster: akvorado-clickhouse
+              clickhouse.com/role: clickhouse-server
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: opentelemetry-collector
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: opentelemetry-collector
+              app.kubernetes.io/instance: opentelemetry-collector.prometheus
+      ports:
+        - port: 8080
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      app: akvorado
+      app.kubernetes.io/component: orchestrator
+      app.kubernetes.io/name: akvorado
+  policyTypes:
+    - Ingress

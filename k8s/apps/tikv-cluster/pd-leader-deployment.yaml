@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: tikv-cluster
+    app.kubernetes.io/name: pd-leader-prober
+  name: tikv-cluster-pd-leader-prober
+  namespace: databases
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: tikv-cluster
+      app.kubernetes.io/name: pd-leader-prober
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: tikv-cluster
+        app.kubernetes.io/name: pd-leader-prober
+    spec:
+      containers:
+        - args:
+            - --config.file=/etc/blackbox/blackbox.yml
+          image: quay.io/prometheus/blackbox-exporter:v0.28.0@sha256:43027b43fb785b7c5adc53bd3b5dbc1a258270a2e8aff24f477b45c4e38dac68
+          name: blackbox-exporter
+          ports:
+            - containerPort: 9115
+              name: http
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 50m
+              memory: 64Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 1000
+          volumeMounts:
+            - mountPath: /etc/blackbox
+              name: config
+              readOnly: true
+            - mountPath: /etc/pd-client-tls
+              name: pd-client-tls
+              readOnly: true
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - configMap:
+            name: tikv-cluster-pd-leader-prober
+          name: config
+        - name: pd-client-tls
+          secret:
+            defaultMode: 288
+            secretName: tikv-cluster-pd-cluster-secret

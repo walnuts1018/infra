@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    lbipam.cilium.io/ips: 192.168.12.141
+  labels:
+    cnpg.io/cluster: postgresql-default
+  name: postgresql-default-rw-expose
+  namespace: databases
+spec:
+  ports:
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    cnpg.io/cluster: postgresql-default
+    cnpg.io/instanceRole: primary
+  type: LoadBalancer

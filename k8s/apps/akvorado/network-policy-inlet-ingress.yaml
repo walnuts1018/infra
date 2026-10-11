@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: akvorado-inlet-ingress
+  namespace: akvorado
+spec:
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 192.168.0.1/32
+      ports:
+        - port: 2055
+          protocol: UDP
+        - port: 6343
+          protocol: UDP
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: opentelemetry-collector
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: opentelemetry-collector
+              app.kubernetes.io/instance: opentelemetry-collector.prometheus
+      ports:
+        - port: 8080
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      app: akvorado
+      app.kubernetes.io/component: inlet
+      app.kubernetes.io/name: akvorado
+  policyTypes:
+    - Ingress

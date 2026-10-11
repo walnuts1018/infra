@@ -1,0 +1,147 @@
+apiVersion: v1
+data:
+  job-completed.sh: |
+    #!/usr/bin/env bash
+    (
+      END_TIME=$(date +%s)
+      START_TIME="${END_TIME}"
+      START_CPU_USAGE=0
+
+      if [ -f /tmp/job-metrics.env ]; then
+        source /tmp/job-metrics.env
+      fi
+
+      DURATION=$((END_TIME - START_TIME))
+      if [ "${DURATION}" -le 0 ]; then
+        DURATION=1
+      fi
+
+      PEAK_MEM=0
+      if [ -f /sys/fs/cgroup/memory.peak ]; then
+        PEAK_MEM=$(cat /sys/fs/cgroup/memory.peak 2>/dev/null || echo 0)
+      elif [ -f /sys/fs/cgroup/memory.current ]; then
+        PEAK_MEM=$(cat /sys/fs/cgroup/memory.current 2>/dev/null || echo 0)
+      fi
+
+      AVG_CPU="0.0"
+      if [ -f /sys/fs/cgroup/cpu.stat ]; then
+        END_CPU_USAGE=$(grep "usage_usec" /sys/fs/cgroup/cpu.stat | awk '{print $2}')
+        if [ -n "${END_CPU_USAGE}" ] && [ "${END_CPU_USAGE}" -gt "${START_CPU_USAGE}" ]; then
+          CPU_DELTA_USEC=$((END_CPU_USAGE - START_CPU_USAGE))
+          AVG_CPU=$(awk "BEGIN {printf \"%.4f\", ${CPU_DELTA_USEC} / (${DURATION} * 1000000)}")
+        fi
+      fi
+
+      WORKER_LOG=""
+      for d in "/home/runner/_diag" "${RUNNER_WORKSPACE:-}/../_diag" "${RUNNER_WORKSPACE%/_work*}/_diag" "/actions-runner/_diag" "/runner/_diag"; do
+        if [ -d "${d}" ]; then
+          LATEST=$(ls -t "${d}"/Worker_*.log 2>/dev/null | head -n 1)
+          if [ -n "${LATEST}" ] && [ -f "${LATEST}" ]; then
+            WORKER_LOG="${LATEST}"
+            break
+          fi
+        fi
+      done
+
+      JOB_NAME="${GITHUB_JOB:-unknown}"
+      if [ -n "${WORKER_LOG}" ] && [ -f "${WORKER_LOG}" ]; then
+        DISPLAY_NAME=$(sed -n -E 's/^[[:space:]]*"[jJ]obDisplayName":[[:space:]]*"(.*)"[[:space:]]*,?[[:space:]]*$/\1/p' "${WORKER_LOG}" | head -n 1)
+        if [ -z "${DISPLAY_NAME}" ]; then
+          DISPLAY_NAME=$(sed -n -E 's/.*Starting:[[:space:]]*(.*)/\1/p' "${WORKER_LOG}" | head -n 1)
+        fi
+        if [ -n "${DISPLAY_NAME}" ]; then
+          JOB_NAME="${DISPLAY_NAME}"
+        fi
+      fi
+
+      WORKFLOW_NAME="${GITHUB_WORKFLOW:-unknown}"
+      REPO_NAME="${GITHUB_REPOSITORY:-unknown}"
+      REPO_SHORT="${REPO_NAME##*/}"
+
+      NOW_NS=$(date +%s%N 2>/dev/null || echo "$(( $(date +%s) * 1000000000 ))")
+
+      PAYLOAD=$(cat <<EOF
+    {
+      "resourceMetrics": [{
+        "resource": {
+          "attributes": [
+            {"key": "service.name", "value": {"stringValue": "actions-runner"}},
+            {"key": "k8s.namespace.name", "value": {"stringValue": "arc-runners"}}
+          ]
+        },
+        "scopeMetrics": [{
+          "scope": {"name": "github.actions.runner"},
+          "metrics": [
+            {
+              "name": "gha_job_resource_peak_memory_bytes",
+              "gauge": {
+                "dataPoints": [{
+                  "asInt": ${PEAK_MEM},
+                  "timeUnixNano": "${NOW_NS}",
+                  "attributes": [
+                    {"key": "job_name", "value": {"stringValue": "${JOB_NAME}"}},
+                    {"key": "job_workflow_name", "value": {"stringValue": "${WORKFLOW_NAME}"}},
+                    {"key": "repository", "value": {"stringValue": "${REPO_SHORT}"}}
+                  ]
+                }]
+              }
+            },
+            {
+              "name": "gha_job_resource_avg_cpu_cores",
+              "gauge": {
+                "dataPoints": [{
+                  "asDouble": ${AVG_CPU},
+                  "timeUnixNano": "${NOW_NS}",
+                  "attributes": [
+                    {"key": "job_name", "value": {"stringValue": "${JOB_NAME}"}},
+                    {"key": "job_workflow_name", "value": {"stringValue": "${WORKFLOW_NAME}"}},
+                    {"key": "repository", "value": {"stringValue": "${REPO_SHORT}"}}
+                  ]
+                }]
+              }
+            },
+            {
+              "name": "gha_job_resource_duration_seconds",
+              "gauge": {
+                "dataPoints": [{
+                  "asInt": ${DURATION},
+                  "timeUnixNano": "${NOW_NS}",
+                  "attributes": [
+                    {"key": "job_name", "value": {"stringValue": "${JOB_NAME}"}},
+                    {"key": "job_workflow_name", "value": {"stringValue": "${WORKFLOW_NAME}"}},
+                    {"key": "repository", "value": {"stringValue": "${REPO_SHORT}"}}
+                  ]
+                }]
+              }
+            }
+          ]
+        }]
+      }]
+    }
+    EOF
+    )
+
+      curl -s -m 5 -X POST \
+        "http://default-collector.opentelemetry-collector.svc.cluster.local:4318/v1/metrics" \
+        -H "Content-Type: application/json" \
+        -d "${PAYLOAD}" >/dev/null 2>&1 || true
+    ) || true
+    exit 0
+  job-started.sh: |
+    #!/usr/bin/env bash
+    START_TIME=$(date +%s)
+    CPU_USAGE=0
+    if [ -f /sys/fs/cgroup/cpu.stat ]; then
+      CPU_USAGE=$(grep "usage_usec" /sys/fs/cgroup/cpu.stat | awk '{print $2}')
+    fi
+    echo "START_TIME=${START_TIME}" > /tmp/job-metrics.env
+    echo "START_CPU_USAGE=${CPU_USAGE}" >> /tmp/job-metrics.env
+    exit 0
+immutable: true
+kind: ConfigMap
+metadata:
+  labels:
+    app: actions-runners
+    app.kubernetes.io/name: actions-runners
+  name: runner-hooks-076f5f
+  namespace: arc-runners

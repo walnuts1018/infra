@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: otel-targetallocator-self
+  namespace: opentelemetry-collector
+spec:
+  endpoints:
+    - interval: 30s
+      path: /metrics
+      port: targetallocation
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-targetallocator

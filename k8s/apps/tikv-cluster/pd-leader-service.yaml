@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: tikv-cluster
+    app.kubernetes.io/name: pd-leader-prober
+  name: tikv-cluster-pd-leader-prober
+  namespace: databases
+spec:
+  ports:
+    - name: http
+      port: 9115
+      protocol: TCP
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: tikv-cluster
+    app.kubernetes.io/name: pd-leader-prober

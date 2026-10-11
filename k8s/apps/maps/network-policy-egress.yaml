@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: maps-versatiles-server-egress
+  namespace: maps
+spec:
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+    - ports:
+        - port: 8333
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: seaweedfs
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: s3
+              app.kubernetes.io/instance: seaweedfs-default
+              app.kubernetes.io/name: seaweedfs
+  podSelector:
+    matchLabels:
+      app: maps-versatiles-server
+      app.kubernetes.io/name: maps-versatiles-server
+  policyTypes:
+    - Egress

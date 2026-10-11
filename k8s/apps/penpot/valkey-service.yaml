@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: penpot-valkey
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/name: penpot-valkey
+  name: penpot-valkey
+  namespace: penpot
+spec:
+  ports:
+    - name: valkey
+      port: 6379
+      protocol: TCP
+      targetPort: valkey
+  selector:
+    app: penpot-valkey
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/name: penpot-valkey
+  type: ClusterIP

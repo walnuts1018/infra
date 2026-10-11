@@ -1,0 +1,56 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+  name: ipu
+  namespace: ipu
+spec:
+  authorization:
+    defaultAction: Deny
+    rules:
+      - action: Allow
+        name: viewer
+        principal:
+          jwt:
+            claims:
+              - name: my:zitadel:grants
+                valueType: StringArray
+                values:
+                  - 385244306220253385:viewer
+            provider: zitadel
+  jwt:
+    providers:
+      - audiences:
+          - "385244306622906793"
+        extractFrom:
+          cookies:
+            - ipu-access-token
+        issuer: https://auth.walnuts.dev
+        name: zitadel
+        remoteJWKS:
+          uri: https://auth.walnuts.dev/oauth/v2/keys
+  oidc:
+    clientIDRef:
+      name: ipu-6320e4
+    clientSecret:
+      name: ipu-6320e4
+    cookieNames:
+      accessToken: ipu-access-token
+      idToken: ipu-id-token
+    disableTokenEncryption: false
+    forwardAccessToken: false
+    logoutPath: /logout
+    provider:
+      issuer: https://auth.walnuts.dev
+    redirectURL: https://ipu.walnuts.dev/auth/callback
+    scopes:
+      - openid
+      - email
+      - profile
+      - offline_access
+      - urn:zitadel:iam:org:projects:roles
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: ipu

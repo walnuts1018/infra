@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: akvorado-valkey
+  namespace: akvorado
+spec:
+  egress:
+    - ports:
+        - port: 6379
+          protocol: TCP
+        - port: 16379
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: akvorado
+          podSelector:
+            matchLabels:
+              valkey.io/cluster: akvorado-valkey
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: akvorado
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: console
+              app.kubernetes.io/name: akvorado
+      ports:
+        - port: 6379
+          protocol: TCP
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: akvorado
+          podSelector:
+            matchLabels:
+              valkey.io/cluster: akvorado-valkey
+      ports:
+        - port: 6379
+          protocol: TCP
+        - port: 16379
+          protocol: TCP
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: valkey-operator-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: valkey-operator
+      ports:
+        - port: 6379
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      valkey.io/cluster: akvorado-valkey
+  policyTypes:
+    - Ingress
+    - Egress

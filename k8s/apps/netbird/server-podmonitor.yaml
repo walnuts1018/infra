@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app: netbird-server
+    app.kubernetes.io/name: netbird-server
+  name: netbird-server-metrics
+  namespace: netbird
+spec:
+  namespaceSelector:
+    matchNames:
+      - netbird
+  podMetricsEndpoints:
+    - interval: 30s
+      path: /metrics
+      port: metrics
+  selector:
+    matchLabels:
+      app: netbird-server
+      app.kubernetes.io/name: netbird-server

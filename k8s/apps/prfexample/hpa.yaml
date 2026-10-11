@@ -1,0 +1,25 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  labels:
+    app: prfexample
+    app.kubernetes.io/name: prfexample
+  name: prfexample
+  namespace: prfexample
+spec:
+  cooldownPeriod: 300
+  maxReplicaCount: 2
+  minReplicaCount: 0
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: prfexample
+  triggers:
+    - metadata:
+        interceptorRoute: prfexample
+        scalerAddress: keda-add-ons-http-external-scaler.keda:9090
+      type: external-push
+    - metadata:
+        value: "95"
+      metricType: Utilization
+      type: cpu

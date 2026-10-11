@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: iwashi
+    app.kubernetes.io/name: iwashi
+  name: iwashi
+  namespace: iwashi-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iwashi
+      app.kubernetes.io/name: iwashi
+  template:
+    metadata:
+      labels:
+        app: iwashi
+        app.kubernetes.io/name: iwashi
+    spec:
+      containers:
+        - env:
+            - name: OIDC_ISSUER
+              value: https://auth.walnuts.dev
+            - name: OIDC_REDIRECT_URL
+              value: https://iwashi.walnuts.dev/auth/callback
+            - name: CORTEX_QUERY_URL
+              value: http://iwashi-cortex-querier.iwashi-system.svc.cluster.local:8080/prometheus
+            - name: CORTEX_OTLP_URL
+              value: http://iwashi-cortex-distributor.iwashi-system.svc.cluster.local:8080/api/v1/otlp/v1/metrics
+            - name: CORTEX_RULER_URL
+              value: http://iwashi-cortex-ruler.iwashi-system.svc.cluster.local:8080
+            - name: CORTEX_ALERTMANAGER_URL
+              value: http://iwashi-cortex-alertmanager.iwashi-system.svc.cluster.local:8080
+            - name: SMTP_SMARTHOST
+              value: iwashi-smtp-relay-mail.iwashi-system.svc.cluster.local:587
+            - name: SMTP_FROM
+              value: netbox@resend.walnuts.dev
+          envFrom:
+            - secretRef:
+                name: iwashi-0528a0
+          image: ghcr.io/walnuts1018/iwashi:b800bd8f72ac984087c5e32f9d564936c54b0c39@sha256:b220dd58998f29c396f0420ce6412f6ee624999e30c5901fd245ccadd22eec80
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+          name: iwashi
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 2
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      initContainers:
+        - envFrom:
+            - secretRef:
+                name: iwashi-0528a0
+          image: ghcr.io/walnuts1018/iwashi-migration:b800bd8f72ac984087c5e32f9d564936c54b0c39@sha256:2b9f8f690d4dd63817d41aeb2a35d9d3b5d600029de7b8acd72a2371831cca1a
+          name: migrations
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: iwashi-api

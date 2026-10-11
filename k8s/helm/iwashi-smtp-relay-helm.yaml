@@ -1,0 +1,212 @@
+---
+# Source: mail/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: iwashi-smtp-relay-mail
+  labels:
+    helm.sh/chart: mail-5.1.0
+    app.kubernetes.io/name: mail
+    app.kubernetes.io/instance: iwashi-smtp-relay
+    app.kubernetes.io/version: "5.1.0"
+    app.kubernetes.io/managed-by: Helm
+data:
+  ALLOWED_SENDER_DOMAINS: resend.walnuts.dev
+  RELAYHOST: '[smtp.resend.com]:587'
+  RELAYHOST_PASSWORD_FILE: /var/run/secrets/iwashi/smtp/smtp_password
+  RELAYHOST_USERNAME: resend
+  POSTFIX_mynetworks: "127.0.0.0/8,10.0.0.0/8"
+  POSTFIX_smtp_tls_security_level: "encrypt"
+---
+# Source: mail/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: "iwashi-smtp-relay-mail"
+  labels:
+    helm.sh/chart: mail-5.1.0
+    app.kubernetes.io/name: mail
+    app.kubernetes.io/instance: iwashi-smtp-relay
+    app.kubernetes.io/version: "5.1.0"
+    app.kubernetes.io/managed-by: Helm
+    type: standard
+  annotations:
+spec:
+  type: ClusterIP
+  ports:
+    - port: 587
+      targetPort: smtp
+      protocol: TCP
+      name: smtp
+      
+      
+  selector:
+    app.kubernetes.io/name: mail
+    app.kubernetes.io/instance: iwashi-smtp-relay
+---
+# Source: mail/templates/service.yaml
+# https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#limitations
+# StatefulSets now require a headless service
+apiVersion: v1
+kind: Service
+metadata:
+  name: "iwashi-smtp-relay-mail-headless"
+  namespace: "iwashi-system"
+  labels:
+    helm.sh/chart: mail-5.1.0
+    app.kubernetes.io/name: mail
+    app.kubernetes.io/instance: iwashi-smtp-relay
+    app.kubernetes.io/version: "5.1.0"
+    app.kubernetes.io/managed-by: Helm
+    type: headless
+  annotations:
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 587
+      targetPort: smtp
+      protocol: TCP
+      name: smtp
+      
+  selector:
+    app.kubernetes.io/name: mail
+    app.kubernetes.io/instance: iwashi-smtp-relay
+---
+# Source: mail/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: "StatefulSet"
+metadata:
+  name: "iwashi-smtp-relay-mail"
+  namespace: "iwashi-system"
+  labels:
+    helm.sh/chart: mail-5.1.0
+    app.kubernetes.io/name: mail
+    app.kubernetes.io/instance: iwashi-smtp-relay
+    app.kubernetes.io/version: "5.1.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    # Auto-reload postfix if somebody changes config map directly in Kuberentes.
+    # Uses: https://github.com/stakater/Reloader
+    configmap.reloader.stakater.com/reload: "iwashi-smtp-relay-mail"
+spec:
+  serviceName: iwashi-smtp-relay-mail
+  
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mail
+      app.kubernetes.io/instance: iwashi-smtp-relay
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mail
+        app.kubernetes.io/instance: iwashi-smtp-relay
+      annotations:
+        # Reload for Statefulset when configmap changes on deployment
+        checksum/configmap: 68f8e40320db767cecf36840dcb58f19d17f55f83ee5f8be5f5b3c5ea36119c9
+    spec:
+      serviceAccountName: "iwashi-smtp-relay"
+      
+      
+      
+      
+      
+      
+      
+
+      # Allow up to 2 minutes for Postfix to flush / empty the queue  before shutting down the container
+      terminationGracePeriodSeconds: 120
+      containers:
+        - name: mail
+          image: "boky/postfix:5.1.0@sha256:aafc772384232497bed875e1eb66b4d3e54ba1ebc86e2e185a6dc1dbc48182ef"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            {}
+          ports:
+            - name: smtp
+              containerPort: 587
+              protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - /scripts/healthcheck.sh
+            failureThreshold: 6
+            initialDelaySeconds: 10
+            periodSeconds: 60
+            timeoutSeconds: 8
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - ps axf | fgrep -v grep | egrep -q '\{supervisord\}|/usr/bin/supervisord' && ps
+                axf | fgrep -v grep | egrep -q '(/usr/lib/postfix/sbin/|/usr/libexec/postfix/)master'
+            failureThreshold: 2
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          startupProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - ps axf | fgrep -v grep | egrep -q '\{supervisord\}|/usr/bin/supervisord' && ps
+                axf | fgrep -v grep | fgrep -q "postfix-script" && ps axf | fgrep -v grep | fgrep
+                -q 'opendkim'
+            failureThreshold: 12
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          lifecycle:
+            # If a container has a preStop hook configured, that runs before the container enters the Terminated state.
+            preStop:
+              exec:
+                command:
+                  - bash
+                  - -c
+                  - sleep 0 && touch /tmp/container_is_terminating && while ! [[ "`mailq`" == *empty* ]]; do echo "Flushing queue..." && postfix flush; sleep 1; done; killall5 -15 supervisord
+          
+          envFrom:
+            - configMapRef:
+                name: "iwashi-smtp-relay-mail"
+          volumeMounts:
+            - mountPath: /var/spool/postfix
+              name: "iwashi-smtp-relay-mail"
+              subPath: spool
+            - mountPath: /var/run/secrets/iwashi/smtp
+              name: smtp-credentials
+              readOnly: true
+          resources: 
+            limits:
+              cpu: 250m
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+      dnsConfig:
+        nameservers: []
+        options:
+        - name: ndots
+          value: "1"
+        searches: []
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        # Socket directories
+        - name: smtp-credentials
+          secret:
+            defaultMode: 288
+            secretName: iwashi-smtp-relay
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: iwashi-smtp-relay-mail
+        namespace: iwashi-system
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "1Gi"

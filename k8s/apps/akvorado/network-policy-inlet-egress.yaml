@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: akvorado-inlet-egress
+  namespace: akvorado
+spec:
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+    - ports:
+        - port: 9092
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: akvorado
+          podSelector:
+            matchLabels:
+              strimzi.io/broker-role: "true"
+              strimzi.io/cluster: akvorado-kafka
+              strimzi.io/kind: Kafka
+              strimzi.io/name: akvorado-kafka-kafka
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: inlet
+      app.kubernetes.io/name: akvorado
+  policyTypes:
+    - Egress

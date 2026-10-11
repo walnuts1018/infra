@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: akvorado
+    app.kubernetes.io/component: console
+    app.kubernetes.io/name: akvorado
+  name: akvorado-console
+  namespace: akvorado
+spec:
+  endpoints:
+    - path: /api/v0/metrics
+      port: http
+  namespaceSelector:
+    matchNames:
+      - akvorado
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: console
+      app.kubernetes.io/name: akvorado

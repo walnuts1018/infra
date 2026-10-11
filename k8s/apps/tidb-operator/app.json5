@@ -1,7 +1,0 @@
-{
-  name: "tidb-operator",
-  namespace: "tidb-operator",
-  clusters: {
-    kurumi: {},
-  },
-}

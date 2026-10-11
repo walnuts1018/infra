@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  labels:
+    app: penpot
+    app.kubernetes.io/name: penpot
+  name: penpot
+  namespace: penpot
+spec:
+  hostnames:
+    - penpot.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  rules:
+    - backendRefs:
+        - name: penpot
+          port: 8080
+      timeouts:
+        backendRequest: 0s
+        request: 0s

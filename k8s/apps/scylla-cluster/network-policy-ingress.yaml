@@ -1,0 +1,71 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: scylla-cluster-ingress
+  namespace: databases
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:io.kubernetes.pod.namespace: databases
+      k8s:scylla/cluster: scylla-cluster
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: databases
+            k8s:scylla/cluster: scylla-cluster
+      toPorts:
+        - ports:
+            - endPort: 65535
+              port: "1"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/name: picca-apiserver
+            k8s:io.kubernetes.pod.namespace: picca
+        - matchLabels:
+            k8s:app.kubernetes.io/name: prfexample
+            k8s:io.kubernetes.pod.namespace: prfexample
+        - matchLabels:
+            k8s:app.kubernetes.io/name: walnuk-backend
+            k8s:io.kubernetes.pod.namespace: walnuk
+        - matchLabels:
+            k8s:app: scylla-cluster-setup
+            k8s:io.kubernetes.pod.namespace: databases
+      toPorts:
+        - ports:
+            - port: "9142"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: scylla-manager
+            k8s:app.kubernetes.io/name: scylla-manager
+            k8s:io.kubernetes.pod.namespace: scylla-manager
+      toPorts:
+        - ports:
+            - port: "9042"
+              protocol: TCP
+            - port: "10001"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/component: opentelemetry-collector
+            k8s:app.kubernetes.io/instance: opentelemetry-collector.prometheus
+            k8s:io.kubernetes.pod.namespace: opentelemetry-collector
+      toPorts:
+        - ports:
+            - port: "5090"
+              protocol: TCP
+            - port: "9180"
+              protocol: TCP
+    - fromEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+            - port: "9100"
+              protocol: TCP
+            - port: "10001"
+              protocol: TCP
+            - port: "42081"
+              protocol: TCP

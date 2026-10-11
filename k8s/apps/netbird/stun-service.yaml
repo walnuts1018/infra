@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    lbipam.cilium.io/ips: 192.168.12.142
+  name: netbird-stun
+  namespace: netbird
+spec:
+  ports:
+    - name: stun
+      port: 3478
+      protocol: UDP
+      targetPort: 3478
+  selector:
+    app: netbird-server
+    app.kubernetes.io/name: netbird-server
+  type: LoadBalancer

@@ -1,0 +1,44 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: webtop
+  namespace: webtop
+spec:
+  authorization:
+    defaultAction: Deny
+    rules:
+      - action: Allow
+        principal:
+          jwt:
+            claims:
+              - name: my:zitadel:grants
+                valueType: StringArray
+                values:
+                  - 393366993551491741:webtop-user
+            provider: zitadel
+  jwt:
+    providers:
+      - issuer: https://auth.walnuts.dev
+        name: zitadel
+        remoteJWKS:
+          uri: https://auth.walnuts.dev/oauth/v2/keys
+  oidc:
+    clientIDRef:
+      name: webtop-oidc-gateway
+    clientSecret:
+      name: webtop-oidc-gateway
+    forwardAccessToken: true
+    logoutPath: /oauth2/logout
+    provider:
+      issuer: https://auth.walnuts.dev
+    refreshToken: true
+    scopes:
+      - openid
+      - email
+      - profile
+      - offline_access
+      - urn:zitadel:iam:org:projects:roles
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: webtop

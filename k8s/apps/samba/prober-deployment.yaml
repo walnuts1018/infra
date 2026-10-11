@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: samba-prober
+    app.kubernetes.io/name: samba-prober
+  name: samba-prober
+  namespace: samba
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: samba-prober
+      app.kubernetes.io/name: samba-prober
+  template:
+    metadata:
+      annotations:
+        checksum/samba-monitor-config: 8cb092cbb3559892f4e5b22bfbb171df
+      labels:
+        app: samba-prober
+        app.kubernetes.io/name: samba-prober
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - command:
+            - /bin/sh
+            - /config/probe.sh
+          image: ghcr.io/servercontainers/samba:a3.24.2-s4.23.8-r0@sha256:ea1b37536729f16b2f45a601ea45a37d34b9fce5cc51f2d686a347dd77131be1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 2
+          name: prober
+          ports:
+            - containerPort: 9187
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+            periodSeconds: 10
+            timeoutSeconds: 2
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /config
+              name: probe-config
+              readOnly: true
+            - mountPath: /run/secrets
+              name: monitor-credentials
+              readOnly: true
+            - mountPath: /run/probe-auth
+              name: probe-auth
+            - mountPath: /tmp/www
+              name: metrics
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - configMap:
+            name: samba-monitor
+          name: probe-config
+        - name: monitor-credentials
+          secret:
+            defaultMode: 288
+            items:
+              - key: monitor-username
+                path: username
+              - key: monitor-password
+                path: password
+            secretName: samba-secret-886ec5
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 1Mi
+          name: probe-auth
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 1Mi
+          name: metrics

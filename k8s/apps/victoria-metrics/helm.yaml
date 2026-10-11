@@ -1,0 +1,222 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: victoria-metrics-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: victoria-metrics
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: victoria-metrics-cluster
+    helm:
+      releaseName: victoria-metrics
+      values: |
+        # The chart's built-in policies omit policyTypes. Keep egress isolation explicit so existing ingress policies remain ingress-only.
+        extraObjects:
+        - |
+          apiVersion: networking.k8s.io/v1
+          kind: NetworkPolicy
+          metadata:
+            name: victoria-metrics-vminsert-egress
+            namespace: victoria-metrics
+          spec:
+            podSelector:
+              matchLabels:
+                app: vminsert
+                app.kubernetes.io/instance: victoria-metrics
+                app.kubernetes.io/name: victoria-metrics-cluster
+            policyTypes:
+            - Egress
+            egress:
+            - to:
+              - namespaceSelector:
+                  matchLabels:
+                    kubernetes.io/metadata.name: kube-system
+                podSelector:
+                  matchLabels:
+                    k8s-app: kube-dns
+              ports:
+              - protocol: UDP
+                port: 53
+              - protocol: TCP
+                port: 53
+            - to:
+              - podSelector:
+                  matchLabels:
+                    app: vmstorage
+                    app.kubernetes.io/instance: victoria-metrics
+                    app.kubernetes.io/name: victoria-metrics-cluster
+              ports:
+              - protocol: TCP
+                port: 8400
+        - |
+          apiVersion: networking.k8s.io/v1
+          kind: NetworkPolicy
+          metadata:
+            name: victoria-metrics-vmselect-egress
+            namespace: victoria-metrics
+          spec:
+            podSelector:
+              matchLabels:
+                app: vmselect
+                app.kubernetes.io/instance: victoria-metrics
+                app.kubernetes.io/name: victoria-metrics-cluster
+            policyTypes:
+            - Egress
+            egress:
+            - to:
+              - namespaceSelector:
+                  matchLabels:
+                    kubernetes.io/metadata.name: kube-system
+                podSelector:
+                  matchLabels:
+                    k8s-app: kube-dns
+              ports:
+              - protocol: UDP
+                port: 53
+              - protocol: TCP
+                port: 53
+            - to:
+              - podSelector:
+                  matchLabels:
+                    app: vmstorage
+                    app.kubernetes.io/instance: victoria-metrics
+                    app.kubernetes.io/name: victoria-metrics-cluster
+              ports:
+              - protocol: TCP
+                port: 8401
+
+        vmselect:
+          enabled: true
+          mode: deployment
+          replicaCount: 1
+          networkPolicy:
+            enabled: true
+            ingress:
+            - from:
+              - namespaceSelector:
+                  matchLabels:
+                    kubernetes.io/metadata.name: monitoring
+                podSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: grafana
+                    app.kubernetes.io/name: grafana
+              - namespaceSelector:
+                  matchLabels:
+                    kubernetes.io/metadata.name: opencost
+                podSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: opencost
+                    app.kubernetes.io/name: opencost
+              - namespaceSelector:
+                  matchLabels:
+                    kubernetes.io/metadata.name: keda
+                podSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: keda
+                    app.kubernetes.io/name: keda-operator
+              - namespaceSelector:
+                  matchLabels:
+                    kubernetes.io/metadata.name: opentelemetry-collector
+                podSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: opentelemetry-collector
+                    app.kubernetes.io/instance: opentelemetry-collector.prometheus
+              ports:
+              - protocol: TCP
+                port: 8481
+          horizontalPodAutoscaler:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 5
+            metrics:
+            - resource:
+                name: cpu
+                target:
+                  averageUtilization: 100
+                  type: Utilization
+              type: Resource
+          resources:
+            requests:
+              cpu: 10m
+              memory: 60Mi
+            limits:
+              memory: 512Gi
+          serviceMonitor:
+            enabled: true
+
+        vminsert:
+          enabled: true
+          mode: deployment
+          replicaCount: 1
+          networkPolicy:
+            enabled: true
+            ingress:
+            - from:
+              - namespaceSelector:
+                  matchLabels:
+                    kubernetes.io/metadata.name: opentelemetry-collector
+                podSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: opentelemetry-collector
+              ports:
+              - protocol: TCP
+                port: 8480
+          horizontalPodAutoscaler:
+            enabled: true
+            minReplicas: 1
+            maxReplicas: 5
+            metrics:
+            - resource:
+                name: cpu
+                target:
+                  averageUtilization: 100
+                  type: Utilization
+              type: Resource
+          resources:
+            requests:
+              cpu: 80m
+              memory: 250Mi
+            limits:
+              memory: 1Gi
+          serviceMonitor:
+            enabled: true
+
+        vmstorage:
+          enabled: true
+          replicaCount: 1
+          retentionPeriod: 1y
+          persistentVolume:
+            enabled: true
+            storageClassName: "topolvm-hdd"
+            size: 128Gi
+          resources:
+            requests:
+              cpu: 100m
+              memory: 1.5Gi
+            limits:
+              memory: 2Gi
+          topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: 'kubernetes.io/hostname'
+            whenUnsatisfiable: 'ScheduleAnyway'
+            labelSelector:
+              matchLabels:
+                app: vmstorage
+                app.kubernetes.io/instance: victoria-metrics
+                app.kubernetes.io/name: victoria-metrics-cluster
+          serviceMonitor:
+            enabled: true
+    repoURL: https://victoriametrics.github.io/helm-charts/
+    targetRevision: 0.52.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

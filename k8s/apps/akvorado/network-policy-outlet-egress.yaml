@@ -1,0 +1,67 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: akvorado-outlet-egress
+  namespace: akvorado
+spec:
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+    - ports:
+        - port: 9092
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: akvorado
+          podSelector:
+            matchLabels:
+              strimzi.io/broker-role: "true"
+              strimzi.io/cluster: akvorado-kafka
+              strimzi.io/kind: Kafka
+              strimzi.io/name: akvorado-kafka-kafka
+    - ports:
+        - port: 9000
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: akvorado
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: clickhouse-server
+              clickhouse.com/cluster: akvorado-clickhouse
+              clickhouse.com/role: clickhouse-server
+    - ports:
+        - port: 8080
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: akvorado
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: orchestrator
+              app.kubernetes.io/name: akvorado
+    - ports:
+        - port: 161
+          protocol: UDP
+      to:
+        - ipBlock:
+            cidr: 192.168.0.1/32
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: outlet
+      app.kubernetes.io/name: akvorado
+  policyTypes:
+    - Egress

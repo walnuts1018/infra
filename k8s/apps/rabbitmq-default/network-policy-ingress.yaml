@@ -1,0 +1,69 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: rabbitmq-default-ingress
+  namespace: rabbitmq
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/component: rabbitmq
+      k8s:app.kubernetes.io/name: default
+      k8s:io.kubernetes.pod.namespace: rabbitmq
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: picca
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: picca-dev
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: beast
+      toPorts:
+        - ports:
+            - port: "5672"
+              protocol: TCP
+    - fromEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "5672"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/component: rabbitmq
+            k8s:app.kubernetes.io/name: default
+            k8s:io.kubernetes.pod.namespace: rabbitmq
+      toPorts:
+        - ports:
+            - port: "4369"
+              protocol: TCP
+            - port: "25672"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/component: operator
+            k8s:app.kubernetes.io/instance: keda
+            k8s:app.kubernetes.io/name: keda-operator
+            k8s:io.kubernetes.pod.namespace: keda
+        - matchLabels:
+            k8s:app.kubernetes.io/component: rabbitmq-operator
+            k8s:app.kubernetes.io/instance: rabbitmq-cluster-operator
+            k8s:app.kubernetes.io/name: rabbitmq-cluster-operator
+            k8s:io.kubernetes.pod.namespace: rabbitmq-operator
+        - matchLabels:
+            k8s:app.kubernetes.io/component: messaging-topology-operator
+            k8s:app.kubernetes.io/instance: rabbitmq-topology-operator
+            k8s:app.kubernetes.io/name: rabbitmq-topology-operator
+            k8s:io.kubernetes.pod.namespace: rabbitmq-operator
+      toPorts:
+        - ports:
+            - port: "15672"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/component: opentelemetry-collector
+            k8s:app.kubernetes.io/instance: opentelemetry-collector.prometheus
+            k8s:io.kubernetes.pod.namespace: opentelemetry-collector
+      toPorts:
+        - ports:
+            - port: "15692"
+              protocol: TCP
