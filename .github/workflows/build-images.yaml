@@ -170,7 +170,7 @@ jobs:
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
         with:
           # renovate: datasource=github-releases depName=docker/buildx
-          version: v0.37.2
+          version: v0.38.0
 
       - name: Build and push image by digest
         id: build
@@ -225,7 +225,7 @@ jobs:
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
         with:
           # renovate: datasource=github-releases depName=docker/buildx
-          version: v0.37.2
+          version: v0.38.0
 
       - name: Login to GHCR
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
