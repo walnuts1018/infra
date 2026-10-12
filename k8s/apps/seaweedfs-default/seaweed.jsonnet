@@ -2,6 +2,7 @@ local labels = import '../../components/labels.libsonnet';
 local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
 local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
+local sseKek = (import 'external-secrets.libsonnet').sseKek;
 {
   apiVersion: 'seaweed.seaweedfs.com/v1',
   kind: 'Seaweed',
@@ -205,6 +206,17 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
     },
     s3: {
       replicas: 2,
+      env: [
+        {
+          name: 'WEED_S3_SSE_KEK',
+          valueFrom: {
+            secretKeyRef: {
+              name: sseKek.spec.target.name,
+              key: 'kek',
+            },
+          },
+        },
+      ],
       requests: {
         cpu: '60m',
         memory: '512Mi',
