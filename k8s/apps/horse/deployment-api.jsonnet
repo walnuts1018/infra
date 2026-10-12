@@ -90,7 +90,7 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.0-341494a62fffc798b3aac2127797f296
               { name: 'PUBLIC_ORIGIN', value: 'https://horse.walnuts.dev' },
               { name: 'OIDC_ISSUER_URL', value: 'https://auth.walnuts.dev' },
               { name: 'OIDC_REDIRECT_URL', value: 'https://horse.walnuts.dev/auth/callback' },
-              { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317' },
+              { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4318' },
               { name: 'OTEL_EXPORTER_OTLP_INSECURE', value: 'true' },
               { name: 'SSL_CERT_FILE', value: '/etc/ssl/certs/trust-bundle.pem' },
               { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },

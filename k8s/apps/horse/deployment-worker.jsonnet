@@ -41,7 +41,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
             command: ['/app/worker'],
             ports: [{ name: 'health', containerPort: 8081 }],
             env: [
-              { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317' },
+              { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4318' },
               { name: 'OTEL_EXPORTER_OTLP_INSECURE', value: 'true' },
               { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
               { name: 'S3_BUCKET', value: 'horse' },
