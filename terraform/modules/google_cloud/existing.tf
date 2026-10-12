@@ -40,7 +40,7 @@ resource "google_project_iam_member" "existing_terraform_cloud_apply_viewer" {
 }
 
 resource "google_logging_project_bucket_config" "existing_default" {
-  project          = google_project.existing.project_id
+  project          = "projects/${google_project.existing.project_id}"
   location         = "global"
   bucket_id        = "_Default"
   description      = "Default bucket"
