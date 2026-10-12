@@ -97,10 +97,6 @@ locals {
     enableProjectLevelRecipients = true
   }
 
-  gemini_paid_alert_notifications = {
-    enableProjectLevelRecipients = true
-  }
-
   gemini_paid_spend_cap_data = jsonencode({
     displayName  = "Horse Gemini paid monthly 500 JPY spend cap"
     budgetFilter = local.gemini_paid_budget_filter
@@ -119,20 +115,6 @@ locals {
     spendCap          = { inputState = "CONFIGURED" }
   })
 
-  gemini_paid_300_alert_data = jsonencode({
-    displayName  = "Horse Gemini paid monthly 300 JPY alert"
-    budgetFilter = local.gemini_paid_budget_filter
-    amount = {
-      specifiedAmount = {
-        currencyCode = "JPY"
-        units        = "300"
-      }
-    }
-    thresholdRules = [
-      { thresholdPercent = 1.0, spendBasis = "CURRENT_SPEND" }
-    ]
-    notificationsRule = local.gemini_paid_alert_notifications
-  })
 }
 
 resource "restapi_object" "gemini_paid_spend_cap" {
@@ -151,22 +133,6 @@ resource "restapi_object" "gemini_paid_spend_cap" {
   lifecycle {
     prevent_destroy = true
   }
-
-  depends_on = [google_project.gemini_paid, google_project_service.gemini_paid_budgets_api]
-}
-
-resource "restapi_object" "gemini_paid_300_alert" {
-  path           = "/v1/billingAccounts/${local.billing_account_id}/budgets"
-  create_path    = "/v1/billingAccounts/${local.billing_account_id}/budgets"
-  read_path      = "/v1/{id}"
-  update_path    = "/v1/{id}?updateMask=displayName,amount,thresholdRules,notificationsRule"
-  destroy_path   = "/v1/{id}"
-  create_method  = "POST"
-  read_method    = "GET"
-  update_method  = "PATCH"
-  destroy_method = "DELETE"
-  id_attribute   = "name"
-  data           = local.gemini_paid_300_alert_data
 
   depends_on = [google_project.gemini_paid, google_project_service.gemini_paid_budgets_api]
 }
