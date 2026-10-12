@@ -269,11 +269,13 @@
         {
           "effect": "Allow",
           "actions": [
-            "s3:GetObject",
-            "s3:PutObject"
+            "Read",
+            "Write",
+            "List",
+            "Tagging"
           ],
-          "resources": [
-            "arn:aws:s3:::horse/*"
+          "buckets": [
+            "horse"
           ]
         }
       ]

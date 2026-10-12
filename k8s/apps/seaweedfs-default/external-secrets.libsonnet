@@ -57,27 +57,7 @@ local filerConfig = externalSecret {
   },
 };
 
-local sseKek = (externalSecret {
-                  name: app.name + '-sse-kek',
-                  namespace: app.namespace,
-                  use_suffix: false,
-                  data: [
-                    {
-                      secretKey: 'kek',
-                      remoteRef: {
-                        key: 'seaweedfs-sse',
-                        property: 'seaweedfs-sse-kek',
-                      },
-                    },
-                  ],
-                }) + {
-  metadata+: {
-    annotations: { 'argocd.argoproj.io/sync-wave': '-1' },
-  },
-};
-
 {
   filerConfig: filerConfig,
-  sseKek: sseKek,
   externalCredentialSecrets: [credentialSecret(identity) for identity in externalCredentials],
 }

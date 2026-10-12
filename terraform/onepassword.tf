@@ -53,10 +53,3 @@ module "horse_ai" {
   gemini_free_project_id = module.google_cloud.gemini_free_project_id
   gemini_paid_project_id = module.google_cloud.gemini_paid_project_id
 }
-
-module "seaweedfs_sse" {
-  source = "./modules/seaweedfs_sse"
-
-  vault                 = var.onepassword_vault
-  service_account_token = var.onepassword_service_account_token
-}
