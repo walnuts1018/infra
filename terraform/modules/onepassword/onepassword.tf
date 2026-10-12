@@ -125,6 +125,16 @@ resource "random_password" "horse_rabbitmq_password" {
   special = false
 }
 
+resource "random_password" "horse_s3_access_key" {
+  length  = 20
+  special = false
+}
+
+resource "random_password" "horse_s3_secret_key" {
+  length  = 40
+  special = false
+}
+
 resource "onepassword_item" "external_secret" {
   vault    = var.vault
   title    = "terraform-external-secrets"
@@ -152,6 +162,8 @@ resource "onepassword_item" "external_secret" {
         "horse-client-secret"                      = { type = "CONCEALED", value = var.horse_client_secret }
         "horse-database-password"                  = { type = "CONCEALED", value = random_password.horse_database_password.result }
         "horse-rabbitmq-password"                  = { type = "CONCEALED", value = random_password.horse_rabbitmq_password.result }
+        "horse-s3-access-key"                      = { type = "CONCEALED", value = random_password.horse_s3_access_key.result }
+        "horse-s3-secret-key"                      = { type = "CONCEALED", value = random_password.horse_s3_secret_key.result }
         "ipu-client-id"                            = { type = "STRING", value = var.ipu_client_id }
         "ipu-client-secret"                        = { type = "CONCEALED", value = var.ipu_client_secret }
         "iwashi-client-id"                         = { type = "STRING", value = var.iwashi_client_id }
