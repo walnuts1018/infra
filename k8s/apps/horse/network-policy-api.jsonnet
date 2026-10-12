@@ -65,6 +65,10 @@ local name = app.name + '-api';
         ports: [{ protocol: 'TCP', port: 5672 }],
       },
       {
+        to: [{ podSelector: { matchLabels: labels(app.name + '-ocr') } }],
+        ports: [{ protocol: 'TCP', port: 8000 }],
+      },
+      {
         to: [networkPolicy.otelDefaultCollector],
         ports: [{ protocol: 'TCP', port: 4318 }],
       },

@@ -14,7 +14,10 @@ local name = app.name + '-ocr';
     policyTypes: ['Ingress', 'Egress'],
     ingress: [
       {
-        from: [{ podSelector: { matchLabels: labels(app.name + '-worker') } }],
+        from: [
+          { podSelector: { matchLabels: labels(app.name + '-worker') } },
+          { podSelector: { matchLabels: labels(app.name + '-api') } },
+        ],
         ports: [{ protocol: 'TCP', port: 8000 }],
       },
     ],
