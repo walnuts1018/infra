@@ -22,7 +22,7 @@ locals {
   paid_project_id    = "walnuts-horse-gemini-paid"
 }
 
-data "google_client_config" "this" {}
+ephemeral "google_client_config" "this" {}
 
 data "google_billing_account" "gemini_paid" {
   billing_account = local.billing_account_id
@@ -39,7 +39,7 @@ data "google_billing_account" "gemini_paid" {
 
 provider "restapi" {
   uri                  = "https://billingbudgets.googleapis.com"
-  bearer_token         = data.google_client_config.this.access_token
+  bearer_token         = ephemeral.google_client_config.this.access_token
   write_returns_object = true
   debug                = false
 
