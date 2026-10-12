@@ -217,25 +217,3 @@ resource "onepassword_item" "external_secret" {
     }
   }
 }
-
-resource "onepassword_item" "horse_backup" {
-  vault    = var.vault
-  title    = "horse-backup"
-  category = "login"
-
-  section_map = {
-    terraform = {
-      field_map = {
-        "bucket-name"               = { type = "STRING", value = var.horse_backup_credentials.bucket_name }
-        "writer-application-key-id" = { type = "STRING", value = var.horse_backup_credentials.writer.application_key_id }
-        "writer-application-key"    = { type = "CONCEALED", value = var.horse_backup_credentials.writer.application_key }
-        "reader-application-key-id" = { type = "STRING", value = var.horse_backup_credentials.reader.application_key_id }
-        "reader-application-key"    = { type = "CONCEALED", value = var.horse_backup_credentials.reader.application_key }
-      }
-    }
-  }
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}

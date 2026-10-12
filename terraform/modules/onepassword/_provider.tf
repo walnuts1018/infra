@@ -52,21 +52,6 @@ variable "b2_application_key" {
   sensitive = true
 }
 
-variable "horse_backup_credentials" {
-  type = object({
-    bucket_name = string
-    writer = object({
-      application_key_id = string
-      application_key    = string
-    })
-    reader = object({
-      application_key_id = string
-      application_key    = string
-    })
-  })
-  sensitive = true
-}
-
 variable "beast_client_id" { type = string }
 
 variable "beast_client_secret" {
