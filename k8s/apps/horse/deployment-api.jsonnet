@@ -26,7 +26,16 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.0-341494a62fffc798b3aac2127797f296
           seccompProfile: { type: 'RuntimeDefault' },
         },
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
-        volumes: [{ name: 'tmp', emptyDir: { sizeLimit: '1Gi' } }],
+        volumes: [
+          { name: 'tmp', emptyDir: { sizeLimit: '1Gi' } },
+          {
+            name: 'local-ca-bundle',
+            configMap: {
+              name: 'local-ca-bundle',
+              items: [{ key: 'trust-bundle.pem', path: 'trust-bundle.pem' }],
+            },
+          },
+        ],
         initContainers: [
           container {
             name: 'migrate',
@@ -66,7 +75,15 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.0-341494a62fffc798b3aac2127797f296
               readOnlyRootFilesystem: true,
             },
             ports: [{ name: 'http', containerPort: 8080 }],
-            volumeMounts: [{ name: 'tmp', mountPath: '/tmp' }],
+            volumeMounts: [
+              { name: 'tmp', mountPath: '/tmp' },
+              {
+                name: 'local-ca-bundle',
+                mountPath: '/etc/ssl/certs/trust-bundle.pem',
+                subPath: 'trust-bundle.pem',
+                readOnly: true,
+              },
+            ],
             env: [
               { name: 'PORT', value: '8080' },
               { name: 'AUTO_MIGRATE', value: 'false' },
@@ -75,6 +92,7 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.0-341494a62fffc798b3aac2127797f296
               { name: 'OIDC_REDIRECT_URL', value: 'https://horse.walnuts.dev/auth/callback' },
               { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317' },
               { name: 'OTEL_EXPORTER_OTLP_INSECURE', value: 'true' },
+              { name: 'SSL_CERT_FILE', value: '/etc/ssl/certs/trust-bundle.pem' },
               { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
               { name: 'S3_BUCKET', value: 'horse' },
               {
