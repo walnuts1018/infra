@@ -4,6 +4,7 @@
   metadata: {
     name: 'horse-ai',
     namespace: (import 'app.json5').namespace,
+    annotations: { 'argocd.argoproj.io/sync-wave': '3' },
   },
   spec: {
     refreshInterval: '1h',
