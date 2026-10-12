@@ -43,46 +43,8 @@ variable "onepassword_service_account_token" {
   description = "1Password service account token with access to the External Secrets vault"
 }
 
-variable "gemini_gcp_enabled" {
-  type        = bool
-  default     = false
-  description = "Set true only after Google Cloud billing and Terraform authentication prerequisites are reviewed"
-}
-
-variable "gemini_free_project_id" {
-  type        = string
-  default     = "walnuts-horse-gemini-free"
-  description = "New Google Cloud project ID for Gemini free-tier requests"
-}
-
-variable "gemini_free_project_number" {
-  type        = string
-  default     = "471988777845"
-  description = "Project number of the imported Horse Gemini free project"
-}
-
-variable "gemini_paid_project_id" {
-  type        = string
-  default     = "walnuts-horse-gemini-paid"
-  description = "New Google Cloud project ID for paid Gemini requests"
-}
-
-variable "gemini_paid_project_number" {
-  type        = string
-  default     = "912318903625"
-  description = "Project number of the imported Horse Gemini paid project"
-}
-
-variable "gemini_paid_billing_account_id" {
-  type        = string
-  default     = ""
-  description = "Cloud Billing account ID linked to the paid Gemini project"
-}
-
-variable "gemini_organization_id" {
-  type        = string
-  default     = ""
-  description = "Optional Google Cloud organization ID; leave empty for a standalone project"
+variable "google_cloud_billing_account_id" {
+  type = string
 }
 
 # variable "zitadel_github_idp_client_secret" {

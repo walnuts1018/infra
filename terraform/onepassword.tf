@@ -41,9 +41,8 @@ module "onepassword" {
   penpot_client_id        = module.zitadel.penpot_oidc_client_id
   penpot_client_secret    = module.zitadel.penpot_oidc_client_secret
   penpot_project_id       = module.zitadel.penpot_project_id
-  gemini_gcp_enabled      = var.gemini_gcp_enabled
-  gemini_free_api_key     = try(google_apikeys_key.gemini_free[0].key_string, "")
-  gemini_paid_api_key     = try(google_apikeys_key.gemini_paid[0].key_string, "")
-  gemini_free_project_id  = try(google_project.gemini_free[0].project_id, "")
-  gemini_paid_project_id  = try(google_project.gemini_paid[0].project_id, "")
+  gemini_free_api_key     = module.google_cloud.gemini_free_api_key
+  gemini_paid_api_key     = module.google_cloud.gemini_paid_api_key
+  gemini_free_project_id  = module.google_cloud.gemini_free_project_id
+  gemini_paid_project_id  = module.google_cloud.gemini_paid_project_id
 }

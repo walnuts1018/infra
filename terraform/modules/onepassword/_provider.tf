@@ -133,8 +133,6 @@ variable "penpot_client_secret" {
 }
 variable "penpot_project_id" { type = string }
 
-variable "gemini_gcp_enabled" { type = bool }
-
 variable "gemini_free_api_key" {
   type      = string
   sensitive = true

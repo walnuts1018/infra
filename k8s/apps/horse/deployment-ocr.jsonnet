@@ -27,7 +27,7 @@ local name = app.name + '-ocr';
         containers: [
           container {
             name: 'ocr',
-            image: 'ghcr.io/walnuts1018/horse-ocr:v0.0.0-c988fe6d34b26185782f7afbdb4c31dbfd45085c-6@sha256:462232df9c3f380de3335ac7dd5f406115d2e9b2ecfc272a007c6144abde1bce',
+            image: 'ghcr.io/walnuts1018/horse-ocr:v0.0.0-c16e39a18728abfd044b1c8fa1dd34df3efb7f8a-9@sha256:43330b0844358671507372b281c1a4be1d654005af2844a0cb9c91f17a3c9070',
             imagePullPolicy: 'Always',
             ports: [{ name: 'http', containerPort: 8000 }],
             env: [
