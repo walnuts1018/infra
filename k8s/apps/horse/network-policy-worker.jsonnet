@@ -14,6 +14,10 @@ local name = app.name + '-worker';
     policyTypes: ['Egress'],
     egress: [
       {
+        to: [networkPolicy.kubeDns],
+        ports: [{ protocol: 'UDP', port: 53 }, { protocol: 'TCP', port: 53 }],
+      },
+      {
         to: [{
           namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'databases' } },
           podSelector: {
