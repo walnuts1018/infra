@@ -16,8 +16,8 @@ autoscaling:
   targetMemory: ""
 resources:
   requests:
-    cpu: 100m
-    memory: 560Mi
+    cpu: 120m
+    memory: 812Mi
   limits:
     cpu: 500m
     memory: 2Gi
