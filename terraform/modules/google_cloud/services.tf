@@ -35,6 +35,7 @@ locals {
     gemini_free = toset([
       "apptopology.googleapis.com",
       "cloudresourcemanager.googleapis.com",
+      "cloudbilling.googleapis.com",
     ])
     gemini_paid = toset([
       "apptopology.googleapis.com",
