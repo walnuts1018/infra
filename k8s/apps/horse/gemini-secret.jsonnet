@@ -18,7 +18,6 @@
         remoteRef: {
           key: 'terraform-external-secrets',
           property: 'horse-gemini-free-api-key',
-          optional: true,
         },
       },
       {
@@ -26,7 +25,6 @@
         remoteRef: {
           key: 'terraform-external-secrets',
           property: 'horse-gemini-paid-api-key',
-          optional: true,
         },
       },
       {
@@ -34,7 +32,6 @@
         remoteRef: {
           key: 'terraform-external-secrets',
           property: 'horse-gemini-free-project-id',
-          optional: true,
         },
       },
       {
@@ -42,39 +39,6 @@
         remoteRef: {
           key: 'terraform-external-secrets',
           property: 'horse-gemini-paid-project-id',
-          optional: true,
-        },
-      },
-      {
-        secretKey: 'GEMINI_FLASH_MODEL',
-        remoteRef: {
-          key: 'terraform-external-secrets',
-          property: 'horse-gemini-flash-model',
-          optional: true,
-        },
-      },
-      {
-        secretKey: 'GEMINI_LITE_MODEL',
-        remoteRef: {
-          key: 'terraform-external-secrets',
-          property: 'horse-gemini-lite-model',
-          optional: true,
-        },
-      },
-      {
-        secretKey: 'GEMINI_PRO_MODEL',
-        remoteRef: {
-          key: 'terraform-external-secrets',
-          property: 'horse-gemini-pro-model',
-          optional: true,
-        },
-      },
-      {
-        secretKey: 'USDJPY_RATE',
-        remoteRef: {
-          key: 'terraform-external-secrets',
-          property: 'horse-gemini-usdjpy-rate',
-          optional: true,
         },
       },
     ],

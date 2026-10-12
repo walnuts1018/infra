@@ -61,22 +61,6 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
                 valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_PAID_PROJECT_ID', optional: true } },
               },
               {
-                name: 'GEMINI_FLASH_MODEL',
-                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_FLASH_MODEL', optional: true } },
-              },
-              {
-                name: 'GEMINI_LITE_MODEL',
-                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_LITE_MODEL', optional: true } },
-              },
-              {
-                name: 'GEMINI_PRO_MODEL',
-                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_PRO_MODEL', optional: true } },
-              },
-              {
-                name: 'USDJPY_RATE',
-                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'USDJPY_RATE', optional: true } },
-              },
-              {
                 name: 'S3_ACCESS_KEY_ID',
                 valueFrom: { secretKeyRef: { name: s3Credentials.secretName, key: s3Credentials.accessKeyField } },
               },
