@@ -4,7 +4,7 @@ local app = import 'app.json5';
 local name = app.name + '-api';
 local externalSecret = import 'external-secret.jsonnet';
 local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonnet')('horse');
-local image = 'ghcr.io/walnuts1018/horse:v0.0.0-c16e39a18728abfd044b1c8fa1dd34df3efb7f8a-9@sha256:e32fcbc154afa7e8deb5a4c6c9bb9781996e6228803bcf26dacd037024a40ab5';
+local image = 'ghcr.io/walnuts1018/horse:v0.0.0-341494a62fffc798b3aac2127797f296d2682543-17@sha256:48d9274b227a5502c1822455ea0e1c56e33689e0e67a1eea405e7bb29fcd5a3a';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -19,6 +19,12 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.0-c16e39a18728abfd044b1c8fa1dd34df
     template: {
       metadata: { labels: labels(name) },
       spec: {
+        securityContext: {
+          runAsNonRoot: true,
+          runAsUser: 10001,
+          runAsGroup: 10001,
+          seccompProfile: { type: 'RuntimeDefault' },
+        },
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         volumes: [{ name: 'tmp', emptyDir: { sizeLimit: '1Gi' } }],
         initContainers: [
@@ -26,6 +32,11 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.0-c16e39a18728abfd044b1c8fa1dd34df
             name: 'migrate',
             image: image,
             imagePullPolicy: 'Always',
+            securityContext: {
+              allowPrivilegeEscalation: false,
+              capabilities: { drop: ['ALL'] },
+              readOnlyRootFilesystem: true,
+            },
             command: [
               '/usr/local/bin/atlas',
               'migrate',
@@ -49,6 +60,11 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.0-c16e39a18728abfd044b1c8fa1dd34df
             image: image,
             imagePullPolicy: 'Always',
             command: ['/app/api'],
+            securityContext: {
+              allowPrivilegeEscalation: false,
+              capabilities: { drop: ['ALL'] },
+              readOnlyRootFilesystem: true,
+            },
             ports: [{ name: 'http', containerPort: 8080 }],
             volumeMounts: [{ name: 'tmp', mountPath: '/tmp' }],
             env: [

@@ -17,7 +17,13 @@ local name = app.name + '-ocr';
     template: {
       metadata: { labels: labels(name) },
       spec: {
-        securityContext: { fsGroup: 10001 },
+        securityContext: {
+          runAsNonRoot: true,
+          runAsUser: 10001,
+          runAsGroup: 10001,
+          fsGroup: 10001,
+          seccompProfile: { type: 'RuntimeDefault' },
+        },
         nodeSelector: { 'kubernetes.io/arch': 'amd64' },
         imagePullSecrets: [{ name: 'ghcr-login-secret' }],
         volumes: [
@@ -27,8 +33,13 @@ local name = app.name + '-ocr';
         containers: [
           container {
             name: 'ocr',
-            image: 'ghcr.io/walnuts1018/horse-ocr:v0.0.0-c16e39a18728abfd044b1c8fa1dd34df3efb7f8a-9@sha256:43330b0844358671507372b281c1a4be1d654005af2844a0cb9c91f17a3c9070',
+            image: 'ghcr.io/walnuts1018/horse-ocr:v0.0.0-341494a62fffc798b3aac2127797f296d2682543-17@sha256:360fc71269a63548868947a31033682dbfadb4dd8984b967bb4499da5882644d',
             imagePullPolicy: 'Always',
+            securityContext: {
+              allowPrivilegeEscalation: false,
+              capabilities: { drop: ['ALL'] },
+              readOnlyRootFilesystem: true,
+            },
             ports: [{ name: 'http', containerPort: 8000 }],
             env: [
               { name: 'HOME', value: '/home/horse' },
