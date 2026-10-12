@@ -52,7 +52,7 @@ local name = app.name + '-worker';
       },
       {
         to: [networkPolicy.otelDefaultCollector],
-        ports: [{ protocol: 'TCP', port: 4317 }],
+        ports: [{ protocol: 'TCP', port: 4318 }],
       },
       {
         to: [{ podSelector: { matchLabels: labels(app.name + '-ocr') } }],

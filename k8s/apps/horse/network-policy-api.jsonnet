@@ -66,7 +66,7 @@ local name = app.name + '-api';
       },
       {
         to: [networkPolicy.otelDefaultCollector],
-        ports: [{ protocol: 'TCP', port: 4317 }],
+        ports: [{ protocol: 'TCP', port: 4318 }],
       },
       {
         to: networkPolicy.publicInternet,
