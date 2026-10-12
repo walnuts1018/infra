@@ -44,7 +44,8 @@ variable "onepassword_service_account_token" {
 }
 
 variable "google_cloud_billing_account_id" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 # variable "zitadel_github_idp_client_secret" {

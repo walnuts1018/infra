@@ -22,7 +22,7 @@ resource "google_project_iam_member" "owner" {
 }
 
 resource "google_billing_account_iam_member" "billing_admin" {
-  billing_account_id = var.billing_account_id
+  billing_account_id = local.billing_account_id
   role               = "roles/billing.admin"
   member             = "user:ryota.juglans@gmail.com"
 }
@@ -47,7 +47,10 @@ resource "google_logging_project_bucket_config" "existing_default" {
   retention_days   = 30
   locked           = false
   enable_analytics = false
-  deletion_policy  = "PREVENT"
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_logging_project_sink" "existing_default" {
@@ -72,7 +75,7 @@ import {
 
 import {
   to = google_billing_account_iam_member.billing_admin
-  id = "${var.billing_account_id} roles/billing.admin user:ryota.juglans@gmail.com"
+  id = "${local.billing_account_id} roles/billing.admin user:ryota.juglans@gmail.com"
 }
 
 import {

@@ -93,15 +93,10 @@ import {
 
 import {
   to = google_billing_account_iam_member.terraform_cloud_plan_billing_costs_manager
-  id = "${var.billing_account_id} roles/billing.projectCostsManager serviceAccount:horse-tfc-plan@${local.free_project_id}.iam.gserviceaccount.com"
+  id = "${local.billing_account_id} roles/billing.projectCostsManager serviceAccount:horse-tfc-plan@${local.free_project_id}.iam.gserviceaccount.com"
 }
 
 import {
   to = google_billing_account_iam_member.terraform_cloud_apply_billing_user
-  id = "${var.billing_account_id} roles/billing.user serviceAccount:horse-tfc-apply@${local.free_project_id}.iam.gserviceaccount.com"
-}
-
-import {
-  to = google_billing_project_info.gemini_paid
-  id = "projects/${local.paid_project_id}"
+  id = "${local.billing_account_id} roles/billing.user serviceAccount:horse-tfc-apply@${local.free_project_id}.iam.gserviceaccount.com"
 }

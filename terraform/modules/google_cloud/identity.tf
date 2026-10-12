@@ -81,7 +81,7 @@ resource "google_project_iam_member" "terraform_cloud_apply_viewer" {
 }
 
 resource "google_billing_account_iam_member" "terraform_cloud_plan_billing_costs_manager" {
-  billing_account_id = var.billing_account_id
+  billing_account_id = local.billing_account_id
   role               = "roles/billing.projectCostsManager"
   member             = "serviceAccount:${google_service_account.terraform_cloud_plan.email}"
 }
@@ -148,7 +148,7 @@ resource "google_project_iam_member" "terraform_cloud_apply_billing_project_mana
 }
 
 resource "google_billing_account_iam_member" "terraform_cloud_apply_billing_user" {
-  billing_account_id = var.billing_account_id
+  billing_account_id = local.billing_account_id
   role               = "roles/billing.user"
   member             = "serviceAccount:${google_service_account.terraform_cloud_apply.email}"
 }

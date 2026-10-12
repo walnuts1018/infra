@@ -137,8 +137,8 @@ locals {
 }
 
 resource "restapi_object" "gemini_paid_spend_cap" {
-  path           = "/v1/billingAccounts/${var.billing_account_id}/budgets"
-  create_path    = "/v1/billingAccounts/${var.billing_account_id}/budgets"
+  path           = "/v1/billingAccounts/${local.billing_account_id}/budgets"
+  create_path    = "/v1/billingAccounts/${local.billing_account_id}/budgets"
   read_path      = "/v1/{id}"
   update_path    = "/v1/{id}?updateMask=displayName,budgetFilter,amount,thresholdRules,notificationsRule,spendCap"
   destroy_path   = "/v1/{id}"
@@ -153,12 +153,12 @@ resource "restapi_object" "gemini_paid_spend_cap" {
     prevent_destroy = true
   }
 
-  depends_on = [google_billing_project_info.gemini_paid, google_project_service.gemini_paid_budgets_api]
+  depends_on = [google_project.gemini_paid, google_project_service.gemini_paid_budgets_api]
 }
 
 resource "restapi_object" "gemini_paid_300_alert" {
-  path           = "/v1/billingAccounts/${var.billing_account_id}/budgets"
-  create_path    = "/v1/billingAccounts/${var.billing_account_id}/budgets"
+  path           = "/v1/billingAccounts/${local.billing_account_id}/budgets"
+  create_path    = "/v1/billingAccounts/${local.billing_account_id}/budgets"
   read_path      = "/v1/{id}"
   update_path    = "/v1/{id}?updateMask=displayName,budgetFilter,amount,thresholdRules,notificationsRule"
   destroy_path   = "/v1/{id}"
@@ -169,5 +169,5 @@ resource "restapi_object" "gemini_paid_300_alert" {
   id_attribute   = "name"
   data           = local.gemini_paid_300_alert_data
 
-  depends_on = [google_billing_project_info.gemini_paid, google_project_service.gemini_paid_budgets_api]
+  depends_on = [google_project.gemini_paid, google_project_service.gemini_paid_budgets_api]
 }

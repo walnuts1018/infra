@@ -11,17 +11,21 @@ terraform {
   }
 }
 
-variable "billing_account_id" { type = string }
+variable "billing_account_id" {
+  type      = string
+  sensitive = true
+}
 
 locals {
-  free_project_id = "walnuts-horse-gemini-free"
-  paid_project_id = "walnuts-horse-gemini-paid"
+  billing_account_id = nonsensitive(var.billing_account_id)
+  free_project_id    = "walnuts-horse-gemini-free"
+  paid_project_id    = "walnuts-horse-gemini-paid"
 }
 
 data "google_client_config" "this" {}
 
 data "google_billing_account" "gemini_paid" {
-  billing_account = var.billing_account_id
+  billing_account = local.billing_account_id
   open            = true
   lookup_projects = false
 
