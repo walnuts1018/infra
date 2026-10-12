@@ -16,28 +16,28 @@
       {
         secretKey: 'GEMINI_FREE_API_KEY',
         remoteRef: {
-          key: 'terraform-external-secrets',
+          key: 'horse-ai',
           property: 'horse-gemini-free-api-key',
         },
       },
       {
         secretKey: 'GEMINI_PAID_API_KEY',
         remoteRef: {
-          key: 'terraform-external-secrets',
+          key: 'horse-ai',
           property: 'horse-gemini-paid-api-key',
         },
       },
       {
         secretKey: 'GEMINI_FREE_PROJECT_ID',
         remoteRef: {
-          key: 'terraform-external-secrets',
+          key: 'horse-ai',
           property: 'horse-gemini-free-project-id',
         },
       },
       {
         secretKey: 'GEMINI_PAID_PROJECT_ID',
         remoteRef: {
-          key: 'terraform-external-secrets',
+          key: 'horse-ai',
           property: 'horse-gemini-paid-project-id',
         },
       },
