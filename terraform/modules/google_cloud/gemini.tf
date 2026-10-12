@@ -136,3 +136,11 @@ resource "restapi_object" "gemini_paid_spend_cap" {
 
   depends_on = [google_project.gemini_paid, google_project_service.gemini_paid_budgets_api]
 }
+
+removed {
+  from = restapi_object.gemini_paid_300_alert
+
+  lifecycle {
+    destroy = false
+  }
+}
