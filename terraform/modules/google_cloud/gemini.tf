@@ -99,7 +99,6 @@ locals {
 
   gemini_paid_alert_notifications = {
     enableProjectLevelRecipients = true
-    disableDefaultIamRecipients  = false
   }
 
   gemini_paid_spend_cap_data = jsonencode({
