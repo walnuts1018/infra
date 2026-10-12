@@ -11,8 +11,8 @@ topologySpreadConstraints:
 autoscaling:
   enabled: true
   minReplicas: 1
-  maxReplicas: 5
-  targetCPU: "95"
+  maxReplicas: 3
+  targetCPU: "100"
   targetMemory: ""
 resources:
   requests:
