@@ -4,7 +4,7 @@ local app = import 'app.json5';
 local name = app.name + '-api';
 local externalSecret = import 'external-secret.jsonnet';
 local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonnet')('horse');
-local image = 'ghcr.io/walnuts1018/horse:v0.0.0-62a594207ad00d63cab54d3982ae8f7c4cde9d05-30@sha256:4c7438cc8eb8e5e3e8501ed5c3fbdf3a042b14cb2af1391caeaf370c4e0deeb8';
+local image = 'ghcr.io/walnuts1018/horse:v0.0.0-2f3b983e6327e1781400175fd1f31893b373307c-31@sha256:b0216cc544eb502dbffb6e17a17feffb550e9643e9849c0dd3d7538517a8c2f9';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
