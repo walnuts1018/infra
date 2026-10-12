@@ -2,7 +2,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 7.24"
+      version = "~> 8.0"
     }
     restapi = {
       source  = "Mastercard/restapi"
