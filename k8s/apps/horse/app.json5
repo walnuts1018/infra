@@ -1,0 +1,7 @@
+{
+  name: "horse",
+  namespace: "horse",
+  clusters: {
+    kurumi: {},
+  },
+}

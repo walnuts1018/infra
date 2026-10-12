@@ -1,0 +1,106 @@
+local container = import '../../components/container.libsonnet';
+local labels = import '../../components/labels.libsonnet';
+local app = import 'app.json5';
+local name = app.name + '-worker';
+local externalSecret = import 'external-secret.jsonnet';
+local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonnet')('horse');
+{
+  apiVersion: 'apps/v1',
+  kind: 'Deployment',
+  metadata: {
+    name: name,
+    namespace: app.namespace,
+    labels: labels(name),
+    annotations: { 'argocd.argoproj.io/sync-wave': '2' },
+  },
+  spec: {
+    replicas: 1,
+    selector: { matchLabels: labels(name) },
+    template: {
+      metadata: { labels: labels(name) },
+      spec: {
+        imagePullSecrets: [{ name: 'ghcr-login-secret' }],
+        dnsConfig: { options: [{ name: 'ndots', value: '1' }] },
+        volumes: [{ name: 'tmp', emptyDir: { sizeLimit: '2Gi' } }],
+        containers: [
+          container {
+            name: 'worker',
+            image: 'ghcr.io/walnuts1018/horse:v0.0.0-c16e39a18728abfd044b1c8fa1dd34df3efb7f8a-9@sha256:e32fcbc154afa7e8deb5a4c6c9bb9781996e6228803bcf26dacd037024a40ab5',
+            imagePullPolicy: 'Always',
+            command: ['/app/worker'],
+            ports: [{ name: 'health', containerPort: 8081 }],
+            env: [
+              { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317' },
+              { name: 'OTEL_EXPORTER_OTLP_INSECURE', value: 'true' },
+              { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
+              { name: 'S3_BUCKET', value: 'horse' },
+              { name: 'OCR_URL', value: 'http://horse-ocr.horse.svc.cluster.local:8000' },
+              { name: 'GEMINI_ENABLED', value: 'false' },
+              {
+                name: 'DATABASE_URL',
+                valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'DATABASE_URL' } },
+              },
+              {
+                name: 'RABBITMQ_URL',
+                valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'RABBITMQ_URL' } },
+              },
+              {
+                name: 'GEMINI_FREE_API_KEY',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_FREE_API_KEY', optional: true } },
+              },
+              {
+                name: 'GEMINI_PAID_API_KEY',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_PAID_API_KEY', optional: true } },
+              },
+              {
+                name: 'GEMINI_FREE_PROJECT_ID',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_FREE_PROJECT_ID', optional: true } },
+              },
+              {
+                name: 'GEMINI_PAID_PROJECT_ID',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_PAID_PROJECT_ID', optional: true } },
+              },
+              {
+                name: 'GEMINI_FLASH_MODEL',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_FLASH_MODEL', optional: true } },
+              },
+              {
+                name: 'GEMINI_LITE_MODEL',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_LITE_MODEL', optional: true } },
+              },
+              {
+                name: 'GEMINI_PRO_MODEL',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'GEMINI_PRO_MODEL', optional: true } },
+              },
+              {
+                name: 'USDJPY_RATE',
+                valueFrom: { secretKeyRef: { name: 'horse-ai', key: 'USDJPY_RATE', optional: true } },
+              },
+              {
+                name: 'S3_ACCESS_KEY_ID',
+                valueFrom: { secretKeyRef: { name: s3Credentials.secretName, key: s3Credentials.accessKeyField } },
+              },
+              {
+                name: 'S3_SECRET_ACCESS_KEY',
+                valueFrom: { secretKeyRef: { name: s3Credentials.secretName, key: s3Credentials.secretKeyField } },
+              },
+            ],
+            volumeMounts: [{ name: 'tmp', mountPath: '/tmp' }],
+            livenessProbe: {
+              httpGet: { path: '/healthz', port: 'health' },
+              periodSeconds: 10,
+            },
+            readinessProbe: {
+              httpGet: { path: '/readyz', port: 'health' },
+              periodSeconds: 5,
+            },
+            resources: {
+              requests: { cpu: '100m', memory: '512Mi' },
+              limits: { cpu: '2', memory: '2Gi' },
+            },
+          },
+        ],
+      },
+    },
+  },
+}

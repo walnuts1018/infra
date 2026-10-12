@@ -115,6 +115,16 @@ resource "random_id" "penpot_api_secret_key" {
   byte_length = 64
 }
 
+resource "random_password" "horse_database_password" {
+  length  = 48
+  special = false
+}
+
+resource "random_password" "horse_rabbitmq_password" {
+  length  = 48
+  special = false
+}
+
 resource "onepassword_item" "external_secret" {
   vault    = var.vault
   title    = "terraform-external-secrets"
@@ -122,7 +132,7 @@ resource "onepassword_item" "external_secret" {
 
   section_map = {
     terraform = {
-      field_map = {
+      field_map = merge({
         "akvorado-client-id"                       = { type = "STRING", value = var.akvorado_client_id }
         "akvorado-client-secret"                   = { type = "CONCEALED", value = var.akvorado_client_secret }
         "argocd-cli-client-id"                     = { type = "STRING", value = var.argocd_cli_client_id }
@@ -138,6 +148,10 @@ resource "onepassword_item" "external_secret" {
         "coder-database-password"                  = { type = "CONCEALED", value = random_password.coder_database_password.result }
         "hubble-client-id"                         = { type = "STRING", value = var.hubble_client_id }
         "hubble-client-secret"                     = { type = "CONCEALED", value = var.hubble_client_secret }
+        "horse-client-id"                          = { type = "STRING", value = var.horse_client_id }
+        "horse-client-secret"                      = { type = "CONCEALED", value = var.horse_client_secret }
+        "horse-database-password"                  = { type = "CONCEALED", value = random_password.horse_database_password.result }
+        "horse-rabbitmq-password"                  = { type = "CONCEALED", value = random_password.horse_rabbitmq_password.result }
         "ipu-client-id"                            = { type = "STRING", value = var.ipu_client_id }
         "ipu-client-secret"                        = { type = "CONCEALED", value = var.ipu_client_secret }
         "iwashi-client-id"                         = { type = "STRING", value = var.iwashi_client_id }
@@ -187,7 +201,12 @@ resource "onepassword_item" "external_secret" {
         "visual-regression-tracker-jwt-secret"     = { type = "CONCEALED", value = random_password.visual_regression_tracker_jwt_secret.result }
         "visual-regression-tracker-admin-password" = { type = "CONCEALED", value = random_password.visual_regression_tracker_admin_password.result }
         "visual-regression-tracker-admin-api-key"  = { type = "CONCEALED", value = random_password.visual_regression_tracker_admin_api_key.result }
-      }
+        }, {
+        "horse-gemini-free-api-key"    = { type = "CONCEALED", value = var.gemini_free_api_key }
+        "horse-gemini-paid-api-key"    = { type = "CONCEALED", value = var.gemini_paid_api_key }
+        "horse-gemini-free-project-id" = { type = "STRING", value = var.gemini_free_project_id }
+        "horse-gemini-paid-project-id" = { type = "STRING", value = var.gemini_paid_project_id }
+      })
     }
   }
 }

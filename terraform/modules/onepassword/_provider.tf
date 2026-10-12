@@ -26,6 +26,13 @@ variable "service_account_token" {
   description = "1Password service account token"
 }
 
+variable "horse_client_id" { type = string }
+
+variable "horse_client_secret" {
+  type      = string
+  sensitive = true
+}
+
 variable "akvorado_client_id" { type = string }
 
 variable "akvorado_client_secret" {
@@ -125,3 +132,16 @@ variable "penpot_client_secret" {
   sensitive = true
 }
 variable "penpot_project_id" { type = string }
+
+variable "gemini_free_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "gemini_paid_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "gemini_free_project_id" { type = string }
+variable "gemini_paid_project_id" { type = string }

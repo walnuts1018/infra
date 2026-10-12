@@ -43,6 +43,11 @@ variable "onepassword_service_account_token" {
   description = "1Password service account token with access to the External Secrets vault"
 }
 
+variable "google_cloud_billing_account_id" {
+  type      = string
+  sensitive = true
+}
+
 # variable "zitadel_github_idp_client_secret" {
 #   type        = string
 #   sensitive   = true

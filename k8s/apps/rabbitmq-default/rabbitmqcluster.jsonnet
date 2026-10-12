@@ -8,7 +8,7 @@ local app = import 'app.json5';
     namespace: app.namespace,
     annotations: {
       'argocd.argoproj.io/sync-options': 'SkipDryRunOnMissingResource=true',
-      'rabbitmq.com/topology-allowed-namespaces': 'picca,picca-dev,beast',
+      'rabbitmq.com/topology-allowed-namespaces': 'picca,picca-dev,beast,horse',
     },
     labels: (import '../../components/labels.libsonnet')(app.name),
   },
