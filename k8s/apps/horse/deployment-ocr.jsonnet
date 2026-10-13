@@ -33,7 +33,7 @@ local name = app.name + '-ocr';
         containers: [
           container {
             name: 'ocr',
-            image: 'ghcr.io/walnuts1018/horse-ocr:v0.0.202@sha256:1a9e72544091345409856c16e6624e66d5265b571fab64c345993f3783d616d8',
+            image: 'ghcr.io/walnuts1018/horse-ocr:v0.0.203@sha256:3c6d605bcbb380da9094947e0413181ea0ed61eca7f31d7f2c29dd20f319c857',
             imagePullPolicy: 'Always',
             securityContext: {
               allowPrivilegeEscalation: false,
