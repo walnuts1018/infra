@@ -30,22 +30,24 @@ locals {
     "telemetry.googleapis.com",
   ])
 
-  additional_enabled_services = {
-    existing = toset([])
+  project_enabled_services = {
+    existing = local.common_enabled_services
     gemini_free = toset([
       "apptopology.googleapis.com",
       "cloudresourcemanager.googleapis.com",
       "cloudbilling.googleapis.com",
+      "serviceusage.googleapis.com",
     ])
     gemini_paid = toset([
       "apptopology.googleapis.com",
+      "serviceusage.googleapis.com",
     ])
   }
 
   current_project_services = {
     for service in flatten([
       for project_key, project_id in local.service_project_ids : [
-        for api in setunion(local.common_enabled_services, local.additional_enabled_services[project_key]) : {
+        for api in local.project_enabled_services[project_key] : {
           key     = "${project_key}/${api}"
           project = project_id
           service = api
@@ -60,7 +62,7 @@ resource "google_project_service" "currently_enabled" {
 
   project            = each.value.project
   service            = each.value.service
-  disable_on_destroy = false
+  disable_on_destroy = !startswith(each.key, "existing/")
 }
 
 import {
