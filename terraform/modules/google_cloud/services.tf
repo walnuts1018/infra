@@ -40,7 +40,6 @@ locals {
     ])
     gemini_paid = toset([
       "apptopology.googleapis.com",
-      "cloudresourcemanager.googleapis.com",
       "serviceusage.googleapis.com",
     ])
   }
