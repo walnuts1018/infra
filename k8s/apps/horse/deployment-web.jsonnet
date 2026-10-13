@@ -20,7 +20,7 @@ local name = app.name + '-web';
         containers: [
           container {
             name: 'web',
-            image: 'ghcr.io/walnuts1018/horse:v0.0.0-4e119145357fe4b6b7c662f4d7791d0e4eba93d6-117@sha256:bc6ebd60595437bf1fafae985a3ff9e27f6c5628dd918f7940052d668a2d215c',
+            image: 'ghcr.io/walnuts1018/horse-web:v0.0.0-f68c84edd2cd67adcfacdc874ae45e77263afae5-153@sha256:f173bd3d69775d3236be887d988e03560b0d87d098b15d3e456759545c4defcf',
             imagePullPolicy: 'Always',
             command: ['node', '.output/server/index.mjs'],
             ports: [{ name: 'http', containerPort: 3000 }],
