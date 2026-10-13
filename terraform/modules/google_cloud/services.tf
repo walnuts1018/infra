@@ -32,16 +32,14 @@ locals {
 
   project_enabled_services = {
     existing = local.common_enabled_services
-    gemini_free = toset([
+    gemini_free = setunion(local.common_enabled_services, toset([
       "apptopology.googleapis.com",
       "cloudresourcemanager.googleapis.com",
       "cloudbilling.googleapis.com",
-      "serviceusage.googleapis.com",
-    ])
-    gemini_paid = toset([
+    ]))
+    gemini_paid = setunion(local.common_enabled_services, toset([
       "apptopology.googleapis.com",
-      "serviceusage.googleapis.com",
-    ])
+    ]))
   }
 
   current_project_services = {
