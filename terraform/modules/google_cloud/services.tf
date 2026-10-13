@@ -62,7 +62,7 @@ resource "google_project_service" "currently_enabled" {
 
   project            = each.value.project
   service            = each.value.service
-  disable_on_destroy = true
+  disable_on_destroy = !startswith(each.key, "existing/")
 }
 
 import {
