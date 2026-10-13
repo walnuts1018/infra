@@ -22,7 +22,6 @@ local name = app.name + '-web';
             name: 'web',
             image: 'ghcr.io/walnuts1018/horse-web:v0.0.160@sha256:26facb53e9d1a18c943fa5e9cf93ba803df2f56528cabdaff4b8a31e2d3312ca',
             imagePullPolicy: 'Always',
-            command: ['node', '.output/server/index.mjs'],
             ports: [{ name: 'http', containerPort: 3000 }],
             env: [
               { name: 'NODE_ENV', value: 'production' },
