@@ -79,7 +79,7 @@ jobs:
           import re
           import sys
 
-          reference = re.compile(r"^([ \t]*(?:local image = |image: ))\x27(ghcr\.io/walnuts1018/horse(?:-[a-z0-9]+)*):v([0-9]+\.[0-9]+\.[0-9]+)@sha256:([0-9a-f]{64})\x27(,?)$")
+          reference = re.compile(r"^([ \t]*(?:local image = |image: ))\x27(ghcr\.io/walnuts1018/horse(?:-[a-z0-9]+)*):v([0-9]+\.[0-9]+\.[0-9]+)@sha256:([0-9a-f]{64})\x27([;,]?)$")
           hunks = []
           additions = []
           deletions = []
