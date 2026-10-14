@@ -11,16 +11,25 @@ local app = import 'app.json5';
   spec: {
     podSelector: { matchLabels: labels(app.name) },
     policyTypes: ['Ingress'],
-    ingress: [{
-      from: [networkPolicy.envoyGatewayProxy],
-      ports: [
-        { protocol: 'TCP', port: 8080 },
-        { protocol: 'TCP', port: 443 },
-        { protocol: 'TCP', port: 25 },
-        { protocol: 'TCP', port: 465 },
-        { protocol: 'TCP', port: 587 },
-        { protocol: 'TCP', port: 993 },
-      ],
-    }],
+    ingress: [
+      {
+        from: [networkPolicy.envoyGatewayProxy],
+        ports: [
+          { protocol: 'TCP', port: 8080 },
+          { protocol: 'TCP', port: 443 },
+          { protocol: 'TCP', port: 25 },
+          { protocol: 'TCP', port: 465 },
+          { protocol: 'TCP', port: 587 },
+          { protocol: 'TCP', port: 993 },
+        ],
+      },
+      {
+        from: [{
+          namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'horse' } },
+          podSelector: { matchLabels: { app: 'horse-api' } },
+        }],
+        ports: [{ protocol: 'TCP', port: 993 }],
+      },
+    ],
   },
 }

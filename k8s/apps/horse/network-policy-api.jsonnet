@@ -69,6 +69,13 @@ local name = app.name + '-api';
         ports: [{ protocol: 'TCP', port: 8000 }],
       },
       {
+        to: [{
+          namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'stalwart' } },
+          podSelector: { matchLabels: { app: 'stalwart' } },
+        }],
+        ports: [{ protocol: 'TCP', port: 993 }],
+      },
+      {
         to: [networkPolicy.otelDefaultCollector],
         ports: [{ protocol: 'TCP', port: 4318 }],
       },
