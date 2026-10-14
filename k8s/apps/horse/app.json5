@@ -1,7 +1,7 @@
 {
   name: "horse",
   namespace: "horse",
-  geminiEnabled: false,
+  geminiEnabled: true,
   clusters: {
     kurumi: {},
   },
