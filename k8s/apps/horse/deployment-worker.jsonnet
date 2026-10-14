@@ -82,6 +82,10 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
                 name: 'S3_SECRET_ACCESS_KEY',
                 valueFrom: { secretKeyRef: { name: s3Credentials.secretName, key: s3Credentials.secretKeyField } },
               },
+              {
+                name: 'EMAIL_BODY_ENCRYPTION_KEYS',
+                valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'EMAIL_BODY_ENCRYPTION_KEYS' } },
+              },
             ],
             volumeMounts: [{ name: 'tmp', mountPath: '/tmp' }],
             livenessProbe: {

@@ -120,6 +120,10 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.213@sha256:7c587f3bf6a798350acd57c
                 name: 'RABBITMQ_URL',
                 valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'RABBITMQ_URL' } },
               },
+              {
+                name: 'EMAIL_BODY_ENCRYPTION_KEYS',
+                valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'EMAIL_BODY_ENCRYPTION_KEYS' } },
+              },
             ],
             livenessProbe: {
               httpGet: { path: '/healthz', port: 'http' },

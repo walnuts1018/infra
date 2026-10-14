@@ -135,6 +135,10 @@ resource "random_password" "horse_s3_secret_key" {
   special = false
 }
 
+resource "random_id" "horse_email_body_encryption_key" {
+  byte_length = 32
+}
+
 resource "onepassword_item" "external_secret" {
   vault    = var.vault
   title    = "terraform-external-secrets"
@@ -161,6 +165,7 @@ resource "onepassword_item" "external_secret" {
         "horse-client-id"                          = { type = "STRING", value = var.horse_client_id }
         "horse-client-secret"                      = { type = "CONCEALED", value = var.horse_client_secret }
         "horse-database-password"                  = { type = "CONCEALED", value = random_password.horse_database_password.result }
+        "horse-email-body-encryption-keys"         = { type = "CONCEALED", value = "v1:${random_id.horse_email_body_encryption_key.b64_std}" }
         "horse-rabbitmq-password"                  = { type = "CONCEALED", value = random_password.horse_rabbitmq_password.result }
         "horse-s3-access-key"                      = { type = "CONCEALED", value = random_password.horse_s3_access_key.result }
         "horse-s3-secret-key"                      = { type = "CONCEALED", value = random_password.horse_s3_secret_key.result }

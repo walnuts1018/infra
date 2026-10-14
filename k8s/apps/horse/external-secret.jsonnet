@@ -29,11 +29,19 @@
         property: 'horse-rabbitmq-password',
       },
     },
+    {
+      secretKey: 'email_body_encryption_keys',
+      remoteRef: {
+        key: 'terraform-external-secrets',
+        property: 'horse-email-body-encryption-keys',
+      },
+    },
   ],
   template_data: {
     DATABASE_URL: 'postgresql://horse:{{ .postgres_password }}@postgresql-default-rw.databases.svc.cluster.local:5432/horse',
     OIDC_CLIENT_ID: '{{ .client_id }}',
     OIDC_CLIENT_SECRET: '{{ .client_secret }}',
     RABBITMQ_URL: 'amqp://horse:{{ .rabbitmq_password }}@default.rabbitmq.svc.cluster.local:5672/horse',
+    EMAIL_BODY_ENCRYPTION_KEYS: '{{ .email_body_encryption_keys }}',
   },
 }
