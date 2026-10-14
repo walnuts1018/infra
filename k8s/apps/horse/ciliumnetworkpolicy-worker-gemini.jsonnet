@@ -11,7 +11,6 @@ local geminiFqdn = 'generativelanguage.googleapis.com';
     endpointSelector: {
       matchLabels: {
         'k8s:app.kubernetes.io/name': app.name + '-worker',
-        'k8s:horse.walnuts.dev/gemini-enabled': 'true',
       },
     },
     egress: [

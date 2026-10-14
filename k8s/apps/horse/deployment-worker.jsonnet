@@ -2,7 +2,6 @@ local container = import '../../components/container.libsonnet';
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local name = app.name + '-worker';
-local geminiEnabled = app.geminiEnabled;
 local externalSecret = import 'external-secret.jsonnet';
 local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonnet')('horse');
 {
@@ -19,7 +18,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
     selector: { matchLabels: labels(name) },
     template: {
       metadata: {
-        labels: labels(name) + { 'horse.walnuts.dev/gemini-enabled': std.toString(geminiEnabled) },
+        labels: labels(name),
       },
       spec: {
         securityContext: {
@@ -49,7 +48,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
               { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
               { name: 'S3_BUCKET', value: 'horse' },
               { name: 'OCR_URL', value: 'http://horse-ocr.horse.svc.cluster.local:8000' },
-              { name: 'GEMINI_ENABLED', value: std.toString(geminiEnabled) },
+              { name: 'GEMINI_ENABLED', value: 'true' },
               {
                 name: 'DATABASE_URL',
                 valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'DATABASE_URL' } },
