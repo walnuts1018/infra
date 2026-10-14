@@ -33,7 +33,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
         containers: [
           container {
             name: 'worker',
-            image: 'ghcr.io/walnuts1018/horse:v0.0.387@sha256:e5cf2cca33c9bc547883e5c3dad9cbc53027ecc8464a06ccc87d0a0272f97afd',
+            image: 'ghcr.io/walnuts1018/horse:v0.0.437@sha256:1be01e72b16baa676c498b1ab9857dcf318ba2c6327db009b702605587c0bfab',
             imagePullPolicy: 'Always',
             securityContext: {
               allowPrivilegeEscalation: false,
