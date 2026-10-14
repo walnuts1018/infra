@@ -97,13 +97,6 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.213@sha256:7c587f3bf6a798350acd57c
               { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4318' },
               { name: 'OTEL_EXPORTER_OTLP_INSECURE', value: 'true' },
               { name: 'SSL_CERT_FILE', value: '/etc/ssl/certs/trust-bundle.pem' },
-              { name: 'MAILBOX_IMAPS_ADDRESS', value: 'stalwart.stalwart.svc.cluster.local:993' },
-              { name: 'MAILBOX_IMAPS_SERVER_NAME', value: 'mx.walnuts.dev' },
-              { name: 'MAILBOX_IMAPS_MAILBOX', value: 'INBOX' },
-              { name: 'MAILBOX_RECIPIENT_BASE', value: 'horse-mail@walnuts.dev' },
-              { name: 'MAIL_FORWARDING_MAILBOX_DOMAIN', value: 'walnuts.dev' },
-              { name: 'MAIL_FORWARDING_ADDRESS_LOCAL_PART_PREFIX', value: 'horse-mail+' },
-              { name: 'MAILBOX_POLL_INTERVAL', value: '1m' },
               { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
               { name: 'S3_BUCKET', value: 'horse' },
               {
@@ -133,14 +126,6 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.213@sha256:7c587f3bf6a798350acd57c
               {
                 name: 'EMAIL_BODY_ENCRYPTION_KEYS',
                 valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'EMAIL_BODY_ENCRYPTION_KEYS' } },
-              },
-              {
-                name: 'MAILBOX_IMAPS_USERNAME',
-                valueFrom: { secretKeyRef: { name: 'horse-mailbox', key: 'username', optional: true } },
-              },
-              {
-                name: 'MAILBOX_IMAPS_PASSWORD',
-                valueFrom: { secretKeyRef: { name: 'horse-mailbox', key: 'password', optional: true } },
               },
             ],
             livenessProbe: {
