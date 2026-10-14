@@ -16,10 +16,122 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  change-scope:
+    name: Detect changed files
+    runs-on: ubuntu-26.04
+    timeout-minutes: 2
+    outputs:
+      digest-only: ${{ steps.detect.outputs.digest-only }}
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Detect digest-only changes
+        id: detect
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          case "$EVENT_NAME" in
+            pull_request)
+              diff_range="${BASE_SHA}...HEAD"
+              ;;
+            push)
+              if [[ "$BEFORE_SHA" =~ ^0+$ ]]; then
+                echo "digest-only=false" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              if ! git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
+                echo "digest-only=false" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              diff_range="$BEFORE_SHA $GITHUB_SHA"
+              ;;
+            *)
+              echo "digest-only=false" >> "$GITHUB_OUTPUT"
+              exit 0
+              ;;
+          esac
+
+          changed_files="$(git diff --no-ext-diff --no-renames --name-only $diff_range)"
+          if [[ -z "$changed_files" ]]; then
+            echo "digest-only=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          while IFS= read -r path; do
+            if [[ ! "$path" =~ ^k8s/apps/horse/[^/]+\.jsonnet$ ]]; then
+              echo "digest-only=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done <<< "$changed_files"
+
+          diff="$(git diff --no-ext-diff --no-renames --unified=0 $diff_range)"
+          if python3 -c '
+          import re
+          import sys
+
+          reference = re.compile(r"^([ \t]*(?:local image = |image: ))\x27(ghcr\.io/walnuts1018/horse(?:-[a-z0-9]+)*):v([0-9]+\.[0-9]+\.[0-9]+)@sha256:([0-9a-f]{64})\x27(,?)$")
+          hunks = []
+          additions = []
+          deletions = []
+
+          def finish_hunk():
+              if not additions and not deletions:
+                  return True
+              if not additions or len(additions) != len(deletions):
+                  return False
+              for old, new in zip(deletions, additions):
+                  old_match = reference.fullmatch(old)
+                  new_match = reference.fullmatch(new)
+                  if old_match is None or new_match is None:
+                      return False
+                  if old_match.group(1) != new_match.group(1) or old_match.group(5) != new_match.group(5):
+                      return False
+                  if old_match.group(2) != new_match.group(2):
+                      return False
+                  if old_match.group(3, 4) == new_match.group(3, 4):
+                      return False
+              hunks.append(True)
+              additions.clear()
+              deletions.clear()
+              return True
+
+          for line in sys.stdin.read().splitlines():
+              if line.startswith("@@"):
+                  if not finish_hunk():
+                      sys.exit(1)
+              elif line.startswith("+++") or line.startswith("---") or line.startswith("diff --git") or line.startswith("index "):
+                  continue
+              elif line.startswith("+"):
+                  additions.append(line[1:])
+              elif line.startswith("-"):
+                  deletions.append(line[1:])
+              elif line.startswith("\\"):
+                  sys.exit(1)
+              elif line:
+                  sys.exit(1)
+          if not finish_hunk() or not hunks:
+              sys.exit(1)
+          ' <<< "$diff"; then
+            echo "digest-only=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "digest-only=false" >> "$GITHUB_OUTPUT"
+          fi
+
   quality:
     name: Quality checks
     runs-on: ubuntu-26.04
     timeout-minutes: 30
+    needs: change-scope
     outputs:
       snapshot-diff-ready: ${{ steps.upload-snapshot-diff.outcome == 'success' }}
       trivy-diff-ready: ${{ steps.upload-trivy-diff.outcome == 'success' }}
@@ -44,11 +156,12 @@ jobs:
             run: mise run github-actions-lint
 
           - name: Generate snapshots
+            if: needs.change-scope.outputs.digest-only != 'true'
             run: mise run snapshot
 
       - name: Check out snapshot base
         id: snapshot-base
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && needs.change-scope.outputs.digest-only != 'true'
         continue-on-error: true
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -58,9 +171,11 @@ jobs:
 
       - parallel:
           - name: Validate application manifests
+            if: needs.change-scope.outputs.digest-only != 'true'
             run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
 
           - name: Scan rendered manifests with Trivy
+            if: needs.change-scope.outputs.digest-only != 'true'
             run: |
               if [[ "$GITHUB_EVENT_NAME" == "pull_request" && \
                 -f snapshot-base/trivy.yaml && -f snapshot-base/.trivyignore.yaml ]]; then
@@ -75,6 +190,7 @@ jobs:
               fi
 
       - name: Upload snapshots
+        if: needs.change-scope.outputs.digest-only != 'true'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: snapshots
@@ -84,7 +200,7 @@ jobs:
 
       - name: Build snapshot diff artifacts
         id: build-snapshot-diff
-        if: github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success'
+        if: github.event_name == 'pull_request' && needs.change-scope.outputs.digest-only != 'true' && steps.snapshot-base.outcome == 'success'
         continue-on-error: true
         run: |
           set -euo pipefail
@@ -119,7 +235,7 @@ jobs:
 
       - name: Compare Trivy findings with snapshot branch
         id: build-trivy-diff
-        if: github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success'
+        if: github.event_name == 'pull_request' && needs.change-scope.outputs.digest-only != 'true' && steps.snapshot-base.outcome == 'success'
         continue-on-error: true
         run: |
           set -euo pipefail
@@ -164,8 +280,10 @@ jobs:
     name: Publish snapshot branch
     runs-on: ubuntu-26.04
     timeout-minutes: 10
-    if: github.ref == 'refs/heads/main'
-    needs: quality
+    if: github.ref == 'refs/heads/main' && needs.change-scope.outputs.digest-only != 'true'
+    needs:
+      - change-scope
+      - quality
     permissions:
       contents: read
     steps:
@@ -297,6 +415,7 @@ jobs:
     timeout-minutes: 1
     if: always()
     needs:
+      - change-scope
       - quality
       - publish-snapshot
     permissions: {}
@@ -305,8 +424,14 @@ jobs:
         env:
           QUALITY_RESULT: ${{ needs.quality.result }}
           SNAPSHOT_RESULT: ${{ needs.publish-snapshot.result }}
-          SNAPSHOT_REQUIRED: ${{ github.ref == 'refs/heads/main' }}
+          CHANGE_SCOPE_RESULT: ${{ needs.change-scope.result }}
+          SNAPSHOT_REQUIRED: ${{ github.ref == 'refs/heads/main' && needs.change-scope.outputs.digest-only != 'true' }}
         run: |
+          if [[ "$CHANGE_SCOPE_RESULT" != "success" ]]; then
+            echo "Change detection did not succeed: ${CHANGE_SCOPE_RESULT}"
+            exit 1
+          fi
+
           if [[ "$QUALITY_RESULT" != "success" ]]; then
             echo "Quality checks did not succeed: ${QUALITY_RESULT}"
             exit 1
