@@ -20,7 +20,7 @@ local app = import 'app.json5';
       },
       {
         matches: [{ path: { type: 'PathPrefix', value: '/graphql' } }],
-        timeouts: { request: '60s', backendRequest: '55s' },
+        timeouts: { request: '0s', backendRequest: '0s' },
         backendRefs: [{ kind: 'Service', name: app.name + '-api', port: 8080 }],
       },
       {
