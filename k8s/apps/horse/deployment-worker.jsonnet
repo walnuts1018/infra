@@ -14,7 +14,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
     annotations: { 'argocd.argoproj.io/sync-wave': '2' },
   },
   spec: {
-    replicas: 1,
+    replicas: 0,
     selector: { matchLabels: labels(name) },
     template: {
       metadata: {

@@ -11,7 +11,7 @@ local name = app.name + '-web';
     labels: labels(name),
   },
   spec: {
-    replicas: 1,
+    replicas: 0,
     selector: { matchLabels: labels(name) },
     template: {
       metadata: { labels: labels(name) },

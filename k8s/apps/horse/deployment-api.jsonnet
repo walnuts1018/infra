@@ -17,7 +17,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
     },
   },
   spec: {
-    replicas: 1,
+    replicas: 0,
     selector: { matchLabels: labels(name) },
     template: {
       metadata: { labels: labels(name) },
@@ -36,35 +36,6 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
             configMap: {
               name: 'local-ca-bundle',
               items: [{ key: 'trust-bundle.pem', path: 'trust-bundle.pem' }],
-            },
-          },
-        ],
-        initContainers: [
-          container {
-            name: 'migrate',
-            image: 'ghcr.io/walnuts1018/horse:v0.0.664@sha256:e88fb9d1cb184fed4080be974b2555b647d6f0f6899bd369b350e2aeab1b8cfd',
-            imagePullPolicy: 'IfNotPresent',
-            securityContext: {
-              allowPrivilegeEscalation: false,
-              capabilities: { drop: ['ALL'] },
-              readOnlyRootFilesystem: true,
-            },
-            command: [
-              '/usr/local/bin/atlas',
-              'migrate',
-              'apply',
-              '--config',
-              'file:///app/atlas-rust.hcl',
-              '--env',
-              'rust',
-            ],
-            env: [{
-              name: 'RUST_DATABASE_URL',
-              valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'DATABASE_URL' } },
-            }],
-            resources: {
-              requests: { cpu: '10m', memory: '64Mi' },
-              limits: { cpu: '500m', memory: '256Mi' },
             },
           },
         ],
