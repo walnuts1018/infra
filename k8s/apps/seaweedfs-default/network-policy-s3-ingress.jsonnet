@@ -60,6 +60,15 @@ local piccaS3ClientNames = [
           networkPolicy.envoyGatewayProxy,
           peer('beast', { matchLabels: { 'app.kubernetes.io/name': 'backend' } }),
           peer('beast', { matchLabels: { 'app.kubernetes.io/name': 'encoder' } }),
+          peer('horse', {
+            matchExpressions: [
+              {
+                key: 'app.kubernetes.io/name',
+                operator: 'In',
+                values: ['horse-api', 'horse-worker'],
+              },
+            ],
+          }),
           peer('ipu', { matchLabels: { 'app.kubernetes.io/name': 'ipu' } }),
           peer('maps', { matchLabels: { 'app.kubernetes.io/name': 'maps-versatiles-server' } }),
           peer('maps', { matchLabels: { 'app.kubernetes.io/name': 'maps-update' } }),
