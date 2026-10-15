@@ -4,7 +4,6 @@ local app = import 'app.json5';
 local name = app.name + '-api';
 local externalSecret = import 'external-secret.jsonnet';
 local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonnet')('horse');
-local image = 'ghcr.io/walnuts1018/horse:v0.0.664@sha256:e88fb9d1cb184fed4080be974b2555b647d6f0f6899bd369b350e2aeab1b8cfd';
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -42,7 +41,7 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.664@sha256:e88fb9d1cb184fed4080be9
         initContainers: [
           container {
             name: 'migrate',
-            image: image,
+            image: 'ghcr.io/walnuts1018/horse:v0.0.664@sha256:e88fb9d1cb184fed4080be974b2555b647d6f0f6899bd369b350e2aeab1b8cfd',
             imagePullPolicy: 'Always',
             securityContext: {
               allowPrivilegeEscalation: false,
@@ -69,7 +68,7 @@ local image = 'ghcr.io/walnuts1018/horse:v0.0.664@sha256:e88fb9d1cb184fed4080be9
         containers: [
           container {
             name: 'api',
-            image: image,
+            image: 'ghcr.io/walnuts1018/horse:v0.0.664@sha256:e88fb9d1cb184fed4080be974b2555b647d6f0f6899bd369b350e2aeab1b8cfd',
             imagePullPolicy: 'Always',
             command: ['/app/api'],
             securityContext: {
