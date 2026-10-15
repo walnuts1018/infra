@@ -5,7 +5,7 @@ function(app, role='query')
   local storageEnv = (import '../../env/storage.libsonnet')(app);
   local s3Irsa = (import '../../s3-irsa.libsonnet')(app);
   local isImageWorker = role == 'image';
-  local serviceImage = 'ghcr.io/walnuts1018/picca/ai-openvino:v0.0.95@sha256:ec881c21c40f223c363acc946ea64dabc91dd76820e26cf1e5f7eb6ffb22c106';
+  local serviceImage = 'ghcr.io/walnuts1018/picca/ai-openvino:v0.0.96@sha256:d7e8e31dedd61aa30b50f00e8364b60b086a360531290df615f30a84ea9f1462';
   local deploymentName = app.name + if isImageWorker then '-dense-worker' else '-dense-service';
   {
     apiVersion: 'apps/v1',
