@@ -12,6 +12,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
     namespace: app.namespace,
     labels: labels(name),
     annotations: {
+      'argocd.argoproj.io/sync-wave': '0',
       'reloader.stakater.com/auto': 'true',
     },
   },
@@ -52,11 +53,13 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
               '/usr/local/bin/atlas',
               'migrate',
               'apply',
+              '--config',
+              'file:///app/atlas-rust.hcl',
               '--env',
-              'kubernetes',
+              'rust',
             ],
             env: [{
-              name: 'DATABASE_URL',
+              name: 'RUST_DATABASE_URL',
               valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'DATABASE_URL' } },
             }],
             resources: {
