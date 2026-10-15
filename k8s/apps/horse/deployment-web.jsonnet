@@ -9,6 +9,7 @@ local name = app.name + '-web';
     name: name,
     namespace: app.namespace,
     labels: labels(name),
+    annotations: { 'argocd.argoproj.io/sync-wave': '1' },
   },
   spec: {
     replicas: 0,
