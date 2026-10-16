@@ -259,7 +259,7 @@ local makeRunnerSet(repo, runner) =
           initContainers: [
             {
               name: 'init-dind-externals',
-              image: 'ghcr.io/walnuts1018/infra/actions-runner:2.336.0',
+              image: 'ghcr.io/walnuts1018/infra/actions-runner:v1.0.13@sha256:3d3e23eca72905ec44f353ce847653a13272f26d13865a87ae13ce941cd85e3a',
               command: ['cp', '-r', '/home/runner/externals/.', '/home/runner/tmpDir/'],
               volumeMounts: [
                 { name: 'dind-externals', mountPath: '/home/runner/tmpDir' },
@@ -299,7 +299,7 @@ local makeRunnerSet(repo, runner) =
           containers: [
             {
               name: 'runner',
-              image: 'ghcr.io/walnuts1018/infra/actions-runner:2.336.0',
+              image: 'ghcr.io/walnuts1018/infra/actions-runner:v1.0.13@sha256:3d3e23eca72905ec44f353ce847653a13272f26d13865a87ae13ce941cd85e3a',
               command: ['/home/runner/run.sh'],
               env: [
                 {

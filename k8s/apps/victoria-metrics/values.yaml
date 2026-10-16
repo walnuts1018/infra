@@ -1,78 +1,3 @@
-# The chart's built-in policies omit policyTypes. Keep egress isolation explicit so existing ingress policies remain ingress-only.
-extraObjects:
-- |
-  apiVersion: networking.k8s.io/v1
-  kind: NetworkPolicy
-  metadata:
-    name: victoria-metrics-vminsert-egress
-    namespace: victoria-metrics
-  spec:
-    podSelector:
-      matchLabels:
-        app: vminsert
-        app.kubernetes.io/instance: victoria-metrics
-        app.kubernetes.io/name: victoria-metrics-cluster
-    policyTypes:
-    - Egress
-    egress:
-    - to:
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: kube-system
-        podSelector:
-          matchLabels:
-            k8s-app: kube-dns
-      ports:
-      - protocol: UDP
-        port: 53
-      - protocol: TCP
-        port: 53
-    - to:
-      - podSelector:
-          matchLabels:
-            app: vmstorage
-            app.kubernetes.io/instance: victoria-metrics
-            app.kubernetes.io/name: victoria-metrics-cluster
-      ports:
-      - protocol: TCP
-        port: 8400
-- |
-  apiVersion: networking.k8s.io/v1
-  kind: NetworkPolicy
-  metadata:
-    name: victoria-metrics-vmselect-egress
-    namespace: victoria-metrics
-  spec:
-    podSelector:
-      matchLabels:
-        app: vmselect
-        app.kubernetes.io/instance: victoria-metrics
-        app.kubernetes.io/name: victoria-metrics-cluster
-    policyTypes:
-    - Egress
-    egress:
-    - to:
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: kube-system
-        podSelector:
-          matchLabels:
-            k8s-app: kube-dns
-      ports:
-      - protocol: UDP
-        port: 53
-      - protocol: TCP
-        port: 53
-    - to:
-      - podSelector:
-          matchLabels:
-            app: vmstorage
-            app.kubernetes.io/instance: victoria-metrics
-            app.kubernetes.io/name: victoria-metrics-cluster
-      ports:
-      - protocol: TCP
-        port: 8401
-
 vmselect:
   enabled: true
   mode: deployment
@@ -182,7 +107,7 @@ vmstorage:
       cpu: 100m
       memory: 1.5Gi
     limits:
-      memory: 2Gi
+      memory: 4Gi
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: 'kubernetes.io/hostname'
