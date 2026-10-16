@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
-"""Compare Trivy config JSON reports and render new findings as Markdown.
-
-Findings are compared per (target file, rule, severity, title, Kubernetes
-resource). The resource identity (kind/namespace/name) is resolved from the
-scanned manifest: Trivy reports only the file plus a cause line span, and a
-single rendered file can contain many resources, so counting per file would
-miss a fix in one resource coinciding with the same rule firing in another.
-Line numbers alone are unsuitable as identity (unrelated insertions shift
-them), hence the logical resource ID. No infrautil changes are needed.
+"""Trivy configレポートを比較し、新規検出をMarkdownで出力する。
+比較キーは対象ファイル、ルール、重要度、タイトル、Kubernetesリソースとする。ファイル単位の件数比較では別リソース間の解消と新規発生を相殺して見逃すため、リソース単位で比較する。行番号は無関係な差分でずれるため使わず、kind、namespace、nameをマニフェストから読み取る。
 """
 
 from __future__ import annotations
@@ -50,7 +43,6 @@ def parse_resource_id(manifest: Path, start: int | None) -> tuple[str, str, str]
             docs.append([])
         else:
             docs[-1].append(line)
-    # 1-based line numbers; separator lines belong to no document.
     lineno = 0
     chosen: list[str] | None = None
     for doc in docs:
@@ -60,7 +52,7 @@ def parse_resource_id(manifest: Path, start: int | None) -> tuple[str, str, str]
                 chosen = doc
                 break
         else:
-            lineno += 1  # separator line
+            lineno += 1
             continue
         break
     if chosen is None:

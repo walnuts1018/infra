@@ -121,8 +121,8 @@ jobs:
       cache: true
       meta-images: ghcr.io/walnuts1018/infra/${{ matrix.target }}
       meta-tags: |
-        type=raw,value=latest
         type=raw,value=v1.0.${{ github.run_number }}
+        type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
     secrets:
       registry-auths: |
         - registry: ghcr.io

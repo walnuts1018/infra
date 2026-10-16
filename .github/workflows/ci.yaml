@@ -87,8 +87,7 @@ jobs:
           set -euo pipefail
           overall_failed=0
 
-          # Writes the finished Markdown to $5; returns nonzero on any failure
-          # so callers can distinguish "no diff" from "diff broken".
+          # 完成したMarkdownを$5に書き出す。失敗時は非ゼロで終了する。
           render_dir() {
             local head_dir="$1" base_dir="$2" out_title="$3" dyff_extra="$4" out_file="$5"
             local tmp raw failed rel base_file head_file diff_one
@@ -129,7 +128,7 @@ jobs:
               done < <(comm -12 "$tmp.base" "$tmp.head")
               [ ! -f "$tmp.failed" ] || failed=1
             fi
-            # Truncate the body on disk first: no pipe consumer can SIGPIPE us.
+            # ファイル上で切り詰める。パイプ経由ではSIGPIPEで失敗する。
             if [ "$(wc -c < "$raw")" -gt 56000 ]; then
               head -c 56000 "$raw" > "$tmp/snippet"
               truncated=1
@@ -175,8 +174,7 @@ jobs:
               ':warning: Base snapshot rescan failed; diff is unavailable.' > /tmp/trivy-config-diff.md
             echo "ready=true" >> "$GITHUB_OUTPUT"
             echo "findings-added=false" >> "$GITHUB_OUTPUT"
-            # continue-on-error keeps this non-blocking, but the failed step
-            # stays visible instead of looking like a clean comparison.
+            # 比較失敗を可視化するため非ゼロで終了する。CI全体はcontinue-on-errorで継続する。
             exit 1
           fi
           python3 scripts/trivy-config-diff.py \
