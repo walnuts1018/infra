@@ -33,6 +33,11 @@ local prometheusCollector = endpoint('opentelemetry-collector', {
       {
         fromEndpoints: [
           endpoint('picca', { 'k8s:app.kubernetes.io/name': 'picca-apiserver' }),
+          endpoint('picca', { 'k8s:app.kubernetes.io/name': 'picca-stack-timeline-worker' }),
+          endpoint('picca', { 'k8s:app.kubernetes.io/name': 'picca-download-worker' }),
+          endpoint('picca', { 'k8s:app.kubernetes.io/name': 'picca-empty-trash-worker' }),
+          endpoint('picca', { 'k8s:app.kubernetes.io/name': 'picca-image-processing-worker' }),
+          endpoint('picca', { 'k8s:app.kubernetes.io/name': 'picca-video-processing-worker' }),
           endpoint('prfexample', { 'k8s:app.kubernetes.io/name': 'prfexample' }),
           endpoint('walnuk', { 'k8s:app.kubernetes.io/name': 'walnuk-backend' }),
           endpoint(app.namespace, { 'k8s:app': app.name + '-setup' }),
