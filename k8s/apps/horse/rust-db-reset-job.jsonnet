@@ -5,7 +5,7 @@ local externalSecret = import 'database-reset-external-secret.jsonnet';
   apiVersion: 'batch/v1',
   kind: 'Job',
   metadata: {
-    name: 'horse-rust-db-reset',
+    name: 'horse-rust-db-reset-v2',
     namespace: app.namespace,
     labels: labels('horse-db-reset'),
     annotations: { 'argocd.argoproj.io/sync-wave': '-1' },
@@ -56,7 +56,7 @@ local externalSecret = import 'database-reset-external-secret.jsonnet';
             '-v',
             'ON_ERROR_STOP=1',
             '-c',
-            'DROP SCHEMA public CASCADE; CREATE SCHEMA public AUTHORIZATION horse;',
+            'DROP SCHEMA public CASCADE; CREATE SCHEMA public AUTHORIZATION horse; DROP SCHEMA IF EXISTS atlas_schema_revisions CASCADE;',
           ],
           env: [
             { name: 'PGHOST', value: 'postgresql-default-rw.databases.svc.cluster.local' },
