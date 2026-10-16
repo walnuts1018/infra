@@ -42,7 +42,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
         initContainers: [
           container {
             name: 'migrate',
-            image: 'ghcr.io/walnuts1018/horse:v0.0.967@sha256:2b7ca84e96b4340a9af3bc200b2755dbfd5956fbb5b32ee217d72c7b6cf1e1b9',
+            image: 'ghcr.io/walnuts1018/horse:v0.0.968@sha256:7ffc08f82626886f31a72fade8743fadb071c4a981e38f62cd978df9376edbfa',
             imagePullPolicy: 'IfNotPresent',
             securityContext: {
               allowPrivilegeEscalation: false,
@@ -71,7 +71,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
         containers: [
           container {
             name: 'api',
-            image: 'ghcr.io/walnuts1018/horse:v0.0.967@sha256:2b7ca84e96b4340a9af3bc200b2755dbfd5956fbb5b32ee217d72c7b6cf1e1b9',
+            image: 'ghcr.io/walnuts1018/horse:v0.0.968@sha256:7ffc08f82626886f31a72fade8743fadb071c4a981e38f62cd978df9376edbfa',
             imagePullPolicy: 'IfNotPresent',
             command: ['/app/api'],
             securityContext: {
