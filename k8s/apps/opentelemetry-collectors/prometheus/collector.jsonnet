@@ -8,7 +8,7 @@ function(
   },
   spec: {
     managementState: 'managed',
-    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.162.0@sha256:39923a8e431bd1f57be82411999d389fcfe40857492e4365456d97a4c1f74be6',
+    image: 'ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.163.1@sha256:1175b03003053962012f5a231f5567f66a3e8fdb960c7835c0e48f7aa1555806',
     serviceAccount: (import 'sa.jsonnet').metadata.name,
     replicas: 2,
     mode: 'statefulset',
