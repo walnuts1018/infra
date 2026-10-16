@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Compare Trivy config JSON reports and render new findings as Markdown.
 
-Kept as a small Python script on purpose: SARIF-multitool style set
-comparisons miss cases we must not miss (same rule on another resource,
-one resolved + one added netting to zero, multiple findings per target).
-The comparison key is (target, rule, severity, title) with per-key counts.
+Findings are compared per (target file, rule, severity, title, Kubernetes
+resource). The resource identity (kind/namespace/name) is resolved from the
+scanned manifest: Trivy reports only the file plus a cause line span, and a
+single rendered file can contain many resources, so counting per file would
+miss a fix in one resource coinciding with the same rule firing in another.
+Line numbers alone are unsuitable as identity (unrelated insertions shift
+them), hence the logical resource ID. No infrautil changes are needed.
 """
 
 from __future__ import annotations
@@ -12,6 +15,7 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -25,11 +29,72 @@ SEVERITY_ORDER: dict[str, int] = {
 }
 MAX_ROWS = 60
 
-FindingKey = tuple[str, str, str, str]
+FindingKey = tuple[str, str, str, str, str, str, str]
 FindingDetail = dict[str, str]
 
+_DOC_SEP = re.compile(r"^---(?:\s|$)")
+_KIND = re.compile(r"^kind:\s*(\S+)\s*$")
+_METADATA = re.compile(r"^(\s*)metadata:\s*(?:#.*)?$")
+_NAME = re.compile(r"^(\s*)(?:name|namespace):\s*(\S+)\s*$")
 
-def load_findings(report_path: Path) -> tuple[collections.Counter[FindingKey], dict[FindingKey, FindingDetail]]:
+
+def parse_resource_id(manifest: Path, start: int | None) -> tuple[str, str, str]:
+    """Return (kind, namespace, name) of the document containing start line."""
+    try:
+        text = manifest.read_text(encoding="utf-8")
+    except OSError:
+        return ("?", "?", "?")
+    docs: list[list[str]] = [[]]
+    for line in text.splitlines():
+        if _DOC_SEP.match(line):
+            docs.append([])
+        else:
+            docs[-1].append(line)
+    # 1-based line numbers; separator lines belong to no document.
+    lineno = 0
+    chosen: list[str] | None = None
+    for doc in docs:
+        for line in doc:
+            lineno += 1
+            if start is not None and lineno == start:
+                chosen = doc
+                break
+        else:
+            lineno += 1  # separator line
+            continue
+        break
+    if chosen is None:
+        return ("?", "?", "?")
+    kind = name = ns = "?"
+    m = next((m for m in (_KIND.match(l) for l in chosen) if m), None)
+    if m:
+        kind = m.group(1).strip("\"'")
+    meta_indent: int | None = None
+    for line in chosen:
+        if meta_indent is None:
+            mm = _METADATA.match(line)
+            if mm:
+                meta_indent = len(mm.group(1).replace("\t", "        "))
+            continue
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        indent = len(line) - len(line.lstrip(" "))
+        if indent <= meta_indent:
+            break
+        nm = _NAME.match(line)
+        if nm:
+            field = nm.group(0).split(":", 1)[0].strip()
+            val = nm.group(2).strip("\"'")
+            if field == "name" and name == "?":
+                name = val
+            elif field == "namespace" and ns == "?":
+                ns = val
+    return (kind, ns, name)
+
+
+def load_findings(
+    report_path: Path, manifest_dir: Path | None = None
+) -> tuple[collections.Counter[FindingKey], dict[FindingKey, FindingDetail]]:
     with report_path.open(encoding="utf-8") as report_file:
         report: dict[str, Any] = json.load(report_file)
 
@@ -43,13 +108,23 @@ def load_findings(report_path: Path) -> tuple[collections.Counter[FindingKey], d
             title = (
                 finding.get("Title") or finding.get("Message") or "(untitled finding)"
             )
-            key: FindingKey = (target, rule_id, severity, title)
+            cause = finding.get("CauseMetadata") or {}
+            kind, ns, name = ("?", "?", "?")
+            if manifest_dir is not None:
+                start = cause.get("StartLine")
+                kind, ns, name = parse_resource_id(
+                    manifest_dir / target,
+                    start if isinstance(start, int) else None,
+                )
+            key: FindingKey = (target, rule_id, severity, title, kind, ns, name)
             counts[key] += 1
+            resource = f"{kind}/{ns}/{name}" if (kind, ns, name) != ("?", "?", "?") else "?"
             details[key] = {
                 "target": f"k8s/snapshots/{target}",
                 "rule_id": rule_id,
                 "severity": severity,
                 "title": title,
+                "resource": resource,
                 "resolution": (
                     finding.get("Resolution") or finding.get("Message") or ""
                 ),
@@ -92,20 +167,21 @@ def render_markdown(
         f"the manifests published from `main` on the `snapshot` branch "
         f"({summary}).",
         "",
-        "| Severity | Rule | Rendered manifest | Finding | Remediation | Added |",
-        "| --- | --- | --- | --- | --- | ---: |",
+        "| Severity | Rule | Rendered manifest | Resource | Finding | Remediation | Added |",
+        "| --- | --- | --- | --- | --- | --- | ---: |",
     ]
 
     for detail, count in additions[:MAX_ROWS]:
         target = detail["target"].replace("`", "'")
         lines.append(
             (
-                "| {severity} | `{rule}` | `{target}` | {title} | "
+                "| {severity} | `{rule}` | `{target}` | `{resource}` | {title} | "
                 "{resolution} | +{count} |"
             ).format(
                 severity=markdown_cell(detail["severity"]),
                 rule=markdown_cell(detail["rule_id"]),
                 target=markdown_cell(target),
+                resource=markdown_cell(detail.get("resource", "?"), limit=120),
                 title=markdown_cell(detail["title"]),
                 resolution=markdown_cell(detail["resolution"]),
                 count=count,
@@ -125,10 +201,14 @@ def main() -> None:
     parser.add_argument("--head-report", type=Path, required=True)
     parser.add_argument("--markdown-output", type=Path, required=True)
     parser.add_argument("--github-output", type=Path)
+    parser.add_argument("--base-dir", type=Path, default=None,
+                        help="Manifest root the base report was scanned from")
+    parser.add_argument("--head-dir", type=Path, default=None,
+                        help="Manifest root the head report was scanned from")
     args = parser.parse_args()
 
-    base_counts, _ = load_findings(args.base_report)
-    head_counts, head_details = load_findings(args.head_report)
+    base_counts, _ = load_findings(args.base_report, args.base_dir)
+    head_counts, head_details = load_findings(args.head_report, args.head_dir)
     additions: list[tuple[FindingDetail, int]] = []
     for key, count in head_counts.items():
         added = count - base_counts[key]
@@ -140,6 +220,7 @@ def main() -> None:
             SEVERITY_ORDER.get(item[0]["severity"], len(SEVERITY_ORDER)),
             item[0]["target"],
             item[0]["rule_id"],
+            item[0].get("resource", "?"),
             item[0]["title"],
         )
     )

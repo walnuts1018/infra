@@ -85,55 +85,77 @@ jobs:
         continue-on-error: true
         run: |
           set -euo pipefail
-          diff_failed=0
+          overall_failed=0
 
+          # Writes the finished Markdown to $5; returns nonzero on any failure
+          # so callers can distinguish "no diff" from "diff broken".
           render_dir() {
-            local head_dir="$1" base_dir="$2" out_title="$3" dyff_extra="$4"
-            local tmp diff_one rel base_file head_file
-            tmp="$(mktemp)"
-            {
-              (cd "$head_dir" 2>/dev/null && find . -type f | sort) > "$tmp.head" || true
-              (cd "$base_dir" 2>/dev/null && find . -type f | sort) > "$tmp.base" || true
+            local head_dir="$1" base_dir="$2" out_title="$3" dyff_extra="$4" out_file="$5"
+            local tmp raw failed rel base_file head_file diff_one
+            tmp="$(mktemp -d)"
+            raw="$tmp/body.md"
+            failed=0
+            if [ ! -d "$head_dir" ]; then
+              echo "::error::Head snapshot directory missing: $head_dir"
+              failed=1
+            fi
+            if [ ! -d "$base_dir" ]; then
+              echo "::error::Base snapshot directory missing: $base_dir"
+              failed=1
+            fi
+            if [ "$failed" -eq 0 ]; then
+              find "$head_dir" -type f | sort | sed "s|^$head_dir/||" > "$tmp.head" || failed=1
+              find "$base_dir" -type f | sort | sed "s|^$base_dir/||" > "$tmp.base" || failed=1
+            fi
+            : > "$raw"
+            if [ "$failed" -eq 0 ]; then
               comm -23 "$tmp.base" "$tmp.head" | while IFS= read -r rel; do
-                printf 'deleted: %s\n' "${rel#./}"
-              done
+                printf 'deleted: %s\n' "$rel"
+              done >> "$raw"
               comm -13 "$tmp.base" "$tmp.head" | while IFS= read -r rel; do
-                printf 'added: %s\n' "${rel#./}"
-              done
-              comm -12 "$tmp.base" "$tmp.head" | while IFS= read -r rel; do
-                rel="${rel#./}"
+                printf 'added: %s\n' "$rel"
+              done >> "$raw"
+              while IFS= read -r rel; do
                 base_file="${base_dir}/${rel}"
                 head_file="${head_dir}/${rel}"
                 # shellcheck disable=SC2086
                 if ! diff_one="$(dyff between --output github $dyff_extra "$base_file" "$head_file" 2>&1)"; then
-                  echo "DYFF_FAILED:${rel}"
-                  echo "$diff_one"
+                  echo "::warning::dyff failed for ${rel}"
+                  printf 'dyff failed for %s:\n%s\n' "$rel" "$diff_one" >> "$raw"
+                  echo FAILED > "$tmp.failed"
                 else
-                  printf '%s\n' "$diff_one"
+                  printf '%s\n' "$diff_one" >> "$raw"
                 fi
-              done
-            } > "$tmp.all" || diff_failed=1
-            if grep -q '^DYFF_FAILED:' "$tmp.all"; then
-              diff_failed=1
+              done < <(comm -12 "$tmp.base" "$tmp.head")
+              [ ! -f "$tmp.failed" ] || failed=1
+            fi
+            # Truncate the body on disk first: no pipe consumer can SIGPIPE us.
+            if [ "$(wc -c < "$raw")" -gt 56000 ]; then
+              head -c 56000 "$raw" > "$tmp/snippet"
+              truncated=1
+            else
+              cp "$raw" "$tmp/snippet"
+              truncated=0
             fi
             {
               printf '%s\n' "# ${out_title}" '' '<details>' '<summary>Click to expand</summary>' '' '```diff'
-              grep -v '^DYFF_FAILED:' "$tmp.all" || true
+              cat "$tmp/snippet"
               printf '%s\n' '```' '</details>'
-              if [ "$diff_failed" -ne 0 ]; then
+              if [ "$truncated" -ne 0 ]; then
+                printf '\n%s\n' '(truncated: diff too large to display fully)'
+              fi
+              if [ "$failed" -ne 0 ]; then
                 printf '\n%s\n' '> :warning: Diff generation partially failed; results may be incomplete.'
               fi
-            } | head -c 60000 > "$tmp.capped"
-            if [ "$(wc -c < "$tmp.capped")" -ge 60000 ]; then
-              printf '\n%s\n' '(truncated: diff too large to display fully)' >> "$tmp.capped"
-            fi
-            cat "$tmp.capped"
+            } > "$out_file"
+            rm -rf "$tmp"
+            return "$failed"
           }
 
-          render_dir k8s/snapshots/apps snapshot-base/k8s/apps 'Manifest (k8s/apps) diff' '' > /tmp/manifest-diff.md
-          render_dir k8s/snapshots/helm snapshot-base/k8s/helm 'Helm diff' '--exclude-regexp .metadata.labels.app.kubernetes.io/version|.metadata.labels.chart|.metadata.labels.helm.sh/chart|\.spec\.compliance\.controls' > /tmp/helm-diff.md
+          render_dir k8s/snapshots/apps snapshot-base/k8s/apps 'Manifest (k8s/apps) diff' '' /tmp/manifest-diff.md || overall_failed=1
+          render_dir k8s/snapshots/helm snapshot-base/k8s/helm 'Helm diff' '--exclude-regexp .metadata.labels.app.kubernetes.io/version|.metadata.labels.chart|.metadata.labels.helm.sh/chart|\.spec\.compliance\.controls' /tmp/helm-diff.md || overall_failed=1
           echo "ready=true" >> "$GITHUB_OUTPUT"
-          if [ "$diff_failed" -ne 0 ]; then
+          if [ "$overall_failed" -ne 0 ]; then
             echo "::warning::Snapshot diff generation partially failed; see comments for details."
           fi
 
@@ -153,11 +175,15 @@ jobs:
               ':warning: Base snapshot rescan failed; diff is unavailable.' > /tmp/trivy-config-diff.md
             echo "ready=true" >> "$GITHUB_OUTPUT"
             echo "findings-added=false" >> "$GITHUB_OUTPUT"
-            exit 0
+            # continue-on-error keeps this non-blocking, but the failed step
+            # stays visible instead of looking like a clean comparison.
+            exit 1
           fi
           python3 scripts/trivy-config-diff.py \
             --base-report /tmp/trivy-snapshot-base.json \
             --head-report k8s/trivy-config-report.json \
+            --base-dir /tmp/trivy-snapshot-base \
+            --head-dir k8s/snapshots \
             --markdown-output /tmp/trivy-config-diff.md \
             --github-output "$GITHUB_OUTPUT"
 

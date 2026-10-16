@@ -48,7 +48,7 @@ jobs:
           set -euo pipefail
           all_targets="$(jq -c '[.[].target]' <<< '${{ steps.bake-matrix.outputs.matrix }}')"
 
-          # Fail-safe: any comparison problem builds everything, never "no change".
+          # 比較に失敗した場合は全件ビルドする。差分なしとの誤判定を防ぐ。
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             echo "targets=${all_targets}" >> "$GITHUB_OUTPUT"
             echo "has_targets=true" >> "$GITHUB_OUTPUT"
@@ -81,7 +81,7 @@ jobs:
             exit 0
           fi
 
-          # Image dirs changed in this push, validated to avoid path injection.
+          # 対象名の形式を検証し、不正なパス混入を防ぐ。
           dirs="$(printf '%s\n' "$changed" | awk -F/ '$1 == "images" && NF >= 2 {print $2}' | sort -u | grep -E '^[a-z0-9]+([._-][a-z0-9]+)*$' || true)"
           if [ -z "$dirs" ]; then
             echo "targets=[]" >> "$GITHUB_OUTPUT"
@@ -106,9 +106,8 @@ jobs:
       fail-fast: false
       matrix:
         target: ${{ fromJSON(needs.select.outputs.targets) }}
-    # NOTE: one reusable-workflow call per Bake target (no groups / multi-target).
-    # Tags v1.0.<run_number> + latest are applied to the final manifest index.
-    # Reruns reuse the same run_number, so a rerun overwrites the same tags.
+    # Bakeターゲットごとに再利用ワークフローを1回呼び出す。まとめ渡しは受け付けない。
+    # 再実行は同じ実行番号を使うため同じタグを上書きする。
     uses: docker/github-builder/.github/workflows/bake.yml@58cb9f5b71b1836d6f690c1e95effdeb9b98cb8a # v1.17.0
     permissions:
       contents: read

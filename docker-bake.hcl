@@ -2,30 +2,32 @@
 #
 # Adding a new image is two steps:
 #   1. Add images/<name>/Dockerfile
-#   2. Add "<name>" to group "default" and a matching target below
+#   2. Add "<name>" to IMAGES below
 #
-# Image name == directory name == Bake target name, so no duplicated
-# name/context/path bookkeeping is needed.
+# Bake's native matrix expands one target per image, so the target name,
+# directory name, and image name stay identical with no extra bookkeeping.
 
-variable "REGISTRY" {
-  default = "ghcr.io"
+variable "IMAGES" {
+  default = [
+    "actions-runner",
+  ]
 }
 
-variable "NAMESPACE" {
-  default = "walnuts1018/infra"
+target "image" {
+  matrix = {
+    image = IMAGES
+  }
+
+  name       = image
+  context    = "images/${image}"
+  dockerfile = "Dockerfile"
+
+  platforms = [
+    "linux/amd64",
+    "linux/arm64",
+  ]
 }
 
 group "default" {
-  targets = ["actions-runner"]
-}
-
-// Shared settings for all self-built images.
-target "_common" {
-  platforms = ["linux/amd64", "linux/arm64"]
-}
-
-target "actions-runner" {
-  inherits = ["_common"]
-  context    = "images/actions-runner"
-  dockerfile = "Dockerfile"
+  targets = ["image"]
 }
