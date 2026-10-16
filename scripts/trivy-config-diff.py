@@ -1,12 +1,22 @@
 #!/usr/bin/env python3
+"""Compare Trivy config JSON reports and render new findings as Markdown.
+
+Kept as a small Python script on purpose: SARIF-multitool style set
+comparisons miss cases we must not miss (same rule on another resource,
+one resolved + one added netting to zero, multiple findings per target).
+The comparison key is (target, rule, severity, title) with per-key counts.
+"""
+
+from __future__ import annotations
 
 import argparse
 import collections
 import json
 from pathlib import Path
+from typing import Any
 
 
-SEVERITY_ORDER = {
+SEVERITY_ORDER: dict[str, int] = {
     "CRITICAL": 0,
     "HIGH": 1,
     "MEDIUM": 2,
@@ -15,13 +25,16 @@ SEVERITY_ORDER = {
 }
 MAX_ROWS = 60
 
+FindingKey = tuple[str, str, str, str]
+FindingDetail = dict[str, str]
 
-def load_findings(report_path):
+
+def load_findings(report_path: Path) -> tuple[collections.Counter[FindingKey], dict[FindingKey, FindingDetail]]:
     with report_path.open(encoding="utf-8") as report_file:
-        report = json.load(report_file)
+        report: dict[str, Any] = json.load(report_file)
 
-    counts = collections.Counter()
-    details = {}
+    counts: collections.Counter[FindingKey] = collections.Counter()
+    details: dict[FindingKey, FindingDetail] = {}
     for result in report.get("Results") or []:
         target = result.get("Target") or "(unknown target)"
         for finding in result.get("Misconfigurations") or []:
@@ -30,7 +43,7 @@ def load_findings(report_path):
             title = (
                 finding.get("Title") or finding.get("Message") or "(untitled finding)"
             )
-            key = (target, rule_id, severity, title)
+            key: FindingKey = (target, rule_id, severity, title)
             counts[key] += 1
             details[key] = {
                 "target": f"k8s/snapshots/{target}",
@@ -45,14 +58,16 @@ def load_findings(report_path):
     return counts, details
 
 
-def markdown_cell(value, limit=240):
+def markdown_cell(value: object, limit: int = 240) -> str:
     cell = str(value).replace("|", "\\|").replace("\r", " ").replace("\n", " ").strip()
     if len(cell) > limit:
         return cell[: limit - 1] + "…"
     return cell
 
 
-def render_markdown(additions, total_added):
+def render_markdown(
+    additions: list[tuple[FindingDetail, int]], total_added: int
+) -> str:
     if total_added == 0:
         return (
             "## Trivy config scan\n\n"
@@ -61,7 +76,7 @@ def render_markdown(additions, total_added):
             "Existing findings do not block this CI.\n"
         )
 
-    severity_counts = collections.Counter()
+    severity_counts: collections.Counter[str] = collections.Counter()
     for detail, count in additions:
         severity_counts[detail["severity"]] += count
 
@@ -104,7 +119,7 @@ def render_markdown(additions, total_added):
     return "\n".join(lines) + "\n"
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Compare Trivy config reports.")
     parser.add_argument("--base-report", type=Path, required=True)
     parser.add_argument("--head-report", type=Path, required=True)
@@ -114,7 +129,7 @@ def main():
 
     base_counts, _ = load_findings(args.base_report)
     head_counts, head_details = load_findings(args.head_report)
-    additions = []
+    additions: list[tuple[FindingDetail, int]] = []
     for key, count in head_counts.items():
         added = count - base_counts[key]
         if added > 0:
