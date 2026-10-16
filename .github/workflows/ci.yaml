@@ -20,9 +20,6 @@ jobs:
     name: Quality checks
     runs-on: ubuntu-26.04
     timeout-minutes: 30
-    outputs:
-      snapshot-diff-ready: ${{ steps.upload-snapshot-diff.outcome == 'success' }}
-      trivy-diff-ready: ${{ steps.upload-trivy-diff.outcome == 'success' }}
     permissions:
       contents: read
     steps:
@@ -33,7 +30,7 @@ jobs:
 
       - uses: jdx/mise-action@9b200bcecbfd6303e69a4a261b2e09e3757440a7 # v5.2.0
         with:
-          install_args: go go-jsonnet kubeconform trivy jactionlint dyff
+          install_args: go go-jsonnet kubeconform trivy jactionlint
 
       - parallel:
           - name: Check Jsonnet format
@@ -45,182 +42,14 @@ jobs:
       - name: Generate snapshots
         run: mise run snapshot
 
-      - name: Check out snapshot base
-        id: snapshot-base
-        if: github.event_name == 'pull_request'
-        continue-on-error: true
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: snapshot
-          path: snapshot-base
-          persist-credentials: false
-
-      - parallel:
-          - name: Validate application manifests
-            run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
-
-          - name: Scan rendered manifests with Trivy
-            env:
-              TRIVY_CONFIG: ${{ github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success' && 'snapshot-base/trivy.yaml' || 'trivy.yaml' }}
-              TRIVY_IGNOREFILE: ${{ github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success' && 'snapshot-base/.trivyignore.yaml' || '.trivyignore.yaml' }}
-            run: mise run trivy-config-report
+      - name: Validate application manifests
+        run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
 
       - name: Upload snapshots
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: snapshots
           path: k8s/snapshots
-          if-no-files-found: error
-          retention-days: 1
-
-      - name: Generate manifest diff
-        id: manifest-diff
-        if: github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success'
-        continue-on-error: true
-        uses: int128/diff-action@7af689114faca670e84e942d192e9badd23ef51b # main
-        with:
-          base: snapshot-base/k8s/apps
-          head: k8s/snapshots/apps
-
-      - name: Build snapshot diff artifacts
-        id: build-snapshot-diff
-        if: github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success'
-        continue-on-error: true
-        env:
-          MANIFEST_BODY: ${{ steps.manifest-diff.outputs.comment-body }}
-          MANIFEST_OUTCOME: ${{ steps.manifest-diff.outcome }}
-        run: |
-          set -euo pipefail
-          overall_failed=0
-
-          if [ "$MANIFEST_OUTCOME" != "success" ]; then
-            printf '%s\n' '# Manifest (k8s/apps) diff' '' \
-              '> :warning: Manifest diff generation failed; results may be incomplete.' > /tmp/manifest-diff.md
-            overall_failed=1
-          elif [ -n "$MANIFEST_BODY" ]; then
-            printf '%s\n' '# Manifest (k8s/apps) diff' '' "$MANIFEST_BODY" > /tmp/manifest-diff.md
-          else
-            printf '%s\n' '# Manifest (k8s/apps) diff' '' 'No changes.' > /tmp/manifest-diff.md
-          fi
-
-          # 完成したMarkdownを$5に書き出す。失敗時は非ゼロで終了する。
-          render_dir() {
-            local head_dir="$1" base_dir="$2" out_title="$3" dyff_extra="$4" out_file="$5"
-            local tmp raw failed rel base_file head_file diff_one
-            tmp="$(mktemp -d)"
-            raw="$tmp/body.md"
-            failed=0
-            if [ ! -d "$head_dir" ]; then
-              echo "::error::Head snapshot directory missing: $head_dir"
-              failed=1
-            fi
-            if [ ! -d "$base_dir" ]; then
-              echo "::error::Base snapshot directory missing: $base_dir"
-              failed=1
-            fi
-            if [ "$failed" -eq 0 ]; then
-              find "$head_dir" -type f | sort | sed "s|^$head_dir/||" > "$tmp.head" || failed=1
-              find "$base_dir" -type f | sort | sed "s|^$base_dir/||" > "$tmp.base" || failed=1
-            fi
-            : > "$raw"
-            if [ "$failed" -eq 0 ]; then
-              comm -23 "$tmp.base" "$tmp.head" | while IFS= read -r rel; do
-                printf 'deleted: %s\n' "$rel"
-              done >> "$raw"
-              comm -13 "$tmp.base" "$tmp.head" | while IFS= read -r rel; do
-                printf 'added: %s\n' "$rel"
-              done >> "$raw"
-              while IFS= read -r rel; do
-                base_file="${base_dir}/${rel}"
-                head_file="${head_dir}/${rel}"
-                # shellcheck disable=SC2086
-                if ! diff_one="$(dyff between --output github $dyff_extra "$base_file" "$head_file" 2>&1)"; then
-                  echo "::warning::dyff failed for ${rel}"
-                  printf 'dyff failed for %s:\n%s\n' "$rel" "$diff_one" >> "$raw"
-                  echo FAILED > "$tmp.failed"
-                else
-                  printf '%s\n' "$diff_one" >> "$raw"
-                fi
-              done < <(comm -12 "$tmp.base" "$tmp.head")
-              [ ! -f "$tmp.failed" ] || failed=1
-            fi
-            # ファイル上で切り詰める。パイプ経由ではSIGPIPEで失敗する。
-            if [ "$(wc -c < "$raw")" -gt 56000 ]; then
-              head -c 56000 "$raw" > "$tmp/snippet"
-              truncated=1
-            else
-              cp "$raw" "$tmp/snippet"
-              truncated=0
-            fi
-            {
-              printf '%s\n' "# ${out_title}" '' '<details>' '<summary>Click to expand</summary>' '' '```diff'
-              cat "$tmp/snippet"
-              printf '%s\n' '```' '</details>'
-              if [ "$truncated" -ne 0 ]; then
-                printf '\n%s\n' '(truncated: diff too large to display fully)'
-              fi
-              if [ "$failed" -ne 0 ]; then
-                printf '\n%s\n' '> :warning: Diff generation partially failed; results may be incomplete.'
-              fi
-            } > "$out_file"
-            rm -rf "$tmp"
-            return "$failed"
-          }
-
-          render_dir k8s/snapshots/helm snapshot-base/k8s/helm 'Helm diff' '--exclude-regexp .metadata.labels.app.kubernetes.io/version|.metadata.labels.chart|.metadata.labels.helm.sh/chart|\.spec\.compliance\.controls' /tmp/helm-diff.md || overall_failed=1
-          echo "ready=true" >> "$GITHUB_OUTPUT"
-          if [ "$overall_failed" -ne 0 ]; then
-            echo "::warning::Snapshot diff generation partially failed; see comments for details."
-          fi
-
-      - name: Compare Trivy findings with snapshot branch
-        id: build-trivy-diff
-        if: github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success'
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          mkdir -p /tmp/trivy-snapshot-base
-          cp -a snapshot-base/k8s/apps snapshot-base/k8s/helm /tmp/trivy-snapshot-base/
-          if ! TRIVY_CONFIG=snapshot-base/trivy.yaml \
-            TRIVY_IGNOREFILE=snapshot-base/.trivyignore.yaml \
-              trivy config --exit-code 0 --format json \
-              --output /tmp/trivy-snapshot-base.json /tmp/trivy-snapshot-base; then
-            printf '%s\n' '## New Trivy config findings' '' \
-              ':warning: Base snapshot rescan failed; diff is unavailable.' > /tmp/trivy-config-diff.md
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-            echo "findings-added=false" >> "$GITHUB_OUTPUT"
-            # 比較失敗を可視化するため非ゼロで終了する。CI全体はcontinue-on-errorで継続する。
-            exit 1
-          fi
-          python3 scripts/trivy-config-diff.py \
-            --base-report /tmp/trivy-snapshot-base.json \
-            --head-report k8s/trivy-config-report.json \
-            --base-dir /tmp/trivy-snapshot-base \
-            --head-dir k8s/snapshots \
-            --markdown-output /tmp/trivy-config-diff.md \
-            --github-output "$GITHUB_OUTPUT"
-
-      - name: Upload Trivy findings diff
-        id: upload-trivy-diff
-        if: steps.build-trivy-diff.outputs.ready == 'true'
-        continue-on-error: true
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: trivy-config-diff
-          path: /tmp/trivy-config-diff.md
-          if-no-files-found: error
-          retention-days: 1
-
-      - name: Upload snapshot diff artifacts
-        id: upload-snapshot-diff
-        if: steps.build-snapshot-diff.outputs.ready == 'true'
-        continue-on-error: true
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: snapshot-diffs
-          path: |
-            /tmp/manifest-diff.md
-            /tmp/helm-diff.md
           if-no-files-found: error
           retention-days: 1
 
@@ -273,51 +102,133 @@ jobs:
     name: Comment snapshot diff
     runs-on: ubuntu-slim
     timeout-minutes: 10
-    if: github.event_name == 'pull_request' && needs.quality.outputs.snapshot-diff-ready == 'true'
+    if: github.event_name == 'pull_request'
     needs: quality
     permissions:
       contents: read
       pull-requests: write
     steps:
-      - name: Download snapshot diff artifacts
+      - name: Check out snapshot base
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: snapshot
+          path: snapshot-base
+          persist-credentials: false
+
+      - name: Download snapshots
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: snapshot-diffs
-          path: diffs
+          name: snapshots
+          path: k8s/snapshots
+
+      - uses: jdx/mise-action@9b200bcecbfd6303e69a4a261b2e09e3757440a7 # v5.2.0
+        with:
+          install_args: go:github.com/szhekpisov/diffyml
+
+      - name: Compare rendered manifests
+        run: |
+          set -euo pipefail
+          render() {
+            title="$1"; base="$2"; head="$3"; out="$4"; shift 4
+            body="$(mktemp)"
+            diffyml -o github "$@" "$base" "$head" > "$body"
+            {
+              printf '# %s\n\n' "$title"
+              if [ -s "$body" ]; then
+                head -c 56000 "$body"
+              else
+                printf 'No changes.\n'
+              fi
+            } > "$out"
+            rm -f "$body"
+          }
+          render 'Manifest (k8s/apps) diff' snapshot-base/k8s/apps k8s/snapshots/apps /tmp/manifest-diff.md
+          render 'Helm diff' snapshot-base/k8s/helm k8s/snapshots/helm /tmp/helm-diff.md \
+            --exclude 'metadata.labels[app.kubernetes.io/version]' \
+            --exclude 'metadata.labels[helm.sh/chart]' \
+            --exclude 'metadata.labels[chart]' \
+            --exclude 'spec.compliance.controls'
 
       - name: Comment manifest diff
         uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         with:
           header: manifest-diff
-          path: diffs/manifest-diff.md
+          path: /tmp/manifest-diff.md
 
       - name: Comment Helm diff
         uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         with:
           header: helm-diff
-          path: diffs/helm-diff.md
+          path: /tmp/helm-diff.md
 
-  trivy-findings-comment:
+  trivy:
     name: Comment Trivy findings
     runs-on: ubuntu-slim
-    timeout-minutes: 5
-    if: github.event_name == 'pull_request' && needs.quality.outputs.trivy-diff-ready == 'true'
+    timeout-minutes: 10
+    if: github.event_name == 'pull_request'
     needs: quality
     permissions:
       contents: read
       pull-requests: write
     steps:
-      - name: Download Trivy findings diff
+      - name: Check out snapshot base
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: snapshot
+          path: snapshot-base
+          persist-credentials: false
+
+      - name: Download snapshots
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: trivy-config-diff
-          path: trivy-diff
+          name: snapshots
+          path: k8s/snapshots
+
+      - uses: jdx/mise-action@9b200bcecbfd6303e69a4a261b2e09e3757440a7 # v5.2.0
+        with:
+          install_args: trivy pipx:sarif-tools
+
+      - name: Compare Trivy SARIF reports
+        run: |
+          set -euo pipefail
+          work=/tmp/sarif-work
+          mkdir -p "$work/base/manifests" "$work/head/manifests"
+          cp -r snapshot-base/k8s/apps snapshot-base/k8s/helm "$work/base/manifests/"
+          cp -r k8s/snapshots/apps k8s/snapshots/helm "$work/head/manifests/"
+          for f in snapshot-base/trivy.yaml snapshot-base/.trivyignore.yaml; do
+            [ -f "$f" ] || { echo "::error::Base Trivy policy missing: $f"; exit 1; }
+          done
+          export TRIVY_CONFIG=snapshot-base/trivy.yaml TRIVY_IGNOREFILE=snapshot-base/.trivyignore.yaml
+          trivy config --exit-code 0 --format sarif --output "$work/base.sarif" "$work/base/manifests"
+          trivy config --exit-code 0 --format sarif --output "$work/head.sarif" "$work/head/manifests"
+          sarif diff --output "$work/diff.json" "$work/base.sarif" "$work/head.sarif" > "$work/diff.txt"
+          grep -v '^writing diff to' "$work/diff.txt" > "$work/diff-body.txt" || true
+          {
+            printf '## Trivy security changes\n\n'
+            printf "Trivy SARIF diff between the \`snapshot\` branch and this PR (same policy and Trivy version).\n\n"
+            printf 'Note: moves of the same rule to another location with unchanged counts may be missed.\n\n'
+            printf '```\n'
+            head -c 50000 "$work/diff-body.txt"
+            printf '\n```\n'
+            printf "\nFull locations are in the \`trivy-sarif\` artifact (\`diff.json\`).\n"
+          } > /tmp/trivy-comment.md
+
+      - name: Upload SARIF reports
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: trivy-sarif
+          path: |
+            /tmp/sarif-work/base.sarif
+            /tmp/sarif-work/head.sarif
+            /tmp/sarif-work/diff.json
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Update Trivy findings comment
         uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         with:
           header: trivy-config-findings
-          path: trivy-diff/trivy-config-diff.md
+          path: /tmp/trivy-comment.md
 
   status-check:
     runs-on: ubuntu-slim
