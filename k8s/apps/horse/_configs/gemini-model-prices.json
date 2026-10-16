@@ -1,0 +1,62 @@
+{
+  "version": "gemini-prices-2026-10-v2",
+  "models": [
+    {
+      "modelId": "gemini-4-argon",
+      "endsAt": "2026-12-01T00:00:00Z",
+      "inputUsdPerMillionTokens": 2.0,
+      "outputUsdPerMillionTokens": 10.0
+    },
+    {
+      "modelId": "gemini-4-argon",
+      "startsAt": "2026-12-01T00:00:00Z",
+      "inputUsdPerMillionTokens": 4.0,
+      "outputUsdPerMillionTokens": 20.0
+    },
+    {
+      "modelId": "gemini-3.8-flash",
+      "endsAt": "2027-01-01T00:00:00Z",
+      "inputUsdPerMillionTokens": 0.75,
+      "outputUsdPerMillionTokens": 3.75
+    },
+    {
+      "modelId": "gemini-3.8-flash",
+      "startsAt": "2027-01-01T00:00:00Z",
+      "inputUsdPerMillionTokens": 1.5,
+      "outputUsdPerMillionTokens": 7.5
+    },
+    {
+      "modelId": "gemini-3.6-flash",
+      "endsAt": "2027-01-01T00:00:00Z",
+      "inputUsdPerMillionTokens": 0.75,
+      "outputUsdPerMillionTokens": 3.75
+    },
+    {
+      "modelId": "gemini-3.6-flash",
+      "startsAt": "2027-01-01T00:00:00Z",
+      "inputUsdPerMillionTokens": 1.5,
+      "outputUsdPerMillionTokens": 7.5
+    },
+    {
+      "modelId": "gemini-3.5-flash-lite",
+      "inputUsdPerMillionTokens": 0.3,
+      "outputUsdPerMillionTokens": 2.5
+    },
+    {
+      "modelId": "gemini-3.1-flash-lite",
+      "inputUsdPerMillionTokens": 0.25,
+      "outputUsdPerMillionTokens": 1.5
+    },
+    {
+      "modelId": "gemini-3.1-pro-preview",
+      "minInputTokens": 200001,
+      "inputUsdPerMillionTokens": 4.0,
+      "outputUsdPerMillionTokens": 18.0
+    },
+    {
+      "modelId": "gemini-3.1-pro-preview",
+      "inputUsdPerMillionTokens": 2.0,
+      "outputUsdPerMillionTokens": 12.0
+    }
+  ]
+}

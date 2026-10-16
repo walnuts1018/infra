@@ -50,6 +50,10 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
               { name: 'OCR_URL', value: 'http://horse-ocr.horse.svc.cluster.local:8000' },
               { name: 'GEMINI_ENABLED', value: 'true' },
               {
+                name: 'GEMINI_MODEL_PRICES',
+                valueFrom: { configMapKeyRef: { name: app.name + '-gemini-model-prices', key: 'GEMINI_MODEL_PRICES' } },
+              },
+              {
                 name: 'DATABASE_URL',
                 valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'DATABASE_URL' } },
               },
