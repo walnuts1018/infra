@@ -15,7 +15,7 @@ local app = import 'app.json5';
   spec: {
     affinity: storage.avoidSlowNodeAffinity,
     replicas: 1,
-    image: 'docker.io/rabbitmq:4.3.6-management@sha256:8dd6e3570ddaa2ef82a6c3a8950e79c1f73893adfbdddbc374fc1f1ac8a0f5dd',
+    image: 'docker.io/rabbitmq:4.3.6-management@sha256:b575d00b4e309e1eacc68e772298af74fe0f5672fac5b46ba698ffef379f68f7',
     persistence: {
       storage: '10Gi',
     },
