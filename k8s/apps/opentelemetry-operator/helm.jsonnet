@@ -5,6 +5,6 @@ local app = import 'app.json5';
 
   chart: 'opentelemetry-operator',
   repoURL: 'https://open-telemetry.github.io/opentelemetry-helm-charts',
-  targetRevision: '0.124.1',
+  targetRevision: '0.126.0',
   values: (importstr 'values.yaml'),
 }
