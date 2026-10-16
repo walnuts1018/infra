@@ -12,7 +12,7 @@ local name = app.name + '-web';
     annotations: { 'argocd.argoproj.io/sync-wave': '1' },
   },
   spec: {
-    replicas: 0,
+    replicas: 1,
     selector: { matchLabels: labels(name) },
     template: {
       metadata: { labels: labels(name) },

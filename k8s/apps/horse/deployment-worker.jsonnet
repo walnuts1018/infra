@@ -14,7 +14,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
     annotations: { 'argocd.argoproj.io/sync-wave': '2' },
   },
   spec: {
-    replicas: 0,
+    replicas: 1,
     selector: { matchLabels: labels(name) },
     template: {
       metadata: {
@@ -33,7 +33,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
         containers: [
           container {
             name: 'worker',
-            image: 'ghcr.io/walnuts1018/horse:v0.0.664@sha256:e88fb9d1cb184fed4080be974b2555b647d6f0f6899bd369b350e2aeab1b8cfd',
+            image: 'ghcr.io/walnuts1018/horse:v0.0.927@sha256:b17e43fe54fce45da90cac6ba39f1a1ce10aa7b791398350c6526171eb9add56',
             imagePullPolicy: 'IfNotPresent',
             securityContext: {
               allowPrivilegeEscalation: false,
