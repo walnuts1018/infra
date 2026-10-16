@@ -42,7 +42,7 @@ jobs:
 
           case "$EVENT_NAME" in
             pull_request)
-              diff_range="${BASE_SHA}...HEAD"
+              diff_args=("${BASE_SHA}...HEAD")
               ;;
             push)
               if [[ "$BEFORE_SHA" =~ ^0+$ ]]; then
@@ -53,7 +53,7 @@ jobs:
                 echo "digest-only=false" >> "$GITHUB_OUTPUT"
                 exit 0
               fi
-              diff_range="$BEFORE_SHA $GITHUB_SHA"
+              diff_args=("$BEFORE_SHA" "$GITHUB_SHA")
               ;;
             *)
               echo "digest-only=false" >> "$GITHUB_OUTPUT"
@@ -61,7 +61,7 @@ jobs:
               ;;
           esac
 
-          changed_files="$(git diff --no-ext-diff --no-renames --name-only $diff_range)"
+          changed_files="$(git diff --no-ext-diff --no-renames --name-only "${diff_args[@]}")"
           if [[ -z "$changed_files" ]]; then
             echo "digest-only=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -74,7 +74,7 @@ jobs:
             fi
           done <<< "$changed_files"
 
-          diff="$(git diff --no-ext-diff --no-renames --unified=0 $diff_range)"
+          diff="$(git diff --no-ext-diff --no-renames --unified=0 "${diff_args[@]}")"
           if python3 -c '
           import re
           import sys
