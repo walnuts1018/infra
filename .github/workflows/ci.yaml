@@ -123,7 +123,7 @@ jobs:
 
       - uses: jdx/mise-action@9b200bcecbfd6303e69a4a261b2e09e3757440a7 # v5.2.0
         with:
-          install_args: go:github.com/szhekpisov/diffyml
+          install_args: go@1.27.2 go:github.com/szhekpisov/diffyml@v1.8.2
 
       - name: Compare rendered manifests
         run: |
@@ -186,7 +186,7 @@ jobs:
 
       - uses: jdx/mise-action@9b200bcecbfd6303e69a4a261b2e09e3757440a7 # v5.2.0
         with:
-          install_args: trivy pipx:sarif-tools
+          install_args: trivy@0.76.0 pipx:sarif-tools@3.0.5
 
       - name: Compare Trivy SARIF reports
         run: |
