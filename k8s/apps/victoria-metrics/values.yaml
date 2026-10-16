@@ -40,7 +40,7 @@ vmselect:
   horizontalPodAutoscaler:
     enabled: true
     minReplicas: 1
-    maxReplicas: 5
+    maxReplicas: 3
     metrics:
     - resource:
         name: cpu
@@ -77,7 +77,7 @@ vminsert:
   horizontalPodAutoscaler:
     enabled: true
     minReplicas: 1
-    maxReplicas: 5
+    maxReplicas: 3
     metrics:
     - resource:
         name: cpu
