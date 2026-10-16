@@ -24,49 +24,33 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Create automation branch
-        run: git switch -c auto-gen-namespace
-
       - uses: jdx/mise-action@9b200bcecbfd6303e69a4a261b2e09e3757440a7 # v5.2.0
         with:
           install_args: go
       - name: Generate namespace manifest
         run: mise run namespace
 
-      - name: Check namespace changes
-        id: check-diff
-        run: |
-          if git diff --quiet -- k8s/namespaces/namespaces.json5; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
         id: generate-token
-        if: steps.check-diff.outputs.changed == 'true'
         with:
           client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
 
-      - name: Push namespace changes
-        if: steps.check-diff.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-        run: |
-          gh auth setup-git
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- k8s/namespaces/namespaces.json5
-          git commit -m "auto-gen-namespace"
-          git push origin auto-gen-namespace --force
+      - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        id: create-pr
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          branch: auto-gen-namespace
+          add-paths: k8s/namespaces/namespaces.json5
+          title: auto-gen-namespace
+          commit-message: auto-gen-namespace
+          delete-branch: true
 
-      - name: Create namespace pull request
-        if: steps.check-diff.outputs.changed == 'true'
+      - name: Enable auto-merge
+        if: steps.create-pr.outputs.pull-request-number
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-        run: |
-          gh pr create --title "auto-gen-namespace" --body "auto-gen-namespace" --base main --head auto-gen-namespace
-          gh pr merge --merge --auto
+          PR: ${{ steps.create-pr.outputs.pull-request-number }}
+        run: gh pr merge "$PR" --merge --auto
