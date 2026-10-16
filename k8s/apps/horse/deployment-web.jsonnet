@@ -21,7 +21,7 @@ local name = app.name + '-web';
         containers: [
           container {
             name: 'web',
-            image: 'ghcr.io/walnuts1018/horse-web:v0.0.946@sha256:6da89cf24a3c5dd7b27fc1771fec3f64ecbf2e48f046c1ce28a70835fe0b7862',
+            image: 'ghcr.io/walnuts1018/horse-web:v0.0.948@sha256:a46f6ae89dd3b07ae37cc5baca84df93931dc705cd9fb50a24787dd976cffeb2',
             imagePullPolicy: 'IfNotPresent',
             ports: [{ name: 'http', containerPort: 3000 }],
             env: [
