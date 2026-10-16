@@ -411,7 +411,7 @@ jobs:
           fi
 
   status-check:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-slim
     timeout-minutes: 1
     if: always()
     needs:
