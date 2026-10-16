@@ -308,3 +308,5 @@ jobs:
             echo "Snapshot publishing did not succeed: ${SNAPSHOT_RESULT}"
             exit 1
           fi
+
+# verify: PR comment check (no functional change)
