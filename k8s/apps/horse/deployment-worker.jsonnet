@@ -11,7 +11,10 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
     name: name,
     namespace: app.namespace,
     labels: labels(name),
-    annotations: { 'argocd.argoproj.io/sync-wave': '2' },
+    annotations: {
+      'argocd.argoproj.io/sync-wave': '2',
+      'reloader.stakater.com/auto': 'true',
+    },
   },
   spec: {
     replicas: 1,
