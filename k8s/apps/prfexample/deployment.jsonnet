@@ -33,7 +33,7 @@ local scyllaClientCertExternalSecret = import 'scylla-client-cert-external-secre
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'ghcr.io/walnuts1018/prfexample/server:0.0.65@sha256:ed180ba04152aabaab9c7539b4deb69f9a2aa3919c588d6c696d23efd2e3d1e3',
+            image: 'ghcr.io/walnuts1018/prfexample/server:0.0.67@sha256:20d27005fc74db566949d3b58a8e5134870f9f697e0956bd9d84f24e96d6472f',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
