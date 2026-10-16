@@ -31,6 +31,15 @@ local app = import 'app.json5';
         }],
       },
       {
+        toEntities: ['kube-apiserver'],
+        toPorts: [{
+          ports: [
+            { port: '443', protocol: 'TCP' },
+            { port: '6443', protocol: 'TCP' },
+          ],
+        }],
+      },
+      {
         toEndpoints: [{
           matchLabels: {
             'k8s:io.kubernetes.pod.namespace': 'databases',
