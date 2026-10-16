@@ -35,11 +35,12 @@ jobs:
         with:
           install_args: go go-jsonnet kubeconform trivy jactionlint dyff
 
-      - name: Check Jsonnet format
-        run: mise run jsonnet-fmt-check
+      - parallel:
+          - name: Check Jsonnet format
+            run: mise run jsonnet-fmt-check
 
-      - name: Lint GitHub Actions workflows
-        run: mise run github-actions-lint
+          - name: Lint GitHub Actions workflows
+            run: mise run github-actions-lint
 
       - name: Generate snapshots
         run: mise run snapshot
@@ -54,14 +55,15 @@ jobs:
           path: snapshot-base
           persist-credentials: false
 
-      - name: Validate application manifests
-        run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
+      - parallel:
+          - name: Validate application manifests
+            run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
 
-      - name: Scan rendered manifests with Trivy
-        env:
-          TRIVY_CONFIG: ${{ github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success' && 'snapshot-base/trivy.yaml' || 'trivy.yaml' }}
-          TRIVY_IGNOREFILE: ${{ github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success' && 'snapshot-base/.trivyignore.yaml' || '.trivyignore.yaml' }}
-        run: mise run trivy-config-report
+          - name: Scan rendered manifests with Trivy
+            env:
+              TRIVY_CONFIG: ${{ github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success' && 'snapshot-base/trivy.yaml' || 'trivy.yaml' }}
+              TRIVY_IGNOREFILE: ${{ github.event_name == 'pull_request' && steps.snapshot-base.outcome == 'success' && 'snapshot-base/.trivyignore.yaml' || '.trivyignore.yaml' }}
+            run: mise run trivy-config-report
 
       - name: Upload snapshots
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
