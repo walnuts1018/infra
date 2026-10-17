@@ -249,5 +249,7 @@ jobs:
       - publish-snapshot
     permissions: {}
     steps:
-      - name: Fail if required jobs failed
+      - name: Fail the job
         run: exit 1
+
+# verify: sarif and diffyml PR flow check
