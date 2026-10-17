@@ -55,7 +55,7 @@ echo "Checking Jsonnet format..."
 find k8s \\( -name '*.jsonnet' -o -name '*.libsonnet' \\) -type f | xargs jsonnetfmt --test
 """
 
-[tasks."lint"]
+[tasks."lint:k8s"]
 description = "Lint k8s apps"
 depends = ["snapshot"]
 run = "kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps"

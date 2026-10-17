@@ -43,7 +43,7 @@ jobs:
         run: mise run snapshot
 
       - name: Validate application manifests
-        run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
+        run: mise run lint:k8s
 
       - name: Upload snapshots
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
