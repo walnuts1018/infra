@@ -221,10 +221,11 @@ jobs:
             printf "Trivy SARIF diff between the \`snapshot\` branch and this PR (same policy and Trivy version).\n\n"
             printf 'Note: moves of the same rule to another location with unchanged counts may be missed.\n\n'
             printf '```\n'
-            if grep -q '^all levels: +0' "$work/diff-body.txt"; then
-              printf 'No new security changes.\n'
-            else
+            # 件数増減の記述がなければ実質差分なし（all levels の件数だけでは判定できない）
+            if grep -qE 'New issue|Eliminated issue|Number of occurrences' "$work/diff-body.txt"; then
               head -c 50000 "$work/diff-body.txt"
+            else
+              printf 'No new security changes.\n'
             fi
             printf '\n```\n'
             printf "\nFull locations are in the \`trivy-sarif\` artifact (\`diff.json\`).\n"
