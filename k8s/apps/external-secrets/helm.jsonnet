@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'external-secrets',
   repoURL: 'https://charts.external-secrets.io',
-  targetRevision: '2.12.0',
+  targetRevision: '2.13.0',
   values: (importstr 'values.yaml'),
 }
