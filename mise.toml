@@ -60,18 +60,9 @@ description = "Lint k8s apps"
 depends = ["snapshot"]
 run = "kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps"
 
-[tasks.github-actions-lint]
+[tasks.lint:gha]
 description = "Lint GitHub Actions workflows"
 run = "jactionlint"
-
-[tasks.trivy-config]
-description = "Scan rendered Kubernetes manifests with Trivy"
-depends = ["snapshot"]
-run = "trivy config k8s/snapshots"
-
-[tasks.trivy-config-report]
-description = "Write a non-blocking Trivy report for rendered manifests"
-run = "trivy config --exit-code 0 --format json --output k8s/trivy-config-report.json k8s/snapshots"
 
 [tasks.terraform]
 run = "terraform -chdir=terraform"

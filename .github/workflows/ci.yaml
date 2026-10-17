@@ -37,7 +37,7 @@ jobs:
             run: mise run jsonnet-fmt-check
 
           - name: Lint GitHub Actions workflows
-            run: mise run github-actions-lint
+            run: mise run lint:gha
 
       - name: Generate snapshots
         run: mise run snapshot
