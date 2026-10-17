@@ -34,7 +34,7 @@ jobs:
 
       - parallel:
           - name: Check Jsonnet format
-            run: mise run jsonnet-fmt-check
+            run: mise run fmt:jsonnet:check
 
           - name: Lint GitHub Actions workflows
             run: mise run lint:gha

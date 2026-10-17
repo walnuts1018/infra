@@ -17,52 +17,52 @@ jactionlint = "2.2.0"
 [env]
 _.file = { path = ".env", redact = true }
 
-[tasks.build-infrautil]
+[tasks."build:infrautil"]
 description = "Build infrautil"
 dir = "scripts/infrautil"
 run = "go build -o infrautil ."
 
-[tasks.namespace]
+[tasks."namespace"]
 description = "Generate namespaces.json5"
-depends = ["build-infrautil"]
+depends = ["build:infrautil"]
 run = "scripts/infrautil/infrautil namespace -d ./k8s/apps -o ./k8s/namespaces/namespaces.json5"
 
-[tasks.snapshot]
+[tasks."snapshot"]
 description = "Take snapshots"
-depends = ["app-snapshot", "helm-snapshot"]
+depends = ["snapshot:app", "snapshot:helm"]
 
-[tasks.app-snapshot]
+[tasks."snapshot:app"]
 description = "Take app snapshot"
-depends = ["build-infrautil"]
+depends = ["build:infrautil"]
 run = "scripts/infrautil/infrautil snapshot -d ./k8s/apps -o ./k8s/snapshots/apps"
 
-[tasks.helm-snapshot]
+[tasks."snapshot:helm"]
 description = "Take helm snapshot"
-depends = ["app-snapshot"]
+depends = ["snapshot:app"]
 run = "scripts/infrautil/infrautil helm-snapshot -d ./k8s/snapshots/apps -o ./k8s/snapshots/helm"
 
-[tasks.jsonnet-fmt]
+[tasks."fmt:jsonnet"]
 description = "Format Jsonnet files"
 run = """
 echo "Formatting Jsonnet files..."
 find k8s \\( -name '*.jsonnet' -o -name '*.libsonnet' \\) -type f | xargs jsonnetfmt -i
 """
 
-[tasks.jsonnet-fmt-check]
+[tasks."fmt:jsonnet:check"]
 description = "Check Jsonnet format"
 run = """
 echo "Checking Jsonnet format..."
 find k8s \\( -name '*.jsonnet' -o -name '*.libsonnet' \\) -type f | xargs jsonnetfmt --test
 """
 
-[tasks.lint]
+[tasks."lint"]
 description = "Lint k8s apps"
 depends = ["snapshot"]
 run = "kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps"
 
-[tasks.lint:gha]
+[tasks."lint:gha"]
 description = "Lint GitHub Actions workflows"
 run = "jactionlint"
 
-[tasks.terraform]
+[tasks."terraform"]
 run = "terraform -chdir=terraform"
