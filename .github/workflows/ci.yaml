@@ -136,14 +136,15 @@ jobs:
           render() {
             title="$1"; base="$2"; head="$3"; out="$4"; shift 4
             body="$(mktemp)"
-            diffyml -o github "$@" "$base" "$head" > "$body"
+            diffyml -o compact "$@" "$base" "$head" > "$body"
             {
-              printf '# %s\n\n' "$title"
+              printf '# %s\n\n```\n' "$title"
               if [ -s "$body" ]; then
                 head -c 56000 "$body"
               else
                 printf 'No changes.\n'
               fi
+              printf '\n```\n'
             } > "$out"
             rm -f "$body"
           }
@@ -211,14 +212,20 @@ jobs:
           export TRIVY_CONFIG=snapshot-base/trivy.yaml TRIVY_IGNOREFILE=snapshot-base/.trivyignore.yaml
           trivy config --exit-code 0 --format sarif --output "$work/base.sarif" "$work/base/manifests"
           trivy config --exit-code 0 --format sarif --output "$work/head.sarif" "$work/head/manifests"
-          sarif diff --output "$work/diff.json" "$work/base.sarif" "$work/head.sarif" > "$work/diff.txt"
-          grep -v '^writing diff to' "$work/diff.txt" > "$work/diff-body.txt" || true
+          # --output 指定時は標準出力に "writing diff to ..." しか出ないため、
+          # コメント用のテキストと JSON は別々に取得する
+          sarif diff "$work/base.sarif" "$work/head.sarif" > "$work/diff-body.txt"
+          sarif diff --output "$work/diff.json" "$work/base.sarif" "$work/head.sarif" > /dev/null
           {
             printf '## Trivy security changes\n\n'
             printf "Trivy SARIF diff between the \`snapshot\` branch and this PR (same policy and Trivy version).\n\n"
             printf 'Note: moves of the same rule to another location with unchanged counts may be missed.\n\n'
             printf '```\n'
-            head -c 50000 "$work/diff-body.txt"
+            if grep -q '^all levels: +0' "$work/diff-body.txt"; then
+              printf 'No new security changes.\n'
+            else
+              head -c 50000 "$work/diff-body.txt"
+            fi
             printf '\n```\n'
             printf "\nFull locations are in the \`trivy-sarif\` artifact (\`diff.json\`).\n"
           } > /tmp/trivy-comment.md
