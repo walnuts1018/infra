@@ -100,7 +100,7 @@ jobs:
 
   snapshot-diff:
     name: Comment snapshot diff
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     if: github.event_name == 'pull_request'
     needs: quality
