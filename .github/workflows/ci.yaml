@@ -243,11 +243,11 @@ jobs:
   status-check:
     runs-on: ubuntu-slim
     timeout-minutes: 1
+    # skipped は成功として扱われる
     if: failure()
     needs:
       - quality
       - publish-snapshot
     permissions: {}
     steps:
-      - name: Fail if required jobs failed
-        run: exit 1
+      - run: exit 1
