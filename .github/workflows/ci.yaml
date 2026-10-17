@@ -247,3 +247,5 @@ jobs:
              needs.publish-snapshot.result != 'success')
           }}
         run: exit 1
+
+# verify: sarif and diffyml PR flow check
