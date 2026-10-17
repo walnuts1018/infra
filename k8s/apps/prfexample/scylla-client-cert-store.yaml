@@ -1,0 +1,19 @@
+apiVersion: external-secrets.io/v1
+kind: SecretStore
+metadata:
+  name: scylla-client-cert
+  namespace: prfexample
+spec:
+  provider:
+    kubernetes:
+      auth:
+        serviceAccount:
+          name: prfexample-scylla-secret-reader
+          namespace: prfexample
+      remoteNamespace: databases
+      server:
+        caProvider:
+          key: ca.crt
+          name: kube-root-ca.crt
+          type: ConfigMap
+        url: https://kubernetes.default.svc

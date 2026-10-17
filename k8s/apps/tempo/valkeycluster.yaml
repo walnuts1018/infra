@@ -1,0 +1,28 @@
+apiVersion: valkey.io/v1alpha1
+kind: ValkeyCluster
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app: tempo-valkey
+    app.kubernetes.io/name: tempo-valkey
+  name: tempo-valkey
+  namespace: tempo
+spec:
+  replicas: 0
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1Gi
+    requests:
+      cpu: 5m
+      memory: 5Mi
+  scheduling:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: storage.walnuts.dev/slow
+                  operator: DoesNotExist
+  shards: 1

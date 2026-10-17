@@ -1,7 +1,0 @@
-{
-  name: "maps",
-  namespace: "maps",
-  clusters: {
-    kurumi: {},
-  },
-}

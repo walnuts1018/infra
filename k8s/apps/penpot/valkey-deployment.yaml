@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: penpot-valkey
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/name: penpot-valkey
+  name: penpot-valkey
+  namespace: penpot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: penpot-valkey
+      app.kubernetes.io/instance: penpot
+      app.kubernetes.io/name: penpot-valkey
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: penpot-valkey
+        app.kubernetes.io/instance: penpot
+        app.kubernetes.io/name: penpot-valkey
+    spec:
+      containers:
+        - args:
+            - --maxmemory
+            - 256mb
+            - --maxmemory-policy
+            - volatile-lfu
+            - --appendonly
+            - "no"
+            - --save
+            - ""
+            - --requirepass
+            - $(REDIS_PASSWORD)
+          command:
+            - valkey-server
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redis-password
+                  name: penpot-secrets
+          image: valkey/valkey:9.1.2@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - valkey-cli -a "$REDIS_PASSWORD" ping
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          name: valkey
+          ports:
+            - containerPort: 6379
+              name: valkey
+              protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - valkey-cli -a "$REDIS_PASSWORD" ping
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 5m
+              memory: 16Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          volumeMounts:
+            - mountPath: /data
+              name: data
+      nodeSelector:
+        kubernetes.io/hostname: rusk
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: penpot
+      volumes:
+        - emptyDir: {}
+          name: data

@@ -1,0 +1,169 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+    reloader.stakater.com/auto: "true"
+  labels:
+    app: horse-api
+    app.kubernetes.io/name: horse-api
+  name: horse-api
+  namespace: horse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: horse-api
+      app.kubernetes.io/name: horse-api
+  template:
+    metadata:
+      labels:
+        app: horse-api
+        app.kubernetes.io/name: horse-api
+    spec:
+      containers:
+        - command:
+            - /app/api
+          env:
+            - name: PORT
+              value: "8080"
+            - name: AUTO_MIGRATE
+              value: "false"
+            - name: PUBLIC_ORIGIN
+              value: https://horse.walnuts.dev
+            - name: OIDC_ISSUER_URL
+              value: https://auth.walnuts.dev
+            - name: OIDC_REDIRECT_URL
+              value: https://horse.walnuts.dev/auth/callback
+            - name: OCR_URL
+              value: http://horse-ocr.horse.svc.cluster.local:8000
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4318
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: SSL_CERT_FILE
+              value: /etc/ssl/certs/trust-bundle.pem
+            - name: S3_ENDPOINT
+              value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+            - name: S3_BUCKET
+              value: horse
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: DATABASE_URL
+                  name: horse-c21df8
+            - name: OIDC_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: OIDC_CLIENT_ID
+                  name: horse-c21df8
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: OIDC_CLIENT_SECRET
+                  name: horse-c21df8
+            - name: S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_ACCESS_KEY_ID
+                  name: horse-s3-credentials
+            - name: S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_SECRET_ACCESS_KEY
+                  name: horse-s3-credentials
+            - name: RABBITMQ_URL
+              valueFrom:
+                secretKeyRef:
+                  key: RABBITMQ_URL
+                  name: horse-c21df8
+            - name: EMAIL_BODY_ENCRYPTION_KEYS
+              valueFrom:
+                secretKeyRef:
+                  key: EMAIL_BODY_ENCRYPTION_KEYS
+                  name: horse-c21df8
+          image: ghcr.io/walnuts1018/horse:v0.0.1120@sha256:11590aecb566cc51142d5e3fe05e579218d6e279acffa4a7e97080e10ce3706a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          name: api
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+            requests:
+              cpu: 25m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /etc/ssl/certs/trust-bundle.pem
+              name: local-ca-bundle
+              readOnly: true
+              subPath: trust-bundle.pem
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      initContainers:
+        - command:
+            - /usr/local/bin/atlas
+            - migrate
+            - apply
+            - --config
+            - file:///app/atlas-rust.hcl
+            - --env
+            - rust
+          env:
+            - name: RUST_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: DATABASE_URL
+                  name: horse-c21df8
+          image: ghcr.io/walnuts1018/horse:v0.0.1120@sha256:11590aecb566cc51142d5e3fe05e579218d6e279acffa4a7e97080e10ce3706a
+          imagePullPolicy: IfNotPresent
+          name: migrate
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+      securityContext:
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - emptyDir:
+            sizeLimit: 1Gi
+          name: tmp
+        - configMap:
+            items:
+              - key: trust-bundle.pem
+                path: trust-bundle.pem
+            name: local-ca-bundle
+          name: local-ca-bundle

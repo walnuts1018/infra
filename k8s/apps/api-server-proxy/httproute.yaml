@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: api-server-service-proxy
+  namespace: default
+spec:
+  hostnames:
+    - kurumi.local.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: kubernetes
+          port: 443
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

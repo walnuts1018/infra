@@ -1,0 +1,795 @@
+---
+# Source: penpot/templates/backend-deployment-pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: penpot-backend
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: penpot-backend
+---
+# Source: penpot/templates/exporter-deployment-pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: penpot-exporter
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: penpot-exporter
+---
+# Source: penpot/templates/frontend-deployment-pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: penpot-frontend
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: penpot-frontend
+---
+# Source: penpot/templates/mcp-deployment-pdb.yml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: penpot-mcp
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: penpot-mcp
+---
+# Source: penpot/templates/backend-service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: penpot-backend
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6060
+      targetPort: 6060
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: penpot-backend
+    app.kubernetes.io/instance: penpot
+---
+# Source: penpot/templates/exporter-service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: penpot-exporter
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6061
+      targetPort: 6061
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: penpot-exporter
+    app.kubernetes.io/instance: penpot
+---
+# Source: penpot/templates/frontend-service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: penpot
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: penpot-frontend
+    app.kubernetes.io/instance: penpot
+---
+# Source: penpot/templates/mcp-service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: penpot-mcp
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4401
+      targetPort: 4401
+      protocol: TCP
+      name: http
+    - port: 4402
+      targetPort: 4402
+      protocol: TCP
+      name: ws
+  selector:
+    app.kubernetes.io/name: penpot-mcp
+    app.kubernetes.io/instance: penpot
+---
+# Source: penpot/templates/backend-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: penpot-backend
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: penpot-backend
+      app.kubernetes.io/instance: penpot
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: penpot-backend
+        app.kubernetes.io/name: penpot-backend
+        app.kubernetes.io/instance: penpot
+    spec:
+      serviceAccountName: penpot
+      securityContext:
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: penpot-backend
+          image: "penpotapp/backend:2.18.3"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - all
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 1001
+          env:
+            # General settings
+            - name: PENPOT_PUBLIC_URI
+              value: "https://penpot.walnuts.dev"
+            - name: PENPOT_FLAGS
+              value: "$PENPOT_FLAGS disable-registration disable-login-with-password enable-login-with-oidc enable-oidc-registration enable-mcp"
+            - name: PENPOT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: api-secret-key
+            # Telemetry settings
+            - name: PENPOT_TELEMETRY_ENABLED
+              value: "false"
+            - name: PENPOT_TELEMETRY_REFERER
+              value: kubernetes
+            # PosgreSQL connection settings
+            - name: PENPOT_DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: database-uri
+            - name: PENPOT_DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: username
+            - name: PENPOT_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: password
+            # Valkey/Redis connection settings
+            - name: PENPOT_REDIS_URI
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: redis-uri
+            # Objects Storage settings
+            - name: PENPOT_OBJECTS_STORAGE_BACKEND
+              value: "s3"
+            - name: PENPOT_OBJECTS_STORAGE_S3_REGION
+              value: "us-east-1"
+            - name: PENPOT_OBJECTS_STORAGE_S3_BUCKET
+              value: "penpot"
+            - name: AWS_ACCESS_KEY_ID
+              value: ""
+            - name: AWS_SECRET_ACCESS_KEY
+              value: ""
+            - name: PENPOT_OBJECTS_STORAGE_S3_ENDPOINT
+              value: "http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333"
+            # File Data Store settings
+            - name: PENPOT_FILE_DATA_BACKEND
+              value: "legacy-db"
+            # OIDC provider settings
+            - name: PENPOT_OIDC_BASE_URI
+              value: "https://auth.walnuts.dev"
+            - name: PENPOT_OIDC_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: oidc-client-id
+            - name: PENPOT_OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: oidc-client-secret
+            - name: PENPOT_OIDC_ROLES_ATTR
+              value: "my:zitadel:grants"
+            - name: PENPOT_OIDC_SCOPES
+              value: "openid profile email"
+            # Auto file snapshot settings
+            - name: PENPOT_AUTO_FILE_SNAPSHOT_EVERY
+              value: "5"
+            - name: PENPOT_AUTO_FILE_SNAPSHOT_TIMEOUT
+              value: "3h"
+            # Extra environments
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_ENDPOINT_URL_STS
+              value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/penpot
+            - name: AWS_REGION
+              value: us-east-1
+            - name: PENPOT_OIDC_ROLES
+              valueFrom:
+                secretKeyRef:
+                  key: oidc-required-role
+                  name: penpot-secrets
+          volumeMounts:
+            - mountPath: "/opt/data/assets"
+              name: app-data
+              readOnly: false
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: seaweedfs-sts-token
+              readOnly: true
+          ports:
+            - name: http
+              containerPort: 6060
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "2"
+              memory: 4Gi
+            requests:
+              cpu: 250m
+              memory: 768Mi
+          startupProbe:
+            failureThreshold: 30
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 10
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - rusk
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: penpot
+                  app.kubernetes.io/name: penpot-backend
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      volumes:
+      - name: app-data
+        emptyDir: {}
+      - name: seaweedfs-sts-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              audience: sts.seaweedfs.com
+              expirationSeconds: 86400
+              path: token
+---
+# Source: penpot/templates/exporter-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: penpot-exporter
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: penpot-exporter
+      app.kubernetes.io/instance: penpot
+  template:
+    metadata:
+      labels:
+        app: penpot-exporter
+        app.kubernetes.io/name: penpot-exporter
+        app.kubernetes.io/instance: penpot
+    spec:
+      serviceAccountName: penpot
+      securityContext:
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: penpot-exporter
+          image: "penpotapp/exporter:2.18.3"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - all
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 1001
+          env:
+            - name: PENPOT_PUBLIC_URI
+              value: "https://penpot.walnuts.dev"
+            - name: PENPOT_INTERNAL_URI
+              value: http://penpot:8080
+            - name: PENPOT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: api-secret-key
+            - name: PENPOT_REDIS_URI
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: redis-uri
+            - name: PENPOT_TEMPDIR
+              value: "/tmp/penpot-exporter"
+            # Extra environments
+          volumeMounts:
+          ports:
+            - name: http
+              containerPort: 6061
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "2"
+              memory: 2Gi
+            requests:
+              cpu: 200m
+              memory: 256Mi
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - rusk
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: penpot
+                  app.kubernetes.io/name: penpot-exporter
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      volumes:
+---
+# Source: penpot/templates/frontend-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: penpot-frontend
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: penpot-frontend
+      app.kubernetes.io/instance: penpot
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: penpot-frontend
+        app.kubernetes.io/name: penpot-frontend
+        app.kubernetes.io/instance: penpot
+    spec:
+      serviceAccountName: penpot
+      securityContext:
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: penpot-frontend
+          image: "penpotapp/frontend:2.18.3"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - all
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 1001
+          env:
+            - name: PENPOT_FLAGS
+              value: "$PENPOT_FLAGS disable-registration disable-login-with-password enable-login-with-oidc enable-oidc-registration enable-mcp"
+            - name: PENPOT_PUBLIC_URI
+              value: "https://penpot.walnuts.dev"
+            - name: PENPOT_BACKEND_URI
+              value: http://penpot-backend:6060
+            - name: PENPOT_EXPORTER_URI
+              value: http://penpot-exporter:6061
+            - name: PENPOT_MCP_URI
+              value: http://penpot-mcp.penpot.svc.cluster.local:4401
+            - name: PENPOT_MCP_URI_WS
+              value: http://penpot-mcp.penpot.svc.cluster.local:4402
+            - name: PENPOT_TERMS_OF_SERVICE_URI
+              value: ""
+            - name: PENPOT_PRIVACY_POLICY_URI
+              value: ""
+            - name: PENPOT_HTTP_SERVER_MAX_BODY_SIZE
+              value: "367001600"
+            # Extra environments
+          volumeMounts:
+            - mountPath: /opt/data/assets
+              name: app-data
+              readOnly: false
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - rusk
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: penpot
+                  app.kubernetes.io/name: penpot-frontend
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      volumes:
+      - name: app-data
+        emptyDir: {}
+---
+# Source: penpot/templates/mcp-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: penpot-mcp
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: penpot-mcp
+      app.kubernetes.io/instance: penpot
+  template:
+    metadata:
+      labels:
+        app: penpot-mcp
+        app.kubernetes.io/name: penpot-mcp
+        app.kubernetes.io/instance: penpot
+    spec:
+      serviceAccountName: penpot
+      securityContext:
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: penpot-mcp
+          image: "penpotapp/mcp:2.18.3"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - all
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 1001
+          env:
+            - name: PENPOT_MCP_SERVER_PORT
+              value: "4401"
+            - name: PENPOT_MCP_WEBSOCKET_PORT
+              value: "4402"
+            - name: PENPOT_MCP_REMOTE_MODE
+              value: "true"
+            # Valkey/Redis connection settings (enables multi-instance task routing)
+            - name: PENPOT_MCP_REDIS_URI
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secrets
+                  key: redis-uri
+            # Extra environments
+          volumeMounts:
+          ports:
+            - name: http
+              containerPort: 4401
+              protocol: TCP
+            - name: ws
+              containerPort: 4402
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - rusk
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: penpot
+                  app.kubernetes.io/name: penpot-mcp
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      volumes:
+---
+# Source: penpot/templates/backend-hpa.yml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: penpot-backend
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: penpot-backend
+  minReplicas: 1
+  maxReplicas: 1
+  metrics:
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 70
+          type: Utilization
+      type: Resource
+---
+# Source: penpot/templates/exporter-hpa.yml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: penpot-exporter
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: penpot-exporter
+  minReplicas: 1
+  maxReplicas: 1
+  metrics:
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 70
+          type: Utilization
+      type: Resource
+---
+# Source: penpot/templates/frontend-hpa.yml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: penpot-frontend
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: penpot-frontend
+  minReplicas: 1
+  maxReplicas: 1
+  metrics:
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 70
+          type: Utilization
+      type: Resource
+---
+# Source: penpot/templates/mcp-hpa.yml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: penpot-mcp
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: penpot-mcp
+  minReplicas: 1
+  maxReplicas: 1
+  metrics:
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 70
+          type: Utilization
+      type: Resource
+---
+# Source: penpot/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "penpot-test-connection"
+  namespace: penpot
+  labels:
+    helm.sh/chart: penpot-1.11.3
+    app.kubernetes.io/name: penpot
+    app.kubernetes.io/instance: penpot
+    app.kubernetes.io/version: "2.18.3"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  restartPolicy: Never
+  securityContext:
+    fsGroup: 1001
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: readyz
+      image: curlimages/curl:8.11.1
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - all
+        readOnlyRootFilesystem: false
+        runAsNonRoot: true
+        runAsUser: 1001
+      args:
+        - --fail
+        - --silent
+        - --show-error
+        - --max-time
+        - "10"
+        - --retry
+        - "12"
+        - --retry-delay
+        - "5"
+        - --retry-connrefused
+        - http://penpot:8080/readyz

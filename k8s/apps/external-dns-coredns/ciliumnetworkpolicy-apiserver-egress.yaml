@@ -1,0 +1,19 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: external-dns-coredns-apiserver-egress
+  namespace: external-dns-coredns
+spec:
+  egress:
+    - toEntities:
+        - kube-apiserver
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+            - port: "6443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/instance: external-dns-coredns
+      k8s:app.kubernetes.io/name: external-dns

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: github-readme-stats
+    app.kubernetes.io/name: github-readme-stats
+  name: github-readme-stats
+  namespace: github-readme-stats
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-readme-stats
+      app.kubernetes.io/name: github-readme-stats
+  template:
+    metadata:
+      labels:
+        app: github-readme-stats
+        app.kubernetes.io/name: github-readme-stats
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - env:
+            - name: PAT_1
+              valueFrom:
+                secretKeyRef:
+                  key: github-token
+                  name: github-readme-stats-ae1c3d
+          image: ghcr.io/walnuts1018/github-readme-stats:v1.0.3@sha256:30f411fb0fd8d9cd23be292810f569519cebec37d3882c0e866e4c6a34b1d7c1
+          imagePullPolicy: IfNotPresent
+          name: github-readme-stats
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 1m
+              memory: 50Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            seccompProfile:
+              type: RuntimeDefault

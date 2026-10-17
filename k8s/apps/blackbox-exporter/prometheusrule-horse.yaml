@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    release: prometheus-stack
+  name: blackbox-alerts-horse
+  namespace: monitoring
+spec:
+  groups:
+    - name: horse.public-probe
+      rules:
+        - alert: HorsePublicProbeFailed
+          annotations:
+            description: The Blackbox probe for {{ $labels.instance }} has failed continuously for 5 minutes.
+            summary: Horse public health probe is failing
+          expr: probe_success{target="horse"} == 0
+          for: 5m
+          labels:
+            severity: warning

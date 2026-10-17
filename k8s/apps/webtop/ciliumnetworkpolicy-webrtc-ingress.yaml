@@ -1,0 +1,17 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: webtop-webrtc-ingress
+  namespace: webtop
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app: webtop
+      k8s:app.kubernetes.io/name: webtop
+  ingress:
+    - fromEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "59000"
+              protocol: UDP
