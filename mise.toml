@@ -22,7 +22,7 @@ description = "Build infrautil"
 dir = "scripts/infrautil"
 run = "go build -o infrautil ."
 
-[tasks."namespace"]
+[tasks."gen:namespace"]
 description = "Generate namespaces.json5"
 depends = ["build:infrautil"]
 run = "scripts/infrautil/infrautil namespace -d ./k8s/apps -o ./k8s/namespaces/namespaces.json5"
