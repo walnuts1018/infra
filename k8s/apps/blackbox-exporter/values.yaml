@@ -2,7 +2,7 @@ config:
   modules:
     http_2xx:
       prober: http
-      timeout: 5s
+      timeout: 8s
       http:
         follow_redirects: true
         preferred_ip_protocol: ip4

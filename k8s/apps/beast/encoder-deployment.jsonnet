@@ -8,7 +8,7 @@ local labels = {
   kind: 'Deployment',
   metadata: { name: app.name + '-encoder', namespace: app.namespace, labels: labels },
   spec: {
-    replicas: 1,
+    replicas: 2,
     revisionHistoryLimit: 3,
     strategy: { type: 'Recreate' },
     selector: { matchLabels: labels },
@@ -36,7 +36,6 @@ local labels = {
           ],
           resources: {
             requests: { cpu: '100m', memory: '256Mi' },
-            limits: { cpu: '2', memory: '1Gi' },
           },
           securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: { drop: ['ALL'] } },
           volumeMounts: [{ name: 'work', mountPath: '/tmp/beast-encoder' }],
