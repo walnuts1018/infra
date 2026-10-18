@@ -142,7 +142,7 @@ jobs:
               if [ -s "$body" ]; then
                 head -c 56000 "$body"
               else
-                printf 'No changes.\n'
+                printf '変更なし\n'
               fi
               printf '\n```\n'
             } > "$out"
@@ -207,28 +207,24 @@ jobs:
           cp -r snapshot-base/k8s/apps snapshot-base/k8s/helm "$work/base/manifests/"
           cp -r k8s/snapshots/apps k8s/snapshots/helm "$work/head/manifests/"
           for f in snapshot-base/trivy.yaml snapshot-base/.trivyignore.yaml; do
-            [ -f "$f" ] || { echo "::error::Base Trivy policy missing: $f"; exit 1; }
+            [ -f "$f" ] || { echo "::error::ベースブランチのTrivyポリシーファイルが存在しません: $f"; exit 1; }
           done
           export TRIVY_CONFIG=snapshot-base/trivy.yaml TRIVY_IGNOREFILE=snapshot-base/.trivyignore.yaml
           trivy config --exit-code 0 --format sarif --output "$work/base.sarif" "$work/base/manifests"
           trivy config --exit-code 0 --format sarif --output "$work/head.sarif" "$work/head/manifests"
-          # --output 指定時は標準出力に "writing diff to ..." しか出ないため、
-          # コメント用のテキストと JSON は別々に取得する
+          # `--output`指定時は標準出力に差分の詳細が出力されないため、コメント用テキストとJSONを別々に取得する。
           sarif diff "$work/base.sarif" "$work/head.sarif" > "$work/diff-body.txt"
           sarif diff --output "$work/diff.json" "$work/base.sarif" "$work/head.sarif" > /dev/null
           {
             printf '## Trivy security changes\n\n'
-            printf "Trivy SARIF diff between the \`snapshot\` branch and this PR (same policy and Trivy version).\n\n"
-            printf 'Note: moves of the same rule to another location with unchanged counts may be missed.\n\n'
             printf '```\n'
-            # 件数増減の記述がなければ実質差分なし（all levels の件数だけでは判定できない）
+            # all levelsの件数表示だけでは変更有無を判定できないため、増減の記述の有無で判定する。
             if grep -qE 'New issue|Eliminated issue|Number of occurrences' "$work/diff-body.txt"; then
               head -c 50000 "$work/diff-body.txt"
             else
-              printf 'No new security changes.\n'
+              printf '変更なし\n'
             fi
             printf '\n```\n'
-            printf "\nFull locations are in the \`trivy-sarif\` artifact (\`diff.json\`).\n"
           } > /tmp/trivy-comment.md
 
       - name: Upload SARIF reports

@@ -1,5 +1,4 @@
-# 新しいイメージは`images/<名前>/Dockerfile`の追加とIMAGESへの1行追加で登録する。
-# ターゲット名、ディレクトリ名、イメージ名はmatrix展開により常に一致する。
+# イメージの追加時は`images/<名前>/Dockerfile`を配置し、`IMAGES`に名前を追加する。
 
 variable "IMAGES" {
   default = [
