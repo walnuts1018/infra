@@ -21,7 +21,7 @@ local app = import 'app.json5';
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'ubuntu-debug',
-            image: 'ghcr.io/cybozu/ubuntu-debug:26.04@sha256:849ff246a809eb94da7732eb70c4599659e891a3a9bab0cb2acb20201c8f8fd2',
+            image: 'ghcr.io/cybozu/ubuntu-debug:26.04@sha256:95b8b3988ffade0438338fb95f6cd4aa444236e60a4a9fa90e80036ad21bc4a6',
             securityContext:: null,
             command: ['sleep', 'infinity'],
             resources: {
