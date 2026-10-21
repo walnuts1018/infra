@@ -30,7 +30,7 @@ local workloadLabels = {
         containers: [
           {
             name: 'blackbox-exporter',
-            image: 'quay.io/prometheus/blackbox-exporter:v0.29.0@sha256:c827aebdb688c29f3472bdfacff50c7c1e243ddfa3a7de76db41706d64646479',
+            image: 'quay.io/prometheus/blackbox-exporter:v0.29.1@sha256:66eae352a79e6f677aeddd8c25a9bdb017586dc5fbd230f22329213d891f94bd',
             args: ['--config.file=/etc/blackbox/blackbox.yml'],
             ports: [
               {
