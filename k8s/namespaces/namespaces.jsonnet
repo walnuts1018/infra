@@ -11,7 +11,7 @@ local gen = function(namespace)
   else
     baseLabels;
 
-  local ghcrLabels = if std.member(['beast', 'iwashi-system', 'mcl-website', 'picca'], namespace) then
+  local ghcrLabels = if std.member(['beast', 'iwashi-system', 'picca'], namespace) then
     { 'walnuts.dev/ghcr-login-secret': 'true' }
   else
     {};
