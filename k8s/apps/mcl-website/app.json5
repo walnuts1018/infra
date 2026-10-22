@@ -1,6 +1,6 @@
 {
   name: "mcl-website",
-  namespace: "default",
+  namespace: "mcl-website",
   clusters: {
     kurumi: {},
   },

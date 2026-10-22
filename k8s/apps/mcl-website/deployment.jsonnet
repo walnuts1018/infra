@@ -19,6 +19,9 @@ local app = import 'app.json5';
       },
       spec: {
         automountServiceAccountToken: false,
+        imagePullSecrets: [
+          { name: 'ghcr-login-secret' },
+        ],
         securityContext: {
           runAsNonRoot: true,
           runAsUser: 101,
