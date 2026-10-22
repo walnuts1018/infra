@@ -1,0 +1,7 @@
+{
+  name: "manifest-configuration-language-website",
+  namespace: "default",
+  clusters: {
+    kurumi: {},
+  },
+}
