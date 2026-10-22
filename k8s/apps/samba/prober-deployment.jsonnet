@@ -36,7 +36,7 @@ local secretName = (import 'external-secret.jsonnet').spec.target.name;
         containers: [
           {
             name: 'prober',
-            image: 'ghcr.io/servercontainers/samba:a3.24.2-s4.23.8-r0@sha256:ea1b37536729f16b2f45a601ea45a37d34b9fce5cc51f2d686a347dd77131be1',
+            image: 'ghcr.io/servercontainers/samba:a3.24.3-s4.23.8-r0@sha256:b427152c429d9ba6ce9e1aeae3710e15845d40042a5dfd563bbb3c20c677d280',
             imagePullPolicy: 'IfNotPresent',
             command: ['/bin/sh', '/config/probe.sh'],
             ports: [
