@@ -101,10 +101,10 @@
     {
       description: 'Pin digests for Kubernetes container images',
       matchDatasources: [
-        'docker'
+        'docker',
       ],
       matchManagers: [
-        'kubernetes'
+        'kubernetes',
       ],
       pinDigests: true,
     },
@@ -136,6 +136,16 @@
       ],
       platformAutomerge: false,
       minimumReleaseAge: '1 days',
+    },
+    {
+      matchDatasources: [
+        'docker',
+      ],
+      matchPackageNames: [
+        'ghcr.io/manifest-configuration-language/website',
+      ],
+      matchCurrentValue: 'main',
+      automerge: true,
     },
     {
       matchDatasources: [
@@ -199,7 +209,6 @@
         'scylladb/scylla',
       ],
       automerge: false,
-      // Major, Minor versionはスキップ禁止なので、手動でPRを作るようにする
       dependencyDashboardApproval: true,
     },
     {
