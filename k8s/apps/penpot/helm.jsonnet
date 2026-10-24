@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'penpot',
   repoURL: 'https://helm.penpot.app/',
-  targetRevision: '1.11.3',
+  targetRevision: '1.11.4',
   values: (importstr 'values.yaml'),
 }
