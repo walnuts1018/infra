@@ -45,7 +45,7 @@ local clientMetricsConfig = import 'client-metrics-configmap.jsonnet';
         containers: [
           {
             name: 'netbird',
-            image: 'netbirdio/netbird:0.81.2@sha256:6242a1fbaf6b611c00c26a914cbbea512c30c18a45de0646ce7b0e5d93a21e67',
+            image: 'netbirdio/netbird:0.81.4@sha256:0911a96049d95a37ee1653663a0d9005f77a0096a1dc0cac45d9c3a022256e85',
             imagePullPolicy: 'IfNotPresent',
             env: [
               {
