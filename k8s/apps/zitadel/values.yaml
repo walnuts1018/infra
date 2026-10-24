@@ -17,6 +17,9 @@ zitadel:
   masterkeySecretName: "zitadel"
   configSecretName: zitadel
   configSecretKey: "config.yaml"
+image:
+  repository: ghcr.io/zitadel/zitadel
+  tag: v4.19.5
 replicaCount: 1
 gateway:
   httpRoute:
@@ -87,6 +90,9 @@ topologySpreadConstraints:
 # https://zitadel.com/docs/self-hosting/manage/login-client
 login:
   enabled: false
+  image:
+    repository: ghcr.io/zitadel/zitadel-login
+    tag: v4.19.5
   loginServiceKeySecretName: zitadel-login-service-key
   sessionCookieSecretName: zitadel-login-session-cookie
 
