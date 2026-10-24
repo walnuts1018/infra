@@ -17,6 +17,9 @@ zitadel:
   masterkeySecretName: "zitadel"
   configSecretName: zitadel
   configSecretKey: "config.yaml"
+image:
+  repository: ghcr.io/zitadel/zitadel
+  tag: v4.20.0
 replicaCount: 1
 gateway:
   httpRoute:
@@ -86,7 +89,39 @@ topologySpreadConstraints:
 
 # https://zitadel.com/docs/self-hosting/manage/login-client
 login:
-  enabled: false # 一旦使うつもりはないのでいいかな
+  enabled: true
+  image:
+    repository: ghcr.io/zitadel/zitadel-login
+    tag: v4.20.0
+  loginServiceKeySecretName: zitadel-login-service-key
+  sessionCookieSecretName: zitadel-login-session-cookie
+  gateway:
+    httpRoute:
+      enabled: true
+      parentRefs:
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: envoy-gateway
+        namespace: envoy-gateway-system
+      hostnames:
+      - auth.walnuts.dev
+  replicaCount: 2
+  pdb:
+    enabled: true
+    minAvailable: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
+  topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: zitadel-login
 
 tools:
   kubectl:

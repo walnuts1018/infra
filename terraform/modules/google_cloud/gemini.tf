@@ -130,6 +130,9 @@ resource "restapi_object" "gemini_paid_spend_cap" {
   id_attribute   = "name"
   data           = local.gemini_paid_spend_cap_data
 
+  ignore_changes_to       = ["spendCap.inputState"]
+  ignore_server_additions = true
+
   lifecycle {
     prevent_destroy = true
   }
