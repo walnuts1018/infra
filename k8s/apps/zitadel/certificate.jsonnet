@@ -14,7 +14,6 @@ local app = import 'app.json5';
     privateKey: {
       algorithm: 'RSA',
       size: 2048,
-      // SystemAPIUsersとLogin UIの鍵を同時に変更しないよう、更新時も秘密鍵を維持する。
       rotationPolicy: 'Never',
     },
     issuerRef: {

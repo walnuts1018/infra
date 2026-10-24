@@ -21,6 +21,10 @@ resource "zitadel_application_oidc" "horse" {
   access_token_role_assertion = false
   id_token_role_assertion     = false
   id_token_userinfo_assertion = true
+
+  login_version {
+    login_v2 {}
+  }
 }
 
 output "horse_oidc_client_id" {
