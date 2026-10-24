@@ -45,6 +45,11 @@ jobs:
       - name: Validate application manifests
         run: kubeconform -ignore-missing-schemas -strict -summary k8s/snapshots/apps
 
+      # PR経由ではなくmainに直接pushした時はsnapshot-diffが走らないため、最低限のスキャンだけはしておく
+      - name: Scan snapshots with Trivy
+        if: github.event_name != 'pull_request'
+        run: trivy config --exit-code 0 k8s/snapshots
+
       - name: Upload snapshots
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -128,19 +133,43 @@ jobs:
 
       - uses: jdx/mise-action@82a612c5ab8bcda7cc5db6b7e81a8e7584c3dc6e # v5.2.3
         with:
-          install_args: go go:github.com/szhekpisov/diffyml
+          install_args: go go:github.com/szhekpisov/diffyml jq
 
       - name: Compare rendered manifests
         run: |
           set -euo pipefail
+          mkdir -p /tmp/full-diffs
           render() {
             title="$1"; base="$2"; head="$3"; out="$4"; shift 4
             body="$(mktemp)"
-            diffyml -o compact "$@" "$base" "$head" > "$body"
+            # -o compact はGitHub上で色分けされないため、JSON出力をMarkdownのdiff形式へ変換する
+            diffyml -o json "$@" "$base" "$head" | jq -r '
+              def clip: if type == "string" and length > 1200 then .[0:1200] + "…" else . end;
+              group_by([.file, .document_name])[]
+              | "@@ \(.[0].file) :: \(.[0].document_name // "-") @@",
+                (.[]
+                 | if .type == "modified" then
+                     .path,
+                     "- \(.from | clip | tojson)",
+                     "+ \(.to | clip | tojson)"
+                   elif .type == "added" then
+                     .path,
+                     "+ \(.to | clip | tojson)"
+                   elif .type == "removed" then
+                     .path,
+                     "- \(.from | clip | tojson)"
+                   else
+                     "? \(.path): \(.type)"
+                   end),
+                ""' > "$body"
+            cp "$body" "/tmp/full-diffs/$(basename "$out")"
             {
-              printf '# %s\n\n```\n' "$title"
+              printf '# %s\n\n```diff\n' "$title"
               if [ -s "$body" ]; then
                 head -c 56000 "$body"
+                if [ "$(($(wc -c < "$body")))" -gt 56000 ]; then
+                  printf '\n… (truncated: full diff in the snapshot-diff artifact)\n'
+                fi
               else
                 printf '変更なし\n'
               fi
@@ -154,6 +183,14 @@ jobs:
             --exclude 'metadata.labels[helm.sh/chart]' \
             --exclude 'metadata.labels[chart]' \
             --exclude 'spec.compliance.controls'
+
+      - name: Upload full diffs
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: snapshot-diff
+          path: /tmp/full-diffs/
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Comment manifest diff
         uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
