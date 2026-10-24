@@ -69,16 +69,12 @@ local app = import 'app.json5';
               },
             },
             volumeMounts: [
-              { name: 'nginx-cache', mountPath: '/var/cache/nginx' },
-              { name: 'nginx-run', mountPath: '/var/run' },
-              { name: 'nginx-tmp', mountPath: '/tmp' },
+              { name: 'tmp', mountPath: '/tmp' },
             ],
           },
         ],
         volumes: [
-          { name: 'nginx-cache', emptyDir: {} },
-          { name: 'nginx-run', emptyDir: {} },
-          { name: 'nginx-tmp', emptyDir: {} },
+          { name: 'tmp', emptyDir: {} },
         ],
       },
     },
