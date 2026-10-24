@@ -5,6 +5,11 @@ module "zitadel" {
   # github_idp_client_secret = var.zitadel_github_idp_client_secret
 }
 
+import {
+  to = module.zitadel.zitadel_instance_features.default
+  id = "instance"
+}
+
 output "netbird_oidc_client_id" {
   value       = module.zitadel.netbird_oidc_client_id
   description = "Client ID for NetBird's ZITADEL identity-provider connector"
