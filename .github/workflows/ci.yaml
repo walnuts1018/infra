@@ -247,8 +247,12 @@ jobs:
             [ -f "$f" ] || { echo "::error::ベースブランチのTrivyポリシーファイルが存在しません: $f"; exit 1; }
           done
           export TRIVY_CONFIG="$PWD/snapshot-base/trivy.yaml" TRIVY_IGNOREFILE="$PWD/snapshot-base/.trivyignore.yaml"
-          (cd "$work/base" && trivy config --exit-code 0 --format sarif --output base.sarif manifests)
-          (cd "$work/head" && trivy config --exit-code 0 --format sarif --output head.sarif manifests)
+          (cd "$work/base" && trivy config --exit-code 0 --format sarif --output "$work/base.sarif" manifests)
+          (cd "$work/head" && trivy config --exit-code 0 --format sarif --output "$work/head.sarif" manifests)
+          # sarif diffは入力ファイルが存在しない場合でも空の差分として終了コード0を返すため、出力の存在をここで確認する
+          for f in "$work/base.sarif" "$work/head.sarif"; do
+            [ -s "$f" ] || { echo "::error::SARIFレポートが生成されていません: $f"; exit 1; }
+          done
           # `--output`指定時は標準出力に差分の詳細が出力されないため、コメント用テキストとJSONを別々に取得する。
           sarif diff "$work/base.sarif" "$work/head.sarif" > "$work/diff-body.txt"
           sarif diff --output "$work/diff.json" "$work/base.sarif" "$work/head.sarif" > /dev/null
