@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: backend
+    app.kubernetes.io/part-of: beast
+  name: beast-apiserver
+  namespace: beast
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: backend
+  type: ClusterIP

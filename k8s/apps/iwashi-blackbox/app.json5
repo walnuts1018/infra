@@ -1,7 +1,0 @@
-{
-  name: "iwashi-blackbox",
-  namespace: "iwashi-blackbox",
-  clusters: {
-    kurumi: {},
-  },
-}

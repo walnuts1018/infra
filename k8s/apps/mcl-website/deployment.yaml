@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mcl-website
+    app.kubernetes.io/name: mcl-website
+  name: mcl-website
+  namespace: mcl-website
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcl-website
+      app.kubernetes.io/name: mcl-website
+  template:
+    metadata:
+      labels:
+        app: mcl-website
+        app.kubernetes.io/name: mcl-website
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - image: ghcr.io/manifest-configuration-language/website:main@sha256:a7b92820591c0c925c6fc2c6b651dca6e9ce9296ac3a277c47aadd99e535629d
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          name: website
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /var/cache/nginx
+              name: nginx-cache
+            - mountPath: /var/run
+              name: nginx-run
+            - mountPath: /tmp
+              name: nginx-tmp
+      securityContext:
+        fsGroup: 101
+        runAsGroup: 101
+        runAsNonRoot: true
+        runAsUser: 101
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - emptyDir: {}
+          name: nginx-cache
+        - emptyDir: {}
+          name: nginx-run
+        - emptyDir: {}
+          name: nginx-tmp

@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1alpha3
+kind: BackendTLSPolicy
+metadata:
+  name: kube-oidc-proxy
+  namespace: kube-oidc-proxy
+spec:
+  targetRefs:
+    - group: ""
+      kind: Service
+      name: kube-oidc-proxy
+  validation:
+    caCertificateRefs:
+      - group: ""
+        kind: ConfigMap
+        name: local-ca-bundle
+    hostname: kube-oidc-proxy.kube-oidc-proxy.svc.cluster.local

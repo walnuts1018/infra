@@ -1,0 +1,17 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: ipu
+  namespace: ipu
+spec:
+  hostnames:
+    - ipu.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  rules:
+    - backendRefs:
+        - name: ipu
+          port: 8080

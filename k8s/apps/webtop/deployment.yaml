@@ -1,0 +1,166 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    app: webtop
+    app.kubernetes.io/name: webtop
+  name: webtop
+  namespace: webtop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webtop
+      app.kubernetes.io/name: webtop
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: webtop
+        app.kubernetes.io/name: webtop
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - command:
+            - /bin/bash
+            - /launcher/runtime-launcher.sh
+          env:
+            - name: DISPLAY
+              value: :1
+            - name: HOME
+              value: /config
+            - name: PATH
+              value: /lsiopy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: PULSE_RUNTIME_PATH
+              value: /defaults
+            - name: TZ
+              value: Asia/Tokyo
+            - name: LC_ALL
+              value: ja_JP.UTF-8
+            - name: PIXELFLUX_WAYLAND
+              value: "true"
+            - name: START_DOCKER
+              value: "false"
+            - name: SELKIES_ENABLE_BASIC_AUTH
+              value: "false"
+            - name: SELKIES_MODE
+              value: webrtc
+            - name: SELKIES_ENABLE_DUAL_MODE
+              value: "true"
+            - name: SELKIES_WEBRTC_UDP_MUX_PORT
+              value: "59000"
+            - name: SELKIES_WEBRTC_PUBLIC_IP
+              value: 111.100.165.117
+            - name: SELKIES_WEBRTC_ICE_LITE
+              value: "true"
+            - name: SELKIES_WEBRTC_TCP_MUX_PORT
+              value: "0"
+            - name: SELKIES_RTC_CONFIG_JSON
+              value: /tmp/rtc.json
+            - name: TITLE
+              value: Linux Desktop
+            - name: UMASK
+              value: "022"
+          image: debian:13.7-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /api/status
+              port: http
+            periodSeconds: 60
+            timeoutSeconds: 10
+          name: webtop
+          ports:
+            - containerPort: 3000
+              name: http
+              protocol: TCP
+            - containerPort: 59000
+              name: webrtc
+              protocol: UDP
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /api/status
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "4"
+              memory: 8Gi
+            requests:
+              cpu: 500m
+              memory: 2Gi
+          securityContext:
+            allowPrivilegeEscalation: true
+            appArmorProfile:
+              type: Unconfined
+            capabilities:
+              add:
+                - AUDIT_WRITE
+                - SYS_ADMIN
+                - SYS_CHROOT
+                - CHOWN
+                - DAC_OVERRIDE
+                - FOWNER
+                - FSETID
+                - KILL
+                - MKNOD
+                - NET_BIND_SERVICE
+                - NET_RAW
+                - SETPCAP
+                - SETUID
+                - SETGID
+                - SETFCAP
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsUser: 0
+          startupProbe:
+            failureThreshold: 60
+            httpGet:
+              path: /api/status
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          volumeMounts:
+            - mountPath: /sysroot
+              name: rootfs
+            - mountPath: /launcher
+              name: launcher
+              readOnly: true
+            - mountPath: /run
+              name: run
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /dev/shm
+              name: dev-shm
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: rootfs
+          persistentVolumeClaim:
+            claimName: webtop-root
+        - configMap:
+            defaultMode: 292
+            name: webtop-launcher-e96fd2
+          name: launcher
+        - emptyDir:
+            medium: Memory
+          name: run
+        - emptyDir: {}
+          name: tmp
+        - emptyDir:
+            medium: Memory
+            sizeLimit: 1Gi
+          name: dev-shm

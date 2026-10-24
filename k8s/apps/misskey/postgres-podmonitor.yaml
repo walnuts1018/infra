@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app: misskey
+    app.kubernetes.io/name: misskey
+  name: cnpg-cluster-instance
+  namespace: misskey
+spec:
+  podMetricsEndpoints:
+    - interval: 30s
+      path: /metrics
+      port: metrics
+  selector:
+    matchLabels:
+      cnpg.io/cluster: misskey-postgresql
+      cnpg.io/podRole: instance

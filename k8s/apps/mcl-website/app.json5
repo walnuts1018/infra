@@ -1,7 +1,0 @@
-{
-  name: "mcl-website",
-  namespace: "mcl-website",
-  clusters: {
-    kurumi: {},
-  },
-}

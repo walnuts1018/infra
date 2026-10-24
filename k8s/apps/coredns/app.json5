@@ -1,7 +1,0 @@
-{
-  name: "coredns",
-  namespace: "coredns",
-  clusters: {
-    kurumi: {},
-  },
-}

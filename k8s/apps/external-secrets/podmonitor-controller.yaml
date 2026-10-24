@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app: external-secrets
+    app.kubernetes.io/name: external-secrets
+  name: external-secrets-controller
+  namespace: external-secrets
+spec:
+  namespaceSelector:
+    matchNames:
+      - external-secrets
+  podMetricsEndpoints:
+    - interval: 30s
+      path: /metrics
+      port: metrics
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: external-secrets
+      app.kubernetes.io/name: external-secrets
