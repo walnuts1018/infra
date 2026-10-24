@@ -12,6 +12,16 @@ spec:
   ingress:
   - fromEndpoints:
     - matchLabels:
+        k8s:io.kubernetes.pod.namespace: "{{ .Release.Namespace }}"
+        k8s:app.kubernetes.io/component: login
+        k8s:app.kubernetes.io/instance: zitadel
+        k8s:app.kubernetes.io/name: zitadel-login
+    toPorts:
+    - ports:
+      - port: '8080'
+        protocol: TCP
+  - fromEndpoints:
+    - matchLabels:
         k8s:io.kubernetes.pod.namespace: envoy-gateway-system
         k8s:app.kubernetes.io/component: proxy
         k8s:app.kubernetes.io/managed-by: envoy-gateway

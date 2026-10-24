@@ -86,7 +86,9 @@ topologySpreadConstraints:
 
 # https://zitadel.com/docs/self-hosting/manage/login-client
 login:
-  enabled: false # 一旦使うつもりはないのでいいかな
+  enabled: false
+  loginServiceKeySecretName: zitadel-login-service-key
+  sessionCookieSecretName: zitadel-login-session-cookie
 
 tools:
   kubectl:

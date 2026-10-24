@@ -11,6 +11,7 @@ local app = import 'app.json5';
       std.parseYaml(importstr 'config/network-policy.yaml'),
       std.parseYaml(importstr 'config/network-policy-ingress.yaml'),
       std.parseYaml(importstr 'config/network-policy-bootstrap-egress.yaml'),
+      std.parseYaml(importstr 'config/network-policy-login.yaml'),
     ],
   }),
 }
