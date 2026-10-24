@@ -234,7 +234,7 @@ jobs:
 
       - uses: jdx/mise-action@82a612c5ab8bcda7cc5db6b7e81a8e7584c3dc6e # v5.2.3
         with:
-          install_args: trivy pipx:sarif-tools
+          install_args: trivy pipx:sarif-tools jq
 
       - name: Compare Trivy SARIF reports
         run: |
@@ -246,18 +246,20 @@ jobs:
           for f in snapshot-base/trivy.yaml snapshot-base/.trivyignore.yaml; do
             [ -f "$f" ] || { echo "::error::ベースブランチのTrivyポリシーファイルが存在しません: $f"; exit 1; }
           done
-          export TRIVY_CONFIG=snapshot-base/trivy.yaml TRIVY_IGNOREFILE=snapshot-base/.trivyignore.yaml
-          trivy config --exit-code 0 --format sarif --output "$work/base.sarif" "$work/base/manifests"
-          trivy config --exit-code 0 --format sarif --output "$work/head.sarif" "$work/head/manifests"
+          export TRIVY_CONFIG="$PWD/snapshot-base/trivy.yaml" TRIVY_IGNOREFILE="$PWD/snapshot-base/.trivyignore.yaml"
+          (cd "$work/base" && trivy config --exit-code 0 --format sarif --output base.sarif manifests)
+          (cd "$work/head" && trivy config --exit-code 0 --format sarif --output head.sarif manifests)
           # `--output`指定時は標準出力に差分の詳細が出力されないため、コメント用テキストとJSONを別々に取得する。
           sarif diff "$work/base.sarif" "$work/head.sarif" > "$work/diff-body.txt"
           sarif diff --output "$work/diff.json" "$work/base.sarif" "$work/head.sarif" > /dev/null
           {
             printf '## Trivy security changes\n\n'
             printf '```\n'
-            # all levelsの件数表示だけでは変更有無を判定できないため、増減の記述の有無で判定する。
-            if grep -qE 'New issue|Eliminated issue|Number of occurrences' "$work/diff-body.txt"; then
+            if jq -e 'any(.[]; ((.codes? // {}) | length) > 0)' "$work/diff.json" > /dev/null; then
               head -c 50000 "$work/diff-body.txt"
+              if [ "$(($(wc -c < "$work/diff-body.txt")))" -gt 50000 ]; then
+                printf '\n… (truncated: full diff in the trivy-sarif artifact)\n'
+              fi
             else
               printf '変更なし\n'
             fi
