@@ -23,7 +23,9 @@ resource "zitadel_application_oidc" "horse" {
   id_token_userinfo_assertion = true
 
   login_version {
-    login_v2 {}
+    login_v2 {
+      base_uri = "https://auth.walnuts.dev/ui/v2/login"
+    }
   }
 }
 
