@@ -19,7 +19,7 @@ zitadel:
   configSecretKey: "config.yaml"
 image:
   repository: ghcr.io/zitadel/zitadel
-  tag: v4.19.5
+  tag: v4.20.0
 replicaCount: 1
 gateway:
   httpRoute:
