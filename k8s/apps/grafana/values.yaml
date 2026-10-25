@@ -164,6 +164,68 @@ datasources:
         version: Flux
       secureJsonData:
         token: $__file{/etc/secrets/influxdb_token}
+alerting:
+  mcl-playground-rules.yaml:
+    apiVersion: 1
+    groups:
+    - orgId: 1
+      name: mcl-playground-availability
+      folder: MCL Playground
+      interval: 1m
+      rules:
+      - uid: mcl-playground-availability
+        title: MCL Playground availability degraded
+        condition: B
+        data:
+        - refId: A
+          relativeTimeRange:
+            from: 300
+            to: 0
+          datasourceUid: P4169E866C3094E38
+          model:
+            datasource:
+              type: prometheus
+              uid: P4169E866C3094E38
+            editorMode: code
+            expr: 'sum(probe_success{target=~"mcl-playground-(api|website)"}) < bool 2'
+            instant: true
+            intervalMs: 1000
+            maxDataPoints: 43200
+            range: false
+            refId: A
+        - refId: B
+          relativeTimeRange:
+            from: 0
+            to: 0
+          datasourceUid: __expr__
+          model:
+            conditions:
+            - evaluator:
+                params: [0]
+                type: gt
+              operator:
+                type: and
+              query:
+                params: [B]
+              reducer:
+                params: []
+                type: last
+              type: query
+            datasource:
+              type: __expr__
+              uid: __expr__
+            expression: A
+            intervalMs: 1000
+            maxDataPoints: 43200
+            refId: B
+            type: threshold
+        noDataState: Alerting
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          summary: MCL Playground API or website probe is failing.
+        labels:
+          severity: warning
 
 route:
   main:
