@@ -81,7 +81,7 @@ local s3Credentials = (import 's3-config.libsonnet').forIdentity('mcl_playground
                   },
                 },
               },
-              { name: 'VALKEY_URL', value: 'redis://mcl-playground-api-valkey-primary.mcl-website.svc.cluster.local:6379' },
+              { name: 'VALKEY_URL', value: 'redis://mcl-playground-api-valkey.mcl-website.svc.cluster.local:6379' },
               { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
               { name: 'S3_BUCKET', value: 'mcl-playground' },
               { name: 'S3_REGION', value: 'us-east-1' },
