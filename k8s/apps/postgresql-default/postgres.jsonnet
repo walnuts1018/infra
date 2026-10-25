@@ -61,7 +61,7 @@ local app = import 'app.json5';
         ensure: 'present',
         login: true,
         superuser: false,
-        inRoles: ['pg_monitor', 'pg_signal_backend'],
+        inRoles: if 'in_roles' in database then database.in_roles else ['pg_monitor', 'pg_signal_backend'],
         passwordSecret: {
           name: std.strReplace(database.user_name + '-db-password', '_', '-'),
         },

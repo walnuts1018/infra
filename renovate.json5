@@ -154,6 +154,18 @@
         'docker',
       ],
       matchPackageNames: [
+        'ghcr.io/manifest-configuration-language/mcl-playground-api',
+      ],
+      matchCurrentValue: [
+        'main',
+      ],
+      automerge: true,
+    },
+    {
+      matchDatasources: [
+        'docker',
+      ],
+      matchPackageNames: [
         'ghcr.io/renovatebot/renovate',
       ],
       matchUpdateTypes: [

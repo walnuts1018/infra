@@ -24,6 +24,24 @@ local app = import 'app.json5';
           {
             path: {
               type: 'PathPrefix',
+              value: '/api/playground',
+            },
+          },
+        ],
+        backendRefs: [
+          {
+            kind: 'Service',
+            name: 'mcl-playground-api',
+            port: 8080,
+            weight: 1,
+          },
+        ],
+      },
+      {
+        matches: [
+          {
+            path: {
+              type: 'PathPrefix',
               value: '/',
             },
           },

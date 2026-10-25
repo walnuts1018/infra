@@ -1,0 +1,7 @@
+{
+  name: "mcl-playground-api",
+  namespace: "mcl-website",
+  clusters: {
+    kurumi: {},
+  },
+}

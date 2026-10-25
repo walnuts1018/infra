@@ -108,6 +108,11 @@
     user_name: 'visual_regression_tracker',
   },
   {
+    db_name: 'mcl_web',
+    user_name: 'mcl_web',
+    in_roles: [],
+  },
+  {
     db_name: 'gha_cache_server',
     user_name: 'gha_cache_server',
   },
