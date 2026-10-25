@@ -18,6 +18,19 @@ local app = import 'app.json5';
       },
       {
         to: [{
+          namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'seaweedfs' } },
+          podSelector: { matchLabels: { 'app.kubernetes.io/component': 's3', 'app.kubernetes.io/instance': 'seaweedfs-default', 'app.kubernetes.io/name': 'seaweedfs' } },
+        }],
+        ports: [{ protocol: 'TCP', port: 8333 }],
+      },
+      {
+        to: [{
+          podSelector: { matchLabels: { 'valkey.io/cluster': app.name + '-valkey' } },
+        }],
+        ports: [{ protocol: 'TCP', port: 6379 }],
+      },
+      {
+        to: [{
           namespaceSelector: {
             matchLabels: { 'kubernetes.io/metadata.name': 'databases' },
           },

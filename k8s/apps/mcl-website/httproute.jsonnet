@@ -24,7 +24,7 @@ local app = import 'app.json5';
           {
             path: {
               type: 'PathPrefix',
-              value: '/api/playground',
+              value: '/api/playground/snippets',
             },
           },
         ],

@@ -113,6 +113,13 @@
     in_roles: [],
   },
   {
+    db_name: 'mcl_playground',
+    user_name: 'mcl_playground',
+    secret_source_key: 'terraform-external-secrets',
+    secret_source_property: 'mcl-playground-database-password',
+    in_roles: [],
+  },
+  {
     db_name: 'gha_cache_server',
     user_name: 'gha_cache_server',
   },

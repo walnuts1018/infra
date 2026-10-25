@@ -254,6 +254,14 @@
         "diskType": "ssd",
         "replication": "000"
       }
+    },
+    {
+      "name": "mcl-playground",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
+      }
     }
   ],
   "accessKeyIdentities": [
@@ -444,6 +452,22 @@
           "buckets": [
             "visual-regression-tracker"
           ]
+        }
+      ]
+    },
+    {
+      "name": "mcl_playground",
+      "secretTarget": {
+        "namespace": "mcl-website",
+        "secretName": "mcl-playground-s3-credentials",
+        "accessKeyField": "AWS_ACCESS_KEY_ID",
+        "secretKeyField": "AWS_SECRET_ACCESS_KEY"
+      },
+      "permissions": [
+        {
+          "effect": "Allow",
+          "actions": ["Read", "Write", "List", "Delete"],
+          "buckets": ["mcl-playground"]
         }
       ]
     }

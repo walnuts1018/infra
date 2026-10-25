@@ -1,6 +1,7 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local externalSecret = import 'external-secret.jsonnet';
+local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonnet')('mcl_playground');
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -32,7 +33,7 @@ local externalSecret = import 'external-secret.jsonnet';
         containers: [
           {
             name: 'api',
-            image: 'ghcr.io/manifest-configuration-language/mcl-playground-api:main@sha256:dd342c8ed76d04da1bd0d4f62bec8c7ccdafb3e7a24e446ca83a35f49b68c262',
+            image: 'ghcr.io/manifest-configuration-language/website-api:main@sha256:a57482d091fcad31dbf337e11f39b0916e4fda8d4e7b7e5dffa02707a5bba932',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
@@ -41,10 +42,8 @@ local externalSecret = import 'external-secret.jsonnet';
               },
             ],
             env: [
-              {
-                name: 'LISTEN_ADDR',
-                value: ':8080',
-              },
+              { name: 'HOST', value: '0.0.0.0' },
+              { name: 'PORT', value: '8080' },
               {
                 name: 'DATABASE_URL',
                 valueFrom: {
@@ -54,10 +53,30 @@ local externalSecret = import 'external-secret.jsonnet';
                   },
                 },
               },
+              { name: 'VALKEY_URL', value: 'redis://mcl-playground-api-valkey-primary.mcl-website.svc.cluster.local:6379' },
+              { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
+              { name: 'S3_BUCKET', value: 'mcl-playground' },
+              { name: 'S3_REGION', value: 'us-east-1' },
+              { name: 'MCL_RUNTIME_VERSION', value: '0.3.10' },
+              { name: 'SHARE_TTL_DAYS', value: '90' },
+              { name: 'SHARE_STORAGE_MAX_BYTES', value: '10737418240' },
+              { name: 'SHARE_DAILY_UPLOAD_BYTES', value: '134217728' },
+              {
+                name: 'S3_ACCESS_KEY_ID',
+                valueFrom: { secretKeyRef: { name: s3Credentials.secretName, key: s3Credentials.accessKeyField } },
+              },
+              {
+                name: 'S3_SECRET_ACCESS_KEY',
+                valueFrom: { secretKeyRef: { name: s3Credentials.secretName, key: s3Credentials.secretKeyField } },
+              },
+              {
+                name: 'RATE_LIMIT_HMAC_SECRET',
+                valueFrom: { secretKeyRef: { name: externalSecret.spec.target.name, key: 'RATE_LIMIT_HMAC_SECRET' } },
+              },
             ],
             readinessProbe: {
               httpGet: {
-                path: '/readyz',
+                path: '/healthz',
                 port: 'http',
               },
               periodSeconds: 10,

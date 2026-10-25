@@ -135,6 +135,15 @@ resource "random_password" "horse_s3_secret_key" {
   special = false
 }
 
+resource "random_password" "mcl_playground_database_password" {
+  length  = 48
+  special = false
+}
+
+resource "random_id" "mcl_playground_rate_limit_secret" {
+  byte_length = 32
+}
+
 resource "random_id" "horse_email_body_encryption_key" {
   byte_length = 32
 }
@@ -178,6 +187,8 @@ resource "onepassword_item" "external_secret" {
         "iwashi-discovery-key"                     = { type = "CONCEALED", value = random_password.iwashi_discovery_key.result }
         "longhorn-client-id"                       = { type = "STRING", value = var.longhorn_client_id }
         "longhorn-client-secret"                   = { type = "CONCEALED", value = var.longhorn_client_secret }
+        "mcl-playground-database-password"         = { type = "CONCEALED", value = random_password.mcl_playground_database_password.result }
+        "mcl-playground-rate-limit-secret"         = { type = "CONCEALED", value = random_id.mcl_playground_rate_limit_secret.hex }
         "webtop-client-id"                         = { type = "STRING", value = var.webtop_client_id }
         "webtop-client-secret"                     = { type = "CONCEALED", value = var.webtop_client_secret }
         "netbird-setup-key"                        = { type = "CONCEALED", value = var.netbird_setup_key }
