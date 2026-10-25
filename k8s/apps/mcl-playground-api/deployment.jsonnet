@@ -33,7 +33,7 @@ local s3Credentials = (import 's3-config.libsonnet').forIdentity('mcl_playground
         initContainers: [
           {
             name: 'migrate',
-            image: 'ghcr.io/manifest-configuration-language/website-api:main@sha256:8640238c5b131191b8fe647cda48f69338fc56c96d639611a2ac6b0dffac5631',
+            image: 'ghcr.io/manifest-configuration-language/website-api:main@sha256:20167e3f286e072eba92360a1164b5bb2234e0ebb7604fb1f0c0742b4c3d3980',
             imagePullPolicy: 'IfNotPresent',
             command: ['node', 'src/api/migrate.js'],
             env: [
@@ -61,7 +61,7 @@ local s3Credentials = (import 's3-config.libsonnet').forIdentity('mcl_playground
         containers: [
           {
             name: 'api',
-            image: 'ghcr.io/manifest-configuration-language/website-api:main@sha256:8640238c5b131191b8fe647cda48f69338fc56c96d639611a2ac6b0dffac5631',
+            image: 'ghcr.io/manifest-configuration-language/website-api:main@sha256:20167e3f286e072eba92360a1164b5bb2234e0ebb7604fb1f0c0742b4c3d3980',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
