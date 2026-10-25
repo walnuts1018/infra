@@ -101,10 +101,10 @@
     {
       description: 'Pin digests for Kubernetes container images',
       matchDatasources: [
-        'docker'
+        'docker',
       ],
       matchManagers: [
-        'kubernetes'
+        'kubernetes',
       ],
       pinDigests: true,
     },
@@ -145,9 +145,7 @@
         'ghcr.io/manifest-configuration-language/website',
         'ghcr.io/manifest-configuration-language/website-api',
       ],
-      matchCurrentValue: [
-        'main',
-      ],
+      matchCurrentValue: 'main',
       automerge: true,
     },
     {
@@ -212,7 +210,6 @@
         'scylladb/scylla',
       ],
       automerge: false,
-      // Major, Minor versionはスキップ禁止なので、手動でPRを作るようにする
       dependencyDashboardApproval: true,
     },
     {
