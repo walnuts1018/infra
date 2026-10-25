@@ -58,6 +58,12 @@ local piccaS3ClientNames = [
       {
         from: [
           networkPolicy.envoyGatewayProxy,
+          peer('mcl-website', {
+            matchLabels: {
+              app: 'mcl-playground-api',
+              'app.kubernetes.io/name': 'mcl-playground-api',
+            },
+          }),
           peer('beast', { matchLabels: { 'app.kubernetes.io/name': 'backend' } }),
           peer('beast', { matchLabels: { 'app.kubernetes.io/name': 'encoder' } }),
           peer('horse', {
