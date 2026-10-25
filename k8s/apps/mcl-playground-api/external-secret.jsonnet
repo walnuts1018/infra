@@ -17,7 +17,7 @@
     },
   ],
   template_data: {
-    DATABASE_URL: 'postgresql://mcl_playground:{{ .postgres_password | urlquery | replace "+" "%20" }}@postgresql-default-rw.databases.svc.cluster.local:5432/mcl_playground?sslmode=require&pool_max_conns=4',
+    DATABASE_URL: 'postgresql://mcl_playground:{{ .postgres_password | urlquery | replace "+" "%20" }}@postgresql-default-rw.databases.svc.cluster.local:5432/mcl_playground?sslmode=require',
     RATE_LIMIT_HMAC_SECRET: '{{ .rate_limit_hmac_secret }}',
   },
 }
