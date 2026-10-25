@@ -33,7 +33,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
         containers: [
           {
             name: 'api',
-            image: 'ghcr.io/manifest-configuration-language/website-api:main@sha256:56c8f5aa524e0d1c6613200696e72923e239c23e1b130817c298b17b723b3242',
+            image: 'ghcr.io/manifest-configuration-language/website-api:main@sha256:009a72ba6ed779cf486819ac974acedc214cafcf9e3438a44201db34f00ebe36',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
