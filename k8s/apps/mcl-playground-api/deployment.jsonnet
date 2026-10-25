@@ -57,7 +57,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
               { name: 'S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
               { name: 'S3_BUCKET', value: 'mcl-playground' },
               { name: 'S3_REGION', value: 'us-east-1' },
-              { name: 'MCL_RUNTIME_VERSION', value: '0.3.10' },
+              { name: 'MCL_RUNTIME_VERSION', value: '0.3.11' },
               { name: 'SHARE_TTL_DAYS', value: '90' },
               { name: 'SHARE_STORAGE_MAX_BYTES', value: '10737418240' },
               { name: 'SHARE_DAILY_UPLOAD_BYTES', value: '134217728' },
