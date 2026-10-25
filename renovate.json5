@@ -143,18 +143,7 @@
       ],
       matchPackageNames: [
         'ghcr.io/manifest-configuration-language/website',
-      ],
-      matchCurrentValue: [
-        'main',
-      ],
-      automerge: true,
-    },
-    {
-      matchDatasources: [
-        'docker',
-      ],
-      matchPackageNames: [
-        'ghcr.io/manifest-configuration-language/mcl-playground-api',
+        'ghcr.io/manifest-configuration-language/website-api',
       ],
       matchCurrentValue: [
         'main',
