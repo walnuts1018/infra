@@ -30,7 +30,7 @@ local app = import 'app.json5';
           },
           podSelector: {
             matchLabels: {
-              'app.kubernetes.io/instance': 'mcl-playground-api',
+              app: 'mcl-playground-api',
               'app.kubernetes.io/name': 'mcl-playground-api',
             },
           },
