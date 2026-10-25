@@ -24,6 +24,20 @@ local app = import 'app.json5';
         ports: [{ protocol: 'UDP', port: 53 }, { protocol: 'TCP', port: 53 }],
       },
       {
+        to: [{
+          namespaceSelector: {
+            matchLabels: { 'kubernetes.io/metadata.name': 'mcl-website' },
+          },
+          podSelector: {
+            matchLabels: {
+              'app.kubernetes.io/instance': 'mcl-playground-api',
+              'app.kubernetes.io/name': 'mcl-playground-api',
+            },
+          },
+        }],
+        ports: [{ protocol: 'TCP', port: 8080 }],
+      },
+      {
         to: networkPolicy.publicInternet,
         ports: [{ protocol: 'TCP', port: 80 }, { protocol: 'TCP', port: 443 }],
       },

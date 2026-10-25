@@ -12,7 +12,20 @@ local app = import 'app.json5';
     podSelector: { matchLabels: labels(app.name) },
     policyTypes: ['Ingress'],
     ingress: [{
-      from: [networkPolicy.envoyGatewayProxy],
+      from: [
+        networkPolicy.envoyGatewayProxy,
+        {
+          namespaceSelector: {
+            matchLabels: { 'kubernetes.io/metadata.name': 'monitoring' },
+          },
+          podSelector: {
+            matchLabels: {
+              'app.kubernetes.io/instance': 'blackbox-exporter',
+              'app.kubernetes.io/name': 'prometheus-blackbox-exporter',
+            },
+          },
+        },
+      ],
       ports: [{ protocol: 'TCP', port: 8080 }],
     }],
   },
