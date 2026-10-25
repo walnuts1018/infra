@@ -32,7 +32,7 @@ local externalSecret = import 'external-secret.jsonnet';
         containers: [
           {
             name: 'api',
-            image: 'ghcr.io/manifest-configuration-language/mcl-playground-api:main@sha256:ff760a3ab0cf0b4d6746d5acaf61549479a860dc2bd635d6d33f7bfbc60d7fb4',
+            image: 'ghcr.io/manifest-configuration-language/mcl-playground-api:main@sha256:a4d979fe769261d9852f0a8c5c1f9ae55f30b879b7e61f2093c1a239a113d21d',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
