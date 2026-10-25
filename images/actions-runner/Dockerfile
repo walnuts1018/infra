@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ghcr.io/falcondev-oss/actions-runner:2.338.0@sha256:3c4d939869cb1374cd61bfcb3abbe6c1444991f7b20c48cbb13708484ee0a8e1
+FROM ghcr.io/falcondev-oss/actions-runner:2.338.1@sha256:6d8e4376dbff85372f11589f2087d719292452bc95124d2e4da1bd5b913d12d1
 
 USER root
 
