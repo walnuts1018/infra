@@ -64,6 +64,12 @@ local piccaS3ClientNames = [
               'app.kubernetes.io/name': 'mcl-playground-api',
             },
           }),
+          peer('mcl-website', {
+            matchLabels: {
+              app: 'mcl-playground-api-backup',
+              'app.kubernetes.io/name': 'mcl-playground-api-backup',
+            },
+          }),
           peer('beast', { matchLabels: { 'app.kubernetes.io/name': 'backend' } }),
           peer('beast', { matchLabels: { 'app.kubernetes.io/name': 'encoder' } }),
           peer('horse', {
