@@ -32,7 +32,7 @@ local app = import 'app.json5';
         containers: [
           {
             name: 'website',
-            image: 'ghcr.io/manifest-configuration-language/website:main@sha256:4bdd11768536720d35173a8597a6b46fc2b1ee815025518d1ce1d57d2d6ef630',
+            image: 'ghcr.io/manifest-configuration-language/website:main@sha256:17c5de9a241eab5f1b244d836d9afac5f5c1e168caf6d863f8c9b81e6876c7af',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
