@@ -1,7 +1,7 @@
 local app = import 'app.json5';
 local config = import 'backup-configmap.jsonnet';
 local externalSecret = import 'backup-external-secret.jsonnet';
-local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonnet')('mcl_playground_backup');
+local s3Credentials = (import 's3-config.libsonnet').forIdentity('mcl_playground_backup');
 local backupLabels = (import '../../components/labels.libsonnet')(app.name + '-backup');
 {
   apiVersion: 'batch/v1',

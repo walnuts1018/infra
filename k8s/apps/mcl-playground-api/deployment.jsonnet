@@ -1,7 +1,7 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 local externalSecret = import 'external-secret.jsonnet';
-local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonnet')('mcl_playground');
+local s3Credentials = (import 's3-config.libsonnet').forIdentity('mcl_playground');
 {
   apiVersion: 'apps/v1',
   kind: 'Deployment',
@@ -30,10 +30,38 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
             type: 'RuntimeDefault',
           },
         },
+        initContainers: [
+          {
+            name: 'migrate',
+            image: 'ghcr.io/manifest-configuration-language/website-api:main@sha256:009a72ba6ed779cf486819ac974acedc214cafcf9e3438a44201db34f00ebe36',
+            imagePullPolicy: 'IfNotPresent',
+            command: ['node', 'src/api/migrate.js'],
+            env: [
+              {
+                name: 'DATABASE_URL',
+                valueFrom: {
+                  secretKeyRef: {
+                    name: externalSecret.spec.target.name,
+                    key: 'DATABASE_URL',
+                  },
+                },
+              },
+            ],
+            resources: {
+              requests: { cpu: '10m', memory: '64Mi' },
+              limits: { memory: '128Mi' },
+            },
+            securityContext: {
+              allowPrivilegeEscalation: false,
+              readOnlyRootFilesystem: true,
+              capabilities: { drop: ['ALL'] },
+            },
+          },
+        ],
         containers: [
           {
             name: 'api',
-            image: 'ghcr.io/manifest-configuration-language/website-api:main@sha256:56c8f5aa524e0d1c6613200696e72923e239c23e1b130817c298b17b723b3242',
+            image: 'ghcr.io/manifest-configuration-language/website-api:main@sha256:009a72ba6ed779cf486819ac974acedc214cafcf9e3438a44201db34f00ebe36',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
