@@ -52,6 +52,14 @@ variable "b2_application_key" {
   sensitive = true
 }
 
+variable "mcl_playground_backup_application_key" {
+  type = object({
+    application_key_id = string
+    application_key    = string
+  })
+  sensitive = true
+}
+
 variable "beast_client_id" { type = string }
 
 variable "beast_client_secret" {

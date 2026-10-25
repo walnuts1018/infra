@@ -189,6 +189,8 @@ resource "onepassword_item" "external_secret" {
         "longhorn-client-secret"                   = { type = "CONCEALED", value = var.longhorn_client_secret }
         "mcl-playground-database-password"         = { type = "CONCEALED", value = random_password.mcl_playground_database_password.result }
         "mcl-playground-rate-limit-secret"         = { type = "CONCEALED", value = random_id.mcl_playground_rate_limit_secret.hex }
+        "mcl-playground-backup-application-key-id" = { type = "STRING", value = var.mcl_playground_backup_application_key.application_key_id }
+        "mcl-playground-backup-application-key"    = { type = "CONCEALED", value = var.mcl_playground_backup_application_key.application_key }
         "webtop-client-id"                         = { type = "STRING", value = var.webtop_client_id }
         "webtop-client-secret"                     = { type = "CONCEALED", value = var.webtop_client_secret }
         "netbird-setup-key"                        = { type = "CONCEALED", value = var.netbird_setup_key }
