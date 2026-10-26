@@ -5,6 +5,6 @@ local app = import 'app.json5';
 
   chart: 'victoria-metrics-cluster',
   repoURL: 'https://victoriametrics.github.io/helm-charts/',
-  targetRevision: '0.53.0',
+  targetRevision: '0.54.0',
   values: (importstr 'values.yaml'),
 }
