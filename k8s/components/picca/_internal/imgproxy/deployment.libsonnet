@@ -25,7 +25,7 @@ function(app)
           containers: [
             (import '../../../container.libsonnet') {
               name: 'imgproxy',
-              image: 'ghcr.io/imgproxy/imgproxy:v4.0.19@sha256:bfe6737804adccdc05325ea4e11ba95dd6242ee7aa79a0a041174cc5160f8e8d',
+              image: 'ghcr.io/imgproxy/imgproxy:v4.0.20@sha256:f5db62d528ab08e7b12f14e759fd7d62c09aeabf2e629d0e2a3963da692d0130',
               imagePullPolicy: 'IfNotPresent',
               envFrom: [
                 {
