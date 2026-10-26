@@ -4,7 +4,7 @@ function() (helm) {
   name: app.name,
   namespace: app.namespace,
   ociChartURL: 'docker.io/envoyproxy/gateway-helm',
-  targetRevision: '1.9.2',
+  targetRevision: '1.9.3',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'), {}
   ),
