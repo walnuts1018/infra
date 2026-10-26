@@ -3,6 +3,6 @@ local app = import 'app.json5';
   name: app.name,
   namespace: app.namespace,
   ociChartURL: 'ghcr.io/grafana/helm-charts/pyroscope',
-  targetRevision: '2.4.1',
+  targetRevision: '2.4.2',
   values: (importstr 'values.yaml'),
 }
