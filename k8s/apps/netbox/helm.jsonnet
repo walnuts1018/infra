@@ -3,6 +3,6 @@ local app = import 'app.json5';
   name: app.name,
   namespace: app.namespace,
   ociChartURL: 'ghcr.io/netbox-community/netbox-chart/netbox',
-  targetRevision: '8.3.97',
+  targetRevision: '8.3.98',
   values: (importstr 'values.yaml'),
 }
