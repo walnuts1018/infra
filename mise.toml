@@ -12,7 +12,7 @@ trivy = "0.76.0"
 "go:github.com/grafana/mcp-grafana/v2/cmd/mcp-grafana" = "v2.0.2"
 "go:github.com/szhekpisov/diffyml" = "v1.8.2"
 "pipx:sarif-tools" = "3.0.5"
-jactionlint = "2.3.0"
+jactionlint = "2.4.0"
 
 [env]
 _.file = { path = ".env", redact = true }
