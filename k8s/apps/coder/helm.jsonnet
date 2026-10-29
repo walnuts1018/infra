@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'coder',
   repoURL: 'https://helm.coder.com/v2',
-  targetRevision: '2.38.3',
+  targetRevision: '2.38.4',
   values: (importstr 'values.yaml'),
 }
