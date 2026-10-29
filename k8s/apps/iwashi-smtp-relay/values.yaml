@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: boky/postfix
-  tag: "5.1.0@sha256:aafc772384232497bed875e1eb66b4d3e54ba1ebc86e2e185a6dc1dbc48182ef"
+  tag: "5.2.0@sha256:94443307a7e092c8ed2d18bde712d3571a25ac3169b53978b3298690aa70c083"
   pullPolicy: IfNotPresent
 
 service:
