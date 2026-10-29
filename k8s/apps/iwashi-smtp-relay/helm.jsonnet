@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'mail',
   repoURL: 'https://bokysan.github.io/docker-postfix',
-  targetRevision: '5.1.0',
+  targetRevision: '5.2.0',
   values: (importstr 'values.yaml'),
 }
