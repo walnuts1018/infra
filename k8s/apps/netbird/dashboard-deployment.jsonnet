@@ -16,7 +16,7 @@ local app = import 'app.json5';
       spec: {
         containers: [{
           name: 'dashboard',
-          image: 'netbirdio/dashboard:v2.95.0@sha256:3d6adfee19dd8d34d795af51daee69d27d2081d2076a5a304cfdd14acc67d6f4',
+          image: 'netbirdio/dashboard:v2.96.0@sha256:340b13c00b84349572a2acc5605e907cb09250a9e6461c757097eabdb8e02f2c',
           env: [
             {
               name: 'NETBIRD_MGMT_API_ENDPOINT',
