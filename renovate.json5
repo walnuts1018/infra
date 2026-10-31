@@ -92,33 +92,6 @@
   ],
   packageRules: [
     {
-      groupName: 'actions-runner-controller',
-      matchPackageNames: [
-        'ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller',
-        'ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set',
-      ],
-    },
-    {
-      description: 'Pin digests for Kubernetes container images',
-      matchDatasources: [
-        'docker'
-      ],
-      matchManagers: [
-        'kubernetes'
-      ],
-      pinDigests: true,
-    },
-    {
-      description: 'Pin digests for Dockerfile base images',
-      matchDatasources: [
-        'docker',
-      ],
-      matchManagers: [
-        'dockerfile',
-      ],
-      pinDigests: true,
-    },
-    {
       matchPackageNames: [
         'lscr.io/linuxserver/webtop',
       ],
@@ -168,38 +141,6 @@
     },
     {
       matchPackageNames: [
-        'ghcr.io/walnuts1018/2024-ac-hacking',
-        'ghcr.io/walnuts1018/2024-ac-hacking-front',
-        'ghcr.io/walnuts1018/walnuts.dev',
-        'ghcr.io/walnuts1018/http-dump',
-        'ghcr.io/walnuts1018/mucaron-backend',
-        'ghcr.io/walnuts1018/mucaron-frontend',
-      ],
-      versioning: 'regex:^[a-f0-9]+-(?<patch>[0-9]+)$',
-    },
-    {
-      matchPackageNames: [
-        'ghcr.io/kmc-jp/oekaki-dengon-game-back',
-        'ghcr.io/kmc-jp/oekaki-dengon-game-front',
-        'ghcr.io/walnuts1018/openchokin-back',
-        'ghcr.io/walnuts1018/openchokin-front',
-      ],
-      versioning: 'regex:^v0\\.0\\.0-[a-f0-9]+-(?<patch>[0-9]+)$',
-    },
-    {
-      matchPackageNames: [
-        'photoprism/photoprism',
-      ],
-      versioning: 'regex:^(?<major>[0-9]{2})(?<minor>[0-9]{2})(?<patch>[0-9]{2})$',
-    },
-    {
-      matchPackageNames: [
-        'ghcr.io/servercontainers/samba',
-      ],
-      versioning: 'regex:^a(?<major>[0-9]+)\\.(?<minor>[0-9]+)\\.(?<patch>[0-9]+)-s(?<build>[0-9]+)\\.(?<revision>[0-9]+)\\.([0-9]+)-r([0-9]+)$',
-    },
-    {
-      matchPackageNames: [
         'ghcr.io/cloudnative-pg/postgresql',
       ],
       matchUpdateTypes: [
@@ -214,12 +155,6 @@
       automerge: false,
       // Major, Minor versionはスキップ禁止なので、手動でPRを作るようにする
       dependencyDashboardApproval: true,
-    },
-    {
-      matchPackageNames: [
-        'chrislusf/seaweedfs',
-      ],
-      versioning: 'regex:^(?<major>[0-9]+)\\.(?<minor>[0-9]+)(_(?<compatibility>.+))?$',
     },
     {
       groupName: 'picca',
