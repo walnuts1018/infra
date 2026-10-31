@@ -1,0 +1,98 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mcl-playground-api-backup
+  namespace: mcl-website
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 14400
+      backoffLimit: 3
+      template:
+        metadata:
+          labels:
+            app: mcl-playground-api-backup
+            app.kubernetes.io/name: mcl-playground-api-backup
+        spec:
+          automountServiceAccountToken: false
+          containers:
+            - args:
+                - --config=/config/rclone.conf
+                - --cache-dir=/tmp/rclone
+                - copy
+                - seaweed:mcl-playground
+                - b2:walnuts-mcl-playground-backup-81f18e5/mcl-playground
+                - --transfers=4
+                - --checkers=8
+                - --b2-chunk-size=64M
+                - --retries=5
+                - --low-level-retries=20
+                - --retries-sleep=30s
+                - --timeout=10m
+                - --contimeout=30s
+                - --stats=1m
+                - --log-level=INFO
+              command:
+                - rclone
+              env:
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      key: AWS_ACCESS_KEY_ID
+                      name: mcl-playground-backup-seaweedfs-credentials
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      key: AWS_SECRET_ACCESS_KEY
+                      name: mcl-playground-backup-seaweedfs-credentials
+                - name: RCLONE_CONFIG_B2_ACCOUNT
+                  valueFrom:
+                    secretKeyRef:
+                      key: RCLONE_CONFIG_B2_ACCOUNT
+                      name: mcl-playground-api-backup-8d41e3
+                - name: RCLONE_CONFIG_B2_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      key: RCLONE_CONFIG_B2_KEY
+                      name: mcl-playground-api-backup-8d41e3
+              image: ghcr.io/rclone/rclone:1.75.2@sha256:2687085f718d3c628f7fdfb77c52a1d344332aed543110bb88088f2c70d43eb5
+              name: backup
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: 1Gi
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+              volumeMounts:
+                - mountPath: /config
+                  name: config
+                  readOnly: true
+                - mountPath: /tmp
+                  name: tmp
+          restartPolicy: OnFailure
+          securityContext:
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          volumes:
+            - configMap:
+                name: mcl-playground-api-backup-rclone-config-74cbd7
+              name: config
+            - emptyDir:
+                sizeLimit: 1Gi
+              name: tmp
+  schedule: 17 3 * * *
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  timeZone: Asia/Tokyo

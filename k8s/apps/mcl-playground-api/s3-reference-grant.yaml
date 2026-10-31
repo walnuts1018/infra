@@ -1,0 +1,23 @@
+apiVersion: seaweed.seaweedfs.com/v1
+kind: ResourceReferenceGrant
+metadata:
+  name: mcl-playground-api
+  namespace: seaweedfs
+spec:
+  from:
+    - group: seaweed.seaweedfs.com
+      kind: S3Identity
+      namespace: mcl-website
+    - group: seaweed.seaweedfs.com
+      kind: S3Credentials
+      namespace: mcl-website
+    - group: seaweed.seaweedfs.com
+      kind: S3Policy
+      namespace: mcl-website
+    - group: seaweed.seaweedfs.com
+      kind: S3PolicyBinding
+      namespace: mcl-website
+  to:
+    - group: seaweed.seaweedfs.com
+      kind: Seaweed
+      name: seaweedfs-default

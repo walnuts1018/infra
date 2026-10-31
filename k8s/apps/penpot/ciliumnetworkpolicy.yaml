@@ -1,0 +1,343 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: penpot-frontend
+  namespace: penpot
+spec:
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchPattern: '*'
+    - toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-backend
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "6060"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-exporter
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "6061"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-mcp
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "4401"
+              protocol: TCP
+            - port: "4402"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/component: s3
+            k8s:app.kubernetes.io/instance: seaweedfs-default
+            k8s:app.kubernetes.io/name: seaweedfs
+            k8s:io.kubernetes.pod.namespace: seaweedfs
+      toPorts:
+        - ports:
+            - port: "8333"
+              protocol: TCP
+    - toFQDNs:
+        - matchName: fonts.googleapis.com
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toFQDNs:
+        - matchName: fonts.gstatic.com
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/instance: penpot
+      k8s:app.kubernetes.io/name: penpot-frontend
+      k8s:io.kubernetes.pod.namespace: penpot
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/component: proxy
+            k8s:app.kubernetes.io/managed-by: envoy-gateway
+            k8s:app.kubernetes.io/name: envoy
+            k8s:io.kubernetes.pod.namespace: envoy-gateway-system
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-exporter
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: penpot-backend
+  namespace: penpot
+spec:
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchPattern: '*'
+    - toEndpoints:
+        - matchLabels:
+            k8s:cnpg.io/cluster: postgresql-default
+            k8s:cnpg.io/instanceRole: primary
+            k8s:io.kubernetes.pod.namespace: databases
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-valkey
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/component: s3
+            k8s:app.kubernetes.io/instance: seaweedfs-default
+            k8s:app.kubernetes.io/name: seaweedfs
+            k8s:io.kubernetes.pod.namespace: seaweedfs
+      toPorts:
+        - ports:
+            - port: "8333"
+              protocol: TCP
+    - toFQDNs:
+        - matchName: auth.walnuts.dev
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toFQDNs:
+        - matchName: images.unsplash.com
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/instance: penpot
+      k8s:app.kubernetes.io/name: penpot-backend
+      k8s:io.kubernetes.pod.namespace: penpot
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-frontend
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "6060"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: opentelemetry-collector.prometheus
+            k8s:app.kubernetes.io/name: prometheus-collector
+            k8s:io.kubernetes.pod.namespace: opentelemetry-collector
+      toPorts:
+        - ports:
+            - port: "6060"
+              protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: penpot-exporter
+  namespace: penpot
+spec:
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchPattern: '*'
+    - toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-frontend
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-valkey
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/instance: penpot
+      k8s:app.kubernetes.io/name: penpot-exporter
+      k8s:io.kubernetes.pod.namespace: penpot
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-frontend
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "6061"
+              protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: penpot-mcp
+  namespace: penpot
+spec:
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchPattern: '*'
+    - toEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-valkey
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/instance: penpot
+      k8s:app.kubernetes.io/name: penpot-mcp
+      k8s:io.kubernetes.pod.namespace: penpot
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-frontend
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "4401"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-frontend
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "4402"
+              protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: penpot-valkey
+  namespace: penpot
+spec:
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchPattern: '*'
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/instance: penpot
+      k8s:app.kubernetes.io/name: penpot-valkey
+      k8s:io.kubernetes.pod.namespace: penpot
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-backend
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-exporter
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: penpot
+            k8s:app.kubernetes.io/name: penpot-mcp
+            k8s:io.kubernetes.pod.namespace: penpot
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP

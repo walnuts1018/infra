@@ -1,0 +1,41 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: iwashi-smtp-relay
+  namespace: iwashi-system
+spec:
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+          rules:
+            dns:
+              - matchName: smtp.resend.com
+    - toFQDNs:
+        - matchName: smtp.resend.com
+      toPorts:
+        - ports:
+            - port: "587"
+              protocol: TCP
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/instance: iwashi-smtp-relay
+      app.kubernetes.io/name: mail
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/component: alertmanager
+            k8s:app.kubernetes.io/instance: iwashi-cortex
+            k8s:app.kubernetes.io/name: cortex
+            k8s:io.kubernetes.pod.namespace: iwashi-system
+      toPorts:
+        - ports:
+            - port: "587"
+              protocol: TCP

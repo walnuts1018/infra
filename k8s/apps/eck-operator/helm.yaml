@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: eck-operator-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: elasticsearch
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: eck-operator
+    helm:
+      releaseName: eck-operator
+      values: |
+        replicaCount: 1
+
+        resources:
+          requests:
+            cpu: 50m
+            memory: 150Mi
+          limits:
+            cpu: 1
+            memory: 1Gi
+
+        config:
+          # logVerbosity defines the logging level. Valid values are as follows:
+          # -2: Errors only
+          # -1: Errors and warnings
+          #  0: Errors, warnings, and information
+          #  number greater than 0: Errors, warnings, information, and debug details.
+          logVerbosity: "0"
+
+        podMonitor:
+          enabled: true
+    repoURL: https://helm.elastic.co
+    targetRevision: 3.5.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

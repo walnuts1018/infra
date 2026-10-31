@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mcl-playground-api
+    app.kubernetes.io/name: mcl-playground-api
+  name: mcl-playground-api
+  namespace: mcl-website
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcl-playground-api
+      app.kubernetes.io/name: mcl-playground-api
+  template:
+    metadata:
+      labels:
+        app: mcl-playground-api
+        app.kubernetes.io/name: mcl-playground-api
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - env:
+            - name: HOST
+              value: 0.0.0.0
+            - name: PORT
+              value: "8080"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: DATABASE_URL
+                  name: mcl-playground-api-662f5e
+            - name: VALKEY_URL
+              value: redis://valkey-mcl-playground-api-valkey.mcl-website.svc.cluster.local:6379
+            - name: S3_ENDPOINT
+              value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+            - name: S3_BUCKET
+              value: mcl-playground
+            - name: S3_REGION
+              value: us-east-1
+            - name: MCL_RUNTIME_VERSION
+              value: 0.3.12
+            - name: SHARE_TTL_DAYS
+              value: "90"
+            - name: SHARE_STORAGE_MAX_BYTES
+              value: "10737418240"
+            - name: SHARE_DAILY_UPLOAD_BYTES
+              value: "134217728"
+            - name: S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_ACCESS_KEY_ID
+                  name: mcl-playground-s3-credentials
+            - name: S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_SECRET_ACCESS_KEY
+                  name: mcl-playground-s3-credentials
+            - name: RATE_LIMIT_HMAC_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: RATE_LIMIT_HMAC_SECRET
+                  name: mcl-playground-api-662f5e
+          image: ghcr.io/manifest-configuration-language/website-api:main@sha256:e0c75db0d60d292fe704b5a113523792e3133746c41f4341fc66ecda2cb92e29
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 2
+          name: api
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 2
+          resources:
+            limits:
+              memory: 384Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      initContainers:
+        - command:
+            - node
+            - src/api/migrate.js
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: DATABASE_URL
+                  name: mcl-playground-api-662f5e
+          image: ghcr.io/manifest-configuration-language/website-api:main@sha256:e0c75db0d60d292fe704b5a113523792e3133746c41f4341fc66ecda2cb92e29
+          imagePullPolicy: IfNotPresent
+          name: migrate
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+      securityContext:
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault

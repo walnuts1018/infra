@@ -1,0 +1,16 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: http-dump
+  namespace: default
+spec:
+  cooldownPeriod: 300
+  maxReplicaCount: 2
+  minReplicaCount: 0
+  scaleTargetRef:
+    name: http-dump
+  triggers:
+    - metadata:
+        interceptorRoute: http-dump
+        scalerAddress: keda-add-ons-http-external-scaler.keda:9090
+      type: external-push

@@ -1,0 +1,21 @@
+apiVersion: v1
+data:
+  rclone.conf: |
+    [seaweed]
+    type = s3
+    provider = Other
+    env_auth = true
+    endpoint = http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+    region = us-east-1
+    no_check_bucket = true
+
+    [b2]
+    type = b2
+immutable: true
+kind: ConfigMap
+metadata:
+  labels:
+    app: mcl-playground-api-backup
+    app.kubernetes.io/name: mcl-playground-api-backup
+  name: mcl-playground-api-backup-rclone-config-74cbd7
+  namespace: mcl-website

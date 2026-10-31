@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+  labels:
+    app: webtop
+    app.kubernetes.io/name: webtop
+  name: webtop-root
+  namespace: webtop
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 128Gi
+  storageClassName: local-path

@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: iwashi-system-default-deny
+  namespace: iwashi-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress

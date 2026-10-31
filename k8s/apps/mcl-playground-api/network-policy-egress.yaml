@@ -1,0 +1,55 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: mcl-playground-api-egress
+  namespace: mcl-website
+spec:
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+    - ports:
+        - port: 8333
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: seaweedfs
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: s3
+              app.kubernetes.io/instance: seaweedfs-default
+              app.kubernetes.io/name: seaweedfs
+    - ports:
+        - port: 6379
+          protocol: TCP
+      to:
+        - podSelector:
+            matchLabels:
+              valkey.io/cluster: mcl-playground-api-valkey
+    - ports:
+        - port: 5432
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: databases
+          podSelector:
+            matchLabels:
+              cnpg.io/cluster: postgresql-default
+              cnpg.io/instanceRole: primary
+  podSelector:
+    matchLabels:
+      app: mcl-playground-api
+      app.kubernetes.io/name: mcl-playground-api
+  policyTypes:
+    - Egress

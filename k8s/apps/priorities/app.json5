@@ -1,7 +1,0 @@
-{
-  name: "priorities",
-  namespace: "kube-system",
-  clusters: {
-    kurumi: {},
-  },
-}

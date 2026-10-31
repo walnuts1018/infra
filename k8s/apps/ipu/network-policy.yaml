@@ -1,0 +1,52 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ipu
+  namespace: ipu
+spec:
+  egress:
+    - ports:
+        - port: 8333
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: seaweedfs
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: s3
+              app.kubernetes.io/instance: seaweedfs-default
+              app.kubernetes.io/managed-by: seaweedfs-operator
+              app.kubernetes.io/name: seaweedfs
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: envoy-gateway-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: proxy
+              app.kubernetes.io/managed-by: envoy-gateway
+              app.kubernetes.io/name: envoy
+      ports:
+        - port: 8080
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      app: ipu
+      app.kubernetes.io/name: ipu
+  policyTypes:
+    - Ingress
+    - Egress

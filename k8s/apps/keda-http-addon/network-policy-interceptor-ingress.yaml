@@ -1,0 +1,43 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: keda-http-addon-interceptor-ingress
+  namespace: keda
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/component: interceptor
+      k8s:app.kubernetes.io/instance: keda-http-addon
+      k8s:app.kubernetes.io/name: http-add-on
+      k8s:app.kubernetes.io/part-of: keda-add-ons-http
+      k8s:io.kubernetes.pod.namespace: keda
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/component: proxy
+            k8s:app.kubernetes.io/managed-by: envoy-gateway
+            k8s:app.kubernetes.io/name: envoy
+            k8s:gateway.envoyproxy.io/owning-gateway-name: envoy-gateway
+            k8s:gateway.envoyproxy.io/owning-gateway-namespace: envoy-gateway-system
+            k8s:io.kubernetes.pod.namespace: envoy-gateway-system
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app.kubernetes.io/component: scaler
+            k8s:app.kubernetes.io/instance: keda-http-addon
+            k8s:app.kubernetes.io/name: http-add-on
+            k8s:app.kubernetes.io/part-of: keda-add-ons-http
+            k8s:io.kubernetes.pod.namespace: keda
+      toPorts:
+        - ports:
+            - port: "9090"
+              protocol: TCP
+    - fromEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "9090"
+              protocol: TCP

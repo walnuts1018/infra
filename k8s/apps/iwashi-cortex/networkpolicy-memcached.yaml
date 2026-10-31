@@ -1,0 +1,42 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: iwashi-cortex-memcached
+  namespace: iwashi-system
+spec:
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: iwashi-cortex
+              app.kubernetes.io/name: cortex
+      ports:
+        - port: 11211
+          protocol: TCP
+  podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/name
+        operator: In
+        values:
+          - memcached-frontend
+          - memcached-blocks-index
+          - memcached-blocks
+          - memcached-blocks-metadata
+    matchLabels:
+      app.kubernetes.io/instance: iwashi-cortex
+  policyTypes:
+    - Ingress
+    - Egress

@@ -1,0 +1,31 @@
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3PolicyBinding
+metadata:
+  name: mcl-playground
+  namespace: mcl-website
+spec:
+  policyRef:
+    name: mcl-playground-access-key
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+    namespace: seaweedfs
+  subjects:
+    - kind: S3Identity
+      name: mcl-playground
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3PolicyBinding
+metadata:
+  name: mcl-playground-backup
+  namespace: mcl-website
+spec:
+  policyRef:
+    name: mcl-playground-backup-access-key
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+    namespace: seaweedfs
+  subjects:
+    - kind: S3Identity
+      name: mcl-playground-backup

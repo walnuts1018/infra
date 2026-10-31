@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app: misskey
+    app.kubernetes.io/name: misskey
+  name: misskey
+  namespace: misskey
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: misskey
+      app.kubernetes.io/name: misskey

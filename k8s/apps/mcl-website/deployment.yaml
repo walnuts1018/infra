@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mcl-website
+    app.kubernetes.io/name: mcl-website
+  name: mcl-website
+  namespace: mcl-website
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcl-website
+      app.kubernetes.io/name: mcl-website
+  template:
+    metadata:
+      labels:
+        app: mcl-website
+        app.kubernetes.io/name: mcl-website
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - image: ghcr.io/manifest-configuration-language/website:main@sha256:69f3bbe8763a6c052e840b3e3d895f5ea2d8855ce3eaf88e2cf1409bbad7e898
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          name: website
+          ports:
+            - containerPort: 8080
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      securityContext:
+        fsGroup: 101
+        runAsGroup: 101
+        runAsNonRoot: true
+        runAsUser: 101
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - emptyDir: {}
+          name: tmp

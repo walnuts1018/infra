@@ -1,0 +1,61 @@
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Policy
+metadata:
+  name: mcl-playground-access-key
+  namespace: mcl-website
+spec:
+  name: mcl-playground-access-key
+  policyDocument: |-
+    {
+        "Statement": [
+            {
+                "Action": [
+                    "s3:Get*",
+                    "s3:Put*",
+                    "s3:Delete*",
+                    "s3:AbortMultipartUpload",
+                    "s3:List*",
+                    "Delete"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::mcl-playground",
+                    "arn:aws:s3:::mcl-playground/*"
+                ]
+            }
+        ],
+        "Version": "2012-10-17"
+    }
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+    namespace: seaweedfs
+---
+apiVersion: seaweed.seaweedfs.com/v1
+kind: S3Policy
+metadata:
+  name: mcl-playground-backup-access-key
+  namespace: mcl-website
+spec:
+  name: mcl-playground-backup-access-key
+  policyDocument: |-
+    {
+        "Statement": [
+            {
+                "Action": [
+                    "s3:Get*",
+                    "s3:List*"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                    "arn:aws:s3:::mcl-playground",
+                    "arn:aws:s3:::mcl-playground/*"
+                ]
+            }
+        ],
+        "Version": "2012-10-17"
+    }
+  reclaimPolicy: Retain
+  seaweedRef:
+    name: seaweedfs-default
+    namespace: seaweedfs

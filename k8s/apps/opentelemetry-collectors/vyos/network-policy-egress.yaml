@@ -1,0 +1,55 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vyos-collector-egress
+  namespace: opentelemetry-collector
+spec:
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+    - ports:
+        - port: 9273
+          protocol: TCP
+      to:
+        - ipBlock:
+            cidr: 192.168.0.1/32
+    - ports:
+        - port: 8480
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: victoria-metrics
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: vminsert
+              app.kubernetes.io/instance: victoria-metrics
+              app.kubernetes.io/name: victoria-metrics-cluster
+    - ports:
+        - port: 8080
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: loki
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: gateway
+              app.kubernetes.io/instance: loki
+              app.kubernetes.io/name: loki
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: opentelemetry-collector
+      app.kubernetes.io/instance: opentelemetry-collector.vyos
+  policyTypes:
+    - Egress

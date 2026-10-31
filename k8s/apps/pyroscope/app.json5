@@ -1,7 +1,0 @@
-{
-  name: "pyroscope",
-  namespace: "pyroscope",
-  clusters: {
-    kurumi: {},
-  },
-}
