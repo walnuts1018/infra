@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'grafana',
   repoURL: 'https://grafana-community.github.io/helm-charts',
-  targetRevision: '14.0.1',
+  targetRevision: '14.2.0',
   values: (importstr 'values.yaml'),
 }
