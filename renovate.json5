@@ -118,9 +118,7 @@
         'ghcr.io/manifest-configuration-language/website',
         'ghcr.io/manifest-configuration-language/website-api',
       ],
-      matchCurrentValue: [
-        'main',
-      ],
+      matchCurrentValue: 'main',
       automerge: true,
     },
     {
