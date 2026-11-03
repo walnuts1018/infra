@@ -31,6 +31,16 @@
     "https://kedacore.github.io/charts/keda-add-ons-http-0.15.0.tgz": "dddb21bd400877ce0d474e4a51e890bc257d6c8c73b56ccd8ec4f7a7590e2001",
     "https://stakater.github.io/stakater-charts/reloader-2.2.17.tgz": "a17ee91d66785c29c17e5dfd038c13b0e35b23301b33f8fdb431b403d8a7a071"
   },
-  "ociCharts": {},
+  "ociCharts": {
+    "oci://ghcr.io/konoe-akitoshi/charts/shumoku": {
+      "0.1.5": {
+        "manifestDigest": "sha256:48d329dec1c5394ef9dd3fa7ee423e4060c47e853b5848cfca9b962c04fed512",
+        "manifestSize": 780,
+        "chartLayerDigest": "sha256:9e4d204fd180254396a1a98533a0f78b31f9bf31d16d38e52397e310e457d100",
+        "chartLayerSize": 2694,
+        "archiveDigest": "9e4d204fd180254396a1a98533a0f78b31f9bf31d16d38e52397e310e457d100"
+      }
+    }
+  },
   "gitSources": {}
 }
