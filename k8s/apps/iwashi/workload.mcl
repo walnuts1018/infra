@@ -1,5 +1,6 @@
 import "std:context" as context
 import "./app.mcl" as app
+import "./external-secret.mcl" as externalSecret
 import "./profiles.mcl" as appProfiles
 
 let labels =
@@ -7,7 +8,7 @@ let labels =
   "app.kubernetes.io/name": app.name
 let profileName = context.parameter("profile")
 let profile = appProfiles.profiles[profileName]
-let secretName = "iwashi-0528a0"
+let secretName = externalSecret.secretName
 let securityContext =
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: true

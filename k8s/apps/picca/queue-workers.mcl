@@ -1,4 +1,6 @@
 
+import "./shared-infrastructure.mcl" as sharedInfrastructure
+
 let emptyMap: Map<String, Any> = {}
 
 fn deploymentPiccaOutboxWorker(namespace: String) -> Map<String, Any> = node:
@@ -136,22 +138,22 @@ fn deploymentPiccaOutboxWorker(namespace: String) -> Map<String, Any> = node:
             envFrom:
               -
                 secretRef:
-                  name: "picca-postgres-99751a"
+                  name: sharedInfrastructure.piccaPostgresSecretName
               -
                 secretRef:
-                  name: "picca-scylla-a8f7af"
+                  name: sharedInfrastructure.piccaScyllaSecretName
               -
                 secretRef:
-                  name: "picca-valkey-ee0a97"
+                  name: sharedInfrastructure.piccaValkeySecretName
               -
                 secretRef:
-                  name: "picca-rabbitmq-94d271"
+                  name: sharedInfrastructure.piccaRabbitmqSecretName
               -
                 secretRef:
-                  name: "picca-oidc-4a2746"
+                  name: sharedInfrastructure.piccaOidcSecretName
               -
                 secretRef:
-                  name: "picca-graphql-signing-secret-b86cef"
+                  name: sharedInfrastructure.piccaGraphqlSecretName
             image: "ghcr.io/walnuts1018/picca/outbox-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe:
@@ -391,22 +393,22 @@ fn deploymentPiccaProcessingReconciler(namespace: String) -> Map<String, Any> = 
             envFrom:
               -
                 secretRef:
-                  name: "picca-postgres-99751a"
+                  name: sharedInfrastructure.piccaPostgresSecretName
               -
                 secretRef:
-                  name: "picca-scylla-a8f7af"
+                  name: sharedInfrastructure.piccaScyllaSecretName
               -
                 secretRef:
-                  name: "picca-valkey-ee0a97"
+                  name: sharedInfrastructure.piccaValkeySecretName
               -
                 secretRef:
-                  name: "picca-rabbitmq-94d271"
+                  name: sharedInfrastructure.piccaRabbitmqSecretName
               -
                 secretRef:
-                  name: "picca-oidc-4a2746"
+                  name: sharedInfrastructure.piccaOidcSecretName
               -
                 secretRef:
-                  name: "picca-graphql-signing-secret-b86cef"
+                  name: sharedInfrastructure.piccaGraphqlSecretName
             image: "ghcr.io/walnuts1018/picca/processing-reconciler:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe:
@@ -646,22 +648,22 @@ fn deploymentPiccaStorageReconciler(namespace: String) -> Map<String, Any> = nod
             envFrom:
               -
                 secretRef:
-                  name: "picca-postgres-99751a"
+                  name: sharedInfrastructure.piccaPostgresSecretName
               -
                 secretRef:
-                  name: "picca-scylla-a8f7af"
+                  name: sharedInfrastructure.piccaScyllaSecretName
               -
                 secretRef:
-                  name: "picca-valkey-ee0a97"
+                  name: sharedInfrastructure.piccaValkeySecretName
               -
                 secretRef:
-                  name: "picca-rabbitmq-94d271"
+                  name: sharedInfrastructure.piccaRabbitmqSecretName
               -
                 secretRef:
-                  name: "picca-oidc-4a2746"
+                  name: sharedInfrastructure.piccaOidcSecretName
               -
                 secretRef:
-                  name: "picca-graphql-signing-secret-b86cef"
+                  name: sharedInfrastructure.piccaGraphqlSecretName
             image: "ghcr.io/walnuts1018/picca/storage-reconciler:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe:
@@ -776,7 +778,7 @@ fn triggerAuthenticationPiccaRabbitmqWorkerAuth(namespace: String) -> Map<String
     secretTargetRef:
       -
         key: "KEDA_RABBITMQ_HOST"
-        name: "picca-rabbitmq-94d271"
+        name: sharedInfrastructure.piccaRabbitmqSecretName
         parameter: "host"
 
 export fn outbox(namespace: String) -> List<Map<String, Any>> =

@@ -1,3 +1,4 @@
+import "./secrets.mcl" as secrets
 let volumeClaimTemplates =
   -
     metadata:
@@ -71,7 +72,7 @@ export let resources =
           -
             name: "filer-config-custom"
             secret:
-              secretName: "seaweedfs-default-filer-config-a2411c"
+              secretName: secrets.filerConfigName
           -
             name: "tikv-client-cert"
             secret:

@@ -1,26 +1,31 @@
-let externalSecretPiccaDevOidcFilterD222E5 = node:
+import "std:hash" as hash
+
+let externalSecretData =
+  -
+    remoteRef:
+      key: "terraform-external-secrets"
+      property: "picca-dev-client-id"
+    secretKey: "client-id"
+  -
+    remoteRef:
+      key: "terraform-external-secrets"
+      property: "picca-dev-client-secret"
+    secretKey: "client-secret"
+export let secretName = "picca-dev-oidc-filter-" + hash.fnv1a64(externalSecretData)
+
+let externalSecretPiccaDevOidcFilter = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
-    name: "picca-dev-oidc-filter-d222e5"
+    name: secretName
   spec:
-    data:
-      -
-        remoteRef:
-          key: "terraform-external-secrets"
-          property: "picca-dev-client-id"
-        secretKey: "client-id"
-      -
-        remoteRef:
-          key: "terraform-external-secrets"
-          property: "picca-dev-client-secret"
-        secretKey: "client-secret"
+    data: externalSecretData
     refreshInterval: "1m"
     secretStoreRef:
       kind: "ClusterSecretStore"
       name: "onepassword"
     target:
-      name: "picca-dev-oidc-filter-d222e5"
+      name: secretName
       template:
         engineVersion: "v2"
         type: "Opaque"
@@ -34,9 +39,9 @@ fn securityPolicyPiccaDev(namespace: String) -> Map<String, Any> = node:
   spec:
     oidc:
       clientIDRef:
-        name: "picca-dev-oidc-filter-d222e5"
+        name: secretName
       clientSecret:
-        name: "picca-dev-oidc-filter-d222e5"
+        name: secretName
       logoutPath: "/oauth2/logout"
       provider:
         issuer: "https://auth.walnuts.dev"
@@ -52,7 +57,7 @@ fn securityPolicyPiccaDev(namespace: String) -> Map<String, Any> = node:
         name: "picca-dev"
 
 export fn externalSecret() -> List<Map<String, Any>> =
-  - externalSecretPiccaDevOidcFilterD222E5
+  - externalSecretPiccaDevOidcFilter
 
 export fn securityPolicy(namespace: String) -> List<Map<String, Any>> =
   - securityPolicyPiccaDev(namespace)

@@ -1,4 +1,5 @@
 import "std:crypto" as crypto
+import "std:hash" as hash
 import "std:context" as context
 import "./profiles.mcl" as appProfiles
 import text "./_configs/aws-config" as awsConfig
@@ -21,7 +22,33 @@ let scriptData =
 let awsConfigMapName = name + "-aws-" + crypto.sha256(awsData, 6)
 let rcloneConfigMapName = name + "-rclone-" + crypto.sha256(rcloneData, 6)
 let scriptConfigMapName = name + "-script-" + crypto.sha256(scriptData, 6)
-let secretName = name + "-aws-" + crypto.sha256(awsCredentials, 6)
+let externalSecretData =
+  -
+    secretKey: "seaweedfs_biscuit_default_backup_access_key"
+    remoteRef:
+      key: "terraform-external-secrets"
+      property: "seaweedfs_biscuit_default_backup_access_key"
+  -
+    secretKey: "seaweedfs_biscuit_default_backup_secret_key"
+    remoteRef:
+      key: "terraform-external-secrets"
+      property: "seaweedfs_biscuit_default_backup_secret_key"
+  -
+    secretKey: "b2_seaweedfs_application_key_id"
+    remoteRef:
+      key: "terraform-external-secrets"
+      property: "b2-seaweedfs-application-key-id"
+  -
+    secretKey: "b2_seaweedfs_application_key"
+    remoteRef:
+      key: "terraform-external-secrets"
+      property: "b2-seaweedfs-application-key"
+let externalSecretTemplateData =
+  credentials: awsCredentials
+let externalSecretHashInput =
+  data: externalSecretData
+  templateData: externalSecretTemplateData
+let secretName = name + "-aws-" + hash.fnv1a64(externalSecretHashInput)
 
 export let awsConfigMap = node:
   apiVersion: "v1"
@@ -69,29 +96,8 @@ export let externalSecret = node:
       template:
         engineVersion: "v2"
         type: "Opaque"
-        data:
-          credentials: awsCredentials
-    data:
-      -
-        secretKey: "seaweedfs_biscuit_default_backup_access_key"
-        remoteRef:
-          key: "terraform-external-secrets"
-          property: "seaweedfs_biscuit_default_backup_access_key"
-      -
-        secretKey: "seaweedfs_biscuit_default_backup_secret_key"
-        remoteRef:
-          key: "terraform-external-secrets"
-          property: "seaweedfs_biscuit_default_backup_secret_key"
-      -
-        secretKey: "b2_seaweedfs_application_key_id"
-        remoteRef:
-          key: "terraform-external-secrets"
-          property: "b2-seaweedfs-application-key-id"
-      -
-        secretKey: "b2_seaweedfs_application_key"
-        remoteRef:
-          key: "terraform-external-secrets"
-          property: "b2-seaweedfs-application-key"
+        data: externalSecretTemplateData
+    data: externalSecretData
 
 export let serviceAccount = node:
   apiVersion: "v1"
