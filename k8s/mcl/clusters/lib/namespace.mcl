@@ -1,0 +1,12 @@
+export fn namespace(name: String) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  kind: "Namespace"
+  metadata:
+    name: name
+
+export fn labeledNamespace(name: String, labels: Map<String, String>) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  kind: "Namespace"
+  metadata:
+    name: name
+    labels: labels

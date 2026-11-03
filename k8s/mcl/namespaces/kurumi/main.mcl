@@ -1,0 +1,3 @@
+import "./resources.mcl" as namespaceResources
+
+emit each namespaceResources.resources

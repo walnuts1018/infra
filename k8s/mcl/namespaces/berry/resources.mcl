@@ -1,0 +1,7 @@
+import "../../clusters/lib/namespace.mcl" as namespace
+
+export let resources =
+  - namespace.namespace("tart-infrastructure-system")
+  - namespace.namespace("kurumi")
+  - namespace.namespace("biscuit")
+

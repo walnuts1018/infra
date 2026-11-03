@@ -1,0 +1,8 @@
+import "../../clusters/lib/namespace.mcl" as namespace
+
+let privilegedLabels =
+  key("pod-security.kubernetes.io/enforce"): "privileged"
+
+export let resources =
+  - namespace.labeledNamespace("cilium-system", privilegedLabels)
+

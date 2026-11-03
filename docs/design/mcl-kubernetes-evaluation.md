@@ -4,13 +4,13 @@
 
 `clusterapi`ブランチの`k8s/`は117個のアプリケーションと、Cluster API/Tart/Talos/Argo CD Agentを管理するクラスタ定義で構成されています。MCL化では既存の`app.json5`やJsonnet Componentを一対一に翻訳せず、アプリケーションの入力データ、共通のリソース関数、entrypointを分け、MCLの型とBundle出力に合わせて構成を見直します。
 
-現在の実装は`k8s/mcl/clusters/kurumi/main.mcl`からTartHost 4台とRedfish用ExternalSecretを、`k8s/mcl/clusters/biscuit/main.mcl`からTartHost 1台とIntel AMT用ExternalSecretを出力します。ホスト固有値をレコードに集約し、電源仕様をWakeOnLAN、Redfish、IntelManageabilityのUnionで表します。MCLは共通の`TartHost`生成関数に各レコードの値を渡します。
+現在の実装は`k8s/mcl/clusters/kurumi/main.mcl`からTartHost 4台とRedfish用ExternalSecretを、`k8s/mcl/clusters/biscuit/main.mcl`からTartHost 1台とIntel AMT用ExternalSecretを出力します。各クラスタのホスト固有値をレコードに集約し、電源仕様をWakeOnLAN、Redfish、IntelManageabilityのUnionで表します。MCLは共通の`TartHost`生成関数に各レコードの値を渡します。`k8s/mcl/namespaces/`は3クラスタのNamespace resourceを生成し、各出力は既存YAMLと一致します。
 
 ## Argo CD Config Management Plugin案
 
 将来のpluginは、Argo CD Applicationのsource pathにある`main.mcl`をentrypointとして、checkout済みGit revisionを入力に`mcl check`と`mcl render`を順に実行します。成功時はYAMLのBundleだけをstdoutへ出力し、診断と実行ログはstderrへ出力します。pluginは環境変数や外部ネットワークの最新値からManifestを生成せず、同じrevisionとlockfileから同じBundleを生成します。
 
-Argo CD Applicationは現在と同じアプリケーション単位を保ちます。各Applicationのsource pathは`k8s/mcl/apps/<app>/main.mcl`、クラスタ構築用Applicationのsource pathは`k8s/mcl/clusters/<cluster>/main.mcl`を指す想定です。共通モジュールはMCLの明示的なimportで参照します。HelmとKustomizeはMCL標準Adapterでレンダリングし、取得元とrevisionをlockfileに固定します。Secret値をBundleに含めず、ExternalSecretなどの参照だけを出力します。
+Argo CD Applicationは現在と同じアプリケーション単位を保ちます。各Applicationのsource pathは`k8s/mcl/apps/<app>/main.mcl`、クラスタ構築用Applicationのsource pathは`k8s/mcl/clusters/<cluster>/main.mcl`、Namespace Applicationのsource pathは`k8s/mcl/namespaces/<cluster>/main.mcl`を指す想定です。共通モジュールはMCLの明示的なimportで参照します。HelmとKustomizeはMCL標準Adapterでレンダリングし、取得元とrevisionをlockfileに固定します。Secret値をBundleに含めず、ExternalSecretなどの参照だけを出力します。MCLのプロジェクトrootは`k8s/mcl/`の`mcl.toml`で区切ります。
 
 ## MCLに必要な機能
 
@@ -23,4 +23,4 @@ Argo CD Applicationは現在と同じアプリケーション単位を保ちま�
 
 ## 未完了項目
 
-MCL化はBiscuitとKurumiのTartHostおよび資格情報参照に限られます。残りのCluster APIリソース、Talos patch、Argo CD Agent、他クラスタ、117アプリ、Helm/Kustomize利用、既存Componentの置き換えは未移植です。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。
+MCL化は3クラスタのNamespaceと、Biscuit・KurumiのTartHostおよび資格情報参照に限られます。残りのCluster APIリソース、Talos patch、Argo CD Agent、117アプリ、Helm/Kustomize利用、既存Componentの置き換えは未移植です。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。
