@@ -1,0 +1,4 @@
+export let chartVersion = "0.122.0"
+export let chartArchive = "https://github.com/open-telemetry/opentelemetry-helm-charts/releases/download/opentelemetry-operator-" + chartVersion + "/opentelemetry-operator-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let namespace = "opentelemetry-operator-system"

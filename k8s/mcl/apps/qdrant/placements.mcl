@@ -1,0 +1,29 @@
+import "./chart.mcl" as appChart
+
+export type Placement =
+  target: String
+  cluster: String
+  entrypoint: String
+  destination: Destination
+
+export type NamedDestination =
+  kind: "name"
+  name: String
+  namespace: String
+
+export type ServerDestination =
+  kind: "server"
+  server: String
+  namespace: String
+
+export type Destination = NamedDestination | ServerDestination
+
+export let placements: Map<String, Placement> =
+  kurumi:
+    target: "kurumi"
+    cluster: "kurumi"
+    entrypoint: "k8s/mcl/apps/qdrant/main.mcl"
+    destination:
+      kind: "name"
+      name: "kurumi"
+      namespace: appChart.namespace

@@ -1,0 +1,45 @@
+import "./chart.mcl" as appChart
+
+export type NamedDestination =
+  kind: "name"
+  name: String
+  namespace: String
+
+export type ServerDestination =
+  kind: "server"
+  server: String
+  namespace: String
+
+export type Destination = NamedDestination | ServerDestination
+
+export type Placement =
+  target: String
+  cluster: String
+  entrypoint: String
+  destination: Destination
+
+export let placements: Map<String, Placement> =
+  biscuit:
+    target: "biscuit"
+    cluster: "biscuit"
+    entrypoint: "k8s/mcl/apps/onepassword-connect/main.mcl"
+    destination:
+      kind: "name"
+      name: "biscuit"
+      namespace: appChart.namespace
+  kurumi:
+    target: "kurumi"
+    cluster: "kurumi"
+    entrypoint: "k8s/mcl/apps/onepassword-connect/main.mcl"
+    destination:
+      kind: "name"
+      name: "kurumi"
+      namespace: appChart.namespace
+  berry:
+    target: "berry"
+    cluster: "berry"
+    entrypoint: "k8s/mcl/apps/onepassword-connect/main.mcl"
+    destination:
+      kind: "server"
+      server: "https://kubernetes.default.svc"
+      namespace: appChart.namespace

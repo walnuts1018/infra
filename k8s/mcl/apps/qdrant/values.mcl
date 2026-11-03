@@ -1,0 +1,28 @@
+let metricsValues: Map<String, Any> =
+  serviceMonitor:
+    enabled: true
+
+export let values: Map<String, Any> =
+  replicaCount: 1
+  useUnprivilegedImage: true
+  readinessProbe:
+    enabled: true
+  livenessProbe:
+    enabled: true
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "1"
+      memory: "2Gi"
+  persistence:
+    size: "10Gi"
+    storageClassName: "longhorn"
+
+  snapshotPersistence:
+    enabled: true
+    size: "10Gi"
+    storageClassName: "longhorn"
+
+  metrics: metricsValues
