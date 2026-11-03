@@ -1,0 +1,760 @@
+import "std:list" as lists
+
+let runnerHooksConfigMapName = "runner-hooks-076f5f"
+let baseValues =
+  controllerServiceAccount:
+    name: "actions-runner-controller-gha-rs-controller"
+    namespace: "arc-systems"
+  githubConfigSecret: "github-app-secret"
+  githubConfigUrl: "https://github.com/walnuts1018/picca"
+  listenerMetrics:
+    counters:
+      gha_completed_jobs_total:
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+          - "job_name"
+          - "event_name"
+          - "job_result"
+          - "job_workflow_ref"
+          - "job_workflow_name"
+          - "job_workflow_target"
+      gha_started_jobs_total:
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+          - "job_name"
+          - "event_name"
+          - "job_workflow_ref"
+          - "job_workflow_name"
+          - "job_workflow_target"
+    gauges:
+      gha_assigned_jobs:
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+      gha_busy_runners:
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+      gha_desired_runners:
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+      gha_idle_runners:
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+      gha_max_runners:
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+      gha_min_runners:
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+      gha_registered_runners:
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+      gha_running_jobs:
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+    histograms:
+      gha_job_execution_duration_seconds:
+        buckets:
+          - 0.01
+          - 0.05
+          - 0.1
+          - 0.5
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 12
+          - 15
+          - 18
+          - 20
+          - 25
+          - 30
+          - 40
+          - 50
+          - 60
+          - 70
+          - 80
+          - 90
+          - 100
+          - 110
+          - 120
+          - 150
+          - 180
+          - 210
+          - 240
+          - 300
+          - 360
+          - 420
+          - 480
+          - 540
+          - 600
+          - 900
+          - 1200
+          - 1800
+          - 2400
+          - 3000
+          - 3600
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+          - "job_name"
+          - "event_name"
+          - "job_result"
+          - "job_workflow_ref"
+          - "job_workflow_name"
+          - "job_workflow_target"
+      gha_job_startup_duration_seconds:
+        buckets:
+          - 0.01
+          - 0.05
+          - 0.1
+          - 0.5
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 12
+          - 15
+          - 18
+          - 20
+          - 25
+          - 30
+          - 40
+          - 50
+          - 60
+          - 70
+          - 80
+          - 90
+          - 100
+          - 110
+          - 120
+          - 150
+          - 180
+          - 210
+          - 240
+          - 300
+          - 360
+          - 420
+          - 480
+          - 540
+          - 600
+          - 900
+          - 1200
+          - 1800
+          - 2400
+          - 3000
+          - 3600
+        labels:
+          - "name"
+          - "namespace"
+          - "repository"
+          - "organization"
+          - "enterprise"
+          - "job_name"
+          - "event_name"
+          - "job_workflow_ref"
+          - "job_workflow_name"
+          - "job_workflow_target"
+  minRunners: 0
+  template:
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            -
+              preference:
+                matchExpressions:
+                  -
+                    key: "kubernetes.io/hostname"
+                    operator: "In"
+                    values:
+                      - "rusk"
+              weight: 100
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              -
+                matchExpressions:
+                  -
+                    key: "kubernetes.io/hostname"
+                    operator: "In"
+                    values:
+                      - "rusk"
+                      - "cake"
+      automountServiceAccountToken: false
+      containers:
+        -
+          command:
+            - "/home/runner/run.sh"
+          env:
+            -
+              name: "DOTNET_gcServer"
+              value: "0"
+            -
+              name: "DOTNET_GCHeapHardLimit"
+              value: "0x10000000"
+            -
+              name: "DOTNET_GCConserveMemory"
+              value: "9"
+            -
+              name: "DOTNET_TieredPGO"
+              value: "0"
+            -
+              name: "MALLOC_ARENA_MAX"
+              value: "2"
+            -
+              name: "DOCKER_HOST"
+              value: "unix:///var/run/docker.sock"
+            -
+              name: "RUNNER_WAIT_FOR_DOCKER_IN_SECONDS"
+              value: "120"
+            -
+              name: "CUSTOM_ACTIONS_RESULTS_URL"
+              value: "https://gha-cache-server.local.walnuts.dev/"
+            -
+              name: "ACTIONS_RUNNER_HOOK_JOB_STARTED"
+              value: "/etc/arc/hooks/job-started.sh"
+            -
+              name: "ACTIONS_RUNNER_HOOK_JOB_COMPLETED"
+              value: "/etc/arc/hooks/job-completed.sh"
+          image: "ghcr.io/walnuts1018/infra/actions-runner:2.336.0"
+          name: "runner"
+          volumeMounts:
+            -
+              mountPath: "/home/runner/_work"
+              name: "work"
+            -
+              mountPath: "/var/run"
+              name: "dind-sock"
+            -
+              mountPath: "/etc/arc/hooks"
+              name: "runner-hooks"
+      enableServiceLinks: false
+      initContainers:
+        -
+          command:
+            - "cp"
+            - "-r"
+            - "/home/runner/externals/."
+            - "/home/runner/tmpDir/"
+          image: "ghcr.io/walnuts1018/infra/actions-runner:2.336.0"
+          name: "init-dind-externals"
+          volumeMounts:
+            -
+              mountPath: "/home/runner/tmpDir"
+              name: "dind-externals"
+        -
+          args:
+            - "dockerd"
+            - "--host=unix:///var/run/docker.sock"
+            - "--group=$(DOCKER_GROUP_GID)"
+            - "--mtu=1280"
+          env:
+            -
+              name: "DOCKER_GROUP_GID"
+              value: "123"
+          image: "docker:29.7.2-dind"
+          name: "dind"
+          restartPolicy: "Always"
+          securityContext:
+            privileged: true
+          startupProbe:
+            exec:
+              command:
+                - "docker"
+                - "info"
+            failureThreshold: 24
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            timeoutSeconds: 10
+          volumeMounts:
+            -
+              mountPath: "/home/runner/_work"
+              name: "work"
+            -
+              mountPath: "/var/run"
+              name: "dind-sock"
+            -
+              mountPath: "/home/runner/externals"
+              name: "dind-externals"
+            -
+              mountPath: "/var/lib/docker"
+              name: "docker-storage"
+      nodeSelector:
+        "kubernetes.io/arch": "amd64"
+      resources:
+        limits:
+          cpu: "100m"
+          memory: "256Mi"
+        requests:
+          cpu: "100m"
+          memory: "256Mi"
+      volumes:
+        -
+          emptyDir: {}
+          name: "work"
+        -
+          emptyDir: {}
+          name: "dind-sock"
+        -
+          emptyDir: {}
+          name: "dind-externals"
+        -
+          emptyDir: {}
+          name: "docker-storage"
+        -
+          configMap:
+            defaultMode: 493
+            name: "runner-hooks-076f5f"
+          name: "runner-hooks"
+
+type Runner =
+  name: String
+  cpu: String
+  memory: String
+  architecture: String
+  maxRunners: Int
+
+let runners =
+  - name: "nano-amd64"
+    cpu: "100m"
+    memory: "256Mi"
+    architecture: "amd64"
+    maxRunners: 3
+  - name: "small-amd64"
+    cpu: "500m"
+    memory: "512Mi"
+    architecture: "amd64"
+    maxRunners: 3
+  - name: "large-amd64"
+    cpu: "2"
+    memory: "2Gi"
+    architecture: "amd64"
+    maxRunners: 2
+  - name: "xlarge-amd64"
+    cpu: "4"
+    memory: "4Gi"
+    architecture: "amd64"
+    maxRunners: 2
+  - name: "2xlarge-amd64"
+    cpu: "4"
+    memory: "8Gi"
+    architecture: "amd64"
+    maxRunners: 2
+
+fn runnerValues(runner: Runner) -> Map<String, Any> = baseValues with:
+  maxRunners: runner.maxRunners
+  template:
+    spec:
+      nodeSelector:
+        "kubernetes.io/arch": runner.architecture
+      resources:
+        requests:
+          cpu: runner.cpu
+          memory: runner.memory
+        limits:
+          cpu: runner.cpu
+          memory: runner.memory
+
+fn runnerApplication(runner: Runner) -> Map<String, Any> = node:
+  apiVersion: "argoproj.io/v1alpha1"
+  kind: "Application"
+  metadata:
+    name: "arc-picca-" + runner.name + "-helm"
+    namespace: "argocd"
+    finalizers:
+      - "resources-finalizer.argocd.argoproj.io"
+  spec:
+    destination:
+      namespace: "arc-runners"
+      server: "https://kubernetes.default.svc"
+    project: "default"
+    source:
+      chart: "gha-runner-scale-set"
+      repoURL: "ghcr.io/actions/actions-runner-controller-charts"
+      targetRevision: "0.14.2"
+      helm:
+        releaseName: "arc-picca-" + runner.name
+        valuesObject: runnerValues(runner)
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - "ServerSideApply=true"
+        - "FailOnSharedResource=true"
+
+let applications = lists.map(runners, runnerApplication)
+
+let appLabels =
+  app: "actions-runners"
+  "app.kubernetes.io/name": "actions-runners"
+
+let jobStartedScript = """
+#!/usr/bin/env bash
+START_TIME=$(date +%s)
+CPU_USAGE=0
+if [ -f /sys/fs/cgroup/cpu.stat ]; then
+  CPU_USAGE=$(grep "usage_usec" /sys/fs/cgroup/cpu.stat | awk '{print $2}')
+fi
+echo "START_TIME=${START_TIME}" > /tmp/job-metrics.env
+echo "START_CPU_USAGE=${CPU_USAGE}" >> /tmp/job-metrics.env
+exit 0
+"""
+
+let jobCompletedScript = """
+#!/usr/bin/env bash
+(
+  END_TIME=$(date +%s)
+  START_TIME="${END_TIME}"
+  START_CPU_USAGE=0
+
+  if [ -f /tmp/job-metrics.env ]; then
+    source /tmp/job-metrics.env
+  fi
+
+  DURATION=$((END_TIME - START_TIME))
+  if [ "${DURATION}" -le 0 ]; then
+    DURATION=1
+  fi
+
+  PEAK_MEM=0
+  if [ -f /sys/fs/cgroup/memory.peak ]; then
+    PEAK_MEM=$(cat /sys/fs/cgroup/memory.peak 2>/dev/null || echo 0)
+  elif [ -f /sys/fs/cgroup/memory.current ]; then
+    PEAK_MEM=$(cat /sys/fs/cgroup/memory.current 2>/dev/null || echo 0)
+  fi
+
+  AVG_CPU="0.0"
+  if [ -f /sys/fs/cgroup/cpu.stat ]; then
+    END_CPU_USAGE=$(grep "usage_usec" /sys/fs/cgroup/cpu.stat | awk '{print $2}')
+    if [ -n "${END_CPU_USAGE}" ] && [ "${END_CPU_USAGE}" -gt "${START_CPU_USAGE}" ]; then
+      CPU_DELTA_USEC=$((END_CPU_USAGE - START_CPU_USAGE))
+      AVG_CPU=$(awk "BEGIN {printf \"%.4f\", ${CPU_DELTA_USEC} / (${DURATION} * 1000000)}")
+    fi
+  fi
+
+  WORKER_LOG=""
+  for d in "/home/runner/_diag" "${RUNNER_WORKSPACE:-}/../_diag" "${RUNNER_WORKSPACE%/_work*}/_diag" "/actions-runner/_diag" "/runner/_diag"; do
+    if [ -d "${d}" ]; then
+      LATEST=$(ls -t "${d}"/Worker_*.log 2>/dev/null | head -n 1)
+      if [ -n "${LATEST}" ] && [ -f "${LATEST}" ]; then
+        WORKER_LOG="${LATEST}"
+        break
+      fi
+    fi
+  done
+
+  JOB_NAME="${GITHUB_JOB:-unknown}"
+  if [ -n "${WORKER_LOG}" ] && [ -f "${WORKER_LOG}" ]; then
+    DISPLAY_NAME=$(sed -n -E 's/^[[:space:]]*"[jJ]obDisplayName":[[:space:]]*"(.*)"[[:space:]]*,?[[:space:]]*$/\1/p' "${WORKER_LOG}" | head -n 1)
+    if [ -z "${DISPLAY_NAME}" ]; then
+      DISPLAY_NAME=$(sed -n -E 's/.*Starting:[[:space:]]*(.*)/\1/p' "${WORKER_LOG}" | head -n 1)
+    fi
+    if [ -n "${DISPLAY_NAME}" ]; then
+      JOB_NAME="${DISPLAY_NAME}"
+    fi
+  fi
+
+  WORKFLOW_NAME="${GITHUB_WORKFLOW:-unknown}"
+  REPO_NAME="${GITHUB_REPOSITORY:-unknown}"
+  REPO_SHORT="${REPO_NAME##*/}"
+
+  NOW_NS=$(date +%s%N 2>/dev/null || echo "$(( $(date +%s) * 1000000000 ))")
+
+  PAYLOAD=$(cat <<EOF
+{
+  "resourceMetrics": [{
+    "resource": {
+      "attributes": [
+        {"key": "service.name", "value": {"stringValue": "actions-runner"}},
+        {"key": "k8s.namespace.name", "value": {"stringValue": "arc-runners"}}
+      ]
+    },
+    "scopeMetrics": [{
+      "scope": {"name": "github.actions.runner"},
+      "metrics": [
+        {
+          "name": "gha_job_resource_peak_memory_bytes",
+          "gauge": {
+            "dataPoints": [{
+              "asInt": ${PEAK_MEM},
+              "timeUnixNano": "${NOW_NS}",
+              "attributes": [
+                {"key": "job_name", "value": {"stringValue": "${JOB_NAME}"}},
+                {"key": "job_workflow_name", "value": {"stringValue": "${WORKFLOW_NAME}"}},
+                {"key": "repository", "value": {"stringValue": "${REPO_SHORT}"}}
+              ]
+            }]
+          }
+        },
+        {
+          "name": "gha_job_resource_avg_cpu_cores",
+          "gauge": {
+            "dataPoints": [{
+              "asDouble": ${AVG_CPU},
+              "timeUnixNano": "${NOW_NS}",
+              "attributes": [
+                {"key": "job_name", "value": {"stringValue": "${JOB_NAME}"}},
+                {"key": "job_workflow_name", "value": {"stringValue": "${WORKFLOW_NAME}"}},
+                {"key": "repository", "value": {"stringValue": "${REPO_SHORT}"}}
+              ]
+            }]
+          }
+        },
+        {
+          "name": "gha_job_resource_duration_seconds",
+          "gauge": {
+            "dataPoints": [{
+              "asInt": ${DURATION},
+              "timeUnixNano": "${NOW_NS}",
+              "attributes": [
+                {"key": "job_name", "value": {"stringValue": "${JOB_NAME}"}},
+                {"key": "job_workflow_name", "value": {"stringValue": "${WORKFLOW_NAME}"}},
+                {"key": "repository", "value": {"stringValue": "${REPO_SHORT}"}}
+              ]
+            }]
+          }
+        }
+      ]
+    }]
+  }]
+}
+EOF
+)
+
+  curl -s -m 5 -X POST \
+    "http://default-collector.opentelemetry-collector.svc.cluster.local:4318/v1/metrics" \
+    -H "Content-Type: application/json" \
+    -d "${PAYLOAD}" >/dev/null 2>&1 || true
+) || true
+exit 0
+"""
+
+let runnerHooksConfigMap = node:
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  immutable: true
+  metadata:
+    name: runnerHooksConfigMapName
+    namespace: "arc-runners"
+    labels: appLabels
+  data:
+    "job-started.sh": jobStartedScript + "\n"
+    "job-completed.sh": jobCompletedScript + "\n"
+
+let githubAppSecret =
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: "github-app-secret"
+    namespace: "arc-runners"
+  spec:
+    data:
+      -
+        remoteRef:
+          key: "sharc-rusk"
+          property: "github_app_id"
+        secretKey: "github_app_id"
+      -
+        remoteRef:
+          key: "sharc-rusk"
+          property: "github_app_installation_id"
+        secretKey: "github_app_installation_id"
+      -
+        remoteRef:
+          key: "sharc-rusk"
+          property: "github_app_private_key"
+        secretKey: "github_app_private_key"
+    refreshInterval: "1m"
+    secretStoreRef:
+      kind: "ClusterSecretStore"
+      name: "onepassword"
+    target:
+      name: "github-app-secret"
+      template:
+        data:
+          github_app_id: "{{ .github_app_id }}"
+          github_app_installation_id: "{{ .github_app_installation_id }}"
+          github_app_private_key: "{{ .github_app_private_key }}"
+        engineVersion: "v2"
+        type: "Opaque"
+
+let networkPolicy =
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: "actions-runners"
+    namespace: "arc-runners"
+  spec:
+    egress:
+      -
+        to:
+          -
+            ipBlock:
+              cidr: "0.0.0.0/0"
+              except:
+                - "192.168.0.0/16"
+                - "10.244.0.0/16"
+                - "10.96.0.0/12"
+      -
+        ports:
+          -
+            port: 53
+            protocol: "UDP"
+          -
+            port: 53
+            protocol: "TCP"
+        to:
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "kube-system"
+            podSelector:
+              matchLabels:
+                "k8s-app": "kube-dns"
+      -
+        ports:
+          -
+            port: 3000
+            protocol: "TCP"
+        to:
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "arc-systems"
+            podSelector:
+              matchLabels:
+                "app.kubernetes.io/name": "github-actions-cache-server"
+      -
+        ports:
+          -
+            port: 443
+            protocol: "TCP"
+        to:
+          -
+            ipBlock:
+              cidr: "192.168.12.138/32"
+      -
+        ports:
+          -
+            port: 10443
+            protocol: "TCP"
+        to:
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "envoy-gateway-system"
+            podSelector:
+              matchLabels:
+                "app.kubernetes.io/component": "proxy"
+                "app.kubernetes.io/name": "envoy"
+      -
+        ports:
+          -
+            port: 4318
+            protocol: "TCP"
+        to:
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "opentelemetry-collector"
+            podSelector:
+              matchLabels:
+                "app.kubernetes.io/name": "default-collector"
+    ingress:
+      -
+        from:
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "opentelemetry-collector"
+        ports:
+          -
+            port: 8080
+            protocol: "TCP"
+    podSelector: {}
+    policyTypes:
+      - "Ingress"
+      - "Egress"
+
+let podMonitor =
+  apiVersion: "monitoring.coreos.com/v1"
+  kind: "PodMonitor"
+  metadata:
+    labels:
+      app: "actions-runners"
+      "app.kubernetes.io/name": "actions-runners"
+    name: "arc-runner-set-listener"
+    namespace: "arc-runners"
+  spec:
+    namespaceSelector:
+      matchNames:
+        - "arc-systems"
+    podMetricsEndpoints:
+      -
+        interval: "15s"
+        path: "/metrics"
+        port: "metrics"
+    selector:
+      matchLabels:
+        "app.kubernetes.io/component": "runner-scale-set-listener"
+
+emit runnerHooksConfigMap
+emit githubAppSecret
+emit networkPolicy
+emit podMonitor
+emit each applications
