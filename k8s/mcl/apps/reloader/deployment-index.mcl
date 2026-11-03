@@ -1,0 +1,7 @@
+import "./deployments.mcl" as app
+
+let deployments =
+  - app.deployments.kurumi
+  - app.deployments.biscuit
+  - app.deployments.berry
+emit each deployments

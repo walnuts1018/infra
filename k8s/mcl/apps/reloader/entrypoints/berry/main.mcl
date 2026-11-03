@@ -5,7 +5,7 @@ import "../../deployments.mcl" as app
 let deployment = app.deployments.berry
 let options =
   releaseName: "reloader"
-  namespace: deployment.namespace
+  namespace: deployment.destination.namespace
   version: appChart.chart.targetRevision
   kubeVersion: appChart.kubeVersion
   apiVersions: appChart.apiVersions
