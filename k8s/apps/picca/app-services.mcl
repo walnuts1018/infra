@@ -378,7 +378,7 @@ fn deploymentPiccaApiserver(namespace: String) -> Map<String, Any> = node:
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: "picca-scylladb-ca-cert-c0f830"
+              name: sharedInfrastructure.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -397,7 +397,7 @@ fn deploymentPiccaApiserver(namespace: String) -> Map<String, Any> = node:
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: "picca-plans-23d579"
+              name: sharedInfrastructure.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn servicePiccaApiserver(namespace: String) -> Map<String, Any> = node:

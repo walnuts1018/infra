@@ -1,20 +1,12 @@
-import "std:list" as lists
 import "./profiles.mcl" as appProfiles
 import "./ai-services.mcl" as aiServices
 import "./app-services.mcl" as appServices
 import "./shared-infrastructure.mcl" as sharedInfrastructure
 import "./workers.mcl" as workers
 
-let profile = appProfiles.profiles["default"]
-let resources = lists.concat(
-  aiServices.render(profile.namespace),
-  lists.concat(
-    appServices.render(profile.namespace),
-    lists.concat(
-      sharedInfrastructure.render(profile.namespace),
-      workers.render(profile.namespace),
-    ),
-  ),
-)
+let namespace = appProfiles.profiles["default"].namespace
 
-emit each resources
+emit each aiServices.render(namespace)
+emit each appServices.render(namespace)
+emit each sharedInfrastructure.render(namespace)
+emit each workers.render(namespace)

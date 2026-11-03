@@ -3,17 +3,6 @@ import text "./_configs/argocd-spoke-values.yaml" as argocdSpokeValuesText
 import text "./_configs/argocd-agent-resources.yaml.tmpl" as argocdAgentResourcesTemplateText
 import text "./_configs/onepassword-resources.yaml.tmpl" as onepasswordResourcesTemplateText
 
-let argocdAgentValues = argocdAgentValuesText
-
-
-let argocdSpokeValues = argocdSpokeValuesText
-
-
-let argocdAgentResourcesTemplate = argocdAgentResourcesTemplateText
-
-
-let onepasswordResourcesTemplate = onepasswordResourcesTemplateText
-
 export fn resources(clusterName: String, namespace: String, ciliumValues: String) -> List<Map<String, Any>> =
   -
     apiVersion: "addons.cluster.x-k8s.io/v1alpha1"
@@ -37,7 +26,7 @@ export fn resources(clusterName: String, namespace: String, ciliumValues: String
         wait: false
         install:
           createNamespace: true
-      valuesTemplate: argocdAgentValues
+      valuesTemplate: argocdAgentValuesText
   -
     apiVersion: "addons.cluster.x-k8s.io/v1alpha1"
     kind: "HelmChartProxy"
@@ -136,7 +125,7 @@ export fn resources(clusterName: String, namespace: String, ciliumValues: String
           engineVersion: "v2"
           type: "addons.cluster.x-k8s.io/resource-set"
           data:
-            "resources.yaml": onepasswordResourcesTemplate
+            "resources.yaml": onepasswordResourcesTemplateText
       data:
         -
           secretKey: "credentials"
@@ -167,7 +156,7 @@ export fn resources(clusterName: String, namespace: String, ciliumValues: String
           engineVersion: "v2"
           type: "addons.cluster.x-k8s.io/resource-set"
           data:
-            "resources.yaml": argocdAgentResourcesTemplate
+            "resources.yaml": argocdAgentResourcesTemplateText
       data:
         -
           secretKey: "clientCertificate"
@@ -251,4 +240,4 @@ export fn resources(clusterName: String, namespace: String, ciliumValues: String
         wait: true
         install:
           createNamespace: true
-      valuesTemplate: argocdSpokeValues
+      valuesTemplate: argocdSpokeValuesText

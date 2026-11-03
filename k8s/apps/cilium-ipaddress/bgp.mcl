@@ -18,8 +18,8 @@ fn clusterConfig(name: String, nodeSelector: Map<String, Any>, bgpInstance: Map<
     bgpInstances:
       - bgpInstance
 
-let controlPlaneResources =
-  if appFeatures.enabled("controlPlanePeer"):
+fn controlPlaneResources(features: List<appFeatures.Feature>) -> List<Map<String, Any>> =
+  if appFeatures.enabled(features, "controlPlanePeer"):
     - peerConfig(
       appFeatures.controlPlanePeer.bgp.peerConfigName,
       appFeatures.controlPlanePeer.bgp.peerConfigSpec,
@@ -32,8 +32,8 @@ let controlPlaneResources =
   else:
     []
 
-let serverVlanResources =
-  if appFeatures.enabled("serverVlanPeer"):
+fn serverVlanResources(features: List<appFeatures.Feature>) -> List<Map<String, Any>> =
+  if appFeatures.enabled(features, "serverVlanPeer"):
     - peerConfig(
       appFeatures.serverVlanPeer.bgp.peerConfigName,
       appFeatures.serverVlanPeer.bgp.peerConfigSpec,
@@ -46,4 +46,5 @@ let serverVlanResources =
   else:
     []
 
-export let resources = lists.concat(controlPlaneResources, serverVlanResources)
+export fn resources(features: List<appFeatures.Feature>) -> List<Map<String, Any>> =
+  lists.concat(controlPlaneResources(features), serverVlanResources(features))

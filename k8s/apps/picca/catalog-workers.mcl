@@ -461,7 +461,7 @@ fn deploymentPiccaLibraryNotifyWorker(namespace: String) -> Map<String, Any> = n
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: "picca-scylladb-ca-cert-c0f830"
+              name: sharedInfrastructure.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -480,7 +480,7 @@ fn deploymentPiccaLibraryNotifyWorker(namespace: String) -> Map<String, Any> = n
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: "picca-plans-23d579"
+              name: sharedInfrastructure.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn scaledObjectPiccaLibraryNotifyWorker(namespace: String) -> Map<String, Any> = node:
@@ -750,7 +750,7 @@ fn deploymentPiccaStackTimelineWorker(namespace: String) -> Map<String, Any> = n
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: "picca-scylladb-ca-cert-c0f830"
+              name: sharedInfrastructure.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -769,7 +769,7 @@ fn deploymentPiccaStackTimelineWorker(namespace: String) -> Map<String, Any> = n
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: "picca-plans-23d579"
+              name: sharedInfrastructure.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn scaledObjectPiccaStackTimelineWorker(namespace: String) -> Map<String, Any> = node:

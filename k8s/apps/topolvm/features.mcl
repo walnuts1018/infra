@@ -1,8 +1,10 @@
 import "std:list" as lists
 import "./values.mcl" as appValues
 
-fn hasFeature(features: String, name: String) -> Bool =
-  lists.contains("," + features + ",", "," + name + ",")
+export type Feature = "ssd" | "hdd" | "monitoring" | "ruskStorageNodes"
+
+fn hasFeature(features: List<Feature>, name: Feature) -> Bool =
+  lists.contains(features, name)
 
 let ssdDeviceClassItems: List<Map<String, Any>> =
   -
@@ -39,19 +41,19 @@ let hddStorageClassItems: List<Map<String, Any>> =
       mountOptions:
         - "noatime"
 
-fn lvmdNodeSelector(features: String) -> Map<String, String> =
+fn lvmdNodeSelector(features: List<Feature>) -> Map<String, String> =
   if hasFeature(features, "ruskStorageNodes"):
     "topolvm.io/lvmd-config": "rusk"
   else:
     {}
 
-fn nodeSelector(features: String) -> Map<String, String> =
+fn nodeSelector(features: List<Feature>) -> Map<String, String> =
   if hasFeature(features, "ruskStorageNodes"):
     "topolvm.io/enabled": "true"
   else:
     {}
 
-fn hddDeviceClasses(features: String) -> List<Map<String, Any>> =
+fn hddDeviceClasses(features: List<Feature>) -> List<Map<String, Any>> =
   if hasFeature(features, "hdd"):
     -
       name: "hdd"
@@ -63,31 +65,31 @@ fn hddDeviceClasses(features: String) -> List<Map<String, Any>> =
   else:
     []
 
-fn ssdDeviceClasses(features: String) -> List<Map<String, Any>> =
+fn ssdDeviceClasses(features: List<Feature>) -> List<Map<String, Any>> =
   if hasFeature(features, "ssd"):
     ssdDeviceClassItems
   else:
     []
 
-fn deviceClasses(features: String) -> List<Map<String, Any>> =
+fn deviceClasses(features: List<Feature>) -> List<Map<String, Any>> =
   lists.concat(ssdDeviceClasses(features), hddDeviceClasses(features))
 
-fn ssdStorageClasses(features: String) -> List<Map<String, Any>> =
+fn ssdStorageClasses(features: List<Feature>) -> List<Map<String, Any>> =
   if hasFeature(features, "ssd"):
     ssdStorageClassItems
   else:
     []
 
-fn hddStorageClasses(features: String) -> List<Map<String, Any>> =
+fn hddStorageClasses(features: List<Feature>) -> List<Map<String, Any>> =
   if hasFeature(features, "hdd"):
     hddStorageClassItems
   else:
     []
 
-fn storageClasses(features: String) -> List<Map<String, Any>> =
+fn storageClasses(features: List<Feature>) -> List<Map<String, Any>> =
   lists.concat(ssdStorageClasses(features), hddStorageClasses(features))
 
-export fn values(features: String) -> Map<String, Any> = appValues.commonValues with:
+export fn values(features: List<Feature>) -> Map<String, Any> = appValues.commonValues with:
   lvmd:
     nodeSelector: lvmdNodeSelector(features)
     deviceClasses: deviceClasses(features)

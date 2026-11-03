@@ -1,9 +1,11 @@
-import "std:context" as context
 import "std:list" as lists
 import "./resources.mcl" as appResources
 
-let selectedFeatures = "," + context.parameter("features") + ","
-let includeServiceMonitor = lists.contains(selectedFeatures, ",monitoring,")
+type Feature = "monitoring"
+
+param features: List<Feature> = []
+
+let includeServiceMonitor = lists.contains(features, "monitoring")
 let monitoringResources =
   if includeServiceMonitor:
     appResources.monitoringResources

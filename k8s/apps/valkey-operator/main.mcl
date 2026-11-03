@@ -1,11 +1,13 @@
-import "std:context" as context
 import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./features.mcl" as appFeatures
 import "./resources.mcl" as resources
 
-let selectedFeatures = "," + context.parameter("features") + ","
-let monitoringEnabled = lists.contains(selectedFeatures, ",monitoring,")
+type Feature = "monitoring"
+
+param features: List<Feature> = []
+
+let monitoringEnabled = lists.contains(features, "monitoring")
 let values =
   if monitoringEnabled:
     appFeatures.valuesByFeature.monitoring

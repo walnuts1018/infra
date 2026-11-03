@@ -1,12 +1,14 @@
 import "std:list" as lists
 import "./advertisement.mcl" as appAdvertisement
+import "./features.mcl" as appFeatures
 import "./bgp.mcl" as appBgp
 import "./ip-pool.mcl" as appIpPool
 
 let advertisementResources =
   - appAdvertisement.advertisement
 
-export let resources = lists.concat(
-  advertisementResources,
-  lists.concat(appBgp.resources, appIpPool.resources),
-)
+export fn resources(features: List<appFeatures.Feature>) -> List<Map<String, Any>> =
+  lists.concat(
+    advertisementResources,
+    lists.concat(appBgp.resources(features), appIpPool.resources(features)),
+  )

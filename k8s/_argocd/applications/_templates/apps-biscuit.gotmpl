@@ -10,13 +10,20 @@ spec:
     {{- if ne (dig "manifestGenerator" "" .) "jsonnet" }}
     plugin:
       name: mcl
+      {{- $cluster := dig "clusters" "biscuit" (dict) . }}
+      {{- $features := dig "features" nil $cluster }}
+      {{- $settings := dig "settings" nil $cluster }}
+      {{- if or $features $settings }}
       env:
+      {{- with $features }}
       - name: MCL_FEATURES
-        value: '{{ join "," (dig "clusters" "biscuit" "features" (list) .) }}'
-      {{ range $name, $value := dig "clusters" "biscuit" "settings" (dict) . }}
-      - name: MCL_SETTING_{{ upper $name }}
-        value: {{ $value | quote }}
-      {{ end }}
+        value: {{ toJson . | quote }}
+      {{- end }}
+      {{- with $settings }}
+      - name: MCL_SETTINGS
+        value: {{ toJson . | quote }}
+      {{- end }}
+      {{- end }}
     {{- else }}
     directory:
       recurse: true

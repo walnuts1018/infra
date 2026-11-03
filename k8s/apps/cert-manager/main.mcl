@@ -1,4 +1,3 @@
-import "std:context" as context
 import "std:helm" as helm
 import "std:list" as lists
 import "./chart.mcl" as appChart
@@ -6,9 +5,12 @@ import "./controller-configmap.mcl" as controllerConfigMap
 import "./hooks.mcl" as appHooks
 import "./features.mcl" as appFeatures
 
+type Feature = "monitoring"
+
+param features: List<Feature> = []
+
 let apiVersions: List<String> = []
-let selectedFeatures = "," + context.parameter("features") + ","
-let monitoringEnabled = lists.contains(selectedFeatures, ",monitoring,")
+let monitoringEnabled = lists.contains(features, "monitoring")
 let values: Map<String, Any> =
   if monitoringEnabled:
     appFeatures.valuesByFeature.monitoring

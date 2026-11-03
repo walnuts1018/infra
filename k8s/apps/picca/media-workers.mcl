@@ -236,7 +236,7 @@ fn deploymentPiccaDownloadWorker(namespace: String) -> Map<String, Any> = node:
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: "picca-scylladb-ca-cert-c0f830"
+              name: sharedInfrastructure.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -255,7 +255,7 @@ fn deploymentPiccaDownloadWorker(namespace: String) -> Map<String, Any> = node:
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: "picca-plans-23d579"
+              name: sharedInfrastructure.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn scaledObjectPiccaDownloadWorker(namespace: String) -> Map<String, Any> = node:
@@ -515,7 +515,7 @@ fn deploymentPiccaImageProcessingWorker(namespace: String) -> Map<String, Any> =
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: "picca-scylladb-ca-cert-c0f830"
+              name: sharedInfrastructure.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -534,7 +534,7 @@ fn deploymentPiccaImageProcessingWorker(namespace: String) -> Map<String, Any> =
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: "picca-plans-23d579"
+              name: sharedInfrastructure.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn scaledObjectPiccaImageProcessingWorker(namespace: String) -> Map<String, Any> = node:
@@ -794,7 +794,7 @@ fn deploymentPiccaVideoProcessingWorker(namespace: String) -> Map<String, Any> =
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: "picca-scylladb-ca-cert-c0f830"
+              name: sharedInfrastructure.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -813,7 +813,7 @@ fn deploymentPiccaVideoProcessingWorker(namespace: String) -> Map<String, Any> =
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: "picca-plans-23d579"
+              name: sharedInfrastructure.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn scaledObjectPiccaVideoProcessingWorker(namespace: String) -> Map<String, Any> = node:
@@ -1073,7 +1073,7 @@ fn deploymentPiccaVideoTranscodeWorker(namespace: String) -> Map<String, Any> = 
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: "picca-scylladb-ca-cert-c0f830"
+              name: sharedInfrastructure.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -1092,7 +1092,7 @@ fn deploymentPiccaVideoTranscodeWorker(namespace: String) -> Map<String, Any> = 
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: "picca-plans-23d579"
+              name: sharedInfrastructure.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn scaledObjectPiccaVideoTranscodeWorker(namespace: String) -> Map<String, Any> = node:

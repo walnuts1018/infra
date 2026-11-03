@@ -1,17 +1,25 @@
-import "std:context" as context
 import "std:helm" as helm
 import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./external-secret.mcl" as externalSecret
 import "./values.mcl" as appValues
 
-let selectedFeatures = "," + context.parameter("features") + ","
-let originCertificateIngressEnabled = lists.contains(selectedFeatures, ",originCertificateIngress,")
-let gatewayAPIEnabled = lists.contains(selectedFeatures, ",gatewayAPI,")
-let monitoringEnabled = lists.contains(selectedFeatures, ",monitoring,")
-let hubbleTLSEnabled = lists.contains(selectedFeatures, ",hubbleTLS,")
-let l2AnnouncementsEnabled = lists.contains(selectedFeatures, ",l2Announcements,")
-let nodePortEnabled = lists.contains(selectedFeatures, ",nodePort,")
+type Feature = "originCertificateIngress" | "gatewayAPI" | "monitoring" | "hubbleTLS" | "l2Announcements" | "nodePort"
+type Settings =
+  api_server: String
+  cluster_id: Int
+  cluster_name: String
+  envoy_memory: String
+
+param features: List<Feature> = []
+param settings: Settings
+
+let originCertificateIngressEnabled = lists.contains(features, "originCertificateIngress")
+let gatewayAPIEnabled = lists.contains(features, "gatewayAPI")
+let monitoringEnabled = lists.contains(features, "monitoring")
+let hubbleTLSEnabled = lists.contains(features, "hubbleTLS")
+let l2AnnouncementsEnabled = lists.contains(features, "l2Announcements")
+let nodePortEnabled = lists.contains(features, "nodePort")
 let helmValues = appValues.helmValues(
   originCertificateIngressEnabled,
   gatewayAPIEnabled,
@@ -19,10 +27,10 @@ let helmValues = appValues.helmValues(
   hubbleTLSEnabled,
   l2AnnouncementsEnabled,
   nodePortEnabled,
-  context.parameter("setting.api_server"),
-  context.intParameter("setting.cluster_id"),
-  context.parameter("setting.cluster_name"),
-  context.parameter("setting.envoy_memory"),
+  settings.api_server,
+  settings.cluster_id,
+  settings.cluster_name,
+  settings.envoy_memory,
 )
 let apiVersions: List<String> = []
 let options =

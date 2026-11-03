@@ -1,11 +1,13 @@
-import "std:context" as context
 import "std:helm" as helm
 import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
 
-let selectedFeatures = "," + context.parameter("features") + ","
-let argocdApplicationReloadEnabled = lists.contains(selectedFeatures, ",argocdApplicationReload,")
+type Feature = "argocdApplicationReload"
+
+param features: List<Feature> = []
+
+let argocdApplicationReloadEnabled = lists.contains(features, "argocdApplicationReload")
 let namespaceSelector =
   if argocdApplicationReloadEnabled:
     "kubernetes.io/metadata.name=argocd"

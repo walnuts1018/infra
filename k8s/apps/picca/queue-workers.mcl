@@ -236,7 +236,7 @@ fn deploymentPiccaOutboxWorker(namespace: String) -> Map<String, Any> = node:
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: "picca-scylladb-ca-cert-c0f830"
+              name: sharedInfrastructure.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -255,7 +255,7 @@ fn deploymentPiccaOutboxWorker(namespace: String) -> Map<String, Any> = node:
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: "picca-plans-23d579"
+              name: sharedInfrastructure.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn deploymentPiccaProcessingReconciler(namespace: String) -> Map<String, Any> = node:
@@ -491,7 +491,7 @@ fn deploymentPiccaProcessingReconciler(namespace: String) -> Map<String, Any> = 
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: "picca-scylladb-ca-cert-c0f830"
+              name: sharedInfrastructure.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -510,7 +510,7 @@ fn deploymentPiccaProcessingReconciler(namespace: String) -> Map<String, Any> = 
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: "picca-plans-23d579"
+              name: sharedInfrastructure.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn deploymentPiccaStorageReconciler(namespace: String) -> Map<String, Any> = node:
@@ -746,7 +746,7 @@ fn deploymentPiccaStorageReconciler(namespace: String) -> Map<String, Any> = nod
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: "picca-scylladb-ca-cert-c0f830"
+              name: sharedInfrastructure.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -765,7 +765,7 @@ fn deploymentPiccaStorageReconciler(namespace: String) -> Map<String, Any> = nod
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: "picca-plans-23d579"
+              name: sharedInfrastructure.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn triggerAuthenticationPiccaRabbitmqWorkerAuth(namespace: String) -> Map<String, Any> = node:

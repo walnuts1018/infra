@@ -2,6 +2,7 @@
 set -eu
 
 mcl_features=${ARGOCD_ENV_MCL_FEATURES:-}
+mcl_settings=${ARGOCD_ENV_MCL_SETTINGS:-}
 k8s_root=$(cd ../.. && pwd)
 lock_file="$k8s_root/mcl.lock"
 mcl_version=$(sed -n '/"toolchain"[[:space:]]*:/,/^[[:space:]]*}/ s/^[[:space:]]*"mcl":[[:space:]]*"\([0-9][0-9A-Za-z.+-]*\)".*/\1/p' "$lock_file")
@@ -60,12 +61,13 @@ restore_lock() {
 }
 trap restore_lock EXIT
 trap 'exit 1' HUP INT TERM
-set -- --parameter "features=$mcl_features"
-for setting_name in $(env | sed -n 's/^ARGOCD_ENV_MCL_SETTING_\([A-Z0-9_]*\)=.*/\1/p'); do
-  setting_key=$(printf '%s' "$setting_name" | tr '[:upper:]' '[:lower:]')
-  setting_value=$(printenv "ARGOCD_ENV_MCL_SETTING_$setting_name")
-  set -- "$@" --parameter "setting.$setting_key=$setting_value"
-done
+set --
+if [ -n "$mcl_features" ]; then
+  set -- "$@" --parameter "features=$mcl_features"
+fi
+if [ -n "$mcl_settings" ]; then
+  set -- "$@" --parameter "settings=$mcl_settings"
+fi
 "$mcl" update main.mcl "$@"
 if ! cmp -s "$backup_file" "$lock_file"; then
   echo 'MCL dependency update changed k8s/mcl.lock; refusing to render with an unreviewed lock.' >&2

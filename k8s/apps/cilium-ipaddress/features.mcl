@@ -1,11 +1,10 @@
-import "std:context" as context
 import "std:list" as lists
 import "./advertisement.mcl" as appAdvertisement
 
-let selectedFeatures = "," + context.parameter("features") + ","
+export type Feature = "serverVlanPeer" | "controlPlanePeer"
 
-export fn enabled(name: String) -> Bool =
-  lists.contains(selectedFeatures, "," + name + ",")
+export fn enabled(features: List<Feature>, name: Feature) -> Bool =
+  lists.contains(features, name)
 
 let peerConfigBase =
   families:

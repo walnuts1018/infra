@@ -1,5 +1,3 @@
-import "./profiles.mcl" as appProfiles
+import "./resources.mcl" as appResources
 
-let resources = appProfiles.resourcesByProfile["postgres-backup-and-seaweedfs-user-content"]
-
-emit each resources
+emit each appResources.resources

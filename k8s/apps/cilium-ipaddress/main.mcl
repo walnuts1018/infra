@@ -1,3 +1,8 @@
 import "./resources.mcl" as appResources
+import "./features.mcl" as appFeatures
 
-emit each appResources.resources
+param features: List<appFeatures.Feature> = []
+
+let resources = appResources.resources(features)
+
+emit each resources

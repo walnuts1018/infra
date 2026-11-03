@@ -1,0 +1,73 @@
+import "./names.mcl" as names
+
+
+export fn permissionPicca(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "rabbitmq.com/v1beta1"
+  kind: "Permission"
+  metadata:
+    name: "picca"
+    namespace: namespace
+  spec:
+    permissions:
+      configure: ".*"
+      read: ".*"
+      write: ".*"
+    rabbitmqClusterReference:
+      name: "default"
+      namespace: "rabbitmq"
+    userReference:
+      name: "picca"
+    vhost: "picca"
+
+export fn externalSecretPiccaRabbitmq94D271(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: names.piccaRabbitmqSecretName
+    namespace: namespace
+  spec:
+    data:
+      -
+        remoteRef:
+          key: "terraform-external-secrets"
+          property: "picca-rabbitmq-password"
+        secretKey: "rabbitmq_password"
+    refreshInterval: "1m"
+    secretStoreRef:
+      kind: "ClusterSecretStore"
+      name: "onepassword"
+    target:
+      name: names.piccaRabbitmqSecretName
+      template:
+        data:
+          KEDA_RABBITMQ_HOST: "http://picca:{{ .rabbitmq_password }}@default.rabbitmq.svc.cluster.local:15672/picca"
+          RABBITMQ_URL: "amqp://picca:{{ .rabbitmq_password }}@default.rabbitmq.svc.cluster.local:5672/picca"
+        engineVersion: "v2"
+        type: "Opaque"
+
+export fn userPicca(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "rabbitmq.com/v1beta1"
+  kind: "User"
+  metadata:
+    name: "picca"
+    namespace: namespace
+  spec:
+    importCredentialsSecret:
+      name: "picca-rabbitmq-user-credentials"
+    rabbitmqClusterReference:
+      name: "default"
+      namespace: "rabbitmq"
+    tags:
+      - "monitoring"
+
+export fn vhostPicca(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "rabbitmq.com/v1beta1"
+  kind: "Vhost"
+  metadata:
+    name: "picca"
+    namespace: namespace
+  spec:
+    name: "picca"
+    rabbitmqClusterReference:
+      name: "default"
+      namespace: "rabbitmq"

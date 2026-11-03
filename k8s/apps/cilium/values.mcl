@@ -112,23 +112,14 @@ export fn helmValues(originCertificateIngressEnabled: Bool, gatewayAPIEnabled: B
       dashboards:
         enabled: monitoringEnabled
   envoy:
-    log: commonValues.envoy.log
     resources:
       requests:
-        cpu: "10m"
         memory: envoyMemory
     prometheus:
       enabled: monitoringEnabled
       serviceMonitor:
         enabled: monitoringEnabled
   operator:
-    replicas: 1
-    resources:
-      requests:
-        cpu: "10m"
-        memory: "60Mi"
-      limits:
-        memory: "512Mi"
     prometheus:
       enabled: monitoringEnabled
       serviceMonitor:

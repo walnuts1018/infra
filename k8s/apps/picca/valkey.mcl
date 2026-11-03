@@ -1,0 +1,69 @@
+import "./names.mcl" as names
+
+
+export fn valkeyClusterPiccaValkey(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "valkey.io/v1alpha1"
+  kind: "ValkeyCluster"
+  metadata:
+    annotations:
+      "argocd.argoproj.io/sync-options": "SkipDryRunOnMissingResource=true"
+    labels:
+      app: "picca-valkey"
+      "app.kubernetes.io/name": "picca-valkey"
+    name: "picca-valkey"
+    namespace: namespace
+  spec:
+    replicas: 2
+    resources:
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+      requests:
+        cpu: "5m"
+        memory: "5Mi"
+    scheduling:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              -
+                matchExpressions:
+                  -
+                    key: "storage.walnuts.dev/slow"
+                    operator: "DoesNotExist"
+    shards: 1
+    users:
+      -
+        enabled: true
+        name: "default"
+        passwordSecret:
+          keys:
+            - "valkey_password"
+          name: names.piccaValkeySecretName
+        permissions: "+@all ~* &*"
+
+export fn externalSecretPiccaValkeyEe0A97(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: names.piccaValkeySecretName
+    namespace: namespace
+  spec:
+    data:
+      -
+        remoteRef:
+          key: "terraform-external-secrets"
+          property: "picca-redis-password"
+        secretKey: "valkey_password"
+    refreshInterval: "1m"
+    secretStoreRef:
+      kind: "ClusterSecretStore"
+      name: "onepassword"
+    target:
+      name: names.piccaValkeySecretName
+      template:
+        data:
+          VALKEY_URL: "redis://:{{ .valkey_password }}@valkey-picca-valkey.picca.svc.cluster.local:6379/0"
+          valkey_password: "{{ .valkey_password }}"
+        engineVersion: "v2"
+        type: "Opaque"

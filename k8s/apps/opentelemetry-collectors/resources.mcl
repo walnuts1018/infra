@@ -1,3 +1,4 @@
+import "std:manifest" as manifest
 import "std:list" as lists
 
 let clusterRoleBinding = manifest.load("./_configs/cluster-role-binding.yaml")[0]

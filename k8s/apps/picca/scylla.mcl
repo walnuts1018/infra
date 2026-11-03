@@ -1,0 +1,109 @@
+import "./names.mcl" as names
+
+export fn externalSecretScyllaClusterLocalClientCa(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: "scylla-cluster-local-client-ca"
+    namespace: namespace
+  spec:
+    target:
+      name: "scylla-cluster-local-client-ca"
+    dataFrom:
+      -
+        extract:
+          key: "scylla-cluster-local-client-ca"
+    refreshInterval: "1h"
+    secretStoreRef:
+      kind: "SecretStore"
+      name: "scylla-client-cert"
+
+export fn rolePiccaReadScyllaClientCert() -> Map<String, Any> = node:
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  kind: "Role"
+  metadata:
+    name: "picca-read-scylla-client-cert"
+    namespace: "databases"
+  rules:
+    -
+      apiGroups:
+        - ""
+      resourceNames:
+        - "scylla-cluster-local-client-ca"
+      resources:
+        - "secrets"
+      verbs:
+        - "get"
+
+export fn roleBindingPiccaReadScyllaClientCert() -> Map<String, Any> = node:
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  kind: "RoleBinding"
+  metadata:
+    name: "picca-read-scylla-client-cert"
+    namespace: "databases"
+  roleRef:
+    apiGroup: "rbac.authorization.k8s.io"
+    kind: "Role"
+    name: "picca-read-scylla-client-cert"
+  subjects:
+    -
+      kind: "ServiceAccount"
+      name: "picca-scylla-secret-reader"
+      namespace: "picca"
+
+export fn serviceAccountPiccaScyllaSecretReader(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  metadata:
+    name: "picca-scylla-secret-reader"
+    namespace: namespace
+
+export fn secretStoreScyllaClientCert(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "SecretStore"
+  metadata:
+    name: "scylla-client-cert"
+    namespace: namespace
+  spec:
+    provider:
+      kubernetes:
+        auth:
+          serviceAccount:
+            name: "picca-scylla-secret-reader"
+            namespace: "picca"
+        remoteNamespace: "databases"
+        server:
+          caProvider:
+            key: "ca.crt"
+            name: "kube-root-ca.crt"
+            type: "ConfigMap"
+          url: "https://kubernetes.default.svc"
+
+let piccaScyllaPasswordData =
+  -
+    remoteRef:
+      key: "scylladb"
+      property: "picca"
+    secretKey: "scylla_password"
+
+let piccaScyllaPasswordTemplate = node:
+  data:
+    SCYLLA_PASSWORD: "{{ .scylla_password }}"
+  engineVersion: "v2"
+  type: "Opaque"
+
+export fn externalSecretPiccaScyllaA8F7Af(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: names.piccaScyllaSecretName
+    namespace: namespace
+  spec:
+    data: piccaScyllaPasswordData
+    refreshInterval: "1m"
+    secretStoreRef:
+      kind: "ClusterSecretStore"
+      name: "onepassword"
+    target:
+      name: names.piccaScyllaSecretName
+      template: piccaScyllaPasswordTemplate

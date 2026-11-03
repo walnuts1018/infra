@@ -1,9 +1,9 @@
-import "std:context" as context
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./features.mcl" as appFeatures
 
-let features = context.parameter("features")
+param features: List<appFeatures.Feature> = []
+
 let values = appFeatures.values(features)
 let apiVersions: List<String> =
   - "monitoring.coreos.com/v1"

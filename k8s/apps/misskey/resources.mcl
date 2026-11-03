@@ -1,0 +1,28 @@
+import "./config.mcl" as config
+import "./backup.mcl" as backup
+import "./deployment.mcl" as deployment
+import "./external-secrets.mcl" as externalSecrets
+import "./pdb.mcl" as pdb
+import "./postgres.mcl" as postgres
+import "./routing.mcl" as routing
+import "./services.mcl" as services
+import "./valkey.mcl" as valkey
+import "./vpa.mcl" as vpa
+
+export let resources =
+  - config.resource
+  - deployment.resource
+  - externalSecrets.appSecret
+  - externalSecrets.postgresPassword
+  - pdb.resource
+  - vpa.resource
+  - postgres.cluster
+  - backup.objectStore
+  - backup.scheduledBackup
+  - routing.webRoute
+  - routing.userContentRoute
+  - routing.seaweedReferenceGrant
+  - services.application
+  - services.valkey
+  - services.valkeyHeadless
+  - valkey.statefulSet

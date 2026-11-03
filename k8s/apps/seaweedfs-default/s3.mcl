@@ -1,324 +1,90 @@
-export let buckets =
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "picca"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "picca-dev"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "cloudnative-pg-backup"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "cortex-blocks"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "cortex-ruler"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "cortex-alertmanager"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "gha-cache"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "000"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "ipu"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "loki-admin"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "loki-chunks"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "hdd"
-        replication: "000"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "loki-ruler"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "maps"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "misskey"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "netbox-media"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "netbox-scripts"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "oekaki-dengon-game"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "pyroscope"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "hdd"
-        replication: "000"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "stalwart"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "001"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "tempo"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "hdd"
-        replication: "000"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "Bucket"
-    metadata:
-      name: "visual-regression-tracker"
-      namespace: "seaweedfs"
-    spec:
-      adoptExisting: true
-      clusterRef:
-        name: "seaweedfs-default"
-      objectLock: false
-      placement:
-        diskType: "ssd"
-        replication: "000"
-      reclaimPolicy: "Retain"
-      versioning: "Off"
+import "std:list" as lists
+
+type BucketConfig =
+  name: String
+  diskType: "hdd" | "ssd"
+  replication: "000" | "001"
+
+let bucketConfigs: List<BucketConfig> =
+  - name: "picca"
+    diskType: "ssd"
+    replication: "001"
+  - name: "picca-dev"
+    diskType: "ssd"
+    replication: "001"
+  - name: "cloudnative-pg-backup"
+    diskType: "ssd"
+    replication: "001"
+  - name: "cortex-blocks"
+    diskType: "ssd"
+    replication: "001"
+  - name: "cortex-ruler"
+    diskType: "ssd"
+    replication: "001"
+  - name: "cortex-alertmanager"
+    diskType: "ssd"
+    replication: "001"
+  - name: "gha-cache"
+    diskType: "ssd"
+    replication: "000"
+  - name: "ipu"
+    diskType: "ssd"
+    replication: "001"
+  - name: "loki-admin"
+    diskType: "ssd"
+    replication: "001"
+  - name: "loki-chunks"
+    diskType: "hdd"
+    replication: "000"
+  - name: "loki-ruler"
+    diskType: "ssd"
+    replication: "001"
+  - name: "maps"
+    diskType: "ssd"
+    replication: "001"
+  - name: "misskey"
+    diskType: "ssd"
+    replication: "001"
+  - name: "netbox-media"
+    diskType: "ssd"
+    replication: "001"
+  - name: "netbox-scripts"
+    diskType: "ssd"
+    replication: "001"
+  - name: "oekaki-dengon-game"
+    diskType: "ssd"
+    replication: "001"
+  - name: "pyroscope"
+    diskType: "hdd"
+    replication: "000"
+  - name: "stalwart"
+    diskType: "ssd"
+    replication: "001"
+  - name: "tempo"
+    diskType: "hdd"
+    replication: "000"
+  - name: "visual-regression-tracker"
+    diskType: "ssd"
+    replication: "000"
+
+fn bucket(config: BucketConfig) -> Map<String, Any> = node:
+  apiVersion: "seaweed.seaweedfs.com/v1"
+  kind: "Bucket"
+  metadata:
+    name: config.name
+    namespace: "seaweedfs"
+  spec:
+    adoptExisting: true
+    clusterRef:
+      name: "seaweedfs-default"
+    objectLock: false
+    placement:
+      diskType: config.diskType
+      replication: config.replication
+    reclaimPolicy: "Retain"
+    versioning: "Off"
+
+export let buckets = lists.map(bucketConfigs, fn(config) => bucket(config))
 
 export let identities =
   -

@@ -11,8 +11,8 @@ fn resource(name: String, start: String, stop: String) -> Map<String, Any> = nod
       - start: start
         stop: stop
 
-let controlPlanePool =
-  if appFeatures.enabled("controlPlanePeer"):
+fn controlPlanePool(features: List<appFeatures.Feature>) -> List<Map<String, Any>> =
+  if appFeatures.enabled(features, "controlPlanePeer"):
     - resource(
       appFeatures.controlPlanePeer.addressPool.name,
       appFeatures.controlPlanePeer.addressPool.start,
@@ -21,8 +21,8 @@ let controlPlanePool =
   else:
     []
 
-let serverVlanPool =
-  if appFeatures.enabled("serverVlanPeer"):
+fn serverVlanPool(features: List<appFeatures.Feature>) -> List<Map<String, Any>> =
+  if appFeatures.enabled(features, "serverVlanPeer"):
     - resource(
       appFeatures.serverVlanPeer.addressPool.name,
       appFeatures.serverVlanPeer.addressPool.start,
@@ -31,4 +31,5 @@ let serverVlanPool =
   else:
     []
 
-export let resources = lists.concat(controlPlanePool, serverVlanPool)
+export fn resources(features: List<appFeatures.Feature>) -> List<Map<String, Any>> =
+  lists.concat(controlPlanePool(features), serverVlanPool(features))
