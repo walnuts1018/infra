@@ -1,0 +1,51 @@
+export type AppConfig =
+  name: String
+  namespace: String
+  image: String
+
+let app: AppConfig =
+  name: "ubuntu-test"
+  namespace: "default"
+  image: "ghcr.io/cybozu/ubuntu-debug:24.04"
+
+let labels =
+  app: app.name
+  "app.kubernetes.io/name": app.name
+
+let deployment = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+    labels: labels
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: labels
+    template:
+      metadata:
+        labels: labels
+      spec:
+        containers:
+          - name: "ubuntu-debug"
+            image: app.image
+            command:
+              - "sleep"
+              - "infinity"
+            resources:
+              requests:
+                memory: "5Mi"
+              limits:
+                memory: "1Gi"
+            volumeMounts:
+              - name: "local-ca-bundle"
+                mountPath: "/etc/ssl/certs/trust-bundle.pem"
+                subPath: "trust-bundle.pem"
+                readOnly: true
+        volumes:
+          - name: "local-ca-bundle"
+            configMap:
+              name: "local-ca-bundle"
+
+emit deployment
