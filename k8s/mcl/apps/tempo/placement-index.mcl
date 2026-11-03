@@ -1,0 +1,3 @@
+import "./placements.mcl" as app
+
+emit app.placements.kurumi

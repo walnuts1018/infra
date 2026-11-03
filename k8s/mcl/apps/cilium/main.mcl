@@ -1,0 +1,26 @@
+import "std:context" as context
+import "std:helm" as helm
+import "std:list" as lists
+import "./chart.mcl" as appChart
+import "./external-secret.mcl" as externalSecret
+import "./values.mcl" as appValues
+
+let profileName = context.parameter("profile")
+let profile = appValues.profiles[profileName]
+let apiVersions: List<String> = []
+let options =
+  releaseName: "cilium"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  now: appChart.durationValidationTime
+  apiVersions: apiVersions
+  values: profile.helmValues
+let chartResources = helm.render(appChart.chartArchive, options)
+let extraResources =
+  if profile.cloudflareOriginCert:
+    - externalSecret.resource
+  else:
+    []
+
+emit each lists.concat(chartResources, extraResources)

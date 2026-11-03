@@ -1,7 +1,9 @@
+import "./external-secret.mcl" as externalSecret
+
 export let values =
   adminUser:
     user: "admin"
-    existingSecret: "influxdb"
+    existingSecret: externalSecret.name
   persistence:
     enabled: true
     storageClass: "longhorn"

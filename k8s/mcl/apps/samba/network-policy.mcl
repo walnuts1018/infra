@@ -1,0 +1,46 @@
+import "./config.mcl" as app
+
+let ingressRule =
+  from:
+    -
+      ipBlock:
+        cidr: "192.168.100.0/24"
+  ports:
+    -
+      protocol: "TCP"
+      port: 10445
+
+let egressRule =
+  to:
+    -
+      namespaceSelector:
+        matchLabels:
+          "kubernetes.io/metadata.name": "kube-system"
+      podSelector:
+        matchLabels:
+          "k8s-app": "kube-dns"
+  ports:
+    -
+      protocol: "UDP"
+      port: 53
+    -
+      protocol: "TCP"
+      port: 53
+
+export let resource = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: app.appName
+    namespace: app.namespace
+  spec:
+    podSelector:
+      matchLabels: app.labels
+    policyTypes:
+      - "Ingress"
+      - "Egress"
+
+    ingress:
+      - ingressRule
+    egress:
+      - egressRule

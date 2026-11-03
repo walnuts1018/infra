@@ -1,0 +1,18 @@
+import "./config.mcl" as app
+
+export let resource = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: app.appName
+    namespace: app.namespace
+    labels: app.labels
+  spec:
+    ports:
+      - port: 445
+        protocol: "TCP"
+        targetPort: 10445
+
+    selector: app.labels
+    type: "LoadBalancer"
+    loadBalancerIP: "192.168.12.132"

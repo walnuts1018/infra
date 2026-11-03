@@ -1,0 +1,5 @@
+export let chartVersion = "1.20.2"
+export let chartArchive = "https://helm.cilium.io/cilium-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let namespace = "cilium-system"
+export let durationValidationTime = "2026-01-01T00:00:00Z"

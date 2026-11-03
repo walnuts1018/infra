@@ -1,0 +1,17 @@
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./resources.mcl" as appResources
+import "./values.mcl" as appValues
+
+let apiVersions: List<String> = []
+let options =
+  releaseName: "tempo"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: appValues.values
+let chartResources = helm.render(appChart.chartArchive, options)
+
+emit each chartResources
+emit appResources.valkeyCluster

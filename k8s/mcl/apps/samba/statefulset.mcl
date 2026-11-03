@@ -1,0 +1,59 @@
+import "./config.mcl" as app
+import "./container.mcl" as sambaContainer
+
+let avoidSlowNodeAffinity =
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        -
+          matchExpressions:
+            -
+              key: "storage.walnuts.dev/slow"
+              operator: "DoesNotExist"
+
+export let resource = node:
+  apiVersion: "apps/v1"
+  kind: "StatefulSet"
+  metadata:
+    name: app.appName
+    namespace: app.namespace
+    labels: app.labels
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: app.labels
+    serviceName: app.appName
+    template:
+      metadata:
+        labels: app.labels
+      spec:
+        affinity: avoidSlowNodeAffinity
+        securityContext:
+          fsGroup: 1000
+          fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          - sambaContainer.resource
+
+        volumes:
+          - name: "samba-local-dir"
+            hostPath:
+              path: "/mnt/data/share"
+              type: "Directory"
+          - name: "root"
+            persistentVolumeClaim:
+              claimName: "root"
+          - name: "books"
+            persistentVolumeClaim:
+              claimName: "books"
+          - name: "camera-roll"
+            persistentVolumeClaim:
+              claimName: "camera-roll"
+          - name: "mega"
+            persistentVolumeClaim:
+              claimName: "mega"
+          - name: "movies"
+            persistentVolumeClaim:
+              claimName: "movies"
+          - name: "musics"
+            persistentVolumeClaim:
+              claimName: "musics"

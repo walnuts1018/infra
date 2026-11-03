@@ -1,0 +1,20 @@
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./external-secret.mcl" as externalSecret
+import "./values.mcl" as appValues
+import "./vpa.mcl" as vpa
+
+let apiVersions: List<String> =
+  - "autoscaling/v2"
+let options =
+  releaseName: "grafana"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: appValues.values
+let chartResources = helm.render(appChart.chartArchive, options)
+
+emit each chartResources
+emit externalSecret.resource
+emit vpa.resource

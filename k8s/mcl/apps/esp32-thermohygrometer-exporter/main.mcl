@@ -1,6 +1,17 @@
+import "std:hash" as hashes
+
 let appName = "esp32-thermohygrometer-exporter"
 let namespace = appName
-let externalSecretName = appName + "-db2bfc"
+let externalSecretData =
+  - secretKey: "device_url"
+    remoteRef:
+      key: "esp32_thermohygrometer_exporter"
+      property: "device_url"
+  - secretKey: "private_key_json"
+    remoteRef:
+      key: "esp32_thermohygrometer_exporter"
+      property: "private_key_json"
+let externalSecretName = appName + "-" + hashes.fnv1a64(externalSecretData)
 let labels =
   app: appName
   "app.kubernetes.io/name": appName
@@ -104,15 +115,7 @@ let externalSecret = node:
       template:
         engineVersion: "v2"
         type: "Opaque"
-    data:
-      - secretKey: "device_url"
-        remoteRef:
-          key: "esp32_thermohygrometer_exporter"
-          property: "device_url"
-      - secretKey: "private_key_json"
-        remoteRef:
-          key: "esp32_thermohygrometer_exporter"
-          property: "private_key_json"
+    data: externalSecretData
 
 emit deployment
 emit externalSecret

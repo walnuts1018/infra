@@ -1,0 +1,4 @@
+export let chartVersion = "13.2.5"
+export let chartArchive = "https://github.com/grafana-community/helm-charts/releases/download/grafana-" + chartVersion + "/grafana-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let namespace = "monitoring"

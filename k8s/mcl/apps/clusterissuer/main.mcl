@@ -2,7 +2,7 @@ export type AcmeIssuerConfig =
   name: String
   server: String
 
-let externalSecretName = "cloudflare-api-token-fb60a7"
+let externalSecretName = "cloudflare-api-token"
 let localCertificateName = "local-ca-cert"
 let localCertificateSecretName = "local-ca-secret"
 

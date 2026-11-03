@@ -1,0 +1,4 @@
+export let chartVersion = "2.5.31"
+export let chartArchive = "https://github.com/opencost/opencost-helm-chart/releases/download/opencost-" + chartVersion + "/opencost-" + chartVersion + ".tgz"
+export let namespace = "opencost"
+export let kubeVersion = "1.36.4"

@@ -1,0 +1,28 @@
+import "./external-secret.mcl" as externalSecret
+import "./chart.mcl" as appChart
+
+export let resource = node:
+  apiVersion: "gateway.envoyproxy.io/v1alpha1"
+  kind: "SecurityPolicy"
+  metadata:
+    name: "opencost"
+    namespace: appChart.namespace
+  spec:
+    targetRefs:
+      -
+        group: "gateway.networking.k8s.io"
+        kind: "HTTPRoute"
+        name: "opencost-ui"
+    oidc:
+      provider:
+        issuer: "https://auth.walnuts.dev"
+      clientIDRef:
+        name: externalSecret.resource.metadata.name
+      clientSecret:
+        name: externalSecret.resource.metadata.name
+      scopes:
+        - "openid"
+        - "email"
+        - "profile"
+      redirectURL: "https://opencost.walnuts.dev/oauth2/callback"
+      logoutPath: "/oauth2/logout"

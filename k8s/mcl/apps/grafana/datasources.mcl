@@ -1,0 +1,43 @@
+export let values: Map<String, Any> =
+  apiVersion: 1
+  datasources:
+    - name: "VictoriaMetrics"
+      type: "prometheus"
+      url: "http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus"
+      access: "proxy"
+      isDefault: true
+    - name: "Loki"
+      type: "loki"
+      url: "http://loki-gateway.loki.svc.cluster.local"
+      access: "proxy"
+      isDefault: false
+    - name: "Tempo"
+      type: "tempo"
+      url: "http://tempo-gateway.tempo.svc.cluster.local"
+      access: "proxy"
+      isDefault: false
+      jsonData:
+        tracesToLogsV2:
+          datasourceUid: "P8E80F9AEF21F6940"
+          filterByTraceID: true
+          filterBySpanID: true
+        tracesToMetrics:
+          datasourceUid: "P4169E866C3094E38"
+        serviceMap:
+          datasourceUid: "P4169E866C3094E38"
+        streamingEnabled:
+          search: true
+          metrics: true
+    - name: "influxdb"
+      type: "influxdb"
+      url: "http://influxdb-influxdb2.databases.svc.cluster.local"
+      access: "proxy"
+      isDefault: false
+      user: "admin"
+      jsonData:
+        httpMode: "POST"
+        organization: "influxdata"
+        pdcInjected: false
+        version: "Flux"
+      secureJsonData:
+        token: "$__file{/etc/secrets/influxdb_token}"

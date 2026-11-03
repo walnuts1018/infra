@@ -1,9 +1,9 @@
 import "std:list" as lists
+import "./external-secrets.mcl" as externalSecrets
 import text "../../../apps/akvorado/_configs/akvorado.yaml" as akvoradoConfigText
 import text "../../../apps/akvorado/_configs/inlet.yaml" as inletConfigText
 import text "../../../apps/akvorado/_configs/outlet.yaml" as outletConfigText
 import text "../../../apps/akvorado/_configs/console.yaml" as consoleConfigText
-import text "../../../apps/akvorado/_configs/snmp.yaml" as snmpTemplate
 
 let namespace = "akvorado"
 let appName = "akvorado"
@@ -214,7 +214,7 @@ let orchestratorVolumes =
       name: "akvorado-config-8a4b55"
   - name: "snmp-config"
     secret:
-      secretName: "akvorado-snmp-b9ac04"
+      secretName: externalSecrets.snmpName
 let orchestratorContainer = appContainer(
   "orchestrator",
   orchestratorArgs,
@@ -244,55 +244,6 @@ let configMap = node:
       app: "akvorado-config"
       "app.kubernetes.io/name": "akvorado-config"
   data: configMapData
-
-let externalSecret = node:
-  apiVersion: "external-secrets.io/v1"
-  kind: "ExternalSecret"
-  metadata:
-    name: "akvorado-secret-b88a29"
-  spec:
-    secretStoreRef:
-      kind: "ClusterSecretStore"
-      name: "onepassword"
-    refreshInterval: "1m"
-    target:
-      name: "akvorado-secret-b88a29"
-      template:
-        engineVersion: "v2"
-        type: "Opaque"
-    data:
-      - secretKey: "client-id"
-        remoteRef:
-          key: "terraform-external-secrets"
-          property: "akvorado-client-id"
-      - secretKey: "client-secret"
-        remoteRef:
-          key: "terraform-external-secrets"
-          property: "akvorado-client-secret"
-
-let snmpExternalSecret = node:
-  apiVersion: "external-secrets.io/v1"
-  kind: "ExternalSecret"
-  metadata:
-    name: "akvorado-snmp-b9ac04"
-    namespace: namespace
-  spec:
-    secretStoreRef:
-      name: "onepassword"
-      kind: "ClusterSecretStore"
-    refreshInterval: "1m"
-    target:
-      name: "akvorado-snmp-b9ac04"
-      template:
-        engineVersion: "v2"
-        type: "Opaque"
-        data:
-          "snmp.yaml": snmpTemplate
-    data:
-      - secretKey: "snmp_community"
-        remoteRef:
-          key: "snmp"
-          property: "community"
 
 let avoidSlowNodeAffinity =
   nodeAffinity:
@@ -515,9 +466,9 @@ let securityPolicy = node:
       provider:
         issuer: "https://auth.walnuts.dev"
       clientIDRef:
-        name: "akvorado-secret-b88a29"
+        name: externalSecrets.credentialName
       clientSecret:
-        name: "akvorado-secret-b88a29"
+        name: externalSecrets.credentialName
       scopes:
         - "openid"
         - "email"
@@ -583,8 +534,8 @@ let orchestratorService = service("akvorado-orchestrator", "orchestrator", httpS
 let componentServiceMonitors = lists.map(componentNames, serviceMonitor)
 
 emit configMap
-emit externalSecret
-emit snmpExternalSecret
+emit externalSecrets.credentials
+emit externalSecrets.snmp
 emit keeperCluster
 emit clickHouseCluster
 emit kafka

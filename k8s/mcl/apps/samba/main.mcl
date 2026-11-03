@@ -1,0 +1,17 @@
+import "std:list" as lists
+import "./claims.mcl" as claims
+import "./external-secrets.mcl" as externalSecrets
+import "./network-policy.mcl" as networkPolicy
+import "./service.mcl" as service
+import "./statefulset.mcl" as statefulSet
+
+let additionalResources =
+  - externalSecrets.account
+  - externalSecrets.mega
+  - networkPolicy.resource
+  - service.resource
+  - statefulSet.resource
+
+let resources = lists.concat(claims.resources, additionalResources)
+
+emit each resources

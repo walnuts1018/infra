@@ -1,0 +1,65 @@
+import "./external-secrets.mcl" as externalSecrets
+
+let environment =
+  -
+    name: "ACCOUNT_samba"
+    valueFrom:
+      secretKeyRef:
+        name: externalSecrets.accountName
+        key: "account-samba"
+  -
+    name: "SAMBA_CONF_LOG_LEVEL"
+    value: "3"
+  -
+    name: "WSDD2_DISABLE"
+    value: "1"
+  -
+    name: "AVAHI_DISABLE"
+    value: "1"
+  -
+    name: "GROUPS_samba"
+    value: "samba"
+  -
+    name: "SAMBA_VOLUME_CONFIG_share"
+    value: "[share]; path=/samba-share; valid users = samba; public = no; read only = no; browseable = yes; available = yes"
+  -
+    name: "SAMBA_GLOBAL_CONFIG_smb_SPACE_ports"
+    value: "10445 10139"
+
+let volumeMounts =
+  -
+    name: "root"
+    mountPath: "/samba-share"
+  -
+    name: "books"
+    mountPath: "/samba-share/books"
+  -
+    name: "camera-roll"
+    mountPath: "/samba-share/CameraRoll"
+  -
+    name: "mega"
+    mountPath: "/samba-share/mega"
+  -
+    name: "movies"
+    mountPath: "/samba-share/movies"
+  -
+    name: "musics"
+    mountPath: "/samba-share/musics"
+
+export let resource = node:
+  name: "samba"
+  image: "ghcr.io/servercontainers/samba:a3.24.2-s4.23.8-r0"
+  imagePullPolicy: "IfNotPresent"
+  env: environment
+  ports:
+    -
+      containerPort: 10445
+      name: "samba"
+  volumeMounts: volumeMounts
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "128Mi"
+    limits:
+      cpu: "1"
+      memory: "6Gi"

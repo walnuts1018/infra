@@ -1,0 +1,36 @@
+import "./config.mcl" as app
+
+fn claim(name: String, storageClassName: String, size: String) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  kind: "PersistentVolumeClaim"
+  metadata:
+    name: name
+  spec:
+    storageClassName: storageClassName
+    accessModes:
+      - "ReadWriteOnce"
+
+    resources:
+      requests:
+        storage: size
+
+export let resources =
+  - claim("books", "longhorn", "40Gi")
+  - claim("camera-roll", "longhorn", "160Gi")
+  -
+    apiVersion: "v1"
+    kind: "PersistentVolumeClaim"
+    metadata:
+      name: "mega"
+      namespace: app.namespace
+    spec:
+      storageClassName: "longhorn-single-encrypted"
+      accessModes:
+        - "ReadWriteOnce"
+
+      resources:
+        requests:
+          storage: "176Gi"
+  - claim("movies", "longhorn-single", "248Gi")
+  - claim("musics", "longhorn", "32Gi")
+  - claim("root", "longhorn", "64Gi")

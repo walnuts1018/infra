@@ -1,43 +1,9 @@
 import "std:helm" as helm
+import "./external-secret.mcl" as externalSecret
+import "./values.mcl" as appValues
 
 let chartVersion = "1.21.1"
 let chartArchive = "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-" + chartVersion + "/external-dns-" + chartVersion + ".tgz"
-let values: Map<String, Any> =
-  resources:
-    requests:
-      cpu: "3m"
-      memory: "48Mi"
-    limits:
-      memory: "1Gi"
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: "kubernetes.io/hostname"
-      whenUnsatisfiable: "ScheduleAnyway"
-      labelSelector:
-        matchLabels:
-          "app.kubernetes.io/name": "external-dns"
-  serviceMonitor:
-    enabled: true
-  triggerLoopOnEvent: true
-  sources:
-    - "gateway-httproute"
-    - "gateway-grpcroute"
-    - "gateway-tlsroute"
-    - "gateway-tcproute"
-    - "gateway-udproute"
-  policy: "upsert-only"
-  registry: "txt"
-  excludeDomains:
-    - "local.walnuts.dev"
-  annotationPrefix: "external-dns-cloudflare.alpha.kubernetes.io/"
-  provider:
-    name: "cloudflare"
-  env:
-    - name: "CF_API_TOKEN"
-      valueFrom:
-        secretKeyRef:
-          name: "external-dns-cloudflare"
-          key: "cloudflare_api_token"
 let helmOptions =
   releaseName: "external-dns-cloudflare"
   namespace: "external-dns-cloudflare"
@@ -47,30 +13,8 @@ let helmOptions =
     - "gateway.networking.k8s.io/v1"
     - "gateway.networking.k8s.io/v1alpha2"
     - "monitoring.coreos.com/v1"
-  values: values
+  values: appValues.values
 let chartResources = helm.render(chartArchive, helmOptions)
 
-let externalSecret =
-  apiVersion: "external-secrets.io/v1"
-  kind: "ExternalSecret"
-  metadata:
-    name: "external-dns-cloudflare"
-    namespace: "external-dns-cloudflare"
-  spec:
-    secretStoreRef:
-      name: "onepassword"
-      kind: "ClusterSecretStore"
-    refreshInterval: "1m"
-    target:
-      name: "external-dns-cloudflare"
-      template:
-        engineVersion: "v2"
-        type: "Opaque"
-    data:
-      - secretKey: "cloudflare_api_token"
-        remoteRef:
-          key: "external-dns"
-          property: "cloudflare_api_token"
-
 emit each chartResources
-emit externalSecret
+emit externalSecret.resource

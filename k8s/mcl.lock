@@ -1,8 +1,8 @@
 {
   "version": 3,
   "toolchain": {
-    "mcl": "0.3.19",
-    "revision": "e151612cd974a97c8980eeec2855ce7d4358f834",
+    "mcl": "0.3.20",
+    "revision": "d6a70bfd8a42e74dabebcc93cfdd50a2d90644c9",
     "modified": "false",
     "go": "go1.27.3",
     "helm": "v4.3.1",
@@ -18,6 +18,7 @@
     "https://github.com/aquasecurity/helm-charts/releases/download/trivy-operator-0.36.0/trivy-operator-0.36.0.tgz": "bb0c44bc70e3158cc63ea49d7458ede6db5b6c932f6585a2d787eb9712fd4288",
     "https://github.com/cloudnative-pg/charts/releases/download/cloudnative-pg-v0.29.0/cloudnative-pg-0.29.0.tgz": "668e065ff53508d58238788fd35b355a925060843629a951df0e6a9362e6d32f",
     "https://github.com/external-secrets/external-secrets/releases/download/helm-chart-2.10.0/external-secrets-2.10.0.tgz": "b96e948fff3674638b5d3f9e43886f3796e04739c4b4127929aed2ddac7d1418",
+    "https://github.com/grafana-community/helm-charts/releases/download/grafana-13.2.5/grafana-13.2.5.tgz": "651b75a9494f8bae7630d685e7721318433efd258d126e052a8dc45704e9a72d",
     "https://github.com/groundcover-com/helm-charts/releases/download/caretta-0.0.16/caretta-0.0.16.tgz": "24593ec0e9e7971520b2ab3f049d7fceebe0519a04f857f711ca5c7505e0af72",
     "https://github.com/influxdata/helm-charts/releases/download/influxdb2-2.1.2/influxdb2-2.1.2.tgz": "1da8b1e8a2b93e9acbb0bc9a9c0a3e526581ccde4bf271785d09699ed219ca08",
     "https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/releases/download/1.21.3/k8s-ephemeral-storage-metrics-1.21.3.tgz": "64f916134aeb805b41bc3245beb05384c4637c6e0a37418a4f3830743b07ef8d",
@@ -26,6 +27,7 @@
     "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-1.21.1/external-dns-1.21.1.tgz": "5dd033a4b872bf641860695705ee460031d0bc695f114bf8926fee6736814e19",
     "https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-3.14.0/metrics-server-3.14.0.tgz": "c2ca1185c01e6e7f53dd1b7d131f0c9b3fa50e003ed068b784563a1b5a3422a1",
     "https://github.com/open-telemetry/opentelemetry-helm-charts/releases/download/opentelemetry-operator-0.122.0/opentelemetry-operator-0.122.0.tgz": "b66f9b937ab644e75c0042395dc85bfc041eb5c51d22719b944d3e2bf32b5e4b",
+    "https://github.com/opencost/opencost-helm-chart/releases/download/opencost-2.5.31/opencost-2.5.31.tgz": "e248c0c2bda47d7a1800d577c056e345f764767cec22141125de68960ecbd461",
     "https://github.com/prometheus-community/helm-charts/releases/download/kube-state-metrics-8.4.2/kube-state-metrics-8.4.2.tgz": "e42988751de414f1d6e3247f51ef8b45ed49218f30294c99b1469324d348145f",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-blackbox-exporter-11.18.0/prometheus-blackbox-exporter-11.18.0.tgz": "19322b26614c62d6277a1471e26c0b5379ce9ebf43897e01ab85d3e164594ab8",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-node-exporter-4.56.3/prometheus-node-exporter-4.56.3.tgz": "b3051e01f476199f9620aa508823dd7ece2798081b064305368e8a98d4891a04",
@@ -37,6 +39,7 @@
     "https://github.com/strimzi/strimzi-kafka-operator/releases/download/1.2.0/strimzi-kafka-operator-helm-3-chart-1.2.0.tgz": "0f8a50b2f19bd99482f9fd6e17cf42902f72f9e594a136813ac3f0b7af422efd",
     "https://github.com/topolvm/topolvm/releases/download/topolvm-chart-v17.2.0/topolvm-17.2.0.tgz": "4b6c070da0b38f098c9ef6b6a38ef4e2dfff52adecedc280ad92bfab408f90ee",
     "https://github.com/valkey-io/valkey-helm/releases/download/valkey-operator-0.6.0/valkey-operator-0.6.0.tgz": "78c23f630a7e6910ad208c182ff1f6a2d6df9d612a89806c8b2b7f9535ed8783",
+    "https://helm.cilium.io/cilium-1.20.2.tgz": "b2afd87b7f75f875f92a14559f14f59b7babbb479d968e3fd625a20bf30ec20e",
     "https://helm.elastic.co/helm/eck-operator/eck-operator-3.5.0.tgz": "eda9ec502c786fc1ad293e7f4235fdef43b2c741dcc977ab1f62377d72b5173f",
     "https://kedacore.github.io/charts/keda-2.20.2.tgz": "db60b1fa60f0565fefa4ce2f87e855b6a8854363ee82962fbe28a12a70d64c4c",
     "https://kedacore.github.io/charts/keda-add-ons-http-0.15.0.tgz": "dddb21bd400877ce0d474e4a51e890bc257d6c8c73b56ccd8ec4f7a7590e2001",
@@ -59,6 +62,15 @@
         "chartLayerDigest": "sha256:dae8671194485e7c21cf42b0b95a42bc21b9f1333d5ac508c5b62b5da7b72028",
         "chartLayerSize": 134921,
         "archiveDigest": "dae8671194485e7c21cf42b0b95a42bc21b9f1333d5ac508c5b62b5da7b72028"
+      }
+    },
+    "oci://ghcr.io/grafana-community/helm-charts/tempo-distributed": {
+      "2.26.2": {
+        "manifestDigest": "sha256:48981d8c0b97200458be3fa2b90051476339f005c89a2c4ff563685e5d8ca07d",
+        "manifestSize": 1075,
+        "chartLayerDigest": "sha256:4adb4a0a8078fc179435b9e21e4ad90ccb7e471d4571767d1284d11afaa02ea3",
+        "chartLayerSize": 118753,
+        "archiveDigest": "4adb4a0a8078fc179435b9e21e4ad90ccb7e471d4571767d1284d11afaa02ea3"
       }
     },
     "oci://ghcr.io/konoe-akitoshi/charts/shumoku": {

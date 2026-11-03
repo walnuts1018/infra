@@ -29,21 +29,29 @@ Argo CD Agent bootstrapではBiscuitとKurumiのstackをMCL化しました。各
 
 `ghcr-login-secret`は1つの`ClusterExternalSecret`をMCLへ移し、Jsonnet出力との構造化JSON比較で一致を確認しました。
 
-追加した`cilium-ipaddress`はKurumiとBiscuitがそれぞれfeature profileを選び、4つのCRD resourceを出力します。両profileの出力は既存Jsonnetと一致します。`descheduler`はKurumi向け5 Helm resourceを出力し、元valuesによるHelm出力と一致します。`envoy-gateway-class`はKurumi向け6 resourceを出力し、profileでEnvoyProxyのLoadBalancer IPを選びます。6 resourceは既存Jsonnet出力と一致します。`esp32-thermohygrometer-exporter`の2 resourceは既存Jsonnet出力と一致します。`gateway-api-crds`はv1.6.1の固定Git commitから12 resourceを生成します。`ghcr-login-secret`は1つの`ClusterExternalSecret`を生成し、既存Jsonnetと一致します。`local-path-provisioner`は8つの最終resourceをMCL内に直接記述し、元のKustomize baseとpatchの出力に一致させました。
+ExternalSecret自体は名前へのhash suffixを要求しません。dataやtemplateの定義が変わったときに参照先Secret名も変え、環境変数やvolume参照を使うPodの更新を促す必要がある場合だけ、ローカル定義からsuffixを生成します。suffixはremote secretの値をhashしないため、1Passwordなどの値が更新されても名前は変わりません。ExternalSecret名には決定的なJSON表現に対する非暗号学的なFNV-1a 64-bit全長digestを使います。全16桁を保持し、現行のresource名prefixと合わせてKubernetesの63文字制限内に収めます。Podのrolloutを必要としないClusterIssuerのCloudflare token参照は固定名にします。immutable ConfigMapなど内容に基づいて新しいresource名を作る用途では、既存のSHA-256を維持します。
+
+追加した`cilium-ipaddress`はKurumiとBiscuitがそれぞれfeature profileを選び、4つのCRD resourceを出力します。両profileの出力は既存Jsonnetと一致します。`descheduler`はKurumi向け5 Helm resourceを出力し、元valuesによるHelm出力と一致します。`envoy-gateway-class`はKurumi向け6 resourceを出力し、profileでEnvoyProxyのLoadBalancer IPを選びます。6 resourceは既存Jsonnet出力と一致します。`esp32-thermohygrometer-exporter`の2 resourceはExternalSecret名のsuffixをFNV-1a 64-bitへ変更し、suffixを正規化して既存Jsonnet出力との一致を確認します。`gateway-api-crds`はv1.6.1の固定Git commitから12 resourceを生成します。`ghcr-login-secret`は1つの`ClusterExternalSecret`を生成し、既存Jsonnetと一致します。`local-path-provisioner`は8つの最終resourceをMCL内に直接記述し、元のKustomize baseとpatchの出力に一致させました。
 
 `external-snapshotter`はv8.3.0の固定commitからCRDとsnapshot-controllerの12 resourceを生成します。`external-secrets-store`は3クラスタで共通の`main.mcl`を使い、feature profileで同じvault設定を選びます。出力は既存Jsonnetと一致します。`kube-oidc-proxy`は10 resourceを生成し、既存Jsonnet出力と一致します。
 
-追加した`cilium-gateway`は3 resourceを生成し、既存Jsonnet出力と一致します。`cilium-hubble-oauth2-proxy`は3 resourceを生成し、ExternalSecret名をdataから`std:crypto.sha256`で計算します。`cloudnative-pg-barman-cloud-plugin`はv0.15.0のrelease manifestを固定ファイルとして読み込み、namespaceを適用した17 resourceを元のKustomize出力と一致させます。`coredns`は複数行のCorefileを外部ファイルから`import text`で読み込み、10 resourceを生成します。`fitbit-manager`はExternalSecret dataから名前を生成し、5 resourceを既存Jsonnet出力と一致させます。`http-dump`は6 resourceを既存Jsonnet出力と一致させます。`priorities`は3つのPriorityClassを1つのentrypointから生成し、既存Jsonnet出力と一致させます。
+追加した`cilium-gateway`は3 resourceを生成し、既存Jsonnet出力と一致します。`cilium-hubble-oauth2-proxy`は3 resourceを生成し、ExternalSecret名をdataからFNV-1a 64-bitで計算し、既存Jsonnetとの比較時はsuffixを正規化します。`cloudnative-pg-barman-cloud-plugin`はv0.15.0のrelease manifestを固定ファイルとして読み込み、namespaceを適用した17 resourceを元のKustomize出力と一致させます。`coredns`は複数行のCorefileを外部ファイルから`import text`で読み込み、10 resourceを生成します。`fitbit-manager`はExternalSecret名を同じFNV-1a 64-bit方式で生成し、suffixを正規化して5 resourceを既存Jsonnet出力と比較します。`opencost`と`samba`もExternalSecret名をdata定義からFNV-1a 64-bitで生成し、workload側からその名前を参照します。`http-dump`は6 resourceを既存Jsonnet出力と一致させます。`priorities`は3つのPriorityClassを1つのentrypointから生成し、既存Jsonnet出力と一致させます。
 
 `snmp-exporter`はchart v9.17.1の7 resourceを生成し、Helmのcanonical出力と一致させます。SNMP設定は`_configs/snmp.yml`へ分離し、`import text`で読み込みます。
 
-`envoy-gateway`はchart v1.6.1とValkeyClusterを同じentrypointから出力します。通常resourceは`helm template --no-hooks`と一致し、pre-install/pre-upgrade hookはMCLの`before.create`と`before.update` phaseに出力します。`github-readme-stats`は4つの既存Jsonnet出力と構造的に一致し、ExternalSecret名はdataからSHA-256で生成します。`prometheus-operator-crds`はchart v31.0.1から10 CRDを生成し、Helm出力と一致します。`trivy-operator`はchart v0.36.0から22 resourceを生成し、Helm出力と一致します。
+`external-dns-cloudflare`はExternalSecret名をdataからFNV-1a 64-bitで生成し、Helm valuesのSecret参照も同じ名前を使います。
 
-`influxdb`はHelm chart 5 resourceと既存Jsonnetの2 resourceをまとめて7 resource出力し、canonical outputと一致させます。`longhorn-oauth2-proxy`はExternalSecret、HTTPRoute、SecurityPolicyの3 resourceを生成し、既存Jsonnet出力と一致させます。
+`cilium`は同じ`main.mcl`にKurumiの`originCertificateIngress` profileとBiscuitの`gatewayAPI` profileを対応させ、それぞれ63 resourceと29 resourceを生成します。chart既定値のCNI initContainer CPU limitは数値`1`として出力されKubernetes Quantity schemaを満たさないため、両profileで同じ値を文字列`"1"`として指定します。
+
+`envoy-gateway`はchart v1.6.1とValkeyClusterを同じentrypointから出力します。通常resourceは`helm template --no-hooks`と一致し、pre-install/pre-upgrade hookはMCLの`before.create`と`before.update` phaseに出力します。`github-readme-stats`は4つの既存Jsonnet出力と構造的に一致し、ExternalSecret名はdataからFNV-1a 64-bitで生成します。`prometheus-operator-crds`はchart v31.0.1から10 CRDを生成し、Helm出力と一致します。`trivy-operator`はchart v0.36.0から22 resourceを生成し、Helm出力と一致します。
+
+`influxdb`はHelm chart 5 resourceと既存Jsonnetの2 resourceをまとめて7 resource出力し、ExternalSecret名のsuffixを正規化してcanonical outputと比較します。Helm valuesとExternalSecretは同じFNV-1a 64-bit生成名を使います。`longhorn-oauth2-proxy`はExternalSecret、HTTPRoute、SecurityPolicyの3 resourceを生成し、suffixを正規化して既存Jsonnet出力と比較します。
 
 `keda`はbase valuesとKurumi valuesを`standard` profileへまとめ、34 resourceを生成します。KEDA chart既定値のCPU limitはSchema検証でNumberとして拒否されるため、等価なQuantity文字列`"1"`をMCL valuesに明示し、同じoverrideを使ったHelm出力と一致させます。
 
 `loki`はchart v13.2.0から61 resourceを生成し、values YAMLをapp内の外部ファイルから読み込みます。12 resourceのCPU limitはKubernetes QuantityとしてMCL Schemaが要求する文字列に直し、同じ文字列overrideを使ったHelm出力と一致させます。元のHelm出力とは該当フィールドのYAML型だけが異なります。
+
+`grafana`はHelm chartの8 resource、ExternalSecret、VPAを同じentrypointから出力します。Helm valuesとExternalSecretは同じFNV-1a 64-bit生成名を使い、suffixを正規化して既存出力と比較します。複数行のdatasource設定値は外部ファイルを`import text`で読み込みます。
 
 ## 複数クラスタでのアプリケーション配置
 
@@ -84,4 +92,4 @@ Argo CD Applicationは現在と同じアプリケーション単位を保ちま�
 
 ## 未完了項目
 
-MCL化は61アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの56アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、placement-indexからApplicationSetを生成するPlugin Generatorは未実装です。`rabbitmq-topology-operator`はHelm chart内で`genCA`を呼び出すため、現在のMCLでrenderできず未移行です。MCL本体に関する技術的な制約と改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`で管理します。`actions-runners`のConfigMap名とCAPIのimmutable resource名は、hook scriptやTalos machine設定を入力に`std:crypto.sha256`で生成します。MCL側の技術的な改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`に記録します。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。
+MCL化は66アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの51アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、placement-indexからApplicationSetを生成するPlugin Generatorは未実装です。`rabbitmq-topology-operator`はHelm chart内で`genCA`を呼び出すため、現在のMCLでrenderできず未移行です。MCL本体に関する技術的な制約と改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`で管理します。`actions-runners`のConfigMap名とCAPIのimmutable resource名は、hook scriptやTalos machine設定を入力に`std:crypto.sha256`で生成します。MCL側の技術的な改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`に記録します。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。
