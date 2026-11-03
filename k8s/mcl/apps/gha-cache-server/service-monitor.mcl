@@ -1,0 +1,18 @@
+export let resource = node:
+  apiVersion: "monitoring.coreos.com/v1"
+  kind: "ServiceMonitor"
+  metadata:
+    name: "gha-cache-server"
+    namespace: "arc-systems"
+    labels:
+      app: "gha-cache-server"
+      "app.kubernetes.io/name": "gha-cache-server"
+  spec:
+    endpoints:
+      - port: "cache"
+        path: "/metrics"
+        interval: "15s"
+    selector:
+      matchLabels:
+        "app.kubernetes.io/instance": "gha-cache-server"
+        "app.kubernetes.io/name": "github-actions-cache-server"

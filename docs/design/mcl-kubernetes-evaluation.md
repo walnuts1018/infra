@@ -41,6 +41,8 @@ ExternalSecret自体は名前へのhash suffixを要求しません。dataやtem
 
 `external-dns-cloudflare`はExternalSecret名をdataからFNV-1a 64-bitで生成し、Helm valuesのSecret参照も同じ名前を使います。
 
+`gha-cache-server`はHelm chartの3 resourceとExternalSecret、HTTPRoute、ScaledObject、ServiceMonitorを出力し、合計7 resourceを生成します。Helm outputと既存Jsonnetの4 resourceをそれぞれ構造的に比較しました。ExternalSecretのtargetは固定名を維持し、Helm valuesはprofile fileに分割しています。
+
 `cilium`は同じ`main.mcl`にKurumiの`originCertificateIngress` profileとBiscuitの`gatewayAPI` profileを対応させ、それぞれ63 resourceと29 resourceを生成します。chart既定値のCNI initContainer CPU limitは数値`1`として出力されKubernetes Quantity schemaを満たさないため、両profileで同じ値を文字列`"1"`として指定します。
 
 `envoy-gateway`はchart v1.6.1とValkeyClusterを同じentrypointから出力します。通常resourceは`helm template --no-hooks`と一致し、pre-install/pre-upgrade hookはMCLの`before.create`と`before.update` phaseに出力します。`github-readme-stats`は4つの既存Jsonnet出力と構造的に一致し、ExternalSecret名はdataからFNV-1a 64-bitで生成します。`prometheus-operator-crds`はchart v31.0.1から10 CRDを生成し、Helm出力と一致します。`trivy-operator`はchart v0.36.0から22 resourceを生成し、Helm出力と一致します。
@@ -92,4 +94,4 @@ Argo CD Applicationは現在と同じアプリケーション単位を保ちま�
 
 ## 未完了項目
 
-MCL化は66アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの51アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、placement-indexからApplicationSetを生成するPlugin Generatorは未実装です。`rabbitmq-topology-operator`はHelm chart内で`genCA`を呼び出すため、現在のMCLでrenderできず未移行です。MCL本体に関する技術的な制約と改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`で管理します。`actions-runners`のConfigMap名とCAPIのimmutable resource名は、hook scriptやTalos machine設定を入力に`std:crypto.sha256`で生成します。MCL側の技術的な改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`に記録します。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。
+MCL化は67アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの50アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、placement-indexからApplicationSetを生成するPlugin Generatorは未実装です。`rabbitmq-topology-operator`はHelm chart内で`genCA`を呼び出すため、現在のMCLでrenderできず未移行です。MCL本体に関する技術的な制約と改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`で管理します。`actions-runners`のConfigMap名とCAPIのimmutable resource名は、hook scriptやTalos machine設定を入力に`std:crypto.sha256`で生成します。MCL側の技術的な改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`に記録します。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。

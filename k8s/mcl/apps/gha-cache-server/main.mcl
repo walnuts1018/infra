@@ -1,0 +1,27 @@
+import "std:context" as context
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./profiles.mcl" as appProfiles
+import "./external-secret.mcl" as externalSecret
+import "./http-route.mcl" as httpRoute
+import "./scaled-object.mcl" as scaledObject
+import "./service-monitor.mcl" as serviceMonitor
+
+let apiVersions: List<String> =
+  - "gateway.networking.k8s.io/v1"
+  - "keda.sh/v1alpha1"
+  - "monitoring.coreos.com/v1"
+let options =
+  releaseName: "gha-cache-server"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: appProfiles.profiles[context.parameter("profile")]
+let resources = helm.render(appChart.chartArchive, options)
+
+emit each resources
+emit externalSecret.resource
+emit httpRoute.resource
+emit scaledObject.resource
+emit serviceMonitor.resource
