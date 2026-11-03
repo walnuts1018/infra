@@ -24,6 +24,7 @@
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-blackbox-exporter-11.18.0/prometheus-blackbox-exporter-11.18.0.tgz": "19322b26614c62d6277a1471e26c0b5379ce9ebf43897e01ab85d3e164594ab8",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-node-exporter-4.56.3/prometheus-node-exporter-4.56.3.tgz": "b3051e01f476199f9620aa508823dd7ece2798081b064305368e8a98d4891a04",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-smartctl-exporter-0.17.1/prometheus-smartctl-exporter-0.17.1.tgz": "cb03ec4acc49401996e047b33939c9aa205e2a2be673309d7834ee64301b26f3",
+    "https://github.com/strimzi/strimzi-kafka-operator/releases/download/1.2.0/strimzi-kafka-operator-helm-3-chart-1.2.0.tgz": "0f8a50b2f19bd99482f9fd6e17cf42902f72f9e594a136813ac3f0b7af422efd",
     "https://github.com/topolvm/topolvm/releases/download/topolvm-chart-v17.2.0/topolvm-17.2.0.tgz": "4b6c070da0b38f098c9ef6b6a38ef4e2dfff52adecedc280ad92bfab408f90ee",
     "https://github.com/valkey-io/valkey-helm/releases/download/valkey-operator-0.6.0/valkey-operator-0.6.0.tgz": "78c23f630a7e6910ad208c182ff1f6a2d6df9d612a89806c8b2b7f9535ed8783",
     "https://helm.elastic.co/helm/eck-operator/eck-operator-3.5.0.tgz": "eda9ec502c786fc1ad293e7f4235fdef43b2c741dcc977ab1f62377d72b5173f",
