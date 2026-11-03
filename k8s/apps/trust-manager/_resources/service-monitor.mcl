@@ -1,0 +1,33 @@
+let endpoints =
+  - targetPort: 9402
+    path: "/metrics"
+    interval: "10s"
+    scrapeTimeout: "5s"
+
+let serviceMonitor = node:
+  apiVersion: "monitoring.coreos.com/v1"
+  kind: "ServiceMonitor"
+  metadata: node:
+    name: "trust-manager"
+    namespace: "cert-manager"
+    labels: node:
+      app: "trust-manager"
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+      prometheus: "default"
+  spec: node:
+    jobLabel: "trust-manager"
+    selector: node:
+      matchLabels: node:
+        app: "trust-manager"
+        "app.kubernetes.io/component": "metrics"
+    namespaceSelector: node:
+      matchNames:
+        - "cert-manager"
+    endpoints: endpoints
+
+export let resources =
+  - serviceMonitor

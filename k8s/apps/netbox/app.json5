@@ -1,17 +1,10 @@
 {
   name: "netbox",
   namespace: "netbox",
-  additionalSources: {
-    helm: {
-      repoURL: "ghcr.io/netbox-community/netbox-chart",
-      chart: "netbox",
-      targetRevision: "8.3.18",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "oidc-and-s3-storage",
+    },
   },
 }

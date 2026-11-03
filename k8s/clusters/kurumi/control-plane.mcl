@@ -1,0 +1,37 @@
+import "std:crypto" as crypto
+import "../lib/tart-control-plane.mcl" as capi
+import text "./_patches/control-plane.yaml" as patchesText
+
+let clusterName = "kurumi"
+let patches = patchesText
+let hostSelectorLabels =
+  "kurumi.walnuts.dev/pool": "control-plane"
+let identity =
+  patches: patches
+  schematicID: "613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245"
+  talosVersion: "v1.14.0"
+  hostSelectorLabels: hostSelectorLabels
+let identityHash = crypto.sha256(identity, 10)
+let resourceName = clusterName + "-control-plane-" + identityHash
+let patchesSecretName = clusterName + "-control-plane-patches-" + identityHash
+
+let config = identity with:
+  name: resourceName
+  patchesName: patchesSecretName
+  clusterName: clusterName
+  namespace: clusterName
+  kubernetesVersion: "v1.36.4"
+  talosVersion: "v1.14.0"
+  replicas: 3
+  endpointHost: "192.168.4.11"
+  endpointPort: 6443
+  podCIDR: "10.244.0.0/16"
+  serviceCIDR: "10.96.0.0/12"
+
+export let resources =
+  - capi.bootstrapConfigTemplate(config)
+  - capi.clusterResource(config)
+  - capi.tartControlPlane(config)
+  - capi.tartMachineTemplate(config, hostSelectorLabels)
+  - capi.patchSecret(config)
+  - capi.tartCluster(config)

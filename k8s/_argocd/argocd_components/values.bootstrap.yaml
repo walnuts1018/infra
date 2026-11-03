@@ -1,3 +1,0 @@
-configs:
-  params:
-    redis.server: "argocd-redis:6379"

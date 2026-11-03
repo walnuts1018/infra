@@ -1,0 +1,15 @@
+import "../argocd_components/appproject.mcl" as appProject
+
+let berryDestinations =
+  - namespace: "*"
+    server: "https://kubernetes.default.svc"
+let biscuitDestinations =
+  - namespace: "*"
+    name: "biscuit"
+let kurumiDestinations =
+  - namespace: "*"
+    name: "kurumi"
+export let resources =
+  - appProject.resource("berry", berryDestinations)
+  - appProject.agentResource("biscuit", biscuitDestinations)
+  - appProject.agentResource("kurumi", kurumiDestinations)

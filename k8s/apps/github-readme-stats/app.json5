@@ -1,6 +1,7 @@
 {
   name: "github-readme-stats",
   namespace: "github-readme-stats",
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

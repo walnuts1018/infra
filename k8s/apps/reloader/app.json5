@@ -1,24 +1,16 @@
 {
   name: "reloader",
   namespace: "reloader",
-  additionalSources: {
-    helm: {
-      repoURL: "https://stakater.github.io/stakater-charts",
-      chart: "reloader",
-      targetRevision: "2.2.17",
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
     berry: {
-      additionalSources: {
-        helm: {
-          additionalValueFiles: [
-            "values.berry.yaml",
-          ],
-        },
-      },
+      profile: "argocdApplicationReload",
     },
-    biscuit: {},
+    biscuit: {
+      profile: "standard",
+    },
+    kurumi: {
+      profile: "standard",
+    },
   },
 }

@@ -1,0 +1,21 @@
+import "std:context" as context
+import "std:list" as lists
+import "./profiles.mcl" as appProfiles
+import "./ai-services.mcl" as aiServices
+import "./app-services.mcl" as appServices
+import "./shared-infrastructure.mcl" as sharedInfrastructure
+import "./workers.mcl" as workers
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+let resources = lists.concat(
+  aiServices.render(profile.namespace),
+  lists.concat(
+    appServices.render(profile.namespace),
+    lists.concat(
+      sharedInfrastructure.render(profile.namespace),
+      workers.render(profile.namespace),
+    ),
+  ),
+)
+
+emit each resources

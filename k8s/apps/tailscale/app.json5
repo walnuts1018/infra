@@ -1,7 +1,10 @@
 {
   name: "tailscale",
   namespace: "network-exporter",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "subnetRouter",
+    },
   },
 }

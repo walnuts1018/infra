@@ -1,0 +1,19 @@
+import "./common.mcl" as common
+
+let destination =
+  server: "https://kubernetes.default.svc"
+  namespace: "argocd"
+let sources =
+  - common.mclSource("k8s/_argocd/applications")
+  - common.mclSource("k8s/_argocd/entrypoint")
+let syncOptions =
+  - "ServerSideApply=true"
+  - "FailOnSharedResource=true"
+
+export let resource = common.multiSourceApplicationNoLabels(
+  "base",
+  "default",
+  destination,
+  sources,
+  syncOptions,
+)

@@ -1,0 +1,3 @@
+import "./resources.mcl" as config
+
+emit each config.resources

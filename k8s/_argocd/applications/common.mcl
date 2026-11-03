@@ -1,0 +1,162 @@
+export let infraRepo = "https://github.com/walnuts1018/infra"
+export let revision = "clusterapi"
+export let argocdNamespace = "argocd"
+export let apiVersion = "argoproj.io/v1alpha1"
+let applicationSetSyncOptions =
+  - "ServerSideApply=true"
+  - "FailOnSharedResource=true"
+  - "CreateNamespace=true"
+let clusterSyncOptions =
+  - "ServerSideApply=true"
+  - "FailOnSharedResource=true"
+  - "SkipDryRunOnMissingResource=true"
+  - "CreateNamespace=true"
+
+export fn syncPolicy(syncOptions: List<String>) -> Map<String, Any> = node:
+  automated:
+    selfHeal: true
+    prune: true
+  syncOptions: syncOptions
+
+export fn metadataNoLabels(name: String) -> Map<String, Any> = node:
+  name: name
+  namespace: argocdNamespace
+
+export fn metadataWithLabels(name: String, labels: Map<String, String>) -> Map<String, Any> = node:
+  name: name
+  namespace: argocdNamespace
+  labels: labels
+
+export fn application(name: String, project: String, destination: Map<String, Any>, source: Map<String, Any>, labels: Map<String, String>, syncOptions: List<String>) -> Map<String, Any> = node:
+  apiVersion: apiVersion
+  kind: "Application"
+  metadata: metadataWithLabels(name, labels)
+  spec:
+    project: project
+    destination: destination
+    source: source
+    syncPolicy: syncPolicy(syncOptions)
+
+export fn applicationNoLabels(name: String, project: String, destination: Map<String, Any>, source: Map<String, Any>, syncOptions: List<String>) -> Map<String, Any> = node:
+  apiVersion: apiVersion
+  kind: "Application"
+  metadata: metadataNoLabels(name)
+  spec:
+    project: project
+    destination: destination
+    source: source
+    syncPolicy: syncPolicy(syncOptions)
+
+export fn multiSourceApplication(name: String, project: String, destination: Map<String, Any>, sources: List<Map<String, Any>>, labels: Map<String, String>, syncOptions: List<String>) -> Map<String, Any> = node:
+  apiVersion: apiVersion
+  kind: "Application"
+  metadata: metadataWithLabels(name, labels)
+  spec:
+    project: project
+    destination: destination
+    sources: sources
+    syncPolicy: syncPolicy(syncOptions)
+
+export fn multiSourceApplicationNoLabels(name: String, project: String, destination: Map<String, Any>, sources: List<Map<String, Any>>, syncOptions: List<String>) -> Map<String, Any> = node:
+  apiVersion: apiVersion
+  kind: "Application"
+  metadata: metadataNoLabels(name)
+  spec:
+    project: project
+    destination: destination
+    sources: sources
+    syncPolicy: syncPolicy(syncOptions)
+
+export fn mclSource(path: String) -> Map<String, Any> = node:
+  repoURL: infraRepo
+  targetRevision: revision
+  path: path
+  plugin:
+    name: "mcl"
+
+export fn mclSourceWithRef(path: String, refName: String) -> Map<String, Any> = node:
+  repoURL: infraRepo
+  targetRevision: revision
+  path: path
+  plugin:
+    name: "mcl"
+  ref: refName
+
+export fn repositorySource(refName: String) -> Map<String, Any> = node:
+  repoURL: infraRepo
+  targetRevision: revision
+  ref: refName
+
+export fn argoHelmSource(values: List<String>) -> Map<String, Any> = node:
+  repoURL: "https://argoproj.github.io/argo-helm"
+  chart: "argo-cd"
+  targetRevision: "10.8.2"
+  helm:
+    releaseName: "argocd"
+    valueFiles: values
+
+export fn agentHelmSource(component: String, releaseName: String, values: List<String>) -> Map<String, Any> = node:
+  repoURL: "https://github.com/argoproj-labs/argocd-agent"
+  targetRevision: "v0.10.0"
+  path: "install/helm-repo/argocd-agent-" + component
+  helm:
+    releaseName: releaseName
+    valueFiles: values
+
+export fn applicationGenerator(enabledElement: Map<String, String>, selector: Map<String, String>) -> Map<String, Any> = node:
+  matrix:
+    generators:
+      -
+        git:
+          repoURL: infraRepo
+          revision: revision
+          files:
+            -
+              path: "k8s/apps/*/app.json5"
+      -
+        list:
+          elements:
+            - enabledElement
+  selector:
+    matchLabels: selector
+
+export fn appTemplateMetadataNoLabels(cluster: String) -> Map<String, Any> = node:
+  name: "{{ printf \"%s-" + cluster + "\" .name }}"
+
+export fn appTemplateMetadataWithLabels(cluster: String, labels: Map<String, String>) -> Map<String, Any> = node:
+  name: "{{ printf \"%s-" + cluster + "\" .name }}"
+  labels: labels
+
+export fn clusterAppSet(cluster: String) -> Map<String, Any> = node:
+  apiVersion: apiVersion
+  kind: "ApplicationSet"
+  metadata:
+    name: "clusters"
+    namespace: argocdNamespace
+  spec:
+    goTemplate: true
+    goTemplateOptions:
+      - "missingkey=error"
+    generators:
+      -
+        git:
+          repoURL: infraRepo
+          revision: revision
+          files:
+            -
+              path: "k8s/clusters/*/cluster.json5"
+    template:
+      metadata:
+        name: "{{.name}}"
+      spec:
+        project: cluster
+        destination:
+          server: "https://kubernetes.default.svc"
+          namespace: "{{.namespace}}"
+        source:
+          repoURL: infraRepo
+          targetRevision: revision
+          path: "{{.path.path}}"
+          plugin:
+            name: "mcl"
+        syncPolicy: syncPolicy(clusterSyncOptions)

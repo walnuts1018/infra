@@ -1,6 +1,7 @@
 {
   name: "kube-oidc-proxy",
   namespace: "kube-oidc-proxy",
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

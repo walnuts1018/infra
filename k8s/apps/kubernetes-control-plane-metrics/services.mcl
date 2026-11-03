@@ -1,0 +1,141 @@
+let appName = "kubernetes-control-plane-metrics"
+let monitoringNamespace = "monitoring"
+let systemNamespace = "kube-system"
+let bearerTokenFile = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+let caFile = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+fn service(name: String, labels: Map<String, String>, selector: Map<String, String>, portName: String, port: Int) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: name
+    namespace: systemNamespace
+    labels: labels
+  spec:
+    clusterIP: "None"
+    selector: selector
+    ports:
+      -
+        name: portName
+        port: port
+        targetPort: port
+
+fn serviceMonitor(name: String, selector: Map<String, String>, jobLabel: String, namespace: String, endpoints: List<Map<String, Any>>) -> Map<String, Any> = node:
+  apiVersion: "monitoring.coreos.com/v1"
+  kind: "ServiceMonitor"
+  metadata:
+    name: name
+    namespace: monitoringNamespace
+    labels:
+      app: appName
+      "app.kubernetes.io/name": appName
+  spec:
+    jobLabel: jobLabel
+    namespaceSelector:
+      matchNames:
+        - namespace
+    selector:
+      matchLabels: selector
+    endpoints: endpoints
+
+let controlPlaneProxySelector =
+  app: "kubernetes-control-plane-metrics-proxy"
+let corednsSelector =
+  "k8s-app": "kube-dns"
+let kubeProxySelector =
+  "k8s-app": "kube-proxy"
+let corednsMetricsSelector =
+  app: "coredns-metrics"
+let etcdMetricsSelector =
+  app: "kube-etcd-metrics-proxy"
+let kubeProxyMetricsSelector =
+  app: "kube-proxy-metrics"
+let controllerManagerMetricsSelector =
+  app: "kube-controller-manager-metrics-proxy"
+let schedulerMetricsSelector =
+  app: "kube-scheduler-metrics-proxy"
+let apiserverSelector =
+  component: "apiserver"
+  provider: "kubernetes"
+let kubeletMetricsSelector =
+  "app.kubernetes.io/name": "kubelet-metrics-proxy"
+  "k8s-app": "kubelet"
+
+let controllerManagerServiceLabels =
+  app: "kube-controller-manager-metrics-proxy"
+  "app.kubernetes.io/name": appName
+  jobLabel: "kube-controller-manager"
+let corednsServiceLabels =
+  app: "coredns-metrics"
+  "app.kubernetes.io/name": appName
+  jobLabel: "kubernetes-coredns"
+let etcdServiceLabels =
+  app: "kube-etcd-metrics-proxy"
+  "app.kubernetes.io/name": appName
+  jobLabel: "kube-etcd"
+let proxyServiceLabels =
+  app: "kube-proxy-metrics"
+  "app.kubernetes.io/name": appName
+  jobLabel: "kube-proxy"
+let schedulerServiceLabels =
+  app: "kube-scheduler-metrics-proxy"
+  "app.kubernetes.io/name": appName
+  jobLabel: "kube-scheduler"
+
+export let controllerManagerService = service(
+  "kube-controller-manager-metrics-proxy",
+  controllerManagerServiceLabels,
+  controlPlaneProxySelector,
+  "http-metrics",
+  11057,
+)
+export let corednsService = service(
+  "coredns-metrics",
+  corednsServiceLabels,
+  corednsSelector,
+  "http-metrics",
+  9153,
+)
+export let etcdService = service(
+  "kube-etcd-metrics-proxy",
+  etcdServiceLabels,
+  controlPlaneProxySelector,
+  "http-metrics",
+  12381,
+)
+export let proxyService = service(
+  "kube-proxy-metrics",
+  proxyServiceLabels,
+  kubeProxySelector,
+  "http-metrics",
+  10249,
+)
+export let schedulerService = service(
+  "kube-scheduler-metrics-proxy",
+  schedulerServiceLabels,
+  controlPlaneProxySelector,
+  "http-metrics",
+  11059,
+)
+
+export let kubeletService = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: "kubelet-metrics-proxy"
+    namespace: systemNamespace
+    labels:
+      app: appName
+      "app.kubernetes.io/name": "kubelet-metrics-proxy"
+      "k8s-app": "kubelet"
+  spec:
+    clusterIP: "None"
+    ipFamilies:
+      - "IPv4"
+    ipFamilyPolicy: "SingleStack"
+    selector:
+      app: "kubelet-metrics-proxy"
+    ports:
+      -
+        name: "https-metrics"
+        port: 11050
+        targetPort: 11050

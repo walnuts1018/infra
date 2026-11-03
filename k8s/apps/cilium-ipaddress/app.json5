@@ -1,36 +1,13 @@
 {
   name: "cilium-ipaddress",
   namespace: "cilium-system",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {
-      jsonnet: {
-        extVars: [
-          {
-            name: "cluster",
-            value: "kurumi",
-          },
-        ],
-      },
-    },
     biscuit: {
-      jsonnet: {
-        extVars: [
-          {
-            name: "cluster",
-            value: "biscuit",
-          },
-        ],
-        tlas: [
-          {
-            name: "start",
-            value: "192.168.16.0",
-          },
-          {
-            name: "stop",
-            value: "192.168.16.255",
-          },
-        ],
-      },
+      profile: "serverVlanPeer",
+    },
+    kurumi: {
+      profile: "controlPlanePeer",
     },
   },
 }

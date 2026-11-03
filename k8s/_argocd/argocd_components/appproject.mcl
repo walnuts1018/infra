@@ -1,0 +1,47 @@
+export fn resource(name: String, destinations: List<Map<String, Any>>) -> Map<String, Any> = node:
+  apiVersion: "argoproj.io/v1alpha1"
+  kind: "AppProject"
+  metadata:
+    name: name
+    namespace: "argocd"
+    annotations:
+      "notifications.argoproj.io/subscribe.on-deleted.slack": "argocd"
+      "notifications.argoproj.io/subscribe.on-health-degraded.slack": "argocd"
+      "notifications.argoproj.io/subscribe.on-sync-failed.slack": "argocd"
+      "notifications.argoproj.io/subscribe.on-sync-succeeded.slack": "argocd"
+  spec:
+    clusterResourceWhitelist:
+      - group: "*"
+        kind: "*"
+    destinations: destinations
+    sourceNamespaces:
+      - "*"
+    orphanedResources:
+      warn: false
+    sourceRepos:
+      - "*"
+
+export fn agentResource(name: String, destinations: List<Map<String, Any>>) -> Map<String, Any> = node:
+  apiVersion: "argoproj.io/v1alpha1"
+  kind: "AppProject"
+  metadata:
+    name: name
+    namespace: "argocd"
+    annotations:
+      "notifications.argoproj.io/subscribe.on-deleted.slack": "argocd"
+      "notifications.argoproj.io/subscribe.on-health-degraded.slack": "argocd"
+      "notifications.argoproj.io/subscribe.on-sync-failed.slack": "argocd"
+      "notifications.argoproj.io/subscribe.on-sync-succeeded.slack": "argocd"
+    labels:
+      "argocd-agent": "true"
+  spec:
+    clusterResourceWhitelist:
+      - group: "*"
+        kind: "*"
+    destinations: destinations
+    sourceNamespaces:
+      - "*"
+    orphanedResources:
+      warn: false
+    sourceRepos:
+      - "*"

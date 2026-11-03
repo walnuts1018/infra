@@ -1,16 +1,8 @@
 {
   name: "opentelemetry-collectors",
   namespace: "opentelemetry-collector",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {
-      jsonnet: {
-        tlas: [
-          {
-            name: "clusterName",
-            value: "kurumi",
-          },
-        ],
-      },
-    },
+    kurumi: {},
   },
 }

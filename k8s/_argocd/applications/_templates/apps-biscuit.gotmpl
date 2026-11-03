@@ -1,0 +1,64 @@
+spec:
+  {{- with (dig "clusters" "biscuit" "namespace" "" .) }}
+  destination:
+    namespace: '{{ . }}'
+  {{- end }}
+  sources:
+  - repoURL: 'https://github.com/walnuts1018/infra'
+    targetRevision: clusterapi
+    path: '{{.path.path}}'
+    {{- if eq (dig "manifestGenerator" "" .) "mcl" }}
+    plugin:
+      name: mcl
+      env:
+      - name: MCL_PROFILE
+        value: '{{ dig "clusters" "biscuit" "profile" "" . }}'
+    {{- else }}
+    directory:
+      recurse: true
+      exclude: '{config/*,_*/*,values*.yaml}'
+      jsonnet:
+        tlas:
+        {{- range $tla := dig "clusters" "biscuit" "jsonnet" "tlas" (list) . }}
+        - {{ $tla | toJson }}
+        {{- end }}
+        extVars:
+        {{- range $extVar := dig "clusters" "biscuit" "jsonnet" "extVars" (list) . }}
+        - {{ $extVar | toJson }}
+        {{- end }}
+    ref: infra
+    {{- end }}
+  {{- if ne (dig "manifestGenerator" "" .) "mcl" }}
+  {{- with (dig "additionalSources" "helm" (dict) .) }}
+  - repoURL: '{{ .repoURL }}'
+    chart: '{{ .chart }}'
+    targetRevision: '{{ .targetRevision }}'
+    helm:
+      releaseName: '{{ $.name }}'
+      valueFiles:
+      {{- range (dig "valueFiles" (list) .) }}
+      - {{ printf "$infra/%s/%s" $.path.path . }}
+      {{- end }}
+      {{- with (dig "clusters" "biscuit" "additionalSources" "helm" "additionalValueFiles" (list) $) }}
+      {{- range . }}
+      - {{ printf "$infra/%s/%s" $.path.path . }}
+      {{- end }}
+      {{- end }}
+  {{- end }}
+  {{- range (dig "additionalSources" "kustomize" (list) .) }}
+  - repoURL: '{{ .repoURL }}'
+    path: '{{ .path }}'
+    targetRevision: '{{ .targetRevision }}'
+    {{- with (dig "patches" (list) .) }}
+    kustomize:
+      patches: {{ . | toJson }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+{{- with (dig "annotations" (dict) .) }}
+metadata:
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+{{- end }}

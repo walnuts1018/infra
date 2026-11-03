@@ -1,0 +1,4 @@
+- description: Application is being synced
+  send:
+  - app-sync-running
+  when: app.status.operationState.phase in ['Running']

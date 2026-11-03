@@ -1,0 +1,4 @@
+- description: Application has degraded
+  send:
+  - app-health-degraded
+  when: app.status.health.status == 'Degraded'

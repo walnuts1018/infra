@@ -1,7 +1,10 @@
 {
   name: "visual-regression-tracker",
   namespace: "visual-regression-tracker",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "s3BackedVisualRegression",
+    },
   },
 }

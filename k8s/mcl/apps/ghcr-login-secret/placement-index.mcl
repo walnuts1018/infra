@@ -1,5 +1,0 @@
-import "./placements.mcl" as app
-
-let placement = app.placements.kurumi
-
-emit placement

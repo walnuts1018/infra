@@ -1,17 +1,10 @@
 {
   name: "opencost",
   namespace: "opencost",
-  additionalSources: {
-    helm: {
-      repoURL: "https://opencost.github.io/opencost-helm-chart",
-      chart: "opencost",
-      targetRevision: "2.5.31",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "standard",
+    },
   },
 }

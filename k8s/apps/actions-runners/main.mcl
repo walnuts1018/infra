@@ -1,0 +1,8 @@
+import "./applications.mcl" as runnerApplications
+import "./resources.mcl" as resources
+
+emit resources.runnerHooksConfigMap
+emit resources.githubAppSecret
+emit resources.networkPolicy
+emit resources.podMonitor
+emit each runnerApplications.applications

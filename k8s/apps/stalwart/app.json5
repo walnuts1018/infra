@@ -1,7 +1,10 @@
 {
   name: "stalwart",
   namespace: "stalwart",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "s3BackedMail",
+    },
   },
 }

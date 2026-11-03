@@ -1,6 +1,7 @@
 {
   name: "api-server-service-proxy",
   namespace: "default",
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

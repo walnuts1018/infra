@@ -1,0 +1,39 @@
+import "./chart.mcl" as appChart
+
+let emptyManagerResources: Map<String, Any> = {}
+
+let chartValues: Map<String, Any> =
+  core:
+    "cluster-api":
+      version: "v1.14.2"
+      manager:
+        featureGates:
+          RuntimeSDK: true
+  bootstrap:
+    tart:
+      version: "v0.3.16"
+      fetchConfig:
+        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/bootstrap-components.yaml"
+  controlPlane:
+    tart:
+      version: "v0.3.16"
+      fetchConfig:
+        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/control-plane-components.yaml"
+  infrastructure:
+    tart:
+      version: "v0.3.16"
+      fetchConfig:
+        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/infrastructure-components.yaml"
+  addon:
+    helm:
+      version: "v0.6.4"
+      fetchConfig:
+        url: "https://github.com/kubernetes-sigs/cluster-api-addon-provider-helm/releases/download/v0.6.4/addon-components.yaml"
+  resources:
+    manager: emptyManagerResources
+  enableHelmHook: false
+
+export let profiles: Map<String, Map<String, Any>> =
+  standard:
+    namespace: appChart.namespace
+    chartValues: chartValues

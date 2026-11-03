@@ -1,0 +1,85 @@
+import text "../_templates/apps-berry.gotmpl" as appsTemplatePatch
+import "../common.mcl" as common
+
+let standardSyncOptions =
+  - "ServerSideApply=true"
+  - "FailOnSharedResource=true"
+let appSetSyncOptions =
+  - "ServerSideApply=true"
+  - "FailOnSharedResource=true"
+  - "CreateNamespace=true"
+let destination =
+  server: "https://kubernetes.default.svc"
+  namespace: "argocd"
+let clusterDestination =
+  server: "https://kubernetes.default.svc"
+
+let argocdComponentsSource = common.mclSourceWithRef("k8s/_argocd/argocd_components", "infra")
+let cmpSource = common.mclSource("k8s/_argocd/cmp")
+let argocdSources =
+  - argocdComponentsSource
+  - cmpSource
+let appsEnabledElement =
+  "berryEnabled": "{{ hasKey (default dict .clusters) \"berry\" }}"
+let appsSelector =
+  "berryEnabled": "true"
+let appsGenerator = common.applicationGenerator(appsEnabledElement, appsSelector)
+let emptySources: List<Map<String, Any>> = []
+let appSet = node:
+  apiVersion: common.apiVersion
+  kind: "ApplicationSet"
+  metadata: common.metadataNoLabels("apps-berry")
+  spec:
+    goTemplate: true
+    goTemplateOptions:
+      - "missingkey=error"
+    generators:
+      - appsGenerator
+    template:
+      metadata: common.appTemplateMetadataNoLabels("berry")
+      spec:
+        project: "berry"
+        destination:
+          server: "https://kubernetes.default.svc"
+          namespace: "{{.namespace}}"
+        sources: emptySources
+        syncPolicy: common.syncPolicy(appSetSyncOptions)
+    templatePatch: appsTemplatePatch
+
+let agentCerts = common.applicationNoLabels(
+  "argocd-agent-certs",
+  "berry",
+  destination,
+  common.mclSource("k8s/_argocd/agent/certs"),
+  standardSyncOptions,
+  )
+let agentPrincipal = common.applicationNoLabels(
+  "argocd-agent-principal",
+  "berry",
+  destination,
+  common.mclSource("k8s/_argocd/agent/principal"),
+  standardSyncOptions,
+  )
+let argocd = common.multiSourceApplicationNoLabels(
+  "argocd",
+  "default",
+  destination,
+  argocdSources,
+  standardSyncOptions,
+  )
+let clusterAppSet = common.clusterAppSet("berry")
+let namespaces = common.applicationNoLabels(
+  "namespaces-berry",
+  "berry",
+  clusterDestination,
+  common.mclSource("k8s/namespaces/berry"),
+  standardSyncOptions,
+  )
+
+export let resources: List<Map<String, Any>> =
+  - agentCerts
+  - agentPrincipal
+  - appSet
+  - argocd
+  - clusterAppSet
+  - namespaces

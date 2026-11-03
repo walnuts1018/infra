@@ -1,0 +1,78 @@
+import text "../_templates/apps-kurumi.gotmpl" as appsTemplatePatch
+import "../common.mcl" as common
+
+let agentLabel =
+  "argocd-agent": "true"
+let standardSyncOptions =
+  - "ServerSideApply=true"
+  - "FailOnSharedResource=true"
+let appSetSyncOptions =
+  - "ServerSideApply=true"
+  - "FailOnSharedResource=true"
+  - "CreateNamespace=true"
+let destination =
+  name: "kurumi"
+  namespace: "argocd"
+let appDestination =
+  name: "kurumi"
+let enabledElement =
+  "kurumiEnabled": "{{ hasKey (default dict .clusters) \"kurumi\" }}"
+let selector =
+  "kurumiEnabled": "true"
+let appsGenerator = common.applicationGenerator(enabledElement, selector)
+let spokeSource = common.mclSource("k8s/_argocd/spoke")
+let cmpSource = common.mclSource("k8s/_argocd/cmp")
+let spokeSources =
+  - cmpSource
+  - spokeSource
+let emptySources: List<Map<String, Any>> = []
+let apps = node:
+  apiVersion: common.apiVersion
+  kind: "ApplicationSet"
+  metadata: common.metadataNoLabels("apps-kurumi")
+  spec:
+    goTemplate: true
+    goTemplateOptions:
+      - "missingkey=error"
+    generators:
+      - appsGenerator
+    template:
+      metadata: common.appTemplateMetadataWithLabels("kurumi", agentLabel)
+      spec:
+        project: "kurumi"
+        destination:
+          name: "kurumi"
+          namespace: "{{.namespace}}"
+        sources: emptySources
+        syncPolicy: common.syncPolicy(appSetSyncOptions)
+    templatePatch: appsTemplatePatch
+let agent = common.application(
+  "argocd-agent-kurumi",
+  "kurumi",
+  destination,
+  common.mclSource("k8s/_argocd/agent/agent"),
+  agentLabel,
+  standardSyncOptions,
+)
+let namespaces = common.application(
+  "namespaces-kurumi",
+  "kurumi",
+  appDestination,
+  common.mclSource("k8s/namespaces/kurumi"),
+  agentLabel,
+  standardSyncOptions,
+)
+let spoke = common.multiSourceApplication(
+  "argocd-spoke-kurumi",
+  "kurumi",
+  destination,
+  spokeSources,
+  agentLabel,
+  standardSyncOptions,
+)
+
+export let resources: List<Map<String, Any>> =
+  - agent
+  - apps
+  - namespaces
+  - spoke

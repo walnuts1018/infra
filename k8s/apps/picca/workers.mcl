@@ -1,0 +1,37 @@
+import "std:list" as lists
+import "./media-workers.mcl" as mediaWorkers
+import "./catalog-workers.mcl" as catalogWorkers
+import "./queue-workers.mcl" as queueWorkers
+
+export fn render(namespace: String) -> List<Map<String, Any>> =
+  lists.concat(
+    mediaWorkers.download(namespace),
+    lists.concat(
+      catalogWorkers.embedding(namespace),
+      lists.concat(
+        mediaWorkers.imageProcessing(namespace),
+        lists.concat(
+          catalogWorkers.libraryNotify(namespace),
+          lists.concat(
+            queueWorkers.outbox(namespace),
+            lists.concat(
+              queueWorkers.processingReconciler(namespace),
+              lists.concat(
+                catalogWorkers.stackTimeline(namespace),
+                lists.concat(
+                  queueWorkers.storageReconciler(namespace),
+                  lists.concat(
+                    queueWorkers.triggerAuthentication(namespace),
+                    lists.concat(
+                      mediaWorkers.videoProcessing(namespace),
+                      mediaWorkers.videoTranscode(namespace),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  )

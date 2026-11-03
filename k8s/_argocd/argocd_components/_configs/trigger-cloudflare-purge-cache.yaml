@@ -1,0 +1,4 @@
+- description: Purge Cloudflare cache
+  send:
+  - cloudflare-purge-cache
+  when: app.status.operationState.phase in ['Succeeded']

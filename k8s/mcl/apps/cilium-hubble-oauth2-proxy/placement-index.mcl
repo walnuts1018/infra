@@ -1,6 +1,0 @@
-import "./placements.mcl" as app
-
-let targets =
-  - app.placements.kurumi
-
-emit each targets

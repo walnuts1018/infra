@@ -1,0 +1,26 @@
+import "./external-secrets.mcl" as externalSecrets
+import "./workloads.mcl" as workloads
+import "./datastores.mcl" as datastores
+import "./http-route.mcl" as route
+import "./security-policy.mcl" as policy
+
+emit workloads.configMap
+emit externalSecrets.credentials
+emit externalSecrets.snmp
+emit datastores.keeperCluster
+emit datastores.clickHouseCluster
+emit datastores.kafka
+emit datastores.kafkaNodePool
+emit datastores.kafkaTopic
+emit datastores.valkeyCluster
+emit route.httpRoute
+emit policy.resource
+emit workloads.consoleDeployment
+emit workloads.inletDeployment
+emit workloads.outletDeployment
+emit workloads.orchestratorDeployment
+emit workloads.consoleService
+emit workloads.inletService
+emit workloads.outletService
+emit workloads.orchestratorService
+emit each workloads.componentServiceMonitors

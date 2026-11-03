@@ -1,7 +1,10 @@
 {
   name: "maps",
   namespace: "maps",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "monthlyTileRefresh",
+    },
   },
 }

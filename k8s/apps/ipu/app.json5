@@ -1,6 +1,7 @@
 {
   name: "ipu",
   namespace: "ipu",
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

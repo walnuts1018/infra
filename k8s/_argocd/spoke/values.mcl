@@ -1,0 +1,90 @@
+export let values: Map<String, Any> =
+  fullnameOverride: "argocd"
+  configs:
+    params:
+      "controller.status.processors": "2"
+      "controller.operation.processors": "1"
+      "controller.kubectl.parallelism.limit": "2"
+      "reposerver.parallelism.limit": "1"
+      "controller.repo.server.timeout.seconds": "300"
+      "server.repo.server.timeout.seconds": "300"
+  dex:
+    enabled: false
+  server:
+    replicas: 0
+    metrics:
+      serviceMonitor:
+        enabled: false
+  applicationSet:
+    replicas: 0
+    metrics:
+      serviceMonitor:
+        enabled: false
+  notifications:
+    enabled: false
+    metrics:
+      serviceMonitor:
+        enabled: false
+  controller:
+    metrics:
+      serviceMonitor:
+        enabled: false
+    extraArgs:
+      - "--status-processors=2"
+      - "--operation-processors=1"
+      - "--kubectl-parallelism-limit=2"
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "768Mi"
+      limits:
+        cpu: "2"
+        memory: "3Gi"
+  repoServer:
+    extraContainers:
+      - name: "cmp-mcl"
+        command:
+          - "/var/run/argocd/argocd-cmp-server"
+        image: "curlimages/curl:8.12.1"
+        env:
+          - name: "ARGOCD_EXEC_TIMEOUT"
+            value: "300"
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 999
+        volumeMounts:
+          - mountPath: "/var/run/argocd"
+            name: "var-files"
+          - mountPath: "/home/argocd/cmp-server/plugins"
+            name: "plugins"
+          - mountPath: "/home/argocd/cmp-server/config/plugin.yaml"
+            name: "argocd-mcl-cmp"
+            subPath: "plugin.yaml"
+          - mountPath: "/home/argocd/cmp-server/config/render-mcl.sh"
+            name: "argocd-mcl-cmp"
+            subPath: "render-mcl.sh"
+            readOnly: true
+          - mountPath: "/tmp"
+            name: "cmp-tmp"
+    volumes:
+      - name: "argocd-mcl-cmp"
+        configMap:
+          name: "argocd-mcl-cmp"
+      - name: "cmp-tmp"
+        emptyDir: {}
+    metrics:
+      serviceMonitor:
+        enabled: false
+    env:
+      - name: "ARGOCD_REPO_SERVER_PARALLELISM_LIMIT"
+        value: "1"
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        memory: "1Gi"
+  redis:
+    metrics:
+      serviceMonitor:
+        enabled: false

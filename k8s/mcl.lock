@@ -1,9 +1,9 @@
 {
-  "version": 3,
+  "version": 4,
   "toolchain": {
-    "mcl": "0.3.20",
-    "revision": "d6a70bfd8a42e74dabebcc93cfdd50a2d90644c9",
-    "modified": "false",
+    "mcl": "main",
+    "revision": "fe88631819eb5fe43542d2feebb80138e6885941",
+    "modified": "true",
     "go": "go1.27.3",
     "helm": "v4.3.1",
     "kustomizeAPI": "v0.21.3",
@@ -12,11 +12,16 @@
   "manifests": {},
   "schemas": {},
   "charts": {
+    "https://bokysan.github.io/docker-postfix/mail-5.1.0.tgz": "202c9e211dd313990e0cf08a8ac2dacb31c2d6b85a3e2ab3f299a51e8fa0c271",
+    "https://charts.bitnami.com/bitnami/memcached-6.14.0.tgz": "729aa0fc402dcc3eb493028ef124a744f907b8dba997519bb7dea588703a3c5f",
+    "https://charts.jetstack.io/charts/cert-manager-v1.21.2.tgz": "73a56e1728edd6c99f1f31082618c3259d279a76b7ebd3d4bdc5475c2442d34a",
     "https://charts.pingcap.com/tidb-operator-v1.6.6.tgz": "4b223f79a00cf73998d9ad8341eace64aa947cf51cc108f29d76f2de02867bb4",
+    "https://cortexproject.github.io/cortex-helm-chart/cortex-3.3.8.tgz": "15507f1cd09538d63914b79098b5a28f6cf0d1719e5d61c75611ff5f797849e0",
     "https://cybozu-go.github.io/moco/moco-0.27.0.tgz": "c0d02d0c8081bcb8b640bb69c88506002d6374b14644a6ab15f89f16054cce0a",
     "https://github.com/1Password/connect-helm-charts/releases/download/connect-2.3.0/connect-2.3.0.tgz": "aea9c0f927a73d889bfa9afd58dc540203d1c200b20e02430b59d6099fb419dd",
     "https://github.com/VictoriaMetrics/helm-charts/releases/download/victoria-metrics-cluster-0.50.0/victoria-metrics-cluster-0.50.0.tgz": "743308f5a74e77b32798173383233a6a0e63b6ffdf6c511b9bdfe931464e2f46",
     "https://github.com/aquasecurity/helm-charts/releases/download/trivy-operator-0.36.0/trivy-operator-0.36.0.tgz": "bb0c44bc70e3158cc63ea49d7458ede6db5b6c932f6585a2d787eb9712fd4288",
+    "https://github.com/argoproj/argo-helm/releases/download/argo-cd-10.8.2/argo-cd-10.8.2.tgz": "96fb5ab2897e3c8758cd8fef409a46668ef1a19a538116b112b0691614a48f20",
     "https://github.com/cloudnative-pg/charts/releases/download/cloudnative-pg-v0.29.0/cloudnative-pg-0.29.0.tgz": "668e065ff53508d58238788fd35b355a925060843629a951df0e6a9362e6d32f",
     "https://github.com/external-secrets/external-secrets/releases/download/helm-chart-2.10.0/external-secrets-2.10.0.tgz": "b96e948fff3674638b5d3f9e43886f3796e04739c4b4127929aed2ddac7d1418",
     "https://github.com/grafana-community/helm-charts/releases/download/grafana-13.2.5/grafana-13.2.5.tgz": "651b75a9494f8bae7630d685e7721318433efd258d126e052a8dc45704e9a72d",
@@ -24,10 +29,13 @@
     "https://github.com/influxdata/helm-charts/releases/download/influxdb2-2.1.2/influxdb2-2.1.2.tgz": "1da8b1e8a2b93e9acbb0bc9a9c0a3e526581ccde4bf271785d09699ed219ca08",
     "https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/releases/download/1.21.3/k8s-ephemeral-storage-metrics-1.21.3.tgz": "64f916134aeb805b41bc3245beb05384c4637c6e0a37418a4f3830743b07ef8d",
     "https://github.com/klicktipp/helm-charts/releases/download/rabbitmq-cluster-operator-0.4.2/rabbitmq-cluster-operator-0.4.2.tgz": "5fb8ca9d338bd03043875766723177be3800d84faba12934f3ca339309d50743",
+    "https://github.com/klicktipp/helm-charts/releases/download/rabbitmq-topology-operator-0.4.1/rabbitmq-topology-operator-0.4.1.tgz": "a903a4a5016f0d9490397ce63b9c7870d4deb6925e7217b9b61513be15363bd1",
+    "https://github.com/kubernetes-sigs/cluster-api-operator/releases/download/v0.26.0/cluster-api-operator-0.26.0.tgz": "30e02a682eefb9c3ad09872d7d20d8de80294e64bfa1b0ca75183e2933ccf03b",
     "https://github.com/kubernetes-sigs/descheduler/releases/download/descheduler-helm-chart-0.36.0/descheduler-0.36.0.tgz": "fae31d330236c0dee087241e0861759df16235c1f4d4c5a149d83788997b6b8f",
     "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-1.21.1/external-dns-1.21.1.tgz": "5dd033a4b872bf641860695705ee460031d0bc695f114bf8926fee6736814e19",
     "https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-3.14.0/metrics-server-3.14.0.tgz": "c2ca1185c01e6e7f53dd1b7d131f0c9b3fa50e003ed068b784563a1b5a3422a1",
     "https://github.com/kubernetes/autoscaler/releases/download/vertical-pod-autoscaler-chart-0.12.0/vertical-pod-autoscaler-0.12.0.tgz": "6a52f67e3ac0085f2ffce9d135c22c30c58929de047bb65351f59db56bd700c4",
+    "https://github.com/longhorn/charts/releases/download/longhorn-1.12.1/longhorn-1.12.1.tgz": "c8cf4b35a9d872cd5f7e44fd26d8e6ac7c2abaee42f4e2f2a0b0ebbc6e3a6116",
     "https://github.com/open-telemetry/opentelemetry-helm-charts/releases/download/opentelemetry-operator-0.122.0/opentelemetry-operator-0.122.0.tgz": "b66f9b937ab644e75c0042395dc85bfc041eb5c51d22719b944d3e2bf32b5e4b",
     "https://github.com/opencost/opencost-helm-chart/releases/download/opencost-2.5.31/opencost-2.5.31.tgz": "e248c0c2bda47d7a1800d577c056e345f764767cec22141125de68960ecbd461",
     "https://github.com/prometheus-community/helm-charts/releases/download/kube-state-metrics-8.4.2/kube-state-metrics-8.4.2.tgz": "e42988751de414f1d6e3247f51ef8b45ed49218f30294c99b1469324d348145f",
@@ -43,13 +51,46 @@
     "https://github.com/topolvm/topolvm/releases/download/topolvm-chart-v17.2.0/topolvm-17.2.0.tgz": "4b6c070da0b38f098c9ef6b6a38ef4e2dfff52adecedc280ad92bfab408f90ee",
     "https://github.com/valkey-io/valkey-helm/releases/download/valkey-operator-0.6.0/valkey-operator-0.6.0.tgz": "78c23f630a7e6910ad208c182ff1f6a2d6df9d612a89806c8b2b7f9535ed8783",
     "https://github.com/vmware-tanzu/helm-charts/releases/download/velero-12.1.0/velero-12.1.0.tgz": "cd23589ad1b2d25cdd3220f6866b3f6f4c5683c4c09494e76a14700b33f81f83",
+    "https://github.com/zitadel/zitadel-charts/releases/download/zitadel-10.0.6/zitadel-10.0.6.tgz": "b0a5427aaa98d384b0756651f81122bd3417323a5d9f6f83a73e88db0bee10ee",
     "https://helm.cilium.io/cilium-1.20.2.tgz": "b2afd87b7f75f875f92a14559f14f59b7babbb479d968e3fd625a20bf30ec20e",
     "https://helm.elastic.co/helm/eck-operator/eck-operator-3.5.0.tgz": "eda9ec502c786fc1ad293e7f4235fdef43b2c741dcc977ab1f62377d72b5173f",
     "https://helm.ngc.nvidia.com/nvidia/charts/gpu-operator-v26.7.0.tgz": "6d1b282d74288be206c66dfe49073b7c85c209e92826c27f6507429055e2e102",
     "https://kedacore.github.io/charts/keda-2.20.2.tgz": "db60b1fa60f0565fefa4ce2f87e855b6a8854363ee82962fbe28a12a70d64c4c",
     "https://kedacore.github.io/charts/keda-add-ons-http-0.15.0.tgz": "dddb21bd400877ce0d474e4a51e890bc257d6c8c73b56ccd8ec4f7a7590e2001",
+    "https://scylla-operator-charts.storage.googleapis.com/stable/scylla-manager-v1.21.1.tgz": "2a2bdbda299dcb6314181fc285ec179a99d9b7009f23269be23cb24962981715",
     "https://scylla-operator-charts.storage.googleapis.com/stable/scylla-operator-v1.21.1.tgz": "7aee0463398121095405c5ea781712b7ce0b4d0f1f8319ab26fececb6ae89e41",
+    "https://scylla-operator-charts.storage.googleapis.com/stable/scylla-v1.21.1.tgz": "a991d2a1d0311561e2ad10c0edf5ee68e8156fb059a074ea0910dee4e3fc5e03",
     "https://stakater.github.io/stakater-charts/reloader-2.2.17.tgz": "a17ee91d66785c29c17e5dfd038c13b0e35b23301b33f8fdb431b403d8a7a071"
+  },
+  "chartDependencies": {
+    "15507f1cd09538d63914b79098b5a28f6cf0d1719e5d61c75611ff5f797849e0": {
+      "memcached-blocks": {
+        "source": "https://charts.bitnami.com/bitnami/memcached-6.14.0.tgz",
+        "version": "6.14.0"
+      },
+      "memcached-blocks-index": {
+        "source": "https://charts.bitnami.com/bitnami/memcached-6.14.0.tgz",
+        "version": "6.14.0"
+      },
+      "memcached-blocks-metadata": {
+        "source": "https://charts.bitnami.com/bitnami/memcached-6.14.0.tgz",
+        "version": "6.14.0"
+      },
+      "memcached-frontend": {
+        "source": "https://charts.bitnami.com/bitnami/memcached-6.14.0.tgz",
+        "version": "6.14.0"
+      },
+      "memcached-parquet-labels": {
+        "source": "https://charts.bitnami.com/bitnami/memcached-6.14.0.tgz",
+        "version": "6.14.0"
+      }
+    },
+    "729aa0fc402dcc3eb493028ef124a744f907b8dba997519bb7dea588703a3c5f": {
+      "common": {
+        "source": "oci://registry-1.docker.io/bitnamicharts/common",
+        "version": "2.18.0"
+      }
+    }
   },
   "ociCharts": {
     "oci://docker.io/envoyproxy/gateway-helm": {
@@ -70,6 +111,24 @@
         "archiveDigest": "222763b7edbe57eabe626cda09bb58040ed9c70471d32aab650c8e6825a3d8e7"
       }
     },
+    "oci://ghcr.io/argoproj-labs/argocd-agent/argocd-agent-agent": {
+      "0.2.7": {
+        "manifestDigest": "sha256:0806f895cc29ee786993ec6e802276ea2d3a8678f98ca343fee9a5f5ee684ac9",
+        "manifestSize": 911,
+        "chartLayerDigest": "sha256:cc209317e0c927afaaf03a55c4464a2833e816aa4f2667b815a93ca47d218692",
+        "chartLayerSize": 23476,
+        "archiveDigest": "cc209317e0c927afaaf03a55c4464a2833e816aa4f2667b815a93ca47d218692"
+      }
+    },
+    "oci://ghcr.io/argoproj-labs/argocd-agent/argocd-agent-principal": {
+      "0.3.3": {
+        "manifestDigest": "sha256:38ec20b333b7f464a51604a1f7c90fcfe2cd0ad95ab5c483c39a8dd67b3cfcb6",
+        "manifestSize": 933,
+        "chartLayerDigest": "sha256:2fc80fefb901cc46754d82ceb470e62d7964f4dc9dd5ea18df86f97fa98a46f1",
+        "chartLayerSize": 25991,
+        "archiveDigest": "2fc80fefb901cc46754d82ceb470e62d7964f4dc9dd5ea18df86f97fa98a46f1"
+      }
+    },
     "oci://ghcr.io/clickhouse/clickhouse-operator-helm": {
       "0.0.6": {
         "manifestDigest": "sha256:0bed310d096458934bcc16553a4ad8251037186fad5ef7dfe6aaa17da974af96",
@@ -77,6 +136,15 @@
         "chartLayerDigest": "sha256:654f99c0e430216904a1b774f24535dd2aca8067e7c60e24c0fb22112af756d0",
         "chartLayerSize": 125045,
         "archiveDigest": "654f99c0e430216904a1b774f24535dd2aca8067e7c60e24c0fb22112af756d0"
+      }
+    },
+    "oci://ghcr.io/coder/chart/coder": {
+      "2.36.5": {
+        "manifestDigest": "sha256:59f062cdb7867f9ea47a493e7a92e2b824158d29170f554a59bbaf9571ac7f8a",
+        "manifestSize": 843,
+        "chartLayerDigest": "sha256:6e18e35f5987c0c193468f7fed621b81c5c1733a72a02bcc9659f1cc67620a22",
+        "chartLayerSize": 14174,
+        "archiveDigest": "6e18e35f5987c0c193468f7fed621b81c5c1733a72a02bcc9659f1cc67620a22"
       }
     },
     "oci://ghcr.io/falcondev-oss/charts/github-actions-cache-server": {
@@ -122,6 +190,24 @@
         "chartLayerDigest": "sha256:9e4d204fd180254396a1a98533a0f78b31f9bf31d16d38e52397e310e457d100",
         "chartLayerSize": 2694,
         "archiveDigest": "9e4d204fd180254396a1a98533a0f78b31f9bf31d16d38e52397e310e457d100"
+      }
+    },
+    "oci://ghcr.io/netbox-community/netbox-chart/netbox": {
+      "8.3.18": {
+        "manifestDigest": "sha256:45fc70a24393bd8b4af558854dc95a7693f180b8bfe86f938da6d9e555813f83",
+        "manifestSize": 1552,
+        "chartLayerDigest": "sha256:a2499a41319c2b1874aea846fb2feb450b18944ae78bb2b5c54f5003bcf4d006",
+        "chartLayerSize": 255124,
+        "archiveDigest": "a2499a41319c2b1874aea846fb2feb450b18944ae78bb2b5c54f5003bcf4d006"
+      }
+    },
+    "oci://registry-1.docker.io/bitnamicharts/common": {
+      "2.18.0": {
+        "manifestDigest": "sha256:ff6cda9929f8875e3f39bffbc19061821b7ea5ee5f895d65e042eb74266ea2ba",
+        "manifestSize": 480,
+        "chartLayerDigest": "sha256:5d3e980dbef322fec77c5fe9213458f2616501e8d9148fe57bc4bad21c003970",
+        "chartLayerSize": 15493,
+        "archiveDigest": "5d3e980dbef322fec77c5fe9213458f2616501e8d9148fe57bc4bad21c003970"
       }
     }
   },

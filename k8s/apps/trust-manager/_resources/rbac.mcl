@@ -1,0 +1,227 @@
+let clusterRoleTrustManagerClusterViewRules =
+  - apiGroups:
+      - "trust.cert-manager.io"
+    resources:
+      - "bundles"
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+
+let clusterRoleTrustManagerRules =
+  - apiGroups:
+      - "trust.cert-manager.io"
+    resources:
+      - "bundles"
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+  - apiGroups:
+      - "trust.cert-manager.io"
+    resources:
+      - "bundles/finalizers"
+    verbs:
+      - "update"
+  - apiGroups:
+      - "trust.cert-manager.io"
+    resources:
+      - "bundles/status"
+    verbs:
+      - "patch"
+  - apiGroups:
+      - ""
+    resources:
+      - "namespaces"
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+  - apiGroups:
+      - ""
+    resources:
+      - "configmaps"
+    verbs:
+      - "get"
+      - "list"
+      - "create"
+      - "patch"
+      - "watch"
+      - "delete"
+  - apiGroups:
+      - ""
+      - "events.k8s.io"
+    resources:
+      - "events"
+    verbs:
+      - "create"
+      - "patch"
+
+let clusterRoleBindingTrustManagerSubjects =
+  - kind: "ServiceAccount"
+    name: "trust-manager"
+    namespace: "cert-manager"
+
+let roleTrustManagerRules =
+  - apiGroups:
+      - ""
+    resources:
+      - "secrets"
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+
+let roleTrustManagerLeaderelectionRules =
+  - apiGroups:
+      - "coordination.k8s.io"
+    resources:
+      - "leases"
+    verbs:
+      - "get"
+      - "create"
+      - "update"
+      - "watch"
+      - "list"
+
+let roleBindingTrustManagerSubjects =
+  - kind: "ServiceAccount"
+    name: "trust-manager"
+    namespace: "cert-manager"
+
+let roleBindingTrustManagerLeaderelectionSubjects =
+  - kind: "ServiceAccount"
+    name: "trust-manager"
+    namespace: "cert-manager"
+
+let serviceAccountTrustManager = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  automountServiceAccountToken: true
+  metadata: node:
+    name: "trust-manager"
+    namespace: "cert-manager"
+    labels: node:
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+
+let clusterRoleTrustManagerClusterView = node:
+  kind: "ClusterRole"
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  metadata: node:
+    labels: node:
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+      "rbac.authorization.k8s.io/aggregate-to-cluster-reader": "true"
+    name: "trust-manager-cluster-view"
+  rules: clusterRoleTrustManagerClusterViewRules
+
+let clusterRoleTrustManager = node:
+  kind: "ClusterRole"
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  metadata: node:
+    labels: node:
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+    name: "trust-manager"
+  rules: clusterRoleTrustManagerRules
+
+let clusterRoleBindingTrustManager = node:
+  kind: "ClusterRoleBinding"
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  metadata: node:
+    labels: node:
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+    name: "trust-manager"
+  roleRef: node:
+    apiGroup: "rbac.authorization.k8s.io"
+    kind: "ClusterRole"
+    name: "trust-manager"
+  subjects: clusterRoleBindingTrustManagerSubjects
+
+let roleTrustManager = node:
+  kind: "Role"
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  metadata: node:
+    name: "trust-manager"
+    namespace: "cert-manager"
+    labels: node:
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+  rules: roleTrustManagerRules
+
+let roleTrustManagerLeaderelection = node:
+  kind: "Role"
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  metadata: node:
+    name: "trust-manager:leaderelection"
+    namespace: "cert-manager"
+    labels: node:
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+  rules: roleTrustManagerLeaderelectionRules
+
+let roleBindingTrustManager = node:
+  kind: "RoleBinding"
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  metadata: node:
+    name: "trust-manager"
+    namespace: "cert-manager"
+    labels: node:
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+  roleRef: node:
+    apiGroup: "rbac.authorization.k8s.io"
+    kind: "Role"
+    name: "trust-manager"
+  subjects: roleBindingTrustManagerSubjects
+
+let roleBindingTrustManagerLeaderelection = node:
+  kind: "RoleBinding"
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  metadata: node:
+    name: "trust-manager:leaderelection"
+    namespace: "cert-manager"
+    labels: node:
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+  roleRef: node:
+    apiGroup: "rbac.authorization.k8s.io"
+    kind: "Role"
+    name: "trust-manager:leaderelection"
+  subjects: roleBindingTrustManagerLeaderelectionSubjects
+
+export let resources =
+  - serviceAccountTrustManager
+  - clusterRoleTrustManagerClusterView
+  - clusterRoleTrustManager
+  - clusterRoleBindingTrustManager
+  - roleTrustManager
+  - roleTrustManagerLeaderelection
+  - roleBindingTrustManager
+  - roleBindingTrustManagerLeaderelection

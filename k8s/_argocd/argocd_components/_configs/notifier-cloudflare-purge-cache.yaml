@@ -1,0 +1,6 @@
+url: https://api.cloudflare.com/client/v4/zones/48b02398c8bc932f4d0b1dba83de196c/purge_cache
+headers: #optional headers
+- name: Content-Type
+  value: application/json
+- name: Authorization
+  value: Bearer $cloudflare-api-token

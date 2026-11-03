@@ -1,17 +1,10 @@
 {
   name: "longhorn",
   namespace: "longhorn-system",
-  additionalSources: {
-    helm: {
-      repoURL: "https://charts.longhorn.io",
-      chart: "longhorn",
-      targetRevision: "1.12.1",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "default",
+    },
   },
 }

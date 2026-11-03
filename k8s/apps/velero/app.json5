@@ -1,17 +1,10 @@
 {
   name: "velero",
   namespace: "velero",
-  additionalSources: {
-    helm: {
-      repoURL: "https://vmware-tanzu.github.io/helm-charts",
-      chart: "velero",
-      targetRevision: "12.1.0",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "seaweedfsBiscuit",
+    },
   },
 }

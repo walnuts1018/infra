@@ -1,17 +1,10 @@
 {
   name: "pyroscope",
   namespace: "pyroscope",
-  additionalSources: {
-    helm: {
-      repoURL: "ghcr.io/grafana/helm-charts",
-      chart: "pyroscope",
-      targetRevision: "2.0.1",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "default",
+    },
   },
 }

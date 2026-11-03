@@ -1,16 +1,7 @@
 {
   name: "influxdb",
   namespace: "databases",
-  additionalSources: {
-    helm: {
-      repoURL: "https://helm.influxdata.com/",
-      chart: "influxdb2",
-      targetRevision: "2.1.2",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

@@ -1,0 +1,422 @@
+let customResourceDefinitionBundlesTrustCertManagerIoSpecVersionsAdditionalPrinterColumns =
+  - description: "Bundle ConfigMap Target Key"
+    jsonPath: ".spec.target.configMap.key"
+    name: "ConfigMap Target"
+    type: "string"
+  - description: "Bundle Secret Target Key"
+    jsonPath: ".spec.target.secret.key"
+    name: "Secret Target"
+    type: "string"
+  - description: "Bundle has been synced"
+    jsonPath: ".status.conditions[?(@.type == \"Synced\")].status"
+    name: "Synced"
+    type: "string"
+  - description: "Reason Bundle has Synced status"
+    jsonPath: ".status.conditions[?(@.type == \"Synced\")].reason"
+    name: "Reason"
+    type: "string"
+  - description: "Timestamp Bundle was created"
+    jsonPath: ".metadata.creationTimestamp"
+    name: "Age"
+    type: "date"
+
+let customResourceDefinitionBundlesTrustCertManagerIoPropertiesConfigMapXKubernetesValidations =
+  - message: "exactly one of the fields in [name selector] must be set"
+    rule: "[has(self.name),has(self.selector)].filter(x,x==true).size() == 1"
+
+let customResourceDefinitionBundlesTrustCertManagerIoPropertiesSecretXKubernetesValidations =
+  - message: "exactly one of the fields in [name selector] must be set"
+    rule: "[has(self.name),has(self.selector)].filter(x,x==true).size() == 1"
+
+let customResourceDefinitionBundlesTrustCertManagerIoSourcesItemsXKubernetesValidations =
+  - message: "exactly one of the fields in [configMap secret inLine useDefaultCAs] must be set"
+    rule: "[has(self.configMap),has(self.secret),has(self.inLine),has(self.useDefaultCAs)].filter(x,x==true).size() == 1"
+
+let customResourceDefinitionBundlesTrustCertManagerIoPropertiesAdditionalFormatsXKubernetesValidations =
+  - message: "at least one of the fields in [jks pkcs12] must be set"
+    rule: "[has(self.jks),has(self.pkcs12)].filter(x,x==true).size() >= 1"
+
+let customResourceDefinitionBundlesTrustCertManagerIoPropertiesTargetXKubernetesValidations =
+  - message: "at least one of the fields in [configMap secret] must be set"
+    rule: "[has(self.configMap),has(self.secret)].filter(x,x==true).size() >= 1"
+
+let customResourceDefinitionBundlesTrustCertManagerIoSpecVersions =
+  - additionalPrinterColumns: customResourceDefinitionBundlesTrustCertManagerIoSpecVersionsAdditionalPrinterColumns
+    name: "v1alpha1"
+    schema: node:
+      openAPIV3Schema: node:
+        properties: node:
+          apiVersion: node:
+            description: "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources"
+            type: "string"
+          kind: node:
+            description: "Kind is a string value representing the REST resource this object represents.\nServers may infer this from the endpoint the client submits requests to.\nCannot be updated.\nIn CamelCase.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+            type: "string"
+          metadata: node:
+            type: "object"
+          spec: node:
+            description: "spec represents the desired state of the Bundle resource."
+            properties: node:
+              sources: node:
+                description: "sources is a set of references to data whose data will sync to the target."
+                items: node:
+                  description: "BundleSource is the set of sources whose data will be appended and synced to\nthe BundleTarget in all Namespaces."
+                  properties: node:
+                    configMap: node:
+                      description: "configMap is a reference (by name) to a ConfigMap's `data` key(s), or to a\nlist of ConfigMap's `data` key(s) using label selector, in the trust namespace."
+                      properties: node:
+                        includeAllKeys: node:
+                          description: "includeAllKeys is a flag to include all keys in the object's `data` field to be used. False by default.\nThis field must not be true when `key` is set."
+                          type: "boolean"
+                        key: node:
+                          description: "key of the entry in the object's `data` field to be used."
+                          maxLength: 253
+                          minLength: 1
+                          type: "string"
+                        name: node:
+                          description: "name is the name of the source object in the trust namespace.\nThis field must be left empty when `selector` is set"
+                          maxLength: 253
+                          minLength: 1
+                          type: "string"
+                        selector: node:
+                          description: "selector is the label selector to use to fetch a list of objects. Must not be set\nwhen `name` is set."
+                          properties: node:
+                            matchExpressions: node:
+                              description: "matchExpressions is a list of label selector requirements. The requirements are ANDed."
+                              items: node:
+                                description: "A label selector requirement is a selector that contains values, a key, and an operator that\nrelates the key and values."
+                                properties: node:
+                                  key: node:
+                                    description: "key is the label key that the selector applies to."
+                                    type: "string"
+                                  operator: node:
+                                    description: "operator represents a key's relationship to a set of values.\nValid operators are In, NotIn, Exists and DoesNotExist."
+                                    type: "string"
+                                  values: node:
+                                    description: "values is an array of string values. If the operator is In or NotIn,\nthe values array must be non-empty. If the operator is Exists or DoesNotExist,\nthe values array must be empty. This array is replaced during a strategic\nmerge patch."
+                                    items: node:
+                                      type: "string"
+                                    type: "array"
+                                    "x-kubernetes-list-type": "atomic"
+                                required:
+                                  - "key"
+                                  - "operator"
+                                type: "object"
+                              type: "array"
+                              "x-kubernetes-list-type": "atomic"
+                            matchLabels: node:
+                              additionalProperties: node:
+                                type: "string"
+                              description: "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels\nmap is equivalent to an element of matchExpressions, whose key field is \"key\", the\noperator is \"In\", and the values array contains only \"value\". The requirements are ANDed."
+                              type: "object"
+                          type: "object"
+                          "x-kubernetes-map-type": "atomic"
+                      type: "object"
+                      "x-kubernetes-map-type": "atomic"
+                      "x-kubernetes-validations": customResourceDefinitionBundlesTrustCertManagerIoPropertiesConfigMapXKubernetesValidations
+                    inLine: node:
+                      description: "inLine is a simple string to append as the source data."
+                      maxLength: 1048576
+                      minLength: 1
+                      type: "string"
+                    secret: node:
+                      description: "secret is a reference (by name) to a Secret's `data` key(s), or to a\nlist of Secret's `data` key(s) using label selector, in the trust namespace."
+                      properties: node:
+                        includeAllKeys: node:
+                          description: "includeAllKeys is a flag to include all keys in the object's `data` field to be used. False by default.\nThis field must not be true when `key` is set."
+                          type: "boolean"
+                        key: node:
+                          description: "key of the entry in the object's `data` field to be used."
+                          maxLength: 253
+                          minLength: 1
+                          type: "string"
+                        name: node:
+                          description: "name is the name of the source object in the trust namespace.\nThis field must be left empty when `selector` is set"
+                          maxLength: 253
+                          minLength: 1
+                          type: "string"
+                        selector: node:
+                          description: "selector is the label selector to use to fetch a list of objects. Must not be set\nwhen `name` is set."
+                          properties: node:
+                            matchExpressions: node:
+                              description: "matchExpressions is a list of label selector requirements. The requirements are ANDed."
+                              items: node:
+                                description: "A label selector requirement is a selector that contains values, a key, and an operator that\nrelates the key and values."
+                                properties: node:
+                                  key: node:
+                                    description: "key is the label key that the selector applies to."
+                                    type: "string"
+                                  operator: node:
+                                    description: "operator represents a key's relationship to a set of values.\nValid operators are In, NotIn, Exists and DoesNotExist."
+                                    type: "string"
+                                  values: node:
+                                    description: "values is an array of string values. If the operator is In or NotIn,\nthe values array must be non-empty. If the operator is Exists or DoesNotExist,\nthe values array must be empty. This array is replaced during a strategic\nmerge patch."
+                                    items: node:
+                                      type: "string"
+                                    type: "array"
+                                    "x-kubernetes-list-type": "atomic"
+                                required:
+                                  - "key"
+                                  - "operator"
+                                type: "object"
+                              type: "array"
+                              "x-kubernetes-list-type": "atomic"
+                            matchLabels: node:
+                              additionalProperties: node:
+                                type: "string"
+                              description: "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels\nmap is equivalent to an element of matchExpressions, whose key field is \"key\", the\noperator is \"In\", and the values array contains only \"value\". The requirements are ANDed."
+                              type: "object"
+                          type: "object"
+                          "x-kubernetes-map-type": "atomic"
+                      type: "object"
+                      "x-kubernetes-map-type": "atomic"
+                      "x-kubernetes-validations": customResourceDefinitionBundlesTrustCertManagerIoPropertiesSecretXKubernetesValidations
+                    useDefaultCAs: node:
+                      description: "useDefaultCAs indicates whether the default CA bundle should be used as a source.\nThe default CA bundle is available only if trust-manager was installed with\ndefault CA support enabled, either via the Helm chart or by starting the\ntrust-manager controller with the \"--default-package-location\" flag.\nIf default CA support was not enabled at startup, setting this field to true\nwill result in reconciliation failure.\nThe version of the default CA package used for this Bundle is reported in\nstatus.defaultCAVersion."
+                      type: "boolean"
+                  type: "object"
+                  "x-kubernetes-map-type": "atomic"
+                  "x-kubernetes-validations": customResourceDefinitionBundlesTrustCertManagerIoSourcesItemsXKubernetesValidations
+                maxItems: 100
+                minItems: 1
+                type: "array"
+                "x-kubernetes-list-type": "atomic"
+              target: node:
+                description: "target is the target location in all namespaces to sync source data to."
+                properties: node:
+                  additionalFormats: node:
+                    description: "additionalFormats specifies any additional formats to write to the target"
+                    properties: node:
+                      jks: node:
+                        description: "jks requests a JKS-formatted binary trust bundle to be written to the target.\nThe bundle has \"changeit\" as the default password.\nFor more information refer to this link https://cert-manager.io/docs/faq/#keystore-passwords\nFormat is deprecated: Writing JKS is subject for removal. Please migrate to PKCS12.\nPKCS#12 trust stores created by trust-manager are compatible with Java."
+                        minProperties: 1
+                        properties: node:
+                          key: node:
+                            description: "key is the key of the entry in the object's `data` field to be used."
+                            maxLength: 253
+                            minLength: 1
+                            type: "string"
+                          password: node:
+                            default: "changeit"
+                            description: "password for JKS trust store"
+                            maxLength: 128
+                            minLength: 1
+                            type: "string"
+                        required:
+                          - "key"
+                        type: "object"
+                        "x-kubernetes-map-type": "atomic"
+                      pkcs12: node:
+                        description: "pkcs12 requests a PKCS12-formatted binary trust bundle to be written to the target.\n\nThe bundle is by default created without a password.\nFor more information refer to this link https://cert-manager.io/docs/faq/#keystore-passwords"
+                        minProperties: 1
+                        properties: node:
+                          key: node:
+                            description: "key is the key of the entry in the object's `data` field to be used."
+                            maxLength: 253
+                            minLength: 1
+                            type: "string"
+                          password: node:
+                            default: ""
+                            description: "password for PKCS12 trust store"
+                            maxLength: 128
+                            minLength: 0
+                            type: "string"
+                          profile: node:
+                            description: "profile specifies the certificate encryption algorithms and the HMAC algorithm\nused to create the PKCS12 trust store.\n\nIf provided, allowed values are:\n`LegacyRC2`: Deprecated. Not supported by default in OpenSSL 3 or Java 20.\n`LegacyDES`: Less secure algorithm. Use this option for maximal compatibility.\n`Modern2023`: Secure algorithm. Use this option in case you have to always use secure algorithms (e.g. because of company policy).\n\nDefault value is `LegacyRC2` for backward compatibility."
+                            enum:
+                              - "LegacyRC2"
+                              - "LegacyDES"
+                              - "Modern2023"
+                            type: "string"
+                        required:
+                          - "key"
+                        type: "object"
+                        "x-kubernetes-map-type": "atomic"
+                    type: "object"
+                    "x-kubernetes-validations": customResourceDefinitionBundlesTrustCertManagerIoPropertiesAdditionalFormatsXKubernetesValidations
+                  configMap: node:
+                    description: "configMap is the target ConfigMap in Namespaces that all Bundle source\ndata will be synced to."
+                    properties: node:
+                      key: node:
+                        description: "key is the key of the entry in the object's `data` field to be used."
+                        maxLength: 253
+                        minLength: 1
+                        type: "string"
+                      metadata: node:
+                        description: "metadata is an optional set of labels and annotations to be copied to the target."
+                        minProperties: 1
+                        properties: node:
+                          annotations: node:
+                            additionalProperties: node:
+                              type: "string"
+                            description: "annotations is a key value map to be copied to the target."
+                            minProperties: 1
+                            type: "object"
+                          labels: node:
+                            additionalProperties: node:
+                              type: "string"
+                            description: "labels is a key value map to be copied to the target."
+                            minProperties: 1
+                            type: "object"
+                        type: "object"
+                    required:
+                      - "key"
+                    type: "object"
+                  namespaceSelector: node:
+                    description: "namespaceSelector will, if set, only sync the target resource in\nNamespaces which match the selector."
+                    properties: node:
+                      matchExpressions: node:
+                        description: "matchExpressions is a list of label selector requirements. The requirements are ANDed."
+                        items: node:
+                          description: "A label selector requirement is a selector that contains values, a key, and an operator that\nrelates the key and values."
+                          properties: node:
+                            key: node:
+                              description: "key is the label key that the selector applies to."
+                              type: "string"
+                            operator: node:
+                              description: "operator represents a key's relationship to a set of values.\nValid operators are In, NotIn, Exists and DoesNotExist."
+                              type: "string"
+                            values: node:
+                              description: "values is an array of string values. If the operator is In or NotIn,\nthe values array must be non-empty. If the operator is Exists or DoesNotExist,\nthe values array must be empty. This array is replaced during a strategic\nmerge patch."
+                              items: node:
+                                type: "string"
+                              type: "array"
+                              "x-kubernetes-list-type": "atomic"
+                          required:
+                            - "key"
+                            - "operator"
+                          type: "object"
+                        type: "array"
+                        "x-kubernetes-list-type": "atomic"
+                      matchLabels: node:
+                        additionalProperties: node:
+                          type: "string"
+                        description: "matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels\nmap is equivalent to an element of matchExpressions, whose key field is \"key\", the\noperator is \"In\", and the values array contains only \"value\". The requirements are ANDed."
+                        type: "object"
+                    type: "object"
+                    "x-kubernetes-map-type": "atomic"
+                  secret: node:
+                    description: "secret is the target Secret that all Bundle source data will be synced to.\nUsing Secrets as targets is only supported if enabled at trust-manager startup.\nBy default, trust-manager has no permissions for writing to secrets and can only read secrets in the trust namespace."
+                    properties: node:
+                      key: node:
+                        description: "key is the key of the entry in the object's `data` field to be used."
+                        maxLength: 253
+                        minLength: 1
+                        type: "string"
+                      metadata: node:
+                        description: "metadata is an optional set of labels and annotations to be copied to the target."
+                        minProperties: 1
+                        properties: node:
+                          annotations: node:
+                            additionalProperties: node:
+                              type: "string"
+                            description: "annotations is a key value map to be copied to the target."
+                            minProperties: 1
+                            type: "object"
+                          labels: node:
+                            additionalProperties: node:
+                              type: "string"
+                            description: "labels is a key value map to be copied to the target."
+                            minProperties: 1
+                            type: "object"
+                        type: "object"
+                    required:
+                      - "key"
+                    type: "object"
+                type: "object"
+                "x-kubernetes-validations": customResourceDefinitionBundlesTrustCertManagerIoPropertiesTargetXKubernetesValidations
+            required:
+              - "sources"
+            type: "object"
+          status: node:
+            description: "status of the Bundle. This is set and managed automatically."
+            minProperties: 1
+            properties: node:
+              conditions: node:
+                description: "conditions represent the latest available observations of the Bundle's current state."
+                items: node:
+                  description: "Condition contains details for one aspect of the current state of this API Resource."
+                  properties: node:
+                    lastTransitionTime: node:
+                      description: "lastTransitionTime is the last time the condition transitioned from one status to another.\nThis should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable."
+                      format: "date-time"
+                      type: "string"
+                    message: node:
+                      description: "message is a human readable message indicating details about the transition.\nThis may be an empty string."
+                      maxLength: 32768
+                      type: "string"
+                    observedGeneration: node:
+                      description: "observedGeneration represents the .metadata.generation that the condition was set based upon.\nFor instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date\nwith respect to the current state of the instance."
+                      format: "int64"
+                      minimum: 0
+                      type: "integer"
+                    reason: node:
+                      description: "reason contains a programmatic identifier indicating the reason for the condition's last transition.\nProducers of specific condition types may define expected values and meanings for this field,\nand whether the values are considered a guaranteed API.\nThe value should be a CamelCase string.\nThis field may not be empty."
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: "^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$"
+                      type: "string"
+                    status: node:
+                      description: "status of the condition, one of True, False, Unknown."
+                      enum:
+                        - "True"
+                        - "False"
+                        - "Unknown"
+                      type: "string"
+                    type: node:
+                      description: "type of condition in CamelCase or in foo.example.com/CamelCase."
+                      maxLength: 316
+                      pattern: "^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$"
+                      type: "string"
+                  required:
+                    - "lastTransitionTime"
+                    - "message"
+                    - "reason"
+                    - "status"
+                    - "type"
+                  type: "object"
+                maxItems: 10
+                minItems: 0
+                type: "array"
+                "x-kubernetes-list-map-keys":
+                  - "type"
+                "x-kubernetes-list-type": "map"
+              defaultCAVersion: node:
+                description: "defaultCAVersion is the version of the default CA package used when resolving\nthe default CA source(s) for this Bundle (for example, when any source has\nuseDefaultCAs set to true), if applicable.\nBundles resolved from identical sets of default CA certificates will report\nthe same defaultCAVersion value."
+                maxLength: 253
+                minLength: 1
+                type: "string"
+            type: "object"
+        required:
+          - "spec"
+        type: "object"
+    served: true
+    storage: true
+    subresources: node:
+      status: {}
+
+let customResourceDefinitionBundlesTrustCertManagerIo = node:
+  apiVersion: "apiextensions.k8s.io/v1"
+  kind: "CustomResourceDefinition"
+  metadata: node:
+    name: "bundles.trust.cert-manager.io"
+    annotations: node:
+      "helm.sh/resource-policy": "keep"
+    labels: node:
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+  spec: node:
+    group: "trust.cert-manager.io"
+    names: node:
+      kind: "Bundle"
+      listKind: "BundleList"
+      plural: "bundles"
+      singular: "bundle"
+    scope: "Cluster"
+    versions: customResourceDefinitionBundlesTrustCertManagerIoSpecVersions
+
+export let resources =
+  - customResourceDefinitionBundlesTrustCertManagerIo

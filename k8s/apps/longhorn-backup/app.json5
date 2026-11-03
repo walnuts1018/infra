@@ -1,7 +1,10 @@
 {
   name: "longhorn-backup",
   namespace: "longhorn-system",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "standard",
+    },
   },
 }

@@ -1,16 +1,7 @@
 {
   name: "onepassword-connect",
   namespace: "onepassword",
-  additionalSources: {
-    helm: {
-      repoURL: "https://1password.github.io/connect-helm-charts/",
-      chart: "connect",
-      targetRevision: "2.3.0",
-      valueFiles: [
-        "values.yaml"
-      ]
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
     berry: {},
     biscuit: {},

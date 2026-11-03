@@ -1,0 +1,11 @@
+import "./certificates.mcl" as certificates
+import "./external-secrets.mcl" as externalSecrets
+
+emit certificates.resources.ca
+emit certificates.resources.principal
+emit certificates.resources.resourceProxy
+emit certificates.resources.sharedClient
+emit certificates.resources.biscuitClient
+emit certificates.resources.kurumiClient
+emit certificates.resources.issuer
+emit externalSecrets.jwt

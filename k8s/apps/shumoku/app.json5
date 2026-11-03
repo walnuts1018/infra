@@ -1,17 +1,8 @@
 {
-    name: "shumoku",
-    namespace: "netbox",
-  additionalSources: {
-    helm: {
-      repoURL: "ghcr.io/konoe-akitoshi/charts",
-      chart: "shumoku",
-      targetRevision: "0.1.5",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
+  name: "shumoku",
+  namespace: "netbox",
+  manifestGenerator: "mcl",
+  clusters: {
+    kurumi: {},
   },
-    clusters: {
-        kurumi: {},
-    },
 }

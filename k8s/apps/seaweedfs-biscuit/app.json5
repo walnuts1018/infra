@@ -1,6 +1,7 @@
 {
   name: "seaweedfs-biscuit",
   namespace: "seaweedfs",
+  manifestGenerator: "mcl",
   clusters: {
     biscuit: {},
   },

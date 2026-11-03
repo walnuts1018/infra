@@ -1,0 +1,9 @@
+name: walnuts-dev
+issuer: https://auth.walnuts.dev
+clientID: "296595833422414292"
+clientSecret: $argocd-oidc:client-secret
+cliClientID: $argocd-oidc:cli-client-id
+requestedScopes:
+- openid
+- email
+- profile

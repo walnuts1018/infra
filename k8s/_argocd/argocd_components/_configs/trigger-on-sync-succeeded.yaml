@@ -1,0 +1,5 @@
+- description: Application syncing has succeeded
+  send:
+  - app-sync-succeeded
+  - cloudflare-purge-cache
+  when: app.status.operationState.phase in ['Succeeded']

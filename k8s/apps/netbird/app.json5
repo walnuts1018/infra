@@ -1,7 +1,10 @@
 {
   name: "netbird",
   namespace: "netbird",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "standard",
+    },
   },
 }

@@ -1,0 +1,5 @@
+export let chartVersion = "v1.21.2"
+export let chartArchive = "https://charts.jetstack.io/charts/cert-manager-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let releaseName = "cert-manager"
+export let namespace = "cert-manager"

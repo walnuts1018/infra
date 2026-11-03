@@ -1,0 +1,96 @@
+import "./chart.mcl" as appChart
+
+let labels =
+  app: "startupapicheck"
+  "app.kubernetes.io/name": "startupapicheck"
+  "app.kubernetes.io/instance": "cert-manager"
+  "app.kubernetes.io/component": "startupapicheck"
+  "app.kubernetes.io/version": appChart.chartVersion
+  "app.kubernetes.io/managed-by": "Helm"
+  "helm.sh/chart": "cert-manager-" + appChart.chartVersion
+
+fn hookMetadata(name: String, weight: String) -> Map<String, Any> = node:
+  name: name
+  namespace: appChart.namespace
+  labels: labels
+  annotations:
+    "helm.sh/hook": "post-install"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
+    "helm.sh/hook-weight": weight
+
+let serviceAccount = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  automountServiceAccountToken: true
+  metadata: hookMetadata("cert-manager-startupapicheck", "-5")
+
+let role = node:
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  kind: "Role"
+  metadata: hookMetadata("cert-manager-startupapicheck:create-cert", "-5")
+  rules:
+    - apiGroups:
+        - "cert-manager.io"
+      resources:
+        - "certificaterequests"
+      verbs:
+        - "create"
+
+let roleBinding = node:
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  kind: "RoleBinding"
+  metadata: hookMetadata("cert-manager-startupapicheck:create-cert", "-5")
+  roleRef:
+    apiGroup: "rbac.authorization.k8s.io"
+    kind: "Role"
+    name: "cert-manager-startupapicheck:create-cert"
+  subjects:
+    - kind: "ServiceAccount"
+      name: "cert-manager-startupapicheck"
+      namespace: appChart.namespace
+
+let job = node:
+  apiVersion: "batch/v1"
+  kind: "Job"
+  metadata: hookMetadata("cert-manager-startupapicheck", "1")
+  spec:
+    backoffLimit: 4
+    template:
+      metadata:
+        labels: labels
+      spec:
+        restartPolicy: "OnFailure"
+        serviceAccountName: "cert-manager-startupapicheck"
+        enableServiceLinks: false
+        securityContext:
+          runAsNonRoot: true
+          seccompProfile:
+            type: "RuntimeDefault"
+        containers:
+          - name: "cert-manager-startupapicheck"
+            image: "quay.io/jetstack/cert-manager-startupapicheck:v1.21.2"
+            imagePullPolicy: "IfNotPresent"
+            args:
+              - "check"
+              - "api"
+              - "--wait=1m"
+              - "-v"
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - "ALL"
+              readOnlyRootFilesystem: true
+            env:
+              - name: "POD_NAMESPACE"
+                valueFrom:
+                  fieldRef:
+                    fieldPath: "metadata.namespace"
+        nodeSelector:
+          "kubernetes.io/os": "linux"
+
+export let resources =
+  - serviceAccount
+  - role
+  - roleBinding
+  - job

@@ -1,0 +1,19 @@
+import "./services.mcl" as services
+import "./service-monitors.mcl" as monitors
+import "./proxies.mcl" as proxies
+
+emit services.controllerManagerService
+emit services.corednsService
+emit services.etcdService
+emit services.kubeletService
+emit services.proxyService
+emit services.schedulerService
+emit proxies.kubeletProxyDaemonSet
+emit proxies.controlPlaneProxyDaemonSet
+emit monitors.controllerManagerServiceMonitor
+emit monitors.corednsServiceMonitor
+emit monitors.etcdServiceMonitor
+emit monitors.proxyServiceMonitor
+emit monitors.schedulerServiceMonitor
+emit monitors.apiServerServiceMonitor
+emit monitors.kubeletServiceMonitor

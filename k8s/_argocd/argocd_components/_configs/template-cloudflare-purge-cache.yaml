@@ -1,0 +1,5 @@
+webhook:
+  cloudflare-purge-cache:
+    method: POST
+    body: |
+      {"purge_everything": true}

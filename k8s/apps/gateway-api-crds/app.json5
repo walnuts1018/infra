@@ -1,15 +1,7 @@
 {
   name: "gateway-api-crds",
   namespace: "kube-system",
-  additionalSources: {
-    kustomize: [
-      {
-        repoURL: "https://github.com/kubernetes-sigs/gateway-api",
-        path: "config/crd",
-        targetRevision: "v1.6.1",
-      },
-    ],
-  },
+  manifestGenerator: "mcl",
   clusters: {
     biscuit: {},
   },

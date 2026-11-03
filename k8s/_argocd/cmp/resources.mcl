@@ -1,0 +1,15 @@
+import text "./_configs/plugin.yaml" as plugin
+import text "./_configs/render-mcl.sh" as renderScript
+
+let mclCMP = node:
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  metadata:
+    name: "argocd-mcl-cmp"
+    namespace: "argocd"
+  data:
+    "plugin.yaml": plugin
+    "render-mcl.sh": renderScript
+
+export let resources =
+  - mclCMP

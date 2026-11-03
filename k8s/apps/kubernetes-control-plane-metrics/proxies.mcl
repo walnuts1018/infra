@@ -1,0 +1,83 @@
+let appName = "kubernetes-control-plane-metrics"
+let systemNamespace = "kube-system"
+
+fn socatContainer(name: String, portName: String, listenPort: String, targetPort: String, port: Int, memoryLimit: String) -> Map<String, Any> = node:
+  name: name
+  image: "docker.io/alpine/socat:1.8.1.3"
+  args:
+    - "-d"
+    - "-d"
+    - "TCP-LISTEN:" + listenPort + ",fork,reuseaddr,bind=0.0.0.0"
+    - "TCP:" + targetPort
+  ports:
+    -
+      name: portName
+      containerPort: port
+      hostPort: port
+  resources:
+    requests:
+      cpu: "3m"
+      memory: "8Mi"
+    limits:
+      cpu: "50m"
+      memory: memoryLimit
+
+export let kubeletProxyDaemonSet = node:
+  apiVersion: "apps/v1"
+  kind: "DaemonSet"
+  metadata:
+    name: "kubelet-metrics-proxy"
+    namespace: systemNamespace
+    labels:
+      app: "kubelet-metrics-proxy"
+      "app.kubernetes.io/name": appName
+  spec:
+    selector:
+      matchLabels:
+        app: "kubelet-metrics-proxy"
+    template:
+      metadata:
+        labels:
+          app: "kubelet-metrics-proxy"
+          "app.kubernetes.io/name": appName
+      spec:
+        hostNetwork: true
+        dnsPolicy: "ClusterFirstWithHostNet"
+        tolerations:
+          -
+            operator: "Exists"
+        containers:
+          - socatContainer("kubelet", "https-metrics", "11050", "127.0.0.1:10250", 11050, "64Mi")
+
+export let controlPlaneProxyDaemonSet = node:
+  apiVersion: "apps/v1"
+  kind: "DaemonSet"
+  metadata:
+    name: "kubernetes-control-plane-metrics-proxy"
+    namespace: systemNamespace
+    labels:
+      app: "kubernetes-control-plane-metrics-proxy"
+      "app.kubernetes.io/name": appName
+  spec:
+    selector:
+      matchLabels:
+        app: "kubernetes-control-plane-metrics-proxy"
+    template:
+      metadata:
+        labels:
+          app: "kubernetes-control-plane-metrics-proxy"
+          "app.kubernetes.io/name": appName
+      spec:
+        hostNetwork: true
+        dnsPolicy: "ClusterFirstWithHostNet"
+        nodeSelector:
+          "node-role.kubernetes.io/control-plane": ""
+        tolerations:
+          -
+            key: "node-role.kubernetes.io/control-plane"
+            operator: "Exists"
+            effect: "NoSchedule"
+        containers:
+          - socatContainer("controller-manager", "controller", "11057", "127.0.0.1:10257", 11057, "32Mi")
+          - socatContainer("scheduler", "scheduler", "11059", "127.0.0.1:10259", 11059, "32Mi")
+          - socatContainer("etcd", "etcd", "12381", "127.0.0.1:2381", 12381, "32Mi")

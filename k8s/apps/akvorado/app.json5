@@ -1,6 +1,7 @@
 {
   name: "akvorado",
   namespace: "akvorado",
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

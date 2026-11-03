@@ -1,0 +1,17 @@
+import "std:helm" as helm
+import "./values.mcl" as appValues
+
+let namespace = "monitoring"
+let chartVersion = "1.21.3"
+let chartArchive = "https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/releases/download/" + chartVersion + "/k8s-ephemeral-storage-metrics-" + chartVersion + ".tgz"
+let apiVersions: List<String> = []
+let helmOptions =
+  releaseName: "ephemeral-storage-metrics"
+  namespace: namespace
+  version: chartVersion
+  kubeVersion: "1.36.4"
+  apiVersions: apiVersions
+  values: appValues.values
+let resources = helm.render(chartArchive, helmOptions)
+
+emit each resources

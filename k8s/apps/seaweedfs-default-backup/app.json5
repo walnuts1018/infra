@@ -1,7 +1,10 @@
 {
   name: "seaweedfs-default-backup",
   namespace: "seaweedfs",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "standard",
+    },
   },
 }

@@ -1,7 +1,10 @@
 {
   name: "prfexample",
   namespace: "prfexample",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "scyllaClientCertificate",
+    },
   },
 }

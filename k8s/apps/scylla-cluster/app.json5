@@ -1,17 +1,10 @@
 {
   name: "scylla-cluster",
   namespace: "databases",
-  additionalSources: {
-    helm: {
-      repoURL: "https://scylla-operator-charts.storage.googleapis.com/stable",
-      chart: "scylla",
-      targetRevision: "v1.21.1",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "default",
+    },
   },
 }

@@ -1,0 +1,43 @@
+let certificateTrustManager = node:
+  apiVersion: "cert-manager.io/v1"
+  kind: "Certificate"
+  metadata: node:
+    name: "trust-manager"
+    namespace: "cert-manager"
+    labels: node:
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+  spec: node:
+    commonName: "trust-manager.cert-manager.svc"
+    dnsNames:
+      - "trust-manager.cert-manager.svc"
+    secretName: "trust-manager-tls"
+    privateKey: node:
+      rotationPolicy: "Always"
+    revisionHistoryLimit: 1
+    issuerRef: node:
+      name: "trust-manager"
+      kind: "Issuer"
+      group: "cert-manager.io"
+
+let issuerTrustManager = node:
+  apiVersion: "cert-manager.io/v1"
+  kind: "Issuer"
+  metadata: node:
+    name: "trust-manager"
+    namespace: "cert-manager"
+    labels: node:
+      "app.kubernetes.io/name": "trust-manager"
+      "helm.sh/chart": "trust-manager-v0.24.0"
+      "app.kubernetes.io/instance": "trust-manager"
+      "app.kubernetes.io/version": "v0.24.0"
+      "app.kubernetes.io/managed-by": "Helm"
+  spec: node:
+    selfSigned: {}
+
+export let resources =
+  - certificateTrustManager
+  - issuerTrustManager

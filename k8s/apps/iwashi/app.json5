@@ -1,7 +1,10 @@
 {
   name: "iwashi",
   namespace: "iwashi-system",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "oidcAndCortexMetrics",
+    },
   },
 }

@@ -1,16 +1,7 @@
 {
   name: "keda-http-addon",
   namespace: "keda",
-  additionalSources: {
-    helm: {
-      repoURL: "https://kedacore.github.io/charts",
-      chart: "keda-add-ons-http",
-      targetRevision: "0.15.0",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

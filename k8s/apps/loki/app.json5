@@ -1,17 +1,10 @@
 {
   name: "loki",
   namespace: "loki",
-  additionalSources: {
-    helm: {
-      repoURL: "ghcr.io/grafana-community/helm-charts",
-      chart: "loki",
-      targetRevision: "13.2.0",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "distributed",
+    },
   },
 }

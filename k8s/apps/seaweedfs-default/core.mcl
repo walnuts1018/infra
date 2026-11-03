@@ -1,0 +1,324 @@
+let volumeClaimTemplates =
+  -
+    metadata:
+      name: "data"
+    spec:
+      accessModes:
+        - "ReadWriteOnce"
+      resources:
+        requests:
+          storage: "256Gi"
+      storageClassName: "topolvm-hdd"
+
+export let resources =
+  -
+    apiVersion: "seaweed.seaweedfs.com/v1"
+    kind: "Seaweed"
+    metadata:
+      labels:
+        app: "seaweedfs-default"
+        "app.kubernetes.io/name": "seaweedfs-default"
+      name: "seaweedfs-default"
+      namespace: "seaweedfs"
+    spec:
+      filer:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                -
+                  matchExpressions:
+                    -
+                      key: "storage.walnuts.dev/slow"
+                      operator: "DoesNotExist"
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              -
+                podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      "app.kubernetes.io/component": "filer"
+                      "app.kubernetes.io/instance": "seaweedfs-default"
+                  topologyKey: "kubernetes.io/hostname"
+                weight: 100
+        annotations:
+          "reloader.stakater.com/auto": "true"
+        config: ""
+        extraArgs:
+          - "-s3.iam.config=/etc/seaweedfs/iam.json"
+          - "-s3.domainName=seaweedfs.local.walnuts.dev"
+        limits:
+          memory: "2Gi"
+        metricsPort: 9327
+        replicas: 2
+        requests:
+          cpu: "60m"
+          memory: "512Mi"
+        s3:
+          enabled: true
+        service:
+          type: "ClusterIP"
+        volumeMounts:
+          -
+            mountPath: "/etc/seaweedfs"
+            name: "filer-config-custom"
+            readOnly: true
+          -
+            mountPath: "/etc/seaweedfs/tikv-client"
+            name: "tikv-client-cert"
+            readOnly: true
+        volumes:
+          -
+            name: "filer-config-custom"
+            secret:
+              secretName: "seaweedfs-default-filer-config-a2411c"
+          -
+            name: "tikv-client-cert"
+            secret:
+              items:
+                -
+                  key: "ca.crt"
+                  path: "ca.crt"
+                -
+                  key: "tls.crt"
+                  path: "tls.crt"
+                -
+                  key: "tls.key"
+                  path: "tls.key"
+              secretName: "seaweedfs-tikv-client"
+      image: "chrislusf/seaweedfs@sha256:aa0d394e64735d240d57673b6745ee344360a9fab9ca0b26e4ed3707d135f570"
+      master:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                -
+                  matchExpressions:
+                    -
+                      key: "storage.walnuts.dev/slow"
+                      operator: "DoesNotExist"
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              -
+                podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      "app.kubernetes.io/component": "master"
+                      "app.kubernetes.io/instance": "seaweedfs-default"
+                  topologyKey: "kubernetes.io/hostname"
+                weight: 100
+        annotations:
+          "reloader.stakater.com/auto": "true"
+        defaultReplication: "001"
+        env:
+          -
+            name: "WEED_MASTER_VOLUME_GROWTH_COPY_1"
+            value: "1"
+          -
+            name: "WEED_MASTER_VOLUME_GROWTH_COPY_2"
+            value: "1"
+          -
+            name: "WEED_MASTER_VOLUME_GROWTH_COPY_3"
+            value: "1"
+          -
+            name: "WEED_MASTER_VOLUME_GROWTH_COPY_OTHER"
+            value: "1"
+        limits:
+          memory: "2Gi"
+        metricsPort: 9327
+        replicas: 3
+        requests:
+          cpu: "10m"
+          memory: "64Mi"
+        volumeSizeLimitMB: 1024
+      volume:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                -
+                  matchExpressions:
+                    -
+                      key: "storage.walnuts.dev/slow"
+                      operator: "DoesNotExist"
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              -
+                podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      "app.kubernetes.io/component": "volume"
+                      "app.kubernetes.io/instance": "seaweedfs-default"
+                  topologyKey: "topology.kubernetes.io/zone"
+                weight: 50
+              -
+                podAffinityTerm:
+                  labelSelector:
+                    matchLabels:
+                      "app.kubernetes.io/component": "volume"
+                      "app.kubernetes.io/instance": "seaweedfs-default"
+                  topologyKey: "kubernetes.io/region"
+                weight: 40
+            requiredDuringSchedulingIgnoredDuringExecution:
+              -
+                labelSelector:
+                  matchLabels:
+                    "app.kubernetes.io/component": "volume"
+                    "app.kubernetes.io/instance": "seaweedfs-default"
+                topologyKey: "kubernetes.io/hostname"
+        annotations:
+          "reloader.stakater.com/auto": "true"
+        extraArgs:
+          - "-disk=ssd"
+        limits:
+          memory: "2Gi"
+        maxVolumeCounts: 1000
+        metricsPort: 9327
+        minFreeSpacePercent: 10
+        replicas: 3
+        requests:
+          cpu: "10m"
+          memory: "300Mi"
+          storage: "300Gi"
+        storageClassName: "local-path"
+        tolerations:
+          -
+            effect: "NoSchedule"
+            key: "node.kubernetes.io/disk-pressure"
+            operator: "Exists"
+  -
+    apiVersion: "seaweed.seaweedfs.com/v1"
+    kind: "AdminScript"
+    metadata:
+      name: "system-storage-policy"
+      namespace: "seaweedfs"
+    spec:
+      clusterRef:
+        name: "seaweedfs-default"
+      concurrencyPolicy: "Forbid"
+      schedule: "0 3 * * *"
+      script: "fs.configure -locationPrefix=/ -disk=ssd -replication=001 -apply\nfs.configure -locationPrefix=/topics/.system/ -disk=ssd -replication=001 -apply\n"
+  -
+    apiVersion: "cert-manager.io/v1"
+    kind: "Certificate"
+    metadata:
+      name: "seaweedfs-tikv-client"
+      namespace: "seaweedfs"
+    spec:
+      commonName: "SeaweedFS"
+      duration: "8760h"
+      issuerRef:
+        group: "cert-manager.io"
+        kind: "ClusterIssuer"
+        name: "local"
+      renewBefore: "360h"
+      secretName: "seaweedfs-tikv-client"
+      usages:
+        - "client auth"
+  -
+    apiVersion: "v1"
+    kind: "Service"
+    metadata:
+      labels:
+        app: "seaweedfs-default"
+        "app.kubernetes.io/component": "volume"
+        "app.kubernetes.io/name": "seaweedfs-default-volume-hdd"
+      name: "seaweedfs-default-volume-hdd-peer"
+      namespace: "seaweedfs"
+    spec:
+      clusterIP: "None"
+      ports:
+        -
+          name: "volume-http"
+          port: 8444
+          targetPort: "volume-http"
+        -
+          name: "volume-grpc"
+          port: 18444
+          targetPort: "volume-grpc"
+        -
+          name: "metrics"
+          port: 9327
+          targetPort: "metrics"
+      publishNotReadyAddresses: true
+      selector:
+        app: "seaweedfs-default"
+        "app.kubernetes.io/component": "volume"
+        "app.kubernetes.io/name": "seaweedfs-default-volume-hdd"
+  -
+    apiVersion: "apps/v1"
+    kind: "StatefulSet"
+    metadata:
+      labels:
+        app: "seaweedfs-default"
+        "app.kubernetes.io/component": "volume"
+        "app.kubernetes.io/name": "seaweedfs-default-volume-hdd"
+      name: "seaweedfs-default-volume-hdd"
+      namespace: "seaweedfs"
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: "seaweedfs-default"
+          "app.kubernetes.io/component": "volume"
+          "app.kubernetes.io/name": "seaweedfs-default-volume-hdd"
+      serviceName: "seaweedfs-default-volume-hdd-peer"
+      template:
+        metadata:
+          labels:
+            app: "seaweedfs-default"
+            "app.kubernetes.io/component": "volume"
+            "app.kubernetes.io/name": "seaweedfs-default-volume-hdd"
+        spec:
+          containers:
+            -
+              command:
+                - "/bin/sh"
+                - "-ec"
+                - "weed -logtostderr=true volume -port=8444 -max=1000 -ip=$(POD_NAME).seaweedfs-default-volume-hdd-peer.seaweedfs -ip.bind=0.0.0.0 -mserver=seaweedfs-default-master-0.seaweedfs-default-master-peer.seaweedfs:9333,seaweedfs-default-master-1.seaweedfs-default-master-peer.seaweedfs:9333,seaweedfs-default-master-2.seaweedfs-default-master-peer.seaweedfs:9333 -dir=/data -disk=hdd -metricsPort=9327 -minFreeSpacePercent=10"
+              env:
+                -
+                  name: "POD_NAME"
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: "metadata.name"
+              image: "chrislusf/seaweedfs@sha256:aa0d394e64735d240d57673b6745ee344360a9fab9ca0b26e4ed3707d135f570"
+              imagePullPolicy: "IfNotPresent"
+              livenessProbe:
+                failureThreshold: 6
+                httpGet:
+                  path: "/status"
+                  port: "volume-http"
+                initialDelaySeconds: 20
+                periodSeconds: 30
+              name: "volume"
+              ports:
+                -
+                  containerPort: 8444
+                  name: "volume-http"
+                -
+                  containerPort: 18444
+                  name: "volume-grpc"
+                -
+                  containerPort: 9327
+                  name: "metrics"
+              readinessProbe:
+                failureThreshold: 6
+                httpGet:
+                  path: "/status"
+                  port: "volume-http"
+                initialDelaySeconds: 10
+                periodSeconds: 10
+              resources:
+                limits:
+                  memory: "2Gi"
+                requests:
+                  cpu: "10m"
+                  memory: "10Mi"
+              volumeMounts:
+                -
+                  mountPath: "/data"
+                  name: "data"
+          nodeSelector:
+            "kubernetes.io/hostname": "rusk"
+      volumeClaimTemplates: volumeClaimTemplates

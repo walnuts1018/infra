@@ -1,0 +1,4 @@
+- description: Application status is 'Unknown'
+  send:
+  - app-sync-status-unknown
+  when: app.status.sync.status == 'Unknown'

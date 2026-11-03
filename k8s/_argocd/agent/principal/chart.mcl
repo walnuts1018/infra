@@ -1,0 +1,4 @@
+export let chartVersion = "0.3.3"
+export let chartArchive = "oci://ghcr.io/argoproj-labs/argocd-agent/argocd-agent-principal"
+export let kubeVersion = "1.36.4"
+export let namespace = "argocd"

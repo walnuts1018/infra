@@ -1,16 +1,7 @@
 {
   name: "external-dns-cloudflare",
   namespace: "external-dns-cloudflare",
-  additionalSources: {
-    helm: {
-      repoURL: "https://kubernetes-sigs.github.io/external-dns/",
-      chart: "external-dns",
-      targetRevision: "1.21.1",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

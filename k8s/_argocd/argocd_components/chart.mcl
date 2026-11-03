@@ -1,0 +1,5 @@
+export let chartVersion = "10.8.2"
+export let chartArchive = "https://github.com/argoproj/argo-helm/releases/download/argo-cd-" + chartVersion + "/argo-cd-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let releaseName = "argocd"
+export let namespace = "argocd"

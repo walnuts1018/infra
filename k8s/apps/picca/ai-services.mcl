@@ -1,0 +1,484 @@
+
+let emptyMap: Map<String, Any> = {}
+
+fn deploymentPiccaCaptionService(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    labels:
+      app: "picca-caption-service"
+      "app.kubernetes.io/name": "picca-caption-service"
+    name: "picca-caption-service"
+    namespace: namespace
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: "picca-caption-service"
+        "app.kubernetes.io/name": "picca-caption-service"
+    template:
+      metadata:
+        labels:
+          app: "picca-caption-service"
+          "app.kubernetes.io/name": "picca-caption-service"
+      spec:
+        containers:
+          -
+            command:
+              - "python"
+              - "scripts/run_caption_service.py"
+            env:
+              -
+                name: "PORT"
+                value: "8004"
+              -
+                name: "MODEL_DEVICE"
+                value: "cpu"
+              -
+                name: "FLORENCE2_MODEL_NAME"
+                value: "/models/Florence-2-base-ft"
+              -
+                name: "TRANSLATE_MODEL_NAME"
+                value: "/models/CAT-Translate-0.8b"
+            image: "ghcr.io/walnuts1018/picca/ai-services:v0.0.49"
+            imagePullPolicy: "IfNotPresent"
+            livenessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: "/healthz"
+                port: "http"
+              periodSeconds: 10
+            name: "caption-service"
+            ports:
+              -
+                containerPort: 8004
+                name: "http"
+            readinessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: "/healthz"
+                port: "http"
+              periodSeconds: 10
+            resources:
+              limits:
+                cpu: "4"
+                memory: "6Gi"
+              requests:
+                cpu: "1"
+                memory: "2Gi"
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                drop:
+                  - "all"
+              readOnlyRootFilesystem: false
+              seccompProfile:
+                type: "RuntimeDefault"
+            volumeMounts:
+              -
+                mountPath: "/tmp"
+                name: "tmp"
+              -
+                mountPath: "/models"
+                name: "models"
+                readOnly: true
+        imagePullSecrets:
+          -
+            name: "ghcr-login-secret"
+        securityContext:
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+        serviceAccountName: "picca"
+        volumes:
+          -
+            emptyDir: emptyMap
+            name: "tmp"
+          -
+            image:
+              pullPolicy: "IfNotPresent"
+              reference: "ghcr.io/walnuts1018/picca/ai-models-caption:v0.0.1"
+            name: "models"
+
+fn servicePiccaCaptionService(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    labels:
+      app: "picca-caption-service"
+      "app.kubernetes.io/name": "picca-caption-service"
+    name: "picca-caption-service"
+    namespace: namespace
+  spec:
+    ports:
+      -
+        name: "http"
+        port: 8004
+        targetPort: "http"
+    selector:
+      app: "picca-caption-service"
+      "app.kubernetes.io/name": "picca-caption-service"
+    type: "ClusterIP"
+
+fn deploymentPiccaDenseService(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    labels:
+      app: "picca-dense-service"
+      "app.kubernetes.io/name": "picca-dense-service"
+    name: "picca-dense-service"
+    namespace: namespace
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: "picca-dense-service"
+        "app.kubernetes.io/name": "picca-dense-service"
+    template:
+      metadata:
+        labels:
+          app: "picca-dense-service"
+          "app.kubernetes.io/name": "picca-dense-service"
+      spec:
+        containers:
+          -
+            command:
+              - "python"
+              - "scripts/run_dense_service.py"
+            env:
+              -
+                name: "PORT"
+                value: "8001"
+              -
+                name: "MODEL_DEVICE"
+                value: "cpu"
+              -
+                name: "DENSE_MODEL_NAME"
+                value: "/models/waon-siglip2-base-patch16-256"
+            image: "ghcr.io/walnuts1018/picca/ai-services:v0.0.49"
+            imagePullPolicy: "IfNotPresent"
+            livenessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: "/healthz"
+                port: "http"
+              periodSeconds: 10
+            name: "dense-service"
+            ports:
+              -
+                containerPort: 8001
+                name: "http"
+            readinessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: "/healthz"
+                port: "http"
+              periodSeconds: 10
+            resources:
+              limits:
+                cpu: "4"
+                memory: "6Gi"
+              requests:
+                cpu: "1"
+                memory: "2Gi"
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                drop:
+                  - "all"
+              readOnlyRootFilesystem: false
+              seccompProfile:
+                type: "RuntimeDefault"
+            volumeMounts:
+              -
+                mountPath: "/tmp"
+                name: "tmp"
+              -
+                mountPath: "/models"
+                name: "models"
+                readOnly: true
+        imagePullSecrets:
+          -
+            name: "ghcr-login-secret"
+        securityContext:
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+        serviceAccountName: "picca"
+        volumes:
+          -
+            emptyDir: emptyMap
+            name: "tmp"
+          -
+            image:
+              pullPolicy: "IfNotPresent"
+              reference: "ghcr.io/walnuts1018/picca/ai-models-dense:v0.0.1"
+            name: "models"
+
+fn servicePiccaDenseService(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    labels:
+      app: "picca-dense-service"
+      "app.kubernetes.io/name": "picca-dense-service"
+    name: "picca-dense-service"
+    namespace: namespace
+  spec:
+    ports:
+      -
+        name: "http"
+        port: 8001
+        targetPort: "http"
+    selector:
+      app: "picca-dense-service"
+      "app.kubernetes.io/name": "picca-dense-service"
+    type: "ClusterIP"
+
+fn deploymentPiccaOcrService(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    labels:
+      app: "picca-ocr-service"
+      "app.kubernetes.io/name": "picca-ocr-service"
+    name: "picca-ocr-service"
+    namespace: namespace
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: "picca-ocr-service"
+        "app.kubernetes.io/name": "picca-ocr-service"
+    template:
+      metadata:
+        labels:
+          app: "picca-ocr-service"
+          "app.kubernetes.io/name": "picca-ocr-service"
+      spec:
+        containers:
+          -
+            command:
+              - "python"
+              - "scripts/run_ocr_service.py"
+            env:
+              -
+                name: "PORT"
+                value: "8003"
+              -
+                name: "MODEL_DEVICE"
+                value: "cpu"
+            image: "ghcr.io/walnuts1018/picca/ai-services:v0.0.49"
+            imagePullPolicy: "IfNotPresent"
+            livenessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: "/healthz"
+                port: "http"
+              periodSeconds: 10
+            name: "ocr-service"
+            ports:
+              -
+                containerPort: 8003
+                name: "http"
+            readinessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: "/healthz"
+                port: "http"
+              periodSeconds: 10
+            resources:
+              limits:
+                cpu: "4"
+                memory: "6Gi"
+              requests:
+                cpu: "1"
+                memory: "2Gi"
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                drop:
+                  - "all"
+              readOnlyRootFilesystem: false
+              seccompProfile:
+                type: "RuntimeDefault"
+            volumeMounts:
+              -
+                mountPath: "/tmp"
+                name: "tmp"
+              -
+                mountPath: "/models"
+                name: "models"
+                readOnly: true
+        imagePullSecrets:
+          -
+            name: "ghcr-login-secret"
+        securityContext:
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+        serviceAccountName: "picca"
+        volumes:
+          -
+            emptyDir: emptyMap
+            name: "tmp"
+          -
+            image:
+              pullPolicy: "IfNotPresent"
+              reference: "ghcr.io/walnuts1018/picca/ai-models-ocr:v0.0.1"
+            name: "models"
+
+fn servicePiccaOcrService(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    labels:
+      app: "picca-ocr-service"
+      "app.kubernetes.io/name": "picca-ocr-service"
+    name: "picca-ocr-service"
+    namespace: namespace
+  spec:
+    ports:
+      -
+        name: "http"
+        port: 8003
+        targetPort: "http"
+    selector:
+      app: "picca-ocr-service"
+      "app.kubernetes.io/name": "picca-ocr-service"
+    type: "ClusterIP"
+
+fn deploymentPiccaSparseService(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    labels:
+      app: "picca-sparse-service"
+      "app.kubernetes.io/name": "picca-sparse-service"
+    name: "picca-sparse-service"
+    namespace: namespace
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: "picca-sparse-service"
+        "app.kubernetes.io/name": "picca-sparse-service"
+    template:
+      metadata:
+        labels:
+          app: "picca-sparse-service"
+          "app.kubernetes.io/name": "picca-sparse-service"
+      spec:
+        containers:
+          -
+            command:
+              - "python"
+              - "scripts/run_sparse_service.py"
+            env:
+              -
+                name: "PORT"
+                value: "8002"
+              -
+                name: "MODEL_DEVICE"
+                value: "cpu"
+              -
+                name: "SPARSE_MODEL_NAME"
+                value: "/models/light-splade-japanese-28M"
+            image: "ghcr.io/walnuts1018/picca/ai-services:v0.0.49"
+            imagePullPolicy: "IfNotPresent"
+            livenessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: "/healthz"
+                port: "http"
+              periodSeconds: 10
+            name: "sparse-service"
+            ports:
+              -
+                containerPort: 8002
+                name: "http"
+            readinessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: "/healthz"
+                port: "http"
+              periodSeconds: 10
+            resources:
+              limits:
+                cpu: "1"
+                memory: "1Gi"
+              requests:
+                cpu: "250m"
+                memory: "512Mi"
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                drop:
+                  - "all"
+              readOnlyRootFilesystem: false
+              seccompProfile:
+                type: "RuntimeDefault"
+            volumeMounts:
+              -
+                mountPath: "/tmp"
+                name: "tmp"
+              -
+                mountPath: "/models"
+                name: "models"
+                readOnly: true
+        imagePullSecrets:
+          -
+            name: "ghcr-login-secret"
+        securityContext:
+          runAsGroup: 65532
+          runAsNonRoot: true
+          runAsUser: 65532
+        serviceAccountName: "picca"
+        volumes:
+          -
+            emptyDir: emptyMap
+            name: "tmp"
+          -
+            image:
+              pullPolicy: "IfNotPresent"
+              reference: "ghcr.io/walnuts1018/picca/ai-models-sparse:v0.0.1"
+            name: "models"
+
+fn servicePiccaSparseService(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    labels:
+      app: "picca-sparse-service"
+      "app.kubernetes.io/name": "picca-sparse-service"
+    name: "picca-sparse-service"
+    namespace: namespace
+  spec:
+    ports:
+      -
+        name: "http"
+        port: 8002
+        targetPort: "http"
+    selector:
+      app: "picca-sparse-service"
+      "app.kubernetes.io/name": "picca-sparse-service"
+    type: "ClusterIP"
+
+export fn render(namespace: String) -> List<Map<String, Any>> =
+  - deploymentPiccaCaptionService(namespace)
+  - servicePiccaCaptionService(namespace)
+  - deploymentPiccaDenseService(namespace)
+  - servicePiccaDenseService(namespace)
+  - deploymentPiccaOcrService(namespace)
+  - servicePiccaOcrService(namespace)
+  - deploymentPiccaSparseService(namespace)
+  - servicePiccaSparseService(namespace)

@@ -1,0 +1,115 @@
+let certificateAnnotations =
+  "argocd.argoproj.io/sync-wave": "0"
+
+let issuerRef =
+  name: "argocd-agent-ca"
+  kind: "Issuer"
+  group: "cert-manager.io"
+
+let principalDnsNames =
+  - "argocd-agent"
+  - "argocd-agent.argocd.svc"
+  - "argocd-agent.argocd.svc.cluster.local"
+  - "argocd-agent.local.walnuts.dev"
+
+let resourceProxyDnsNames =
+  - "argocd-agent-resource-proxy"
+  - "argocd-agent-resource-proxy.argocd.svc"
+  - "argocd-agent-resource-proxy.argocd.svc.cluster.local"
+
+fn clientCertificate(name: String, commonName: String, secretName: String) -> Map<String, Any> = node:
+  apiVersion: "cert-manager.io/v1"
+  kind: "Certificate"
+  metadata:
+    name: name
+    namespace: "argocd"
+    annotations: certificateAnnotations
+  spec:
+    commonName: commonName
+    secretName: secretName
+    duration: "8760h"
+    privateKey:
+      algorithm: "ECDSA"
+      size: 256
+    issuerRef: issuerRef
+    usages:
+      - "client auth"
+
+fn serverCertificate(name: String, commonName: String, secretName: String, dnsNames: List<String>) -> Map<String, Any> = node:
+  apiVersion: "cert-manager.io/v1"
+  kind: "Certificate"
+  metadata:
+    name: name
+    namespace: "argocd"
+    annotations: certificateAnnotations
+  spec:
+    commonName: commonName
+    secretName: secretName
+    duration: "8760h"
+    privateKey:
+      algorithm: "ECDSA"
+      size: 256
+    issuerRef: issuerRef
+    usages:
+      - "server auth"
+    dnsNames: dnsNames
+
+export let resources =
+  ca: node:
+    apiVersion: "cert-manager.io/v1"
+    kind: "Certificate"
+    metadata:
+      name: "argocd-agent-ca"
+      namespace: "argocd"
+      annotations:
+        "argocd.argoproj.io/sync-wave": "-2"
+    spec:
+      isCA: true
+      commonName: "argocd-agent-ca"
+      secretName: "argocd-agent-ca"
+      duration: "87600h"
+      privateKey:
+        algorithm: "ECDSA"
+        size: 256
+      issuerRef:
+        name: "selfsigned"
+        kind: "ClusterIssuer"
+        group: "cert-manager.io"
+  principal: serverCertificate(
+    "argocd-agent-principal-tls",
+    "argocd-agent",
+    "argocd-agent-principal-tls",
+    principalDnsNames,
+  )
+  resourceProxy: serverCertificate(
+    "argocd-agent-resource-proxy-tls",
+    "argocd-agent-resource-proxy",
+    "argocd-agent-resource-proxy-tls",
+    resourceProxyDnsNames,
+  )
+  sharedClient: clientCertificate(
+    "argocd-agent-shared-client",
+    "argocd-agent-shared-client",
+    "argocd-agent-shared-client-cert",
+  )
+  biscuitClient: clientCertificate(
+    "argocd-agent-client-biscuit",
+    "biscuit",
+    "argocd-agent-client-tls-biscuit",
+  )
+  kurumiClient: clientCertificate(
+    "argocd-agent-client-kurumi",
+    "kurumi",
+    "argocd-agent-client-tls-kurumi",
+  )
+  issuer: node:
+    apiVersion: "cert-manager.io/v1"
+    kind: "Issuer"
+    metadata:
+      name: "argocd-agent-ca"
+      namespace: "argocd"
+      annotations:
+        "argocd.argoproj.io/sync-wave": "-1"
+    spec:
+      ca:
+        secretName: "argocd-agent-ca"

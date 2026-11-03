@@ -1,7 +1,10 @@
 {
   name: "tikv-cluster",
   namespace: "databases",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "standard",
+    },
   },
 }

@@ -1,6 +1,7 @@
 {
   name: "ghcr-login-secret",
   namespace: "external-secrets",
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

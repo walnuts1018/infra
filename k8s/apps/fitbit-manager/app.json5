@@ -1,6 +1,7 @@
 {
   name: "fitbit-manager",
   namespace: "fitbit-manager",
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

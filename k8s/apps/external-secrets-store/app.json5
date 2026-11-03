@@ -1,36 +1,16 @@
 {
   name: "external-secrets-store",
   namespace: "external-secrets",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {
-      jsonnet: {
-        tlas: [
-          {
-            name: "onePasswordVaults",
-            value: '{"kurumi":1}',
-          },
-        ],
-      },
-    },
     berry: {
-      jsonnet: {
-        tlas: [
-          {
-            name: "onePasswordVaults",
-            value: '{"kurumi":1}',
-          },
-        ],
-      },
+      profile: "onePasswordConnect",
     },
     biscuit: {
-      jsonnet: {
-        tlas: [
-          {
-            name: "onePasswordVaults",
-            value: '{"kurumi":1}',
-          },
-        ],
-      },
+      profile: "onePasswordConnect",
+    },
+    kurumi: {
+      profile: "onePasswordConnect",
     },
   },
 }

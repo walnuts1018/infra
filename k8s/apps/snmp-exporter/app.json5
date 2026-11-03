@@ -1,17 +1,10 @@
 {
   name: "snmp-exporter",
   namespace: "monitoring",
-  additionalSources: {
-    helm: {
-      repoURL: "https://prometheus-community.github.io/helm-charts",
-      chart: "prometheus-snmp-exporter",
-      targetRevision: "9.17.1",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "ix2215",
+    },
   },
 }

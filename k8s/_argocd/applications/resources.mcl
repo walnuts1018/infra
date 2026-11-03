@@ -1,0 +1,11 @@
+import "std:list" as lists
+import "./berry/resources.mcl" as berry
+import "./biscuit/resources.mcl" as biscuit
+import "./kurumi/resources.mcl" as kurumi
+import "./base-application.mcl" as base
+
+let baseResources =
+  - base.resource
+let resourcesWithoutBiscuit = lists.concat(baseResources, berry.resources)
+let resourcesWithoutKurumi = lists.concat(resourcesWithoutBiscuit, biscuit.resources)
+export let resources = lists.concat(resourcesWithoutKurumi, kurumi.resources)

@@ -1,15 +1,7 @@
 {
   name: "cloudnative-pg-barman-cloud-plugin",
   namespace: "cloudnative-pg",
-  additionalSources: {
-    kustomize: [
-      {
-        repoURL: "https://github.com/walnuts1018/infra",
-        path: "k8s/apps/cloudnative-pg-barman-cloud-plugin/_kustomize",
-        targetRevision: "clusterapi",
-      },
-    ],
-  },
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

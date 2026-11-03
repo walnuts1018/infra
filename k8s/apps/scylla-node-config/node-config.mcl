@@ -1,0 +1,15 @@
+export type NodePlacement =
+  nodeSelector: Map<String, String>
+  tolerations: List<Map<String, Any>>
+
+export type NodeSpec =
+  sysctls: List<Map<String, Any>>
+  placement: NodePlacement
+
+export type NodeConfigBody =
+  apiVersion: String
+  kind: String
+  metadata: Map<String, Any>
+  spec: NodeSpec
+
+export type NodeConfig = Node<NodeConfigBody>

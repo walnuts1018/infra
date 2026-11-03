@@ -1,0 +1,9 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ConfigManagementPlugin
+metadata:
+  name: mcl
+spec:
+  generate:
+    command:
+    - /bin/sh
+    - /home/argocd/cmp-server/config/render-mcl.sh

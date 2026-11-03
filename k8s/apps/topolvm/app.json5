@@ -1,34 +1,13 @@
 {
   name: "topolvm",
   namespace: "topolvm-system",
-  additionalSources: {
-    helm: {
-      repoURL: "https://topolvm.github.io/topolvm",
-      chart: "topolvm",
-      targetRevision: "17.2.0",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {
-      additionalSources: {
-        helm: {
-          additionalValueFiles: [
-            "values.kurumi.yaml",
-          ],
-        },
-      },
-    },
     biscuit: {
-      additionalSources: {
-        helm: {
-          additionalValueFiles: [
-            "values.biscuit.yaml",
-          ],
-        },
-      },
+      profile: "ssdAndHdd",
+    },
+    kurumi: {
+      profile: "monitoringHdd",
     },
   },
 }

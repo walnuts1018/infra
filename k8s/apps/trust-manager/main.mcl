@@ -1,0 +1,15 @@
+import "std:context" as context
+import "std:list" as lists
+import "./profiles.mcl" as appProfiles
+import "./resources.mcl" as appResources
+
+let profile = context.parameter("profile")
+let includeServiceMonitor = appProfiles.serviceMonitorEnabledByProfile[profile]
+let monitoringResources =
+  if includeServiceMonitor:
+    appResources.monitoringResources
+  else:
+    []
+let resources = lists.concat(appResources.baseResources, monitoringResources)
+
+emit each resources

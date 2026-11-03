@@ -1,0 +1,249 @@
+import text "./_configs/ignore-differences-deployment.yaml" as ignoreDifferencesDeployment
+import text "./_configs/ignore-differences-statefulset.yaml" as ignoreDifferencesStatefulSet
+import text "./_configs/oidc-config.yaml" as oidcConfig
+import text "./_configs/rbac-policy.csv" as rbacPolicy
+import text "./_configs/notifier-slack.yaml" as notifierSlack
+import text "./_configs/notifier-cloudflare-purge-cache.yaml" as notifierCloudflarePurgeCache
+import text "./_configs/template-app-deployed.yaml" as templateAppDeployed
+import text "./_configs/template-app-health-degraded.yaml" as templateAppHealthDegraded
+import text "./_configs/template-app-sync-failed.yaml" as templateAppSyncFailed
+import text "./_configs/template-app-sync-running.yaml" as templateAppSyncRunning
+import text "./_configs/template-app-sync-status-unknown.yaml" as templateAppSyncStatusUnknown
+import text "./_configs/template-app-sync-succeeded.yaml" as templateAppSyncSucceeded
+import text "./_configs/template-cloudflare-purge-cache.yaml" as templateCloudflarePurgeCache
+import text "./_configs/trigger-on-deployed.yaml" as triggerOnDeployed
+import text "./_configs/trigger-on-health-degraded.yaml" as triggerOnHealthDegraded
+import text "./_configs/trigger-on-sync-failed.yaml" as triggerOnSyncFailed
+import text "./_configs/trigger-on-sync-running.yaml" as triggerOnSyncRunning
+import text "./_configs/trigger-on-sync-status-unknown.yaml" as triggerOnSyncStatusUnknown
+import text "./_configs/trigger-on-sync-succeeded.yaml" as triggerOnSyncSucceeded
+import text "./_configs/trigger-cloudflare-purge-cache.yaml" as triggerCloudflarePurgeCache
+import text "./_configs/default-triggers.yaml" as defaultTriggers
+
+let valuesNode: Map<String, Any> =
+  "global":
+    "domain": "argocd.local.walnuts.dev"
+    "logging":
+      "format": "json"
+      "level": "info"
+  "configs":
+    "cm":
+      "admin.enabled": true
+      "statusbadge.enabled": true
+      "resource.customizations.ignoreDifferences.apps_Deployment": ignoreDifferencesDeployment
+      "resource.customizations.ignoreDifferences.apps_StatefulSet": ignoreDifferencesStatefulSet
+      "oidc.config": oidcConfig
+      "users.anonymous.enabled": false
+      "users.session.duration": "168h"
+      "application.resourceTrackingMethod": "annotation"
+      "kustomize.buildOptions": "--enable-helm"
+    "params":
+      "server.insecure": true
+      "server.basehref": "/"
+      "redis.key.prefix": "{argocd}:"
+      "controller.diff.server.side": "true"
+      "controller.resource.health.persist": "false"
+      "controller.repo.server.timeout.seconds": "300"
+      "server.repo.server.timeout.seconds": "300"
+      "applicationsetcontroller.enable.new.git.file.globbing": "true"
+      "redis.server": "argocd-agent-redis-proxy:6379"
+    "rbac":
+      "create": true
+      "policy.csv": rbacPolicy
+      "scopes": "[my:zitadel:grants]"
+      "policy.default": ""
+  "controller":
+    "metrics":
+      "enabled": true
+      "serviceMonitor":
+        "enabled": false
+    "resources":
+      "requests":
+        "cpu": "1"
+        "memory": "1268Mi"
+      "limits":
+        "cpu": "2"
+        "memory": "4Gi"
+  "dex":
+    "enabled": false
+    "metrics":
+      "enabled": false
+      "serviceMonitor":
+        "enabled": false
+    "resources":
+      "requests":
+        "cpu": "1m"
+        "memory": "20Mi"
+      "limits":
+        "cpu": "500m"
+        "memory": "256Mi"
+  "redis":
+    "enabled": true
+    "metrics":
+      "enabled": true
+      "serviceMonitor":
+        "enabled": false
+    "resources":
+      "requests":
+        "cpu": "5m"
+        "memory": "16Mi"
+      "limits":
+        "cpu": "100m"
+        "memory": "256Mi"
+  "redis-ha":
+    "enabled": false
+  "server":
+    "ingress":
+      "enabled": false
+      "controller": "generic"
+      "ingressClassName": "cilium"
+      "tls": false
+    "httproute":
+      "enabled": false
+      "parentRefs":
+        -
+          "name": "envoy-gateway"
+          "namespace": "envoy-gateway-system"
+      "hostnames":
+        - "argocd.walnuts.dev"
+      "rules":
+        -
+          "matches":
+            -
+              "path":
+                "type": "PathPrefix"
+                "value": "/"
+    "grpcroute":
+      "enabled": false
+    "metrics":
+      "enabled": true
+      "serviceMonitor":
+        "enabled": false
+    "autoscaling":
+      "enabled": false
+      "minReplicas": 1
+      "maxReplicas": 3
+      "targetCPUUtilizationPercentage": 100
+      "targetMemoryUtilizationPercentage": 10000
+    "resources":
+      "requests":
+        "cpu": "50m"
+        "memory": "86Mi"
+      "limits":
+        "cpu": "500m"
+        "memory": "512Mi"
+    "service":
+      "type": "NodePort"
+      "nodePortHttp": 30080
+      "nodePortHttps": 30443
+  "repoServer":
+    "extraContainers":
+      -
+        "name": "cmp-mcl"
+        "command":
+          - "/var/run/argocd/argocd-cmp-server"
+        "image": "curlimages/curl:8.12.1"
+        "env":
+          -
+            "name": "ARGOCD_EXEC_TIMEOUT"
+            "value": "300"
+        "securityContext":
+          "runAsNonRoot": true
+          "runAsUser": 999
+        "volumeMounts":
+          -
+            "mountPath": "/var/run/argocd"
+            "name": "var-files"
+          -
+            "mountPath": "/home/argocd/cmp-server/plugins"
+            "name": "plugins"
+          -
+            "mountPath": "/home/argocd/cmp-server/config/plugin.yaml"
+            "name": "argocd-cmp-cm"
+            "subPath": "plugin.yaml"
+          -
+            "mountPath": "/home/argocd/cmp-server/config/render-mcl.sh"
+            "name": "argocd-cmp-cm"
+            "subPath": "render-mcl.sh"
+            "readOnly": true
+          -
+            "mountPath": "/tmp"
+            "name": "cmp-tmp"
+    "volumes":
+      -
+        "name": "argocd-cmp-cm"
+        "configMap":
+          "name": "argocd-mcl-cmp"
+      -
+        "name": "cmp-tmp"
+        "emptyDir": {}
+    "metrics":
+      "enabled": true
+      "serviceMonitor":
+        "enabled": false
+    "autoscaling":
+      "enabled": false
+      "minReplicas": 1
+      "maxReplicas": 3
+      "targetCPUUtilizationPercentage": 100
+      "targetMemoryUtilizationPercentage": 10000
+    "resources":
+      "requests":
+        "cpu": "120m"
+        "memory": "128Mi"
+      "limits":
+        "memory": "1Gi"
+  "applicationSet":
+    "metrics":
+      "enabled": true
+      "serviceMonitor":
+        "enabled": false
+    "resources":
+      "requests":
+        "cpu": "15m"
+        "memory": "64Mi"
+      "limits":
+        "cpu": "500m"
+        "memory": "512Mi"
+  "notifications":
+    "argocdUrl": "https://argocd.local.walnuts.dev"
+    "context":
+      "cluster": "kurumi"
+    "secret":
+      "create": false
+      "name": "argocd-notifications-secret"
+    "cm":
+      "create": true
+    "notifiers":
+      "service.slack": notifierSlack
+      "service.webhook.cloudflare-purge-cache": notifierCloudflarePurgeCache
+    "templates":
+      "template.app-deployed": templateAppDeployed
+      "template.app-health-degraded": templateAppHealthDegraded
+      "template.app-sync-failed": templateAppSyncFailed
+      "template.app-sync-running": templateAppSyncRunning
+      "template.app-sync-status-unknown": templateAppSyncStatusUnknown
+      "template.app-sync-succeeded": templateAppSyncSucceeded
+      "template.cloudflare-purge-cache": templateCloudflarePurgeCache
+    "triggers":
+      "trigger.on-deployed": triggerOnDeployed
+      "trigger.on-health-degraded": triggerOnHealthDegraded
+      "trigger.on-sync-failed": triggerOnSyncFailed
+      "trigger.on-sync-running": triggerOnSyncRunning
+      "trigger.on-sync-status-unknown": triggerOnSyncStatusUnknown
+      "trigger.on-sync-succeeded": triggerOnSyncSucceeded
+      "trigger.cloudflare-purge-cache": triggerCloudflarePurgeCache
+      "defaultTriggers": defaultTriggers
+    "metrics":
+      "enabled": true
+      "serviceMonitor":
+        "enabled": false
+    "resources":
+      "limits":
+        "cpu": "100m"
+        "memory": "128Mi"
+      "requests":
+        "cpu": "2m"
+        "memory": "74Mi"
+
+export let values = valuesNode

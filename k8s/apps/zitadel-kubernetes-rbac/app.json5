@@ -1,10 +1,10 @@
 {
   name: "zitadel-kubernetes-rbac",
   namespace: "kube-system",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
-  },
-  params: {
-    oidcIssuerAudience: "385225927988084784",
+    kurumi: {
+      profile: "standard",
+    },
   },
 }

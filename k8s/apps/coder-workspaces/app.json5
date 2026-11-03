@@ -1,7 +1,10 @@
 {
   name: "coder-workspaces",
   namespace: "coder-workspaces",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
+    kurumi: {
+      profile: "workspace-isolation",
+    },
   },
 }

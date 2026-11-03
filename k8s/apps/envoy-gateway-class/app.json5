@@ -1,16 +1,10 @@
 {
   name: "envoy-gateway-class",
   namespace: "envoy-gateway-system",
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      jsonnet: {
-        tlas: [
-          {
-            name: "loadBalancerIP",
-            value: "192.168.8.2",
-          },
-        ],
-      },
+      profile: "standard",
     },
   },
 }

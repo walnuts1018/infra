@@ -1,6 +1,7 @@
 {
   name: "mpeg-dash-encoder",
   namespace: "mpeg-dash-encoder",
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

@@ -1,0 +1,19 @@
+import "std:helm" as helm
+import "std:list" as lists
+import "./chart.mcl" as appChart
+import "./external-secrets.mcl" as externalSecrets
+import "./values.mcl" as appValues
+
+let options =
+  releaseName: appChart.releaseName
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions:
+    - "gateway.networking.k8s.io/v1/HTTPRoute"
+  values: appValues.values
+let chartResources = helm.render(appChart.chartArchive, options)
+let extraResources =
+  - externalSecrets.oidc
+  - externalSecrets.notifications
+export let resources = lists.concat(chartResources, extraResources)

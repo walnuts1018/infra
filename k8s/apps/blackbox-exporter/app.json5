@@ -1,16 +1,7 @@
 {
   name: "blackbox-exporter",
   namespace: "monitoring",
-  additionalSources: {
-    helm: {
-      repoURL: "https://prometheus-community.github.io/helm-charts",
-      chart: "prometheus-blackbox-exporter",
-      targetRevision: "11.18.0",
-      valueFiles: [
-        "values.yaml",
-      ],
-    },
-  },
+  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

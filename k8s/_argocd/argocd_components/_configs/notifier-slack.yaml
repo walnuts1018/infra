@@ -1,0 +1,3 @@
+token: $slack-token
+icon: ":argo:"
+username: argocd

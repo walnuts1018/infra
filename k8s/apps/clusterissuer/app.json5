@@ -1,9 +1,10 @@
 {
   name: "clusterissuer",
   namespace: "cert-manager",
+  manifestGenerator: "mcl",
   clusters: {
-    kurumi: {},
     berry: {},
     biscuit: {},
+    kurumi: {},
   },
 }
