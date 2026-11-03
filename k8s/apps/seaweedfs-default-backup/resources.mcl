@@ -1,6 +1,5 @@
 import "std:crypto" as crypto
 import "std:hash" as hash
-import "std:context" as context
 import "./profiles.mcl" as appProfiles
 import text "./_configs/aws-config" as awsConfig
 import text "./_configs/aws-credentials.tmpl" as awsCredentials
@@ -114,7 +113,7 @@ export let cronJob = node:
     namespace: namespace
     labels: labels
   spec:
-    schedule: appProfiles.profiles[context.parameter("profile")].schedule
+    schedule: appProfiles.profiles["standard"].schedule
     timeZone: "Asia/Tokyo"
     concurrencyPolicy: "Forbid"
     startingDeadlineSeconds: 21600

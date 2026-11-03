@@ -1,9 +1,8 @@
-import "std:context" as context
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
 
-let profileName = context.parameter("profile")
+let profileName = "standard"
 let apiVersions: List<String> =
   - "external-secrets.io/v1"
 let options =

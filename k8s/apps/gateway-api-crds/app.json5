@@ -1,7 +1,6 @@
 {
   name: "gateway-api-crds",
   namespace: "kube-system",
-  manifestGenerator: "mcl",
   clusters: {
     biscuit: {},
   },

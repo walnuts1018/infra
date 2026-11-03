@@ -1,4 +1,3 @@
-import "std:context" as context
 import "std:list" as lists
 import "./databases.mcl" as databaseConfig
 import "./profiles.mcl" as appProfiles
@@ -16,7 +15,7 @@ type PostgisDatabase =
   resourceName: String
   userName: String
 
-let profile = appProfiles.profiles[context.parameter("profile")]
+let profile = appProfiles.profiles["seaweedfsBackup"]
 let databases: List<Database> = databaseConfig.databases
 let clusterName = profile.clusterName
 

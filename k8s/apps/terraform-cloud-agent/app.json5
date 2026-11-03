@@ -1,10 +1,8 @@
 {
   name: "terraform-cloud-agent",
   namespace: "terraform-cloud-agent",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "standard",
     },
   },
 }

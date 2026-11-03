@@ -1,7 +1,6 @@
 {
   name: "tempo",
   namespace: "tempo",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

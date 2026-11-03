@@ -1,16 +1,12 @@
 {
   name: "external-secrets-store",
   namespace: "external-secrets",
-  manifestGenerator: "mcl",
   clusters: {
     berry: {
-      profile: "onePasswordConnect",
     },
     biscuit: {
-      profile: "onePasswordConnect",
     },
     kurumi: {
-      profile: "onePasswordConnect",
     },
   },
 }

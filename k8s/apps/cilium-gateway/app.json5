@@ -1,7 +1,6 @@
 {
   name: "cilium-gateway",
   namespace: "cilium-system",
-  manifestGenerator: "mcl",
   clusters: {
     biscuit: {},
   },

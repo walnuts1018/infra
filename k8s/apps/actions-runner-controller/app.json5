@@ -1,7 +1,6 @@
 {
   name: "actions-runner-controller",
   namespace: "arc-systems",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

@@ -1,10 +1,8 @@
 {
   name: "misskey",
   namespace: "misskey",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "postgres-backup-and-seaweedfs-user-content",
     },
   },
 }

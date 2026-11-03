@@ -1,7 +1,6 @@
 {
   name: "hubble-oauth2-proxy",
   namespace: "cilium-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

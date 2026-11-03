@@ -1,13 +1,12 @@
 {
   name: "valkey-operator",
   namespace: "valkey-operator-system",
-  manifestGenerator: "mcl",
   clusters: {
     berry: {
-      profile: "standard",
+      features: [],
     },
     kurumi: {
-      profile: "monitoring",
+      features: ["monitoring"],
     },
   },
 }

@@ -1,4 +1,3 @@
-import "std:context" as context
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./profiles.mcl" as appProfiles
@@ -10,7 +9,7 @@ let options =
   version: appChart.chartVersion
   kubeVersion: appChart.kubeVersion
   apiVersions: appChart.apiVersions
-  values: appProfiles.valuesByProfile[context.parameter("profile")]
+  values: appProfiles.valuesByProfile["workspace-host"]
 let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources

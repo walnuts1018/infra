@@ -1,10 +1,8 @@
 {
   name: "nvidia-gpu-operator",
   namespace: "nvidia-gpu-operator",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "standard",
     },
   },
 }

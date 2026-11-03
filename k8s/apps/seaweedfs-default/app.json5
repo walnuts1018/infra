@@ -1,7 +1,6 @@
 {
   name: "seaweedfs-default",
   namespace: "seaweedfs",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

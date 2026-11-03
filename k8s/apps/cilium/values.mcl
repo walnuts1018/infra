@@ -33,15 +33,31 @@ let commonValues =
       limits:
         memory: "512Mi"
 
-let originIngressValues =
-  k8sServiceHost: "192.168.4.11"
+let hubbleMetricNames: List<String> =
+  - "dns"
+  - "drop"
+  - "tcp"
+  - "flow:labelsContext=source_namespace,source_workload_kind,source_workload,destination_namespace,destination_workload_kind,destination_workload,traffic_direction"
+  - "flows-to-world"
+  - "port-distribution"
+  - "icmp"
+  - "httpV2:exemplars=true;"
+
+fn hubbleMetrics(enabled: Bool) -> List<String> =
+  if enabled:
+    hubbleMetricNames
+  else:
+    []
+
+export fn helmValues(originCertificateIngressEnabled: Bool, gatewayAPIEnabled: Bool, monitoringEnabled: Bool, hubbleTLSEnabled: Bool, l2AnnouncementsEnabled: Bool, nodePortEnabled: Bool, apiServer: String, clusterID: Int, clusterName: String, envoyMemory: String) -> Map<String, Any> = commonValues with:
+  k8sServiceHost: apiServer
   cluster:
-    id: 1
-    name: "kurumi"
+    id: clusterID
+    name: clusterName
   l2announcements:
-    enabled: true
+    enabled: l2AnnouncementsEnabled
   ingressController:
-    enabled: true
+    enabled: originCertificateIngressEnabled
     loadbalancerMode: "shared"
     default: true
     enforceHttps: true
@@ -54,18 +70,18 @@ let originIngressValues =
       name: "cilium-secrets"
       sync: true
   nodePort:
-    enabled: true
+    enabled: nodePortEnabled
   hubble:
     tls:
-      enabled: true
+      enabled: hubbleTLSEnabled
       auto:
         method: "cronJob"
     relay:
-      enabled: true
+      enabled: monitoringEnabled
       prometheus:
-        enabled: true
+        enabled: monitoringEnabled
         serviceMonitor:
-          enabled: true
+          enabled: monitoringEnabled
       resources:
         requests:
           cpu: "5m"
@@ -73,7 +89,7 @@ let originIngressValues =
         limits:
           memory: "512Mi"
     ui:
-      enabled: true
+      enabled: monitoringEnabled
       backend:
         resources:
           requests:
@@ -89,37 +105,41 @@ let originIngressValues =
           limits:
             memory: "256Mi"
     metrics:
-      enableOpenMetrics: true
-      enabled:
-        - "dns"
-        - "drop"
-        - "tcp"
-        - "flow:labelsContext=source_namespace,source_workload_kind,source_workload,destination_namespace,destination_workload_kind,destination_workload,traffic_direction"
-        - "flows-to-world"
-        - "port-distribution"
-        - "icmp"
-        - "httpV2:exemplars=true;"
+      enableOpenMetrics: monitoringEnabled
+      enabled: hubbleMetrics(monitoringEnabled)
       serviceMonitor:
-        enabled: true
+        enabled: monitoringEnabled
       dashboards:
-        enabled: true
+        enabled: monitoringEnabled
   envoy:
+    log: commonValues.envoy.log
+    resources:
+      requests:
+        cpu: "10m"
+        memory: envoyMemory
     prometheus:
-      enabled: true
+      enabled: monitoringEnabled
       serviceMonitor:
-        enabled: true
+        enabled: monitoringEnabled
   operator:
+    replicas: 1
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "60Mi"
+      limits:
+        memory: "512Mi"
     prometheus:
-      enabled: true
+      enabled: monitoringEnabled
       serviceMonitor:
-        enabled: true
+        enabled: monitoringEnabled
   prometheus:
-    enabled: true
+    enabled: monitoringEnabled
     serviceMonitor:
-      enabled: true
+      enabled: monitoringEnabled
       trustCRDsExist: true
   envoyConfig:
-    enabled: true
+    enabled: originCertificateIngressEnabled
     secretsNamespace:
       create: false
       name: "cilium-secrets"
@@ -127,54 +147,11 @@ let originIngressValues =
     secretsNamespace:
       create: false
       name: "cilium-secrets"
-
-let gatewayAPIValues =
-  k8sServiceHost: "192.168.0.15"
-  cluster:
-    id: 2
-    name: "biscuit"
-  hubble:
-    tls:
-      enabled: false
-  envoy:
-    prometheus:
-      enabled: false
-    resources:
-      requests:
-        memory: "64Mi"
-  operator:
-    prometheus:
-      enabled: false
   gatewayAPI:
-    enabled: true
+    enabled: gatewayAPIEnabled
     secretsNamespace:
       create: true
       name: "cilium-secrets"
       sync: true
     gatewayClass:
       create: false
-
-export let profiles =
-  originCertificateIngress:
-    helmValues: commonValues with:
-      k8sServiceHost: originIngressValues.k8sServiceHost
-      cluster: originIngressValues.cluster
-      l2announcements: originIngressValues.l2announcements
-      ingressController: originIngressValues.ingressController
-      nodePort: originIngressValues.nodePort
-      hubble: originIngressValues.hubble
-      envoy: originIngressValues.envoy
-      operator: originIngressValues.operator
-      prometheus: originIngressValues.prometheus
-      envoyConfig: originIngressValues.envoyConfig
-      tls: originIngressValues.tls
-    cloudflareOriginCert: true
-  gatewayAPI:
-    helmValues: commonValues with:
-      k8sServiceHost: gatewayAPIValues.k8sServiceHost
-      cluster: gatewayAPIValues.cluster
-      hubble: gatewayAPIValues.hubble
-      envoy: gatewayAPIValues.envoy
-      operator: gatewayAPIValues.operator
-      gatewayAPI: gatewayAPIValues.gatewayAPI
-    cloudflareOriginCert: false

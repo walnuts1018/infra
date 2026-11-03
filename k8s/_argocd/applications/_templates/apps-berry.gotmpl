@@ -14,12 +14,16 @@ spec:
   - repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: clusterapi
     path: '{{.path.path}}'
-    {{- if eq (dig "manifestGenerator" "" .) "mcl" }}
+    {{- if ne (dig "manifestGenerator" "" .) "jsonnet" }}
     plugin:
       name: mcl
       env:
-      - name: MCL_PROFILE
-        value: '{{ dig "clusters" "berry" "profile" "" . }}'
+      - name: MCL_FEATURES
+        value: '{{ join "," (dig "clusters" "berry" "features" (list) .) }}'
+      {{ range $name, $value := dig "clusters" "berry" "settings" (dict) . }}
+      - name: MCL_SETTING_{{ upper $name }}
+        value: {{ $value | quote }}
+      {{ end }}
     {{- else }}
     directory:
       recurse: true
@@ -35,7 +39,7 @@ spec:
         {{- end }}
     ref: infra
     {{- end }}
-  {{- if ne (dig "manifestGenerator" "" .) "mcl" }}
+  {{- if eq (dig "manifestGenerator" "" .) "jsonnet" }}
   {{- with (dig "additionalSources" "helm" (dict) .) }}
   - repoURL: '{{ .repoURL }}'
     chart: '{{ .chart }}'

@@ -1,7 +1,6 @@
 {
   name: "ubuntu-test",
   namespace: "default",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

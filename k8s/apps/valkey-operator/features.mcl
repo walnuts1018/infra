@@ -23,6 +23,6 @@ let monitoringValues: Map<String, Any> = commonValues with:
     serviceMonitor:
       enabled: true
 
-export let profiles =
+export let valuesByFeature =
   standard: standardValues
   monitoring: monitoringValues

@@ -1,7 +1,6 @@
 {
   name: "external-snapshotter",
   namespace: "kube-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

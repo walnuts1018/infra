@@ -47,3 +47,8 @@
 > 違うって、mcl repositoryにあるのはなぜ？
 
 > そもそもmclディレクトリではなくk8sディレクトリをmclで完全に作り直せと指示したよね。そのままinplaceにk8s配下をmclに移行していけばどこまで移行したかも分かりやすいし、漏れなく進められるのでは？
+
+
+> -   manifestGenerator: "mcl"っている？mclオンリーにするんだから要らなくない？
+>
+> - clusterごとのprofileって、例えばcluster Aでは機能1と2、cluster Bでは機能2と3を使うみたいな時に困るくない？もっといい表現にして。これだとcluster nameを渡しているのとほぼ変わらないじゃん

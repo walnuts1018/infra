@@ -1,10 +1,8 @@
 {
   name: "scylla-manager",
   namespace: "scylla-manager",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "default",
     },
   },
 }

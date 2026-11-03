@@ -1,7 +1,6 @@
 {
   name: "qdrant",
   namespace: "qdrant",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

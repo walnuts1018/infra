@@ -1,7 +1,6 @@
 {
   name: "rabbitmq-cluster-operator",
   namespace: "rabbitmq-operator",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

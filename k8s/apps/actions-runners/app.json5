@@ -1,7 +1,6 @@
 {
   name: "actions-runners",
   namespace: "arc-runners",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

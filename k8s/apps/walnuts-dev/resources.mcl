@@ -1,9 +1,8 @@
-import "std:context" as context
 import "./profiles.mcl" as appProfiles
 import "./deployment.mcl" as deployment
 import "../envoy-gateway-class/gateway.mcl" as gateway
 
-let profile = appProfiles.profiles[context.parameter("profile")]
+let profile = appProfiles.profiles["default"]
 let appName = profile.name
 let namespace = profile.namespace
 let labels = profile.labels

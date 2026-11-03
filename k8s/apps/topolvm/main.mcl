@@ -1,10 +1,10 @@
 import "std:context" as context
 import "std:helm" as helm
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
+import "./features.mcl" as appFeatures
 
-let profileName = context.parameter("profile")
-let values = appProfiles.valuesByProfile[profileName]
+let features = context.parameter("features")
+let values = appFeatures.values(features)
 let apiVersions: List<String> =
   - "monitoring.coreos.com/v1"
 let options =

@@ -1,7 +1,6 @@
 {
   name: "grafana",
   namespace: "monitoring",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

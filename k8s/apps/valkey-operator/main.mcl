@@ -1,10 +1,16 @@
 import "std:context" as context
+import "std:list" as lists
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
+import "./features.mcl" as appFeatures
 import "./resources.mcl" as resources
 
-let profileName = context.parameter("profile")
-let values = appProfiles.profiles[profileName]
+let selectedFeatures = "," + context.parameter("features") + ","
+let monitoringEnabled = lists.contains(selectedFeatures, ",monitoring,")
+let values =
+  if monitoringEnabled:
+    appFeatures.valuesByFeature.monitoring
+  else:
+    appFeatures.valuesByFeature.standard
 let rendered = resources.render(appChart.namespace, values)
 
 emit each rendered

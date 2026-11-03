@@ -1,0 +1,106 @@
+import "std:list" as lists
+import "./values.mcl" as appValues
+
+fn hasFeature(features: String, name: String) -> Bool =
+  lists.contains("," + features + ",", "," + name + ",")
+
+let ssdDeviceClassItems: List<Map<String, Any>> =
+  -
+    name: "ssd"
+    "volume-group": "ssd"
+    "spare-gb": 5
+    default: false
+    "lvcreate-options":
+      - "--alloc=normal"
+let ssdStorageClassItems: List<Map<String, Any>> =
+  -
+    name: "topolvm-ssd"
+    storageClass:
+      fsType: "xfs"
+      reclaimPolicy: "Retain"
+      isDefaultClass: false
+      volumeBindingMode: "WaitForFirstConsumer"
+      allowVolumeExpansion: true
+      additionalParameters:
+        "topolvm.io/device-class": "ssd"
+      mountOptions:
+        - "noatime"
+let hddStorageClassItems: List<Map<String, Any>> =
+  -
+    name: "topolvm-hdd"
+    storageClass:
+      fsType: "xfs"
+      reclaimPolicy: "Retain"
+      isDefaultClass: false
+      volumeBindingMode: "WaitForFirstConsumer"
+      allowVolumeExpansion: true
+      additionalParameters:
+        "topolvm.io/device-class": "hdd"
+      mountOptions:
+        - "noatime"
+
+fn lvmdNodeSelector(features: String) -> Map<String, String> =
+  if hasFeature(features, "ruskStorageNodes"):
+    "topolvm.io/lvmd-config": "rusk"
+  else:
+    {}
+
+fn nodeSelector(features: String) -> Map<String, String> =
+  if hasFeature(features, "ruskStorageNodes"):
+    "topolvm.io/enabled": "true"
+  else:
+    {}
+
+fn hddDeviceClasses(features: String) -> List<Map<String, Any>> =
+  if hasFeature(features, "hdd"):
+    -
+      name: "hdd"
+      "volume-group": "hdd"
+      "spare-gb": 10
+      default: hasFeature(features, "ruskStorageNodes")
+      "lvcreate-options":
+        - "--alloc=normal"
+  else:
+    []
+
+fn ssdDeviceClasses(features: String) -> List<Map<String, Any>> =
+  if hasFeature(features, "ssd"):
+    ssdDeviceClassItems
+  else:
+    []
+
+fn deviceClasses(features: String) -> List<Map<String, Any>> =
+  lists.concat(ssdDeviceClasses(features), hddDeviceClasses(features))
+
+fn ssdStorageClasses(features: String) -> List<Map<String, Any>> =
+  if hasFeature(features, "ssd"):
+    ssdStorageClassItems
+  else:
+    []
+
+fn hddStorageClasses(features: String) -> List<Map<String, Any>> =
+  if hasFeature(features, "hdd"):
+    hddStorageClassItems
+  else:
+    []
+
+fn storageClasses(features: String) -> List<Map<String, Any>> =
+  lists.concat(ssdStorageClasses(features), hddStorageClasses(features))
+
+export fn values(features: String) -> Map<String, Any> = appValues.commonValues with:
+  lvmd:
+    nodeSelector: lvmdNodeSelector(features)
+    deviceClasses: deviceClasses(features)
+    prometheus:
+      podMonitor:
+        enabled: hasFeature(features, "monitoring")
+  controller:
+    prometheus:
+      podMonitor:
+        enabled: hasFeature(features, "monitoring")
+  node:
+    nodeSelector: nodeSelector(features)
+    prometheus:
+      podMonitor:
+        enabled: hasFeature(features, "monitoring")
+  storageClasses: storageClasses(features)

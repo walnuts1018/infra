@@ -1,10 +1,9 @@
-import "std:context" as context
 import "std:list" as lists
 import "./profiles.mcl" as appProfiles
 import "./oidc.mcl" as oidc
 import "./shared-infrastructure.mcl" as sharedInfrastructure
 
-let profile = appProfiles.profiles[context.parameter("profile")]
+let profile = appProfiles.profiles["default"]
 let resources = lists.concat(
   oidc.externalSecret(),
   lists.concat(

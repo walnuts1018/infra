@@ -1,13 +1,24 @@
 {
   name: "cilium",
   namespace: "cilium-system",
-  manifestGenerator: "mcl",
   clusters: {
     biscuit: {
-      profile: "gatewayAPI",
+      features: ["gatewayAPI"],
+      settings: {
+        api_server: "192.168.0.15",
+        cluster_id: 2,
+        cluster_name: "biscuit",
+        envoy_memory: "64Mi",
+      },
     },
     kurumi: {
-      profile: "originCertificateIngress",
+      features: ["originCertificateIngress", "monitoring", "hubbleTLS", "l2Announcements", "nodePort"],
+      settings: {
+        api_server: "192.168.4.11",
+        cluster_id: 1,
+        cluster_name: "kurumi",
+        envoy_memory: "51Mi",
+      },
     },
   },
 }

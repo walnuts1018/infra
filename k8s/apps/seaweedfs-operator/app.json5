@@ -1,7 +1,6 @@
 {
   name: "seaweedfs-operator",
   namespace: "seaweedfs-operator",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

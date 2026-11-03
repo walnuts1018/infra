@@ -1,10 +1,8 @@
 {
   name: "netbox",
   namespace: "netbox",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "oidc-and-s3-storage",
     },
   },
 }

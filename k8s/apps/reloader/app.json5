@@ -1,16 +1,15 @@
 {
   name: "reloader",
   namespace: "reloader",
-  manifestGenerator: "mcl",
   clusters: {
     berry: {
-      profile: "argocdApplicationReload",
+      features: ["argocdApplicationReload"],
     },
     biscuit: {
-      profile: "standard",
+      features: [],
     },
     kurumi: {
-      profile: "standard",
+      features: [],
     },
   },
 }

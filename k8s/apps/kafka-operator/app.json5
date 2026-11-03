@@ -1,7 +1,6 @@
 {
   name: "kafka-operator",
   namespace: "strimzi-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

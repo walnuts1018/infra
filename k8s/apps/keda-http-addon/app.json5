@@ -1,7 +1,6 @@
 {
   name: "keda-http-addon",
   namespace: "keda",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

@@ -1,7 +1,6 @@
 {
   name: "opentelemetry-collectors",
   namespace: "opentelemetry-collector",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

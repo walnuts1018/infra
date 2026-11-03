@@ -1,11 +1,10 @@
-import "std:context" as context
 import "std:helm" as helm
 import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./profiles.mcl" as appProfiles
 import "./resources.mcl" as appResources
 
-let profileName = context.parameter("profile")
+let profileName = "smtpRelay"
 let profile = appProfiles.profiles[profileName]
 let apiVersions: List<String> = []
 let options =

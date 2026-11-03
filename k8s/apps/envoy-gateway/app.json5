@@ -1,7 +1,6 @@
 {
   name: "envoy-gateway",
   namespace: "envoy-gateway-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

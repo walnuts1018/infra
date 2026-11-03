@@ -5,8 +5,25 @@ import "./chart.mcl" as appChart
 import "./external-secret.mcl" as externalSecret
 import "./values.mcl" as appValues
 
-let profileName = context.parameter("profile")
-let profile = appValues.profiles[profileName]
+let selectedFeatures = "," + context.parameter("features") + ","
+let originCertificateIngressEnabled = lists.contains(selectedFeatures, ",originCertificateIngress,")
+let gatewayAPIEnabled = lists.contains(selectedFeatures, ",gatewayAPI,")
+let monitoringEnabled = lists.contains(selectedFeatures, ",monitoring,")
+let hubbleTLSEnabled = lists.contains(selectedFeatures, ",hubbleTLS,")
+let l2AnnouncementsEnabled = lists.contains(selectedFeatures, ",l2Announcements,")
+let nodePortEnabled = lists.contains(selectedFeatures, ",nodePort,")
+let helmValues = appValues.helmValues(
+  originCertificateIngressEnabled,
+  gatewayAPIEnabled,
+  monitoringEnabled,
+  hubbleTLSEnabled,
+  l2AnnouncementsEnabled,
+  nodePortEnabled,
+  context.parameter("setting.api_server"),
+  context.intParameter("setting.cluster_id"),
+  context.parameter("setting.cluster_name"),
+  context.parameter("setting.envoy_memory"),
+)
 let apiVersions: List<String> = []
 let options =
   releaseName: "cilium"
@@ -15,10 +32,10 @@ let options =
   kubeVersion: appChart.kubeVersion
   now: appChart.durationValidationTime
   apiVersions: apiVersions
-  values: profile.helmValues
+  values: helmValues
 let chartResources = helm.render(appChart.chartArchive, options)
 let extraResources =
-  if profile.cloudflareOriginCert:
+  if originCertificateIngressEnabled:
     - externalSecret.resource
   else:
     []

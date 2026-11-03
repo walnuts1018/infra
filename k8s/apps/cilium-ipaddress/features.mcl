@@ -1,0 +1,73 @@
+import "std:context" as context
+import "std:list" as lists
+import "./advertisement.mcl" as appAdvertisement
+
+let selectedFeatures = "," + context.parameter("features") + ","
+
+export fn enabled(name: String) -> Bool =
+  lists.contains(selectedFeatures, "," + name + ",")
+
+let peerConfigBase =
+  families:
+    - afi: "ipv4"
+      safi: "unicast"
+      advertisements:
+        matchLabels: appAdvertisement.advertisement.metadata.labels
+
+let controlPlanePeerSpec = peerConfigBase with:
+  transport:
+    peerPort: 179
+    sourceInterface: "veth-cilium"
+    timers:
+      connectRetryTimeSeconds: 3
+      holdTimeSeconds: 9
+      keepAliveTimeSeconds: 3
+
+let controlPlaneInstance =
+  name: "talos"
+  localASN: 4200000003
+  peers:
+    - name: "talos"
+      peerASN: 4200000002
+      peerAddress: "10.255.255.1"
+      peerConfigRef:
+        name: "talos"
+
+let serverVlanInstance =
+  name: "server-vlan"
+  localASN: 65010
+  localPort: 1790
+  peers:
+    - name: "vanilla"
+      peerASN: 65001
+      peerAddress: "192.168.0.1"
+      peerConfigRef:
+        name: "vanilla"
+
+export let controlPlanePeer =
+  addressPool:
+    name: "control-plane"
+    start: "192.168.12.0"
+    stop: "192.168.12.255"
+  bgp:
+    instanceName: "talos"
+    peerConfigName: "talos"
+    nodeSelector:
+      matchLabels:
+        "node-role.kubernetes.io/control-plane": ""
+    peerConfigSpec: controlPlanePeerSpec
+    bgpInstance: controlPlaneInstance
+
+export let serverVlanPeer =
+  addressPool:
+    name: "server-vlan"
+    start: "192.168.16.0"
+    stop: "192.168.16.255"
+  bgp:
+    instanceName: "server-vlan"
+    peerConfigName: "vanilla"
+    nodeSelector:
+      matchLabels:
+        "kubernetes.io/os": "linux"
+    peerConfigSpec: peerConfigBase
+    bgpInstance: serverVlanInstance

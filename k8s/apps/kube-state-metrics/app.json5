@@ -1,7 +1,6 @@
 {
   name: "kube-state-metrics",
   namespace: "monitoring",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

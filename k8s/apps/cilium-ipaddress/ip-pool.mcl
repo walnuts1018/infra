@@ -1,14 +1,34 @@
-import "std:context" as context
-import "./profiles.mcl" as appProfiles
+import "std:list" as lists
+import "./features.mcl" as appFeatures
 
-let profile = appProfiles.profiles[context.parameter("profile")]
-
-export let resource = node:
+fn resource(name: String, start: String, stop: String) -> Map<String, Any> = node:
   apiVersion: "cilium.io/v2"
   kind: "CiliumLoadBalancerIPPool"
   metadata:
-    name: "default"
+    name: name
   spec:
     blocks:
-      - start: profile.addressPool.start
-        stop: profile.addressPool.stop
+      - start: start
+        stop: stop
+
+let controlPlanePool =
+  if appFeatures.enabled("controlPlanePeer"):
+    - resource(
+      appFeatures.controlPlanePeer.addressPool.name,
+      appFeatures.controlPlanePeer.addressPool.start,
+      appFeatures.controlPlanePeer.addressPool.stop,
+      )
+  else:
+    []
+
+let serverVlanPool =
+  if appFeatures.enabled("serverVlanPeer"):
+    - resource(
+      appFeatures.serverVlanPeer.addressPool.name,
+      appFeatures.serverVlanPeer.addressPool.start,
+      appFeatures.serverVlanPeer.addressPool.stop,
+      )
+  else:
+    []
+
+export let resources = lists.concat(controlPlanePool, serverVlanPool)

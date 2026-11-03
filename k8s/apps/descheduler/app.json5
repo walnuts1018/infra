@@ -1,10 +1,8 @@
 {
   name: "descheduler",
   namespace: "kube-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "kubernetesMetrics",
     },
   },
 }

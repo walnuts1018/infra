@@ -1,21 +1,49 @@
-import "std:context" as context
-import "./profiles.mcl" as appProfiles
+import "std:list" as lists
+import "./features.mcl" as appFeatures
 
-let profile = appProfiles.profiles[context.parameter("profile")]
-
-export let peerConfig = node:
+fn peerConfig(name: String, spec: Map<String, Any>) -> Map<String, Any> = node:
   apiVersion: "cilium.io/v2"
   kind: "CiliumBGPPeerConfig"
   metadata:
-    name: profile.bgp.peerConfigName
-  spec: profile.bgp.peerConfigSpec
+    name: name
+  spec: spec
 
-export let clusterConfig = node:
+fn clusterConfig(name: String, nodeSelector: Map<String, Any>, bgpInstance: Map<String, Any>) -> Map<String, Any> = node:
   apiVersion: "cilium.io/v2"
   kind: "CiliumBGPClusterConfig"
   metadata:
-    name: profile.bgp.instanceName
+    name: name
   spec:
-    nodeSelector: profile.bgp.nodeSelector
+    nodeSelector: nodeSelector
     bgpInstances:
-      - profile.bgp.bgpInstance
+      - bgpInstance
+
+let controlPlaneResources =
+  if appFeatures.enabled("controlPlanePeer"):
+    - peerConfig(
+      appFeatures.controlPlanePeer.bgp.peerConfigName,
+      appFeatures.controlPlanePeer.bgp.peerConfigSpec,
+      )
+    - clusterConfig(
+      appFeatures.controlPlanePeer.bgp.instanceName,
+      appFeatures.controlPlanePeer.bgp.nodeSelector,
+      appFeatures.controlPlanePeer.bgp.bgpInstance,
+      )
+  else:
+    []
+
+let serverVlanResources =
+  if appFeatures.enabled("serverVlanPeer"):
+    - peerConfig(
+      appFeatures.serverVlanPeer.bgp.peerConfigName,
+      appFeatures.serverVlanPeer.bgp.peerConfigSpec,
+      )
+    - clusterConfig(
+      appFeatures.serverVlanPeer.bgp.instanceName,
+      appFeatures.serverVlanPeer.bgp.nodeSelector,
+      appFeatures.serverVlanPeer.bgp.bgpInstance,
+      )
+  else:
+    []
+
+export let resources = lists.concat(controlPlaneResources, serverVlanResources)

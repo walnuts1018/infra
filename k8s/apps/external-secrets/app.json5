@@ -1,16 +1,12 @@
 {
   name: "external-secrets",
   namespace: "external-secrets",
-  manifestGenerator: "mcl",
   clusters: {
     berry: {
-      profile: "standard",
     },
     biscuit: {
-      profile: "standard",
     },
     kurumi: {
-      profile: "standard",
     },
   },
 }

@@ -1,10 +1,9 @@
-import "std:context" as context
 import "./app.mcl" as app
 import "./configmaps.mcl" as appConfigMaps
 import "./identity.mcl" as appIdentity
 import "./profiles.mcl" as appProfiles
 
-let profile = appProfiles.profiles[context.parameter("profile")]
+let profile = appProfiles.profiles["monthlyTileRefresh"]
 
 let s3Env =
   - name: "AWS_WEB_IDENTITY_TOKEN_FILE"

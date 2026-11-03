@@ -1,7 +1,6 @@
 {
   name: "scylla-node-config",
   namespace: "scylla-operator",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

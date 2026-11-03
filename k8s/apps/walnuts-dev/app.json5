@@ -1,10 +1,8 @@
 {
   name: "walnuts-dev",
   namespace: "walnuts-dev",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "default",
     },
   },
   annotations: {

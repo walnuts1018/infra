@@ -1,4 +1,3 @@
-import "std:context" as context
 import "./app.mcl" as app
 import "./external-secret.mcl" as externalSecret
 import "./profiles.mcl" as appProfiles
@@ -6,7 +5,7 @@ import "./profiles.mcl" as appProfiles
 let labels =
   app: app.name
   "app.kubernetes.io/name": app.name
-let profileName = context.parameter("profile")
+let profileName = "oidcAndCortexMetrics"
 let profile = appProfiles.profiles[profileName]
 let secretName = externalSecret.secretName
 let securityContext =

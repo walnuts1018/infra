@@ -1,7 +1,6 @@
 {
   name: "oekaki-dengon-game",
   namespace: "oekaki-dengon-game",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

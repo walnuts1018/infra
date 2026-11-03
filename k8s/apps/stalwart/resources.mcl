@@ -1,9 +1,8 @@
-import "std:context" as context
 import "std:list" as lists
 import text "./_configs/config.json" as configJSON
 import "./profiles.mcl" as appProfiles
 
-let profile = appProfiles.profiles[context.parameter("profile")]
+let profile = appProfiles.profiles["s3BackedMail"]
 let appName = "stalwart"
 let labels =
   app: appName

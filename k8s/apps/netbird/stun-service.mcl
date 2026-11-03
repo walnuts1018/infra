@@ -1,8 +1,7 @@
 import "./settings.mcl" as appSettings
 import "./profiles.mcl" as appProfiles
-import "std:context" as context
 
-let profileName = context.parameter("profile")
+let profileName = "standard"
 let profile = appProfiles.profiles[profileName]
 let serverLabels =
   app: appSettings.name + "-server"

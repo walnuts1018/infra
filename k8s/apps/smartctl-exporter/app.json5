@@ -1,7 +1,6 @@
 {
   name: "smartctl-exporter",
   namespace: "monitoring",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

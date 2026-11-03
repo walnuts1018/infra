@@ -1,9 +1,12 @@
+import "std:list" as lists
 import "./advertisement.mcl" as appAdvertisement
 import "./bgp.mcl" as appBgp
 import "./ip-pool.mcl" as appIpPool
 
-export let resources =
+let advertisementResources =
   - appAdvertisement.advertisement
-  - appBgp.peerConfig
-  - appBgp.clusterConfig
-  - appIpPool.resource
+
+export let resources = lists.concat(
+  advertisementResources,
+  lists.concat(appBgp.resources, appIpPool.resources),
+)

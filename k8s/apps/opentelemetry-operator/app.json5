@@ -1,7 +1,6 @@
 {
   name: "opentelemetry-operator",
   namespace: "opentelemetry-operator-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

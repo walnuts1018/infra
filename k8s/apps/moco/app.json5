@@ -1,7 +1,6 @@
 {
   name: "moco",
   namespace: "moco-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

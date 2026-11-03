@@ -1,7 +1,6 @@
 {
   name: "prometheus-operator-crds",
   namespace: "monitoring",
-  manifestGenerator: "mcl",
   clusters: {
     biscuit: {},
     kurumi: {},

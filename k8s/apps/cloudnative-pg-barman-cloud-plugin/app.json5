@@ -1,7 +1,6 @@
 {
   name: "cloudnative-pg-barman-cloud-plugin",
   namespace: "cloudnative-pg",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

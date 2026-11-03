@@ -1,7 +1,6 @@
 {
   name: "ephemeral-storage-metrics",
   namespace: "monitoring",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

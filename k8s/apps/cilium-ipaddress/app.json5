@@ -1,13 +1,12 @@
 {
   name: "cilium-ipaddress",
   namespace: "cilium-system",
-  manifestGenerator: "mcl",
   clusters: {
     biscuit: {
-      profile: "serverVlanPeer",
+      features: ["serverVlanPeer"],
     },
     kurumi: {
-      profile: "controlPlanePeer",
+      features: ["controlPlanePeer"],
     },
   },
 }

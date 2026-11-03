@@ -1,9 +1,8 @@
-import "std:context" as context
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./profiles.mcl" as appProfiles
 
-let profileName = context.parameter("profile")
+let profileName = "standard"
 let apiVersions: List<String> = []
 let options =
   releaseName: "nvidia-gpu-operator"

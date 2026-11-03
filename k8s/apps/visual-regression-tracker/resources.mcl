@@ -1,7 +1,6 @@
-import "std:context" as context
 import "./profiles.mcl" as appProfiles
 
-let profile = appProfiles.profiles[context.parameter("profile")]
+let profile = appProfiles.profiles["s3BackedVisualRegression"]
 let appName = "visual-regression-tracker"
 fn labels(name: String) -> Map<String, Any> = node:
   app: name

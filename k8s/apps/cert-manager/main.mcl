@@ -4,10 +4,16 @@ import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./controller-configmap.mcl" as controllerConfigMap
 import "./hooks.mcl" as appHooks
-import "./profiles.mcl" as appProfiles
+import "./features.mcl" as appFeatures
 
 let apiVersions: List<String> = []
-let values: Map<String, Any> = appProfiles.valuesByProfile[context.parameter("profile")]
+let selectedFeatures = "," + context.parameter("features") + ","
+let monitoringEnabled = lists.contains(selectedFeatures, ",monitoring,")
+let values: Map<String, Any> =
+  if monitoringEnabled:
+    appFeatures.valuesByFeature.monitoring
+  else:
+    appFeatures.valuesByFeature.standard
 let options =
   releaseName: appChart.releaseName
   namespace: appChart.namespace

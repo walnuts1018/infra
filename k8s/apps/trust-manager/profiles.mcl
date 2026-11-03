@@ -1,3 +1,0 @@
-export let serviceMonitorEnabledByProfile: Map<String, Bool> =
-  standard: false
-  monitoring: true

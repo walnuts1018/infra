@@ -1,10 +1,8 @@
 {
   name: "coder",
   namespace: "coder",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "workspace-host",
     },
   },
 }

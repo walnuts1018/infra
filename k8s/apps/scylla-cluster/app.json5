@@ -1,10 +1,8 @@
 {
   name: "scylla-cluster",
   namespace: "databases",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "default",
     },
   },
 }

@@ -1,8 +1,7 @@
-import "std:context" as context
 import text "./_configs/scylladb-ca.crt" as scyllaCaCertificate
 import "./profiles.mcl" as appProfiles
 
-let profile = appProfiles.profiles[context.parameter("profile")]
+let profile = appProfiles.profiles["scyllaClientCertificate"]
 let appName = "prfexample"
 let appNamespace = "prfexample"
 let labels =

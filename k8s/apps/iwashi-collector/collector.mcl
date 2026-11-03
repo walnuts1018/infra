@@ -1,9 +1,8 @@
-import "std:context" as context
 import "./app.mcl" as app
 import "./discovery-secret.mcl" as discoverySecret
 import "./profiles.mcl" as appProfiles
 
-let profile = appProfiles.profiles[context.parameter("profile")]
+let profile = appProfiles.profiles["httpProbeMetrics"]
 
 export let resource = node:
   apiVersion: "opentelemetry.io/v1beta1"

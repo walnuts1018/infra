@@ -1,10 +1,9 @@
-import "std:context" as context
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./profiles.mcl" as appProfiles
 
 let apiVersions: List<String> = []
-let profile = appProfiles.profiles[context.parameter("profile")]
+let profile = appProfiles.profiles["standard"]
 let options =
   releaseName: "cluster-api-operator"
   namespace: profile.namespace

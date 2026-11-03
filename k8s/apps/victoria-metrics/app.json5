@@ -1,7 +1,6 @@
 {
   name: "victoria-metrics",
   namespace: "victoria-metrics",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

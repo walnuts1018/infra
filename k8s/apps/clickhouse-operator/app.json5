@@ -1,7 +1,6 @@
 {
   name: "clickhouse-operator",
   namespace: "clickhouse-operator-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

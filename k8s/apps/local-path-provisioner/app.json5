@@ -1,10 +1,8 @@
 {
   name: "local-path-storage",
   namespace: "local-path-storage",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "standard",
     },
   },
 }

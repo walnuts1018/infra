@@ -1,10 +1,8 @@
 {
   name: "pyroscope",
   namespace: "pyroscope",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "default",
     },
   },
 }

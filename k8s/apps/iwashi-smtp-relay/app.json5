@@ -1,10 +1,8 @@
 {
   name: "iwashi-smtp-relay",
   namespace: "iwashi-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "smtpRelay",
     },
   },
 }

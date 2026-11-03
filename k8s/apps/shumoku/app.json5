@@ -1,7 +1,6 @@
 {
   name: "shumoku",
   namespace: "netbox",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

@@ -1,7 +1,6 @@
 {
   name: "rabbitmq-default",
   namespace: "rabbitmq",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

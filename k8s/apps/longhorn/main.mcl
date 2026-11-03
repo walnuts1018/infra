@@ -1,4 +1,3 @@
-import "std:context" as context
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./profiles.mcl" as appProfiles
@@ -7,7 +6,7 @@ import "./external-secret.mcl" as externalSecret
 
 let apiVersions: List<String> = []
 let lookupResources: List<Map<String, Any>> = []
-let selectedProfile = appProfiles.profiles[context.parameter("profile")]
+let selectedProfile = appProfiles.profiles["default"]
 let options =
   releaseName: appChart.releaseName
   namespace: appChart.namespace

@@ -1,10 +1,8 @@
 {
   name: "picca",
   namespace: "picca",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "default",
     },
   },
 }

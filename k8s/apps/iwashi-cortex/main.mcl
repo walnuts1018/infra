@@ -1,11 +1,10 @@
-import "std:context" as context
 import "std:helm" as helm
 import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./network-policies.mcl" as networkPolicies
 import "./profiles.mcl" as appProfiles
 
-let profileName = context.parameter("profile")
+let profileName = "metricsStorage"
 let values: Map<String, Any> = appProfiles.valuesByProfile[profileName]
 let apiVersions: List<String> = []
 let options =

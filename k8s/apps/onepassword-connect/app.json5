@@ -1,7 +1,6 @@
 {
   name: "onepassword-connect",
   namespace: "onepassword",
-  manifestGenerator: "mcl",
   clusters: {
     berry: {},
     biscuit: {},

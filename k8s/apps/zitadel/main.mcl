@@ -1,10 +1,9 @@
-import "std:context" as context
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./external-secret.mcl" as appResources
 import "./profiles.mcl" as appProfiles
 
-let profile = appProfiles.profiles[context.parameter("profile")]
+let profile = appProfiles.profiles["standard"]
 let options =
   releaseName: "zitadel"
   namespace: profile.namespace

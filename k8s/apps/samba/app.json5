@@ -1,7 +1,6 @@
 {
   name: "samba",
   namespace: "samba",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

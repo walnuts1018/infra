@@ -1,7 +1,6 @@
 {
   name: "coredns",
   namespace: "coredns",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

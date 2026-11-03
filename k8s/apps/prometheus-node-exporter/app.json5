@@ -1,7 +1,6 @@
 {
   name: "prometheus-node-exporter",
   namespace: "monitoring",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

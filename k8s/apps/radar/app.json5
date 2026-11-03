@@ -1,7 +1,6 @@
 {
   name: "radar",
   namespace: "radar",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

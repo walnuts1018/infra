@@ -1,7 +1,6 @@
 {
   name: "http-dump",
   namespace: "default",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

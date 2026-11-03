@@ -1,10 +1,9 @@
 import "std:context" as context
 import "std:list" as lists
-import "./profiles.mcl" as appProfiles
 import "./resources.mcl" as appResources
 
-let profile = context.parameter("profile")
-let includeServiceMonitor = appProfiles.serviceMonitorEnabledByProfile[profile]
+let selectedFeatures = "," + context.parameter("features") + ","
+let includeServiceMonitor = lists.contains(selectedFeatures, ",monitoring,")
 let monitoringResources =
   if includeServiceMonitor:
     appResources.monitoringResources

@@ -1,6 +1,7 @@
 {
   name: "renovate",
   namespace: "renovate",
+  manifestGenerator: "jsonnet",
   clusters: {
     kurumi: {},
   },

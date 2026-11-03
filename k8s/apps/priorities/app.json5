@@ -1,7 +1,6 @@
 {
   name: "priorities",
   namespace: "kube-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

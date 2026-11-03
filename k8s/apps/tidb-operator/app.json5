@@ -1,7 +1,6 @@
 {
   name: "tidb-operator",
   namespace: "tidb-operator",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

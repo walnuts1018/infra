@@ -1,6 +1,5 @@
-import "std:context" as context
 import "./profiles.mcl" as appProfiles
 
-let resources = appProfiles.resourcesByProfile[context.parameter("profile")]
+let resources = appProfiles.resourcesByProfile["postgres-backup-and-seaweedfs-user-content"]
 
 emit each resources

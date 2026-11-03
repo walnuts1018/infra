@@ -1,10 +1,8 @@
 {
   name: "opencost",
   namespace: "opencost",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "standard",
     },
   },
 }

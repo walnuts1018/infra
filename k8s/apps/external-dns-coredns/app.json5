@@ -1,7 +1,6 @@
 {
   name: "external-dns-coredns",
   namespace: "external-dns-coredns",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

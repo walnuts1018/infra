@@ -1,7 +1,6 @@
 {
   name: "influxdb",
   namespace: "databases",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

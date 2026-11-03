@@ -1,10 +1,26 @@
 import "std:context" as context
 import "std:helm" as helm
+import "std:list" as lists
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
+import "./values.mcl" as appValues
 
-let profileName = context.parameter("profile")
-let values: Map<String, Any> = appProfiles.valuesByProfile[profileName]
+let selectedFeatures = "," + context.parameter("features") + ","
+let argocdApplicationReloadEnabled = lists.contains(selectedFeatures, ",argocdApplicationReload,")
+let namespaceSelector =
+  if argocdApplicationReloadEnabled:
+    "kubernetes.io/metadata.name=argocd"
+  else:
+    ""
+let reloadStrategy =
+  if argocdApplicationReloadEnabled:
+    "annotations"
+  else:
+    "default"
+let values: Map<String, Any> = appValues.commonValues with:
+  reloader:
+    autoReloadAll: argocdApplicationReloadEnabled
+    namespaceSelector: namespaceSelector
+    reloadStrategy: reloadStrategy
 let options =
   releaseName: "reloader"
   namespace: appChart.namespace

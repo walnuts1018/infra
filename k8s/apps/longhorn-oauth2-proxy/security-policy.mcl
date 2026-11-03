@@ -1,9 +1,8 @@
-import "std:context" as context
 import "./settings.mcl" as settings
 import "./profiles.mcl" as appProfiles
 import "./external-secret.mcl" as externalSecret
 
-let profile = appProfiles.profiles[context.parameter("profile")]
+let profile = appProfiles.profiles["standard"]
 
 export let resource = node:
   apiVersion: "gateway.envoyproxy.io/v1alpha1"

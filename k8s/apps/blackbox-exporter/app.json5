@@ -1,7 +1,6 @@
 {
   name: "blackbox-exporter",
   namespace: "monitoring",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

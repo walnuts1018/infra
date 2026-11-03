@@ -1,10 +1,8 @@
 {
   name: "longhorn-oauth2-proxy",
   namespace: "longhorn-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "standard",
     },
   },
 }

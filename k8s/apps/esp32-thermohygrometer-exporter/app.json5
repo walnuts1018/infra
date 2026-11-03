@@ -1,7 +1,6 @@
 {
   name: "esp32-thermohygrometer-exporter",
   namespace: "esp32-thermohygrometer-exporter",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

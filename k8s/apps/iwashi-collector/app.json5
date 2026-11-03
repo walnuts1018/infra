@@ -1,10 +1,8 @@
 {
   name: "iwashi-collector",
   namespace: "iwashi-system",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {
-      profile: "httpProbeMetrics",
     },
   },
 }

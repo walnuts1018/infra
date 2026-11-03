@@ -1,7 +1,6 @@
 {
   name: "eck-operator",
   namespace: "elasticsearch",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

@@ -1,7 +1,6 @@
 {
   name: "external-dns-cloudflare",
   namespace: "external-dns-cloudflare",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

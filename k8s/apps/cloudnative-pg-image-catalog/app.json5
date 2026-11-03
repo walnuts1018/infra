@@ -1,7 +1,6 @@
 {
   name: "cloudnative-pg-image-catalog",
   namespace: "cloudnative-pg",
-  manifestGenerator: "mcl",
   clusters: {
     kurumi: {},
   },

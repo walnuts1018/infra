@@ -1,13 +1,12 @@
 {
   name: "topolvm",
   namespace: "topolvm-system",
-  manifestGenerator: "mcl",
   clusters: {
     biscuit: {
-      profile: "ssdAndHdd",
+      features: ["ssd", "hdd"],
     },
     kurumi: {
-      profile: "monitoringHdd",
+      features: ["hdd", "monitoring", "ruskStorageNodes"],
     },
   },
 }
