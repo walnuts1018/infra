@@ -1,0 +1,16 @@
+import "std:context" as context
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./profiles.mcl" as appProfiles
+
+let apiVersions: List<String> = []
+let options =
+  releaseName: "pyroscope"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: appProfiles.profiles[context.parameter("profile")]
+let resources = helm.render(appChart.chartArchive, options)
+
+emit each resources

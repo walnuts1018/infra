@@ -1,0 +1,7 @@
+import "std:context" as context
+import "./profiles.mcl" as appProfiles
+
+let profileName = context.parameter("profile")
+let resources = appProfiles.resourcesByProfile[profileName]
+
+emit each resources

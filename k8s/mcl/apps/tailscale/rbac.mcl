@@ -1,0 +1,76 @@
+import "./app.mcl" as appConfig
+
+let labels =
+  app: appConfig.name
+  "app.kubernetes.io/name": appConfig.name
+
+let serviceAccount = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  metadata:
+    name: appConfig.name
+    namespace: appConfig.namespace
+    labels: labels
+
+let role = node:
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  kind: "Role"
+  metadata:
+    name: appConfig.name
+    namespace: appConfig.namespace
+    labels: labels
+  rules:
+    - apiGroups:
+        - ""
+      resources:
+        - "secrets"
+      verbs:
+        - "create"
+    - apiGroups:
+        - ""
+      resources:
+        - "events"
+      verbs:
+        - "get"
+        - "create"
+        - "patch"
+    - apiGroups:
+        - ""
+      resourceNames:
+        - "tailscale"
+      resources:
+        - "secrets"
+      verbs:
+        - "get"
+        - "update"
+        - "patch"
+    - apiGroups:
+        - ""
+      resourceNames:
+        - "tailscale-auth1"
+      resources:
+        - "secrets"
+      verbs:
+        - "get"
+        - "update"
+        - "patch"
+
+let roleBinding = node:
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  kind: "RoleBinding"
+  metadata:
+    name: appConfig.name
+    namespace: appConfig.namespace
+    labels: labels
+  subjects:
+    - kind: "ServiceAccount"
+      name: appConfig.name
+  roleRef:
+    kind: "Role"
+    name: appConfig.name
+    apiGroup: "rbac.authorization.k8s.io"
+
+export let resources =
+  - serviceAccount
+  - role
+  - roleBinding

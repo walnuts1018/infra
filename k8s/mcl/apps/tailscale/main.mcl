@@ -1,0 +1,13 @@
+import "./app.mcl" as app
+import "./deployment.mcl" as deployment
+import "./external-secret.mcl" as externalSecret
+import "./rbac.mcl" as rbac
+
+let resources =
+  - externalSecret.resource
+  - rbac.resources[0]
+  - rbac.resources[1]
+  - rbac.resources[2]
+  - deployment.resource
+
+emit each resources

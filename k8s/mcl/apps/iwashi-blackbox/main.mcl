@@ -1,0 +1,18 @@
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./network-policies.mcl" as networkPolicies
+import "./values.mcl" as appValues
+
+let apiVersions: List<String> = []
+let options =
+  releaseName: "iwashi-blackbox"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: appValues.values
+let chartResources = helm.render(appChart.chartArchive, options)
+
+emit each chartResources
+emit networkPolicies.defaultDeny
+emit networkPolicies.policy

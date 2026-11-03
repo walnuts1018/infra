@@ -1,0 +1,88 @@
+import "./app.mcl" as app
+import "./profiles.mcl" as appProfiles
+
+let profile = appProfiles.profiles.subnetRouter
+let emptyDir: Map<String, Any> = {}
+let labels =
+  app: app.name
+  "app.kubernetes.io/name": app.name
+let volumes =
+  - name: "tmp"
+    emptyDir: emptyDir
+  - name: "var-run-tailscale"
+    emptyDir: emptyDir
+
+export let resource = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+    labels: labels
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: labels
+    template:
+      metadata:
+        annotations:
+          "k8s.v1.cni.cncf.io/networks": profile.network
+        labels: labels
+      spec:
+        serviceAccountName: app.name
+        containers:
+          - name: "tailscale"
+            imagePullPolicy: "IfNotPresent"
+            image: "ghcr.io/tailscale/tailscale:v1.102.4"
+            env:
+              - name: "TS_KUBE_SECRET"
+                value: "tailscale"
+              - name: "POD_NAME"
+                valueFrom:
+                  fieldRef:
+                    fieldPath: "metadata.name"
+              - name: "POD_UID"
+                valueFrom:
+                  fieldRef:
+                    fieldPath: "metadata.uid"
+              - name: "XDG_CACHE_HOME"
+                value: "/tmp/.cache"
+              - name: "TS_USERSPACE"
+                value: "true"
+              - name: "TS_AUTH_KEY"
+                valueFrom:
+                  secretKeyRef:
+                    name: "tailscale-auth1"
+                    key: "TS_AUTH_KEY"
+                    optional: true
+              - name: "TS_ROUTES"
+                value: profile.routes
+              - name: "TS_EXTRA_ARGS"
+                value: profile.extraArgs
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 1000
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                  - "NET_ADMIN"
+                drop:
+                  - "all"
+              seccompProfile:
+                type: "RuntimeDefault"
+            resources:
+              requests:
+                cpu: "20m"
+                memory: "80Mi"
+              limits:
+                cpu: "500m"
+                memory: "256Mi"
+            volumeMounts:
+              - mountPath: "/tmp"
+                name: "tmp"
+              - mountPath: "/var/run/tailscale"
+                name: "var-run-tailscale"
+        priorityClassName: "high"
+        volumes: volumes

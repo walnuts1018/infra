@@ -1,0 +1,20 @@
+import "std:context" as context
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./values.mcl" as appValues
+import "./external-secret.mcl" as externalSecret
+import "./schedule.mcl" as schedule
+
+let apiVersions: List<String> = []
+let options =
+  releaseName: "velero"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: appValues.profiles[context.parameter("profile")]
+let resources = helm.render(appChart.chartArchive, options)
+
+emit each resources
+emit externalSecret.resource
+emit schedule.resource

@@ -42,6 +42,7 @@
     "https://github.com/strimzi/strimzi-kafka-operator/releases/download/1.2.0/strimzi-kafka-operator-helm-3-chart-1.2.0.tgz": "0f8a50b2f19bd99482f9fd6e17cf42902f72f9e594a136813ac3f0b7af422efd",
     "https://github.com/topolvm/topolvm/releases/download/topolvm-chart-v17.2.0/topolvm-17.2.0.tgz": "4b6c070da0b38f098c9ef6b6a38ef4e2dfff52adecedc280ad92bfab408f90ee",
     "https://github.com/valkey-io/valkey-helm/releases/download/valkey-operator-0.6.0/valkey-operator-0.6.0.tgz": "78c23f630a7e6910ad208c182ff1f6a2d6df9d612a89806c8b2b7f9535ed8783",
+    "https://github.com/vmware-tanzu/helm-charts/releases/download/velero-12.1.0/velero-12.1.0.tgz": "cd23589ad1b2d25cdd3220f6866b3f6f4c5683c4c09494e76a14700b33f81f83",
     "https://helm.cilium.io/cilium-1.20.2.tgz": "b2afd87b7f75f875f92a14559f14f59b7babbb479d968e3fd625a20bf30ec20e",
     "https://helm.elastic.co/helm/eck-operator/eck-operator-3.5.0.tgz": "eda9ec502c786fc1ad293e7f4235fdef43b2c741dcc977ab1f62377d72b5173f",
     "https://helm.ngc.nvidia.com/nvidia/charts/gpu-operator-v26.7.0.tgz": "6d1b282d74288be206c66dfe49073b7c85c209e92826c27f6507429055e2e102",
@@ -103,6 +104,15 @@
         "chartLayerDigest": "sha256:4adb4a0a8078fc179435b9e21e4ad90ccb7e471d4571767d1284d11afaa02ea3",
         "chartLayerSize": 118753,
         "archiveDigest": "4adb4a0a8078fc179435b9e21e4ad90ccb7e471d4571767d1284d11afaa02ea3"
+      }
+    },
+    "oci://ghcr.io/grafana/helm-charts/pyroscope": {
+      "2.0.1": {
+        "manifestDigest": "sha256:51859560888c54ca415d43f438d93e1c5f0b9aa2fbedf2e41655df50f692f793",
+        "manifestSize": 793,
+        "chartLayerDigest": "sha256:04e653cf9ffc1636de6474ebe22c703266a73f667f3f5f7baefc36983f4c0d82",
+        "chartLayerSize": 127284,
+        "archiveDigest": "04e653cf9ffc1636de6474ebe22c703266a73f667f3f5f7baefc36983f4c0d82"
       }
     },
     "oci://ghcr.io/konoe-akitoshi/charts/shumoku": {

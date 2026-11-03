@@ -1,0 +1,34 @@
+fn longhornNode(name: String, diskConfig: String) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  kind: "Node"
+  metadata:
+    name: name
+    labels:
+      "node.longhorn.io/create-default-disk": "config"
+    annotations:
+      "argocd.argoproj.io/sync-options": "Prune=false"
+      "node.longhorn.io/default-disks-config": diskConfig
+
+let cakeDiskConfig = "[{\"path\":\"/var/lib/longhorn/\",\"allowScheduling\":true},{\"path\":\"/var/mnt/longhorn-extra\",\"allowScheduling\":true}]\n"
+let defaultDiskConfig = "[{\"path\":\"/var/lib/longhorn/\",\"allowScheduling\":true}]"
+
+let volumeSnapshotClass = node:
+  apiVersion: "snapshot.storage.k8s.io/v1"
+  kind: "VolumeSnapshotClass"
+  metadata:
+    name: "longhorn"
+    annotations:
+      "snapshot.storage.kubernetes.io/is-default-class": "true"
+    labels:
+      "velero.io/csi-volumesnapshot-class": "true"
+  driver: "driver.longhorn.io"
+  deletionPolicy: "Retain"
+  parameters:
+    type: "bak"
+
+export let resources =
+  - longhornNode("cake", cakeDiskConfig)
+  - longhornNode("hotate", defaultDiskConfig)
+  - longhornNode("lemon", defaultDiskConfig)
+  - longhornNode("rusk", defaultDiskConfig)
+  - volumeSnapshotClass

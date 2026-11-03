@@ -1,0 +1,43 @@
+let values: Map<String, Any> =
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "128Mi"
+    limits:
+      cpu: "2"
+      memory: "2Gi"
+  snapshotsEnabled: false
+  initContainers:
+    - name: "velero-plugin-for-aws"
+      image: "velero/velero-plugin-for-aws:v1.14.2"
+      volumeMounts:
+        - mountPath: "/target"
+          name: "plugins"
+  metrics:
+    enabled: true
+    serviceMonitor:
+      autodetect: false
+      enabled: true
+    nodeAgentPodMonitor:
+      autodetect: false
+      enabled: true
+    prometheusRule:
+      autodetect: false
+      enabled: false
+  configuration:
+    features: "EnableCSI"
+    backupStorageLocation:
+      - name: "seaweedfs-biscuit"
+        default: true
+        provider: "aws"
+        bucket: "velero-backup"
+        config:
+          s3Url: "https://seaweedfs-biscuit.local.walnuts.dev"
+          region: "ap-northeast-1"
+          s3ForcePathStyle: "true"
+        credential:
+          name: "velero-seaweedfs-biscuit"
+          key: "credentials"
+
+export let profiles: Map<String, Map<String, Any>> =
+  seaweedfsBiscuit: values

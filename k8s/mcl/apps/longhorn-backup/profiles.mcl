@@ -1,0 +1,4 @@
+import "./resources.mcl" as appResources
+
+export let resourcesByProfile =
+  standard: appResources.resources

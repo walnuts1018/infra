@@ -1,0 +1,21 @@
+export let resource = node:
+  apiVersion: "velero.io/v1"
+  kind: "Schedule"
+  metadata:
+    name: "velero-seaweedfs-biscuit"
+    namespace: "velero"
+    labels:
+      "app.kubernetes.io/name": "velero"
+      "app.kubernetes.io/instance": "velero"
+      "app.kubernetes.io/managed-by": "Helm"
+      "app.kubernetes.io/version": "1.18.1"
+      "helm.sh/chart": "velero-12.1.0"
+  spec:
+    schedule: "10 17 * * *"
+    template:
+      ttl: "336h"
+      storageLocation: "seaweedfs-biscuit"
+      excludedNamespaceScopedResources:
+        - "secret"
+      snapshotVolumes: true
+      csiSnapshotTimeout: "6h"
