@@ -1,0 +1,14 @@
+import "std:helm" as helm
+import "../../chart.mcl" as appChart
+import "../../deployments.mcl" as app
+
+let deployment = app.deployments.kurumi
+let options =
+  releaseName: "reloader"
+  namespace: deployment.namespace
+  version: appChart.chart.targetRevision
+  kubeVersion: appChart.kubeVersion
+  apiVersions: appChart.apiVersions
+  values: deployment.values
+let resources = helm.render(appChart.chartArchive, options)
+emit each resources

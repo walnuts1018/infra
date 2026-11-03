@@ -3,7 +3,6 @@ let monitoringNamespace = "monitoring"
 let systemNamespace = "kube-system"
 let bearerTokenFile = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 let caFile = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
-
 fn service(name: String, labels: Map<String, String>, selector: Map<String, String>, portName: String, port: Int) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"

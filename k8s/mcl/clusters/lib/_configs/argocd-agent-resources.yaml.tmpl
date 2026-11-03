@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-agent-client-tls
+  namespace: argocd
+type: kubernetes.io/tls
+data:
+  tls.crt: {{ .clientCertificate | b64enc }}
+  tls.key: {{ .clientKey | b64enc }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-agent-ca
+  namespace: argocd
+type: Opaque
+data:
+  ca.crt: {{ .caCertificate | b64enc }}

@@ -1,148 +1,18 @@
-let argocdAgentValuesText = """
-fullnameOverride: argocd-agent
+import text "./_configs/argocd-agent-values.yaml" as argocdAgentValuesText
+import text "./_configs/argocd-spoke-values.yaml" as argocdSpokeValuesText
+import text "./_configs/argocd-agent-resources.yaml.tmpl" as argocdAgentResourcesTemplateText
+import text "./_configs/onepassword-resources.yaml.tmpl" as onepasswordResourcesTemplateText
 
-image:
-  tag: v0.10.0 # TODO: appVersionがちゃんと上がったらそっちに合わせる
+let argocdAgentValues = argocdAgentValuesText
 
-agentMode: managed
-logFormat: json
-server: argocd-agent.local.walnuts.dev
-destinationBasedMapping: true
-createNamespace: true
-allowedNamespaces: "*"
-labelSelector: "argocd-agent=true"
 
-serviceMonitor:
-  enabled: false
+let argocdSpokeValues = argocdSpokeValuesText
 
-deploymentAnnotations:
-  reloader.stakater.com/auto: "true"
 
-resources:
-  requests:
-    cpu: 50m
-    memory: 128Mi
-  limits:
-    cpu: 500m
-    memory: 512Mi
-"""
-let argocdAgentValues = argocdAgentValuesText + "\n"
+let argocdAgentResourcesTemplate = argocdAgentResourcesTemplateText
 
-let argocdSpokeValuesText = """
-fullnameOverride: argocd
 
-configs:
-  params:
-    controller.status.processors: "2"
-    controller.operation.processors: "1"
-    controller.kubectl.parallelism.limit: "2"
-    reposerver.parallelism.limit: "1"
-
-dex:
-  enabled: false
-
-server:
-  replicas: 0
-  metrics:
-    serviceMonitor:
-      enabled: false
-
-applicationSet:
-  replicas: 0
-  metrics:
-    serviceMonitor:
-      enabled: false
-
-notifications:
-  enabled: false
-  metrics:
-    serviceMonitor:
-      enabled: false
-
-controller:
-  metrics:
-    serviceMonitor:
-      enabled: false
-  extraArgs:
-    - --status-processors=2
-    - --operation-processors=1
-    - --kubectl-parallelism-limit=2
-  resources:
-    requests:
-      cpu: 500m
-      memory: 768Mi
-    limits:
-      cpu: "2"
-      memory: 3Gi
-
-repoServer:
-  metrics:
-    serviceMonitor:
-      enabled: false
-  env:
-    - name: ARGOCD_REPO_SERVER_PARALLELISM_LIMIT
-      value: "1"
-  resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      memory: 1Gi
-
-redis:
-  metrics:
-    serviceMonitor:
-      enabled: false
-"""
-let argocdSpokeValues = argocdSpokeValuesText + "\n"
-
-let argocdAgentResourcesTemplateText = """
-apiVersion: v1
-kind: Secret
-metadata:
-  name: argocd-agent-client-tls
-  namespace: argocd
-type: kubernetes.io/tls
-data:
-  tls.crt: {{ .clientCertificate | b64enc }}
-  tls.key: {{ .clientKey | b64enc }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: argocd-agent-ca
-  namespace: argocd
-type: Opaque
-data:
-  ca.crt: {{ .caCertificate | b64enc }}
-"""
-let argocdAgentResourcesTemplate = argocdAgentResourcesTemplateText + "\n"
-
-let onepasswordResourcesTemplateText = """
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: onepassword
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: op-credentials
-  namespace: onepassword
-type: Opaque
-data:
-  1password-credentials.json: {{ .credentials | b64enc }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: onepassword-token
-  namespace: onepassword
-type: Opaque
-data:
-  token: {{ .token | b64enc }}
-"""
-let onepasswordResourcesTemplate = onepasswordResourcesTemplateText + "\n"
+let onepasswordResourcesTemplate = onepasswordResourcesTemplateText
 
 export fn resources(clusterName: String, namespace: String, ciliumValues: String) -> List<Map<String, Any>> =
   -

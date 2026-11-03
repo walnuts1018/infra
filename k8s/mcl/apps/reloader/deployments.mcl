@@ -1,0 +1,22 @@
+export type Deployment =
+  cluster: String
+  namespace: String
+  values: Map<String, Any>
+
+export let deployments: Map<String, Deployment> =
+  kurumi:
+    cluster: "kurumi"
+    namespace: "reloader"
+    values: {}
+  biscuit:
+    cluster: "biscuit"
+    namespace: "reloader"
+    values: {}
+  berry:
+    cluster: "berry"
+    namespace: "reloader"
+    values:
+      reloader:
+        autoReloadAll: true
+        namespaceSelector: "kubernetes.io/metadata.name=argocd"
+        reloadStrategy: "annotations"
