@@ -56,6 +56,24 @@
         "archiveDigest": "8b5f8583d836e44c1171ab026acf92b18dd53d663fd368da8c03e1a3cc02f70c"
       }
     },
+    "oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller": {
+      "0.14.2": {
+        "manifestDigest": "sha256:3081ba15c41f0aa791058dedd2a7406fece24c9aeaa94956c268e5099427a452",
+        "manifestSize": 355,
+        "chartLayerDigest": "sha256:222763b7edbe57eabe626cda09bb58040ed9c70471d32aab650c8e6825a3d8e7",
+        "chartLayerSize": 360181,
+        "archiveDigest": "222763b7edbe57eabe626cda09bb58040ed9c70471d32aab650c8e6825a3d8e7"
+      }
+    },
+    "oci://ghcr.io/clickhouse/clickhouse-operator-helm": {
+      "0.0.6": {
+        "manifestDigest": "sha256:0bed310d096458934bcc16553a4ad8251037186fad5ef7dfe6aaa17da974af96",
+        "manifestSize": 1057,
+        "chartLayerDigest": "sha256:654f99c0e430216904a1b774f24535dd2aca8067e7c60e24c0fb22112af756d0",
+        "chartLayerSize": 125045,
+        "archiveDigest": "654f99c0e430216904a1b774f24535dd2aca8067e7c60e24c0fb22112af756d0"
+      }
+    },
     "oci://ghcr.io/falcondev-oss/charts/github-actions-cache-server": {
       "1.1.3": {
         "manifestDigest": "sha256:daa902589851ac26508d391b056f92eb9630e5d47422cf937a9714688a62d339",

@@ -1,0 +1,14 @@
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./values.mcl" as appValues
+
+let options =
+  releaseName: "clickhouse-operator"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: appChart.apiVersions
+  values: appValues.values
+let resources = helm.render(appChart.chartArchive, options)
+
+emit each resources
