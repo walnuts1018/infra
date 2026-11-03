@@ -1,0 +1,10 @@
+import "./certificates.mcl" as certificates
+import "./cluster.mcl" as cluster
+
+let resources =
+  - cluster.resource
+  - certificates.resources[0]
+  - certificates.resources[1]
+  - certificates.resources[2]
+
+emit each resources

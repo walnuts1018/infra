@@ -1,0 +1,88 @@
+let issuer =
+  name: "local"
+  kind: "ClusterIssuer"
+  group: "cert-manager.io"
+
+let tlsUsages =
+  - "server auth"
+  - "client auth"
+
+let clientUsages =
+  - "client auth"
+
+let pdNames =
+  - "tikv-cluster-pd"
+  - "tikv-cluster-pd.databases"
+  - "tikv-cluster-pd.databases.svc"
+  - "tikv-cluster-pd.databases.svc.cluster.local"
+  - "tikv-cluster-pd-peer"
+  - "tikv-cluster-pd-peer.databases"
+  - "tikv-cluster-pd-peer.databases.svc"
+  - "tikv-cluster-pd-peer.databases.svc.cluster.local"
+  - "*.tikv-cluster-pd-peer"
+  - "*.tikv-cluster-pd-peer.databases"
+  - "*.tikv-cluster-pd-peer.databases.svc"
+  - "*.tikv-cluster-pd-peer.databases.svc.cluster.local"
+
+let tikvNames =
+  - "tikv-cluster-tikv"
+  - "tikv-cluster-tikv.databases"
+  - "tikv-cluster-tikv.databases.svc"
+  - "tikv-cluster-tikv.databases.svc.cluster.local"
+  - "tikv-cluster-tikv-peer"
+  - "tikv-cluster-tikv-peer.databases"
+  - "tikv-cluster-tikv-peer.databases.svc"
+  - "tikv-cluster-tikv-peer.databases.svc.cluster.local"
+  - "*.tikv-cluster-tikv-peer"
+  - "*.tikv-cluster-tikv-peer.databases"
+  - "*.tikv-cluster-tikv-peer.databases.svc"
+  - "*.tikv-cluster-tikv-peer.databases.svc.cluster.local"
+
+let pdCertificate =
+  apiVersion: "cert-manager.io/v1"
+  kind: "Certificate"
+  metadata:
+    name: "tikv-cluster-pd-cluster-secret"
+    namespace: "databases"
+  spec:
+    secretName: "tikv-cluster-pd-cluster-secret"
+    duration: "8760h"
+    renewBefore: "360h"
+    commonName: "TiDB"
+    usages: tlsUsages
+    dnsNames: pdNames
+    issuerRef: issuer
+
+let tikvCertificate =
+  apiVersion: "cert-manager.io/v1"
+  kind: "Certificate"
+  metadata:
+    name: "tikv-cluster-tikv-cluster-secret"
+    namespace: "databases"
+  spec:
+    secretName: "tikv-cluster-tikv-cluster-secret"
+    duration: "8760h"
+    renewBefore: "360h"
+    commonName: "TiDB"
+    usages: tlsUsages
+    dnsNames: tikvNames
+    issuerRef: issuer
+
+let clientCertificate =
+  apiVersion: "cert-manager.io/v1"
+  kind: "Certificate"
+  metadata:
+    name: "tikv-cluster-cluster-client-secret"
+    namespace: "databases"
+  spec:
+    secretName: "tikv-cluster-cluster-client-secret"
+    duration: "8760h"
+    renewBefore: "360h"
+    commonName: "TiDB"
+    usages: clientUsages
+    issuerRef: issuer
+
+export let resources =
+  - pdCertificate
+  - tikvCertificate
+  - clientCertificate

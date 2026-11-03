@@ -49,6 +49,10 @@ ExternalSecret自体は名前へのhash suffixを要求しません。dataやtem
 
 `ipu`は8 resourceを既存Jsonnet出力と一致させます。`mpeg-dash-encoder`は4 resourceを生成し、ExternalSecretのローカルdata定義からFNV-1a 64-bit suffixを計算し、Deploymentの参照にも同じ名前を使います。`netbird`は11 resourceを生成し、ExternalSecretのdata/template定義だけをhashして16桁suffixを作り、全参照に適用します。`radar`はchartの3 resourceとJsonnetの11 resourceを出力し、全件が既存出力と一致します。`victoria-metrics`はchart v0.50.0の12 resourceをHelm出力と一致させます。`terraform-cloud-agent`は2 resource、`zitadel-kubernetes-rbac`は1 resourceを出力し、それぞれ既存Jsonnetと構造的に一致させます。
 
+`tikv-cluster`はTidbClusterと3つのCertificateを出力し、既存Jsonnetと構造的に一致させます。PDとTiKVの複数行設定は`_configs/`の外部ファイルを`import text`で読み込みます。
+
+`nvidia-gpu-operator`はchart v26.7.0から36 resourceを出力します。8 CRDは`bootstrap` phase、19 resourceは通常phase、9 Helm hookは`before.update`、`before.delete`、`after.delete` phaseに分かれ、全resourceを既存Helm出力と比較しました。`scylla-operator`はchart v1.21.1から24 resourceを生成し、Helm出力と一致させます。
+
 `cilium`は同じ`main.mcl`にKurumiの`originCertificateIngress` profileとBiscuitの`gatewayAPI` profileを対応させ、それぞれ63 resourceと29 resourceを生成します。chart既定値のCNI initContainer CPU limitは数値`1`として出力されKubernetes Quantity schemaを満たさないため、両profileで同じ値を文字列`"1"`として指定します。
 
 `envoy-gateway`はchart v1.6.1とValkeyClusterを同じentrypointから出力します。通常resourceは`helm template --no-hooks`と一致し、pre-install/pre-upgrade hookはMCLの`before.create`と`before.update` phaseに出力します。`github-readme-stats`は4つの既存Jsonnet出力と構造的に一致し、ExternalSecret名はdataからFNV-1a 64-bitで生成します。`prometheus-operator-crds`はchart v31.0.1から10 CRDを生成し、Helm出力と一致します。`trivy-operator`はchart v0.36.0から22 resourceを生成し、Helm出力と一致します。
@@ -100,4 +104,4 @@ Argo CD Applicationは現在と同じアプリケーション単位を保ちま�
 
 ## 未完了項目
 
-MCL化は79アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの38アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、placement-indexからApplicationSetを生成するPlugin Generatorは未実装です。`rabbitmq-topology-operator`はHelm chart内で`genCA`を呼び出すため、現在のMCLでrenderできず未移行です。`scylla-manager` v1.21.1はparent chartが`scylla` dependency version `1.0.0`を要求する一方、同梱subchartは`0.0.0`を宣言します。Helmは7 resourceをrenderしますが、MCL 0.3.20は依存version不一致でlock解決に失敗するため未移行です。MCL本体に関する技術的な制約と改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`で管理します。`actions-runners`のConfigMap名とCAPIのimmutable resource名は、hook scriptやTalos machine設定を入力に`std:crypto.sha256`で生成します。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。
+MCL化は83アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの34アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、placement-indexからApplicationSetを生成するPlugin Generatorは未実装です。`rabbitmq-topology-operator`はHelm chart内で`genCA`を呼び出すため、現在のMCLでrenderできず未移行です。`scylla-manager` v1.21.1はparent chartが`scylla` dependency version `1.0.0`を要求する一方、同梱subchartは`0.0.0`を宣言します。Helmは7 resourceをrenderしますが、MCL 0.3.20は依存version不一致でlock解決に失敗するため未移行です。MCL本体に関する技術的な制約と改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`で管理します。`actions-runners`のConfigMap名とCAPIのimmutable resource名は、hook scriptやTalos machine設定を入力に`std:crypto.sha256`で生成します。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。

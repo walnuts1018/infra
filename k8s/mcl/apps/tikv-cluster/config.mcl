@@ -1,0 +1,5 @@
+import text "./_configs/pd.conf" as pdConfig
+import text "./_configs/tikv.conf" as tikvConfig
+
+export let pd = pdConfig
+export let tikv = tikvConfig

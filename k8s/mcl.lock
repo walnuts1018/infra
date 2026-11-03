@@ -44,8 +44,10 @@
     "https://github.com/valkey-io/valkey-helm/releases/download/valkey-operator-0.6.0/valkey-operator-0.6.0.tgz": "78c23f630a7e6910ad208c182ff1f6a2d6df9d612a89806c8b2b7f9535ed8783",
     "https://helm.cilium.io/cilium-1.20.2.tgz": "b2afd87b7f75f875f92a14559f14f59b7babbb479d968e3fd625a20bf30ec20e",
     "https://helm.elastic.co/helm/eck-operator/eck-operator-3.5.0.tgz": "eda9ec502c786fc1ad293e7f4235fdef43b2c741dcc977ab1f62377d72b5173f",
+    "https://helm.ngc.nvidia.com/nvidia/charts/gpu-operator-v26.7.0.tgz": "6d1b282d74288be206c66dfe49073b7c85c209e92826c27f6507429055e2e102",
     "https://kedacore.github.io/charts/keda-2.20.2.tgz": "db60b1fa60f0565fefa4ce2f87e855b6a8854363ee82962fbe28a12a70d64c4c",
     "https://kedacore.github.io/charts/keda-add-ons-http-0.15.0.tgz": "dddb21bd400877ce0d474e4a51e890bc257d6c8c73b56ccd8ec4f7a7590e2001",
+    "https://scylla-operator-charts.storage.googleapis.com/stable/scylla-operator-v1.21.1.tgz": "7aee0463398121095405c5ea781712b7ce0b4d0f1f8319ab26fececb6ae89e41",
     "https://stakater.github.io/stakater-charts/reloader-2.2.17.tgz": "a17ee91d66785c29c17e5dfd038c13b0e35b23301b33f8fdb431b403d8a7a071"
   },
   "ociCharts": {

@@ -1,0 +1,29 @@
+export type NamedDestination =
+  kind: "name"
+  name: String
+  namespace: String
+
+export type ServerDestination =
+  kind: "server"
+  server: String
+  namespace: String
+
+export type Destination = NamedDestination | ServerDestination
+
+export type Placement =
+  target: String
+  cluster: String
+  entrypoint: String
+  destination: Destination
+  profile: String
+
+export let placements: Map<String, Placement> =
+  kurumi:
+    target: "kurumi"
+    cluster: "kurumi"
+    entrypoint: "k8s/mcl/apps/tikv-cluster/main.mcl"
+    destination:
+      kind: "name"
+      name: "kurumi"
+      namespace: "databases"
+    profile: "standard"

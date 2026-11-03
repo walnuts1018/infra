@@ -1,0 +1,77 @@
+import "./config.mcl" as config
+
+let slowStorageAffinity =
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        -
+          matchExpressions:
+            -
+              key: "storage.walnuts.dev/slow"
+              operator: "DoesNotExist"
+
+let pdAffinity =
+  nodeAffinity: slowStorageAffinity.nodeAffinity
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            "app.kubernetes.io/component": "pd"
+            "app.kubernetes.io/instance": "tikv-cluster"
+        topologyKey: "kubernetes.io/hostname"
+
+let tikvAffinity =
+  nodeAffinity: slowStorageAffinity.nodeAffinity
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            "app.kubernetes.io/component": "tikv"
+            "app.kubernetes.io/instance": "tikv-cluster"
+        topologyKey: "kubernetes.io/hostname"
+
+let emptyDiscovery: Map<String, Any> = {}
+
+export let resource =
+  apiVersion: "pingcap.com/v1alpha1"
+  kind: "TidbCluster"
+  metadata:
+    name: "tikv-cluster"
+    namespace: "databases"
+  spec:
+    version: "v8.5.7"
+    timezone: "Asia/Tokyo"
+    pvReclaimPolicy: "Retain"
+    enableDynamicConfiguration: true
+    configUpdateStrategy: "RollingUpdate"
+    tlsCluster:
+      enabled: true
+    discovery: emptyDiscovery
+    helper:
+      image: "alpine:3.24.2"
+    pd:
+      baseImage: "pingcap/pd"
+      replicas: 3
+      maxFailoverCount: 0
+      storageClassName: "local-path"
+      requests:
+        cpu: "45m"
+        memory: "110Mi"
+        storage: "1Gi"
+      limits:
+        memory: "512Mi"
+      affinity: pdAffinity
+      config: config.pd
+    tikv:
+      baseImage: "pingcap/tikv"
+      replicas: 3
+      maxFailoverCount: 0
+      storageClassName: "local-path"
+      requests:
+        cpu: "30m"
+        memory: "1900Mi"
+        storage: "8Gi"
+      limits:
+        memory: "2Gi"
+      affinity: tikvAffinity
+      config: config.tikv

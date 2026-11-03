@@ -1,0 +1,25 @@
+let lowPerformanceTolerations: List<Map<String, Any>> =
+  - key: "node.walnuts.dev/low-performance"
+    operator: "Exists"
+
+export let valuesByProfile: Map<String, Map<String, Any>> =
+  default:
+    replicas: 1
+    logLevel: 2
+    resources:
+      requests:
+        cpu: "2m"
+        memory: "70Mi"
+      limits:
+        cpu: "300m"
+        memory: "256Mi"
+    tolerations: lowPerformanceTolerations
+    webhookServerReplicas: 1
+    webhookServerResources:
+      requests:
+        cpu: "2m"
+        memory: "12Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    webhookServerTolerations: lowPerformanceTolerations
