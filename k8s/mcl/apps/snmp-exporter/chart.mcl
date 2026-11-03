@@ -1,0 +1,3 @@
+export let chartVersion = "9.17.1"
+export let chartArchive = "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-snmp-exporter-" + chartVersion + "/prometheus-snmp-exporter-" + chartVersion + ".tgz"
+export let namespace = "monitoring"

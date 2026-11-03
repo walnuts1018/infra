@@ -28,6 +28,7 @@
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-blackbox-exporter-11.18.0/prometheus-blackbox-exporter-11.18.0.tgz": "19322b26614c62d6277a1471e26c0b5379ce9ebf43897e01ab85d3e164594ab8",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-node-exporter-4.56.3/prometheus-node-exporter-4.56.3.tgz": "b3051e01f476199f9620aa508823dd7ece2798081b064305368e8a98d4891a04",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-smartctl-exporter-0.17.1/prometheus-smartctl-exporter-0.17.1.tgz": "cb03ec4acc49401996e047b33939c9aa205e2a2be673309d7834ee64301b26f3",
+    "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-snmp-exporter-9.17.1/prometheus-snmp-exporter-9.17.1.tgz": "b03390d442e972d4ea381ca0568fe8d3c610f966a47cfa28c42a3e76bb244f90",
     "https://github.com/qdrant/qdrant-helm/releases/download/qdrant-1.19.1/qdrant-1.19.1.tgz": "4562eb295c2d98ad9dbb625a729fcb593d315f2538d0200035aac37521f12b17",
     "https://github.com/seaweedfs/seaweedfs-operator/releases/download/seaweedfs-operator-0.1.40/seaweedfs-operator-0.1.40.tgz": "2612470057565f0ef7d6fc1f10ad406592c204df653b3e5daa05dca2dd96b8fc",
     "https://github.com/strimzi/strimzi-kafka-operator/releases/download/1.2.0/strimzi-kafka-operator-helm-3-chart-1.2.0.tgz": "0f8a50b2f19bd99482f9fd6e17cf42902f72f9e594a136813ac3f0b7af422efd",
