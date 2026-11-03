@@ -1,0 +1,13 @@
+export let values: Map<String, Any> =
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "150Mi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+  config:
+    logVerbosity: "0"
+  podMonitor:
+    enabled: true

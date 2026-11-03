@@ -12,6 +12,7 @@
   "manifests": {},
   "schemas": {},
   "charts": {
+    "https://helm.elastic.co/helm/eck-operator/eck-operator-3.5.0.tgz": "eda9ec502c786fc1ad293e7f4235fdef43b2c741dcc977ab1f62377d72b5173f",
     "https://cybozu-go.github.io/moco/moco-0.27.0.tgz": "c0d02d0c8081bcb8b640bb69c88506002d6374b14644a6ab15f89f16054cce0a",
     "https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/releases/download/1.21.3/k8s-ephemeral-storage-metrics-1.21.3.tgz": "64f916134aeb805b41bc3245beb05384c4637c6e0a37418a4f3830743b07ef8d",
     "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-1.21.1/external-dns-1.21.1.tgz": "5dd033a4b872bf641860695705ee460031d0bc695f114bf8926fee6736814e19",

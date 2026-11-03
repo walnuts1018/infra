@@ -1,0 +1,4 @@
+export let chartVersion = "3.5.0"
+export let chartArchive = "https://helm.elastic.co/helm/eck-operator/eck-operator-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let namespace = "elasticsearch"
