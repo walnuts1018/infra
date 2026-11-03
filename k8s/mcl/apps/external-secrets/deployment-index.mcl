@@ -1,0 +1,23 @@
+import "./deployments.mcl" as app
+
+let kurumi = app.deployments.kurumi
+let biscuit = app.deployments.biscuit
+let berry = app.deployments.berry
+let targets =
+  - target: kurumi.target
+    cluster: kurumi.cluster
+    entrypoint: kurumi.entrypoint
+    destination: kurumi.destination
+    profile: kurumi.profile
+  - target: biscuit.target
+    cluster: biscuit.cluster
+    entrypoint: biscuit.entrypoint
+    destination: biscuit.destination
+    profile: biscuit.profile
+  - target: berry.target
+    cluster: berry.cluster
+    entrypoint: berry.entrypoint
+    destination: berry.destination
+    profile: berry.profile
+
+emit each targets

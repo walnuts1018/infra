@@ -1,0 +1,21 @@
+import "./chart.mcl" as appChart
+
+let labels =
+  app: "caretta"
+  "app.kubernetes.io/name": "caretta"
+
+let selectorLabels = labels with:
+  "app.kubernetes.io/instance": "caretta"
+
+export let resource = node:
+  apiVersion: "monitoring.coreos.com/v1"
+  kind: "PodMonitor"
+  metadata:
+    name: "caretta"
+    namespace: appChart.namespace
+    labels: labels
+  spec:
+    podMetricsEndpoints:
+      - port: "prom-metrics"
+    selector:
+      matchLabels: selectorLabels

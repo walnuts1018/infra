@@ -1,0 +1,17 @@
+export let values: Map<String, Any> =
+  rbac:
+    pspEnabled: false
+  image:
+    pullPolicy: "IfNotPresent"
+  resources:
+    requests:
+      cpu: "80m"
+      memory: "400Mi"
+    limits:
+      memory: "600Mi"
+  tolerations:
+    - "operator": "Exists"
+  "victoria-metrics-single":
+    enabled: false
+  grafana:
+    enabled: false

@@ -1,0 +1,4 @@
+export let chartVersion = "2.10.0"
+export let chartArchive = "https://github.com/external-secrets/external-secrets/releases/download/helm-chart-" + chartVersion + "/external-secrets-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let namespace = "external-secrets"

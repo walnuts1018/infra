@@ -8,7 +8,7 @@
 - ConfigMapやHelm valuesなどで数行以上の文字列を書く場合は、文字列を別ファイルに分け、MCLの`import text`で読み込みます。長い文字列をManifest内に埋め込みません。
 - 複数クラスタへ同じアプリケーションを配置するときは、各クラスタの配置先クラスタ名とnamespace、およびクラスタごとに異なる設定をアプリケーション自身のディレクトリで宣言します。
 - 単一の`main.mcl`を各クラスタで使います。クラスタ数に合わせてentrypointを作成したり、Argo CD Applicationごとに別entrypointへ切り替えたりしません。
-- アプリケーションはfeature profileなどクラスタ名に依存しない設定を宣言し、アプリケーション側の配置情報でクラスタとprofileの対応を保持します。MCLまたはApplicationSet Generatorがその対応を読み、単一の`main.mcl`へ必要なprofile selectorを渡します。たとえば、クラスタ名に対応するfeature flagの集合をアプリケーション内に置き、Generatorがprofile名をMCLへ渡す形を使えます。
+- アプリケーションはfeature profileやfeature flagなどクラスタ名に依存しない設定を宣言し、アプリケーション側の配置情報でクラスタと設定値の対応を保持します。MCLのmanifestまたはApplicationSet Generatorがその対応を読み、単一の`main.mcl`へprofile selectorや必要なfeature flagを渡します。クラスタ名を対応関係の検索keyとして使う場合も、検索は配置・設定解決の層に限り、resource定義の条件には使いません。
 - `main.mcl`はprofile selectorを受け取り、アプリケーション内の宣言済みprofileから設定を選びます。Manifestの各要素にcluster名の`if`条件を書きません。cluster名によってManifest内の設定を分岐せず、クラスタ固有名に依存した条件分岐を避けます。
 - Argo CD側からHelm valuesなどの設定一式を大量の引数として渡しません。アプリケーションの設定値はアプリケーション側に宣言し、Argo CDとGeneratorから渡す値は配置profileを選ぶためのselectorに絞ります。
 - 最終的なクラスタ別Manifestを理解するために、baseとoverlayを読み手が頭の中で合成する書き方を避けます。特にKustomize overlayでManifestを上書きし、クラスタごとの出力がoverlayの合成後でないと把握できない構成は使いません。選択するprofileとrender結果の対応がソースから分かるようにします。
@@ -23,7 +23,30 @@
 
 Cluster APIではBiscuitとKurumiのcontrol plane、KurumiのworkerをMCL化しました。3つのstackは16 resourceを生成し、既存Jsonnetの各stack出力と完全一致します。共通resource関数はCluster、TartControlPlane、TartMachineTemplate、MachineDeployment、bootstrap template、patch Secretを生成します。Talos patchは既存の`k8s/clusters/*/_patches/`をtext importで読み込みます。Jsonnetがpatch本文などから計算するimmutable resource名のdigest suffixは現在値を固定しています。patchを編集した場合はresource名も手動更新する必要があります。
 
-Argo CD Agent bootstrapではBiscuitとKurumiのstackをMCL化しました。各stackは11 resourceを生成し、既存Jsonnetと一致します。共通Helm valuesとGo templateは`k8s/mcl/clusters/lib/_configs/`に分離し、クラスタ別Cilium valuesも独立したYAMLファイルにしています。Akvoradoは23 resourceを生成し、`k8s/apps/akvorado/_configs/`の設定ファイルを直接読み込みます。Actions Runner hook scriptとTalos patchも既存ファイルを参照します。MCL固有のbootstrap用設定は`k8s/mcl`内の`_configs/`へ分離しました。アプリでは`api-server-proxy`のBackendTLSPolicyとHTTPRoute、`api-server-service-account-issuer-discovery`のClusterRoleBinding、`blackbox-exporter`の14 Helm resourceとNetworkPolicy、`clusterissuer`の7 resource、`eck-operator`の22 Helm resource、`ephemeral-storage-metrics`の5 resource、`kube-state-metrics`の6 Helm resource、`kubernetes-control-plane-metrics`の15 resource、`metrics-server`の9 Helm resource、`moco`の22 Helm resource、`reloader`の6 resource、`scylla-node-config`のNodeConfig、`smartctl-exporter`の5 Helm resource、`tidb-operator`の4 Helm resource、`ubuntu-test`のDeployment、`valkey-operator`の10または11 Helm resourceをMCL化しました。各アプリのMCL出力を既存のJsonnetまたはHelm出力と比較しています。`eck-operator`ではHelmの`resources.limits.cpu: 1`をMCLのKubernetes Quantity文字列`"1"`として出力します。`ephemeral-storage-metrics`はKurumiの`monitoring` namespace向け配置とHelm valuesをアプリ内のdeployment recordに置き、deployment indexからrouting情報を出力します。`blackbox-exporter`はHelm valuesとNetworkPolicyを同じentrypointでrenderします。`valkey-operator`はdeployment recordにKurumiとBerryの配置先およびprofileの対応を置き、共通`main.mcl`でServiceMonitorの有効・無効を切り替えます。MCLから生成したprofile別Bundleは既存Helm valuesによる出力とそれぞれ一致します。
+Argo CD Agent bootstrapではBiscuitとKurumiのstackをMCL化しました。各stackは11 resourceを生成し、既存Jsonnetと一致します。共通Helm valuesとGo templateは`k8s/mcl/clusters/lib/_configs/`に分離し、クラスタ別Cilium valuesも独立したYAMLファイルにしています。Akvoradoは23 resourceを生成し、`k8s/apps/akvorado/_configs/`の設定ファイルを直接読み込みます。Actions Runner hook scriptとTalos patchも既存ファイルを参照します。MCL固有のbootstrap用設定は`k8s/mcl`内の`_configs/`へ分離しました。アプリでは`api-server-proxy`のBackendTLSPolicyとHTTPRoute、`api-server-service-account-issuer-discovery`のClusterRoleBinding、`blackbox-exporter`の14 Helm resourceとNetworkPolicy、`caretta`の5 Helm resourceとPodMonitor、`clusterissuer`の7 resource、`eck-operator`の22 Helm resource、`ephemeral-storage-metrics`の5 resource、`external-dns-cloudflare`の6 Helm resource、`external-secrets`の43 Helm resourceを3クラスタへ配置する構成、`kube-state-metrics`の6 Helm resource、`kubernetes-control-plane-metrics`の15 resource、`metrics-server`の9 Helm resource、`moco`の22 Helm resource、`reloader`の6 resource、`scylla-node-config`のNodeConfig、`smartctl-exporter`の5 Helm resource、`tidb-operator`の4 Helm resource、`ubuntu-test`のDeployment、`valkey-operator`の10または11 Helm resourceをMCL化しました。各アプリのMCL出力を既存のJsonnetまたはHelm出力と比較しています。`eck-operator`ではHelmの`resources.limits.cpu: 1`をMCLのKubernetes Quantity文字列`"1"`として出力します。`ephemeral-storage-metrics`はKurumiの`monitoring` namespace向け配置とHelm valuesをアプリ内のdeployment recordに置き、deployment indexからrouting情報を出力します。`blackbox-exporter`はHelm valuesとNetworkPolicyを同じentrypointでrenderします。`valkey-operator`はdeployment recordにKurumiとBerryの配置先およびprofileの対応を置き、共通`main.mcl`でServiceMonitorの有効・無効を切り替えます。MCLから生成したprofile別Bundleは既存Helm valuesによる出力とそれぞれ一致します。
+
+## 複数クラスタでのアプリケーション配置
+
+同じアプリケーションを複数クラスタへ配置する場合も、アプリケーションごとに`main.mcl`を1つだけ用意し、すべての配置でそのentrypointを使います。配置するクラスタ数に応じてentrypointを切り替える構成や、クラスタごとのentrypoint directoryは作りません。
+
+アプリケーション自身のディレクトリに配置recordを置きます。各recordには配置先のcluster、Argo CD destination(namespaceを含む)、およびその配置で選ぶfeature profileを宣言します。Argo CD destinationの`name`と`server`は`kind`で区別します。配置先と設定の対応関係はアプリ側で管理し、ApplicationSet側にアプリ設定を重複して定義しません。
+
+アプリケーション内のprofileはcluster名ではなく、機能の有効・無効を表す名前と値で定義します。たとえば、ServiceMonitorを生成するprofileと生成しないprofileを定義し、各deployment recordがどちらを使うか指定します。feature flagを個別に渡す場合も、flagはアプリケーションの機能を表し、cluster名を使った条件判定はresource定義に書きません。KurumiやBerryのようなcluster名は配置recordのrouting情報やclusterと設定値の対応関係を引くkeyとして扱えます。
+
+MCLの`main.mcl`はprofile selectorまたは少数のfeature flagを受け取り、同じアプリケーション内で宣言した設定を使ってBundleを生成します。ApplicationSet Plugin Generatorはアプリ側のdeployment indexから配置recordを読み、cluster、destination、namespaceをApplicationのrouting情報に使い、profile selectorまたはfeature flagをMCLへ渡します。Helm valuesやresource設定を多数のApplicationSet parameterに分割して渡す形にはしません。配置一覧の解決とManifestの生成は同じアプリ側の宣言を参照します。
+
+次の実装パターンは禁止します。
+
+- MCLへcluster名をparameterとして渡し、各Manifest要素に`if cluster == "kurumi"`のようなcluster名依存の条件を書いてresourceや設定値を切り替えること。
+- Argo CD ApplicationまたはApplicationSetからHelm valuesやアプリ設定一式を大量の引数として渡すこと。アプリ設定はアプリ側で宣言し、Argo CDからは配置profileを選ぶselectorを渡します。
+- baseとoverlayを読み手が頭の中で合成しないと、特定clusterの最終Manifestを把握できない構成にすること。Kustomize overlayによる上書きなど、各clusterで有効になるresourceや値がentrypointと選択profileから読めない表現を使いません。
+- 複数クラスタ配置を実現するため、clusterごとに別の`main.mcl`やentrypoint directoryを設けること。
+
+`main.mcl`には入力profileの選択とBundleの組み立てを記述し、chart情報、配置record、profile設定、共通values、resource生成関数は役割ごとに別ファイルへ分割します。1 resourceごとに1ファイルを作る必要はありませんが、可読性を優先し、`main.mcl`だけしか置かない構成ならアプリ専用directoryを作りません。
+
+複数行にわたるConfigMap値、shell script、Helm values、Go templateなどは外部ファイルに分け、MCLの`import text`で読み込みます。`k8s/`配下にはREADMEを含む設計文書を置かず、設計記録は`k8s/`外の`docs/`などに置きます。
+
+この配置モデルのApplicationSet連携では、ApplicationSet Plugin Generatorがdeployment indexから各配置を発見します。MCLのimport graphは明示し、directoryの暗黙探索でアプリや配置を見つける設計にはしません。
 
 ## Argo CD Config Management Plugin案
 
@@ -45,8 +68,10 @@ Argo CD Applicationは現在と同じアプリケーション単位を保ちま�
 - MCLは空のMapやListの要素型を推論できない場合があります。Scylla NodeConfigの空の`nodeSelector`と`tolerations`では、ローカルな型注釈が必要です。
 - MCLはimport graphを明示的に記述します。Plugin Generatorはアプリごとの`deployment-index.mcl`を評価して配置一覧を得て、各Applicationに同じ`main.mcl`とprofile selectorを設定します。MCLにディレクトリの暗黙探索を追加せず、生成されたindexからアプリと配置を発見します。
 
-Helm Adapterの未対応例もあります。Envoy Gateway 1.6.1はClusterRoleとRoleの`metadata.creationTimestamp: null`がschema validationに失敗します。cert-manager v1.21.2とtopolvm 17.2.0のcert-manager subchartでは有効なplain scalar内のコロンを含むRBAC名をYAML parserが拒否します。trust-manager 0.24.0は`genCA`によるランダムな証明書生成を使い、再現可能な評価のためにMCLが無効にしている関数を必要とします。external-dns-cloudflare 1.21.1はGitHub Releaseへredirectする公式archiveを使います。MCL 0.3.14ではHTTPS間のredirectを最大10回まで追従し、HTTPへの降格は拒否します。external-dns-cloudflareはMCL標準Helm Adapterでrenderでき、同じvalues、Kubernetes version、API versionsを指定した`helm template`出力と6 resourceが一致します。ephemeral-storage-metrics 1.21.3のGitHub Pages indexはGitHub Release URLを返します。GitHub Pages上でchart名とversionを使って組み立てたarchive URLは404になるため、MCL entrypointはindexが宣言するGitHub Release URLを使います。
+MCLのlockfileはproject root単位で共有します。`mcl update <entrypoint>`は指定entrypointから到達した依存を再取得し、同じroot内のほかのentrypoint用に記録された依存も保持します。これにより、appごとに個別のentrypointを順に更新しても、共通lockfileから別appのChart hashが消えません。未使用になった依存entryは残るため、不要なentryを明示的に整理する機能は今後の検討項目です。
+
+現在のMCL作業treeでは、Helm AdapterがHelmの依存条件を適用してからtemplateをrenderし、無効なsubchartのtemplateを評価対象から除外します。Chartを複製して条件を処理するため、キャッシュされた読み込み済みChartを変更しません。組み込みKubernetes schema検証はschemaに宣言されたobject propertyのnullを省略値として扱い、`additionalProperties` map内のnull値は検証に残します。carettaのHelm出力に含まれるoptional annotationのnullを処理でき、無効subchartの重複YAML keyによる失敗も回避します。この修正はMCLの次回releaseに含める前のローカルbuildで検証しています。`external-secrets`は同一profileをKurumi、Biscuit、Berryで使い、3配置に共通の`main.mcl`とapp内deployment recordで配置先を表します。Helm templateとの正規化比較では43 resourceが一致します。cert-manager v1.21.2とtopolvm 17.2.0のcert-manager subchartでは有効なplain scalar内のコロンを含むRBAC名をYAML parserが拒否します。trust-manager 0.24.0は`genCA`によるランダムな証明書生成を使い、再現可能な評価のためにMCLが無効にしている関数を必要とします。external-dns-cloudflare 1.21.1はGitHub Releaseへredirectする公式archiveを使います。MCL 0.3.14ではHTTPS間のredirectを最大10回まで追従し、HTTPへの降格は拒否します。external-dns-cloudflareはMCL標準Helm Adapterでrenderでき、同じvalues、Kubernetes version、API versionsを指定した`helm template`出力と6 resourceが一致します。ephemeral-storage-metrics 1.21.3のGitHub Pages indexはGitHub Release URLを返します。GitHub Pages上でchart名とversionを使って組み立てたarchive URLは404になるため、MCL entrypointはindexが宣言するGitHub Release URLを使います。
 
 ## 未完了項目
 
-MCL化は19アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの98アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、deployment-indexからApplicationSetを生成するPlugin Generatorは未実装です。`actions-runners`のimmutable ConfigMap名とCAPI stackのimmutable resource名は現在のJsonnetが生成したdigest suffixを固定値で使っています。scriptやpatchを変更してもMCL自身はdigestを更新できないため、hash関数を追加するか、resource名生成を別仕様にする必要があります。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。
+MCL化は21アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの96アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、deployment-indexからApplicationSetを生成するPlugin Generatorは未実装です。`actions-runners`のimmutable ConfigMap名とCAPI stackのimmutable resource名は現在のJsonnetが生成したdigest suffixを固定値で使っています。scriptやpatchを変更してもMCL自身はdigestを更新できないため、hash関数を追加するか、resource名生成を別仕様にする必要があります。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。

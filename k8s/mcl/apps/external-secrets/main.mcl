@@ -1,0 +1,18 @@
+import "std:context" as context
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./values.mcl" as appValues
+
+let profileName = context.parameter("profile")
+let apiVersions: List<String> =
+  - "external-secrets.io/v1"
+let options =
+  releaseName: "external-secrets"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: appValues.profiles[profileName]
+let resources = helm.render(appChart.chartArchive, options)
+
+emit each resources

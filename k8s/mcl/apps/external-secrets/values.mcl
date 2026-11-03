@@ -1,0 +1,21 @@
+let commonValues: Map<String, Any> =
+  resources:
+    requests:
+      cpu: "25m"
+      memory: "64Mi"
+  webhook:
+    resources:
+      requests:
+        cpu: "1m"
+        memory: "32Mi"
+  certController:
+    resources:
+      requests:
+        cpu: "1m"
+        memory: "42Mi"
+  tolerations:
+    - key: "node.walnuts.dev/low-performance"
+      operator: "Exists"
+
+export let profiles =
+  standard: commonValues

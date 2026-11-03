@@ -1,8 +1,8 @@
 {
   "version": 3,
   "toolchain": {
-    "mcl": "0.3.14",
-    "revision": "7bccae55ef74906b8b8b1f025cf97c70a33d3586",
+    "mcl": "0.3.15",
+    "revision": "80bcb8b6efc0a4afb668425982f25a708fc1e1d3",
     "modified": "false",
     "go": "go1.27.3",
     "helm": "v4.3.1",
@@ -13,16 +13,18 @@
   "schemas": {},
   "charts": {
     "https://charts.pingcap.com/tidb-operator-v1.6.6.tgz": "4b223f79a00cf73998d9ad8341eace64aa947cf51cc108f29d76f2de02867bb4",
-    "https://helm.elastic.co/helm/eck-operator/eck-operator-3.5.0.tgz": "eda9ec502c786fc1ad293e7f4235fdef43b2c741dcc977ab1f62377d72b5173f",
     "https://cybozu-go.github.io/moco/moco-0.27.0.tgz": "c0d02d0c8081bcb8b640bb69c88506002d6374b14644a6ab15f89f16054cce0a",
+    "https://github.com/external-secrets/external-secrets/releases/download/helm-chart-2.10.0/external-secrets-2.10.0.tgz": "b96e948fff3674638b5d3f9e43886f3796e04739c4b4127929aed2ddac7d1418",
+    "https://github.com/groundcover-com/helm-charts/releases/download/caretta-0.0.16/caretta-0.0.16.tgz": "24593ec0e9e7971520b2ab3f049d7fceebe0519a04f857f711ca5c7505e0af72",
     "https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/releases/download/1.21.3/k8s-ephemeral-storage-metrics-1.21.3.tgz": "64f916134aeb805b41bc3245beb05384c4637c6e0a37418a4f3830743b07ef8d",
     "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-1.21.1/external-dns-1.21.1.tgz": "5dd033a4b872bf641860695705ee460031d0bc695f114bf8926fee6736814e19",
     "https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-3.14.0/metrics-server-3.14.0.tgz": "c2ca1185c01e6e7f53dd1b7d131f0c9b3fa50e003ed068b784563a1b5a3422a1",
     "https://github.com/prometheus-community/helm-charts/releases/download/kube-state-metrics-8.4.2/kube-state-metrics-8.4.2.tgz": "e42988751de414f1d6e3247f51ef8b45ed49218f30294c99b1469324d348145f",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-blackbox-exporter-11.18.0/prometheus-blackbox-exporter-11.18.0.tgz": "19322b26614c62d6277a1471e26c0b5379ce9ebf43897e01ab85d3e164594ab8",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-smartctl-exporter-0.17.1/prometheus-smartctl-exporter-0.17.1.tgz": "cb03ec4acc49401996e047b33939c9aa205e2a2be673309d7834ee64301b26f3",
-    "https://stakater.github.io/stakater-charts/reloader-2.2.17.tgz": "a17ee91d66785c29c17e5dfd038c13b0e35b23301b33f8fdb431b403d8a7a071",
-    "https://github.com/valkey-io/valkey-helm/releases/download/valkey-operator-0.6.0/valkey-operator-0.6.0.tgz": "78c23f630a7e6910ad208c182ff1f6a2d6df9d612a89806c8b2b7f9535ed8783"
+    "https://github.com/valkey-io/valkey-helm/releases/download/valkey-operator-0.6.0/valkey-operator-0.6.0.tgz": "78c23f630a7e6910ad208c182ff1f6a2d6df9d612a89806c8b2b7f9535ed8783",
+    "https://helm.elastic.co/helm/eck-operator/eck-operator-3.5.0.tgz": "eda9ec502c786fc1ad293e7f4235fdef43b2c741dcc977ab1f62377d72b5173f",
+    "https://stakater.github.io/stakater-charts/reloader-2.2.17.tgz": "a17ee91d66785c29c17e5dfd038c13b0e35b23301b33f8fdb431b403d8a7a071"
   },
   "ociCharts": {},
   "gitSources": {}
