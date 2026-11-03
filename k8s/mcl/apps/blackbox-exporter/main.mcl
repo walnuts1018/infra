@@ -1,7 +1,7 @@
 import "std:helm" as helm
-import "./deployments.mcl" as app
+import "./placements.mcl" as app
 
-let deployment = app.deployments.kurumi
+let placement = app.placements.kurumi
 let chartVersion = "11.18.0"
 let chartArchive = "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-blackbox-exporter-" + chartVersion + "/prometheus-blackbox-exporter-" + chartVersion + ".tgz"
 let values: Map<String, Any> =
@@ -38,7 +38,7 @@ let apiVersions: List<String> =
   - "monitoring.coreos.com/v1"
 let helmOptions =
   releaseName: "blackbox-exporter"
-  namespace: deployment.destination.namespace
+  namespace: placement.destination.namespace
   version: chartVersion
   kubeVersion: "1.36.4"
   apiVersions: apiVersions
@@ -102,7 +102,7 @@ let networkPolicy = node:
   kind: "NetworkPolicy"
   metadata:
     name: "blackbox-exporter"
-    namespace: deployment.destination.namespace
+    namespace: placement.destination.namespace
   spec:
     podSelector:
       matchLabels:

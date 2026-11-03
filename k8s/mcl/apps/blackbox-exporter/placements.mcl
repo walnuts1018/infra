@@ -1,0 +1,9 @@
+export let placements =
+  kurumi:
+    target: "kurumi"
+    cluster: "kurumi"
+    entrypoint: "k8s/mcl/apps/blackbox-exporter/main.mcl"
+    destination:
+      kind: "name"
+      name: "kurumi"
+      namespace: "monitoring"

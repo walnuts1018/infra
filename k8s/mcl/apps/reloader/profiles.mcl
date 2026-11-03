@@ -1,0 +1,12 @@
+import "./values.mcl" as appValues
+
+let standardValues: Map<String, Any> = appValues.commonValues
+let argocdApplicationReloadValues: Map<String, Any> = appValues.commonValues with:
+  reloader:
+    autoReloadAll: true
+    namespaceSelector: "kubernetes.io/metadata.name=argocd"
+    reloadStrategy: "annotations"
+
+export let valuesByProfile =
+  standard: standardValues
+  argocdApplicationReload: argocdApplicationReloadValues

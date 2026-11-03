@@ -11,4 +11,5 @@ export let chartArchive = chart.repoURL + "/" + chart.chart + "-" + chart.target
 export let apiVersions: List<String> =
   - "rbac.authorization.k8s.io/v1"
 
+export let namespace = "reloader"
 export let kubeVersion = "1.36.4"

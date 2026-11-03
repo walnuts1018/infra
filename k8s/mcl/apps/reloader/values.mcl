@@ -1,0 +1,5 @@
+export let commonValues: Map<String, Any> =
+  reloader:
+    autoReloadAll: false
+    reloadStrategy: "default"
+    namespaceSelector: ""

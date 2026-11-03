@@ -1,0 +1,17 @@
+import "./placements.mcl" as app
+
+let kurumi = app.placements.kurumi
+let biscuit = app.placements.biscuit
+let targets =
+  - target: kurumi.target
+    cluster: kurumi.cluster
+    entrypoint: kurumi.entrypoint
+    destination: kurumi.destination
+    profile: kurumi.profile
+  - target: biscuit.target
+    cluster: biscuit.cluster
+    entrypoint: biscuit.entrypoint
+    destination: biscuit.destination
+    profile: biscuit.profile
+
+emit each targets
