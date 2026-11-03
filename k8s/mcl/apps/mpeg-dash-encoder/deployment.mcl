@@ -1,0 +1,101 @@
+import "./app.mcl" as app
+import "./external-secret.mcl" as externalSecret
+
+let appName = app.name
+let namespace = app.namespace
+let labels =
+  app: appName
+  "app.kubernetes.io/name": appName
+
+export let resource = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: appName
+    namespace: namespace
+    labels: labels
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: labels
+    template:
+      metadata:
+        labels: labels
+      spec:
+        containers:
+          - name: appName
+            image: "ghcr.io/walnuts1018/mpeg-dash-encoder:52054e17d80858a0d2c515601db0a6f189352cf4-14"
+            ports:
+              - containerPort: 8080
+            livenessProbe:
+              httpGet:
+                path: "/healthz"
+                port: 8080
+              failureThreshold: 1
+              initialDelaySeconds: 10
+              periodSeconds: 10
+            env:
+              - name: "LOG_LEVEL"
+                value: "debug"
+              - name: "ADMIN_TOKEN"
+                valueFrom:
+                  secretKeyRef:
+                    name: externalSecret.name
+                    key: "admin_token"
+              - name: "JWT_SIGN_SECRET"
+                valueFrom:
+                  secretKeyRef:
+                    name: externalSecret.name
+                    key: "jwt_sign_secret"
+              - name: "MINIO_ENDPOINT"
+                value: "minio.minio.svc.cluster.local:9000"
+              - name: "MINIO_ACCESS_KEY"
+                value: "k1KHQ1COSPXdYb3CBDUJ"
+              - name: "MINIO_SECRET_KEY"
+                valueFrom:
+                  secretKeyRef:
+                    name: externalSecret.name
+                    key: "minio_secret_key"
+              - name: "MINIO_BUCKET"
+                value: "mucaron"
+              - name: "MINIO_REGION"
+                value: "ap-northeast-1"
+              - name: "MINIO_USE_SSL"
+                value: "false"
+              - name: "FFMPEG_HW_ACCEL"
+                value: "qsv"
+              - name: "MINIO_SOURCE_UPLOAD_BUCKET"
+                value: "mpeg-dash-encoder-source-upload"
+              - name: "MINIO_OUTPUT_BUCKET"
+                value: "mpeg-dash-encoder-output"
+              - name: "OTEL_EXPORTER_OTLP_ENDPOINT"
+                value: "http://default-collector.opentelemetry-collector.svc.cluster.local:4317"
+            volumeMounts:
+              - mountPath: "/tmp"
+                name: "tmp"
+              - mountPath: "/var/log/mpeg-dash-encoder"
+                name: "log"
+            resources:
+              requests:
+                cpu: "1m"
+                memory: "16Mi"
+              limits:
+                cpu: "500m"
+                memory: "256Mi"
+            securityContext:
+              readOnlyRootFilesystem: true
+              seccompProfile:
+                type: "RuntimeDefault"
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                drop:
+                  - "all"
+              privileged: true
+        volumes:
+          - name: "tmp"
+            emptyDir: {}
+          - name: "log"
+            emptyDir: {}
+        nodeSelector:
+          "kubernetes.io/hostname": "cake"

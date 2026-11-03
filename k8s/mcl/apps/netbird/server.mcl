@@ -1,0 +1,180 @@
+import "./settings.mcl" as appSettings
+import text "./_configs/server.yaml" as serverConfig
+import "std:hash" as hash
+
+let serverName = appSettings.name + "-server"
+let externalSecretData =
+  -
+    secretKey: "NB_SETUP_KEY"
+    remoteRef:
+      key: "terraform-external-secrets"
+      property: "netbird-setup-key"
+  -
+    secretKey: "auth_secret"
+    remoteRef:
+      key: "netbird"
+      property: "auth-secret"
+  -
+    secretKey: "store_encryption_key"
+    remoteRef:
+      key: "netbird"
+      property: "store-encryption-key"
+  -
+    secretKey: "postgres_password"
+    remoteRef:
+      key: "postgres_passwords"
+      property: "netbird"
+let externalSecretTemplateData =
+  "config.yaml": serverConfig
+  NB_SETUP_KEY: "{{ .NB_SETUP_KEY }}"
+let externalSecretHashInput =
+  data: externalSecretData
+  templateData: externalSecretTemplateData
+let secretName = appSettings.name + "-config-" + hash.fnv1a64(externalSecretHashInput)
+let serverLabels =
+  app: serverName
+  "app.kubernetes.io/name": serverName
+
+let externalSecret = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: secretName
+    namespace: appSettings.namespace
+  spec:
+    secretStoreRef:
+      name: "onepassword"
+      kind: "ClusterSecretStore"
+    refreshInterval: "1m"
+    target:
+      name: secretName
+      template:
+        engineVersion: "v2"
+        type: "Opaque"
+        data: externalSecretTemplateData
+    data: externalSecretData
+
+let serverPVC = node:
+  apiVersion: "v1"
+  kind: "PersistentVolumeClaim"
+  metadata:
+    name: serverName
+    namespace: appSettings.namespace
+  spec:
+    accessModes:
+      - "ReadWriteOnce"
+    storageClassName: "longhorn"
+    resources:
+      requests:
+        storage: "1Gi"
+
+let serverDeployment = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: serverName
+    namespace: appSettings.namespace
+    labels: serverLabels
+  spec:
+    replicas: 1
+    strategy:
+      type: "Recreate"
+    selector:
+      matchLabels: serverLabels
+    template:
+      metadata:
+        labels: serverLabels
+      spec:
+        containers:
+          - name: "netbird-server"
+            image: "netbirdio/netbird-server:0.78.1"
+            args:
+              - "--config"
+              - "/etc/netbird/config.yaml"
+            ports:
+              - name: "http"
+                containerPort: 80
+                protocol: "TCP"
+              - name: "metrics"
+                containerPort: 9090
+                protocol: "TCP"
+              - name: "health"
+                containerPort: 9000
+                protocol: "TCP"
+            readinessProbe:
+              tcpSocket:
+                port: "http"
+            livenessProbe:
+              tcpSocket:
+                port: "http"
+            securityContext:
+              readOnlyRootFilesystem: false
+            resources:
+              requests:
+                cpu: "10m"
+                memory: "32Mi"
+              limits:
+                memory: "256Mi"
+            volumeMounts:
+              - name: "config"
+                mountPath: "/etc/netbird/config.yaml"
+                subPath: "config.yaml"
+                readOnly: true
+              - name: "data"
+                mountPath: "/var/lib/netbird"
+        volumes:
+          - name: "config"
+            secret:
+              secretName: secretName
+          - name: "data"
+            persistentVolumeClaim:
+              claimName: serverName
+
+let serverService = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: serverName
+    namespace: appSettings.namespace
+  spec:
+    selector: serverLabels
+    ports:
+      - name: "http"
+        port: 80
+        targetPort: "http"
+        protocol: "TCP"
+      - name: "grpc"
+        port: 81
+        targetPort: "http"
+        protocol: "TCP"
+        appProtocol: "kubernetes.io/h2c"
+      - name: "metrics"
+        port: 9090
+        targetPort: "metrics"
+        protocol: "TCP"
+
+let serverMonitor = node:
+  apiVersion: "monitoring.coreos.com/v1"
+  kind: "ServiceMonitor"
+  metadata:
+    name: serverName
+    namespace: appSettings.namespace
+    labels: serverLabels
+  spec:
+    namespaceSelector:
+      matchNames:
+        - appSettings.namespace
+    selector:
+      matchLabels: serverLabels
+    endpoints:
+      - port: "metrics"
+        path: "/metrics"
+
+export let externalSecretName = secretName
+
+export let resources =
+  - externalSecret
+  - serverPVC
+  - serverDeployment
+  - serverService
+  - serverMonitor

@@ -1,0 +1,127 @@
+export let resources =
+  -
+    apiVersion: "external-secrets.io/v1"
+    kind: "ExternalSecret"
+    metadata:
+      name: "radar-auth"
+    spec:
+      refreshInterval: "1m"
+      secretStoreRef:
+        kind: "ClusterSecretStore"
+        name: "onepassword"
+      target:
+        name: "radar-auth"
+        template:
+          engineVersion: "v2"
+          type: "Opaque"
+      data:
+        -
+          secretKey: "auth-secret"
+          remoteRef:
+            key: "terraform-external-secrets"
+            property: "radar-auth-secret"
+        -
+          secretKey: "client-secret"
+          remoteRef:
+            key: "terraform-external-secrets"
+            property: "radar-client-secret"
+  -
+    apiVersion: "networking.k8s.io/v1"
+    kind: "NetworkPolicy"
+    metadata:
+      name: "radar"
+      namespace: "radar"
+    spec:
+      podSelector:
+        matchLabels:
+          "app.kubernetes.io/name": "radar"
+          "app.kubernetes.io/instance": "radar"
+      policyTypes:
+        - "Ingress"
+      ingress:
+        -
+          from:
+            -
+              namespaceSelector:
+                matchLabels:
+                  "kubernetes.io/metadata.name": "envoy-gateway-system"
+            -
+              namespaceSelector:
+                matchLabels:
+                  "kubernetes.io/metadata.name": "keda"
+          ports:
+            -
+              port: 9280
+              protocol: "TCP"
+  -
+    apiVersion: "gateway.networking.k8s.io/v1"
+    kind: "HTTPRoute"
+    metadata:
+      name: "radar"
+      namespace: "radar"
+    spec:
+      parentRefs:
+        -
+          name: "envoy-gateway"
+          namespace: "envoy-gateway-system"
+      hostnames:
+        - "k8s-dashboard.walnuts.dev"
+      rules:
+        -
+          backendRefs:
+            -
+              name: "keda-add-ons-http-interceptor-proxy"
+              namespace: "keda"
+              port: 8080
+  -
+    apiVersion: "http.keda.sh/v1beta1"
+    kind: "InterceptorRoute"
+    metadata:
+      name: "radar"
+      namespace: "radar"
+    spec:
+      target:
+        service: "radar"
+        port: 9280
+      rules:
+        -
+          hosts:
+            - "k8s-dashboard.walnuts.dev"
+      scalingMetric:
+        concurrency:
+          targetValue: 10
+  -
+    apiVersion: "keda.sh/v1alpha1"
+    kind: "ScaledObject"
+    metadata:
+      name: "radar"
+      namespace: "radar"
+    spec:
+      scaleTargetRef:
+        name: "radar"
+      minReplicaCount: 0
+      maxReplicaCount: 1
+      cooldownPeriod: 300
+      triggers:
+        -
+          type: "external-push"
+          metadata:
+            scalerAddress: "keda-add-ons-http-external-scaler.keda:9090"
+            interceptorRoute: "radar"
+  -
+    apiVersion: "gateway.networking.k8s.io/v1beta1"
+    kind: "ReferenceGrant"
+    metadata:
+      name: "radar-allow-interceptor"
+      namespace: "keda"
+    spec:
+      from:
+        -
+          group: "gateway.networking.k8s.io"
+          kind: "HTTPRoute"
+          namespace: "radar"
+      to:
+        -
+          group: ""
+          kind: "Service"
+          name: "keda-add-ons-http-interceptor-proxy"

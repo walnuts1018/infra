@@ -1,0 +1,28 @@
+import "./settings.mcl" as appSettings
+import "./profiles.mcl" as appProfiles
+import "std:context" as context
+
+let profileName = context.parameter("profile")
+let profile = appProfiles.profiles[profileName]
+let serverLabels =
+  app: appSettings.name + "-server"
+  "app.kubernetes.io/name": appSettings.name + "-server"
+let ports =
+  -
+    name: "stun"
+    port: 3478
+    targetPort: 3478
+    protocol: "UDP"
+let serviceSpec =
+  type: "LoadBalancer"
+  loadBalancerIP: profile.stunLoadBalancerIP
+  selector: serverLabels
+  ports: ports
+
+export let resource = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: appSettings.name + "-stun"
+    namespace: appSettings.namespace
+  spec: serviceSpec

@@ -1,0 +1,2 @@
+export let name = "mpeg-dash-encoder"
+export let namespace = "mpeg-dash-encoder"

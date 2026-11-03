@@ -1,0 +1,19 @@
+import "std:helm" as helm
+import "./additional-resources.mcl" as additional
+import "./chart.mcl" as appChart
+import "./cluster-rbac.mcl" as clusterRbac
+import "./values.mcl" as appValues
+
+let apiVersions: List<String> = []
+let options =
+  releaseName: "radar"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: appValues.helmValues
+let chartResources = helm.render(appChart.chartArchive, options)
+
+emit each chartResources
+emit each clusterRbac.resources
+emit each additional.resources

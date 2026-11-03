@@ -1,0 +1,22 @@
+import "./app.mcl" as app
+
+let appName = app.name
+let namespace = app.namespace
+let labels =
+  app: appName
+  "app.kubernetes.io/name": appName
+
+export let resource = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: appName
+    namespace: namespace
+    labels: labels
+  spec:
+    selector: labels
+    ports:
+      - protocol: "TCP"
+        port: 8080
+        targetPort: 8080
+    type: "ClusterIP"

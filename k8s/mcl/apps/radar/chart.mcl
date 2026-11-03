@@ -1,0 +1,4 @@
+export let chartVersion = "1.12.2"
+export let chartArchive = "https://github.com/skyhook-io/helm-charts/releases/download/radar-" + chartVersion + "/radar-" + chartVersion + ".tgz"
+export let namespace = "radar"
+export let kubeVersion = "1.36.4"

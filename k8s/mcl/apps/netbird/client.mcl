@@ -1,0 +1,119 @@
+import "./settings.mcl" as appSettings
+import "./server.mcl" as server
+
+let appName = appSettings.name
+let labels =
+  app: appName
+  "app.kubernetes.io/name": appName
+let serverLabels =
+  app: appName + "-server"
+  "app.kubernetes.io/name": appName + "-server"
+let clientContainer =
+  name: "netbird"
+  image: "netbirdio/netbird:0.78.1"
+  imagePullPolicy: "IfNotPresent"
+  env:
+    -
+      name: "NB_MANAGEMENT_URL"
+      value: "https://netbird.walnuts.dev:443"
+    -
+      name: "NB_SETUP_KEY"
+      valueFrom:
+        secretKeyRef:
+          name: server.externalSecretName
+          key: "NB_SETUP_KEY"
+    -
+      name: "NB_HOSTNAME"
+      valueFrom:
+        fieldRef:
+          fieldPath: "metadata.name"
+  securityContext:
+    readOnlyRootFilesystem: false
+    capabilities:
+      add:
+        - "NET_ADMIN"
+        - "NET_BIND_SERVICE"
+        - "NET_RAW"
+        - "SYS_ADMIN"
+        - "SYS_RESOURCE"
+      drop:
+        - "ALL"
+    seccompProfile:
+      type: "RuntimeDefault"
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "64Mi"
+    limits:
+      memory: "256Mi"
+  volumeMounts:
+    -
+      name: "state"
+      mountPath: "/var/lib/netbird"
+    -
+      name: "tun"
+      mountPath: "/dev/net/tun"
+let clientPodSpec =
+  hostNetwork: true
+  dnsPolicy: "ClusterFirstWithHostNet"
+  automountServiceAccountToken: false
+  topologySpreadConstraints:
+    -
+      maxSkew: 1
+      topologyKey: "kubernetes.io/hostname"
+      whenUnsatisfiable: "ScheduleAnyway"
+      labelSelector:
+        matchLabels: labels
+  containers:
+    - clientContainer
+  volumes:
+    -
+      name: "tun"
+      hostPath:
+        path: "/dev/net/tun"
+        type: "CharDevice"
+let statefulSetSpec =
+  replicas: 2
+  serviceName: appName + "-headless"
+  selector:
+    matchLabels: labels
+  template:
+    metadata:
+      labels: labels
+    spec: clientPodSpec
+  volumeClaimTemplates:
+    -
+      metadata:
+        name: "state"
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        storageClassName: "longhorn"
+        resources:
+          requests:
+            storage: "64Mi"
+
+export let headlessService = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: appName + "-headless"
+    namespace: appSettings.namespace
+    labels: labels
+  spec:
+    clusterIP: "None"
+    selector: labels
+    ports:
+      - name: "wireguard"
+        port: 51820
+        protocol: "UDP"
+
+export let statefulSet = node:
+  apiVersion: "apps/v1"
+  kind: "StatefulSet"
+  metadata:
+    name: appName
+    namespace: appSettings.namespace
+    labels: labels
+  spec: statefulSetSpec
+

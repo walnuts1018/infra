@@ -1,0 +1,21 @@
+import "./workload.mcl" as workload
+
+let hosts =
+  - "ipu.walnuts.dev"
+let routeRules =
+  - hosts: hosts
+
+export let resource = node:
+  apiVersion: "http.keda.sh/v1beta1"
+  kind: "InterceptorRoute"
+  metadata:
+    name: "ipu"
+    namespace: "ipu"
+  spec:
+    target:
+      service: workload.service.metadata.name
+      port: 8080
+    rules: routeRules
+    scalingMetric:
+      concurrency:
+        targetValue: 10

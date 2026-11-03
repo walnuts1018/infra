@@ -1,0 +1,18 @@
+import "./workload.mcl" as workload
+import "./routes.mcl" as routes
+import "./interceptor-route.mcl" as interceptorRoute
+import "./reference-grant.mcl" as referenceGrant
+import "./secrets.mcl" as secrets
+import "./scaling.mcl" as scaling
+
+let resources =
+  - workload.serviceAccount
+  - workload.deployment
+  - workload.service
+  - secrets.externalSecret
+  - routes.httpRoute
+  - interceptorRoute.resource
+  - referenceGrant.resource
+  - scaling.resource
+
+emit each resources

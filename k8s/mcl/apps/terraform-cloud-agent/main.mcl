@@ -1,0 +1,8 @@
+import "./deployment.mcl" as deployment
+import "./external-secret.mcl" as externalSecret
+
+let resources =
+  - deployment.resource
+  - externalSecret.resource
+
+emit each resources

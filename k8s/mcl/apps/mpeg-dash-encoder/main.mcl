@@ -1,0 +1,9 @@
+import "./deployment.mcl" as deployment
+import "./external-secret.mcl" as externalSecret
+import "./http-route.mcl" as httpRoute
+import "./service.mcl" as service
+
+emit deployment.resource
+emit service.resource
+emit externalSecret.resource
+emit httpRoute.resource

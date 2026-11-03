@@ -1,0 +1,19 @@
+let scaledObject = node:
+  apiVersion: "keda.sh/v1alpha1"
+  kind: "ScaledObject"
+  metadata:
+    name: "ipu"
+    namespace: "ipu"
+  spec:
+    minReplicaCount: 0
+    maxReplicaCount: 3
+    cooldownPeriod: 300
+    scaleTargetRef:
+      name: "ipu"
+    triggers:
+      - type: "external-push"
+        metadata:
+          scalerAddress: "keda-add-ons-http-external-scaler.keda:9090"
+          interceptorRoute: "ipu"
+
+export let resource = scaledObject

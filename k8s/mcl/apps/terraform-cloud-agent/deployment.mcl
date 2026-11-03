@@ -1,0 +1,69 @@
+import "./values.mcl" as app
+
+let labels =
+  app: app.name
+  "app.kubernetes.io/name": app.name
+  "app.kubernetes.io/component": "agent"
+
+export let resource =
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+    labels: labels
+    annotations:
+      "reloader.stakater.com/auto": "true"
+  spec:
+    replicas: 1
+    strategy:
+      type: "Recreate"
+    selector:
+      matchLabels: labels
+    template:
+      metadata:
+        labels: labels
+      spec:
+        automountServiceAccountToken: false
+        affinity:
+          nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                preference:
+                  matchExpressions:
+                    - key: "kubernetes.io/hostname"
+                      operator: "In"
+                      values:
+                        - "rusk"
+              - weight: 50
+                preference:
+                  matchExpressions:
+                    - key: "kubernetes.io/hostname"
+                      operator: "In"
+                      values:
+                        - "cake"
+        securityContext:
+          seccompProfile:
+            type: "RuntimeDefault"
+        containers:
+          - name: app.name
+            image: "hashicorp/tfc-agent:1.29.0"
+            imagePullPolicy: "IfNotPresent"
+            env:
+              - name: "TFC_AGENT_TOKEN"
+                valueFrom:
+                  secretKeyRef:
+                    name: app.name
+                    key: "TFC_AGENT_TOKEN"
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - "ALL"
+            resources:
+              requests:
+                cpu: "100m"
+                memory: "256Mi"
+              limits:
+                cpu: "1"
+                memory: "1Gi"
