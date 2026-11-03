@@ -1,0 +1,71 @@
+export type ApiServerProxy =
+  name: String
+  namespace: String
+  hostname: String
+  gatewayName: String
+  gatewayNamespace: String
+  backendService: String
+  backendPort: Int
+  backendHostname: String
+  caConfigMap: String
+
+let app: ApiServerProxy =
+  name: "api-server-service-proxy"
+  namespace: "default"
+  hostname: "kurumi.local.walnuts.dev"
+  gatewayName: "envoy-gateway"
+  gatewayNamespace: "envoy-gateway-system"
+  backendService: "kubernetes"
+  backendPort: 443
+  backendHostname: "kubernetes.default.svc.cluster.local"
+  caConfigMap: "kube-root-ca.crt"
+
+let backendTLSPolicy = node:
+  apiVersion: "gateway.networking.k8s.io/v1alpha3"
+  kind: "BackendTLSPolicy"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    targetRefs:
+      -
+        group: ""
+        kind: "Service"
+        name: app.backendService
+    validation:
+      caCertificateRefs:
+        -
+          group: ""
+          kind: "ConfigMap"
+          name: app.caConfigMap
+      hostname: app.backendHostname
+
+let httpRoute = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    parentRefs:
+      -
+        name: app.gatewayName
+        namespace: app.gatewayNamespace
+    hostnames:
+      - app.hostname
+    rules:
+      -
+        backendRefs:
+          -
+            kind: "Service"
+            name: app.backendService
+            port: app.backendPort
+            weight: 1
+        matches:
+          -
+            path:
+              type: "PathPrefix"
+              value: "/"
+
+emit backendTLSPolicy
+emit httpRoute
