@@ -1,0 +1,40 @@
+export let values =
+  adminUser:
+    user: "admin"
+    existingSecret: "influxdb"
+  persistence:
+    enabled: true
+    storageClass: "longhorn"
+    volumeName: "influxdb"
+    accessMode: "ReadWriteOnce"
+    size: "10Gi"
+    mountPath: "/var/lib/influxdb2"
+    subPath: ""
+  ingress:
+    enabled: false
+    className: "cilium"
+    tls: false
+    hostname: "influxdb.walnuts.dev"
+    path: "/"
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "230Mi"
+    limits:
+      memory: "512Mi"
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          -
+            matchExpressions:
+              -
+                key: "storage.walnuts.dev/slow"
+                operator: "DoesNotExist"
+  startupProbe:
+    enabled: true
+    path: "/health"
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    timeoutSeconds: 1
+    failureThreshold: 90

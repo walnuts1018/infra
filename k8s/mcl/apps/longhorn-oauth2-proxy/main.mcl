@@ -1,0 +1,7 @@
+import "./external-secret.mcl" as externalSecret
+import "./http-route.mcl" as httpRoute
+import "./security-policy.mcl" as securityPolicy
+
+emit externalSecret.resource
+emit httpRoute.resource
+emit securityPolicy.resource

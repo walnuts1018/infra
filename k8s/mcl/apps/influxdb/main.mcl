@@ -1,0 +1,7 @@
+import "./resources.mcl" as app
+import "./external-secret.mcl" as externalSecret
+import "./http-route.mcl" as httpRoute
+
+emit each app.chartResources
+emit externalSecret.resource
+emit httpRoute.resource

@@ -19,6 +19,7 @@
     "https://github.com/cloudnative-pg/charts/releases/download/cloudnative-pg-v0.29.0/cloudnative-pg-0.29.0.tgz": "668e065ff53508d58238788fd35b355a925060843629a951df0e6a9362e6d32f",
     "https://github.com/external-secrets/external-secrets/releases/download/helm-chart-2.10.0/external-secrets-2.10.0.tgz": "b96e948fff3674638b5d3f9e43886f3796e04739c4b4127929aed2ddac7d1418",
     "https://github.com/groundcover-com/helm-charts/releases/download/caretta-0.0.16/caretta-0.0.16.tgz": "24593ec0e9e7971520b2ab3f049d7fceebe0519a04f857f711ca5c7505e0af72",
+    "https://github.com/influxdata/helm-charts/releases/download/influxdb2-2.1.2/influxdb2-2.1.2.tgz": "1da8b1e8a2b93e9acbb0bc9a9c0a3e526581ccde4bf271785d09699ed219ca08",
     "https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/releases/download/1.21.3/k8s-ephemeral-storage-metrics-1.21.3.tgz": "64f916134aeb805b41bc3245beb05384c4637c6e0a37418a4f3830743b07ef8d",
     "https://github.com/klicktipp/helm-charts/releases/download/rabbitmq-cluster-operator-0.4.2/rabbitmq-cluster-operator-0.4.2.tgz": "5fb8ca9d338bd03043875766723177be3800d84faba12934f3ca339309d50743",
     "https://github.com/kubernetes-sigs/descheduler/releases/download/descheduler-helm-chart-0.36.0/descheduler-0.36.0.tgz": "fae31d330236c0dee087241e0861759df16235c1f4d4c5a149d83788997b6b8f",

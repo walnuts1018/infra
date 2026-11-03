@@ -1,0 +1,6 @@
+export type Profile =
+  authorizedGrant: String
+
+export let profiles: Map<String, Profile> =
+  standard:
+    authorizedGrant: "385243484069560521:longhorn-admin"

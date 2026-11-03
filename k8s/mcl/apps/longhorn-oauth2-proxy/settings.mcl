@@ -1,0 +1,3 @@
+export let name = "longhorn-oauth2-proxy"
+export let namespace = "longhorn-system"
+export let hostname = "longhorn.walnuts.dev"

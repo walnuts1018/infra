@@ -1,0 +1,16 @@
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./values.mcl" as appValues
+import "./external-secret.mcl" as externalSecret
+import "./http-route.mcl" as httpRoute
+
+let apiVersions: List<String> =
+  - "policy/v1"
+let options =
+  releaseName: appChart.releaseName
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: appValues.values
+export let chartResources = helm.render(appChart.chartArchive, options)

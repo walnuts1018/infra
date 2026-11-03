@@ -1,0 +1,51 @@
+import "std:context" as context
+import "./settings.mcl" as settings
+import "./profiles.mcl" as appProfiles
+import "./external-secret.mcl" as externalSecret
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+
+export let resource = node:
+  apiVersion: "gateway.envoyproxy.io/v1alpha1"
+  kind: "SecurityPolicy"
+  metadata:
+    name: settings.name
+    namespace: settings.namespace
+  spec:
+    targetRefs:
+      - group: "gateway.networking.k8s.io"
+        kind: "HTTPRoute"
+        name: settings.name
+    oidc:
+      provider:
+        issuer: "https://auth.walnuts.dev"
+      clientIDRef:
+        name: externalSecret.name
+      clientSecret:
+        name: externalSecret.name
+      scopes:
+        - "openid"
+        - "email"
+        - "profile"
+        - "offline_access"
+        - "urn:zitadel:iam:org:projects:roles"
+      forwardAccessToken: true
+      logoutPath: "/oauth2/logout"
+    jwt:
+      providers:
+        - name: "zitadel"
+          issuer: "https://auth.walnuts.dev"
+          remoteJWKS:
+            uri: "https://auth.walnuts.dev/oauth/v2/keys"
+    authorization:
+      defaultAction: "Deny"
+      rules:
+        - action: "Allow"
+          principal:
+            jwt:
+              provider: "zitadel"
+              claims:
+                - name: "my:zitadel:grants"
+                  valueType: "StringArray"
+                  values:
+                    - profile.authorizedGrant
