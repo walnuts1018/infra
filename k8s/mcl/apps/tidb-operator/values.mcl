@@ -1,0 +1,10 @@
+export let values: Map<String, Any> =
+  controllerManager:
+    create: true
+    replicas: 1
+    resources:
+      requests:
+        cpu: "20m"
+        memory: "80Mi"
+  scheduler:
+    create: false
