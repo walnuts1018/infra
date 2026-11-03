@@ -1,0 +1,192 @@
+export type ControlPlaneConfig =
+  name: String
+  patchesName: String
+  clusterName: String
+  namespace: String
+  kubernetesVersion: String
+  talosVersion: String
+  replicas: Int
+  endpointHost: String
+  endpointPort: Int
+  schematicID: String
+  patches: String
+  podCIDR: String
+  serviceCIDR: String
+
+export fn bootstrapConfigTemplate(config: ControlPlaneConfig) -> Map<String, Any> = node:
+  apiVersion: "bootstrap.cluster.x-k8s.io/v1alpha1"
+  kind: "TartBootstrapConfigTemplate"
+  metadata:
+    annotations:
+      "argocd.argoproj.io/sync-options": "Prune=false"
+    name: config.name
+    namespace: config.namespace
+  spec:
+    template:
+      spec:
+        configPatchesSecretRef:
+          name: config.patchesName
+
+export fn clusterResource(config: ControlPlaneConfig) -> Map<String, Any> = node:
+  apiVersion: "cluster.x-k8s.io/v1beta2"
+  kind: "Cluster"
+  metadata:
+    annotations:
+      "argocd.argoproj.io/sync-options": "Prune=confirm,Delete=confirm"
+    labels:
+      "argocd-agent.walnuts.dev/enabled": "true"
+      "cluster.x-k8s.io/cluster-name": config.clusterName
+    name: config.clusterName
+    namespace: config.namespace
+  spec:
+    clusterNetwork:
+      pods:
+        cidrBlocks:
+          - config.podCIDR
+      services:
+        cidrBlocks:
+          - config.serviceCIDR
+    controlPlaneEndpoint:
+      host: config.endpointHost
+      port: config.endpointPort
+    controlPlaneRef:
+      apiGroup: "controlplane.cluster.x-k8s.io"
+      kind: "TartControlPlane"
+      name: config.clusterName
+    infrastructureRef:
+      apiGroup: "infrastructure.cluster.x-k8s.io"
+      kind: "TartCluster"
+      name: config.clusterName
+
+export fn tartControlPlane(config: ControlPlaneConfig) -> Map<String, Any> = node:
+  apiVersion: "controlplane.cluster.x-k8s.io/v1alpha1"
+  kind: "TartControlPlane"
+  metadata:
+    name: config.clusterName
+    namespace: config.namespace
+  spec:
+    bootstrapConfigTemplateRef:
+      apiGroup: "bootstrap.cluster.x-k8s.io"
+      kind: "TartBootstrapConfigTemplate"
+      name: config.name
+    machineTemplate:
+      spec:
+        infrastructureRef:
+          apiGroup: "infrastructure.cluster.x-k8s.io"
+          kind: "TartMachineTemplate"
+          name: config.name
+    replicas: config.replicas
+    version: config.kubernetesVersion
+
+export fn tartMachineTemplate(config: ControlPlaneConfig, hostSelectorLabels: Map<String, String>) -> Map<String, Any> = node:
+  apiVersion: "infrastructure.cluster.x-k8s.io/v1alpha1"
+  kind: "TartMachineTemplate"
+  metadata:
+    annotations:
+      "argocd.argoproj.io/sync-options": "Prune=false"
+    name: config.name
+    namespace: config.namespace
+  spec:
+    template:
+      spec:
+        hostSelector:
+          selector:
+            matchLabels: hostSelectorLabels
+        image:
+          schematicID: config.schematicID
+          version: config.talosVersion
+
+export fn patchSecret(config: ControlPlaneConfig) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  immutable: true
+  kind: "Secret"
+  metadata:
+    annotations:
+      "argocd.argoproj.io/sync-options": "Prune=false"
+    name: config.patchesName
+    namespace: config.namespace
+  stringData:
+    patches: config.patches
+  type: "Opaque"
+
+export fn tartCluster(config: ControlPlaneConfig) -> Map<String, Any> = node:
+  apiVersion: "infrastructure.cluster.x-k8s.io/v1alpha1"
+  kind: "TartCluster"
+  metadata:
+    labels:
+      "cluster.x-k8s.io/cluster-name": config.clusterName
+    name: config.clusterName
+    namespace: config.namespace
+  spec: {}
+
+
+export fn worker(name: String, patchesName: String, clusterName: String, deploymentName: String, namespace: String, kubernetesVersion: String, replicas: Int, labels: Map<String, String>, hostSelectorLabels: Map<String, String>, schematicID: String, talosVersion: String, patches: String) -> List<Map<String, Any>> =
+  -
+    apiVersion: "bootstrap.cluster.x-k8s.io/v1alpha1"
+    kind: "TartBootstrapConfigTemplate"
+    metadata:
+      annotations:
+        "argocd.argoproj.io/sync-options": "Prune=false"
+      name: name
+      namespace: namespace
+    spec:
+      template:
+        spec:
+          configPatchesSecretRef:
+            name: patchesName
+  -
+    apiVersion: "cluster.x-k8s.io/v1beta2"
+    kind: "MachineDeployment"
+    metadata:
+      labels: labels
+      name: deploymentName
+      namespace: namespace
+    spec:
+      clusterName: clusterName
+      replicas: replicas
+      selector:
+        matchLabels: labels
+      template:
+        metadata:
+          labels: labels
+        spec:
+          bootstrap:
+            configRef:
+              apiGroup: "bootstrap.cluster.x-k8s.io"
+              kind: "TartBootstrapConfigTemplate"
+              name: name
+          clusterName: clusterName
+          infrastructureRef:
+            apiGroup: "infrastructure.cluster.x-k8s.io"
+            kind: "TartMachineTemplate"
+            name: name
+          version: kubernetesVersion
+  -
+    apiVersion: "infrastructure.cluster.x-k8s.io/v1alpha1"
+    kind: "TartMachineTemplate"
+    metadata:
+      annotations:
+        "argocd.argoproj.io/sync-options": "Prune=false"
+      name: name
+      namespace: namespace
+    spec:
+      template:
+        spec:
+          hostSelector:
+            selector:
+              matchLabels: hostSelectorLabels
+          image:
+            schematicID: schematicID
+            version: talosVersion
+  -
+    apiVersion: "v1"
+    immutable: true
+    kind: "Secret"
+    metadata:
+      annotations:
+        "argocd.argoproj.io/sync-options": "Prune=false"
+      name: patchesName
+      namespace: namespace
+    stringData:
+      patches: patches
+    type: "Opaque"

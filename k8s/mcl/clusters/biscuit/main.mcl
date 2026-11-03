@@ -1,6 +1,8 @@
 import "./tart-hosts.mcl" as tartHosts
+import "./control-plane.mcl" as controlPlane
 import "../../namespaces/biscuit/resources.mcl" as namespaces
 
 emit each tartHosts.resources.items
 emit tartHosts.resources.credential
 emit each namespaces.resources
+emit each controlPlane.resources

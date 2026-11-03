@@ -1,6 +1,10 @@
 import "./tart-hosts.mcl" as tartHosts
+import "./control-plane.mcl" as controlPlane
+import "./worker.mcl" as worker
 import "../../namespaces/kurumi/resources.mcl" as namespaces
 
 emit each tartHosts.resources.items
 emit tartHosts.resources.redfishSecret
 emit each namespaces.resources
+emit each controlPlane.resources
+emit each worker.resources
