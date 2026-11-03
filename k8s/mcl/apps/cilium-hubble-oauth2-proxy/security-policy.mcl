@@ -1,0 +1,50 @@
+import "./config.mcl" as app
+import "./external-secret.mcl" as externalSecret
+import "./http-route.mcl" as httpRoute
+
+let securityPolicy = node:
+  apiVersion: "gateway.envoyproxy.io/v1alpha1"
+  kind: "SecurityPolicy"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    targetRefs:
+      - group: "gateway.networking.k8s.io"
+        kind: httpRoute.resource.kind
+        name: httpRoute.resource.metadata.name
+    oidc:
+      provider:
+        issuer: "https://auth.walnuts.dev"
+      clientIDRef:
+        name: externalSecret.name
+      clientSecret:
+        name: externalSecret.name
+      scopes:
+        - "openid"
+        - "email"
+        - "profile"
+        - "offline_access"
+        - "urn:zitadel:iam:org:projects:roles"
+      forwardAccessToken: true
+      logoutPath: "/oauth2/logout"
+    jwt:
+      providers:
+        - name: "zitadel"
+          issuer: "https://auth.walnuts.dev"
+          remoteJWKS:
+            uri: "https://auth.walnuts.dev/oauth/v2/keys"
+    authorization:
+      defaultAction: "Deny"
+      rules:
+        - action: "Allow"
+          principal:
+            jwt:
+              provider: "zitadel"
+              claims:
+                - name: "my:zitadel:grants"
+                  valueType: "StringArray"
+                  values:
+                    - "385243484187001257:hubble-user"
+
+export let resource = securityPolicy

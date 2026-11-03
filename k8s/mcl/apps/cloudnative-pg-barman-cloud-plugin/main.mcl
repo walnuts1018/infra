@@ -1,0 +1,3 @@
+let resources = manifest.load("./resources.yaml")
+
+emit each resources

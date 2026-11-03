@@ -1,0 +1,22 @@
+export let resources =
+  - apiVersion: "scheduling.k8s.io/v1"
+    kind: "PriorityClass"
+    metadata:
+      name: "default"
+    value: 100
+    globalDefault: true
+    description: "This priority class should be used for all pods that don't have a priority class."
+  - apiVersion: "scheduling.k8s.io/v1"
+    kind: "PriorityClass"
+    metadata:
+      name: "high"
+    value: 1000
+    globalDefault: false
+    description: "This priority class should be used for all high priority pods."
+  - apiVersion: "scheduling.k8s.io/v1"
+    kind: "PriorityClass"
+    metadata:
+      name: "low"
+    value: 10
+    globalDefault: false
+    description: "This priority class should be used for all low priority pods."

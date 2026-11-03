@@ -1,0 +1,160 @@
+import "./config.mcl" as app
+import "./environment.mcl" as env
+import "./external-secret-config.mcl" as externalSecretConfig
+import "../envoy-gateway-class/gateway.mcl" as gateway
+
+let cronJob = node:
+  apiVersion: "batch/v1"
+  kind: "CronJob"
+  metadata:
+    name: app.appName
+    namespace: app.namespace
+    labels: app.labels
+  spec:
+    schedule: "*/15 * * * *"
+    concurrencyPolicy: "Forbid"
+    startingDeadlineSeconds: 12000
+    jobTemplate:
+      spec:
+        template:
+          spec:
+            restartPolicy: "OnFailure"
+            securityContext:
+              runAsUser: 65532
+              runAsGroup: 65532
+            containers:
+              - name: app.appName
+                image: app.image
+                command:
+                  - "/app/fitbit-manager-job"
+                imagePullPolicy: "IfNotPresent"
+                ports:
+                  - containerPort: 8080
+                resources:
+                  requests:
+                    cpu: "1m"
+                    memory: "10Mi"
+                  limits:
+                    cpu: "100m"
+                    memory: "300Mi"
+                securityContext:
+                  readOnlyRootFilesystem: true
+                  seccompProfile:
+                    type: "RuntimeDefault"
+                  capabilities:
+                    add:
+                      - "NET_BIND_SERVICE"
+                    drop:
+                      - "all"
+                env: env.environment
+            tolerations:
+              - key: "node.walnuts.dev/low-performance"
+                operator: "Exists"
+
+let deployment = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: app.appName
+    namespace: app.namespace
+    labels: app.labels
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: app.labels
+    template:
+      metadata:
+        labels: app.labels
+      spec:
+        securityContext:
+          runAsUser: 65532
+          runAsGroup: 65532
+        containers:
+          - name: app.appName
+            image: app.image
+            imagePullPolicy: "IfNotPresent"
+            ports:
+              - containerPort: 8080
+            resources:
+              requests:
+                cpu: "1m"
+                memory: "35Mi"
+              limits:
+                cpu: "100m"
+                memory: "128Mi"
+            securityContext:
+              readOnlyRootFilesystem: true
+              seccompProfile:
+                type: "RuntimeDefault"
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                drop:
+                  - "all"
+            env: env.environment
+
+let externalSecret = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: externalSecretConfig.name
+  spec:
+    secretStoreRef:
+      name: "onepassword"
+      kind: "ClusterSecretStore"
+    refreshInterval: "1m"
+    target:
+      name: externalSecretConfig.name
+      template:
+        engineVersion: "v2"
+        type: "Opaque"
+    data: externalSecretConfig.data
+
+let httpRoute = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: app.appName
+    namespace: app.namespace
+  spec:
+    parentRefs:
+      -
+        name: gateway.resource.metadata.name
+        namespace: gateway.resource.metadata.namespace
+    hostnames:
+      - "fitbit.walnuts.dev"
+    rules:
+      -
+        backendRefs:
+          -
+            kind: "Service"
+            name: app.appName
+            port: 8080
+            weight: 1
+        matches:
+          -
+            path:
+              type: "PathPrefix"
+              value: "/"
+
+let service = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: app.appName
+    namespace: app.namespace
+    labels: app.labels
+  spec:
+    ports:
+      - name: "http"
+        port: 8080
+        targetPort: 8080
+    selector: app.labels
+    type: "ClusterIP"
+
+export let resources =
+  - cronJob
+  - deployment
+  - externalSecret
+  - httpRoute
+  - service

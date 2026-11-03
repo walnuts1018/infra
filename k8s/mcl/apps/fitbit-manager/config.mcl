@@ -1,0 +1,6 @@
+export let appName = "fitbit-manager"
+export let namespace = appName
+export let image = "ghcr.io/walnuts1018/fitbit-manager:1.0.5"
+export let labels =
+  app: appName
+  "app.kubernetes.io/name": appName

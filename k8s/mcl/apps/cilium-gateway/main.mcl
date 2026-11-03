@@ -1,0 +1,56 @@
+let app =
+  name: "cilium-gateway"
+  namespace: "cilium-system"
+
+let certificate = node:
+  apiVersion: "cert-manager.io/v1"
+  kind: "Certificate"
+  metadata:
+    name: "seaweedfs-biscuit-tls"
+    namespace: app.namespace
+  spec:
+    secretName: "seaweedfs-biscuit-tls"
+    dnsNames:
+      - "seaweedfs-biscuit.local.walnuts.dev"
+    issuerRef:
+      name: "letsencrypt-prod"
+      kind: "ClusterIssuer"
+      group: "cert-manager.io"
+
+let gatewayClass = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "GatewayClass"
+  metadata:
+    name: "cilium"
+  spec:
+    controllerName: "io.cilium/gateway-controller"
+
+let gateway = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "Gateway"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    gatewayClassName: gatewayClass.metadata.name
+    addresses:
+      - type: "IPAddress"
+        value: "192.168.16.159"
+    listeners:
+      - name: "https"
+        protocol: "HTTPS"
+        port: 443
+        hostname: "seaweedfs-biscuit.local.walnuts.dev"
+        allowedRoutes:
+          namespaces:
+            from: "All"
+        tls:
+          mode: "Terminate"
+          certificateRefs:
+            - name: certificate.spec.secretName
+              kind: "Secret"
+              group: ""
+
+emit certificate
+emit gatewayClass
+emit gateway

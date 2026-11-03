@@ -1,0 +1,20 @@
+export type Destination =
+  kind: "name"
+  name: String
+  namespace: String
+
+export type Placement =
+  target: String
+  cluster: String
+  entrypoint: String
+  destination: Destination
+
+export let placements: Map<String, Placement> =
+  biscuit:
+    target: "biscuit"
+    cluster: "biscuit"
+    entrypoint: "k8s/mcl/apps/cilium-gateway/main.mcl"
+    destination:
+      kind: "name"
+      name: "biscuit"
+      namespace: "cilium-system"

@@ -1,0 +1,143 @@
+let namespace = "coredns"
+let etcdLabels =
+  app: "coredns-etcd"
+  "app.kubernetes.io/name": "coredns-etcd"
+let slowStorageExpression =
+  key: "storage.walnuts.dev/slow"
+  operator: "DoesNotExist"
+let slowStorageTerm =
+  matchExpressions:
+    - slowStorageExpression
+let slowStorageTerms =
+  - slowStorageTerm
+let nodeAffinity =
+  requiredDuringSchedulingIgnoredDuringExecution:
+    nodeSelectorTerms: slowStorageTerms
+let etcdPodAffinityTerm =
+  labelSelector:
+    matchLabels: etcdLabels
+  topologyKey: "kubernetes.io/hostname"
+let etcdPodAntiAffinity =
+  preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm: etcdPodAffinityTerm
+let affinity =
+  nodeAffinity: nodeAffinity
+  podAntiAffinity: etcdPodAntiAffinity
+
+export let headlessService = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: "coredns-etcd-headless"
+    namespace: namespace
+    labels: etcdLabels
+  spec:
+    clusterIP: "None"
+    publishNotReadyAddresses: true
+    selector: etcdLabels
+    ports:
+      - name: "client"
+        port: 2379
+        targetPort: "client"
+      - name: "peer"
+        port: 2380
+        targetPort: "peer"
+
+export let service = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: "coredns-etcd"
+    namespace: namespace
+    labels: etcdLabels
+  spec:
+    selector: etcdLabels
+    ports:
+      - name: "client"
+        port: 2379
+        targetPort: "client"
+
+export let statefulSet = node:
+  apiVersion: "apps/v1"
+  kind: "StatefulSet"
+  metadata:
+    name: "coredns-etcd"
+    namespace: namespace
+    labels: etcdLabels
+  spec:
+    replicas: 3
+    serviceName: "coredns-etcd-headless"
+    selector:
+      matchLabels: etcdLabels
+    template:
+      metadata:
+        labels: etcdLabels
+      spec:
+        affinity: affinity
+        containers:
+          - name: "etcd"
+            image: "quay.io/coreos/etcd:v3.7.1"
+            command:
+              - "/usr/local/bin/etcd"
+            args:
+              - "--name=$(POD_NAME)"
+              - "--data-dir=/var/lib/etcd"
+              - "--listen-client-urls=http://0.0.0.0:2379"
+              - "--advertise-client-urls=http://$(POD_NAME).coredns-etcd-headless.$(POD_NAMESPACE).svc.cluster.local:2379"
+              - "--listen-peer-urls=http://0.0.0.0:2380"
+              - "--initial-advertise-peer-urls=http://$(POD_NAME).coredns-etcd-headless.$(POD_NAMESPACE).svc.cluster.local:2380"
+              - "--initial-cluster=coredns-etcd-0=http://coredns-etcd-0.coredns-etcd-headless.coredns.svc.cluster.local:2380,coredns-etcd-1=http://coredns-etcd-1.coredns-etcd-headless.coredns.svc.cluster.local:2380,coredns-etcd-2=http://coredns-etcd-2.coredns-etcd-headless.coredns.svc.cluster.local:2380"
+              - "--initial-cluster-token=coredns-etcd"
+              - "--initial-cluster-state=new"
+              - "--auto-compaction-mode=periodic"
+              - "--auto-compaction-retention=1h"
+            env:
+              - name: "POD_NAME"
+                valueFrom:
+                  fieldRef:
+                    fieldPath: "metadata.name"
+              - name: "POD_NAMESPACE"
+                valueFrom:
+                  fieldRef:
+                    fieldPath: "metadata.namespace"
+            ports:
+              - name: "client"
+                containerPort: 2379
+              - name: "peer"
+                containerPort: 2380
+            livenessProbe:
+              tcpSocket:
+                port: "client"
+            readinessProbe:
+              tcpSocket:
+                port: "client"
+            securityContext:
+              readOnlyRootFilesystem: true
+              seccompProfile:
+                type: "RuntimeDefault"
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                drop:
+                  - "all"
+            resources:
+              requests:
+                cpu: "10m"
+                memory: "128Mi"
+              limits:
+                cpu: "1"
+                memory: "512Mi"
+            volumeMounts:
+              - name: "data"
+                mountPath: "/var/lib/etcd"
+    volumeClaimTemplates:
+      - metadata:
+          name: "data"
+        spec:
+          accessModes:
+            - "ReadWriteOnce"
+          storageClassName: "longhorn"
+          resources:
+            requests:
+              storage: "1Gi"

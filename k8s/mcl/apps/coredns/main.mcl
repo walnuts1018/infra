@@ -1,0 +1,17 @@
+import "./configmap.mcl" as appConfigMap
+import "./coredns.mcl" as appCoreDNS
+import "./etcd.mcl" as appEtcd
+
+let resources =
+  - appConfigMap.configMap
+  - appCoreDNS.deployment
+  - appCoreDNS.service
+  - appCoreDNS.scaledObject
+  - appCoreDNS.podDisruptionBudget
+  - appCoreDNS.verticalPodAutoscaler
+  - appCoreDNS.dnsEndpoint
+  - appEtcd.headlessService
+  - appEtcd.service
+  - appEtcd.statefulSet
+
+emit each resources
