@@ -1,0 +1,16 @@
+let tolerations: List<Map<String, Any>> =
+  - key: "node.walnuts.dev/low-performance"
+    "operator": "Exists"
+
+export let values: Map<String, Any> =
+  msgTopologyOperator:
+    enabled: false
+  clusterOperator:
+    watchAllNamespaces: true
+    resources:
+      requests:
+        cpu: "5m"
+        memory: "48Mi"
+      limits:
+        memory: "512Mi"
+    tolerations: tolerations

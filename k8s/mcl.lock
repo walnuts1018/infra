@@ -1,8 +1,8 @@
 {
   "version": 3,
   "toolchain": {
-    "mcl": "0.3.15",
-    "revision": "80bcb8b6efc0a4afb668425982f25a708fc1e1d3",
+    "mcl": "0.3.16",
+    "revision": "ef94a2d1003b9d8eed080a6cafffc09f105a6f02",
     "modified": "false",
     "go": "go1.27.3",
     "helm": "v4.3.1",
@@ -17,6 +17,7 @@
     "https://github.com/external-secrets/external-secrets/releases/download/helm-chart-2.10.0/external-secrets-2.10.0.tgz": "b96e948fff3674638b5d3f9e43886f3796e04739c4b4127929aed2ddac7d1418",
     "https://github.com/groundcover-com/helm-charts/releases/download/caretta-0.0.16/caretta-0.0.16.tgz": "24593ec0e9e7971520b2ab3f049d7fceebe0519a04f857f711ca5c7505e0af72",
     "https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/releases/download/1.21.3/k8s-ephemeral-storage-metrics-1.21.3.tgz": "64f916134aeb805b41bc3245beb05384c4637c6e0a37418a4f3830743b07ef8d",
+    "https://github.com/klicktipp/helm-charts/releases/download/rabbitmq-cluster-operator-0.4.2/rabbitmq-cluster-operator-0.4.2.tgz": "5fb8ca9d338bd03043875766723177be3800d84faba12934f3ca339309d50743",
     "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-1.21.1/external-dns-1.21.1.tgz": "5dd033a4b872bf641860695705ee460031d0bc695f114bf8926fee6736814e19",
     "https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-3.14.0/metrics-server-3.14.0.tgz": "c2ca1185c01e6e7f53dd1b7d131f0c9b3fa50e003ed068b784563a1b5a3422a1",
     "https://github.com/prometheus-community/helm-charts/releases/download/kube-state-metrics-8.4.2/kube-state-metrics-8.4.2.tgz": "e42988751de414f1d6e3247f51ef8b45ed49218f30294c99b1469324d348145f",
