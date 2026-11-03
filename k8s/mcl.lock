@@ -15,6 +15,7 @@
     "https://charts.pingcap.com/tidb-operator-v1.6.6.tgz": "4b223f79a00cf73998d9ad8341eace64aa947cf51cc108f29d76f2de02867bb4",
     "https://cybozu-go.github.io/moco/moco-0.27.0.tgz": "c0d02d0c8081bcb8b640bb69c88506002d6374b14644a6ab15f89f16054cce0a",
     "https://github.com/1Password/connect-helm-charts/releases/download/connect-2.3.0/connect-2.3.0.tgz": "aea9c0f927a73d889bfa9afd58dc540203d1c200b20e02430b59d6099fb419dd",
+    "https://github.com/aquasecurity/helm-charts/releases/download/trivy-operator-0.36.0/trivy-operator-0.36.0.tgz": "bb0c44bc70e3158cc63ea49d7458ede6db5b6c932f6585a2d787eb9712fd4288",
     "https://github.com/cloudnative-pg/charts/releases/download/cloudnative-pg-v0.29.0/cloudnative-pg-0.29.0.tgz": "668e065ff53508d58238788fd35b355a925060843629a951df0e6a9362e6d32f",
     "https://github.com/external-secrets/external-secrets/releases/download/helm-chart-2.10.0/external-secrets-2.10.0.tgz": "b96e948fff3674638b5d3f9e43886f3796e04739c4b4127929aed2ddac7d1418",
     "https://github.com/groundcover-com/helm-charts/releases/download/caretta-0.0.16/caretta-0.0.16.tgz": "24593ec0e9e7971520b2ab3f049d7fceebe0519a04f857f711ca5c7505e0af72",
@@ -27,6 +28,7 @@
     "https://github.com/prometheus-community/helm-charts/releases/download/kube-state-metrics-8.4.2/kube-state-metrics-8.4.2.tgz": "e42988751de414f1d6e3247f51ef8b45ed49218f30294c99b1469324d348145f",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-blackbox-exporter-11.18.0/prometheus-blackbox-exporter-11.18.0.tgz": "19322b26614c62d6277a1471e26c0b5379ce9ebf43897e01ab85d3e164594ab8",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-node-exporter-4.56.3/prometheus-node-exporter-4.56.3.tgz": "b3051e01f476199f9620aa508823dd7ece2798081b064305368e8a98d4891a04",
+    "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-operator-crds-31.0.1/prometheus-operator-crds-31.0.1.tgz": "105a22a9f9aee1a42d367e1ffe7d613716087b74b341c2b184fb3492e565e1cc",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-smartctl-exporter-0.17.1/prometheus-smartctl-exporter-0.17.1.tgz": "cb03ec4acc49401996e047b33939c9aa205e2a2be673309d7834ee64301b26f3",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-snmp-exporter-9.17.1/prometheus-snmp-exporter-9.17.1.tgz": "b03390d442e972d4ea381ca0568fe8d3c610f966a47cfa28c42a3e76bb244f90",
     "https://github.com/qdrant/qdrant-helm/releases/download/qdrant-1.19.1/qdrant-1.19.1.tgz": "4562eb295c2d98ad9dbb625a729fcb593d315f2538d0200035aac37521f12b17",
@@ -39,6 +41,15 @@
     "https://stakater.github.io/stakater-charts/reloader-2.2.17.tgz": "a17ee91d66785c29c17e5dfd038c13b0e35b23301b33f8fdb431b403d8a7a071"
   },
   "ociCharts": {
+    "oci://docker.io/envoyproxy/gateway-helm": {
+      "1.6.1": {
+        "manifestDigest": "sha256:a89ce554ad10b951e521ac543687ce41616932b2b614121eeffda4c174d2c9dc",
+        "manifestSize": 829,
+        "chartLayerDigest": "sha256:8b5f8583d836e44c1171ab026acf92b18dd53d663fd368da8c03e1a3cc02f70c",
+        "chartLayerSize": 437338,
+        "archiveDigest": "8b5f8583d836e44c1171ab026acf92b18dd53d663fd368da8c03e1a3cc02f70c"
+      }
+    },
     "oci://ghcr.io/konoe-akitoshi/charts/shumoku": {
       "0.1.5": {
         "manifestDigest": "sha256:48d329dec1c5394ef9dd3fa7ee423e4060c47e853b5848cfca9b962c04fed512",

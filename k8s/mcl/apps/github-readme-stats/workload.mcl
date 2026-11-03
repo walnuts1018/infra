@@ -1,0 +1,64 @@
+import "./app.mcl" as appConfig
+import "./credentials.mcl" as credentials
+
+let app = appConfig.app
+let labels = appConfig.labels
+
+export let deployment = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+    labels: labels
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: labels
+    template:
+      metadata:
+        labels: labels
+      spec:
+        containers:
+          - name: "github-readme-stats"
+            image: app.image
+            imagePullPolicy: "IfNotPresent"
+            ports:
+              - containerPort: 80
+            resources:
+              limits:
+                cpu: "100m"
+                memory: "256Mi"
+              requests:
+                cpu: "1m"
+                memory: "50Mi"
+            env:
+              - name: "PAT_1"
+                valueFrom:
+                  secretKeyRef:
+                    name: credentials.name
+                    key: "github-token"
+            securityContext:
+              readOnlyRootFilesystem: true
+              seccompProfile:
+                type: "RuntimeDefault"
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                drop:
+                  - "all"
+
+export let service = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+    labels: labels
+  spec:
+    selector: labels
+    ports:
+      - protocol: "TCP"
+        port: 80
+        targetPort: 9000
+    type: "ClusterIP"

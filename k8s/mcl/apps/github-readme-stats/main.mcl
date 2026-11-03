@@ -1,0 +1,8 @@
+import "./credentials.mcl" as credentials
+import "./route.mcl" as route
+import "./workload.mcl" as workload
+
+emit credentials.externalSecret
+emit workload.deployment
+emit workload.service
+emit route.httpRoute

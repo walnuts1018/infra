@@ -1,0 +1,30 @@
+export type NamedDestination =
+  kind: "name"
+  name: String
+  namespace: String
+
+export type Destination = NamedDestination
+
+export type Placement =
+  target: String
+  cluster: String
+  entrypoint: String
+  destination: Destination
+
+export let placements: Map<String, Placement> =
+  kurumi:
+    target: "kurumi"
+    cluster: "kurumi"
+    entrypoint: "k8s/mcl/apps/prometheus-operator-crds/main.mcl"
+    destination:
+      kind: "name"
+      name: "kurumi"
+      namespace: "monitoring"
+  biscuit:
+    target: "biscuit"
+    cluster: "biscuit"
+    entrypoint: "k8s/mcl/apps/prometheus-operator-crds/main.mcl"
+    destination:
+      kind: "name"
+      name: "biscuit"
+      namespace: "monitoring"

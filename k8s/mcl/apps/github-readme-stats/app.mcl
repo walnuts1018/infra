@@ -1,0 +1,19 @@
+export type App =
+  name: String
+  namespace: String
+  image: String
+  gatewayName: String
+  gatewayNamespace: String
+  hostname: String
+
+export let app: App =
+  name: "github-readme-stats"
+  namespace: "github-readme-stats"
+  image: "ghcr.io/walnuts1018/github-readme-stats:v1.0.3"
+  gatewayName: "envoy-gateway"
+  gatewayNamespace: "envoy-gateway-system"
+  hostname: "github-readme-stats.walnuts.dev"
+
+export let labels =
+  app: app.name
+  "app.kubernetes.io/name": app.name

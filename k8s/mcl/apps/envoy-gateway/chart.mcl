@@ -1,0 +1,4 @@
+export let chartVersion = "1.6.1"
+export let chartArchive = "oci://docker.io/envoyproxy/gateway-helm"
+export let kubeVersion = "1.36.4"
+export let namespace = "envoy-gateway-system"

@@ -1,0 +1,4 @@
+export let chartVersion = "31.0.1"
+export let chartArchive = "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-operator-crds-" + chartVersion + "/prometheus-operator-crds-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let namespace = "monitoring"
