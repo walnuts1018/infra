@@ -1,6 +1,10 @@
 secret.*
 secrets.*
 !/apps/template/secret.yaml
+!/apps/ipu/secrets.mcl
+!/apps/picca/secrets.mcl
+!/apps/seaweedfs-biscuit/secrets.mcl
+!/apps/seaweedfs-default/secrets.mcl
 ./tmp
 
 snapshots/

@@ -1,116 +1,38 @@
-import text "./_configs/plans.yaml" as plansConfig
-import text "./_configs/scylla-ca.crt" as scyllaCaCertificate
 import "std:crypto" as crypto
 import "std:hash" as hash
+import "./secret-data.mcl" as secretData
+import text "./_configs/plans.yaml" as plansConfig
+import text "./_configs/scylla-ca.crt" as scyllaCaCertificate
 
-let piccaGraphqlHashInput =
-  data:
-    -
-      remoteRef:
-        key: "terraform-external-secrets"
-        property: "picca-graphql-query-signing-secret"
-      secretKey: "graphql_query_signing_secret"
-  templateData:
-    GRAPHQL_QUERY_SIGNING_SECRET: "{{ .graphql_query_signing_secret }}"
-    PICCA_GRAPHQL_QUERY_SIGNING_SECRET: "{{ .graphql_query_signing_secret }}"
+let piccaGraphqlHashInput = secretData.piccaGraphqlHashInput
+export let piccaGraphqlData = secretData.piccaGraphqlData
+export let piccaGraphqlTemplateData = secretData.piccaGraphqlTemplateData
+let piccaImgproxyHashInput = secretData.piccaImgproxyHashInput
+export let piccaImgproxyData = secretData.piccaImgproxyData
+export let piccaImgproxyTemplateData = secretData.piccaImgproxyTemplateData
+let piccaOidcHashInput = secretData.piccaOidcHashInput
+export let piccaOidcData = secretData.piccaOidcData
+export let piccaOidcTemplateData = secretData.piccaOidcTemplateData
+let piccaPostgresHashInput = secretData.piccaPostgresHashInput
+export let piccaPostgresData = secretData.piccaPostgresData
+export let piccaPostgresTemplateData = secretData.piccaPostgresTemplateData
+let piccaRabbitmqHashInput = secretData.piccaRabbitmqHashInput
+export let piccaRabbitmqData = secretData.piccaRabbitmqData
+export let piccaRabbitmqTemplateData = secretData.piccaRabbitmqTemplateData
+let piccaScyllaHashInput = secretData.piccaScyllaHashInput
+export let piccaScyllaData = secretData.piccaScyllaData
+export let piccaScyllaTemplateData = secretData.piccaScyllaTemplateData
+let piccaValkeyHashInput = secretData.piccaValkeyHashInput
+export let piccaValkeyData = secretData.piccaValkeyData
+export let piccaValkeyTemplateData = secretData.piccaValkeyTemplateData
 
 export let piccaGraphqlSecretName = "picca-graphql-signing-secret-" + hash.fnv1a64(piccaGraphqlHashInput)
-
-let piccaImgproxyHashInput =
-  data:
-    -
-      remoteRef:
-        key: "terraform-external-secrets"
-        property: "picca-imgproxy-key"
-      secretKey: "imgproxy_key"
-    -
-      remoteRef:
-        key: "terraform-external-secrets"
-        property: "picca-imgproxy-salt"
-      secretKey: "imgproxy_salt"
-  templateData:
-    IMGPROXY_ALLOW_ORIGIN: "https://picca.walnuts.dev"
-    IMGPROXY_FAIL_ON_DEPRECATION: "true"
-    IMGPROXY_KEY: "{{ .imgproxy_key }}"
-    IMGPROXY_PROMETHEUS_BIND: ":8081"
-    IMGPROXY_S3_ALLOWED_BUCKETS: "picca"
-    IMGPROXY_S3_ENDPOINT: "http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333"
-    IMGPROXY_S3_ENDPOINT_USE_PATH_STYLE: "true"
-    IMGPROXY_S3_REGION: "us-east-1"
-    IMGPROXY_SALT: "{{ .imgproxy_salt }}"
-    IMGPROXY_TTL: "900"
-    IMGPROXY_USE_S3: "true"
-
 export let piccaImgproxySecretName = "picca-imgproxy-" + hash.fnv1a64(piccaImgproxyHashInput)
-
-let piccaOidcHashInput =
-  data:
-    -
-      remoteRef:
-        key: "terraform-external-secrets"
-        property: "picca-client-id"
-      secretKey: "oidc_client_id"
-    -
-      remoteRef:
-        key: "terraform-external-secrets"
-        property: "picca-client-secret"
-      secretKey: "oidc_client_secret"
-  templateData:
-    OIDC_CLIENT_ID: "{{ .oidc_client_id }}"
-    OIDC_CLIENT_SECRET: "{{ .oidc_client_secret }}"
-
 export let piccaOidcSecretName = "picca-oidc-" + hash.fnv1a64(piccaOidcHashInput)
-
-let piccaPostgresHashInput =
-  data:
-    -
-      remoteRef:
-        key: "postgres_passwords"
-        property: "picca"
-      secretKey: "postgres_password"
-  templateData:
-    DATABASE_URL: "postgres://picca:{{ .postgres_password }}@postgresql-default-rw.databases.svc.cluster.local:5432/picca?pool_max_conns=2"
-
 export let piccaPostgresSecretName = "picca-postgres-" + hash.fnv1a64(piccaPostgresHashInput)
-
-let piccaRabbitmqHashInput =
-  data:
-    -
-      remoteRef:
-        key: "terraform-external-secrets"
-        property: "picca-rabbitmq-password"
-      secretKey: "rabbitmq_password"
-  templateData:
-    KEDA_RABBITMQ_HOST: "http://picca:{{ .rabbitmq_password }}@default.rabbitmq.svc.cluster.local:15672/picca"
-    RABBITMQ_URL: "amqp://picca:{{ .rabbitmq_password }}@default.rabbitmq.svc.cluster.local:5672/picca"
-
 export let piccaRabbitmqSecretName = "picca-rabbitmq-" + hash.fnv1a64(piccaRabbitmqHashInput)
-
-let piccaScyllaHashInput =
-  data:
-    -
-      remoteRef:
-        key: "scylladb"
-        property: "picca"
-      secretKey: "scylla_password"
-  templateData:
-    SCYLLA_PASSWORD: "{{ .scylla_password }}"
-
 export let piccaScyllaSecretName = "picca-scylla-" + hash.fnv1a64(piccaScyllaHashInput)
-
-let piccaValkeyHashInput =
-  data:
-    -
-      remoteRef:
-        key: "terraform-external-secrets"
-        property: "picca-redis-password"
-      secretKey: "valkey_password"
-  templateData:
-    VALKEY_URL: "redis://:{{ .valkey_password }}@valkey-picca-valkey.picca.svc.cluster.local:6379/0"
-    valkey_password: "{{ .valkey_password }}"
-
 export let piccaValkeySecretName = "picca-valkey-" + hash.fnv1a64(piccaValkeyHashInput)
 
 export let piccaPlansConfigMapName = "picca-plans-" + crypto.sha256(plansConfig, 10)
-
 export let piccaScylladbCaConfigMapName = "picca-scylladb-ca-cert-" + crypto.sha256(scyllaCaCertificate, 10)

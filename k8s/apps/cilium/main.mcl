@@ -4,34 +4,10 @@ import "./chart.mcl" as appChart
 import "./external-secret.mcl" as externalSecret
 import "./values.mcl" as appValues
 
-type Feature = "originCertificateIngress" | "gatewayAPI" | "monitoring" | "hubbleTLS" | "l2Announcements" | "nodePort"
-type Settings =
-  api_server: String
-  cluster_id: Int
-  cluster_name: String
-  envoy_memory: String
+param features: List<appValues.Feature> = []
+param settings: appValues.Settings
 
-param features: List<Feature> = []
-param settings: Settings
-
-let originCertificateIngressEnabled = lists.contains(features, "originCertificateIngress")
-let gatewayAPIEnabled = lists.contains(features, "gatewayAPI")
-let monitoringEnabled = lists.contains(features, "monitoring")
-let hubbleTLSEnabled = lists.contains(features, "hubbleTLS")
-let l2AnnouncementsEnabled = lists.contains(features, "l2Announcements")
-let nodePortEnabled = lists.contains(features, "nodePort")
-let helmValues = appValues.helmValues(
-  originCertificateIngressEnabled,
-  gatewayAPIEnabled,
-  monitoringEnabled,
-  hubbleTLSEnabled,
-  l2AnnouncementsEnabled,
-  nodePortEnabled,
-  settings.api_server,
-  settings.cluster_id,
-  settings.cluster_name,
-  settings.envoy_memory,
-)
+let helmValues = appValues.helmValues(features, settings)
 let apiVersions: List<String> = []
 let options =
   releaseName: "cilium"
@@ -43,7 +19,7 @@ let options =
   values: helmValues
 let chartResources = helm.render(appChart.chartArchive, options)
 let extraResources =
-  if originCertificateIngressEnabled:
+  if lists.contains(features, "originCertificateIngress"):
     - externalSecret.resource
   else:
     []

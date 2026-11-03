@@ -79,31 +79,21 @@ export fn secretStoreScyllaClientCert(namespace: String) -> Map<String, Any> = n
             type: "ConfigMap"
           url: "https://kubernetes.default.svc"
 
-let piccaScyllaPasswordData =
-  -
-    remoteRef:
-      key: "scylladb"
-      property: "picca"
-    secretKey: "scylla_password"
-
-let piccaScyllaPasswordTemplate = node:
-  data:
-    SCYLLA_PASSWORD: "{{ .scylla_password }}"
-  engineVersion: "v2"
-  type: "Opaque"
-
-export fn externalSecretPiccaScyllaA8F7Af(namespace: String) -> Map<String, Any> = node:
+export fn scyllaExternalSecret(namespace: String) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
     name: names.piccaScyllaSecretName
     namespace: namespace
   spec:
-    data: piccaScyllaPasswordData
+    data: names.piccaScyllaData
     refreshInterval: "1m"
     secretStoreRef:
       kind: "ClusterSecretStore"
       name: "onepassword"
     target:
       name: names.piccaScyllaSecretName
-      template: piccaScyllaPasswordTemplate
+      template:
+        data: names.piccaScyllaTemplateData
+        engineVersion: "v2"
+        type: "Opaque"

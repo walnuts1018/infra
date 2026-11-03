@@ -4,6 +4,7 @@ import "./rabbitmq.mcl" as rabbitmq
 import "./routes.mcl" as routes
 import "./secrets.mcl" as secrets
 import "./scylla.mcl" as scylla
+import "./valkey-cluster.mcl" as valkeyCluster
 import "./valkey.mcl" as valkey
 
 export let piccaGraphqlSecretName = names.piccaGraphqlSecretName
@@ -26,19 +27,19 @@ export let piccaScylladbCaConfigMapName = names.piccaScylladbCaConfigMapName
 
 
 export fn render(namespace: String) -> List<Map<String, Any>> =
-  - configmaps.configMapPiccaPlans23D579(namespace)
-  - configmaps.configMapPiccaScylladbCaCertC0F830(namespace)
-  - secrets.externalSecretPiccaGraphqlSigningSecretB86Cef(namespace)
+  - configmaps.plansConfigMap(namespace)
+  - configmaps.scyllaCAConfigMap(namespace)
+  - secrets.graphqlSigningExternalSecret(namespace)
   - routes.httpRoutePiccaImgproxy(namespace)
   - routes.httpRoutePicca(namespace)
   - routes.httpRoutePiccaHttp(namespace)
-  - secrets.externalSecretPiccaImgproxyE18614(namespace)
+  - secrets.imgproxyExternalSecret(namespace)
   - routes.networkPolicyPicca(namespace)
-  - secrets.externalSecretPiccaOidc4A2746(namespace)
-  - secrets.externalSecretPiccaPostgres99751A(namespace)
+  - secrets.oidcExternalSecret(namespace)
+  - secrets.postgresExternalSecret(namespace)
   - secrets.externalSecretPiccaRabbitmqUserCredentials(namespace)
   - rabbitmq.permissionPicca(namespace)
-  - rabbitmq.externalSecretPiccaRabbitmq94D271(namespace)
+  - rabbitmq.rabbitmqExternalSecret(namespace)
   - rabbitmq.userPicca(namespace)
   - rabbitmq.vhostPicca(namespace)
   - secrets.serviceAccountPicca(namespace)
@@ -47,6 +48,6 @@ export fn render(namespace: String) -> List<Map<String, Any>> =
   - scylla.roleBindingPiccaReadScyllaClientCert()
   - scylla.serviceAccountPiccaScyllaSecretReader(namespace)
   - scylla.secretStoreScyllaClientCert(namespace)
-  - scylla.externalSecretPiccaScyllaA8F7Af(namespace)
-  - valkey.valkeyClusterPiccaValkey(namespace)
-  - valkey.externalSecretPiccaValkeyEe0A97(namespace)
+  - scylla.scyllaExternalSecret(namespace)
+  - valkeyCluster.valkeyClusterPiccaValkey(namespace)
+  - valkey.valkeyExternalSecret(namespace)
