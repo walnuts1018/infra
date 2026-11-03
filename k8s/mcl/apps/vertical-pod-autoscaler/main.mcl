@@ -1,0 +1,19 @@
+import "std:context" as context
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./profiles.mcl" as appProfiles
+import "./service-monitor.mcl" as serviceMonitor
+
+let profileName = context.parameter("profile")
+let values: Map<String, Any> = appProfiles.valuesByProfile[profileName]
+let options =
+  releaseName: "vertical-pod-autoscaler"
+  namespace: appChart.namespace
+  version: appChart.chart.targetRevision
+  kubeVersion: appChart.kubeVersion
+  apiVersions: appChart.apiVersions
+  values: values
+let resources = helm.render(appChart.chartArchive, options)
+
+emit each resources
+emit serviceMonitor.resource

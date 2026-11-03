@@ -1,0 +1,26 @@
+import "./chart.mcl" as appChart
+
+let name = "vertical-pod-autoscaler"
+let labels =
+  app: name
+  "app.kubernetes.io/name": name
+
+export let resource = node:
+  apiVersion: "monitoring.coreos.com/v1"
+  kind: "ServiceMonitor"
+  metadata:
+    name: name
+    namespace: appChart.namespace
+    labels: labels with:
+      "app.kubernetes.io/component": "recommender"
+  spec:
+    namespaceSelector:
+      matchNames:
+        - appChart.namespace
+    selector:
+      matchLabels:
+        "app.kubernetes.io/name": name
+        "app.kubernetes.io/component": "recommender"
+    endpoints:
+      - port: "prometheus"
+        path: "/metrics"

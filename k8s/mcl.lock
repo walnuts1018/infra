@@ -26,6 +26,7 @@
     "https://github.com/kubernetes-sigs/descheduler/releases/download/descheduler-helm-chart-0.36.0/descheduler-0.36.0.tgz": "fae31d330236c0dee087241e0861759df16235c1f4d4c5a149d83788997b6b8f",
     "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-1.21.1/external-dns-1.21.1.tgz": "5dd033a4b872bf641860695705ee460031d0bc695f114bf8926fee6736814e19",
     "https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-3.14.0/metrics-server-3.14.0.tgz": "c2ca1185c01e6e7f53dd1b7d131f0c9b3fa50e003ed068b784563a1b5a3422a1",
+    "https://github.com/kubernetes/autoscaler/releases/download/vertical-pod-autoscaler-chart-0.12.0/vertical-pod-autoscaler-0.12.0.tgz": "6a52f67e3ac0085f2ffce9d135c22c30c58929de047bb65351f59db56bd700c4",
     "https://github.com/open-telemetry/opentelemetry-helm-charts/releases/download/opentelemetry-operator-0.122.0/opentelemetry-operator-0.122.0.tgz": "b66f9b937ab644e75c0042395dc85bfc041eb5c51d22719b944d3e2bf32b5e4b",
     "https://github.com/opencost/opencost-helm-chart/releases/download/opencost-2.5.31/opencost-2.5.31.tgz": "e248c0c2bda47d7a1800d577c056e345f764767cec22141125de68960ecbd461",
     "https://github.com/prometheus-community/helm-charts/releases/download/kube-state-metrics-8.4.2/kube-state-metrics-8.4.2.tgz": "e42988751de414f1d6e3247f51ef8b45ed49218f30294c99b1469324d348145f",
