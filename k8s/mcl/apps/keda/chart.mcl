@@ -1,0 +1,4 @@
+export let chartVersion = "2.20.2"
+export let chartArchive = "https://kedacore.github.io/charts/keda-" + chartVersion + ".tgz"
+export let namespace = "keda"
+export let kubeVersion = "1.36.4"

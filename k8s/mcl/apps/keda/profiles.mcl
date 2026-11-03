@@ -1,0 +1,90 @@
+let values: Map<String, Any> =
+  clusterName: "kurumi"
+  operator:
+    replicaCount: 1
+  metricsServer:
+    replicaCount: 1
+  webhooks:
+    replicaCount: 1
+  logging:
+    operator:
+      level: "info"
+      format: "json"
+      timeEncoding: "rfc3339"
+      stackTracesEnabled: false
+    metricServer:
+      zapLevel: "info"
+      zapEncoder: "json"
+      zapTimeEncoding: "rfc3339"
+    webhooks:
+      level: "info"
+      format: "json"
+      timeEncoding: "rfc3339"
+  resources:
+    operator:
+      requests:
+        cpu: "10m"
+        memory: "76Mi"
+      limits:
+        cpu: "1"
+        memory: "1000Mi"
+    metricServer:
+      requests:
+        cpu: "10m"
+        memory: "90Mi"
+      limits:
+        cpu: "1"
+        memory: "1000Mi"
+    webhooks:
+      requests:
+        cpu: "2m"
+        memory: "44Mi"
+      limits:
+        cpu: "1"
+        memory: "1000Mi"
+  topologySpreadConstraints:
+    operator:
+      - maxSkew: 1
+        topologyKey: "kubernetes.io/hostname"
+        whenUnsatisfiable: "ScheduleAnyway"
+        labelSelector:
+          matchLabels:
+            "app.kubernetes.io/name": "keda-operator"
+            "app.kubernetes.io/instance": "keda-operator"
+    metricsServer:
+      - maxSkew: 1
+        topologyKey: "kubernetes.io/hostname"
+        whenUnsatisfiable: "ScheduleAnyway"
+        labelSelector:
+          matchLabels:
+            "app.kubernetes.io/name": "keda-operator-metrics-apiserver"
+            "app.kubernetes.io/instance": "keda-operator"
+    webhooks:
+      - maxSkew: 1
+        topologyKey: "kubernetes.io/hostname"
+        whenUnsatisfiable: "ScheduleAnyway"
+        labelSelector:
+          matchLabels:
+            "app.kubernetes.io/name": "keda-admission-webhooks"
+            "app.kubernetes.io/instance": "keda-operator"
+  prometheus:
+    metricServer:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+      podMonitor:
+        enabled: true
+    operator:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+      podMonitor:
+        enabled: true
+    webhooks:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  enableServiceLinks: false
+
+export let profiles: Map<String, Map<String, Any>> =
+  standard: values
