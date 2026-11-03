@@ -1,0 +1,57 @@
+import "std:list" as list
+import "../lib/tart-host.mcl" as tart
+
+let credentialName = "eclair-intelmanageability-credential"
+type Power = {backend: "WakeOnLAN", wakeOnLAN: {broadcastAddress: String}} | {backend: "Redfish", redfish: {address: String, credentialSecretRef: {name: String}, caSecretRef: {name: String}}} | {backend: "IntelManageability", intelManageability: {address: String, credentialSecretRef: {name: String}}}
+type Host =
+  name: String
+  macAddress: String
+  talosAPIAddress: String
+  labels: Map<String, String>
+  power: Power
+
+let hosts =
+  - name: "eclair"
+    macAddress: "18:03:73:e4:b9:e7"
+    talosAPIAddress: "192.168.0.15"
+    labels:
+      "infrastructure.cluster.x-k8s.io/host-name": "eclair"
+    power:
+      backend: "IntelManageability"
+      intelManageability:
+        address: "http://192.168.0.15:16992/wsman"
+        credentialSecretRef:
+          name: credentialName
+
+fn renderHost(host: Host) -> Map<String, Any> = tart.tartHost(host.name, host.macAddress, host.talosAPIAddress, host.labels, host.power)
+
+let hostResources = list.map(hosts, renderHost)
+let credential = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: credentialName
+    namespace: "tart-infrastructure-system"
+  spec:
+    data:
+      - secretKey: "username"
+        remoteRef:
+          key: "MEBx"
+          property: "username"
+      - secretKey: "password"
+        remoteRef:
+          key: "MEBx"
+          property: "password"
+    refreshInterval: "1m"
+    secretStoreRef:
+      kind: "ClusterSecretStore"
+      name: "onepassword"
+    target:
+      name: credentialName
+      template:
+        engineVersion: "v2"
+        type: "Opaque"
+
+export let resources =
+  items: hostResources
+  credential: credential

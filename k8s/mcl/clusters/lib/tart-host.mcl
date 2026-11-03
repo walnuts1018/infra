@@ -1,0 +1,11 @@
+export fn tartHost(name: String, macAddress: String, talosAPIAddress: String, labels: Map<String, String>, power: Any) -> Map<String, Any> = node:
+  apiVersion: "infrastructure.cluster.x-k8s.io/v1alpha1"
+  kind: "TartHost"
+  metadata:
+    name: name
+    labels: labels
+  spec:
+    macAddress: macAddress
+    talosAPIAddress: talosAPIAddress
+    architecture: "amd64"
+    power: power

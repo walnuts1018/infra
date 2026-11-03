@@ -1,0 +1,4 @@
+import "./tart-hosts.mcl" as tartHosts
+
+emit each tartHosts.resources.items
+emit tartHosts.resources.redfishSecret
