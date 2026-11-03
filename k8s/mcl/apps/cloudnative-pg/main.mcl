@@ -1,0 +1,16 @@
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./values.mcl" as appValues
+
+let apiVersions: List<String> =
+  - "monitoring.coreos.com/v1"
+let options =
+  releaseName: "cloudnative-pg"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: appValues.values
+let resources = helm.render(appChart.chartArchive, options)
+
+emit each resources

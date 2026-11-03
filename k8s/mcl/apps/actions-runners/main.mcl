@@ -1,10 +1,14 @@
+import "std:crypto" as crypto
 import "std:list" as lists
 import text "../../../apps/actions-runners/_scripts/job-started.sh" as jobStartedScript
 import text "../../../apps/actions-runners/_scripts/job-completed.sh" as jobCompletedScript
 
 let runnerImage = "ghcr.io/walnuts1018/infra/actions-runner:2.336.0"
 
-let runnerHooksConfigMapName = "runner-hooks-076f5f"
+let runnerHooksData =
+  "job-started.sh": jobStartedScript
+  "job-completed.sh": jobCompletedScript
+let runnerHooksConfigMapName = "runner-hooks-" + crypto.sha256(runnerHooksData, 6)
 let baseValues =
   controllerServiceAccount:
     name: "actions-runner-controller-gha-rs-controller"
@@ -362,7 +366,7 @@ let baseValues =
         -
           configMap:
             defaultMode: 493
-            name: "runner-hooks-076f5f"
+            name: runnerHooksConfigMapName
           name: "runner-hooks"
 
 type Runner =
@@ -455,9 +459,7 @@ let runnerHooksConfigMap = node:
     name: runnerHooksConfigMapName
     namespace: "arc-runners"
     labels: appLabels
-  data:
-    "job-started.sh": jobStartedScript
-    "job-completed.sh": jobCompletedScript
+  data: runnerHooksData
 
 let githubAppSecret =
   apiVersion: "external-secrets.io/v1"

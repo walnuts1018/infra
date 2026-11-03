@@ -1,16 +1,23 @@
+import "std:crypto" as crypto
 import "../lib/tart-control-plane.mcl" as capi
 import text "../../../clusters/kurumi/_patches/worker.yaml" as patchesText
 
 let clusterName = "kurumi"
 let workerName = "kurumi-worker"
-let resourceName = "kurumi-worker-768a0bf9b4"
-let patchesSecretName = "kurumi-worker-patches-768a0bf9b4"
 let labels =
   "cluster.x-k8s.io/cluster-name": clusterName
   "cluster.x-k8s.io/deployment-name": workerName
 let hostSelectorLabels =
   "kurumi.walnuts.dev/pool": "worker"
 let patches = patchesText
+let identity =
+  patches: patches
+  schematicID: "613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245"
+  talosVersion: "v1.14.0"
+  hostSelectorLabels: hostSelectorLabels
+let identityHash = crypto.sha256(identity, 10)
+let resourceName = clusterName + "-worker-" + identityHash
+let patchesSecretName = clusterName + "-worker-patches-" + identityHash
 
 export let resources = capi.worker(
   resourceName,

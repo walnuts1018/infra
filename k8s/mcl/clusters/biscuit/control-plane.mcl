@@ -1,12 +1,21 @@
+import "std:crypto" as crypto
 import "../lib/tart-control-plane.mcl" as capi
 import text "../../../clusters/biscuit/_patches/control-plane.yaml" as patchesText
 
 let clusterName = "biscuit"
-let resourceName = "biscuit-control-plane-4760a23099"
-let patchesSecretName = "biscuit-control-plane-patches-4760a23099"
 let patches = patchesText
+let hostSelectorLabels =
+  "infrastructure.cluster.x-k8s.io/host-name": "eclair"
+let identity =
+  patches: patches
+  schematicID: "376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba"
+  talosVersion: "v1.14.0"
+  hostSelectorLabels: hostSelectorLabels
+let identityHash = crypto.sha256(identity, 10)
+let resourceName = clusterName + "-control-plane-" + identityHash
+let patchesSecretName = clusterName + "-control-plane-patches-" + identityHash
 
-let config =
+let config = identity with:
   name: resourceName
   patchesName: patchesSecretName
   clusterName: clusterName
@@ -16,13 +25,8 @@ let config =
   replicas: 1
   endpointHost: "192.168.0.15"
   endpointPort: 6443
-  schematicID: "376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba"
-  patches: patches
   podCIDR: "10.244.0.0/16"
   serviceCIDR: "10.96.0.0/12"
-
-let hostSelectorLabels =
-  "infrastructure.cluster.x-k8s.io/host-name": "eclair"
 
 export let resources =
   - capi.bootstrapConfigTemplate(config)

@@ -1,8 +1,8 @@
 {
   "version": 3,
   "toolchain": {
-    "mcl": "0.3.16",
-    "revision": "ef94a2d1003b9d8eed080a6cafffc09f105a6f02",
+    "mcl": "0.3.17",
+    "revision": "b269526b4b2109f4e7e6aa8b9f9643475ca889f7",
     "modified": "false",
     "go": "go1.27.3",
     "helm": "v4.3.1",
@@ -14,6 +14,7 @@
   "charts": {
     "https://charts.pingcap.com/tidb-operator-v1.6.6.tgz": "4b223f79a00cf73998d9ad8341eace64aa947cf51cc108f29d76f2de02867bb4",
     "https://cybozu-go.github.io/moco/moco-0.27.0.tgz": "c0d02d0c8081bcb8b640bb69c88506002d6374b14644a6ab15f89f16054cce0a",
+    "https://github.com/cloudnative-pg/charts/releases/download/cloudnative-pg-v0.29.0/cloudnative-pg-0.29.0.tgz": "668e065ff53508d58238788fd35b355a925060843629a951df0e6a9362e6d32f",
     "https://github.com/external-secrets/external-secrets/releases/download/helm-chart-2.10.0/external-secrets-2.10.0.tgz": "b96e948fff3674638b5d3f9e43886f3796e04739c4b4127929aed2ddac7d1418",
     "https://github.com/groundcover-com/helm-charts/releases/download/caretta-0.0.16/caretta-0.0.16.tgz": "24593ec0e9e7971520b2ab3f049d7fceebe0519a04f857f711ca5c7505e0af72",
     "https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/releases/download/1.21.3/k8s-ephemeral-storage-metrics-1.21.3.tgz": "64f916134aeb805b41bc3245beb05384c4637c6e0a37418a4f3830743b07ef8d",
@@ -24,6 +25,7 @@
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-blackbox-exporter-11.18.0/prometheus-blackbox-exporter-11.18.0.tgz": "19322b26614c62d6277a1471e26c0b5379ce9ebf43897e01ab85d3e164594ab8",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-node-exporter-4.56.3/prometheus-node-exporter-4.56.3.tgz": "b3051e01f476199f9620aa508823dd7ece2798081b064305368e8a98d4891a04",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-smartctl-exporter-0.17.1/prometheus-smartctl-exporter-0.17.1.tgz": "cb03ec4acc49401996e047b33939c9aa205e2a2be673309d7834ee64301b26f3",
+    "https://github.com/seaweedfs/seaweedfs-operator/releases/download/seaweedfs-operator-0.1.40/seaweedfs-operator-0.1.40.tgz": "2612470057565f0ef7d6fc1f10ad406592c204df653b3e5daa05dca2dd96b8fc",
     "https://github.com/strimzi/strimzi-kafka-operator/releases/download/1.2.0/strimzi-kafka-operator-helm-3-chart-1.2.0.tgz": "0f8a50b2f19bd99482f9fd6e17cf42902f72f9e594a136813ac3f0b7af422efd",
     "https://github.com/topolvm/topolvm/releases/download/topolvm-chart-v17.2.0/topolvm-17.2.0.tgz": "4b6c070da0b38f098c9ef6b6a38ef4e2dfff52adecedc280ad92bfab408f90ee",
     "https://github.com/valkey-io/valkey-helm/releases/download/valkey-operator-0.6.0/valkey-operator-0.6.0.tgz": "78c23f630a7e6910ad208c182ff1f6a2d6df9d612a89806c8b2b7f9535ed8783",
