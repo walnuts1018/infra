@@ -52,6 +52,15 @@
         "archiveDigest": "8b5f8583d836e44c1171ab026acf92b18dd53d663fd368da8c03e1a3cc02f70c"
       }
     },
+    "oci://ghcr.io/grafana-community/helm-charts/loki": {
+      "13.2.0": {
+        "manifestDigest": "sha256:14a47b2ca693c98996018161962278e4e8ebb135a05555ab771b6863e64d217e",
+        "manifestSize": 1116,
+        "chartLayerDigest": "sha256:dae8671194485e7c21cf42b0b95a42bc21b9f1333d5ac508c5b62b5da7b72028",
+        "chartLayerSize": 134921,
+        "archiveDigest": "dae8671194485e7c21cf42b0b95a42bc21b9f1333d5ac508c5b62b5da7b72028"
+      }
+    },
     "oci://ghcr.io/konoe-akitoshi/charts/shumoku": {
       "0.1.5": {
         "manifestDigest": "sha256:48d329dec1c5394ef9dd3fa7ee423e4060c47e853b5848cfca9b962c04fed512",

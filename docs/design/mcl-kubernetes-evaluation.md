@@ -43,6 +43,8 @@ Argo CD Agent bootstrapではBiscuitとKurumiのstackをMCL化しました。各
 
 `keda`はbase valuesとKurumi valuesを`standard` profileへまとめ、34 resourceを生成します。KEDA chart既定値のCPU limitはSchema検証でNumberとして拒否されるため、等価なQuantity文字列`"1"`をMCL valuesに明示し、同じoverrideを使ったHelm出力と一致させます。
 
+`loki`はchart v13.2.0から61 resourceを生成し、values YAMLをapp内の外部ファイルから読み込みます。12 resourceのCPU limitはKubernetes QuantityとしてMCL Schemaが要求する文字列に直し、同じ文字列overrideを使ったHelm出力と一致させます。元のHelm出力とは該当フィールドのYAML型だけが異なります。
+
 ## 複数クラスタでのアプリケーション配置
 
 同じアプリケーションを複数クラスタへ配置する場合も、アプリケーションごとに`main.mcl`を1つだけ用意し、すべての配置でそのentrypointを使います。配置するクラスタ数に応じてentrypointを切り替える構成や、クラスタごとのentrypoint directoryは作りません。
@@ -82,4 +84,4 @@ Argo CD Applicationは現在と同じアプリケーション単位を保ちま�
 
 ## 未完了項目
 
-MCL化は60アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの57アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、placement-indexからApplicationSetを生成するPlugin Generatorは未実装です。`rabbitmq-topology-operator`はHelm chart内で`genCA`を呼び出すため、現在のMCLでrenderできず未移行です。MCL本体に関する技術的な制約と改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`で管理します。`actions-runners`のConfigMap名とCAPIのimmutable resource名は、hook scriptやTalos machine設定を入力に`std:crypto.sha256`で生成します。MCL側の技術的な改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`に記録します。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。
+MCL化は61アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの56アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、placement-indexからApplicationSetを生成するPlugin Generatorは未実装です。`rabbitmq-topology-operator`はHelm chart内で`genCA`を呼び出すため、現在のMCLでrenderできず未移行です。MCL本体に関する技術的な制約と改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`で管理します。`actions-runners`のConfigMap名とCAPIのimmutable resource名は、hook scriptやTalos machine設定を入力に`std:crypto.sha256`で生成します。MCL側の技術的な改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`に記録します。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。
