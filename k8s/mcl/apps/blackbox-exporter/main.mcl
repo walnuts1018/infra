@@ -1,0 +1,118 @@
+import "std:helm" as helm
+import "./deployments.mcl" as app
+
+let deployment = app.deployments.kurumi
+let chartVersion = "11.18.0"
+let chartArchive = "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-blackbox-exporter-" + chartVersion + "/prometheus-blackbox-exporter-" + chartVersion + ".tgz"
+let values: Map<String, Any> =
+  serviceMonitor:
+    selfMonitor:
+      enabled: true
+    enabled: true
+    targets:
+      - name: "walnuts-dev"
+        url: "https://walnuts.dev/healthz"
+      - name: "blog"
+        url: "https://blog.walnuts.dev/"
+      - name: "grafana"
+        url: "https://grafana.walnuts.dev/healthz"
+      - name: "oekaki-dengon-game"
+        url: "https://oekaki.walnuts.dev/public"
+      - name: "misskey"
+        url: "https://misskey.walnuts.dev/healthz"
+      - name: "seaweedfs"
+        url: "https://seaweedfs.walnuts.dev/misskey/files/b318bef0-983e-4f24-b7ee-9075ec17fc01.webp"
+      - name: "walnuk-front"
+        url: "https://waln.uk/"
+      - name: "walnuk-back"
+        url: "https://waln.uk/oDwHe"
+      - name: "zitadel"
+        url: "https://auth.walnuts.dev/healthz"
+  resources:
+    requests:
+      cpu: "2m"
+      memory: "39Mi"
+    limits:
+      memory: "300Mi"
+let apiVersions: List<String> =
+  - "monitoring.coreos.com/v1"
+let helmOptions =
+  releaseName: "blackbox-exporter"
+  namespace: deployment.destination.namespace
+  version: chartVersion
+  kubeVersion: "1.36.4"
+  apiVersions: apiVersions
+  values: values
+let chartResources = helm.render(chartArchive, helmOptions)
+
+let ingressRule =
+  "from":
+    - namespaceSelector:
+        matchLabels:
+          "kubernetes.io/metadata.name": "monitoring"
+  ports:
+    - protocol: "TCP"
+      port: 9115
+let ingressRules =
+  - ingressRule
+
+let dnsEgressRule =
+  to:
+    - namespaceSelector:
+        matchLabels:
+          "kubernetes.io/metadata.name": "kube-system"
+      podSelector:
+        matchLabels:
+          "k8s-app": "kube-dns"
+  ports:
+    - protocol: "UDP"
+      port: 53
+    - protocol: "TCP"
+      port: 53
+let publicEgressRule =
+  to:
+    - ipBlock:
+        cidr: "0.0.0.0/0"
+        except:
+          - "0.0.0.0/8"
+          - "10.0.0.0/8"
+          - "100.64.0.0/10"
+          - "127.0.0.0/8"
+          - "169.254.0.0/16"
+          - "172.16.0.0/12"
+          - "192.0.0.0/24"
+          - "192.0.2.0/24"
+          - "192.168.0.0/16"
+          - "198.18.0.0/15"
+          - "198.51.100.0/24"
+          - "203.0.113.0/24"
+          - "224.0.0.0/4"
+          - "240.0.0.0/4"
+  ports:
+    - protocol: "TCP"
+      port: 80
+    - protocol: "TCP"
+      port: 443
+let egressRules =
+  - dnsEgressRule
+  - publicEgressRule
+
+let networkPolicy = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: "blackbox-exporter"
+    namespace: deployment.destination.namespace
+  spec:
+    podSelector:
+      matchLabels:
+        "app.kubernetes.io/name": "prometheus-blackbox-exporter"
+        "app.kubernetes.io/instance": "blackbox-exporter"
+    policyTypes:
+      - "Ingress"
+      - "Egress"
+    ingress: ingressRules
+    egress: egressRules
+
+emit each chartResources
+emit networkPolicy
