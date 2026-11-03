@@ -1,0 +1,4 @@
+export let chartVersion = "4.56.3"
+export let chartArchive = "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-node-exporter-" + chartVersion + "/prometheus-node-exporter-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let namespace = "monitoring"
