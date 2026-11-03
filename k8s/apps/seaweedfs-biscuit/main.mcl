@@ -1,13 +1,13 @@
 import "./compute.mcl" as compute
 import "./config.mcl" as config
 import "./routes.mcl" as routes
-import "./secrets.mcl" as secrets
+import "./external-secrets.mcl" as externalSecrets
 import "./storage.mcl" as storage
 
 emit compute.resource
 emit config.resource
 emit routes.resource
-emit secrets.resource
+emit externalSecrets.resource
 emit storage.service
 emit storage.metaPVC
 emit storage.volumePVC

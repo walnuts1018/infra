@@ -1,7 +1,6 @@
 secret.*
 secrets.*
 !/apps/template/secret.yaml
-!secrets.mcl
 ./tmp
 
 snapshots/

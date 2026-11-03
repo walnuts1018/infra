@@ -2,7 +2,7 @@ import "./core.mcl" as core
 import "./routes.mcl" as routes
 import "./s3-route.mcl" as s3Route
 import "./s3.mcl" as s3
-import "./secrets.mcl" as secrets
+import "./external-secrets.mcl" as externalSecrets
 
 emit each core.resources
 emit each routes.resources
@@ -12,4 +12,4 @@ emit each s3.identities
 emit each s3.policies
 emit each s3.bindings
 emit each s3.credentials
-emit each secrets.resources
+emit each externalSecrets.resources

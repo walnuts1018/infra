@@ -2,7 +2,8 @@ import "./configmaps.mcl" as configmaps
 import "./names.mcl" as names
 import "./rabbitmq.mcl" as rabbitmq
 import "./routes.mcl" as routes
-import "./secrets.mcl" as secrets
+import "./service-account.mcl" as serviceAccount
+import "./external-secrets.mcl" as externalSecrets
 import "./scylla.mcl" as scylla
 import "./valkey-cluster.mcl" as valkeyCluster
 import "./valkey.mcl" as valkey
@@ -29,20 +30,20 @@ export let piccaScylladbCaConfigMapName = names.piccaScylladbCaConfigMapName
 export fn render(namespace: String) -> List<Map<String, Any>> =
   - configmaps.plansConfigMap(namespace)
   - configmaps.scyllaCAConfigMap(namespace)
-  - secrets.graphqlSigningExternalSecret(namespace)
+  - externalSecrets.graphqlSigningExternalSecret(namespace)
   - routes.httpRoutePiccaImgproxy(namespace)
   - routes.httpRoutePicca(namespace)
   - routes.httpRoutePiccaHttp(namespace)
-  - secrets.imgproxyExternalSecret(namespace)
+  - externalSecrets.imgproxyExternalSecret(namespace)
   - routes.networkPolicyPicca(namespace)
-  - secrets.oidcExternalSecret(namespace)
-  - secrets.postgresExternalSecret(namespace)
-  - secrets.externalSecretPiccaRabbitmqUserCredentials(namespace)
+  - externalSecrets.oidcExternalSecret(namespace)
+  - externalSecrets.postgresExternalSecret(namespace)
+  - externalSecrets.externalSecretPiccaRabbitmqUserCredentials(namespace)
   - rabbitmq.permissionPicca(namespace)
   - rabbitmq.rabbitmqExternalSecret(namespace)
   - rabbitmq.userPicca(namespace)
   - rabbitmq.vhostPicca(namespace)
-  - secrets.serviceAccountPicca(namespace)
+  - serviceAccount.serviceAccountPicca(namespace)
   - scylla.externalSecretScyllaClusterLocalClientCa(namespace)
   - scylla.rolePiccaReadScyllaClientCert()
   - scylla.roleBindingPiccaReadScyllaClientCert()
