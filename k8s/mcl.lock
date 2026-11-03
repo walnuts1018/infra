@@ -28,6 +28,7 @@
     "https://github.com/topolvm/topolvm/releases/download/topolvm-chart-v17.2.0/topolvm-17.2.0.tgz": "4b6c070da0b38f098c9ef6b6a38ef4e2dfff52adecedc280ad92bfab408f90ee",
     "https://github.com/valkey-io/valkey-helm/releases/download/valkey-operator-0.6.0/valkey-operator-0.6.0.tgz": "78c23f630a7e6910ad208c182ff1f6a2d6df9d612a89806c8b2b7f9535ed8783",
     "https://helm.elastic.co/helm/eck-operator/eck-operator-3.5.0.tgz": "eda9ec502c786fc1ad293e7f4235fdef43b2c741dcc977ab1f62377d72b5173f",
+    "https://kedacore.github.io/charts/keda-add-ons-http-0.15.0.tgz": "dddb21bd400877ce0d474e4a51e890bc257d6c8c73b56ccd8ec4f7a7590e2001",
     "https://stakater.github.io/stakater-charts/reloader-2.2.17.tgz": "a17ee91d66785c29c17e5dfd038c13b0e35b23301b33f8fdb431b403d8a7a071"
   },
   "ociCharts": {},
