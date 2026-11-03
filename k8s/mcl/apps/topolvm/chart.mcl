@@ -1,0 +1,4 @@
+export let chartVersion = "17.2.0"
+export let chartArchive = "https://github.com/topolvm/topolvm/releases/download/topolvm-chart-v" + chartVersion + "/topolvm-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let namespace = "topolvm-system"

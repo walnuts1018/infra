@@ -1,0 +1,70 @@
+export let commonValues: Map<String, Any> =
+  useLegacy: false
+  "cert-manager":
+    enabled: false
+  scheduler:
+    enabled: false
+  webhook:
+    certManager: true
+    podMutatingWebhook:
+      enabled: false
+  lvmd:
+    managed: true
+  controller:
+    replicaCount: 1
+    podDisruptionBudget:
+      enabled: true
+  node:
+    lvmdEmbedded: false
+    kubeletWorkDirectory: "/var/lib/kubelet"
+  snapshot:
+    enabled: false
+  resources:
+    topolvm_node:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        memory: "128Mi"
+    csi_registrar:
+      requests:
+        cpu: "5m"
+        memory: "16Mi"
+      limits:
+        memory: "64Mi"
+    liveness_probe:
+      requests:
+        cpu: "2m"
+        memory: "8Mi"
+      limits:
+        memory: "32Mi"
+    topolvm_controller:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        memory: "128Mi"
+    csi_provisioner:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        memory: "128Mi"
+    csi_resizer:
+      requests:
+        cpu: "5m"
+        memory: "16Mi"
+      limits:
+        memory: "64Mi"
+    csi_snapshotter:
+      requests:
+        cpu: "5m"
+        memory: "16Mi"
+      limits:
+        memory: "64Mi"
+    lvmd:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        memory: "128Mi"
