@@ -1,0 +1,30 @@
+import "./app.mcl" as app
+import "./labels.mcl" as labels
+
+let appLabels = labels.forApp(app.name)
+
+export let resource =
+  apiVersion: "autoscaling.k8s.io/v1"
+  kind: "VerticalPodAutoscaler"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+    labels: appLabels
+  spec:
+    targetRef:
+      apiVersion: "apps/v1"
+      kind: "Deployment"
+      name: app.name
+    updatePolicy:
+      updateMode: "Auto"
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "misskey"
+          controlledResources:
+            - "memory"
+          minAllowed:
+            cpu: "50m"
+            memory: "256Mi"
+          maxAllowed:
+            cpu: "500m"
+            memory: "2Gi"

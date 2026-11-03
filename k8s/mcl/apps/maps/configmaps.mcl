@@ -1,0 +1,49 @@
+import "std:crypto" as crypto
+import text "./_configs/rclone.conf" as rcloneConfig
+import text "./_configs/versatiles.yaml" as versatilesConfig
+import text "../../../apps/maps/_configs/envoy.yaml" as envoyConfig
+import "./app.mcl" as app
+
+let envoyData =
+  "envoy.yaml": envoyConfig
+let versatilesData =
+  "config.yaml": versatilesConfig
+let rcloneData =
+  "rclone.conf": rcloneConfig
+
+export let envoyName = app.name + "-envoy-config-" + crypto.sha256(envoyData, 6)
+export let versatilesName = app.name + "-versatiles-config-" + crypto.sha256(versatilesData, 6)
+export let rcloneName = app.name + "-rclone-config-" + crypto.sha256(rcloneData, 6)
+
+export let envoy = node:
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  immutable: true
+  metadata:
+    name: envoyName
+    namespace: app.namespace
+    labels: app.labels("versatiles-server")
+  data:
+    "envoy.yaml": envoyConfig
+
+export let versatiles = node:
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  immutable: true
+  metadata:
+    name: versatilesName
+    namespace: app.namespace
+    labels: app.labels("versatiles-server")
+  data:
+    "config.yaml": versatilesConfig
+
+export let rclone = node:
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  immutable: true
+  metadata:
+    name: rcloneName
+    namespace: app.namespace
+    labels: app.labels("update")
+  data:
+    "rclone.conf": rcloneConfig

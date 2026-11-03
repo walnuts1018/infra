@@ -1,0 +1,4 @@
+export let chartVersion = "3.3.8"
+export let chartArchive = "https://cortexproject.github.io/cortex-helm-chart/cortex-" + chartVersion + ".tgz"
+export let namespace = "iwashi-system"
+export let kubeVersion = "1.36.4"

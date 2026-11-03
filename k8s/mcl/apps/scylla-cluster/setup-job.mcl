@@ -1,0 +1,99 @@
+import "std:crypto" as crypto
+import "./app.mcl" as app
+import "./configmaps.mcl" as configMaps
+import "./external-secret.mcl" as migrationsSecret
+
+let labels =
+  app: "scylla-cluster-setup"
+  "app.kubernetes.io/name": "scylla-cluster-setup"
+let jobSpec =
+  template:
+    metadata:
+      labels: labels
+    spec:
+      restartPolicy: "OnFailure"
+      containers:
+        - name: "setup"
+          image: "scylladb/scylla:2025.4.10"
+          command:
+            - "/bin/bash"
+          args:
+            - "-c"
+            - "export PATH=$PATH:/jq && bash /scripts/setup.sh"
+          env:
+            - name: "SCYLLA_HOST"
+              value: "scylla-cluster-client"
+            - name: "SCYLLA_PORT"
+              value: "9142"
+            - name: "SCYLLA_ADMIN_USER"
+              valueFrom:
+                secretKeyRef:
+                  name: migrationsSecret.name
+                  key: "admin_username"
+            - name: "SCYLLA_ADMIN_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: migrationsSecret.name
+                  key: "admin_password"
+          volumeMounts:
+            - name: "admin-certs"
+              mountPath: "/certs/admin"
+              readOnly: true
+            - name: "serving-ca"
+              mountPath: "/certs/ca"
+              readOnly: true
+            - name: "scripts"
+              mountPath: "/scripts"
+              readOnly: true
+            - name: "migration-config"
+              mountPath: "/config/migrations.cql"
+              subPath: "migrations.cql"
+              readOnly: true
+            - name: "jq"
+              mountPath: "/jq"
+              readOnly: true
+      volumes:
+        - name: "admin-certs"
+          secret:
+            secretName: "scylla-cluster-local-user-admin"
+            items:
+              - key: "tls.crt"
+                path: "tls.crt"
+              - key: "tls.key"
+                path: "tls.key"
+        - name: "serving-ca"
+          configMap:
+            name: "scylla-cluster-local-serving-ca"
+            items:
+              - key: "ca-bundle.crt"
+                path: "ca-bundle.crt"
+        - name: "scripts"
+          configMap:
+            name: configMaps.setupConfigMapName
+            items:
+              - key: "setup.sh"
+                path: "setup.sh"
+        - name: "migration-config"
+          secret:
+            secretName: migrationsSecret.name
+            items:
+              - key: "migrations.cql"
+                path: "migrations.cql"
+        - name: "jq"
+          image:
+            reference: "ghcr.io/jqlang/jq:1.8.1"
+
+let jobIdentity =
+  spec: jobSpec
+  setup: configMaps.setupConfigMap
+  migrations: migrationsSecret.resource
+let jobName = "scylla-cluster-setup-" + crypto.sha256(jobIdentity, 10)
+
+export let resource = node:
+  apiVersion: "batch/v1"
+  kind: "Job"
+  metadata:
+    name: jobName
+    namespace: app.namespace
+    labels: labels
+  spec: jobSpec

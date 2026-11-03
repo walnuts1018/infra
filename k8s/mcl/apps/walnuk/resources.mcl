@@ -1,0 +1,15 @@
+import "std:list" as lists
+
+let workloads = manifest.load("./_configs/workloads.yaml")
+let secrets = manifest.load("./_configs/secrets.yaml")
+let traffic = manifest.load("./_configs/traffic.yaml")
+let scaling = manifest.load("./_configs/scaling.yaml")
+let databaseCA = manifest.load("./_configs/database-ca.yaml")
+
+export let scyllaBackedWebApplication = lists.concat(
+  lists.concat(
+    lists.concat(workloads, secrets),
+    traffic,
+  ),
+  lists.concat(scaling, databaseCA),
+)

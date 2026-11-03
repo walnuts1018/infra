@@ -1,0 +1,128 @@
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  labels:
+    app: walnuk-backend
+    app.kubernetes.io/name: walnuk-backend
+  name: walnuk-backend
+  namespace: walnuk
+spec:
+  maxReplicaCount: 5
+  minReplicaCount: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: walnuk-backend
+  triggers:
+  - metadata:
+      value: '95'
+    metricType: Utilization
+    type: cpu
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  labels:
+    app: walnuk-frontend
+    app.kubernetes.io/name: walnuk-frontend
+  name: walnuk-frontend
+  namespace: walnuk
+spec:
+  maxReplicaCount: 5
+  minReplicaCount: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: walnuk-frontend
+  triggers:
+  - metadata:
+      metricName: envoy_cluster_upstream_rq_total_frontend
+      query: sum(rate(envoy_cluster_upstream_rq_total{envoy_cluster_name="httproute/walnuk/walnuk/rule/2",envoy_response_code=~"2..|5.."}[2m]))
+      serverAddress: http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus
+      threshold: '10'
+    type: prometheus
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  labels:
+    app: walnuk-backend
+    app.kubernetes.io/name: walnuk-backend
+  name: walnuk-backend
+  namespace: walnuk
+spec:
+  resourcePolicy:
+    containerPolicies:
+    - containerName: apiserver
+      controlledResources:
+      - memory
+      maxAllowed:
+        cpu: 500m
+        memory: 256Mi
+      minAllowed:
+        cpu: 5m
+        memory: 10Mi
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: walnuk-backend
+  updatePolicy:
+    updateMode: Auto
+---
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  labels:
+    app: walnuk-frontend
+    app.kubernetes.io/name: walnuk-frontend
+  name: walnuk-frontend
+  namespace: walnuk
+spec:
+  resourcePolicy:
+    containerPolicies:
+    - containerName: next
+      controlledResources:
+      - memory
+      maxAllowed:
+        cpu: 500m
+        memory: 512Mi
+      minAllowed:
+        cpu: 10m
+        memory: 64Mi
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: walnuk-frontend
+  updatePolicy:
+    updateMode: Auto
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app: walnuk-backend
+    app.kubernetes.io/name: walnuk-backend
+  name: walnuk-backend
+  namespace: walnuk
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: walnuk-backend
+      app.kubernetes.io/name: walnuk-backend
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app: walnuk-frontend
+    app.kubernetes.io/name: walnuk-frontend
+  name: walnuk-frontend
+  namespace: walnuk
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: walnuk-frontend
+      app.kubernetes.io/name: walnuk-frontend

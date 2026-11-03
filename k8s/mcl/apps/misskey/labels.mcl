@@ -1,0 +1,3 @@
+export fn forApp(name: String) -> Map<String, String> =
+  app: name
+  "app.kubernetes.io/name": name

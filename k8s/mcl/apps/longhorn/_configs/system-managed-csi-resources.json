@@ -1,0 +1,23 @@
+{
+  "csi-attacher": {
+    "requests": {"cpu": "10m", "memory": "64Mi"}
+  },
+  "csi-provisioner": {
+    "requests": {"cpu": "10m", "memory": "64Mi"}
+  },
+  "csi-resizer": {
+    "requests": {"cpu": "10m", "memory": "32Mi"}
+  },
+  "csi-snapshotter": {
+    "requests": {"cpu": "50m", "memory": "64Mi"}
+  },
+  "longhorn-csi-plugin": {
+    "requests": {"cpu": "30m", "memory": "128Mi"}
+  },
+  "node-driver-registrar": {
+    "requests": {"cpu": "10m", "memory": "16Mi"}
+  },
+  "longhorn-liveness-probe": {
+    "requests": {"cpu": "10m", "memory": "32Mi"}
+  }
+}

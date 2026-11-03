@@ -1,0 +1,17 @@
+import "./external-secret.mcl" as externalSecret
+import "./network-policies.mcl" as networkPolicies
+import "./route.mcl" as route
+import "./service.mcl" as service
+import "./workload.mcl" as workload
+
+let resources =
+  - workload.serviceAccount
+  - externalSecret.resource
+  - service.resource
+  - workload.deployment
+  - route.resource
+  - networkPolicies.egress
+  - networkPolicies.ingress
+  - networkPolicies.oidc
+
+emit each resources

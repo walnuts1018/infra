@@ -1,0 +1,73 @@
+import "./app.mcl" as app
+import "./external-secrets.mcl" as externalSecrets
+
+let slowStorageExpression =
+  key: "storage.walnuts.dev/slow"
+  operator: "DoesNotExist"
+let slowStorageTerm =
+  matchExpressions:
+    - slowStorageExpression
+let slowStorageTerms =
+  - slowStorageTerm
+let requiredNodeAffinity =
+  nodeSelectorTerms: slowStorageTerms
+let requiredScheduling =
+  requiredDuringSchedulingIgnoredDuringExecution: requiredNodeAffinity
+let slowStorageAvoidance =
+  nodeAffinity: requiredScheduling
+
+let initdbConfiguration =
+  database: app.name
+  owner: app.name
+  secret:
+    name: externalSecrets.postgresPasswordSecretName
+let bootstrapConfiguration =
+  initdb: initdbConfiguration
+let databaseResources =
+  requests:
+    cpu: "12m"
+    memory: "600Mi"
+  limits:
+    cpu: "2"
+    memory: "4Gi"
+let backupPlugin =
+  name: "barman-cloud.cloudnative-pg.io"
+  isWALArchiver: true
+  parameters:
+    barmanObjectName: "seaweedfs-store"
+let plugins =
+  - backupPlugin
+let serviceAccountTokenConfiguration =
+  audience: "sts.seaweedfs.com"
+  expirationSeconds: 86400
+  path: "sts.seaweedfs.com/serviceaccount/token"
+let serviceAccountToken =
+  serviceAccountToken: serviceAccountTokenConfiguration
+let projectedSources =
+  - serviceAccountToken
+let projectedVolumes =
+  sources: projectedSources
+let clusterSpec =
+  affinity: slowStorageAvoidance
+  instances: 1
+  imageCatalogRef:
+    apiGroup: "postgresql.cnpg.io"
+    kind: "ClusterImageCatalog"
+    name: "standard"
+    major: 18
+  storage:
+    size: "10Gi"
+    storageClass: "local-path"
+  superuserSecret:
+    name: "superuser-secret"
+  bootstrap: bootstrapConfiguration
+  resources: databaseResources
+  plugins: plugins
+  projectedVolumeTemplate: projectedVolumes
+
+export let cluster =
+  apiVersion: "postgresql.cnpg.io/v1"
+  kind: "Cluster"
+  metadata:
+    name: app.name + "-postgresql"
+  spec: clusterSpec

@@ -1,0 +1,119 @@
+import "./app.mcl" as app
+import "./labels.mcl" as labels
+import "./external-secrets.mcl" as externalSecrets
+
+let valkeyName = app.name + "-valkey"
+let valkeyLabels = labels.forApp(valkeyName)
+let slowStorageExpression =
+  key: "storage.walnuts.dev/slow"
+  operator: "DoesNotExist"
+let slowStorageTerm =
+  matchExpressions:
+    - slowStorageExpression
+let slowStorageTerms =
+  - slowStorageTerm
+let nodeAffinity =
+  requiredDuringSchedulingIgnoredDuringExecution:
+    nodeSelectorTerms: slowStorageTerms
+let affinity =
+  nodeAffinity: nodeAffinity
+
+let valkeyEnvironment =
+  - name: "REDIS_PASSWORD"
+    valueFrom:
+      secretKeyRef:
+        name: externalSecrets.appSecretName
+        key: "redisPassword"
+let valkeyPorts =
+  - name: "valkey"
+    containerPort: 6379
+let valkeyVolumeMounts =
+  - name: "data"
+    mountPath: "/data"
+let valkeyContainer =
+  name: "valkey"
+  image: "valkey/valkey:9.1.2"
+  imagePullPolicy: "IfNotPresent"
+  securityContext:
+    readOnlyRootFilesystem: true
+    seccompProfile:
+      type: "RuntimeDefault"
+    capabilities:
+      add:
+        - "NET_BIND_SERVICE"
+      drop:
+        - "all"
+  command:
+    - "valkey-server"
+  args:
+    - "--maxmemory-policy"
+    - "noeviction"
+    - "--requirepass"
+    - "$(REDIS_PASSWORD)"
+  env: valkeyEnvironment
+  ports: valkeyPorts
+  readinessProbe:
+    exec:
+      command:
+        - "sh"
+        - "-c"
+        - "valkey-cli -a \"$REDIS_PASSWORD\" ping"
+    initialDelaySeconds: 5
+    periodSeconds: 5
+  livenessProbe:
+    exec:
+      command:
+        - "sh"
+        - "-c"
+        - "valkey-cli -a \"$REDIS_PASSWORD\" ping"
+    initialDelaySeconds: 15
+    periodSeconds: 10
+  resources:
+    requests:
+      cpu: "5m"
+      memory: "16Mi"
+    limits:
+      cpu: "100m"
+      memory: "256Mi"
+  volumeMounts: valkeyVolumeMounts
+let valkeyContainers =
+  - valkeyContainer
+let podSecurityContext =
+  fsGroup: 999
+  fsGroupChangePolicy: "OnRootMismatch"
+let podSpec =
+  affinity: affinity
+  securityContext: podSecurityContext
+  containers: valkeyContainers
+let podTemplate =
+  metadata:
+    labels: valkeyLabels
+  spec: podSpec
+let dataClaim =
+  metadata:
+    name: "data"
+  spec:
+    accessModes:
+      - "ReadWriteOnce"
+    storageClassName: "longhorn"
+    resources:
+      requests:
+        storage: "1Gi"
+let volumeClaimTemplates =
+  - dataClaim
+let statefulSetSpec =
+  serviceName: valkeyName + "-headless"
+  replicas: 1
+  selector:
+    matchLabels: valkeyLabels
+  template: podTemplate
+  volumeClaimTemplates: volumeClaimTemplates
+
+export let statefulSet = node:
+  apiVersion: "apps/v1"
+  kind: "StatefulSet"
+  metadata:
+    name: valkeyName
+    namespace: app.namespace
+    labels: valkeyLabels
+  spec: statefulSetSpec

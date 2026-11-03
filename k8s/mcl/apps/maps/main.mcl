@@ -1,0 +1,21 @@
+import "./configmaps.mcl" as appConfigMaps
+import "./cronjob.mcl" as appCronJob
+import "./deployment.mcl" as appDeployment
+import "./http-route.mcl" as httpRoute
+import "./identity.mcl" as appIdentity
+import "./rbac.mcl" as appRbac
+import "./service.mcl" as appService
+
+emit appConfigMaps.envoy
+emit appConfigMaps.versatiles
+emit appConfigMaps.rclone
+emit appIdentity.versatilesServiceAccount
+emit appIdentity.updaterServiceAccount
+emit appIdentity.s3CredentialsSecret
+emit appIdentity.s3ReferenceGrant
+emit appRbac.role
+emit appRbac.roleBinding
+emit appDeployment.resource
+emit appService.resource
+emit appCronJob.resource
+emit httpRoute.resource

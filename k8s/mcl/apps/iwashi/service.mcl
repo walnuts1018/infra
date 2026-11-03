@@ -1,0 +1,20 @@
+import "./app.mcl" as app
+
+let labels =
+  app: app.name
+  "app.kubernetes.io/name": app.name
+
+export let resource = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+    labels: labels
+  spec:
+    selector: labels
+    ports:
+      -
+        name: "http"
+        port: 8080
+        targetPort: "http"

@@ -1,0 +1,8 @@
+import "./resources.mcl" as appResources
+
+emit appResources.awsConfigMap
+emit appResources.rcloneConfigMap
+emit appResources.scriptConfigMap
+emit appResources.externalSecret
+emit appResources.serviceAccount
+emit appResources.cronJob

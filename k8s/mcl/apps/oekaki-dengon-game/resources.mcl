@@ -1,0 +1,51 @@
+import text "./_configs/robots.txt" as robotsText
+
+let backDeployment = manifest.load("./_configs/back__deployment.yaml")[0]
+let backHpa = manifest.load("./_configs/back__hpa.yaml")[0]
+let backNetworkPolicy = manifest.load("./_configs/back__networkpolicy.yaml")[0]
+let backService = manifest.load("./_configs/back__service.yaml")[0]
+let backVpa = manifest.load("./_configs/back__vpa.yaml")[0]
+let externalSecret = manifest.load("./_configs/external-secret.yaml")[0]
+let frontDeployment = manifest.load("./_configs/front__deployment.yaml")[0]
+let frontHpa = manifest.load("./_configs/front__hpa.yaml")[0]
+let frontNetworkPolicy = manifest.load("./_configs/front__networkpolicy.yaml")[0]
+let frontService = manifest.load("./_configs/front__service.yaml")[0]
+let frontVpa = manifest.load("./_configs/front__vpa.yaml")[0]
+let oauth2ProxyExternalSecret = manifest.load("./_configs/oauth2-proxy__external-secret.yaml")[0]
+let oauth2ProxyHttpRoutePublic = manifest.load("./_configs/oauth2-proxy__httproute-public.yaml")[0]
+let oauth2ProxyHttpRoute = manifest.load("./_configs/oauth2-proxy__httproute.yaml")[0]
+let oauth2ProxySecurityPolicy = manifest.load("./_configs/oauth2-proxy__securitypolicy.yaml")[0]
+let s3CredentialsSecret = manifest.load("./_configs/s3-credentials-secret.yaml")[0]
+let s3ReferenceGrant = manifest.load("./_configs/s3-reference-grant.yaml")[0]
+let oauth2ProxyConfigMap = node:
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  immutable: true
+  metadata:
+    name: "oekaki-dengon-game-oauth2-proxy-6181a5"
+    namespace: "oekaki-dengon-game"
+    labels:
+      app: "oekaki-dengon-game"
+      "app.kubernetes.io/name": "oekaki-dengon-game"
+  data:
+    "robots.txt": robotsText
+
+export let resources =
+  - externalSecret
+  - oauth2ProxyExternalSecret
+  - s3CredentialsSecret
+  - s3ReferenceGrant
+  - oauth2ProxyConfigMap
+  - backDeployment
+  - backService
+  - backHpa
+  - backVpa
+  - backNetworkPolicy
+  - frontDeployment
+  - frontService
+  - frontHpa
+  - frontVpa
+  - frontNetworkPolicy
+  - oauth2ProxyHttpRoute
+  - oauth2ProxyHttpRoutePublic
+  - oauth2ProxySecurityPolicy

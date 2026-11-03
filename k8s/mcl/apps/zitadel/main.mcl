@@ -1,0 +1,26 @@
+import "std:context" as context
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./external-secret.mcl" as appResources
+import "./profiles.mcl" as appProfiles
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+let options =
+  releaseName: "zitadel"
+  namespace: profile.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions:
+    - "autoscaling/v2"
+    - "gateway.networking.k8s.io/v1"
+    - "gateway.networking.k8s.io/v1alpha2"
+    - "monitoring.coreos.com/v1"
+  values: profile.chartValues
+let chartResources = helm.render(appChart.chartArchive, options)
+
+emit each chartResources
+emit appResources.configMap
+emit appResources.resource
+emit appResources.pdb
+emit appResources.scaledObject
+emit appResources.vpa

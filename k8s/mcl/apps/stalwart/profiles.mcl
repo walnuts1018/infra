@@ -1,0 +1,9 @@
+export let profiles =
+  s3BackedMail:
+    namespace: "stalwart"
+    s3CredentialName: "stalwart-s3-credentials"
+    s3AccessKeyField: "s3_access_key"
+    s3SecretKeyField: "s3_secret_access_key"
+    s3Bucket: "stalwart"
+    s3Endpoint: "https://seaweedfs.local.walnuts.dev"
+    loadBalancerService: "ClusterIP"

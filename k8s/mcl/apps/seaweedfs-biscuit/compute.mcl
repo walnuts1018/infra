@@ -1,0 +1,128 @@
+export let resource = node:
+  apiVersion: "apps/v1"
+  kind: "StatefulSet"
+  metadata:
+    annotations:
+      "reloader.stakater.com/auto": "true"
+    labels:
+      app: "seaweedfs-biscuit"
+      "app.kubernetes.io/component": "mini"
+      "app.kubernetes.io/name": "seaweedfs-biscuit"
+    name: "seaweedfs-biscuit"
+    namespace: "seaweedfs"
+  spec:
+    podManagementPolicy: "OrderedReady"
+    replicas: 1
+    selector:
+      matchLabels:
+        app: "seaweedfs-biscuit"
+        "app.kubernetes.io/component": "mini"
+        "app.kubernetes.io/name": "seaweedfs-biscuit"
+    serviceName: "seaweedfs-biscuit"
+    template:
+      metadata:
+        labels:
+          app: "seaweedfs-biscuit"
+          "app.kubernetes.io/component": "mini"
+          "app.kubernetes.io/name": "seaweedfs-biscuit"
+      spec:
+        automountServiceAccountToken: false
+        containers:
+          -
+            args:
+              - "mini"
+              - "-dir=/data"
+              - "-master.dir=/meta/master"
+              - "-master.defaultReplication=000"
+              - "-master.volumeSizeLimitMB=30000"
+              - "-volume.index=memory"
+              - "-s3.config=/etc/seaweedfs/s3/seaweedfs_s3_config.json"
+              - "-s3.iam.readOnly=true"
+              - "-s3.port=8333"
+              - "-s3.port.iceberg=0"
+              - "-s3.port.lance=0"
+              - "-webdav=false"
+              - "-admin.ui=false"
+            image: "chrislusf/seaweedfs@sha256:aa0d394e64735d240d57673b6745ee344360a9fab9ca0b26e4ed3707d135f570"
+            imagePullPolicy: "IfNotPresent"
+            livenessProbe:
+              failureThreshold: 6
+              httpGet:
+                path: "/healthz"
+                port: "s3"
+                scheme: "HTTP"
+              periodSeconds: 20
+              timeoutSeconds: 5
+            name: "seaweedfs"
+            ports:
+              -
+                containerPort: 8333
+                name: "s3"
+                protocol: "TCP"
+            readinessProbe:
+              failureThreshold: 6
+              httpGet:
+                path: "/readyz"
+                port: "s3"
+                scheme: "HTTP"
+              periodSeconds: 10
+              timeoutSeconds: 3
+            resources:
+              limits:
+                cpu: "2"
+                memory: "4Gi"
+              requests:
+                cpu: "100m"
+                memory: "512Mi"
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - "ALL"
+            startupProbe:
+              failureThreshold: 120
+              httpGet:
+                path: "/readyz"
+                port: "s3"
+                scheme: "HTTP"
+              periodSeconds: 5
+              timeoutSeconds: 3
+            volumeMounts:
+              -
+                mountPath: "/meta"
+                name: "meta"
+              -
+                mountPath: "/data"
+                name: "data"
+              -
+                mountPath: "/etc/seaweedfs/filer.toml"
+                name: "filer-config"
+                readOnly: true
+                subPath: "filer.toml"
+              -
+                mountPath: "/etc/seaweedfs/s3"
+                name: "s3-config"
+                readOnly: true
+        securityContext:
+          seccompProfile:
+            type: "RuntimeDefault"
+        terminationGracePeriodSeconds: 60
+        volumes:
+          -
+            name: "meta"
+            persistentVolumeClaim:
+              claimName: "seaweedfs-meta"
+          -
+            name: "data"
+            persistentVolumeClaim:
+              claimName: "seaweedfs-volume"
+          -
+            configMap:
+              name: "seaweedfs-biscuit-filer-config"
+            name: "filer-config"
+          -
+            name: "s3-config"
+            secret:
+              secretName: "seaweedfs-biscuit-s3-config"
+    updateStrategy:
+      type: "RollingUpdate"

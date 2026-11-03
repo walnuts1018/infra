@@ -1,0 +1,19 @@
+export let name = "maps"
+export let namespace = "maps"
+
+export let containerSecurityContext: Map<String, Any> =
+  readOnlyRootFilesystem: true
+  seccompProfile:
+    type: "RuntimeDefault"
+  capabilities:
+    add:
+      - "NET_BIND_SERVICE"
+    drop:
+      - "all"
+
+export let versatilesContainerSecurityContext: Map<String, Any> = containerSecurityContext with:
+  allowPrivilegeEscalation: false
+
+export fn labels(component: String) -> Map<String, String> =
+  app: name + "-" + component
+  "app.kubernetes.io/name": name + "-" + component

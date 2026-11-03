@@ -1,0 +1,7 @@
+export let chartVersion = "2.36.5"
+export let chartArchive = "oci://ghcr.io/coder/chart/coder"
+export let releaseName = "coder"
+export let namespace = "coder"
+export let kubeVersion = "1.36.4"
+export let apiVersions: List<String> =
+  - "gateway.networking.k8s.io/v1"

@@ -1,0 +1,33 @@
+import "std:list" as lists
+
+let clusterRoleBinding = manifest.load("./_configs/cluster-role-binding.yaml")[0]
+let clusterRole = manifest.load("./_configs/cluster-role.yaml")[0]
+let atomicCollector = manifest.load("./_configs/collectors__atomic.yaml")[0]
+let daemonsetCollector = manifest.load("./_configs/collectors__daemonset.yaml")[0]
+let defaultCollector = manifest.load("./_configs/collectors__default.yaml")[0]
+let prometheusCollector = manifest.load("./_configs/collectors__prometheus.yaml")[0]
+let vyosCollector = manifest.load("./_configs/collectors__vyos.yaml")[0]
+let vyosService = manifest.load("./_configs/collectors__vyos_service.yaml")[0]
+let externalSecret = manifest.load("./_configs/external-secret.yaml")[0]
+let serviceAccount = manifest.load("./_configs/sa.yaml")[0]
+
+let collectors =
+  - atomicCollector
+  - daemonsetCollector
+  - defaultCollector
+  - prometheusCollector
+  - vyosCollector
+
+let baseResources =
+  - clusterRoleBinding
+  - clusterRole
+  - externalSecret
+  - serviceAccount
+
+let serviceResources =
+  - vyosService
+
+export let resources = lists.concat(
+  lists.concat(baseResources, collectors),
+  serviceResources,
+)

@@ -1,0 +1,247 @@
+import "std:context" as context
+import "std:list" as lists
+import "./databases.mcl" as databaseConfig
+import "./profiles.mcl" as appProfiles
+
+type Database =
+  name: String
+  resourceName: String
+  userName: String
+  passwordSecretName: String
+  secretSourceKey: String
+  secretSourceProperty: String
+
+type PostgisDatabase =
+  name: String
+  resourceName: String
+  userName: String
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+let databases: List<Database> = databaseConfig.databases
+let clusterName = profile.clusterName
+
+fn roleForDatabase(database: Database) -> Map<String, Any> = node:
+  name: database.userName
+  ensure: "present"
+  login: true
+  superuser: false
+  inRoles:
+    - "pg_monitor"
+    - "pg_signal_backend"
+  passwordSecret:
+    name: database.passwordSecretName
+let roles = lists.map(databases, roleForDatabase)
+
+
+let cluster = node:
+  apiVersion: "postgresql.cnpg.io/v1"
+  kind: "Cluster"
+  metadata:
+    name: clusterName
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            -
+              matchExpressions:
+                - key: "storage.walnuts.dev/slow"
+                  operator: "DoesNotExist"
+    instances: 3
+    imageCatalogRef:
+      apiGroup: "postgresql.cnpg.io"
+      kind: "ClusterImageCatalog"
+      name: profile.databaseImageCatalog
+      major: profile.majorVersion
+    postgresql:
+      extensions:
+        - name: "postgis"
+      parameters:
+        max_connections: "200"
+    storage:
+      size: profile.storageSize
+      storageClass: profile.storageClass
+    superuserSecret:
+      name: "postgres-superuser-password"
+    enableSuperuserAccess: true
+    bootstrap:
+      initdb:
+        database: "app"
+        owner: "app"
+    managed:
+      roles: roles
+    resources:
+      requests:
+        cpu: "20m"
+        memory: "150Mi"
+    plugins:
+      - name: "barman-cloud.cloudnative-pg.io"
+        isWALArchiver: true
+        parameters:
+          barmanObjectName: "seaweedfs-store"
+    projectedVolumeTemplate:
+      sources:
+        - serviceAccountToken:
+            audience: "sts.seaweedfs.com"
+            expirationSeconds: 86400
+            path: "sts.seaweedfs.com/serviceaccount/token"
+
+
+fn databaseResource(database: Database) -> Map<String, Any> = node:
+  apiVersion: "postgresql.cnpg.io/v1"
+  kind: "Database"
+  metadata:
+    name: database.resourceName
+  spec:
+    name: database.name
+    owner: database.userName
+    cluster:
+      name: clusterName
+let databasesWithoutExtensions = lists.filter(
+  databases,
+  fn(database) => database.name != "picca" and database.name != "picca_dev",
+)
+let regularDatabaseResources = lists.map(databasesWithoutExtensions, databaseResource)
+let postgisDatabases =
+  - name: "picca"
+    resourceName: "picca"
+    userName: "picca"
+  - name: "picca_dev"
+    resourceName: "picca-dev"
+    userName: "picca_dev"
+fn postgisDatabaseResource(database: PostgisDatabase) -> Map<String, Any> = node:
+  apiVersion: "postgresql.cnpg.io/v1"
+  kind: "Database"
+  metadata:
+    name: database.resourceName
+  spec:
+    name: database.name
+    owner: database.userName
+    cluster:
+      name: clusterName
+    extensions:
+      - name: "postgis"
+let postgisResources = lists.map(postgisDatabases, postgisDatabaseResource)
+let databaseResources = lists.concat(regularDatabaseResources, postgisResources)
+
+fn passwordResource(database: Database) -> Map<String, Any> = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: database.passwordSecretName
+  spec:
+    secretStoreRef:
+      name: "onepassword"
+      kind: "ClusterSecretStore"
+    refreshInterval: "1m"
+    target:
+      name: database.passwordSecretName
+      template:
+        engineVersion: "v2"
+        type: "kubernetes.io/basic-auth"
+        data:
+          username: database.userName
+          password: "{{ .password }}"
+    data:
+      - secretKey: "password"
+        remoteRef:
+          key: database.secretSourceKey
+          property: database.secretSourceProperty
+let passwordResources = lists.map(databases, passwordResource)
+
+let superuserPassword = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: "postgres-superuser-password"
+  spec:
+    secretStoreRef:
+      name: "onepassword"
+      kind: "ClusterSecretStore"
+    refreshInterval: "1m"
+    target:
+      name: "postgres-superuser-password"
+      template:
+        engineVersion: "v2"
+        type: "kubernetes.io/basic-auth"
+        data:
+          username: "postgres"
+          password: "{{ .password }}"
+    data:
+      - secretKey: "password"
+        remoteRef:
+          key: "postgres_passwords"
+          property: "postgres"
+
+let objectStore = node:
+  apiVersion: "barmancloud.cnpg.io/v1"
+  kind: "ObjectStore"
+  metadata:
+    name: "seaweedfs-store"
+    namespace: profile.namespace
+  spec:
+    configuration:
+      destinationPath: profile.backupDestination
+      endpointURL: profile.backupEndpoint
+      s3Credentials:
+        inheritFromIAMRole: true
+      data:
+        compression: "bzip2"
+      wal:
+        compression: "xz"
+    retentionPolicy: profile.backupRetention
+    instanceSidecarConfiguration:
+      env:
+        - name: "AWS_WEB_IDENTITY_TOKEN_FILE"
+          value: "/projected/sts.seaweedfs.com/serviceaccount/token"
+        - name: "AWS_ENDPOINT_URL_STS"
+          value: profile.backupEndpoint
+        - name: "AWS_REGION"
+          value: "us-east-1"
+        - name: "AWS_ROLE_ARN"
+          value: "arn:aws:iam::role/cloudnative-pg-backup"
+
+let scheduledBackup = node:
+  apiVersion: "postgresql.cnpg.io/v1"
+  kind: "ScheduledBackup"
+  metadata:
+    name: "postgresql-default-postgresql-backup"
+  spec:
+    cluster:
+      name: clusterName
+    schedule: "0 0 19 */7 * *"
+    backupOwnerReference: "self"
+    method: "plugin"
+    pluginConfiguration:
+      name: "barman-cloud.cloudnative-pg.io"
+
+let service = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: "postgresql-default-rw-expose"
+    namespace: profile.namespace
+    labels:
+      "cnpg.io/cluster": clusterName
+  spec:
+    selector:
+      "cnpg.io/cluster": clusterName
+      "cnpg.io/instanceRole": "primary"
+    ports:
+      - name: "postgres"
+        protocol: "TCP"
+        port: 5432
+        targetPort: 5432
+    type: "LoadBalancer"
+    loadBalancerIP: profile.loadBalancerAddress
+
+let baseResources =
+  - cluster
+  - superuserPassword
+  - objectStore
+  - scheduledBackup
+  - service
+export let resources = lists.concat(
+  baseResources,
+  lists.concat(databaseResources, passwordResources),
+)

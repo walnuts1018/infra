@@ -1,0 +1,10 @@
+export let name = "iwashi-collector"
+export let namespace = "iwashi-system"
+
+export let collectorLabels =
+  "app.kubernetes.io/component": "opentelemetry-collector"
+  "app.kubernetes.io/instance": namespace + "." + name
+
+export let prometheusCollectorLabels =
+  "app.kubernetes.io/component": "opentelemetry-collector"
+  "app.kubernetes.io/instance": "opentelemetry-collector.prometheus"

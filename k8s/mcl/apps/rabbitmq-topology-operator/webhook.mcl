@@ -1,0 +1,46 @@
+fn webhook(apiVersion: String, path: String, name: String, resource: String) -> Map<String, Any> = node:
+  admissionReviewVersions:
+    - "v1"
+  clientConfig:
+    service:
+      name: "rabbitmq-topology-operator-webhook"
+      namespace: "rabbitmq-operator"
+      path: path
+      port: 443
+  failurePolicy: "Fail"
+  name: name
+  rules:
+    - apiGroups:
+        - "rabbitmq.com"
+      apiVersions:
+        - apiVersion
+      operations:
+        - "CREATE"
+        - "UPDATE"
+      resources:
+        - resource
+  sideEffects: "None"
+
+let webhooks: List<Map<String, Any>> =
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-binding", "vbinding.kb.io", "bindings")
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-exchange", "vexchange.kb.io", "exchanges")
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-federation", "vfederation.kb.io", "federations")
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-operatorpolicy", "voperatorpolicy.kb.io", "operatorpolicies")
+  - webhook("v1alpha1", "/validate-rabbitmq-com-v1alpha1-superstream", "vsuperstream.kb.io", "superstreams")
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-permission", "vpermission.kb.io", "permissions")
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-topicpermission", "vtopicpermission.kb.io", "topicpermissions")
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-policy", "vpolicy.kb.io", "policies")
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-queue", "vqueue.kb.io", "queues")
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-schemareplication", "vschemareplication.kb.io", "schemareplications")
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-shovel", "vshovel.kb.io", "shovels")
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-user", "vuser.kb.io", "users")
+  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-vhost", "vvhost.kb.io", "vhosts")
+
+export let configuration = node:
+  apiVersion: "admissionregistration.k8s.io/v1"
+  kind: "ValidatingWebhookConfiguration"
+  metadata:
+    name: "rabbitmq-topology-operator-webhook-rabbitmq-operator"
+    annotations:
+      "cert-manager.io/inject-ca-from": "rabbitmq-operator/rabbitmq-topology-operator-webhook"
+  webhooks: webhooks

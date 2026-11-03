@@ -1,0 +1,5 @@
+import "./deployment.mcl" as deployment
+import "./resources.mcl" as appResources
+
+emit deployment.resource
+emit each appResources.resources

@@ -1,0 +1,22 @@
+export type Destination =
+  kind: "name"
+  name: String
+  namespace: String
+
+export type Placement =
+  target: String
+  cluster: String
+  entrypoint: String
+  destination: Destination
+  profile: String
+
+export let placements: Map<String, Placement> =
+  kurumi:
+    target: "kurumi"
+    cluster: "kurumi"
+    entrypoint: "k8s/mcl/apps/iwashi-cortex/main.mcl"
+    destination:
+      kind: "name"
+      name: "kurumi"
+      namespace: "iwashi-system"
+    profile: "metricsStorage"

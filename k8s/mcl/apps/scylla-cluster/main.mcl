@@ -1,0 +1,30 @@
+import "std:context" as context
+import "std:helm" as helm
+import "std:list" as lists
+import "./chart.mcl" as appChart
+import "./profiles.mcl" as appProfiles
+import "./configmaps.mcl" as configMaps
+import "./external-secret.mcl" as migrationsSecret
+import "./setup-job.mcl" as setupJob
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+let apiVersions: List<String> = []
+let options =
+  releaseName: "scylla-cluster"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: profile
+let chartResources = helm.render(appChart.chartArchive, options)
+let generatedResources =
+  - configMaps.scyllaConfig
+  - configMaps.setupConfigMap
+  - migrationsSecret.resource
+  - setupJob.resource
+let resources = lists.concat(
+  chartResources,
+  generatedResources,
+)
+
+emit each resources

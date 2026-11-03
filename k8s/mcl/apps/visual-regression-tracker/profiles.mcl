@@ -1,0 +1,7 @@
+export let profiles =
+  s3BackedVisualRegression:
+    namespace: "visual-regression-tracker"
+    publicURL: "https://vrt.local.walnuts.dev"
+    s3Bucket: "visual-regression-tracker"
+    s3Endpoint: "https://seaweedfs.local.walnuts.dev"
+    databaseHost: "postgresql-default-rw.databases.svc.cluster.local"

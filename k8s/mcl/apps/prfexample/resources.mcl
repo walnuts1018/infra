@@ -1,0 +1,404 @@
+import "std:context" as context
+import text "./_configs/scylladb-ca.crt" as scyllaCaCertificate
+import "./profiles.mcl" as appProfiles
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+let appName = "prfexample"
+let appNamespace = "prfexample"
+let labels =
+  app: appName
+  "app.kubernetes.io/name": appName
+
+let scyllaPasswordSecret = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: appName
+    namespace: appNamespace
+  spec:
+    secretStoreRef:
+      name: "onepassword"
+      kind: "ClusterSecretStore"
+    refreshInterval: "1m"
+    target:
+      name: appName
+      template:
+        engineVersion: "v2"
+        type: "Opaque"
+        data:
+          scylladb_username: "prfexample"
+          scylladb_password: "{{ .scylladb_password }}"
+    data:
+      - secretKey: "scylladb_password"
+        remoteRef:
+          key: "scylladb"
+          property: appName
+
+let scyllaClientServiceAccount = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  metadata:
+    name: "prfexample-scylla-secret-reader"
+    namespace: appNamespace
+
+let scyllaClientCertificateStore = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "SecretStore"
+  metadata:
+    name: "scylla-client-cert"
+    namespace: appNamespace
+  spec:
+    provider:
+      kubernetes:
+        remoteNamespace: "databases"
+        server:
+          url: "https://kubernetes.default.svc"
+          caProvider:
+            type: "ConfigMap"
+            name: "kube-root-ca.crt"
+            key: "ca.crt"
+        auth:
+          serviceAccount:
+            name: scyllaClientServiceAccount.metadata.name
+            namespace: appNamespace
+
+let scyllaClientCertificate = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: "scylla-cluster-local-client-ca"
+    namespace: appNamespace
+  spec:
+    secretStoreRef:
+      name: scyllaClientCertificateStore.metadata.name
+      kind: "SecretStore"
+    refreshInterval: "1h"
+    target:
+      name: "scylla-cluster-local-client-ca"
+    dataFrom:
+      - extract:
+          key: "scylla-cluster-local-client-ca"
+
+let clientCertReadRole = node:
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  kind: "Role"
+  metadata:
+    name: "prfexample-read-scylla-client-cert"
+    namespace: "databases"
+  rules:
+    - apiGroups:
+        - ""
+      resources:
+        - "secrets"
+      resourceNames:
+        - "scylla-cluster-local-client-ca"
+      verbs:
+        - "get"
+
+let clientCertReadRoleBinding = node:
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  kind: "RoleBinding"
+  metadata:
+    name: "prfexample-read-scylla-client-cert"
+    namespace: "databases"
+  roleRef:
+    apiGroup: "rbac.authorization.k8s.io"
+    kind: "Role"
+    name: clientCertReadRole.metadata.name
+  subjects:
+    - kind: "ServiceAccount"
+      name: scyllaClientServiceAccount.metadata.name
+      namespace: appNamespace
+
+let scyllaCaConfigMap = node:
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  metadata:
+    name: appName + "-scylladb-ca-cert"
+    namespace: appNamespace
+    labels: labels
+  data:
+    "ca.crt": scyllaCaCertificate
+
+let deployment = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: appName
+    namespace: appNamespace
+    labels: labels
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: labels
+    template:
+      metadata:
+        labels: labels
+      spec:
+        imagePullSecrets:
+          - name: "ghcr-login-secret"
+        containers:
+          - name: "apiserver"
+            image: profile.appImage
+            imagePullPolicy: "IfNotPresent"
+            resizePolicy:
+              - resourceName: "cpu"
+                restartPolicy: "NotRequired"
+              - resourceName: "memory"
+                restartPolicy: "RestartContainer"
+            ports:
+              - containerPort: 8080
+            resources:
+              requests:
+                cpu: "5m"
+                memory: "20Mi"
+              limits:
+                cpu: "500m"
+                memory: "256Mi"
+            env:
+              - name: "OTEL_EXPORTER_OTLP_ENDPOINT"
+                value: profile.otelEndpoint
+              - name: "SCYLLA_CA_CERT_PATH"
+                value: "/etc/certs/scylla-db/ca.crt"
+              - name: "SCYLLA_CLIENT_CERT_PATH"
+                value: "/etc/certs/scylla-db-client/tls.crt"
+              - name: "SCYLLA_CLIENT_KEY_PATH"
+                value: "/etc/certs/scylla-db-client/tls.key"
+              - name: "SCYLLA_HOST"
+                value: profile.scyllaHost
+              - name: "SCYLLA_PORT"
+                value: profile.scyllaPort
+              - name: "SCYLLA_USER"
+                valueFrom:
+                  secretKeyRef:
+                    name: scyllaPasswordSecret.spec.target.name
+                    key: "scylladb_username"
+              - name: "SCYLLA_PASSWORD"
+                valueFrom:
+                  secretKeyRef:
+                    name: scyllaPasswordSecret.spec.target.name
+                    key: "scylladb_password"
+              - name: "SERVER_ADDITIONAL_ORIGINS"
+                value: "android:apk-key-hash:lQHKOP1Xm9fdIS_R8RbgdktIxTaucWdqLFaSe7QJTWM"
+            livenessProbe:
+              httpGet:
+                path: "/livez"
+                port: 8080
+            readinessProbe:
+              httpGet:
+                path: "/readyz"
+                port: 8080
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              seccompProfile:
+                type: "RuntimeDefault"
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                drop:
+                  - "all"
+            volumeMounts:
+              - name: "tmp"
+                mountPath: "/tmp"
+              - name: "scylla-db-ca-cert"
+                mountPath: "/etc/certs/scylla-db"
+                readOnly: true
+              - name: "scylla-db-client-cert"
+                mountPath: "/etc/certs/scylla-db-client"
+                readOnly: true
+        volumes:
+          - name: "tmp"
+            emptyDir: {}
+          - name: "scylla-db-ca-cert"
+            configMap:
+              name: scyllaCaConfigMap.metadata.name
+              items:
+                - key: "ca.crt"
+                  path: "ca.crt"
+          - name: "scylla-db-client-cert"
+            secret:
+              secretName: scyllaClientCertificate.spec.target.name
+              items:
+                - key: "tls.crt"
+                  path: "tls.crt"
+                - key: "tls.key"
+                  path: "tls.key"
+
+let service = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: appName
+    namespace: appNamespace
+    labels: labels
+  spec:
+    ports:
+      - name: "http"
+        port: 8080
+        targetPort: 8080
+    selector: labels
+    type: "ClusterIP"
+
+let horizontalAutoscaler = node:
+  apiVersion: "keda.sh/v1alpha1"
+  kind: "ScaledObject"
+  metadata:
+    name: appName
+    namespace: appNamespace
+    labels: labels
+  spec:
+    minReplicaCount: 0
+    maxReplicaCount: 2
+    cooldownPeriod: 300
+    scaleTargetRef:
+      apiVersion: "apps/v1"
+      kind: "Deployment"
+      name: deployment.metadata.name
+    triggers:
+      - type: "external-push"
+        metadata:
+          scalerAddress: "keda-add-ons-http-external-scaler.keda:9090"
+          interceptorRoute: appName
+      - type: "cpu"
+        metricType: "Utilization"
+        metadata:
+          value: "95"
+
+let verticalAutoscaler = node:
+  apiVersion: "autoscaling.k8s.io/v1"
+  kind: "VerticalPodAutoscaler"
+  metadata:
+    name: appName
+    namespace: appNamespace
+    labels: labels
+  spec:
+    targetRef:
+      apiVersion: "apps/v1"
+      kind: "Deployment"
+      name: deployment.metadata.name
+    updatePolicy:
+      updateMode: "Auto"
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "apiserver"
+          controlledResources:
+            - "memory"
+          minAllowed:
+            cpu: "1m"
+            memory: "10Mi"
+          maxAllowed:
+            cpu: "500m"
+            memory: "256Mi"
+
+let httpRoute = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: appName
+    namespace: appNamespace
+  spec:
+    parentRefs:
+      - name: "envoy-gateway"
+        namespace: "envoy-gateway-system"
+    hostnames:
+      - "prfexample.walnuts.dev"
+    rules:
+      -
+        backendRefs:
+          - name: "keda-add-ons-http-interceptor-proxy"
+            namespace: "keda"
+            port: 8080
+
+let interceptorRoute = node:
+  apiVersion: "http.keda.sh/v1beta1"
+  kind: "InterceptorRoute"
+  metadata:
+    name: appName
+    namespace: appNamespace
+  spec:
+    target:
+      service: appName
+      port: 8080
+    rules:
+      - hosts:
+          - "prfexample.walnuts.dev"
+    scalingMetric:
+      concurrency:
+        targetValue: 10
+
+let referenceGrant = node:
+  apiVersion: "gateway.networking.k8s.io/v1beta1"
+  kind: "ReferenceGrant"
+  metadata:
+    name: "prfexample-allow-interceptor"
+    namespace: "keda"
+  spec:
+    from:
+      - group: "gateway.networking.k8s.io"
+        kind: "HTTPRoute"
+        namespace: appNamespace
+    to:
+      - group: ""
+        kind: "Service"
+        name: "keda-add-ons-http-interceptor-proxy"
+
+let networkPolicy = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: appName
+    namespace: appNamespace
+  spec:
+    podSelector:
+      matchLabels: labels
+    policyTypes:
+      - "Egress"
+    egress:
+      -
+        to:
+          -
+            ipBlock:
+              cidr: "0.0.0.0/0"
+              except:
+                - "192.168.0.0/16"
+                - "10.244.0.0/16"
+                - "10.96.0.0/12"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "kube-system"
+            podSelector:
+              matchLabels:
+                "k8s-app": "kube-dns"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "opentelemetry-collector"
+            podSelector:
+              matchLabels:
+                "app.kubernetes.io/name": "default-collector"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "databases"
+            podSelector:
+              matchLabels:
+                "scylla/cluster": "scylla-cluster"
+
+export let resources =
+  - scyllaPasswordSecret
+  - scyllaClientServiceAccount
+  - scyllaClientCertificateStore
+  - scyllaClientCertificate
+  - clientCertReadRole
+  - clientCertReadRoleBinding
+  - scyllaCaConfigMap
+  - deployment
+  - service
+  - horizontalAutoscaler
+  - verticalAutoscaler
+  - httpRoute
+  - interceptorRoute
+  - referenceGrant
+  - networkPolicy

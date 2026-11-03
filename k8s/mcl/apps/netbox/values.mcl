@@ -1,0 +1,23 @@
+import "./external-secrets.mcl" as externalSecrets
+
+let valuesBundle = manifest.load("./_configs/values.yaml")
+let baseValues: Map<String, Any> = valuesBundle[0]
+
+let oidcAndS3StorageValues = baseValues with:
+  existingSecret: externalSecrets.netboxSecretName
+  superuser:
+    existingSecret: externalSecrets.netboxSecretName
+  email:
+    existingSecretName: externalSecrets.netboxSecretName
+  externalDatabase:
+    existingSecretName: externalSecrets.netboxSecretName
+  valkey:
+    auth:
+      existingSecret: externalSecrets.netboxSecretName
+  remoteAuth:
+    extraConfig:
+      - secret:
+          secretName: externalSecrets.oidcSecretName
+
+export let valuesByProfile: Map<String, Map<String, Any>> =
+  "oidc-and-s3-storage": oidcAndS3StorageValues

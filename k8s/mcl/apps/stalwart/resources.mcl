@@ -1,0 +1,419 @@
+import "std:context" as context
+import "std:list" as lists
+import text "./_configs/config.json" as configJSON
+import "./profiles.mcl" as appProfiles
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+let appName = "stalwart"
+let labels =
+  app: appName
+  "app.kubernetes.io/name": appName
+let routeNames =
+  smtp: "stalwart-smtp"
+  smtps: "stalwart-smtps"
+  submission: "stalwart-submission"
+  imaps: "stalwart-imaps"
+
+let externalSecret = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: appName
+  spec:
+    secretStoreRef:
+      name: "onepassword"
+      kind: "ClusterSecretStore"
+    refreshInterval: "1m"
+    target:
+      name: appName
+      template:
+        engineVersion: "v2"
+        type: "Opaque"
+        data:
+          postgres_password: "{{ .postgres_password }}"
+    data:
+      - secretKey: "postgres_password"
+        remoteRef:
+          key: "postgres_passwords"
+          property: appName
+
+let certificate = node:
+  apiVersion: "cert-manager.io/v1"
+  kind: "Certificate"
+  metadata:
+    name: "stalwart-mx"
+    namespace: profile.namespace
+  spec:
+    secretName: "stalwart-mx-tls"
+    dnsNames:
+      - "mx.walnuts.dev"
+    issuerRef:
+      group: "cert-manager.io"
+      kind: "ClusterIssuer"
+      name: "letsencrypt-prod"
+
+let configMap = node:
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  metadata:
+    name: "stalwart-config"
+    namespace: profile.namespace
+    labels: labels
+  data:
+    "config.json": configJSON
+
+let serviceAccount = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  metadata:
+    name: appName
+    namespace: profile.namespace
+
+let s3CredentialsSecret = node:
+  apiVersion: "v1"
+  kind: "Secret"
+  metadata:
+    name: profile.s3CredentialName
+    namespace: profile.namespace
+
+let s3ReferenceGrant = node:
+  apiVersion: "seaweed.seaweedfs.com/v1"
+  kind: "ResourceReferenceGrant"
+  metadata:
+    name: "seaweedfs-s3-credentials"
+    namespace: profile.namespace
+  spec:
+    from:
+      - group: "seaweed.seaweedfs.com"
+        kind: "S3Credentials"
+        namespace: "seaweedfs"
+    to:
+      - group: ""
+        kind: "Secret"
+
+let databaseStorage =
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        -
+          matchExpressions:
+            - key: "storage.walnuts.dev/slow"
+              operator: "DoesNotExist"
+
+let elasticsearch = node:
+  apiVersion: "elasticsearch.k8s.elastic.co/v1"
+  kind: "Elasticsearch"
+  metadata:
+    name: appName
+    namespace: profile.namespace
+    annotations:
+      "argocd.argoproj.io/sync-options": "SkipDryRunOnMissingResource=true"
+  spec:
+    version: "9.4.2"
+    volumeClaimDeletePolicy: "DeleteOnScaledownOnly"
+    nodeSets:
+      - name: "default"
+        count: 1
+        config:
+          "node.store.allow_mmap": false
+        podTemplate:
+          spec:
+            affinity: databaseStorage
+            containers:
+              - name: "elasticsearch"
+                resources:
+                  requests:
+                    cpu: "250m"
+                    memory: "1Gi"
+                  limits:
+                    cpu: "1"
+                    memory: "2Gi"
+        volumeClaimTemplates:
+          - metadata:
+              name: "elasticsearch-data"
+            spec:
+              accessModes:
+                - "ReadWriteOnce"
+              storageClassName: "longhorn"
+              resources:
+                requests:
+                  storage: "4Gi"
+
+let valkeyCluster = node:
+  apiVersion: "valkey.io/v1alpha1"
+  kind: "ValkeyCluster"
+  metadata:
+    name: "stalwart-valkey"
+    namespace: profile.namespace
+    annotations:
+      "argocd.argoproj.io/sync-options": "SkipDryRunOnMissingResource=true"
+    labels:
+      app: "stalwart-valkey"
+      "app.kubernetes.io/name": "stalwart-valkey"
+  spec:
+    shards: 1
+    replicas: 2
+    resources:
+      requests:
+        cpu: "5m"
+        memory: "5Mi"
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+
+fn tcpRoute(listener: String, port: Int, routeName: String) -> Map<String, Any> = node:
+  apiVersion: "gateway.networking.k8s.io/v1alpha2"
+  kind: "TCPRoute"
+  metadata:
+    name: routeName
+    namespace: profile.namespace
+  spec:
+    parentRefs:
+      - name: "envoy-gateway"
+        namespace: "envoy-gateway-system"
+        sectionName: listener
+    rules:
+      -
+        backendRefs:
+          - name: appName
+            port: port
+let tcpRoutes =
+  - tcpRoute("smtp", 25, routeNames.smtp)
+  - tcpRoute("smtps", 465, routeNames.smtps)
+  - tcpRoute("submission", 587, routeNames.submission)
+  - tcpRoute("imaps", 993, routeNames.imaps)
+
+let backendTrafficPolicy = node:
+  apiVersion: "gateway.envoyproxy.io/v1alpha1"
+  kind: "BackendTrafficPolicy"
+  metadata:
+    name: "stalwart-proxy-protocol"
+    namespace: profile.namespace
+  spec:
+    targetRefs:
+      - group: "gateway.networking.k8s.io"
+        kind: "TCPRoute"
+        name: routeNames.smtp
+      - group: "gateway.networking.k8s.io"
+        kind: "TCPRoute"
+        name: routeNames.smtps
+    proxyProtocol:
+      version: "V2"
+
+let httpRoute = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: appName
+    namespace: profile.namespace
+  spec:
+    parentRefs:
+      - name: "envoy-gateway"
+        namespace: "envoy-gateway-system"
+    hostnames:
+      - "stalwart.local.walnuts.dev"
+      - "autoconfig.walnuts.dev"
+      - "autodiscover.walnuts.dev"
+    rules:
+      -
+        backendRefs:
+          - kind: "Service"
+            name: appName
+            port: 8080
+            weight: 1
+        matches:
+          - path:
+              type: "PathPrefix"
+              value: "/"
+
+let deployment = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: appName
+    namespace: profile.namespace
+    labels: labels
+    annotations:
+      "reloader.stakater.com/auto": "true"
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: labels
+    strategy:
+      type: "RollingUpdate"
+      rollingUpdate:
+        maxUnavailable: 0
+        maxSurge: 1
+    template:
+      metadata:
+        labels: labels
+      spec:
+        serviceAccountName: serviceAccount.metadata.name
+        topologySpreadConstraints:
+          - maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: "ScheduleAnyway"
+            labelSelector:
+              matchLabels: labels
+        containers:
+          - name: "stalwart"
+            image: "docker.io/stalwartlabs/stalwart:v0.16.22"
+            imagePullPolicy: "IfNotPresent"
+            args:
+              - "--config"
+              - "/opt/stalwart/etc/config.json"
+            env:
+              - name: "STALWART_DB_PASSWORD"
+                valueFrom:
+                  secretKeyRef:
+                    name: externalSecret.spec.target.name
+                    key: "postgres_password"
+              - name: "STALWART_S3_ACCESS_KEY"
+                valueFrom:
+                  secretKeyRef:
+                    name: profile.s3CredentialName
+                    key: profile.s3AccessKeyField
+              - name: "STALWART_S3_SECRET_KEY"
+                valueFrom:
+                  secretKeyRef:
+                    name: profile.s3CredentialName
+                    key: profile.s3SecretKeyField
+            ports:
+              - name: "http"
+                containerPort: 8080
+              - name: "https"
+                containerPort: 443
+              - name: "smtp"
+                containerPort: 25
+              - name: "smtps"
+                containerPort: 465
+              - name: "submission"
+                containerPort: 587
+              - name: "imaps"
+                containerPort: 993
+            volumeMounts:
+              - name: "stalwart-config"
+                mountPath: "/opt/stalwart/etc/config.json"
+                subPath: "config.json"
+                readOnly: true
+              - name: "tmp"
+                mountPath: "/tmp"
+              - name: "tls"
+                mountPath: "/var/run/stalwart/tls"
+                readOnly: true
+            livenessProbe:
+              httpGet:
+                path: "/healthz/live"
+                port: 8080
+              initialDelaySeconds: 30
+              periodSeconds: 10
+            startupProbe:
+              httpGet:
+                path: "/healthz/live"
+                port: 8080
+              periodSeconds: 10
+              failureThreshold: 20
+            readinessProbe:
+              httpGet:
+                path: "/healthz/ready"
+                port: 8080
+              initialDelaySeconds: 5
+              periodSeconds: 10
+            resources:
+              requests:
+                cpu: "5m"
+                memory: "60Mi"
+              limits:
+                cpu: "500m"
+                memory: "256Mi"
+            securityContext: null
+        volumes:
+          - name: "stalwart-config"
+            configMap:
+              name: configMap.metadata.name
+              items:
+                - key: "config.json"
+                  path: "config.json"
+          - name: "tmp"
+            emptyDir: {}
+          - name: "tls"
+            secret:
+              secretName: certificate.spec.secretName
+
+let service = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: appName
+    namespace: profile.namespace
+    labels: labels
+  spec:
+    selector: labels
+    ports:
+      - name: "http"
+        protocol: "TCP"
+        port: 8080
+        targetPort: "http"
+      - name: "https"
+        protocol: "TCP"
+        port: 443
+        targetPort: "https"
+      - name: "smtp"
+        protocol: "TCP"
+        port: 25
+        targetPort: "smtp"
+      - name: "smtps"
+        protocol: "TCP"
+        port: 465
+        targetPort: "smtps"
+      - name: "submission"
+        protocol: "TCP"
+        port: 587
+        targetPort: "submission"
+      - name: "imaps"
+        protocol: "TCP"
+        port: 993
+        targetPort: "imaps"
+    type: profile.loadBalancerService
+
+let verticalAutoscaler = node:
+  apiVersion: "autoscaling.k8s.io/v1"
+  kind: "VerticalPodAutoscaler"
+  metadata:
+    name: appName
+    namespace: profile.namespace
+    labels: labels
+  spec:
+    targetRef:
+      apiVersion: "apps/v1"
+      kind: "Deployment"
+      name: deployment.metadata.name
+    updatePolicy:
+      updateMode: "Auto"
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "stalwart"
+          controlledResources:
+            - "memory"
+          minAllowed:
+            cpu: "10m"
+            memory: "10Mi"
+          maxAllowed:
+            cpu: "500m"
+            memory: "256Mi"
+
+let resources =
+  - externalSecret
+  - certificate
+  - configMap
+  - serviceAccount
+  - s3CredentialsSecret
+  - s3ReferenceGrant
+  - elasticsearch
+  - valkeyCluster
+  - backendTrafficPolicy
+  - httpRoute
+  - deployment
+  - service
+  - verticalAutoscaler
+export let allResources = lists.concat(resources, tcpRoutes)

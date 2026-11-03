@@ -1,0 +1,6 @@
+export type Profile =
+  namespace: String
+
+export let profiles: Map<String, Profile> =
+  default:
+    namespace: "picca"

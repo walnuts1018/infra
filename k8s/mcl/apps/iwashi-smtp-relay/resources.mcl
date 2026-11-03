@@ -1,0 +1,10 @@
+let externalSecret = manifest.load("./_configs/external-secret.yaml")
+let serviceAccount = manifest.load("./_configs/service-account.yaml")
+let networkPolicy = manifest.load("./_configs/networkpolicy.yaml")
+let ciliumNetworkPolicy = manifest.load("./_configs/ciliumnetworkpolicy.yaml")
+
+export let resources =
+  - externalSecret[0]
+  - serviceAccount[0]
+  - networkPolicy[0]
+  - ciliumNetworkPolicy[0]

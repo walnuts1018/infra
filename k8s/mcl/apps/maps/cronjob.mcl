@@ -1,0 +1,102 @@
+import "std:context" as context
+import "./app.mcl" as app
+import "./configmaps.mcl" as appConfigMaps
+import "./identity.mcl" as appIdentity
+import "./profiles.mcl" as appProfiles
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+
+let s3Env =
+  - name: "AWS_WEB_IDENTITY_TOKEN_FILE"
+    value: "/var/run/secrets/sts.seaweedfs.com/serviceaccount/token"
+  - name: "AWS_ENDPOINT_URL_STS"
+    value: "http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333"
+  - name: "AWS_ROLE_ARN"
+    value: "arn:aws:iam::role/maps"
+
+export let resource = node:
+  apiVersion: "batch/v1"
+  kind: "CronJob"
+  metadata:
+    name: "maps-update"
+    namespace: app.namespace
+  spec:
+    schedule: profile.schedule
+    timeZone: "Asia/Tokyo"
+    concurrencyPolicy: "Forbid"
+    startingDeadlineSeconds: 3600
+    successfulJobsHistoryLimit: 3
+    failedJobsHistoryLimit: 3
+    jobTemplate:
+      spec:
+        backoffLimit: 2
+        activeDeadlineSeconds: 86400
+        template:
+          metadata:
+            labels: app.labels("update")
+          spec:
+            serviceAccountName: appIdentity.updaterServiceAccount.metadata.name
+            restartPolicy: "Never"
+            initContainers:
+              - name: "rclone-sync"
+                image: "ghcr.io/rclone/rclone:1.75.1"
+                command:
+                  - "rclone"
+                securityContext: app.containerSecurityContext
+                args:
+                  - "--config=/config/rclone.conf"
+                  - "copyto"
+                  - profile.source
+                  - profile.destination
+                  - "--retries=5"
+                  - "--low-level-retries=20"
+                  - "--retries-sleep=30s"
+                  - "--timeout=10m"
+                  - "--contimeout=30s"
+                  - "--s3-chunk-size=64M"
+                  - "--s3-upload-concurrency=4"
+                  - "-v"
+                  - "--stats=1m"
+                env: s3Env
+                resources:
+                  requests:
+                    cpu: "100m"
+                    memory: "128Mi"
+                  limits:
+                    memory: "512Mi"
+                volumeMounts:
+                  - name: "rclone-config"
+                    mountPath: "/config"
+                    readOnly: true
+                  - name: "seaweedfs-sts-token"
+                    mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
+                    readOnly: true
+            containers:
+              - name: "rollout-restart"
+                image: "registry.k8s.io/kubectl:v1.37.0"
+                command:
+                  - "kubectl"
+                args:
+                  - "rollout"
+                  - "restart"
+                  - "deployment/maps-versatiles-server"
+                  - "--namespace=" + app.namespace
+                securityContext: app.containerSecurityContext
+                resources:
+                  requests:
+                    cpu: "10m"
+                    memory: "32Mi"
+                  limits:
+                    memory: "128Mi"
+            volumes:
+              - name: "rclone-config"
+                configMap:
+                  name: appConfigMaps.rcloneName
+              - name: "seaweedfs-sts-token"
+                projected:
+                  sources:
+                    -
+                      serviceAccountToken:
+                        audience: "sts.seaweedfs.com"
+                        expirationSeconds: 86400
+                        path: "token"

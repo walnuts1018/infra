@@ -1,0 +1,38 @@
+import "./app.mcl" as app
+
+export let versatilesServiceAccount = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  metadata:
+    name: app.name + "-versatiles-server"
+    namespace: app.namespace
+  automountServiceAccountToken: false
+
+export let updaterServiceAccount = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  metadata:
+    name: app.name + "-updater"
+    namespace: app.namespace
+
+export let s3CredentialsSecret = node:
+  apiVersion: "v1"
+  kind: "Secret"
+  metadata:
+    name: "maps-s3-credentials"
+    namespace: app.namespace
+
+export let s3ReferenceGrant = node:
+  apiVersion: "seaweed.seaweedfs.com/v1"
+  kind: "ResourceReferenceGrant"
+  metadata:
+    name: "seaweedfs-s3-credentials"
+    namespace: app.namespace
+  spec:
+    from:
+      - group: "seaweed.seaweedfs.com"
+        kind: "S3Credentials"
+        namespace: "seaweedfs"
+    to:
+      - group: ""
+        kind: "Secret"

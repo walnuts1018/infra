@@ -1,0 +1,8 @@
+export type Profile =
+  discoveryEndpoint: String
+  blackboxExporterEndpoint: String
+
+export let profiles: Map<String, Profile> =
+  httpProbeMetrics:
+    discoveryEndpoint: "http://iwashi.iwashi-system.svc.cluster.local:8080/internal/discovery/standard"
+    blackboxExporterEndpoint: "iwashi-blackbox-prometheus-blackbox-exporter.iwashi-blackbox.svc.cluster.local:9115"

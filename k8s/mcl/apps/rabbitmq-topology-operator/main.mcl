@@ -1,0 +1,19 @@
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./placements.mcl" as appPlacements
+import "./values.mcl" as appValues
+import "./webhook.mcl" as appWebhook
+
+let placement = appPlacements.placements.kurumi
+let apiVersions: List<String> = []
+let options =
+  releaseName: "rabbitmq-topology-operator"
+  namespace: placement.destination.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: appValues.values
+let resources = helm.render(appChart.chartArchive, options)
+
+emit each resources
+emit appWebhook.configuration

@@ -1,0 +1,61 @@
+export let service = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    labels:
+      app: "seaweedfs-biscuit"
+      "app.kubernetes.io/component": "mini"
+      "app.kubernetes.io/name": "seaweedfs-biscuit"
+    name: "seaweedfs-biscuit"
+    namespace: "seaweedfs"
+  spec:
+    clusterIP: "None"
+    ports:
+      -
+        name: "s3"
+        port: 8333
+        protocol: "TCP"
+        targetPort: "s3"
+    selector:
+      app: "seaweedfs-biscuit"
+      "app.kubernetes.io/component": "mini"
+      "app.kubernetes.io/name": "seaweedfs-biscuit"
+    type: "ClusterIP"
+
+export let metaPVC = node:
+  apiVersion: "v1"
+  kind: "PersistentVolumeClaim"
+  metadata:
+    labels:
+      app: "seaweedfs-biscuit"
+      "app.kubernetes.io/component": "mini"
+      "app.kubernetes.io/name": "seaweedfs-biscuit"
+    name: "seaweedfs-meta"
+    namespace: "seaweedfs"
+  spec:
+    accessModes:
+      - "ReadWriteOnce"
+    resources:
+      requests:
+        storage: "20Gi"
+    storageClassName: "topolvm-ssd"
+    volumeMode: "Filesystem"
+
+export let volumePVC = node:
+  apiVersion: "v1"
+  kind: "PersistentVolumeClaim"
+  metadata:
+    labels:
+      app: "seaweedfs-biscuit"
+      "app.kubernetes.io/component": "mini"
+      "app.kubernetes.io/name": "seaweedfs-biscuit"
+    name: "seaweedfs-volume"
+    namespace: "seaweedfs"
+  spec:
+    accessModes:
+      - "ReadWriteOnce"
+    resources:
+      requests:
+        storage: "800Gi"
+    storageClassName: "topolvm-hdd"
+    volumeMode: "Filesystem"

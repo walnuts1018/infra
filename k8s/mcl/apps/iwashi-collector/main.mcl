@@ -1,0 +1,9 @@
+import "./collector.mcl" as collector
+import "./discovery-secret.mcl" as discoverySecret
+import "./network-policy.mcl" as networkPolicy
+import "./service-account.mcl" as serviceAccount
+
+emit discoverySecret.resource
+emit serviceAccount.resource
+emit collector.resource
+emit networkPolicy.resource

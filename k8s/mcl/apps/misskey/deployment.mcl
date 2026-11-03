@@ -1,0 +1,109 @@
+import "./app.mcl" as app
+import "./labels.mcl" as labels
+import "./external-secrets.mcl" as externalSecrets
+
+let appLabels = labels.forApp(app.name)
+let containerSecurityContext =
+  readOnlyRootFilesystem: false
+  seccompProfile:
+    type: "RuntimeDefault"
+  capabilities:
+    add:
+      - "NET_BIND_SERVICE"
+    drop:
+      - "all"
+
+export let resource = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+    labels: appLabels
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: appLabels
+    strategy:
+      type: "Recreate"
+    template:
+      metadata:
+        labels: appLabels
+      spec:
+        securityContext:
+          fsGroup: 991
+          fsGroupChangePolicy: "OnRootMismatch"
+        initContainers:
+          - name: "misskey-init"
+            image: "misskey/misskey:2026.9.0"
+            imagePullPolicy: "IfNotPresent"
+            command:
+              - "pnpm"
+              - "run"
+              - "init"
+            volumeMounts:
+              - name: "misskey-files"
+                mountPath: "/misskey/files"
+              - name: "misskey-config"
+                mountPath: "/misskey/.config"
+                readOnly: true
+            securityContext: containerSecurityContext
+        containers:
+          - name: "misskey"
+            resizePolicy:
+              - resourceName: "cpu"
+                restartPolicy: "NotRequired"
+              - resourceName: "memory"
+                restartPolicy: "RestartContainer"
+            image: "misskey/misskey:2026.9.0"
+            imagePullPolicy: "IfNotPresent"
+            ports:
+              - containerPort: 3000
+            volumeMounts:
+              - name: "misskey-files"
+                mountPath: "/misskey/files"
+              - name: "misskey-config"
+                mountPath: "/misskey/.config"
+                readOnly: true
+              - name: "tmp"
+                mountPath: "/tmp"
+            env:
+              - name: "POSTGRES_USER"
+                value: "misskey"
+              - name: "POSTGRES_DB"
+                value: "misskey"
+              - name: "POSTGRES_PASSWORD"
+                valueFrom:
+                  secretKeyRef:
+                    name: externalSecrets.appSecretName
+                    key: "dbPassword"
+            livenessProbe:
+              httpGet:
+                path: "/healthz"
+                port: 3000
+              initialDelaySeconds: 3
+              periodSeconds: 3
+            startupProbe:
+              httpGet:
+                path: "/healthz"
+                port: 3000
+              failureThreshold: 30
+              periodSeconds: 10
+            resources:
+              requests:
+                cpu: "100m"
+                memory: "840Mi"
+              limits:
+                memory: "2Gi"
+            securityContext: containerSecurityContext
+        volumes:
+          - name: "misskey-config"
+            secret:
+              secretName: externalSecrets.appSecretName
+          - name: "tmp"
+            emptyDir: {}
+          - name: "misskey-files"
+            emptyDir: {}
+        tolerations:
+          - key: "node.walnuts.dev/untrusted"
+            operator: "Exists"

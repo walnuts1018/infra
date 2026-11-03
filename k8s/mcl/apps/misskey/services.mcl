@@ -1,0 +1,50 @@
+import "./app.mcl" as app
+import "./labels.mcl" as labels
+
+let appLabels = labels.forApp(app.name)
+let valkeyName = app.name + "-valkey"
+let valkeyLabels = labels.forApp(valkeyName)
+
+export let application = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+    labels: appLabels
+  spec:
+    selector: appLabels
+    ports:
+      - protocol: "TCP"
+        port: 8080
+        targetPort: 3000
+    type: "ClusterIP"
+
+export let valkey = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: valkeyName
+    namespace: app.namespace
+    labels: valkeyLabels
+  spec:
+    selector: valkeyLabels
+    ports:
+      - name: "valkey"
+        port: 6379
+        targetPort: "valkey"
+
+export let valkeyHeadless = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: valkeyName + "-headless"
+    namespace: app.namespace
+    labels: valkeyLabels
+  spec:
+    clusterIP: "None"
+    selector: valkeyLabels
+    ports:
+      - name: "valkey"
+        port: 6379
+        targetPort: "valkey"

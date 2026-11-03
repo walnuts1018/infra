@@ -1,0 +1,20 @@
+import "std:context" as context
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./external-secrets.mcl" as externalSecrets
+import "./profiles.mcl" as appProfiles
+import "./service-account.mcl" as serviceAccount
+
+let options =
+  releaseName: appChart.releaseName
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: appChart.apiVersions
+  values: appProfiles.valuesByProfile[context.parameter("profile")]
+let resources = helm.render(appChart.chartArchive, options)
+
+emit each resources
+emit externalSecrets.netboxSecret
+emit externalSecrets.oidcSecret
+emit serviceAccount.resource

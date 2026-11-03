@@ -1,0 +1,14 @@
+import "./app.mcl" as app
+
+export type Profile =
+  namespace: String
+  name: String
+  labels: Map<String, String>
+
+export let profiles: Map<String, Profile> =
+  default:
+    namespace: app.namespace
+    name: app.name
+    labels:
+      app: app.name
+      "app.kubernetes.io/name": app.name

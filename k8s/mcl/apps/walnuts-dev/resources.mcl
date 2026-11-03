@@ -1,0 +1,179 @@
+import "std:context" as context
+import "./profiles.mcl" as appProfiles
+import "./deployment.mcl" as deployment
+import "../envoy-gateway-class/gateway.mcl" as gateway
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+let appName = profile.name
+let namespace = profile.namespace
+let labels = profile.labels
+
+let service = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: appName
+    namespace: namespace
+    labels: labels
+  spec:
+    ports:
+      - name: "http"
+        port: 3000
+        targetPort: 3000
+    selector: labels
+    type: "ClusterIP"
+
+let httpRoute = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: appName
+    namespace: namespace
+    annotations:
+      "external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied": "true"
+  spec:
+    parentRefs:
+      - name: gateway.resource.metadata.name
+        namespace: gateway.resource.metadata.namespace
+    hostnames:
+      - "walnuts.dev"
+    rules:
+      -
+        matches:
+          - path:
+              type: "PathPrefix"
+              value: "/"
+        backendRefs:
+          -
+            kind: "Service"
+            name: appName
+            port: 3000
+            weight: 1
+
+let wwwRoute = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: appName + "-www"
+    namespace: namespace
+    annotations:
+      "external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied": "true"
+  spec:
+    parentRefs:
+      - name: gateway.resource.metadata.name
+        namespace: gateway.resource.metadata.namespace
+    hostnames:
+      - "www.walnuts.dev"
+    rules:
+      -
+        filters:
+          - type: "RequestRedirect"
+            requestRedirect:
+              scheme: "https"
+              hostname: "walnuts.dev"
+              statusCode: 301
+
+let networkPolicy = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: appName
+    namespace: namespace
+  spec:
+    podSelector:
+      matchLabels: labels
+    policyTypes:
+      - "Egress"
+    egress:
+      -
+        to:
+          -
+            ipBlock:
+              cidr: "0.0.0.0/0"
+              except:
+                - "192.168.0.0/16"
+                - "10.244.0.0/16"
+                - "10.96.0.0/12"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "kube-system"
+            podSelector:
+              matchLabels:
+                "k8s-app": "kube-dns"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "opentelemetry-collector"
+            podSelector:
+              matchLabels:
+                "app.kubernetes.io/name": "default-collector"
+
+let pdb = node:
+  apiVersion: "policy/v1"
+  kind: "PodDisruptionBudget"
+  metadata:
+    name: appName
+    namespace: namespace
+    labels: labels
+  spec:
+    minAvailable: 1
+    selector:
+      matchLabels: labels
+
+let hpa = node:
+  apiVersion: "keda.sh/v1alpha1"
+  kind: "ScaledObject"
+  metadata:
+    name: appName
+    namespace: namespace
+    labels: labels
+  spec:
+    minReplicaCount: 2
+    maxReplicaCount: 5
+    scaleTargetRef:
+      apiVersion: "apps/v1"
+      kind: "Deployment"
+      name: deployment.resource.metadata.name
+    triggers:
+      - type: "prometheus"
+        metadata:
+          serverAddress: "http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus"
+          metricName: "envoy_cluster_upstream_rq_total_walnuts_dev"
+          query: "sum(rate(envoy_cluster_upstream_rq_total{envoy_cluster_name=\"httproute/walnuts-dev/walnuts-dev/rule/0\",envoy_response_code=~\"2..|5..\"}[2m]))"
+          threshold: "10"
+
+let vpa = node:
+  apiVersion: "autoscaling.k8s.io/v1"
+  kind: "VerticalPodAutoscaler"
+  metadata:
+    name: appName
+    namespace: namespace
+    labels: labels
+  spec:
+    targetRef:
+      apiVersion: "apps/v1"
+      kind: "Deployment"
+      name: deployment.resource.metadata.name
+    updatePolicy:
+      updateMode: "Auto"
+    resourcePolicy:
+      containerPolicies:
+        - containerName: appName
+          controlledResources:
+            - "memory"
+          minAllowed:
+            cpu: "100m"
+            memory: "128Mi"
+          maxAllowed:
+            cpu: "500m"
+            memory: "1Gi"
+
+export let resources =
+  - service
+  - httpRoute
+  - wwwRoute
+  - networkPolicy
+  - pdb
+  - hpa
+  - vpa

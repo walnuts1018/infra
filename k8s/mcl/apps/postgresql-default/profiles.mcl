@@ -1,0 +1,12 @@
+export let profiles =
+  seaweedfsBackup:
+    clusterName: "postgresql-default"
+    namespace: "databases"
+    databaseImageCatalog: "standard"
+    majorVersion: 18
+    storageClass: "local-path"
+    storageSize: "10Gi"
+    backupDestination: "s3://cloudnative-pg-backup/"
+    backupEndpoint: "https://seaweedfs.local.walnuts.dev"
+    backupRetention: "7d"
+    loadBalancerAddress: "192.168.12.141"

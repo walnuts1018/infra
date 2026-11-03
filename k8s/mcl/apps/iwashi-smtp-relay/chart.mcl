@@ -1,0 +1,4 @@
+export let chartVersion = "5.1.0"
+export let chartArchive = "https://bokysan.github.io/docker-postfix/mail-" + chartVersion + ".tgz"
+export let namespace = "iwashi-system"
+export let kubeVersion = "1.36.4"

@@ -1,0 +1,7 @@
+let egressBundle = manifest.load("./_configs/networkpolicy-egress.yaml")
+let ingressBundle = manifest.load("./_configs/networkpolicy-ingress.yaml")
+let oidcBundle = manifest.load("./_configs/ciliumnetworkpolicy-oidc.yaml")
+
+export let egress = egressBundle[0]
+export let ingress = ingressBundle[0]
+export let oidc = oidcBundle[0]

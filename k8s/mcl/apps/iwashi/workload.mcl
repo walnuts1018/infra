@@ -1,0 +1,112 @@
+import "std:context" as context
+import "./app.mcl" as app
+import "./profiles.mcl" as appProfiles
+
+let labels =
+  app: app.name
+  "app.kubernetes.io/name": app.name
+let profileName = context.parameter("profile")
+let profile = appProfiles.profiles[profileName]
+let secretName = "iwashi-0528a0"
+let securityContext =
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  capabilities:
+    drop:
+      - "ALL"
+
+export let serviceAccount = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  metadata:
+    name: app.name + "-api"
+    namespace: app.namespace
+  automountServiceAccountToken: false
+
+export let deployment = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+    labels: labels
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: labels
+    template:
+      metadata:
+        labels: labels
+      spec:
+        serviceAccountName: app.name + "-api"
+        imagePullSecrets:
+          -
+            name: "ghcr-login-secret"
+        initContainers:
+          -
+            name: "migrations"
+            image: "ghcr.io/walnuts1018/iwashi-migration:b800bd8f72ac984087c5e32f9d564936c54b0c39@sha256:2b9f8f690d4dd63817d41aeb2a35d9d3b5d600029de7b8acd72a2371831cca1a"
+            envFrom:
+              -
+                secretRef:
+                  name: secretName
+            securityContext: securityContext
+        containers:
+          -
+            name: app.name
+            image: "ghcr.io/walnuts1018/iwashi:b800bd8f72ac984087c5e32f9d564936c54b0c39@sha256:b220dd58998f29c396f0420ce6412f6ee624999e30c5901fd245ccadd22eec80"
+            imagePullPolicy: "IfNotPresent"
+            envFrom:
+              -
+                secretRef:
+                  name: secretName
+            env:
+              -
+                name: "OIDC_ISSUER"
+                value: profile.oidcIssuer
+              -
+                name: "OIDC_REDIRECT_URL"
+                value: profile.oidcRedirectUrl
+              -
+                name: "CORTEX_QUERY_URL"
+                value: profile.cortexQueryUrl
+              -
+                name: "CORTEX_OTLP_URL"
+                value: profile.cortexOtlpUrl
+              -
+                name: "CORTEX_RULER_URL"
+                value: profile.cortexRulerUrl
+              -
+                name: "CORTEX_ALERTMANAGER_URL"
+                value: profile.cortexAlertmanagerUrl
+              -
+                name: "SMTP_SMARTHOST"
+                value: profile.smtpSmarthost
+              -
+                name: "SMTP_FROM"
+                value: profile.smtpFrom
+            ports:
+              -
+                name: "http"
+                containerPort: 8080
+            readinessProbe:
+              httpGet:
+                path: "/healthz"
+                port: "http"
+              initialDelaySeconds: 2
+            livenessProbe:
+              httpGet:
+                path: "/healthz"
+                port: "http"
+              initialDelaySeconds: 10
+            resources:
+              requests:
+                cpu: "10m"
+                memory: "32Mi"
+              limits:
+                memory: "256Mi"
+            securityContext: securityContext
+        securityContext:
+          seccompProfile:
+            type: "RuntimeDefault"

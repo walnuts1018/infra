@@ -1,0 +1,59 @@
+fn storageClass(name: String, parameters: Map<String, String>, reclaimPolicy: String) -> Map<String, Any> = node:
+  apiVersion: "storage.k8s.io/v1"
+  kind: "StorageClass"
+  metadata:
+    name: name
+  provisioner: "driver.longhorn.io"
+  allowVolumeExpansion: true
+  parameters: parameters
+  reclaimPolicy: reclaimPolicy
+
+let encryptedBaseParameters: Map<String, String> =
+  "numberOfReplicas": "1"
+  "staleReplicaTimeout": "30"
+  fromBackup: ""
+  encrypted: "true"
+  "csi.storage.k8s.io/provisioner-secret-name": "${pvc.name}"
+  "csi.storage.k8s.io/provisioner-secret-namespace": "${pvc.namespace}"
+  "csi.storage.k8s.io/node-publish-secret-name": "${pvc.name}"
+  "csi.storage.k8s.io/node-publish-secret-namespace": "${pvc.namespace}"
+  "csi.storage.k8s.io/node-stage-secret-name": "${pvc.name}"
+  "csi.storage.k8s.io/node-stage-secret-namespace": "${pvc.namespace}"
+  "csi.storage.k8s.io/node-expand-secret-name": "${pvc.name}"
+  "csi.storage.k8s.io/node-expand-secret-namespace": "${pvc.namespace}"
+let encryptedLocalParameters = encryptedBaseParameters with:
+  dataLocality: "best-effort"
+
+let localParameters: Map<String, String> =
+  numberOfReplicas: "1"
+  dataLocality: "best-effort"
+  staleReplicaTimeout: "30"
+  fromBackup: ""
+
+let singleParameters: Map<String, String> =
+  numberOfReplicas: "1"
+  staleReplicaTimeout: "30"
+  fromBackup: ""
+
+export let resources =
+  - storageClass("longhorn-coder-workspace", localParameters, "Delete")
+  - storageClass("longhorn-local", localParameters, "Retain")
+  - storageClass("longhorn-local-temporary", localParameters, "Delete")
+  - storageClass("longhorn-single", singleParameters, "Retain")
+  - storageClass("longhorn-local-encrypted", encryptedLocalParameters, "Retain")
+  - storageClass("longhorn-single-encrypted", encryptedBaseParameters, "Retain")
+  - node:
+      apiVersion: "longhorn.io/v1beta2"
+      kind: "RecurringJob"
+      metadata:
+        name: "snapshot"
+        namespace: "longhorn-system"
+      spec:
+        concurrency: 1
+        cron: "30 16 * * ?"
+        groups:
+          - "default"
+        name: "snapshot"
+        parameters: {}
+        retain: 2
+        task: "snapshot"

@@ -1,0 +1,271 @@
+import "std:crypto" as crypto
+import "std:context" as context
+import "./profiles.mcl" as appProfiles
+import text "./_configs/aws-config" as awsConfig
+import text "./_configs/aws-credentials.tmpl" as awsCredentials
+import text "./_configs/backup.ts" as backupScript
+import text "./_configs/rclone.conf" as rcloneConfig
+
+let name = "seaweedfs-default-backup"
+let namespace = "seaweedfs"
+let noCapabilities: List<String> = []
+let labels =
+  app: name
+  "app.kubernetes.io/name": name
+let awsData =
+  config: awsConfig
+let rcloneData =
+  "rclone.conf": rcloneConfig
+let scriptData =
+  "backup.ts": backupScript
+let awsConfigMapName = name + "-aws-" + crypto.sha256(awsData, 6)
+let rcloneConfigMapName = name + "-rclone-" + crypto.sha256(rcloneData, 6)
+let scriptConfigMapName = name + "-script-" + crypto.sha256(scriptData, 6)
+let secretName = name + "-aws-" + crypto.sha256(awsCredentials, 6)
+
+export let awsConfigMap = node:
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  metadata:
+    name: awsConfigMapName
+    namespace: namespace
+    labels: labels
+  immutable: true
+  data: awsData
+
+export let rcloneConfigMap = node:
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  metadata:
+    name: rcloneConfigMapName
+    namespace: namespace
+    labels: labels
+  immutable: true
+  data: rcloneData
+
+export let scriptConfigMap = node:
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  metadata:
+    name: scriptConfigMapName
+    namespace: namespace
+    labels: labels
+  immutable: true
+  data: scriptData
+
+export let externalSecret = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: secretName
+    namespace: namespace
+  spec:
+    secretStoreRef:
+      name: "onepassword"
+      kind: "ClusterSecretStore"
+    refreshInterval: "1m"
+    target:
+      name: secretName
+      template:
+        engineVersion: "v2"
+        type: "Opaque"
+        data:
+          credentials: awsCredentials
+    data:
+      -
+        secretKey: "seaweedfs_biscuit_default_backup_access_key"
+        remoteRef:
+          key: "terraform-external-secrets"
+          property: "seaweedfs_biscuit_default_backup_access_key"
+      -
+        secretKey: "seaweedfs_biscuit_default_backup_secret_key"
+        remoteRef:
+          key: "terraform-external-secrets"
+          property: "seaweedfs_biscuit_default_backup_secret_key"
+      -
+        secretKey: "b2_seaweedfs_application_key_id"
+        remoteRef:
+          key: "terraform-external-secrets"
+          property: "b2-seaweedfs-application-key-id"
+      -
+        secretKey: "b2_seaweedfs_application_key"
+        remoteRef:
+          key: "terraform-external-secrets"
+          property: "b2-seaweedfs-application-key"
+
+export let serviceAccount = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  metadata:
+    name: name
+    namespace: namespace
+
+export let cronJob = node:
+  apiVersion: "batch/v1"
+  kind: "CronJob"
+  metadata:
+    name: name
+    namespace: namespace
+    labels: labels
+  spec:
+    schedule: appProfiles.profiles[context.parameter("profile")].schedule
+    timeZone: "Asia/Tokyo"
+    concurrencyPolicy: "Forbid"
+    startingDeadlineSeconds: 21600
+    jobTemplate:
+      spec:
+        activeDeadlineSeconds: 43200
+        template:
+          metadata:
+            labels: labels
+          spec:
+            serviceAccountName: name
+            restartPolicy: "OnFailure"
+            containers:
+              -
+                name: "rclone"
+                image: "denoland/deno:2.9.6"
+                command:
+                  - "/usr/bin/deno"
+                args:
+                  - "run"
+                  - "--allow-run"
+                  - "--allow-env"
+                  - "--allow-read"
+                  - "--allow-write=/tmp"
+                  - "/scripts/backup.ts"
+                env:
+                  -
+                    name: "PATH"
+                    value: "/usr/local/bin:/usr/bin:/bin:/rclone:/usr/local/aws-cli/v2/current/bin"
+                  -
+                    name: "AWS_ROLE_ARN"
+                    value: "arn:aws:iam::role/seaweedfs-default-backup"
+                  -
+                    name: "AWS_ROLE_SESSION_NAME"
+                    value: name
+                  -
+                    name: "AWS_WEB_IDENTITY_TOKEN_FILE"
+                    value: "/var/run/secrets/sts.seaweedfs.com/serviceaccount/token"
+                  -
+                    name: "AWS_REGION"
+                    value: "us-east-1"
+                  -
+                    name: "AWS_ENDPOINT_URL_STS"
+                    value: "http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333"
+                  -
+                    name: "AWS_CONFIG_FILE"
+                    value: "/config/aws/config"
+                  -
+                    name: "AWS_SHARED_CREDENTIALS_FILE"
+                    value: "/config/aws/credentials"
+                  -
+                    name: "AWS_CA_BUNDLE"
+                    value: "/etc/ssl/certs/trust-bundle.pem"
+                resources:
+                  requests:
+                    cpu: "10m"
+                    memory: "10Mi"
+                  limits:
+                    cpu: "1"
+                    memory: "2Gi"
+                volumeMounts:
+                  -
+                    name: "rclone"
+                    mountPath: "/rclone"
+                    subPath: "usr/local/bin"
+                  -
+                    name: "aws-cli"
+                    mountPath: "/usr/local/aws-cli"
+                    subPath: "usr/local/aws-cli"
+                  -
+                    name: "seaweedfs-default-sts-token"
+                    mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
+                    readOnly: true
+                  -
+                    name: "local-ca-bundle"
+                    mountPath: "/etc/ssl/certs/trust-bundle.pem"
+                    subPath: "trust-bundle.pem"
+                    readOnly: true
+                  -
+                    name: "aws"
+                    mountPath: "/config/aws"
+                    readOnly: true
+                  -
+                    name: "rclone-config"
+                    mountPath: "/config/rclone.conf"
+                    subPath: "rclone.conf"
+                    readOnly: true
+                  -
+                    name: "backup-script"
+                    mountPath: "/scripts"
+                    readOnly: true
+                  -
+                    name: "tmp"
+                    mountPath: "/tmp"
+                securityContext:
+                  runAsNonRoot: true
+                  runAsUser: 1000
+                  runAsGroup: 1000
+                  allowPrivilegeEscalation: false
+                  readOnlyRootFilesystem: true
+                  seccompProfile:
+                    type: "RuntimeDefault"
+                  capabilities:
+                    add: noCapabilities
+                    drop:
+                      - "ALL"
+            volumes:
+              -
+                name: "rclone"
+                image:
+                  reference: "ghcr.io/rclone/rclone:1.71.1"
+              -
+                name: "aws-cli"
+                image:
+                  reference: "public.ecr.aws/aws-cli/aws-cli:2.36.49"
+              -
+                name: "seaweedfs-default-sts-token"
+                projected:
+                  sources:
+                    -
+                      serviceAccountToken:
+                        audience: "sts.seaweedfs.com"
+                        path: "token"
+              -
+                name: "local-ca-bundle"
+                configMap:
+                  name: "local-ca-bundle"
+              -
+                name: "rclone-config"
+                configMap:
+                  name: rcloneConfigMapName
+                  items:
+                    -
+                      key: "rclone.conf"
+                      path: "rclone.conf"
+              -
+                name: "aws"
+                projected:
+                  sources:
+                    -
+                      configMap:
+                        name: awsConfigMapName
+                        items:
+                          -
+                            key: "config"
+                            path: "config"
+                    -
+                      secret:
+                        name: secretName
+                        items:
+                          -
+                            key: "credentials"
+                            path: "credentials"
+              -
+                name: "backup-script"
+                configMap:
+                  name: scriptConfigMapName
+              -
+                name: "tmp"
+                emptyDir: {}

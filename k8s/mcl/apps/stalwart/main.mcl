@@ -1,0 +1,3 @@
+import "./resources.mcl" as app
+
+emit each app.allResources

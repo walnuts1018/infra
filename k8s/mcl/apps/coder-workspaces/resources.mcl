@@ -1,0 +1,22 @@
+import "./app.mcl" as app
+
+export let networkPolicy = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    podSelector:
+      matchLabels:
+        "app.kubernetes.io/name": "coder-workspace"
+    policyTypes:
+      - "Ingress"
+
+export let serviceAccount = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  metadata:
+    name: "coder-workspace"
+    namespace: app.namespace
+  automountServiceAccountToken: false

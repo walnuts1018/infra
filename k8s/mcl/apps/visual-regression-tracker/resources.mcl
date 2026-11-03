@@ -1,0 +1,337 @@
+import "std:context" as context
+import "./profiles.mcl" as appProfiles
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+let appName = "visual-regression-tracker"
+fn labels(name: String) -> Map<String, Any> = node:
+  app: name
+  "app.kubernetes.io/name": name
+let databaseURL = "postgresql://visual_regression_tracker:{{ .postgres_password }}@" + profile.databaseHost + ":5432/visual_regression_tracker?connection_limit=10"
+
+let externalSecret = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: appName
+  spec:
+    secretStoreRef:
+      name: "onepassword"
+      kind: "ClusterSecretStore"
+    refreshInterval: "1m"
+    target:
+      name: appName
+      template:
+        engineVersion: "v2"
+        type: "Opaque"
+        data:
+          jwt_secret: "{{ .jwt_secret }}"
+          DATABASE_URL: databaseURL
+          DEFAULT_USER_PASSWORD: "{{ .admin_password }}"
+          DEFAULT_USER_API_KEY: "{{ .admin_api_key }}"
+    data:
+      - secretKey: "jwt_secret"
+        remoteRef:
+          key: "terraform-external-secrets"
+          property: "visual-regression-tracker-jwt-secret"
+      - secretKey: "postgres_password"
+        remoteRef:
+          key: "postgres_passwords"
+          property: "visual_regression_tracker"
+      - secretKey: "admin_password"
+        remoteRef:
+          key: "terraform-external-secrets"
+          property: "visual-regression-tracker-admin-password"
+      - secretKey: "admin_api_key"
+        remoteRef:
+          key: "terraform-external-secrets"
+          property: "visual-regression-tracker-admin-api-key"
+
+let s3CredentialsSecret = node:
+  apiVersion: "v1"
+  kind: "Secret"
+  metadata:
+    name: "visual-regression-tracker-s3-credentials"
+    namespace: profile.namespace
+
+let s3ReferenceGrant = node:
+  apiVersion: "seaweed.seaweedfs.com/v1"
+  kind: "ResourceReferenceGrant"
+  metadata:
+    name: "seaweedfs-s3-credentials"
+    namespace: profile.namespace
+  spec:
+    from:
+      - group: "seaweed.seaweedfs.com"
+        kind: "S3Credentials"
+        namespace: "seaweedfs"
+    to:
+      - group: ""
+        kind: "Secret"
+
+let apiDeployment = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: appName + "-api"
+    namespace: profile.namespace
+    labels: labels(appName + "-api")
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: labels(appName + "-api")
+    template:
+      metadata:
+        labels: labels(appName + "-api")
+      spec:
+        containers:
+          - name: "api"
+            image: "docker.io/visualregressiontracker/api:5.6.3"
+            imagePullPolicy: "IfNotPresent"
+            ports:
+              - name: "http"
+                containerPort: 3000
+            env:
+              - name: "APP_FRONTEND_URL"
+                value: profile.publicURL
+              - name: "AUTO_APPROVE_BASED_ON_HISTORY"
+                value: "true"
+              - name: "BODY_PARSER_JSON_LIMIT"
+                value: "5mb"
+              - name: "JWT_LIFE_TIME"
+                value: "1d"
+              - name: "DATABASE_URL"
+                valueFrom:
+                  secretKeyRef:
+                    name: externalSecret.spec.target.name
+                    key: "DATABASE_URL"
+              - name: "JWT_SECRET"
+                valueFrom:
+                  secretKeyRef:
+                    name: externalSecret.spec.target.name
+                    key: "jwt_secret"
+              - name: "STATIC_SERVICE"
+                value: "s3"
+              - name: "AWS_S3_BUCKET_NAME"
+                value: profile.s3Bucket
+              - name: "AWS_REGION"
+                value: "us-east-1"
+              - name: "AWS_ENDPOINT_URL_S3"
+                value: profile.s3Endpoint
+              - name: "AWS_ACCESS_KEY_ID"
+                valueFrom:
+                  secretKeyRef:
+                    name: s3CredentialsSecret.metadata.name
+                    key: "AWS_ACCESS_KEY_ID"
+              - name: "AWS_SECRET_ACCESS_KEY"
+                valueFrom:
+                  secretKeyRef:
+                    name: s3CredentialsSecret.metadata.name
+                    key: "AWS_SECRET_ACCESS_KEY"
+            livenessProbe:
+              tcpSocket:
+                port: 3000
+              initialDelaySeconds: 5
+              periodSeconds: 10
+            readinessProbe:
+              tcpSocket:
+                port: 3000
+              initialDelaySeconds: 5
+              periodSeconds: 10
+            resources:
+              requests:
+                cpu: "10m"
+                memory: "128Mi"
+              limits:
+                cpu: "1000m"
+                memory: "512Mi"
+            securityContext:
+              readOnlyRootFilesystem: false
+              seccompProfile:
+                type: "RuntimeDefault"
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                drop:
+                  - "all"
+
+let apiService = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: appName + "-api"
+    namespace: profile.namespace
+    labels: labels(appName + "-api")
+  spec:
+    ports:
+      - name: "http"
+        port: 3000
+        targetPort: 3000
+    selector: labels(appName + "-api")
+    type: "ClusterIP"
+
+let uiDeployment = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: appName + "-ui"
+    namespace: profile.namespace
+    labels: labels(appName + "-ui")
+  spec:
+    replicas: 1
+    selector:
+      matchLabels: labels(appName + "-ui")
+    template:
+      metadata:
+        labels: labels(appName + "-ui")
+      spec:
+        containers:
+          - name: "ui"
+            image: "docker.io/visualregressiontracker/ui:5.5.2"
+            imagePullPolicy: "IfNotPresent"
+            ports:
+              - name: "http"
+                containerPort: 8080
+            env:
+              - name: "REACT_APP_API_URL"
+                value: profile.publicURL + "/api"
+            livenessProbe:
+              tcpSocket:
+                port: 8080
+              initialDelaySeconds: 5
+              periodSeconds: 10
+            readinessProbe:
+              tcpSocket:
+                port: 8080
+              initialDelaySeconds: 5
+              periodSeconds: 10
+            resources:
+              requests:
+                cpu: "10m"
+                memory: "32Mi"
+              limits:
+                cpu: "200m"
+                memory: "128Mi"
+            securityContext:
+              readOnlyRootFilesystem: false
+              seccompProfile:
+                type: "RuntimeDefault"
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                  - "CHOWN"
+                  - "SETUID"
+                  - "SETGID"
+                drop:
+                  - "all"
+
+let uiService = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: appName + "-ui"
+    namespace: profile.namespace
+    labels: labels(appName + "-ui")
+  spec:
+    ports:
+      - name: "http"
+        port: 8080
+        targetPort: 8080
+    selector: labels(appName + "-ui")
+    type: "ClusterIP"
+
+let migrationJob = node:
+  apiVersion: "batch/v1"
+  kind: "Job"
+  metadata:
+    name: "visual-regression-tracker-migration-1197c5f7e1"
+    namespace: profile.namespace
+    labels: labels("visual-regression-tracker-migration")
+  spec:
+    template:
+      metadata:
+        labels: labels("visual-regression-tracker-migration")
+      spec:
+        restartPolicy: "Never"
+        containers:
+          - name: "migration"
+            image: "docker.io/visualregressiontracker/migration:5.4.0"
+            imagePullPolicy: "IfNotPresent"
+            env:
+              - name: "DATABASE_URL"
+                valueFrom:
+                  secretKeyRef:
+                    name: externalSecret.spec.target.name
+                    key: "DATABASE_URL"
+              - name: "DEFAULT_USER_EMAIL"
+                value: "admin@vrt.local.walnuts.dev"
+              - name: "DEFAULT_USER_PASSWORD"
+                valueFrom:
+                  secretKeyRef:
+                    name: externalSecret.spec.target.name
+                    key: "DEFAULT_USER_PASSWORD"
+              - name: "DEFAULT_USER_API_KEY"
+                valueFrom:
+                  secretKeyRef:
+                    name: externalSecret.spec.target.name
+                    key: "DEFAULT_USER_API_KEY"
+            securityContext:
+              readOnlyRootFilesystem: false
+              seccompProfile:
+                type: "RuntimeDefault"
+              capabilities:
+                add:
+                  - "NET_BIND_SERVICE"
+                drop:
+                  - "all"
+
+let httpRoute = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: appName
+    namespace: profile.namespace
+    labels: labels(appName)
+  spec:
+    parentRefs:
+      - name: "envoy-gateway"
+        namespace: "envoy-gateway-system"
+    hostnames:
+      - "vrt.local.walnuts.dev"
+    rules:
+      -
+        matches:
+          - path:
+              type: "PathPrefix"
+              value: "/api"
+        filters:
+          - type: "URLRewrite"
+            urlRewrite:
+              path:
+                type: "ReplacePrefixMatch"
+                replacePrefixMatch: "/"
+        backendRefs:
+          - kind: "Service"
+            name: apiService.metadata.name
+            port: 3000
+            weight: 1
+      -
+        matches:
+          - path:
+              type: "PathPrefix"
+              value: "/"
+        backendRefs:
+          - kind: "Service"
+            name: uiService.metadata.name
+            port: 8080
+            weight: 1
+
+export let resources =
+  - externalSecret
+  - s3CredentialsSecret
+  - s3ReferenceGrant
+  - apiDeployment
+  - apiService
+  - uiDeployment
+  - uiService
+  - migrationJob
+  - httpRoute

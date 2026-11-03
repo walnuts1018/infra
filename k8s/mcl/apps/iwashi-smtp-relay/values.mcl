@@ -1,0 +1,2 @@
+let valuesBundle = manifest.load("./_configs/values.yaml")
+export let values: Map<String, Any> = valuesBundle[0]

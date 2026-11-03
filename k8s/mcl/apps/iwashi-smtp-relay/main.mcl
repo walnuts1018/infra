@@ -1,0 +1,20 @@
+import "std:context" as context
+import "std:helm" as helm
+import "std:list" as lists
+import "./chart.mcl" as appChart
+import "./profiles.mcl" as appProfiles
+import "./resources.mcl" as appResources
+
+let profileName = context.parameter("profile")
+let profile = appProfiles.profiles[profileName]
+let apiVersions: List<String> = []
+let options =
+  releaseName: "iwashi-smtp-relay"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: profile.chartValues
+let chartResources = helm.render(appChart.chartArchive, options)
+
+emit each lists.concat(chartResources, appResources.resources)

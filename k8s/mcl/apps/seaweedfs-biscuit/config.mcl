@@ -1,0 +1,12 @@
+export let resource = node:
+  apiVersion: "v1"
+  data:
+    "filer.toml": "[leveldb2]\nenabled = true\ndir = \"/meta/filer\"\n"
+  kind: "ConfigMap"
+  metadata:
+    labels:
+      app: "seaweedfs-biscuit"
+      "app.kubernetes.io/component": "mini"
+      "app.kubernetes.io/name": "seaweedfs-biscuit"
+    name: "seaweedfs-biscuit-filer-config"
+    namespace: "seaweedfs"

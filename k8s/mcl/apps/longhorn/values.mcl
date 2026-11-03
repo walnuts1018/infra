@@ -1,0 +1,10 @@
+import text "./_configs/system-managed-csi-resources.json" as systemManagedCSIResources
+
+let valuesBundle = manifest.load("./_configs/values.yaml")
+let baseValues: Map<String, Any> = valuesBundle[0]
+let defaultSettings: Map<String, Any> = baseValues.defaultSettings
+let defaultSettingsWithResourceLimits = defaultSettings with:
+  systemManagedCSIComponentsResourceLimits: systemManagedCSIResources
+
+export let values = baseValues with:
+  defaultSettings: defaultSettingsWithResourceLimits

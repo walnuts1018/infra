@@ -1,0 +1,16 @@
+import "./app.mcl" as app
+import "./labels.mcl" as labels
+
+let appLabels = labels.forApp(app.name)
+
+export let resource =
+  apiVersion: "policy/v1"
+  kind: "PodDisruptionBudget"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+    labels: appLabels
+  spec:
+    minAvailable: 1
+    selector:
+      matchLabels: appLabels

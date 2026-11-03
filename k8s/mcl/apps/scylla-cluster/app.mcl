@@ -1,0 +1,6 @@
+export let name = "scylla-cluster"
+export let namespace = "databases"
+export let releaseName = name
+export let chartVersion = "v1.21.1"
+export let chartArchive = "https://scylla-operator-charts.storage.googleapis.com/stable/scylla-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"

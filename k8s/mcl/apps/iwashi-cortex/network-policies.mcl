@@ -1,0 +1,320 @@
+let instance = "iwashi-cortex"
+let namespace = "iwashi-system"
+let cortexSelector =
+  matchLabels:
+    "app.kubernetes.io/name": "cortex"
+    "app.kubernetes.io/instance": instance
+let dnsPeer =
+  namespaceSelector:
+    matchLabels:
+      "kubernetes.io/metadata.name": "kube-system"
+  podSelector:
+    matchLabels:
+      "k8s-app": "kube-dns"
+let dnsPorts =
+  -
+    port: 53
+    protocol: "UDP"
+  -
+    port: 53
+    protocol: "TCP"
+let applicationPeer =
+  podSelector:
+    matchLabels:
+      "app.kubernetes.io/name": "iwashi"
+let dnsEgress =
+  to:
+    - dnsPeer
+  ports: dnsPorts
+
+let defaultDeny = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: "iwashi-system-default-deny"
+    namespace: namespace
+  spec:
+    podSelector: {}
+    policyTypes:
+      - "Ingress"
+      - "Egress"
+
+let alertmanagerSMTPEgress =
+  to:
+    -
+      podSelector:
+        matchLabels:
+          "app.kubernetes.io/name": "mail"
+          "app.kubernetes.io/instance": "iwashi-smtp-relay"
+  ports:
+    -
+      port: 587
+      protocol: "TCP"
+
+let alertmanager = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: instance + "-alertmanager"
+    namespace: namespace
+  spec:
+    podSelector:
+      matchLabels:
+        "app.kubernetes.io/name": "cortex"
+        "app.kubernetes.io/instance": instance
+        "app.kubernetes.io/component": "alertmanager"
+    policyTypes:
+      - "Ingress"
+      - "Egress"
+    ingress:
+      -
+        from:
+          - applicationPeer
+        ports:
+          -
+            port: 8080
+            protocol: "TCP"
+    egress:
+      - dnsEgress
+      - alertmanagerSMTPEgress
+
+let distributor = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: instance + "-distributor"
+    namespace: namespace
+  spec:
+    podSelector:
+      matchLabels:
+        "app.kubernetes.io/name": "cortex"
+        "app.kubernetes.io/instance": instance
+        "app.kubernetes.io/component": "distributor"
+    policyTypes:
+      - "Ingress"
+    ingress:
+      -
+        from:
+          - applicationPeer
+        ports:
+          -
+            port: 8080
+            protocol: "TCP"
+
+let querier = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: instance + "-querier"
+    namespace: namespace
+  spec:
+    podSelector:
+      matchLabels:
+        "app.kubernetes.io/name": "cortex"
+        "app.kubernetes.io/instance": instance
+        "app.kubernetes.io/component": "querier"
+    policyTypes:
+      - "Ingress"
+    ingress:
+      -
+        from:
+          - applicationPeer
+        ports:
+          -
+            port: 8080
+            protocol: "TCP"
+
+let ruler = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: instance + "-ruler"
+    namespace: namespace
+  spec:
+    podSelector:
+      matchLabels:
+        "app.kubernetes.io/name": "cortex"
+        "app.kubernetes.io/instance": instance
+        "app.kubernetes.io/component": "ruler"
+    policyTypes:
+      - "Ingress"
+    ingress:
+      -
+        from:
+          - applicationPeer
+        ports:
+          -
+            port: 8080
+            protocol: "TCP"
+
+let prometheusCollector =
+  namespaceSelector:
+    matchLabels:
+      "kubernetes.io/metadata.name": "opentelemetry-collector"
+  podSelector:
+    matchLabels:
+      "app.kubernetes.io/component": "opentelemetry-collector"
+      "app.kubernetes.io/instance": "opentelemetry-collector.prometheus"
+let envoyPeer =
+  namespaceSelector:
+    matchLabels:
+      "kubernetes.io/metadata.name": "envoy-gateway-system"
+  podSelector:
+    matchLabels:
+      "app.kubernetes.io/component": "proxy"
+      "app.kubernetes.io/name": "envoy"
+let internalPorts =
+  -
+    port: 8080
+    protocol: "TCP"
+  -
+    port: 9095
+    protocol: "TCP"
+  -
+    port: 7946
+    protocol: "TCP"
+  -
+    port: 9094
+    protocol: "TCP"
+let memcachedNames =
+  - "memcached-frontend"
+  - "memcached-blocks-index"
+  - "memcached-blocks"
+  - "memcached-blocks-metadata"
+
+let internal = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: instance + "-internal"
+    namespace: namespace
+  spec:
+    podSelector: cortexSelector
+    policyTypes:
+      - "Ingress"
+      - "Egress"
+    ingress:
+      -
+        from:
+          -
+            podSelector: cortexSelector
+        ports: internalPorts
+      -
+        from:
+          - prometheusCollector
+        ports:
+          -
+            port: 8080
+            protocol: "TCP"
+    egress:
+      -
+        to:
+          -
+            podSelector: cortexSelector
+        ports: internalPorts
+      -
+        to:
+          -
+            podSelector:
+              matchLabels:
+                "app.kubernetes.io/instance": instance
+              matchExpressions:
+                -
+                  key: "app.kubernetes.io/name"
+                  operator: "In"
+                  values: memcachedNames
+        ports:
+          -
+            port: 11211
+            protocol: "TCP"
+      -
+        to:
+          - envoyPeer
+        ports:
+          -
+            port: 10443
+            protocol: "TCP"
+      - dnsEgress
+
+let memcached = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: instance + "-memcached"
+    namespace: namespace
+  spec:
+    podSelector:
+      matchLabels:
+        "app.kubernetes.io/instance": instance
+      matchExpressions:
+        -
+          key: "app.kubernetes.io/name"
+          operator: "In"
+          values: memcachedNames
+    policyTypes:
+      - "Ingress"
+      - "Egress"
+    ingress:
+      -
+        from:
+          -
+            podSelector: cortexSelector
+        ports:
+          -
+            port: 11211
+            protocol: "TCP"
+    egress:
+      - dnsEgress
+
+let ciliumAlertmanagerSMTP = node:
+  apiVersion: "cilium.io/v2"
+  kind: "CiliumNetworkPolicy"
+  metadata:
+    name: instance + "-alertmanager-smtp"
+    namespace: namespace
+  spec:
+    endpointSelector:
+      matchLabels:
+        "app.kubernetes.io/name": "cortex"
+        "app.kubernetes.io/instance": instance
+        "app.kubernetes.io/component": "alertmanager"
+    egress:
+      -
+        toEndpoints:
+          -
+            matchLabels:
+              "k8s:io.kubernetes.pod.namespace": "kube-system"
+              "k8s:k8s-app": "kube-dns"
+        toPorts:
+          -
+            ports:
+              -
+                port: "53"
+                protocol: "ANY"
+            rules:
+              dns:
+                -
+                  matchPattern: "*"
+      -
+        toEndpoints:
+          -
+            matchLabels:
+              "k8s:io.kubernetes.pod.namespace": namespace
+              "k8s:app.kubernetes.io/name": "mail"
+              "k8s:app.kubernetes.io/instance": "iwashi-smtp-relay"
+        toPorts:
+          -
+            ports:
+              -
+                port: "587"
+                protocol: "TCP"
+
+export let resources =
+  - defaultDeny
+  - alertmanager
+  - distributor
+  - querier
+  - ruler
+  - internal
+  - memcached
+  - ciliumAlertmanagerSMTP
