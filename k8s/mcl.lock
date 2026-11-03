@@ -12,6 +12,7 @@
   "manifests": {},
   "schemas": {},
   "charts": {
+    "https://cybozu-go.github.io/moco/moco-0.27.0.tgz": "c0d02d0c8081bcb8b640bb69c88506002d6374b14644a6ab15f89f16054cce0a",
     "https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/releases/download/1.21.3/k8s-ephemeral-storage-metrics-1.21.3.tgz": "64f916134aeb805b41bc3245beb05384c4637c6e0a37418a4f3830743b07ef8d",
     "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-1.21.1/external-dns-1.21.1.tgz": "5dd033a4b872bf641860695705ee460031d0bc695f114bf8926fee6736814e19",
     "https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-3.14.0/metrics-server-3.14.0.tgz": "c2ca1185c01e6e7f53dd1b7d131f0c9b3fa50e003ed068b784563a1b5a3422a1",
