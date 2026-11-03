@@ -8,6 +8,8 @@
 
 Cluster APIではBiscuitとKurumiのcontrol plane、KurumiのworkerをMCL化しました。3つのstackは16 resourceを生成し、既存Jsonnetの各stack出力と完全一致します。共通resource関数はCluster、TartControlPlane、TartMachineTemplate、MachineDeployment、bootstrap template、patch Secretを生成します。現在のMCLにtext importと暗号学的hashがないため、Talos patch本文は各entrypoint内へ複製し、Jsonnetが本文などから計算するimmutable resource名のdigest suffixは現在値を固定しています。patchを編集した場合はresource名も手動更新する必要があります。
 
+Argo CD Agent bootstrapではBiscuitとKurumiのstackをMCL化しました。各stackは11 resourceを生成し、既存Jsonnetと一致します。Helm valuesとGo templateは共通libのmultiline stringに保持し、クラスタ固有Cilium valuesは各entrypointに最終形のYAML文字列として保持します。MCLにはtext importとYAML mergeがないため、元ファイルを分割してimportする形にはできません。`k8s/mcl/apps/api-server-proxy/main.mcl`はBackendTLSPolicyとHTTPRouteを生成し、2 resourceとも既存Jsonnetと一致します。
+
 ## Argo CD Config Management Plugin案
 
 将来のpluginは、Argo CD Applicationのsource pathにある`main.mcl`をentrypointとして、checkout済みGit revisionを入力に`mcl check`と`mcl render`を順に実行します。成功時はYAMLのBundleだけをstdoutへ出力し、診断と実行ログはstderrへ出力します。pluginは環境変数や外部ネットワークの最新値からManifestを生成せず、同じrevisionとlockfileから同じBundleを生成します。
@@ -18,7 +20,7 @@ Argo CD Applicationは現在と同じアプリケーション単位を保ちま�
 
 現在のMCLだけでは、既存クラスタ定義にあるTalos patchの再利用と、内容に基づく不変リソース名を同じ抽象度で記述できません。移植を続ける前に、次の機能を追加するか、Plugin側で責務を持つか決める必要があります。
 
-- 任意ファイルを文字列として読み込む標準機能がありません。`manifest.load`はYAMLなどをManifestとして解析するため、Talos patchを`TartBootstrapConfigTemplate`へ文字列として渡す用途には使えません。実験ではpatch本文を各entrypointへ複製しています。`import text "../_patches/control-plane.yaml" as patch`のような型付きtext importを追加し、MCLソースと同じプロジェクトroot制約・依存追跡を適用すると、patchの二重管理を避けられます。
+- 任意ファイルを文字列として読み込む標準機能がありません。`manifest.load`はYAMLなどをManifestとして解析するため、Talos patchやGo templateを文字列としてManifestへ渡す用途には使えません。実験ではTalos patchを各entrypointへ、共通のGo templateとHelm valuesを共通libへ埋め込みました。Cilium valuesはJsonnetのYAML merge後の文字列をクラスタ別entrypointへ埋め込んでいます。`import text "../_patches/control-plane.yaml" as patch`のような型付きtext importを追加し、MCLソースと同じプロジェクトroot制約・依存追跡を適用すると、元ファイルを保ったまま再利用できます。
 - MCLからshell scriptなどの生テキストを参照できません。`actions-runners`のhook scriptをConfigMapに格納するため、2つの`.sh`ファイルをMCLのmultiline stringへ埋め込みました。テキストimportがあればshellの構文強調と個別lintを維持しながらConfigMapへ文字列を渡せます。
 - 標準ライブラリに暗号学的hash関数がありません。既存JsonnetはTalos patchやmachine設定からMD5名を生成し、immutable SecretとTemplateを安全に更新しています。MCL化したCAPI resourceでは現在のdigest suffixを固定値として記述しています。patchなどの入力を変更するときにresource名も手動更新する必要があるため、MCLには正規化JSON bytesを入力にする`std:crypto.sha256`を追加し、必要な箇所は明示的にdigest長を指定できる形が適切です。Pluginが値を暗黙に書き換える設計は避けます。
 - MCL moduleからexportした型を別moduleの型定義で参照できません。`import "./types.mcl" as types`後に`power: types.Power`を宣言すると、現行MCLは`types.Power`をunknown typeとして拒否します。複数クラスタでTart PowerのUnion定義を重複させているため、qualified type importを追加するか、共有型を展開する仕組みが必要です。
@@ -26,4 +28,4 @@ Argo CD Applicationは現在と同じアプリケーション単位を保ちま�
 
 ## 未完了項目
 
-MCL化は3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、`actions-runners`、Biscuit・Kurumiのcontrol plane、Kurumiのworkerに限られます。Argo CD Agent、残りの116アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、Helm/Kustomizeの直接render、既存Componentの置き換えは未移植です。`actions-runners`のimmutable ConfigMap名とCAPI stackのimmutable resource名は現在のJsonnetが生成したdigest suffixを固定値で使っています。scriptやpatchを変更してもMCL自身はdigestを更新できないため、hash関数を追加するか、resource名生成を別仕様にする必要があります。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。
+MCL化は3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、`actions-runners`、`api-server-proxy`、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの115アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、Helm/Kustomizeの直接render、既存Componentの置き換えは未移植です。`actions-runners`のimmutable ConfigMap名とCAPI stackのimmutable resource名は現在のJsonnetが生成したdigest suffixを固定値で使っています。scriptやpatchを変更してもMCL自身はdigestを更新できないため、hash関数を追加するか、resource名生成を別仕様にする必要があります。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。

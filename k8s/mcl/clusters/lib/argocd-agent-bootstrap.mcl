@@ -1,0 +1,384 @@
+let argocdAgentValuesText = """
+fullnameOverride: argocd-agent
+
+image:
+  tag: v0.10.0 # TODO: appVersionがちゃんと上がったらそっちに合わせる
+
+agentMode: managed
+logFormat: json
+server: argocd-agent.local.walnuts.dev
+destinationBasedMapping: true
+createNamespace: true
+allowedNamespaces: "*"
+labelSelector: "argocd-agent=true"
+
+serviceMonitor:
+  enabled: false
+
+deploymentAnnotations:
+  reloader.stakater.com/auto: "true"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+"""
+let argocdAgentValues = argocdAgentValuesText + "\n"
+
+let argocdSpokeValuesText = """
+fullnameOverride: argocd
+
+configs:
+  params:
+    controller.status.processors: "2"
+    controller.operation.processors: "1"
+    controller.kubectl.parallelism.limit: "2"
+    reposerver.parallelism.limit: "1"
+
+dex:
+  enabled: false
+
+server:
+  replicas: 0
+  metrics:
+    serviceMonitor:
+      enabled: false
+
+applicationSet:
+  replicas: 0
+  metrics:
+    serviceMonitor:
+      enabled: false
+
+notifications:
+  enabled: false
+  metrics:
+    serviceMonitor:
+      enabled: false
+
+controller:
+  metrics:
+    serviceMonitor:
+      enabled: false
+  extraArgs:
+    - --status-processors=2
+    - --operation-processors=1
+    - --kubectl-parallelism-limit=2
+  resources:
+    requests:
+      cpu: 500m
+      memory: 768Mi
+    limits:
+      cpu: "2"
+      memory: 3Gi
+
+repoServer:
+  metrics:
+    serviceMonitor:
+      enabled: false
+  env:
+    - name: ARGOCD_REPO_SERVER_PARALLELISM_LIMIT
+      value: "1"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 1Gi
+
+redis:
+  metrics:
+    serviceMonitor:
+      enabled: false
+"""
+let argocdSpokeValues = argocdSpokeValuesText + "\n"
+
+let argocdAgentResourcesTemplateText = """
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-agent-client-tls
+  namespace: argocd
+type: kubernetes.io/tls
+data:
+  tls.crt: {{ .clientCertificate | b64enc }}
+  tls.key: {{ .clientKey | b64enc }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-agent-ca
+  namespace: argocd
+type: Opaque
+data:
+  ca.crt: {{ .caCertificate | b64enc }}
+"""
+let argocdAgentResourcesTemplate = argocdAgentResourcesTemplateText + "\n"
+
+let onepasswordResourcesTemplateText = """
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: onepassword
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: op-credentials
+  namespace: onepassword
+type: Opaque
+data:
+  1password-credentials.json: {{ .credentials | b64enc }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: onepassword-token
+  namespace: onepassword
+type: Opaque
+data:
+  token: {{ .token | b64enc }}
+"""
+let onepasswordResourcesTemplate = onepasswordResourcesTemplateText + "\n"
+
+export fn resources(clusterName: String, namespace: String, ciliumValues: String) -> List<Map<String, Any>> =
+  -
+    apiVersion: "addons.cluster.x-k8s.io/v1alpha1"
+    kind: "HelmChartProxy"
+    metadata:
+      annotations: {}
+      name: "argocd-agent"
+      namespace: namespace
+    spec:
+      clusterSelector:
+        matchLabels:
+          "argocd-agent.walnuts.dev/enabled": "true"
+          "cluster.x-k8s.io/cluster-name": clusterName
+      chartName: "argocd-agent-agent"
+      repoURL: "oci://ghcr.io/argoproj-labs/argocd-agent"
+      version: "0.2.7"
+      releaseName: "argocd-agent"
+      namespace: "argocd"
+      reconcileStrategy: "InstallOnce"
+      options:
+        wait: false
+        install:
+          createNamespace: true
+      valuesTemplate: argocdAgentValues
+  -
+    apiVersion: "addons.cluster.x-k8s.io/v1alpha1"
+    kind: "HelmChartProxy"
+    metadata:
+      annotations: {}
+      name: "cilium-bootstrap"
+      namespace: namespace
+    spec:
+      clusterSelector:
+        matchLabels:
+          "argocd-agent.walnuts.dev/enabled": "true"
+          "cluster.x-k8s.io/cluster-name": clusterName
+      chartName: "cilium"
+      repoURL: "https://helm.cilium.io/"
+      version: "1.20.1"
+      releaseName: "cilium"
+      namespace: "cilium-system"
+      reconcileStrategy: "InstallOnce"
+      options:
+        wait: true
+        install:
+          createNamespace: true
+      valuesTemplate: ciliumValues
+  -
+    apiVersion: "addons.cluster.x-k8s.io/v1beta2"
+    kind: "ClusterResourceSet"
+    metadata:
+      name: "argocd-agent"
+      namespace: namespace
+      annotations: {}
+    spec:
+      clusterSelector:
+        matchLabels:
+          "argocd-agent.walnuts.dev/enabled": "true"
+          "cluster.x-k8s.io/cluster-name": clusterName
+      resources:
+        -
+          kind: "Secret"
+          name: "argocd-agent-resources"
+      strategy: "Reconcile"
+  -
+    apiVersion: "external-secrets.io/v1"
+    kind: "ClusterSecretStore"
+    metadata:
+      name: "argocd-agent-" + clusterName
+    spec:
+      conditions:
+        -
+          namespaces:
+            - namespace
+      provider:
+        kubernetes:
+          remoteNamespace: "argocd"
+          server:
+            url: "https://kubernetes.default.svc"
+            caProvider:
+              type: "ConfigMap"
+              name: "kube-root-ca.crt"
+              namespace: "argocd"
+              key: "ca.crt"
+          auth:
+            serviceAccount:
+              name: "argocd-agent-secret-reader-" + clusterName
+              namespace: "argocd"
+  -
+    apiVersion: "addons.cluster.x-k8s.io/v1beta2"
+    kind: "ClusterResourceSet"
+    metadata:
+      name: "onepassword-bootstrap"
+      namespace: namespace
+    spec:
+      clusterSelector:
+        matchLabels:
+          "argocd-agent.walnuts.dev/enabled": "true"
+          "cluster.x-k8s.io/cluster-name": clusterName
+      resources:
+        -
+          kind: "Secret"
+          name: "onepassword-bootstrap"
+      strategy: "Reconcile"
+  -
+    apiVersion: "external-secrets.io/v1"
+    kind: "ExternalSecret"
+    metadata:
+      name: "onepassword-bootstrap"
+      namespace: namespace
+    spec:
+      refreshInterval: "1h"
+      secretStoreRef:
+        kind: "ClusterSecretStore"
+        name: "onepassword"
+      target:
+        name: "onepassword-bootstrap"
+        creationPolicy: "Owner"
+        template:
+          engineVersion: "v2"
+          type: "addons.cluster.x-k8s.io/resource-set"
+          data:
+            "resources.yaml": onepasswordResourcesTemplate
+      data:
+        -
+          secretKey: "credentials"
+          remoteRef:
+            key: "k8s Credentials File"
+            property: "file/1password-credentials.json"
+        -
+          secretKey: "token"
+          remoteRef:
+            key: "pcookjymtl2zwyozhofaco5yhy"
+            property: "credential"
+  -
+    apiVersion: "external-secrets.io/v1"
+    kind: "ExternalSecret"
+    metadata:
+      name: "argocd-agent-resources"
+      namespace: namespace
+      annotations: {}
+    spec:
+      refreshInterval: "1h"
+      secretStoreRef:
+        kind: "ClusterSecretStore"
+        name: "argocd-agent-" + clusterName
+      target:
+        name: "argocd-agent-resources"
+        creationPolicy: "Owner"
+        template:
+          engineVersion: "v2"
+          type: "addons.cluster.x-k8s.io/resource-set"
+          data:
+            "resources.yaml": argocdAgentResourcesTemplate
+      data:
+        -
+          secretKey: "clientCertificate"
+          remoteRef:
+            key: "argocd-agent-client-tls-" + clusterName
+            property: "tls.crt"
+        -
+          secretKey: "clientKey"
+          remoteRef:
+            key: "argocd-agent-client-tls-" + clusterName
+            property: "tls.key"
+        -
+          secretKey: "caCertificate"
+          remoteRef:
+            key: "argocd-agent-ca"
+            property: "tls.crt"
+  -
+    apiVersion: "rbac.authorization.k8s.io/v1"
+    kind: "Role"
+    metadata:
+      name: "argocd-agent-secret-reader-" + clusterName
+      namespace: "argocd"
+    rules:
+      -
+        apiGroups:
+          - ""
+        resources:
+          - "secrets"
+        resourceNames:
+          - "argocd-agent-ca"
+          - "argocd-agent-client-tls-" + clusterName
+        verbs:
+          - "get"
+      -
+        apiGroups:
+          - "authorization.k8s.io"
+        resources:
+          - "selfsubjectrulesreviews"
+        verbs:
+          - "create"
+  -
+    apiVersion: "rbac.authorization.k8s.io/v1"
+    kind: "RoleBinding"
+    metadata:
+      name: "argocd-agent-secret-reader-" + clusterName
+      namespace: "argocd"
+    roleRef:
+      apiGroup: "rbac.authorization.k8s.io"
+      kind: "Role"
+      name: "argocd-agent-secret-reader-" + clusterName
+    subjects:
+      -
+        kind: "ServiceAccount"
+        name: "argocd-agent-secret-reader-" + clusterName
+        namespace: "argocd"
+  -
+    apiVersion: "v1"
+    kind: "ServiceAccount"
+    metadata:
+      name: "argocd-agent-secret-reader-" + clusterName
+      namespace: "argocd"
+  -
+    apiVersion: "addons.cluster.x-k8s.io/v1alpha1"
+    kind: "HelmChartProxy"
+    metadata:
+      annotations: {}
+      name: "argocd-spoke"
+      namespace: namespace
+    spec:
+      clusterSelector:
+        matchLabels:
+          "argocd-agent.walnuts.dev/enabled": "true"
+          "cluster.x-k8s.io/cluster-name": clusterName
+      chartName: "argo-cd"
+      repoURL: "https://argoproj.github.io/argo-helm"
+      version: "10.8.2"
+      releaseName: "argocd"
+      namespace: "argocd"
+      reconcileStrategy: "InstallOnce"
+      options:
+        wait: true
+        install:
+          createNamespace: true
+      valuesTemplate: argocdSpokeValues
