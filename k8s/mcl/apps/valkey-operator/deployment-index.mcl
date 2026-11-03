@@ -1,0 +1,17 @@
+import "./deployments.mcl" as app
+
+let primary = app.deployments.primary
+let local = app.deployments.local
+let targets =
+  - target: primary.target
+    cluster: primary.cluster
+    entrypoint: primary.entrypoint
+    destination: primary.destination
+    profile: primary.profile
+  - target: local.target
+    cluster: local.cluster
+    entrypoint: local.entrypoint
+    destination: local.destination
+    profile: local.profile
+
+emit each targets

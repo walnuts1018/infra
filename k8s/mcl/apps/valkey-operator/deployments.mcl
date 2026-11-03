@@ -1,0 +1,40 @@
+import "./chart.mcl" as appChart
+
+export type Deployment =
+  target: String
+  cluster: String
+  entrypoint: String
+  destination: Destination
+  profile: String
+
+export type NamedDestination =
+  kind: "name"
+  name: String
+  namespace: String
+
+export type ServerDestination =
+  kind: "server"
+  server: String
+  namespace: String
+
+export type Destination = NamedDestination | ServerDestination
+
+export let deployments: Map<String, Deployment> =
+  primary:
+    target: "primary"
+    cluster: "kurumi"
+    entrypoint: "k8s/mcl/apps/valkey-operator/main.mcl"
+    destination:
+      kind: "name"
+      name: "kurumi"
+      namespace: appChart.namespace
+    profile: "monitoring"
+  local:
+    target: "local"
+    cluster: "berry"
+    entrypoint: "k8s/mcl/apps/valkey-operator/main.mcl"
+    destination:
+      kind: "server"
+      server: "https://kubernetes.default.svc"
+      namespace: appChart.namespace
+    profile: "standard"

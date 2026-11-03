@@ -1,0 +1,4 @@
+export let chartVersion = "3.14.0"
+export let chartArchive = "https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-" + chartVersion + "/metrics-server-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let namespace = "monitoring"

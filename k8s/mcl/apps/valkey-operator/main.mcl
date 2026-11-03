@@ -1,0 +1,10 @@
+import "std:context" as context
+import "./chart.mcl" as appChart
+import "./profiles.mcl" as appProfiles
+import "./resources.mcl" as resources
+
+let profileName = context.parameter("profile")
+let values = appProfiles.profiles[profileName]
+let rendered = resources.render(appChart.namespace, values)
+
+emit each rendered

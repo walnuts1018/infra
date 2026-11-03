@@ -1,0 +1,28 @@
+let commonValues: Map<String, Any> =
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "128Mi"
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: "kubernetes.io/hostname"
+      whenUnsatisfiable: "ScheduleAnyway"
+      labelSelector:
+        matchLabels:
+          "app.kubernetes.io/name": "valkey-operator"
+  metrics:
+    enabled: true
+
+let standardValues: Map<String, Any> = commonValues
+let monitoringValues: Map<String, Any> = commonValues with:
+  metrics:
+    serviceMonitor:
+      enabled: true
+
+export let profiles =
+  standard: standardValues
+  monitoring: monitoringValues
