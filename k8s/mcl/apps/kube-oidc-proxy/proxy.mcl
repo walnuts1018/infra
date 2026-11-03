@@ -1,0 +1,245 @@
+import "./config.mcl" as app
+
+let serviceAccountName = app.name
+let certificateSecretName = app.name + "-tls"
+let labels =
+  "app.kubernetes.io/name": app.name
+
+let service = node:
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    ports:
+      -
+        name: "https"
+        port: 443
+        protocol: "TCP"
+        targetPort: "https"
+    selector: labels
+    type: "ClusterIP"
+
+let certificate = node:
+  apiVersion: "cert-manager.io/v1"
+  kind: "Certificate"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    dnsNames:
+      - service.metadata.name
+      - service.metadata.name + "." + service.metadata.namespace
+      - service.metadata.name + "." + service.metadata.namespace + ".svc"
+      - service.metadata.name + "." + service.metadata.namespace + ".svc.cluster.local"
+    issuerRef:
+      group: "cert-manager.io"
+      kind: "ClusterIssuer"
+      name: "local"
+    secretName: certificateSecretName
+    usages:
+      - "server auth"
+
+let deployment = node:
+  apiVersion: "apps/v1"
+  kind: "Deployment"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    replicas: 2
+    selector:
+      matchLabels: labels
+    template:
+      metadata:
+        labels: labels
+      spec:
+        automountServiceAccountToken: true
+        serviceAccountName: serviceAccountName
+        containers:
+          -
+            name: "kube-oidc-proxy"
+            image: "ghcr.io/tremolosecurity/kube-oidc-proxy:1.0.13@sha256:400477688105f303005df4eec55fb96cf12692cbda510ca68c401f9926bd702f"
+            imagePullPolicy: "IfNotPresent"
+            command:
+              - "kube-oidc-proxy"
+            args:
+              - "--secure-port=8443"
+              - "--tls-cert-file=/etc/kube-oidc-proxy/tls.crt"
+              - "--tls-private-key-file=/etc/kube-oidc-proxy/tls.key"
+              - "--tls-min-version=VersionTLS12"
+              - "--oidc-client-id=" + app.oidcIssuerAudience
+              - "--oidc-issuer-url=https://auth.walnuts.dev"
+              - "--oidc-username-claim=email"
+              - "--oidc-username-prefix=zitadel:"
+              - "--oidc-groups-claim=my:zitadel:grants"
+              - "--oidc-groups-prefix=zitadel:"
+              - "--oidc-signing-algs=RS256"
+              - "--oidc-ca-file=/etc/kube-oidc-proxy-ca/trust-bundle.pem"
+              - "--v=9"
+            ports:
+              -
+                name: "https"
+                containerPort: 8443
+                protocol: "TCP"
+              -
+                name: "health"
+                containerPort: 8080
+                protocol: "TCP"
+            readinessProbe:
+              httpGet:
+                path: "/ready"
+                port: "health"
+              initialDelaySeconds: 5
+              periodSeconds: 10
+            livenessProbe:
+              httpGet:
+                path: "/ready"
+                port: "health"
+              initialDelaySeconds: 15
+              periodSeconds: 20
+            resources:
+              requests:
+                cpu: "5m"
+                memory: "32Mi"
+              limits:
+                memory: "256Mi"
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - "ALL"
+              readOnlyRootFilesystem: true
+              runAsGroup: 65532
+              runAsNonRoot: true
+              runAsUser: 65532
+              seccompProfile:
+                type: "RuntimeDefault"
+            volumeMounts:
+              -
+                name: "tls"
+                mountPath: "/etc/kube-oidc-proxy"
+                readOnly: true
+              -
+                name: "ca"
+                mountPath: "/etc/kube-oidc-proxy-ca"
+                readOnly: true
+        volumes:
+          -
+            name: "tls"
+            secret:
+              secretName: certificate.spec.secretName
+          -
+            name: "ca"
+            configMap:
+              name: "local-ca-bundle"
+              items:
+                -
+                  key: "trust-bundle.pem"
+                  path: "trust-bundle.pem"
+        topologySpreadConstraints:
+          -
+            maxSkew: 1
+            topologyKey: "kubernetes.io/hostname"
+            whenUnsatisfiable: "ScheduleAnyway"
+            labelSelector:
+              matchLabels: labels
+
+let backendTLSPolicy = node:
+  apiVersion: "gateway.networking.k8s.io/v1alpha3"
+  kind: "BackendTLSPolicy"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    targetRefs:
+      -
+        group: ""
+        kind: service.kind
+        name: service.metadata.name
+    validation:
+      caCertificateRefs:
+        -
+          group: ""
+          kind: "ConfigMap"
+          name: "local-ca-bundle"
+      hostname: service.metadata.name + "." + service.metadata.namespace + ".svc.cluster.local"
+
+let httpRoute = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    parentRefs:
+      -
+        name: "envoy-gateway"
+        namespace: "envoy-gateway-system"
+    hostnames:
+      - "kurumi-oidc-proxy.local.walnuts.dev"
+    rules:
+      -
+        backendRefs:
+          -
+            name: service.metadata.name
+            port: service.spec.ports[0].port
+        matches:
+          -
+            path:
+              type: "PathPrefix"
+              value: "/"
+
+let securityPolicy = node:
+  apiVersion: "gateway.envoyproxy.io/v1alpha1"
+  kind: "SecurityPolicy"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    targetRefs:
+      -
+        group: "gateway.networking.k8s.io"
+        kind: httpRoute.kind
+        name: httpRoute.metadata.name
+    authorization:
+      defaultAction: "Deny"
+      rules:
+        -
+          action: "Allow"
+          principal:
+            clientCIDRs:
+              - "192.168.0.0/16"
+
+let networkPolicy = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+  spec:
+    podSelector:
+      matchLabels: labels
+    policyTypes:
+      - "Ingress"
+    ingress:
+      -
+        ports:
+          -
+            port: 8443
+            protocol: "TCP"
+      -
+        ports:
+          -
+            port: 8080
+            protocol: "TCP"
+
+export let resources =
+  - service
+  - certificate
+  - deployment
+  - backendTLSPolicy
+  - httpRoute
+  - securityPolicy
+  - networkPolicy

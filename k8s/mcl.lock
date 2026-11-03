@@ -49,6 +49,18 @@
     }
   },
   "gitSources": {
+    "git+https://github.com/kubernetes-csi/external-snapshotter\n6b2feaaf7fc3d6d0fe21029d1032ea0eee2081e9\nclient/config/crd": {
+      "source": "git+https://github.com/kubernetes-csi/external-snapshotter",
+      "revision": "6b2feaaf7fc3d6d0fe21029d1032ea0eee2081e9",
+      "directory": "client/config/crd",
+      "archiveDigest": "43aeec9d02b5070f958d0b6b5b15794016f2646790c01e843762eb8c968074eb"
+    },
+    "git+https://github.com/kubernetes-csi/external-snapshotter\n6b2feaaf7fc3d6d0fe21029d1032ea0eee2081e9\ndeploy/kubernetes/snapshot-controller": {
+      "source": "git+https://github.com/kubernetes-csi/external-snapshotter",
+      "revision": "6b2feaaf7fc3d6d0fe21029d1032ea0eee2081e9",
+      "directory": "deploy/kubernetes/snapshot-controller",
+      "archiveDigest": "bbf3f729ea4aa12e00f8b4a6fe5c26532362868596321deba795e9a9937747eb"
+    },
     "git+https://github.com/kubernetes-sigs/gateway-api\n8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3\nconfig/crd": {
       "source": "git+https://github.com/kubernetes-sigs/gateway-api",
       "revision": "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3",

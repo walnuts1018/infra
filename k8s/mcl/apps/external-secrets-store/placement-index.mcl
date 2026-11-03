@@ -1,0 +1,8 @@
+import "./placements.mcl" as app
+
+let targets =
+  - app.placements.kurumi
+  - app.placements.berry
+  - app.placements.biscuit
+
+emit each targets

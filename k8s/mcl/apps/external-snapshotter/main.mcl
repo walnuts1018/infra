@@ -1,0 +1,15 @@
+import "std:kustomize" as kustomize
+
+let crds = kustomize.build(
+  "git+https://github.com/kubernetes-csi/external-snapshotter",
+  "6b2feaaf7fc3d6d0fe21029d1032ea0eee2081e9",
+  "client/config/crd",
+)
+let controller = kustomize.build(
+  "git+https://github.com/kubernetes-csi/external-snapshotter",
+  "6b2feaaf7fc3d6d0fe21029d1032ea0eee2081e9",
+  "deploy/kubernetes/snapshot-controller",
+)
+
+emit each crds
+emit each controller

@@ -1,0 +1,52 @@
+import "./config.mcl" as app
+
+let serviceAccount = node:
+  apiVersion: "v1"
+  kind: "ServiceAccount"
+  metadata:
+    name: app.name
+    namespace: app.namespace
+
+let clusterRole = node:
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  kind: "ClusterRole"
+  metadata:
+    name: app.name
+  rules:
+    -
+      apiGroups:
+        - ""
+      resources:
+        - "users"
+        - "groups"
+      verbs:
+        - "impersonate"
+    -
+      apiGroups:
+        - "authentication.k8s.io"
+      resources:
+        - "userextras/originaluser.jetstack.io-user"
+        - "userextras/originaluser.jetstack.io-groups"
+        - "userextras/originaluser.jetstack.io-extra"
+      verbs:
+        - "impersonate"
+
+let clusterRoleBinding = node:
+  apiVersion: "rbac.authorization.k8s.io/v1"
+  kind: "ClusterRoleBinding"
+  metadata:
+    name: app.name
+  roleRef:
+    apiGroup: "rbac.authorization.k8s.io"
+    kind: clusterRole.kind
+    name: clusterRole.metadata.name
+  subjects:
+    -
+      kind: serviceAccount.kind
+      name: serviceAccount.metadata.name
+      namespace: serviceAccount.metadata.namespace
+
+export let resources =
+  - serviceAccount
+  - clusterRole
+  - clusterRoleBinding

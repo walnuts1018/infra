@@ -1,0 +1,23 @@
+import "std:context" as context
+import "./profiles.mcl" as appProfiles
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+
+let resource = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ClusterSecretStore"
+  metadata:
+    name: "onepassword"
+  spec:
+    provider:
+      onepassword:
+        connectHost: "http://onepassword-connect.onepassword.svc.cluster.local:8080"
+        vaults: profile.vaults
+        auth:
+          secretRef:
+            connectTokenSecretRef:
+              namespace: "onepassword"
+              name: "onepassword-token"
+              key: "token"
+
+emit resource
