@@ -14,21 +14,6 @@ local identities = [
       },
     ],
   },
-  {
-    resourceName: 'mcl-playground-backup',
-    name: 'mcl_playground_backup',
-    policyName: 'mcl-playground-backup-access-key',
-    secretName: 'mcl-playground-backup-seaweedfs-credentials',
-    accessKeyField: 'AWS_ACCESS_KEY_ID',
-    secretKeyField: 'AWS_SECRET_ACCESS_KEY',
-    permissions: [
-      {
-        effect: 'Allow',
-        actions: ['Read', 'List'],
-        buckets: ['mcl-playground'],
-      },
-    ],
-  },
 ];
 {
   identities: identities,
