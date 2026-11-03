@@ -1,0 +1,10 @@
+import text "./config.json" as configJSON
+import text "./setup.sh" as setupScript
+import text "./teardown.sh" as teardownScript
+import text "./helperPod.yaml" as helperPod
+
+export let data =
+  "config.json": configJSON
+  setup: setupScript
+  teardown: teardownScript
+  "helperPod.yaml": helperPod

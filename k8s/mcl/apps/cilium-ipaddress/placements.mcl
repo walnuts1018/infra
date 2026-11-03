@@ -1,0 +1,31 @@
+export type Destination =
+  kind: "name"
+  name: String
+  namespace: String
+
+export type Placement =
+  target: String
+  cluster: String
+  entrypoint: String
+  destination: Destination
+  profile: String
+
+export let placements: Map<String, Placement> =
+  kurumi:
+    target: "kurumi"
+    cluster: "kurumi"
+    entrypoint: "k8s/mcl/apps/cilium-ipaddress/main.mcl"
+    destination:
+      kind: "name"
+      name: "kurumi"
+      namespace: "cilium-system"
+    profile: "controlPlanePeer"
+  biscuit:
+    target: "biscuit"
+    cluster: "biscuit"
+    entrypoint: "k8s/mcl/apps/cilium-ipaddress/main.mcl"
+    destination:
+      kind: "name"
+      name: "biscuit"
+      namespace: "cilium-system"
+    profile: "serverVlanPeer"

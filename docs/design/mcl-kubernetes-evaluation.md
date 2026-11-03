@@ -27,6 +27,8 @@ Argo CD Agent bootstrapではBiscuitとKurumiのstackをMCL化しました。各
 
 `ghcr-login-secret`は1つの`ClusterExternalSecret`をMCLへ移し、Jsonnet出力との構造化JSON比較で一致を確認しました。
 
+追加した`cilium-ipaddress`はKurumiとBiscuitがそれぞれfeature profileを選び、4つのCRD resourceを出力します。両profileの出力は既存Jsonnetと一致します。`descheduler`はKurumi向け5 Helm resourceを出力し、元valuesによるHelm出力と一致します。`envoy-gateway-class`はKurumi向け6 resourceを出力し、profileでEnvoyProxyのLoadBalancer IPを選びます。6 resourceは既存Jsonnet出力と一致します。`esp32-thermohygrometer-exporter`の2 resourceは既存Jsonnet出力と一致します。`gateway-api-crds`はv1.6.1の固定Git commitから12 resourceを生成します。`ghcr-login-secret`は1つの`ClusterExternalSecret`を生成し、既存Jsonnetと一致します。`local-path-provisioner`は8つの最終resourceをMCL内に直接記述し、元のKustomize baseとpatchの出力に一致させました。
+
 ## 複数クラスタでのアプリケーション配置
 
 同じアプリケーションを複数クラスタへ配置する場合も、アプリケーションごとに`main.mcl`を1つだけ用意し、すべての配置でそのentrypointを使います。配置するクラスタ数に応じてentrypointを切り替える構成や、クラスタごとのentrypoint directoryは作りません。
@@ -66,4 +68,4 @@ Argo CD Applicationは現在と同じアプリケーション単位を保ちま�
 
 ## 未完了項目
 
-MCL化は36アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの81アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、placement-indexからApplicationSetを生成するPlugin Generatorは未実装です。`rabbitmq-topology-operator`はHelm chart内で`genCA`を呼び出すため、現在のMCLでrenderできず未移行です。MCL本体に関する技術的な制約と改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`で管理します。`actions-runners`のConfigMap名とCAPIのimmutable resource名は、hook scriptやTalos machine設定を入力に`std:crypto.sha256`で生成します。MCL側の技術的な改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`に記録します。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。
+MCL化は42アプリ、3クラスタのNamespace、Biscuit・KurumiのTartHostと資格情報参照、Biscuit・Kurumiのcontrol planeとArgo CD Agent bootstrap、Kurumiのworkerに限られます。残りの75アプリ、全117個の`app.json5` metadataとApplicationSetによるアプリ発見、既存Componentの置き換え、placement-indexからApplicationSetを生成するPlugin Generatorは未実装です。`rabbitmq-topology-operator`はHelm chart内で`genCA`を呼び出すため、現在のMCLでrenderできず未移行です。MCL本体に関する技術的な制約と改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`で管理します。`actions-runners`のConfigMap名とCAPIのimmutable resource名は、hook scriptやTalos machine設定を入力に`std:crypto.sha256`で生成します。MCL側の技術的な改善候補はMCLリポジトリの`docs/reviews/kubernetes-infra-evaluation.md`に記録します。全体の完了判定には、各entrypointのMCL評価、生成Bundleと現行Jsonnet出力の比較、CRDを含むKubernetes schema検証が必要です。

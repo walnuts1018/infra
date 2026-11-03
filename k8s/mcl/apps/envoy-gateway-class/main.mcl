@@ -1,0 +1,60 @@
+import "std:context" as context
+import "./settings.mcl" as appSettings
+import "./profiles.mcl" as appProfiles
+import "./certificate.mcl" as gatewayCertificate
+import "./client-traffic-policy.mcl" as clientTrafficPolicy
+import "./gateway-class.mcl" as gatewayClass
+import "./gateway.mcl" as gateway
+import "./podmonitor.mcl" as proxyPodMonitor
+
+let profileName = context.parameter("profile")
+let profile = appProfiles.profiles[profileName]
+let envoyProxy = node:
+  apiVersion: "gateway.envoyproxy.io/v1alpha1"
+  kind: "EnvoyProxy"
+  metadata:
+    name: "custom-config"
+    namespace: appSettings.namespace
+  spec:
+    provider:
+      type: "Kubernetes"
+      kubernetes:
+        envoyDeployment:
+          replicas: 2
+          container:
+            resources:
+              requests:
+                cpu: "8m"
+                memory: "96Mi"
+              limits:
+                memory: "1Gi"
+        envoyHpa:
+          minReplicas: 2
+          maxReplicas: 5
+          metrics:
+            - type: "Resource"
+              resource:
+                name: "memory"
+                target:
+                  type: "Utilization"
+                  averageUtilization: 100
+        envoyService:
+          externalTrafficPolicy: "Local"
+          loadBalancerIP: profile.envoyProxyLoadBalancerIP
+          type: "LoadBalancer"
+    telemetry:
+      tracing:
+        samplingRate: 100
+        provider:
+          type: "OpenTelemetry"
+          backendRefs:
+            - name: "default-collector"
+              namespace: "opentelemetry-collector"
+              port: 4317
+
+emit gatewayCertificate.resource
+emit envoyProxy
+emit gatewayClass.resource
+emit gateway.resource
+emit clientTrafficPolicy.resource
+emit proxyPodMonitor.resource

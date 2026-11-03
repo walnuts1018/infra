@@ -1,0 +1,14 @@
+import "std:context" as context
+import "./profiles.mcl" as appProfiles
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+
+export let resource = node:
+  apiVersion: "cilium.io/v2"
+  kind: "CiliumLoadBalancerIPPool"
+  metadata:
+    name: "default"
+  spec:
+    blocks:
+      - start: profile.addressPool.start
+        stop: profile.addressPool.stop

@@ -1,0 +1,27 @@
+import "./settings.mcl" as appChart
+
+let appName = "envoy-gateway-proxy"
+let labels =
+  app: appName
+  "app.kubernetes.io/name": appName
+
+export let resource = node:
+  apiVersion: "monitoring.coreos.com/v1"
+  kind: "PodMonitor"
+  metadata:
+    name: "envoy-gateway-proxy"
+    namespace: appChart.namespace
+    labels: labels
+  spec:
+    podMetricsEndpoints:
+      - path: "/stats/prometheus"
+        port: "metrics"
+        interval: "15s"
+    namespaceSelector:
+      matchNames:
+        - appChart.namespace
+    selector:
+      matchLabels:
+        "app.kubernetes.io/name": "envoy"
+        "app.kubernetes.io/component": "proxy"
+        "app.kubernetes.io/managed-by": "envoy-gateway"

@@ -1,0 +1,9 @@
+import "./advertisement.mcl" as appAdvertisement
+import "./bgp.mcl" as appBgp
+import "./ip-pool.mcl" as appIpPool
+
+export let resources =
+  - appAdvertisement.advertisement
+  - appBgp.peerConfig
+  - appBgp.clusterConfig
+  - appIpPool.resource

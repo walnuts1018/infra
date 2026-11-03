@@ -1,0 +1,21 @@
+import "std:context" as context
+import "./profiles.mcl" as appProfiles
+
+let profile = appProfiles.profiles[context.parameter("profile")]
+
+export let peerConfig = node:
+  apiVersion: "cilium.io/v2"
+  kind: "CiliumBGPPeerConfig"
+  metadata:
+    name: profile.bgp.peerConfigName
+  spec: profile.bgp.peerConfigSpec
+
+export let clusterConfig = node:
+  apiVersion: "cilium.io/v2"
+  kind: "CiliumBGPClusterConfig"
+  metadata:
+    name: profile.bgp.instanceName
+  spec:
+    nodeSelector: profile.bgp.nodeSelector
+    bgpInstances:
+      - profile.bgp.bgpInstance

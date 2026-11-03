@@ -1,0 +1,133 @@
+let requestBalanceProfile =
+  name: "request-balance"
+  plugins:
+    balance:
+      enabled:
+        - "RemoveDuplicates"
+        - "RemovePodsViolatingTopologySpreadConstraint"
+        - "LowNodeUtilization"
+    deschedule:
+      enabled:
+        - "RemovePodsViolatingInterPodAntiAffinity"
+        - "RemovePodsViolatingNodeAffinity"
+        - "RemovePodsViolatingNodeTaints"
+        - "RemovePodsHavingTooManyRestarts"
+  pluginConfig:
+    - name: "DefaultEvictor"
+      args:
+        nodeFit: true
+        namespaceLabelSelector:
+          matchExpressions:
+            - key: "kubernetes.io/metadata.name"
+              operator: "NotIn"
+              values:
+                - "arc-runners"
+        labelSelector:
+          matchExpressions:
+            - key: "batch.kubernetes.io/controller-uid"
+              operator: "DoesNotExist"
+        podProtections:
+          defaultDisabled:
+            - "PodsWithLocalStorage"
+          extraEnabled:
+            - "PodsWithPVC"
+          config:
+            PodsWithPVC:
+              protectedStorageClasses:
+                - name: "local-path"
+    - name: "RemoveDuplicates"
+    - name: "RemovePodsViolatingTopologySpreadConstraint"
+      args:
+        constraints:
+          - "DoNotSchedule"
+          - "ScheduleAnyway"
+    - name: "LowNodeUtilization"
+      args:
+        useDeviationThresholds: false
+        thresholds:
+          cpu: 60
+          memory: 70
+        targetThresholds:
+          cpu: 75
+          memory: 80
+    - name: "RemovePodsViolatingInterPodAntiAffinity"
+    - name: "RemovePodsViolatingNodeAffinity"
+      args:
+        nodeAffinityType:
+          - "requiredDuringSchedulingIgnoredDuringExecution"
+    - name: "RemovePodsViolatingNodeTaints"
+    - name: "RemovePodsHavingTooManyRestarts"
+      args:
+        podRestartThreshold: 100
+        includingInitContainers: true
+    - name: "PodLifeTime"
+      args:
+        maxPodLifeTimeSeconds: 86400
+        includingInitContainers: true
+        states:
+          - "Succeeded"
+          - "Failed"
+          - "Unknown"
+          - "Completed"
+          - "Error"
+          - "Evicted"
+          - "CrashLoopBackOff"
+          - "ImagePullBackOff"
+          - "ErrImagePull"
+          - "CreateContainerConfigError"
+          - "CreateContainerError"
+          - "InvalidImageName"
+          - "OOMKilled"
+          - "ContainerCannotRun"
+          - "StartError"
+
+let actualUsageProfile =
+  name: "actual-usage"
+  plugins:
+    balance:
+      enabled:
+        - "LowNodeUtilization"
+  pluginConfig:
+    - name: "DefaultEvictor"
+      args:
+        nodeFit: true
+        namespaceLabelSelector:
+          matchExpressions:
+            - key: "kubernetes.io/metadata.name"
+              operator: "NotIn"
+              values:
+                - "arc-runners"
+        labelSelector:
+          matchExpressions:
+            - key: "batch.kubernetes.io/controller-uid"
+              operator: "DoesNotExist"
+        podProtections:
+          defaultDisabled:
+            - "PodsWithLocalStorage"
+          extraEnabled:
+            - "PodsWithPVC"
+          config:
+            PodsWithPVC:
+              protectedStorageClasses:
+                - name: "local-path"
+    - name: "LowNodeUtilization"
+      args:
+        metricsUtilization:
+          source: "KubernetesMetrics"
+        useDeviationThresholds: false
+        thresholds:
+          cpu: 70
+          memory: 70
+        targetThresholds:
+          cpu: 90
+          memory: 90
+
+export let values: Map<String, Any> =
+  schedule: "*/5 * * * *"
+  deschedulerPolicy:
+    maxNoOfPodsToEvictPerNode: 3
+    metricsProviders:
+      - source: "KubernetesMetrics"
+    profiles:
+      - requestBalanceProfile
+      - actualUsageProfile

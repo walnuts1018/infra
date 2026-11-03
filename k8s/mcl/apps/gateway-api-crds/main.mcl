@@ -1,0 +1,9 @@
+import "std:kustomize" as kustomize
+
+let resources = kustomize.build(
+  "git+https://github.com/kubernetes-sigs/gateway-api",
+  "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3",
+  "config/crd",
+)
+
+emit each resources

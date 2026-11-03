@@ -1,0 +1,18 @@
+import "std:context" as context
+import "std:helm" as helm
+import "./chart.mcl" as appChart
+import "./profiles.mcl" as appProfiles
+
+let profileName = context.parameter("profile")
+let values = appProfiles.valuesByProfile[profileName]
+let apiVersions: List<String> = []
+let options =
+  releaseName: "descheduler"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions: apiVersions
+  values: values
+let resources = helm.render(appChart.chartArchive, options)
+
+emit each resources

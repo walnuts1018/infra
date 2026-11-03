@@ -20,6 +20,7 @@
     "https://github.com/groundcover-com/helm-charts/releases/download/caretta-0.0.16/caretta-0.0.16.tgz": "24593ec0e9e7971520b2ab3f049d7fceebe0519a04f857f711ca5c7505e0af72",
     "https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/releases/download/1.21.3/k8s-ephemeral-storage-metrics-1.21.3.tgz": "64f916134aeb805b41bc3245beb05384c4637c6e0a37418a4f3830743b07ef8d",
     "https://github.com/klicktipp/helm-charts/releases/download/rabbitmq-cluster-operator-0.4.2/rabbitmq-cluster-operator-0.4.2.tgz": "5fb8ca9d338bd03043875766723177be3800d84faba12934f3ca339309d50743",
+    "https://github.com/kubernetes-sigs/descheduler/releases/download/descheduler-helm-chart-0.36.0/descheduler-0.36.0.tgz": "fae31d330236c0dee087241e0861759df16235c1f4d4c5a149d83788997b6b8f",
     "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-1.21.1/external-dns-1.21.1.tgz": "5dd033a4b872bf641860695705ee460031d0bc695f114bf8926fee6736814e19",
     "https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-3.14.0/metrics-server-3.14.0.tgz": "c2ca1185c01e6e7f53dd1b7d131f0c9b3fa50e003ed068b784563a1b5a3422a1",
     "https://github.com/open-telemetry/opentelemetry-helm-charts/releases/download/opentelemetry-operator-0.122.0/opentelemetry-operator-0.122.0.tgz": "b66f9b937ab644e75c0042395dc85bfc041eb5c51d22719b944d3e2bf32b5e4b",
@@ -47,5 +48,12 @@
       }
     }
   },
-  "gitSources": {}
+  "gitSources": {
+    "git+https://github.com/kubernetes-sigs/gateway-api\n8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3\nconfig/crd": {
+      "source": "git+https://github.com/kubernetes-sigs/gateway-api",
+      "revision": "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3",
+      "directory": "config/crd",
+      "archiveDigest": "5798d3a375255283cf4725d5f8ef6ee34b49c998fe3d213693eb81c6a78d0e63"
+    }
+  }
 }
