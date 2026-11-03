@@ -15,6 +15,7 @@
     "https://github.com/jmcgrath207/k8s-ephemeral-storage-metrics/releases/download/1.21.3/k8s-ephemeral-storage-metrics-1.21.3.tgz": "64f916134aeb805b41bc3245beb05384c4637c6e0a37418a4f3830743b07ef8d",
     "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-1.21.1/external-dns-1.21.1.tgz": "5dd033a4b872bf641860695705ee460031d0bc695f114bf8926fee6736814e19",
     "https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-3.14.0/metrics-server-3.14.0.tgz": "c2ca1185c01e6e7f53dd1b7d131f0c9b3fa50e003ed068b784563a1b5a3422a1",
+    "https://github.com/prometheus-community/helm-charts/releases/download/kube-state-metrics-8.4.2/kube-state-metrics-8.4.2.tgz": "e42988751de414f1d6e3247f51ef8b45ed49218f30294c99b1469324d348145f",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-blackbox-exporter-11.18.0/prometheus-blackbox-exporter-11.18.0.tgz": "19322b26614c62d6277a1471e26c0b5379ce9ebf43897e01ab85d3e164594ab8",
     "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-smartctl-exporter-0.17.1/prometheus-smartctl-exporter-0.17.1.tgz": "cb03ec4acc49401996e047b33939c9aa205e2a2be673309d7834ee64301b26f3",
     "https://stakater.github.io/stakater-charts/reloader-2.2.17.tgz": "a17ee91d66785c29c17e5dfd038c13b0e35b23301b33f8fdb431b403d8a7a071",
