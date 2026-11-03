@@ -1,0 +1,4 @@
+export let chartVersion = "1.21.1"
+export let chartArchive = "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-" + chartVersion + "/external-dns-" + chartVersion + ".tgz"
+export let kubeVersion = "1.36.4"
+export let namespace = "external-dns-coredns"
