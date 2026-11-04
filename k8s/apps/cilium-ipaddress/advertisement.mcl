@@ -6,7 +6,7 @@ let selector = node:
         - "never-used-value"
 
 export let advertisement = node:
-  apiVersion: "cilium.io/v2"
+  apiVersion: "cilium.io/v2alpha1"
   kind: "CiliumBGPAdvertisement"
   metadata:
     name: "load-balancer-ips"

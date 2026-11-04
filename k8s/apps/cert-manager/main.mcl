@@ -1,8 +1,8 @@
 import "std:helm" as helm
+import "std:core" as core
 import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./controller-configmap.mcl" as controllerConfigMap
-import "./hooks.mcl" as appHooks
 import "./features.mcl" as appFeatures
 
 type Feature = "monitoring"
@@ -23,31 +23,32 @@ let options =
   kubeVersion: appChart.kubeVersion
   apiVersions: apiVersions
   values: values
-let chartResources = helm.render(appChart.chartArchive, options)
+let chartResources: List<Map<String, Any>> =
+  helm.render(appChart.chartArchive, options)
 let controllerConfigMapIdentity =
   apiVersion: "v1"
   kind: "ConfigMap"
-  namespace: appChart.namespace
   name: "cert-manager"
-let chartControllerConfigMap = lists.exactlyOne(
+let controllerConfigMaps = lists.filter(
   chartResources,
   fn(resource) =>
     resource.apiVersion == controllerConfigMapIdentity.apiVersion and
     resource.kind == controllerConfigMapIdentity.kind and
-    resource.metadata.namespace == controllerConfigMapIdentity.namespace and
     resource.metadata.name == controllerConfigMapIdentity.name,
 )
+rule hasOneControllerConfigMap(resources: List<Map<String, Any>>):
+  require core.len(resources) == 1 message "cert-manager Helm chart must render exactly one controller ConfigMap"
 let resourcesWithoutControllerConfig = lists.filter(
   chartResources,
   fn(resource) =>
-    resource.apiVersion != chartControllerConfigMap.apiVersion or
-    resource.kind != chartControllerConfigMap.kind or
-    resource.metadata.namespace != chartControllerConfigMap.metadata.namespace or
-    resource.metadata.name != chartControllerConfigMap.metadata.name,
+    resource.apiVersion != controllerConfigMapIdentity.apiVersion or
+    resource.kind != controllerConfigMapIdentity.kind or
+    resource.metadata.name != controllerConfigMapIdentity.name,
 )
+let configResource = controllerConfigMap.resource
 let configResources =
-  - controllerConfigMap.resource
-let extraResources = lists.concat(appHooks.resources, configResources)
-let resources = lists.concat(resourcesWithoutControllerConfig, extraResources)
+  - configResource
+let resources = lists.concat(resourcesWithoutControllerConfig, configResources)
 
 emit each resources
+validate controllerConfigMaps using hasOneControllerConfigMap

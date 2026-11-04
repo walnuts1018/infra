@@ -2,14 +2,14 @@ import "std:list" as lists
 import "./features.mcl" as appFeatures
 
 fn peerConfig(name: String, spec: Map<String, Any>) -> Map<String, Any> = node:
-  apiVersion: "cilium.io/v2"
+  apiVersion: "cilium.io/v2alpha1"
   kind: "CiliumBGPPeerConfig"
   metadata:
     name: name
   spec: spec
 
 fn clusterConfig(name: String, nodeSelector: Map<String, Any>, bgpInstance: Map<String, Any>) -> Map<String, Any> = node:
-  apiVersion: "cilium.io/v2"
+  apiVersion: "cilium.io/v2alpha1"
   kind: "CiliumBGPClusterConfig"
   metadata:
     name: name

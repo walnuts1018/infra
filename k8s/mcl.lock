@@ -1,16 +1,19 @@
 {
   "version": 4,
   "toolchain": {
-    "mcl": "main",
-    "revision": "fe88631819eb5fe43542d2feebb80138e6885941",
-    "modified": "true",
+    "mcl": "v0.3.28-0.20261104043010-13399b074088",
+    "revision": "13399b0740884111ac967b4efc9a05fbce8c515b",
+    "modified": "false",
     "go": "go1.27.3",
     "helm": "v4.3.1",
     "kustomizeAPI": "v0.21.3",
     "kustomizeKYAML": "v0.21.3"
   },
   "manifests": {},
-  "schemas": {},
+  "schemas": {
+    "https://github.com/cloudnative-pg/plugin-barman-cloud/releases/download/v0.15.0/manifest.yaml": "1c483eae12a7424ad28ac66bdfee771b510ee8e234cb8756c3ade7254cef2fad",
+    "https://raw.githubusercontent.com/longhorn/longhorn/f349c091c50700cb6cb8a4df8aaa29ea214bdd48/deploy/longhorn.yaml": "41648963af867ac1d0c85755fb53cf61cacd57c9bb22e1942e3fb0439eeb04fd"
+  },
   "charts": {
     "https://bokysan.github.io/docker-postfix/mail-5.1.0.tgz": "202c9e211dd313990e0cf08a8ac2dacb31c2d6b85a3e2ab3f299a51e8fa0c271",
     "https://charts.bitnami.com/bitnami/memcached-6.14.0.tgz": "729aa0fc402dcc3eb493028ef124a744f907b8dba997519bb7dea588703a3c5f",
@@ -213,6 +216,66 @@
     }
   },
   "gitSources": {
+    "git+https://github.com/ClickHouse/clickhouse-operator\n15cdb3544e6261228267e7440ea2e7dff74284d5\nconfig/crd/bases": {
+      "source": "git+https://github.com/ClickHouse/clickhouse-operator",
+      "revision": "15cdb3544e6261228267e7440ea2e7dff74284d5",
+      "directory": "config/crd/bases",
+      "archiveDigest": "667b9d2fce867cece23dab685d05d89e59b58478ffd1973ad083c45702e461e1"
+    },
+    "git+https://github.com/argoproj/argo-cd\ne258ee23c3e52266d407572f4bcdfe7d9ed36cb5\nmanifests/crds": {
+      "source": "git+https://github.com/argoproj/argo-cd",
+      "revision": "e258ee23c3e52266d407572f4bcdfe7d9ed36cb5",
+      "directory": "manifests/crds",
+      "archiveDigest": "5582e7d8598625f3f1f4e4c84ee0ea5199ec5536cb3af56043d5cb7729daceaf"
+    },
+    "git+https://github.com/cilium/cilium\ne0dc92bd6dac33d7ba3b5eace82a0448bbb13aac\npkg/k8s/apis/cilium.io/client/crds/v2": {
+      "source": "git+https://github.com/cilium/cilium",
+      "revision": "e0dc92bd6dac33d7ba3b5eace82a0448bbb13aac",
+      "directory": "pkg/k8s/apis/cilium.io/client/crds/v2",
+      "archiveDigest": "8969bb3857b53466b8ca660a8fe08b796ba42a9606e4717232892c9d8cbb18b2"
+    },
+    "git+https://github.com/cloudnative-pg/cloudnative-pg\n4b5e244a7d031f67e025c83c1555e7726ecbbfa1\nconfig/crd/bases": {
+      "source": "git+https://github.com/cloudnative-pg/cloudnative-pg",
+      "revision": "4b5e244a7d031f67e025c83c1555e7726ecbbfa1",
+      "directory": "config/crd/bases",
+      "archiveDigest": "6e03b92e7e9ca3e5695910723f1bb93fe1a42727786c43d4983896192a9a1ac9"
+    },
+    "git+https://github.com/elastic/cloud-on-k8s\n386c7b14f2d1bbb7f2af1e7da997e64875f16e47\nconfig/crds/v1/resources": {
+      "source": "git+https://github.com/elastic/cloud-on-k8s",
+      "revision": "386c7b14f2d1bbb7f2af1e7da997e64875f16e47",
+      "directory": "config/crds/v1/resources",
+      "archiveDigest": "80d187893bd9c7aa963869caa0f6f9137e5c929b6d77b317533bff822f89090a"
+    },
+    "git+https://github.com/external-secrets/external-secrets\n8488600898e856d74a7e0f53ed5e3cc79d89f4e8\nconfig/crds/bases": {
+      "source": "git+https://github.com/external-secrets/external-secrets",
+      "revision": "8488600898e856d74a7e0f53ed5e3cc79d89f4e8",
+      "directory": "config/crds/bases",
+      "archiveDigest": "8050dda0f06cf8ed8da542decf370a166132c0c5cc7ef140839acdc1037bb857"
+    },
+    "git+https://github.com/jetstack/cert-manager\n922a06aa49ee4bb802db268ef72a174af70edd32\ndeploy/crds": {
+      "source": "git+https://github.com/jetstack/cert-manager",
+      "revision": "922a06aa49ee4bb802db268ef72a174af70edd32",
+      "directory": "deploy/crds",
+      "archiveDigest": "7ae02920befad3126aa52a15a85b53418c42fba7bbda34f8b3938598df3892ba"
+    },
+    "git+https://github.com/kedacore/http-add-on\n4ea8a863bd7c16464dc5afbe9ebc8a26e563fac0\nconfig/crd/bases": {
+      "source": "git+https://github.com/kedacore/http-add-on",
+      "revision": "4ea8a863bd7c16464dc5afbe9ebc8a26e563fac0",
+      "directory": "config/crd/bases",
+      "archiveDigest": "5dd625819890a4c35e148f6deedb2a6b7c1daa15e87054cedca1e0bd55f7de93"
+    },
+    "git+https://github.com/kedacore/keda\n68a5b5028f35b22d50597c69819ab32c4e92f21a\nconfig/crd/bases": {
+      "source": "git+https://github.com/kedacore/keda",
+      "revision": "68a5b5028f35b22d50597c69819ab32c4e92f21a",
+      "directory": "config/crd/bases",
+      "archiveDigest": "a539e249378da037145d5b28dc7dc259c0d5fdf4788ff1cc3b2a0546a8597ecf"
+    },
+    "git+https://github.com/klicktipp/helm-charts\nb550c5fc3ff934e697b55d36a6bcc16c04e9fb98\ncharts/rabbitmq-topology-operator/crds": {
+      "source": "git+https://github.com/klicktipp/helm-charts",
+      "revision": "b550c5fc3ff934e697b55d36a6bcc16c04e9fb98",
+      "directory": "charts/rabbitmq-topology-operator/crds",
+      "archiveDigest": "72a2e5fb7f76bcec0c41a12e46bcbf352bf799701034e891cb5d712001173cea"
+    },
     "git+https://github.com/kubernetes-csi/external-snapshotter\n6b2feaaf7fc3d6d0fe21029d1032ea0eee2081e9\nclient/config/crd": {
       "source": "git+https://github.com/kubernetes-csi/external-snapshotter",
       "revision": "6b2feaaf7fc3d6d0fe21029d1032ea0eee2081e9",
@@ -225,11 +288,101 @@
       "directory": "deploy/kubernetes/snapshot-controller",
       "archiveDigest": "bbf3f729ea4aa12e00f8b4a6fe5c26532362868596321deba795e9a9937747eb"
     },
+    "git+https://github.com/kubernetes-sigs/external-dns\n9f26451346774099a8b3e3e5cc46a53bf2fd1461\nconfig/crd/standard": {
+      "source": "git+https://github.com/kubernetes-sigs/external-dns",
+      "revision": "9f26451346774099a8b3e3e5cc46a53bf2fd1461",
+      "directory": "config/crd/standard",
+      "archiveDigest": "ae1f62a85e1f2fb1e32fdeb93b49c3eeb146523ad73fe2798cf9080149ae5878"
+    },
+    "git+https://github.com/kubernetes-sigs/external-dns\neafce22825a6565c5f228e49bcfc117b128786a9\ncharts/external-dns/crds": {
+      "source": "git+https://github.com/kubernetes-sigs/external-dns",
+      "revision": "eafce22825a6565c5f228e49bcfc117b128786a9",
+      "directory": "charts/external-dns/crds",
+      "archiveDigest": "b44905bc54d2f953cb49e2edf282f7876d5b09c2a79953cf5906bcea34cdb05d"
+    },
     "git+https://github.com/kubernetes-sigs/gateway-api\n8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3\nconfig/crd": {
       "source": "git+https://github.com/kubernetes-sigs/gateway-api",
       "revision": "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3",
       "directory": "config/crd",
       "archiveDigest": "5798d3a375255283cf4725d5f8ef6ee34b49c998fe3d213693eb81c6a78d0e63"
+    },
+    "git+https://github.com/kubernetes-sigs/gateway-api\n8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3\nconfig/crd/experimental": {
+      "source": "git+https://github.com/kubernetes-sigs/gateway-api",
+      "revision": "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3",
+      "directory": "config/crd/experimental",
+      "archiveDigest": "c0685478b70481d1fa9c046bab8eedd8a236a8ece623803c9f574d011093a03d"
+    },
+    "git+https://github.com/kubernetes-sigs/gateway-api\n8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3\nconfig/crd/standard": {
+      "source": "git+https://github.com/kubernetes-sigs/gateway-api",
+      "revision": "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3",
+      "directory": "config/crd/standard",
+      "archiveDigest": "b2df23e14b9430816cc8d3718c89921aa776beab054d83e2799bf614e1ce8abd"
+    },
+    "git+https://github.com/kubernetes/autoscaler\n2179efe07ed8c5c5294aad57186c9ab6a5cbd022\nvertical-pod-autoscaler/deploy": {
+      "source": "git+https://github.com/kubernetes/autoscaler",
+      "revision": "2179efe07ed8c5c5294aad57186c9ab6a5cbd022",
+      "directory": "vertical-pod-autoscaler/deploy",
+      "archiveDigest": "3475cd861af51d52b46e5265f09a7121425769b6ef486768c90d0cfbe379fae9"
+    },
+    "git+https://github.com/open-telemetry/opentelemetry-operator\n7fb513848c6d4ea79b277352fc13ce11eb734b1a\nconfig/crd/bases": {
+      "source": "git+https://github.com/open-telemetry/opentelemetry-operator",
+      "revision": "7fb513848c6d4ea79b277352fc13ce11eb734b1a",
+      "directory": "config/crd/bases",
+      "archiveDigest": "b2d8ff627678135f12322efe0cfa0c4429f354d64148d96aee845ad61a09b340"
+    },
+    "git+https://github.com/pingcap/tidb-operator\nedf76fd646cbbb0c97e4eed51456bfedc24a4ca7\nmanifests/crd/v1": {
+      "source": "git+https://github.com/pingcap/tidb-operator",
+      "revision": "edf76fd646cbbb0c97e4eed51456bfedc24a4ca7",
+      "directory": "manifests/crd/v1",
+      "archiveDigest": "ea4873cc3c3787fde9a40b8f41c5358795a072a2a21666c3b5e6288475b13772"
+    },
+    "git+https://github.com/prometheus-operator/prometheus-operator\n51cc33a31bf3bd83dd22b1ae6efaf26e199194d9\nexample/prometheus-operator-crd": {
+      "source": "git+https://github.com/prometheus-operator/prometheus-operator",
+      "revision": "51cc33a31bf3bd83dd22b1ae6efaf26e199194d9",
+      "directory": "example/prometheus-operator-crd",
+      "archiveDigest": "0c440c1130e3a456acd9160a273f2e5dd6234a56a38abe6c2aa7dc2296a1f75f"
+    },
+    "git+https://github.com/rabbitmq/cluster-operator\ndc6eff65a352d2b6677afd5ed6d682c1dd681665\nconfig/crd/bases": {
+      "source": "git+https://github.com/rabbitmq/cluster-operator",
+      "revision": "dc6eff65a352d2b6677afd5ed6d682c1dd681665",
+      "directory": "config/crd/bases",
+      "archiveDigest": "585dd945d0db33a39e023a0905655a3e0f7e8039c2491b548bec4d0248bfed1f"
+    },
+    "git+https://github.com/scylladb/scylla-operator\n39a4738b9d9f3a1be7520ee51b953f426c6752bd\npkg/api/scylla/v1": {
+      "source": "git+https://github.com/scylladb/scylla-operator",
+      "revision": "39a4738b9d9f3a1be7520ee51b953f426c6752bd",
+      "directory": "pkg/api/scylla/v1",
+      "archiveDigest": "5f864ec76d08026ee6ac8c150f0a2cc95310793840ad7bb3198dd345b2b7e911"
+    },
+    "git+https://github.com/scylladb/scylla-operator\n39a4738b9d9f3a1be7520ee51b953f426c6752bd\npkg/api/scylla/v1alpha1": {
+      "source": "git+https://github.com/scylladb/scylla-operator",
+      "revision": "39a4738b9d9f3a1be7520ee51b953f426c6752bd",
+      "directory": "pkg/api/scylla/v1alpha1",
+      "archiveDigest": "2097fcf23943f7fec1e484634ba8fdb16443ddc77b113ccad14bb38d7b5c85d4"
+    },
+    "git+https://github.com/seaweedfs/seaweedfs-operator\n22da9e4a241a3ed3701f34355b6fced37b6fe96c\nconfig/crd/bases": {
+      "source": "git+https://github.com/seaweedfs/seaweedfs-operator",
+      "revision": "22da9e4a241a3ed3701f34355b6fced37b6fe96c",
+      "directory": "config/crd/bases",
+      "archiveDigest": "782256e2a08f15ce438981b99c59383e365fdf903f5accdf0546ece95830d17c"
+    },
+    "git+https://github.com/strimzi/strimzi-kafka-operator\n6c7b43c4af0db547c10463ba09d1dfa6f5e156a0\ninstall/cluster-operator": {
+      "source": "git+https://github.com/strimzi/strimzi-kafka-operator",
+      "revision": "6c7b43c4af0db547c10463ba09d1dfa6f5e156a0",
+      "directory": "install/cluster-operator",
+      "archiveDigest": "f1a6330b70fba2f2cc1bc30b8a5a66f24338956c765bf02928e6abc4295f10c9"
+    },
+    "git+https://github.com/valkey-io/valkey-helm\na2d8cf876aa81432e248a1ec3787098f7702c613\nvalkey-operator/crds": {
+      "source": "git+https://github.com/valkey-io/valkey-helm",
+      "revision": "a2d8cf876aa81432e248a1ec3787098f7702c613",
+      "directory": "valkey-operator/crds",
+      "archiveDigest": "2757b0b78a569aea072269774b077bc468e5acacb2c85eb69b99aeaaa6d75c86"
+    },
+    "git+https://github.com/vmware-tanzu/helm-charts\n73466ca986bbfe34dbd5c30bbf7d62d545d634a2\ncharts/velero/crds": {
+      "source": "git+https://github.com/vmware-tanzu/helm-charts",
+      "revision": "73466ca986bbfe34dbd5c30bbf7d62d545d634a2",
+      "directory": "charts/velero/crds",
+      "archiveDigest": "56bc56327d70ff86890f2a6076c65cba81f489cc59b8241fb80aad777533860a"
     }
   }
 }
