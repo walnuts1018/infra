@@ -58,15 +58,31 @@ fn hubbleMetrics(enabled: Bool) -> List<String> =
   else:
     []
 
-export fn helmValues(features: List<Feature>, settings: Settings) -> Map<String, Any> = commonValues with:
+type FeatureFlags =
+  l2Announcements: Bool
+  originCertificateIngress: Bool
+  gatewayAPI: Bool
+  hubbleTLS: Bool
+  monitoring: Bool
+  nodePort: Bool
+
+fn featureFlags(features: List<Feature>) -> FeatureFlags =
+  l2Announcements: lists.contains(features, "l2Announcements")
+  originCertificateIngress: lists.contains(features, "originCertificateIngress")
+  gatewayAPI: lists.contains(features, "gatewayAPI")
+  hubbleTLS: lists.contains(features, "hubbleTLS")
+  monitoring: lists.contains(features, "monitoring")
+  nodePort: lists.contains(features, "nodePort")
+
+fn helmValuesWithFlags(settings: Settings, flags: FeatureFlags) -> Map<String, Any> = commonValues with:
   k8sServiceHost: settings.api_server
   cluster:
     id: settings.cluster_id
     name: settings.cluster_name
   l2announcements:
-    enabled: lists.contains(features, "l2Announcements")
+    enabled: flags.l2Announcements
   ingressController:
-    enabled: lists.contains(features, "originCertificateIngress")
+    enabled: flags.originCertificateIngress
     loadbalancerMode: "shared"
     default: true
     enforceHttps: true
@@ -79,18 +95,18 @@ export fn helmValues(features: List<Feature>, settings: Settings) -> Map<String,
       name: "cilium-secrets"
       sync: true
   nodePort:
-    enabled: lists.contains(features, "nodePort")
+    enabled: flags.nodePort
   hubble:
     tls:
-      enabled: lists.contains(features, "hubbleTLS")
+      enabled: flags.hubbleTLS
       auto:
         method: "cronJob"
     relay:
-      enabled: lists.contains(features, "monitoring")
+      enabled: flags.monitoring
       prometheus:
-        enabled: lists.contains(features, "monitoring")
+        enabled: flags.monitoring
         serviceMonitor:
-          enabled: lists.contains(features, "monitoring")
+          enabled: flags.monitoring
       resources:
         requests:
           cpu: "5m"
@@ -98,7 +114,7 @@ export fn helmValues(features: List<Feature>, settings: Settings) -> Map<String,
         limits:
           memory: "512Mi"
     ui:
-      enabled: lists.contains(features, "monitoring")
+      enabled: flags.monitoring
       backend:
         resources:
           requests:
@@ -114,32 +130,32 @@ export fn helmValues(features: List<Feature>, settings: Settings) -> Map<String,
           limits:
             memory: "256Mi"
     metrics:
-      enableOpenMetrics: lists.contains(features, "monitoring")
-      enabled: hubbleMetrics(lists.contains(features, "monitoring"))
+      enableOpenMetrics: flags.monitoring
+      enabled: hubbleMetrics(flags.monitoring)
       serviceMonitor:
-        enabled: lists.contains(features, "monitoring")
+        enabled: flags.monitoring
       dashboards:
-        enabled: lists.contains(features, "monitoring")
+        enabled: flags.monitoring
   envoy:
     resources:
       requests:
         memory: settings.envoy_memory
     prometheus:
-      enabled: lists.contains(features, "monitoring")
+      enabled: flags.monitoring
       serviceMonitor:
-        enabled: lists.contains(features, "monitoring")
+        enabled: flags.monitoring
   operator:
     prometheus:
-      enabled: lists.contains(features, "monitoring")
+      enabled: flags.monitoring
       serviceMonitor:
-        enabled: lists.contains(features, "monitoring")
+        enabled: flags.monitoring
   prometheus:
-    enabled: lists.contains(features, "monitoring")
+    enabled: flags.monitoring
     serviceMonitor:
-      enabled: lists.contains(features, "monitoring")
+      enabled: flags.monitoring
       trustCRDsExist: true
   envoyConfig:
-    enabled: lists.contains(features, "originCertificateIngress")
+    enabled: flags.originCertificateIngress
     secretsNamespace:
       create: false
       name: "cilium-secrets"
@@ -148,10 +164,13 @@ export fn helmValues(features: List<Feature>, settings: Settings) -> Map<String,
       create: false
       name: "cilium-secrets"
   gatewayAPI:
-    enabled: lists.contains(features, "gatewayAPI")
+    enabled: flags.gatewayAPI
     secretsNamespace:
       create: true
       name: "cilium-secrets"
       sync: true
     gatewayClass:
       create: false
+
+export fn helmValues(features: List<Feature>, settings: Settings) -> Map<String, Any> =
+  helmValuesWithFlags(settings, featureFlags(features))
