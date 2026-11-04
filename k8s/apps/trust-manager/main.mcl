@@ -1,16 +1,26 @@
+import "std:helm" as helm
 import "std:list" as lists
-import "./resources.mcl" as appResources
+import "./chart.mcl" as appChart
+import "./values.mcl" as appValues
 
 type Feature = "monitoring"
 
 param features: List<Feature> = []
 
-let includeServiceMonitor = lists.contains(features, "monitoring")
-let monitoringResources =
-  if includeServiceMonitor:
-    appResources.monitoringResources
-  else:
-    []
-let resources = lists.concat(appResources.baseResources, monitoringResources)
+let values: Map<String, Any> = appValues.commonValues with:
+  app:
+    metrics:
+      service:
+        servicemonitor:
+          enabled: lists.contains(features, "monitoring")
+let options =
+  releaseName: "trust-manager"
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: appChart.kubeVersion
+  apiVersions:
+    - "monitoring.coreos.com/v1"
+  values: values
+let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources

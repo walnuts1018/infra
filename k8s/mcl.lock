@@ -15,6 +15,7 @@
     "https://bokysan.github.io/docker-postfix/mail-5.1.0.tgz": "202c9e211dd313990e0cf08a8ac2dacb31c2d6b85a3e2ab3f299a51e8fa0c271",
     "https://charts.bitnami.com/bitnami/memcached-6.14.0.tgz": "729aa0fc402dcc3eb493028ef124a744f907b8dba997519bb7dea588703a3c5f",
     "https://charts.jetstack.io/charts/cert-manager-v1.21.2.tgz": "73a56e1728edd6c99f1f31082618c3259d279a76b7ebd3d4bdc5475c2442d34a",
+    "https://charts.jetstack.io/charts/trust-manager-v0.24.0.tgz": "0de4bbef2d1a013bd4a91c6f59a9cb0273dda9a785e018a9a16e8f2b096af823",
     "https://charts.pingcap.com/tidb-operator-v1.6.6.tgz": "4b223f79a00cf73998d9ad8341eace64aa947cf51cc108f29d76f2de02867bb4",
     "https://cortexproject.github.io/cortex-helm-chart/cortex-3.3.8.tgz": "15507f1cd09538d63914b79098b5a28f6cf0d1719e5d61c75611ff5f797849e0",
     "https://cybozu-go.github.io/moco/moco-0.27.0.tgz": "c0d02d0c8081bcb8b640bb69c88506002d6374b14644a6ab15f89f16054cce0a",
