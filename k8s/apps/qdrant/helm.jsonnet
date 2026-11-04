@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'qdrant',
   repoURL: 'https://qdrant.github.io/qdrant-helm',
-  targetRevision: '1.19.2',
+  targetRevision: '1.20.0',
   values: (importstr 'values.yaml'),
 }
