@@ -1,4 +1,5 @@
 import "./names.mcl" as names
+import "./secret-data.mcl" as secretData
 
 
 export fn permissionPicca(namespace: String) -> Map<String, Any> = node:
@@ -26,7 +27,7 @@ export fn rabbitmqExternalSecret(namespace: String) -> Map<String, Any> = node:
     name: names.piccaRabbitmqSecretName
     namespace: namespace
   spec:
-    data: names.piccaRabbitmqData
+    data: secretData.piccaRabbitmqData
     refreshInterval: "1m"
     secretStoreRef:
       kind: "ClusterSecretStore"
@@ -34,7 +35,7 @@ export fn rabbitmqExternalSecret(namespace: String) -> Map<String, Any> = node:
     target:
       name: names.piccaRabbitmqSecretName
       template:
-        data: names.piccaRabbitmqTemplateData
+        data: secretData.piccaRabbitmqTemplateData
         engineVersion: "v2"
         type: "Opaque"
 

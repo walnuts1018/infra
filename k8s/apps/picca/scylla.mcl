@@ -1,4 +1,5 @@
 import "./names.mcl" as names
+import "./secret-data.mcl" as secretData
 
 export fn externalSecretScyllaClusterLocalClientCa(namespace: String) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
@@ -86,7 +87,7 @@ export fn scyllaExternalSecret(namespace: String) -> Map<String, Any> = node:
     name: names.piccaScyllaSecretName
     namespace: namespace
   spec:
-    data: names.piccaScyllaData
+    data: secretData.piccaScyllaData
     refreshInterval: "1m"
     secretStoreRef:
       kind: "ClusterSecretStore"
@@ -94,6 +95,6 @@ export fn scyllaExternalSecret(namespace: String) -> Map<String, Any> = node:
     target:
       name: names.piccaScyllaSecretName
       template:
-        data: names.piccaScyllaTemplateData
+        data: secretData.piccaScyllaTemplateData
         engineVersion: "v2"
         type: "Opaque"

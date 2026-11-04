@@ -2,202 +2,192 @@
 source = "git+https://github.com/argoproj/argo-cd"
 revision = "e258ee23c3e52266d407572f4bcdfe7d9ed36cb5"
 directory = "manifests/crds"
-file = "application-crd.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/argoproj/argo-cd"
-revision = "e258ee23c3e52266d407572f4bcdfe7d9ed36cb5"
-directory = "manifests/crds"
-file = "appproject-crd.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/argoproj/argo-cd"
-revision = "e258ee23c3e52266d407572f4bcdfe7d9ed36cb5"
-directory = "manifests/crds"
-file = "applicationset-crd.yaml"
+files = [
+  "application-crd.yaml",
+  "applicationset-crd.yaml",
+  "appproject-crd.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/cilium/cilium"
 revision = "e0dc92bd6dac33d7ba3b5eace82a0448bbb13aac"
 directory = "pkg/k8s/apis/cilium.io/client/crds/v2"
-file = "ciliumloadbalancerippools.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/cilium/cilium"
-revision = "e0dc92bd6dac33d7ba3b5eace82a0448bbb13aac"
-directory = "pkg/k8s/apis/cilium.io/client/crds/v2"
-file = "ciliumnetworkpolicies.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/cilium/cilium"
-revision = "e0dc92bd6dac33d7ba3b5eace82a0448bbb13aac"
-directory = "pkg/k8s/apis/cilium.io/client/crds/v2"
-file = "ciliumbgpadvertisements.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/cilium/cilium"
-revision = "e0dc92bd6dac33d7ba3b5eace82a0448bbb13aac"
-directory = "pkg/k8s/apis/cilium.io/client/crds/v2"
-file = "ciliumbgpclusterconfigs.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/cilium/cilium"
-revision = "e0dc92bd6dac33d7ba3b5eace82a0448bbb13aac"
-directory = "pkg/k8s/apis/cilium.io/client/crds/v2"
-file = "ciliumbgppeerconfigs.yaml"
+files = [
+  "ciliumbgpadvertisements.yaml",
+  "ciliumbgpclusterconfigs.yaml",
+  "ciliumbgppeerconfigs.yaml",
+  "ciliumloadbalancerippools.yaml",
+  "ciliumnetworkpolicies.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/jetstack/cert-manager"
 revision = "922a06aa49ee4bb802db268ef72a174af70edd32"
 directory = "deploy/crds"
-file = "cert-manager.io_certificates.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/jetstack/cert-manager"
-revision = "922a06aa49ee4bb802db268ef72a174af70edd32"
-directory = "deploy/crds"
-file = "cert-manager.io_issuers.yaml"
+files = [
+  "cert-manager.io_certificates.yaml",
+  "cert-manager.io_issuers.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/external-secrets/external-secrets"
 revision = "8488600898e856d74a7e0f53ed5e3cc79d89f4e8"
 directory = "config/crds/bases"
-file = "external-secrets.io_externalsecrets.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/external-secrets/external-secrets"
-revision = "8488600898e856d74a7e0f53ed5e3cc79d89f4e8"
-directory = "config/crds/bases"
-file = "external-secrets.io_clusterexternalsecrets.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/external-secrets/external-secrets"
-revision = "8488600898e856d74a7e0f53ed5e3cc79d89f4e8"
-directory = "config/crds/bases"
-file = "external-secrets.io_clustersecretstores.yaml"
+files = [
+  "external-secrets.io_clusterexternalsecrets.yaml",
+  "external-secrets.io_clustersecretstores.yaml",
+  "external-secrets.io_externalsecrets.yaml",
+  "external-secrets.io_secretstores.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/cloudnative-pg/cloudnative-pg"
 revision = "4b5e244a7d031f67e025c83c1555e7726ecbbfa1"
 directory = "config/crd/bases"
-file = "postgresql.cnpg.io_clusterimagecatalogs.yaml"
+files = [
+  "postgresql.cnpg.io_clusterimagecatalogs.yaml",
+  "postgresql.cnpg.io_clusters.yaml",
+  "postgresql.cnpg.io_databases.yaml",
+  "postgresql.cnpg.io_scheduledbackups.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/kubernetes-sigs/gateway-api"
 revision = "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3"
 directory = "config/crd/experimental"
-file = "gateway.networking.k8s.io_backendtlspolicies.yaml"
+files = [
+  "gateway.networking.k8s.io_backendtlspolicies.yaml",
+  "gateway.networking.k8s.io_tcproutes.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/kubernetes-sigs/gateway-api"
 revision = "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3"
 directory = "config/crd/standard"
-file = "gateway.networking.k8s.io_grpcroutes.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/kubernetes-sigs/gateway-api"
-revision = "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3"
-directory = "config/crd/standard"
-file = "gateway.networking.k8s.io_httproutes.yaml"
+files = [
+  "gateway.networking.k8s.io_gatewayclasses.yaml",
+  "gateway.networking.k8s.io_gateways.yaml",
+  "gateway.networking.k8s.io_grpcroutes.yaml",
+  "gateway.networking.k8s.io_httproutes.yaml",
+  "gateway.networking.k8s.io_referencegrants.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/open-telemetry/opentelemetry-operator"
 revision = "7fb513848c6d4ea79b277352fc13ce11eb734b1a"
 directory = "config/crd/bases"
-file = "opentelemetry.io_instrumentations.yaml"
+files = [
+  "opentelemetry.io_instrumentations.yaml",
+  "opentelemetry.io_opentelemetrycollectors.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/kedacore/keda"
 revision = "68a5b5028f35b22d50597c69819ab32c4e92f21a"
 directory = "config/crd/bases"
-file = "keda.sh_scaledobjects.yaml"
+files = [
+  "keda.sh_scaledobjects.yaml",
+  "keda.sh_triggerauthentications.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/kedacore/http-add-on"
 revision = "4ea8a863bd7c16464dc5afbe9ebc8a26e563fac0"
 directory = "config/crd/bases"
-file = "http.keda.sh_interceptorroutes.yaml"
+files = [
+  "http.keda.sh_interceptorroutes.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/prometheus-operator/prometheus-operator"
 revision = "51cc33a31bf3bd83dd22b1ae6efaf26e199194d9"
 directory = "example/prometheus-operator-crd"
-file = "monitoring.coreos.com_podmonitors.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/prometheus-operator/prometheus-operator"
-revision = "51cc33a31bf3bd83dd22b1ae6efaf26e199194d9"
-directory = "example/prometheus-operator-crd"
-file = "monitoring.coreos.com_servicemonitors.yaml"
+files = [
+  "monitoring.coreos.com_podmonitors.yaml",
+  "monitoring.coreos.com_servicemonitors.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/rabbitmq/cluster-operator"
 revision = "dc6eff65a352d2b6677afd5ed6d682c1dd681665"
 directory = "config/crd/bases"
-file = "rabbitmq.com_rabbitmqclusters.yaml"
+files = [
+  "rabbitmq.com_rabbitmqclusters.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/scylladb/scylla-operator"
 revision = "39a4738b9d9f3a1be7520ee51b953f426c6752bd"
 directory = "pkg/api/scylla/v1alpha1"
-file = "scylla.scylladb.com_nodeconfigs.yaml"
+files = [
+  "scylla.scylladb.com_nodeconfigs.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/scylladb/scylla-operator"
 revision = "39a4738b9d9f3a1be7520ee51b953f426c6752bd"
 directory = "pkg/api/scylla/v1"
-file = "scylla.scylladb.com_scyllaclusters.yaml"
+files = [
+  "scylla.scylladb.com_scyllaclusters.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/seaweedfs/seaweedfs-operator"
 revision = "22da9e4a241a3ed3701f34355b6fced37b6fe96c"
 directory = "config/crd/bases"
-file = "seaweed.seaweedfs.com_resourcereferencegrants.yaml"
+files = [
+  "seaweed.seaweedfs.com_adminscripts.yaml",
+  "seaweed.seaweedfs.com_buckets.yaml",
+  "seaweed.seaweedfs.com_resourcereferencegrants.yaml",
+  "seaweed.seaweedfs.com_s3credentials.yaml",
+  "seaweed.seaweedfs.com_s3identities.yaml",
+  "seaweed.seaweedfs.com_s3policies.yaml",
+  "seaweed.seaweedfs.com_s3policybindings.yaml",
+  "seaweed.seaweedfs.com_seaweeds.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/pingcap/tidb-operator"
 revision = "edf76fd646cbbb0c97e4eed51456bfedc24a4ca7"
 directory = "manifests/crd/v1"
-file = "pingcap.com_tidbclusters.yaml"
+files = [
+  "pingcap.com_tidbclusters.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/kubernetes-csi/external-snapshotter"
 revision = "6b2feaaf7fc3d6d0fe21029d1032ea0eee2081e9"
 directory = "client/config/crd"
-file = "snapshot.storage.k8s.io_volumesnapshotclasses.yaml"
+files = [
+  "snapshot.storage.k8s.io_volumesnapshotclasses.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "oci://docker.io/envoyproxy/gateway-helm"
 version = "1.6.1"
-file = "generated/gateway.envoyproxy.io_securitypolicies.yaml"
+files = [
+  "generated/gateway.envoyproxy.io_backendtrafficpolicies.yaml",
+  "generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml",
+  "generated/gateway.envoyproxy.io_envoyproxies.yaml",
+  "generated/gateway.envoyproxy.io_securitypolicies.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
@@ -212,224 +202,75 @@ select_kind = "CustomResourceDefinition"
 source = "git+https://github.com/klicktipp/helm-charts"
 revision = "b550c5fc3ff934e697b55d36a6bcc16c04e9fb98"
 directory = "charts/rabbitmq-topology-operator/crds"
-file = "rabbitmq.com_permissions.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/klicktipp/helm-charts"
-revision = "b550c5fc3ff934e697b55d36a6bcc16c04e9fb98"
-directory = "charts/rabbitmq-topology-operator/crds"
-file = "rabbitmq.com_users.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/klicktipp/helm-charts"
-revision = "b550c5fc3ff934e697b55d36a6bcc16c04e9fb98"
-directory = "charts/rabbitmq-topology-operator/crds"
-file = "rabbitmq.com_vhosts.yaml"
+files = [
+  "rabbitmq.com_permissions.yaml",
+  "rabbitmq.com_users.yaml",
+  "rabbitmq.com_vhosts.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/valkey-io/valkey-helm"
 revision = "a2d8cf876aa81432e248a1ec3787098f7702c613"
 directory = "valkey-operator/crds"
-file = "valkey.io_valkeyclusters.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/external-secrets/external-secrets"
-revision = "8488600898e856d74a7e0f53ed5e3cc79d89f4e8"
-directory = "config/crds/bases"
-file = "external-secrets.io_secretstores.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/kedacore/keda"
-revision = "68a5b5028f35b22d50597c69819ab32c4e92f21a"
-directory = "config/crd/bases"
-file = "keda.sh_triggerauthentications.yaml"
+files = [
+  "valkey.io_valkeyclusters.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/kubernetes/autoscaler"
 revision = "2179efe07ed8c5c5294aad57186c9ab6a5cbd022"
 directory = "vertical-pod-autoscaler/deploy"
-file = "vpa-v1-crd-gen.yaml"
-select_kind = "CustomResourceDefinition"
-
-
-[[crd_schemas]]
-source = "git+https://github.com/cloudnative-pg/cloudnative-pg"
-revision = "4b5e244a7d031f67e025c83c1555e7726ecbbfa1"
-directory = "config/crd/bases"
-file = "postgresql.cnpg.io_clusters.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/cloudnative-pg/cloudnative-pg"
-revision = "4b5e244a7d031f67e025c83c1555e7726ecbbfa1"
-directory = "config/crd/bases"
-file = "postgresql.cnpg.io_databases.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/cloudnative-pg/cloudnative-pg"
-revision = "4b5e244a7d031f67e025c83c1555e7726ecbbfa1"
-directory = "config/crd/bases"
-file = "postgresql.cnpg.io_scheduledbackups.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/kubernetes-sigs/gateway-api"
-revision = "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3"
-directory = "config/crd/standard"
-file = "gateway.networking.k8s.io_gateways.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/kubernetes-sigs/gateway-api"
-revision = "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3"
-directory = "config/crd/standard"
-file = "gateway.networking.k8s.io_gatewayclasses.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/kubernetes-sigs/gateway-api"
-revision = "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3"
-directory = "config/crd/standard"
-file = "gateway.networking.k8s.io_referencegrants.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/kubernetes-sigs/gateway-api"
-revision = "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3"
-directory = "config/crd/experimental"
-file = "gateway.networking.k8s.io_tcproutes.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/open-telemetry/opentelemetry-operator"
-revision = "7fb513848c6d4ea79b277352fc13ce11eb734b1a"
-directory = "config/crd/bases"
-file = "opentelemetry.io_opentelemetrycollectors.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/seaweedfs/seaweedfs-operator"
-revision = "22da9e4a241a3ed3701f34355b6fced37b6fe96c"
-directory = "config/crd/bases"
-file = "seaweed.seaweedfs.com_adminscripts.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/seaweedfs/seaweedfs-operator"
-revision = "22da9e4a241a3ed3701f34355b6fced37b6fe96c"
-directory = "config/crd/bases"
-file = "seaweed.seaweedfs.com_buckets.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/seaweedfs/seaweedfs-operator"
-revision = "22da9e4a241a3ed3701f34355b6fced37b6fe96c"
-directory = "config/crd/bases"
-file = "seaweed.seaweedfs.com_s3credentials.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/seaweedfs/seaweedfs-operator"
-revision = "22da9e4a241a3ed3701f34355b6fced37b6fe96c"
-directory = "config/crd/bases"
-file = "seaweed.seaweedfs.com_s3identities.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/seaweedfs/seaweedfs-operator"
-revision = "22da9e4a241a3ed3701f34355b6fced37b6fe96c"
-directory = "config/crd/bases"
-file = "seaweed.seaweedfs.com_s3policies.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/seaweedfs/seaweedfs-operator"
-revision = "22da9e4a241a3ed3701f34355b6fced37b6fe96c"
-directory = "config/crd/bases"
-file = "seaweed.seaweedfs.com_s3policybindings.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/seaweedfs/seaweedfs-operator"
-revision = "22da9e4a241a3ed3701f34355b6fced37b6fe96c"
-directory = "config/crd/bases"
-file = "seaweed.seaweedfs.com_seaweeds.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "oci://docker.io/envoyproxy/gateway-helm"
-version = "1.6.1"
-file = "generated/gateway.envoyproxy.io_backendtrafficpolicies.yaml"
-
-[[crd_schemas]]
-source = "oci://docker.io/envoyproxy/gateway-helm"
-version = "1.6.1"
-file = "generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml"
-
-[[crd_schemas]]
-source = "oci://docker.io/envoyproxy/gateway-helm"
-version = "1.6.1"
-file = "generated/gateway.envoyproxy.io_envoyproxies.yaml"
-
-[[crd_schemas]]
-source = "git+https://github.com/ClickHouse/clickhouse-operator"
-revision = "15cdb3544e6261228267e7440ea2e7dff74284d5"
-directory = "config/crd/bases"
-file = "clickhouse.com_clickhouseclusters.yaml"
+files = [
+  "vpa-v1-crd-gen.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/ClickHouse/clickhouse-operator"
 revision = "15cdb3544e6261228267e7440ea2e7dff74284d5"
 directory = "config/crd/bases"
-file = "clickhouse.com_keeperclusters.yaml"
+files = [
+  "clickhouse.com_clickhouseclusters.yaml",
+  "clickhouse.com_keeperclusters.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/elastic/cloud-on-k8s"
 revision = "386c7b14f2d1bbb7f2af1e7da997e64875f16e47"
 directory = "config/crds/v1/resources"
-file = "elasticsearch.k8s.elastic.co_elasticsearches.yaml"
+files = [
+  "elasticsearch.k8s.elastic.co_elasticsearches.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/kubernetes-sigs/external-dns"
 revision = "eafce22825a6565c5f228e49bcfc117b128786a9"
 directory = "charts/external-dns/crds"
-file = "dnsendpoints.externaldns.k8s.io.yaml"
+files = [
+  "dnsendpoints.externaldns.k8s.io.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/strimzi/strimzi-kafka-operator"
 revision = "6c7b43c4af0db547c10463ba09d1dfa6f5e156a0"
 directory = "install/cluster-operator"
-file = "040-Crd-kafka.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/strimzi/strimzi-kafka-operator"
-revision = "6c7b43c4af0db547c10463ba09d1dfa6f5e156a0"
-directory = "install/cluster-operator"
-file = "045-Crd-kafkanodepool.yaml"
-select_kind = "CustomResourceDefinition"
-
-[[crd_schemas]]
-source = "git+https://github.com/strimzi/strimzi-kafka-operator"
-revision = "6c7b43c4af0db547c10463ba09d1dfa6f5e156a0"
-directory = "install/cluster-operator"
-file = "043-Crd-kafkatopic.yaml"
+files = [
+  "040-Crd-kafka.yaml",
+  "043-Crd-kafkatopic.yaml",
+  "045-Crd-kafkanodepool.yaml",
+]
 select_kind = "CustomResourceDefinition"
 
 [[crd_schemas]]
 source = "git+https://github.com/vmware-tanzu/helm-charts"
 revision = "73466ca986bbfe34dbd5c30bbf7d62d545d634a2"
 directory = "charts/velero/crds"
-file = "schedules.yaml"
+files = [
+  "schedules.yaml",
+]
 select_kind = "CustomResourceDefinition"

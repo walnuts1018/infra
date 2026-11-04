@@ -2,8 +2,6 @@
 import "./names.mcl" as names
 import "./worker-common.mcl" as workerCommon
 
-let emptyMap: Map<String, Any> = {}
-
 fn deploymentPiccaDownloadWorker(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
@@ -47,21 +45,10 @@ fn deploymentPiccaDownloadWorker(namespace: String) -> Map<String, Any> = node:
             securityContext: workerCommon.containerSecurityContext
             startupProbe: workerCommon.startupProbe
             volumeMounts:
-              -
-                mountPath: "/tmp"
-                name: "tmp"
-              -
-                mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
-                name: "seaweedfs-sts-token"
-                readOnly: true
-              -
-                mountPath: "/etc/certs/scylla-db"
-                name: "scylla-db-ca-cert"
-                readOnly: true
-              -
-                mountPath: "/etc/certs/scylla-db-client"
-                name: "scylla-db-client-cert"
-                readOnly: true
+              - workerCommon.tmpVolumeMount
+              - workerCommon.stsTokenVolumeMount
+              - workerCommon.scyllaCaVolumeMount
+              - workerCommon.scyllaClientCertVolumeMount
               -
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
@@ -70,37 +57,10 @@ fn deploymentPiccaDownloadWorker(namespace: String) -> Map<String, Any> = node:
         securityContext: workerCommon.podSecurityContext
         serviceAccountName: workerCommon.serviceAccountName
         volumes:
-          -
-            emptyDir: emptyMap
-            name: "tmp"
-          -
-            name: "seaweedfs-sts-token"
-            projected:
-              sources:
-                -
-                  serviceAccountToken:
-                    audience: "sts.seaweedfs.com"
-                    expirationSeconds: 86400
-                    path: "token"
-          -
-            configMap:
-              items:
-                -
-                  key: "ca.crt"
-                  path: "ca.crt"
-              name: names.piccaScylladbCaConfigMapName
-            name: "scylla-db-ca-cert"
-          -
-            name: "scylla-db-client-cert"
-            secret:
-              items:
-                -
-                  key: "tls.crt"
-                  path: "tls.crt"
-                -
-                  key: "tls.key"
-                  path: "tls.key"
-              secretName: "scylla-cluster-local-client-ca"
+          - workerCommon.tmpVolume
+          - workerCommon.stsTokenVolume
+          - workerCommon.scyllaCaVolume
+          - workerCommon.scyllaClientCertVolume
           -
             configMap:
               items:
@@ -177,21 +137,10 @@ fn deploymentPiccaImageProcessingWorker(namespace: String) -> Map<String, Any> =
             securityContext: workerCommon.containerSecurityContext
             startupProbe: workerCommon.startupProbe
             volumeMounts:
-              -
-                mountPath: "/tmp"
-                name: "tmp"
-              -
-                mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
-                name: "seaweedfs-sts-token"
-                readOnly: true
-              -
-                mountPath: "/etc/certs/scylla-db"
-                name: "scylla-db-ca-cert"
-                readOnly: true
-              -
-                mountPath: "/etc/certs/scylla-db-client"
-                name: "scylla-db-client-cert"
-                readOnly: true
+              - workerCommon.tmpVolumeMount
+              - workerCommon.stsTokenVolumeMount
+              - workerCommon.scyllaCaVolumeMount
+              - workerCommon.scyllaClientCertVolumeMount
               -
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
@@ -200,37 +149,10 @@ fn deploymentPiccaImageProcessingWorker(namespace: String) -> Map<String, Any> =
         securityContext: workerCommon.podSecurityContext
         serviceAccountName: workerCommon.serviceAccountName
         volumes:
-          -
-            emptyDir: emptyMap
-            name: "tmp"
-          -
-            name: "seaweedfs-sts-token"
-            projected:
-              sources:
-                -
-                  serviceAccountToken:
-                    audience: "sts.seaweedfs.com"
-                    expirationSeconds: 86400
-                    path: "token"
-          -
-            configMap:
-              items:
-                -
-                  key: "ca.crt"
-                  path: "ca.crt"
-              name: names.piccaScylladbCaConfigMapName
-            name: "scylla-db-ca-cert"
-          -
-            name: "scylla-db-client-cert"
-            secret:
-              items:
-                -
-                  key: "tls.crt"
-                  path: "tls.crt"
-                -
-                  key: "tls.key"
-                  path: "tls.key"
-              secretName: "scylla-cluster-local-client-ca"
+          - workerCommon.tmpVolume
+          - workerCommon.stsTokenVolume
+          - workerCommon.scyllaCaVolume
+          - workerCommon.scyllaClientCertVolume
           -
             configMap:
               items:
@@ -307,21 +229,10 @@ fn deploymentPiccaVideoProcessingWorker(namespace: String) -> Map<String, Any> =
             securityContext: workerCommon.containerSecurityContext
             startupProbe: workerCommon.startupProbe
             volumeMounts:
-              -
-                mountPath: "/tmp"
-                name: "tmp"
-              -
-                mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
-                name: "seaweedfs-sts-token"
-                readOnly: true
-              -
-                mountPath: "/etc/certs/scylla-db"
-                name: "scylla-db-ca-cert"
-                readOnly: true
-              -
-                mountPath: "/etc/certs/scylla-db-client"
-                name: "scylla-db-client-cert"
-                readOnly: true
+              - workerCommon.tmpVolumeMount
+              - workerCommon.stsTokenVolumeMount
+              - workerCommon.scyllaCaVolumeMount
+              - workerCommon.scyllaClientCertVolumeMount
               -
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
@@ -330,37 +241,10 @@ fn deploymentPiccaVideoProcessingWorker(namespace: String) -> Map<String, Any> =
         securityContext: workerCommon.podSecurityContext
         serviceAccountName: workerCommon.serviceAccountName
         volumes:
-          -
-            emptyDir: emptyMap
-            name: "tmp"
-          -
-            name: "seaweedfs-sts-token"
-            projected:
-              sources:
-                -
-                  serviceAccountToken:
-                    audience: "sts.seaweedfs.com"
-                    expirationSeconds: 86400
-                    path: "token"
-          -
-            configMap:
-              items:
-                -
-                  key: "ca.crt"
-                  path: "ca.crt"
-              name: names.piccaScylladbCaConfigMapName
-            name: "scylla-db-ca-cert"
-          -
-            name: "scylla-db-client-cert"
-            secret:
-              items:
-                -
-                  key: "tls.crt"
-                  path: "tls.crt"
-                -
-                  key: "tls.key"
-                  path: "tls.key"
-              secretName: "scylla-cluster-local-client-ca"
+          - workerCommon.tmpVolume
+          - workerCommon.stsTokenVolume
+          - workerCommon.scyllaCaVolume
+          - workerCommon.scyllaClientCertVolume
           -
             configMap:
               items:
@@ -437,21 +321,10 @@ fn deploymentPiccaVideoTranscodeWorker(namespace: String) -> Map<String, Any> = 
             securityContext: workerCommon.containerSecurityContext
             startupProbe: workerCommon.startupProbe
             volumeMounts:
-              -
-                mountPath: "/tmp"
-                name: "tmp"
-              -
-                mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
-                name: "seaweedfs-sts-token"
-                readOnly: true
-              -
-                mountPath: "/etc/certs/scylla-db"
-                name: "scylla-db-ca-cert"
-                readOnly: true
-              -
-                mountPath: "/etc/certs/scylla-db-client"
-                name: "scylla-db-client-cert"
-                readOnly: true
+              - workerCommon.tmpVolumeMount
+              - workerCommon.stsTokenVolumeMount
+              - workerCommon.scyllaCaVolumeMount
+              - workerCommon.scyllaClientCertVolumeMount
               -
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
@@ -460,37 +333,10 @@ fn deploymentPiccaVideoTranscodeWorker(namespace: String) -> Map<String, Any> = 
         securityContext: workerCommon.podSecurityContext
         serviceAccountName: workerCommon.serviceAccountName
         volumes:
-          -
-            emptyDir: emptyMap
-            name: "tmp"
-          -
-            name: "seaweedfs-sts-token"
-            projected:
-              sources:
-                -
-                  serviceAccountToken:
-                    audience: "sts.seaweedfs.com"
-                    expirationSeconds: 86400
-                    path: "token"
-          -
-            configMap:
-              items:
-                -
-                  key: "ca.crt"
-                  path: "ca.crt"
-              name: names.piccaScylladbCaConfigMapName
-            name: "scylla-db-ca-cert"
-          -
-            name: "scylla-db-client-cert"
-            secret:
-              items:
-                -
-                  key: "tls.crt"
-                  path: "tls.crt"
-                -
-                  key: "tls.key"
-                  path: "tls.key"
-              secretName: "scylla-cluster-local-client-ca"
+          - workerCommon.tmpVolume
+          - workerCommon.stsTokenVolume
+          - workerCommon.scyllaCaVolume
+          - workerCommon.scyllaClientCertVolume
           -
             configMap:
               items:

@@ -1,7 +1,5 @@
 import "./names.mcl" as names
-
-let valkeySecretData = names.piccaValkeyData
-let valkeySecretTemplateData = names.piccaValkeyTemplateData
+import "./secret-data.mcl" as secretData
 
 export fn valkeyExternalSecret(namespace: String) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
@@ -10,7 +8,7 @@ export fn valkeyExternalSecret(namespace: String) -> Map<String, Any> = node:
     name: names.piccaValkeySecretName
     namespace: namespace
   spec:
-    data: valkeySecretData
+    data: secretData.piccaValkeyData
     refreshInterval: "1m"
     secretStoreRef:
       kind: "ClusterSecretStore"
@@ -18,6 +16,6 @@ export fn valkeyExternalSecret(namespace: String) -> Map<String, Any> = node:
     target:
       name: names.piccaValkeySecretName
       template:
-        data: valkeySecretTemplateData
+        data: secretData.piccaValkeyTemplateData
         engineVersion: "v2"
         type: "Opaque"

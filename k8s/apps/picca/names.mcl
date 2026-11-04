@@ -5,26 +5,12 @@ import text "./_configs/plans.yaml" as plansConfig
 import text "./_configs/scylla-ca.crt" as scyllaCaCertificate
 
 let piccaGraphqlHashInput = secretData.piccaGraphqlHashInput
-export let piccaGraphqlData = secretData.piccaGraphqlData
-export let piccaGraphqlTemplateData = secretData.piccaGraphqlTemplateData
 let piccaImgproxyHashInput = secretData.piccaImgproxyHashInput
-export let piccaImgproxyData = secretData.piccaImgproxyData
-export let piccaImgproxyTemplateData = secretData.piccaImgproxyTemplateData
 let piccaOidcHashInput = secretData.piccaOidcHashInput
-export let piccaOidcData = secretData.piccaOidcData
-export let piccaOidcTemplateData = secretData.piccaOidcTemplateData
 let piccaPostgresHashInput = secretData.piccaPostgresHashInput
-export let piccaPostgresData = secretData.piccaPostgresData
-export let piccaPostgresTemplateData = secretData.piccaPostgresTemplateData
 let piccaRabbitmqHashInput = secretData.piccaRabbitmqHashInput
-export let piccaRabbitmqData = secretData.piccaRabbitmqData
-export let piccaRabbitmqTemplateData = secretData.piccaRabbitmqTemplateData
 let piccaScyllaHashInput = secretData.piccaScyllaHashInput
-export let piccaScyllaData = secretData.piccaScyllaData
-export let piccaScyllaTemplateData = secretData.piccaScyllaTemplateData
 let piccaValkeyHashInput = secretData.piccaValkeyHashInput
-export let piccaValkeyData = secretData.piccaValkeyData
-export let piccaValkeyTemplateData = secretData.piccaValkeyTemplateData
 
 export let piccaGraphqlSecretName = "picca-graphql-signing-secret-" + hash.fnv1a64(piccaGraphqlHashInput)
 export let piccaImgproxySecretName = "picca-imgproxy-" + hash.fnv1a64(piccaImgproxyHashInput)

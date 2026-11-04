@@ -1,6 +1,8 @@
 import "std:list" as lists
 import "./names.mcl" as names
 
+let emptyMap: Map<String, Any> = {}
+
 let sharedEnvironment: List<Map<String, String>> =
   - name: "ENVIRONMENT"
     value: "production"
@@ -98,29 +100,28 @@ export let envFrom = lists.concat(
   otherSecretReferences,
 )
 
-export let envFromWithScylla = lists.concat(
-  postgresSecretReference,
-  lists.concat(
-    scyllaSecretReference,
-    otherSecretReferences,
-  ),
-)
+let envFromGroups: List<List<Map<String, Any>>> =
+  - postgresSecretReference
+  - scyllaSecretReference
+  - otherSecretReferences
+
+export let envFromWithScylla = lists.flatten(envFromGroups)
 
 fn serviceEnvironment(serviceName: String) -> List<Map<String, String>> =
   - name: "OTEL_SERVICE_NAME"
     value: serviceName
 
+let environmentWithScyllaGroups: List<List<Map<String, String>>> =
+  - sharedEnvironment
+  - scyllaEnvironment
+
+let environmentWithScyllaBase = lists.flatten(environmentWithScyllaGroups)
+
 export fn environment(serviceName: String) -> List<Map<String, String>> =
   lists.concat(sharedEnvironment, serviceEnvironment(serviceName))
 
 export fn environmentWithScylla(serviceName: String) -> List<Map<String, String>> =
-  lists.concat(
-    sharedEnvironment,
-    lists.concat(
-      scyllaEnvironment,
-      serviceEnvironment(serviceName),
-    ),
-  )
+  lists.concat(environmentWithScyllaBase, serviceEnvironment(serviceName))
 
 export let imagePullSecrets =
   - name: "ghcr-login-secret"
@@ -131,14 +132,65 @@ export let podSecurityContext =
   runAsUser: 65532
 
 export let containerSecurityContext =
+  allowPrivilegeEscalation: false
   capabilities:
     add:
       - "NET_BIND_SERVICE"
     drop:
-      - "all"
+      - "ALL"
   readOnlyRootFilesystem: true
   seccompProfile:
     type: "RuntimeDefault"
+
+export let tmpVolumeMount =
+  mountPath: "/tmp"
+  name: "tmp"
+
+export let stsTokenVolumeMount =
+  mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
+  name: "seaweedfs-sts-token"
+  readOnly: true
+
+export let scyllaCaVolumeMount =
+  mountPath: "/etc/certs/scylla-db"
+  name: "scylla-db-ca-cert"
+  readOnly: true
+
+export let scyllaClientCertVolumeMount =
+  mountPath: "/etc/certs/scylla-db-client"
+  name: "scylla-db-client-cert"
+  readOnly: true
+
+export let tmpVolume =
+  emptyDir: emptyMap
+  name: "tmp"
+
+export let stsTokenVolume =
+  name: "seaweedfs-sts-token"
+  projected:
+    sources:
+      - serviceAccountToken:
+          audience: "sts.seaweedfs.com"
+          expirationSeconds: 86400
+          path: "token"
+
+export let scyllaCaVolume =
+  configMap:
+    items:
+      - key: "ca.crt"
+        path: "ca.crt"
+    name: names.piccaScylladbCaConfigMapName
+  name: "scylla-db-ca-cert"
+
+export let scyllaClientCertVolume =
+  name: "scylla-db-client-cert"
+  secret:
+    items:
+      - key: "tls.crt"
+        path: "tls.crt"
+      - key: "tls.key"
+        path: "tls.key"
+    secretName: "scylla-cluster-local-client-ca"
 
 export let livenessProbe =
   failureThreshold: 3
