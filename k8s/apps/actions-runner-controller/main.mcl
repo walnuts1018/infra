@@ -1,3 +1,4 @@
+import "std:manifest" as manifest
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 

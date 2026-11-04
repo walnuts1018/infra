@@ -1,3 +1,4 @@
+import "std:manifest" as manifest
 let resources = manifest.load("./resources.yaml")
 
 emit each resources

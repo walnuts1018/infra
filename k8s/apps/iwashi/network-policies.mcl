@@ -1,3 +1,4 @@
+import "std:manifest" as manifest
 let egressBundle = manifest.load("./_configs/networkpolicy-egress.yaml")
 let ingressBundle = manifest.load("./_configs/networkpolicy-ingress.yaml")
 let oidcBundle = manifest.load("./_configs/ciliumnetworkpolicy-oidc.yaml")

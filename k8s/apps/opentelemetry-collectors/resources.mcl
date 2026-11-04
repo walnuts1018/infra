@@ -1,16 +1,16 @@
 import "std:manifest" as manifest
 import "std:list" as lists
 
-let clusterRoleBinding = manifest.load("./_configs/cluster-role-binding.yaml")[0]
-let clusterRole = manifest.load("./_configs/cluster-role.yaml")[0]
-let atomicCollector = manifest.load("./_configs/collectors__atomic.yaml")[0]
-let daemonsetCollector = manifest.load("./_configs/collectors__daemonset.yaml")[0]
-let defaultCollector = manifest.load("./_configs/collectors__default.yaml")[0]
-let prometheusCollector = manifest.load("./_configs/collectors__prometheus.yaml")[0]
-let vyosCollector = manifest.load("./_configs/collectors__vyos.yaml")[0]
-let vyosService = manifest.load("./_configs/collectors__vyos_service.yaml")[0]
-let externalSecret = manifest.load("./_configs/external-secret.yaml")[0]
-let serviceAccount = manifest.load("./_configs/sa.yaml")[0]
+let clusterRoleBinding = manifest.loadOne("./_configs/cluster-role-binding.yaml")
+let clusterRole = manifest.loadOne("./_configs/cluster-role.yaml")
+let atomicCollector = manifest.loadOne("./_configs/collectors__atomic.yaml")
+let daemonsetCollector = manifest.loadOne("./_configs/collectors__daemonset.yaml")
+let defaultCollector = manifest.loadOne("./_configs/collectors__default.yaml")
+let prometheusCollector = manifest.loadOne("./_configs/collectors__prometheus.yaml")
+let vyosCollector = manifest.loadOne("./_configs/collectors__vyos.yaml")
+let vyosService = manifest.loadOne("./_configs/collectors__vyos_service.yaml")
+let externalSecret = manifest.loadOne("./_configs/external-secret.yaml")
+let serviceAccount = manifest.loadOne("./_configs/sa.yaml")
 
 let collectors =
   - atomicCollector

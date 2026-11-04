@@ -1,3 +1,4 @@
+import "std:json" as json
 import "std:list" as lists
 
 type BucketConfig =
@@ -163,7 +164,7 @@ export let policies =
       namespace: "seaweedfs"
     spec:
       name: "mac-hatena-access-key"
-      policyDocument: "{\n    \"Statement\": [\n        {\n            \"Action\": [\n                \"s3:*\"\n            ],\n            \"Effect\": \"Allow\",\n            \"Resource\": [\n                \"*\"\n            ]\n        }\n    ],\n    \"Version\": \"2012-10-17\"\n}"
+      policyDocument: json.encode(policyValue(["s3:*"], ["*"]))
       reclaimPolicy: "Retain"
       seaweedRef:
         name: "seaweedfs-default"
@@ -175,7 +176,7 @@ export let policies =
       namespace: "seaweedfs"
     spec:
       name: "maps-read-access-key"
-      policyDocument: "{\n    \"Statement\": [\n        {\n            \"Action\": [\n                \"s3:Get*\"\n            ],\n            \"Effect\": \"Allow\",\n            \"Resource\": [\n                \"arn:aws:s3:::maps\",\n                \"arn:aws:s3:::maps/*\"\n            ]\n        }\n    ],\n    \"Version\": \"2012-10-17\"\n}"
+      policyDocument: json.encode(policyValue(["s3:Get*"], ["arn:aws:s3:::maps", "arn:aws:s3:::maps/*"]))
       reclaimPolicy: "Retain"
       seaweedRef:
         name: "seaweedfs-default"
@@ -187,7 +188,7 @@ export let policies =
       namespace: "seaweedfs"
     spec:
       name: "misskey-access-key"
-      policyDocument: "{\n    \"Statement\": [\n        {\n            \"Action\": [\n                \"s3:Get*\",\n                \"s3:Put*\",\n                \"s3:Delete*\",\n                \"s3:AbortMultipartUpload\",\n                \"s3:List*\",\n                \"s3:*Tagging\"\n            ],\n            \"Effect\": \"Allow\",\n            \"Resource\": [\n                \"arn:aws:s3:::misskey\",\n                \"arn:aws:s3:::misskey/*\"\n            ]\n        }\n    ],\n    \"Version\": \"2012-10-17\"\n}"
+      policyDocument: json.encode(policyValue(["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"], ["arn:aws:s3:::misskey", "arn:aws:s3:::misskey/*"]))
       reclaimPolicy: "Retain"
       seaweedRef:
         name: "seaweedfs-default"
@@ -199,7 +200,7 @@ export let policies =
       namespace: "seaweedfs"
     spec:
       name: "oekaki-dengon-game-access-key"
-      policyDocument: "{\n    \"Statement\": [\n        {\n            \"Action\": [\n                \"s3:Get*\",\n                \"s3:Put*\",\n                \"s3:Delete*\",\n                \"s3:AbortMultipartUpload\",\n                \"s3:List*\",\n                \"s3:*Tagging\"\n            ],\n            \"Effect\": \"Allow\",\n            \"Resource\": [\n                \"arn:aws:s3:::oekaki-dengon-game\",\n                \"arn:aws:s3:::oekaki-dengon-game/*\"\n            ]\n        }\n    ],\n    \"Version\": \"2012-10-17\"\n}"
+      policyDocument: json.encode(policyValue(["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"], ["arn:aws:s3:::oekaki-dengon-game", "arn:aws:s3:::oekaki-dengon-game/*"]))
       reclaimPolicy: "Retain"
       seaweedRef:
         name: "seaweedfs-default"
@@ -211,7 +212,7 @@ export let policies =
       namespace: "seaweedfs"
     spec:
       name: "stalwart-access-key"
-      policyDocument: "{\n    \"Statement\": [\n        {\n            \"Action\": [\n                \"s3:Get*\",\n                \"s3:Put*\",\n                \"s3:Delete*\",\n                \"s3:AbortMultipartUpload\",\n                \"s3:List*\",\n                \"s3:*Tagging\"\n            ],\n            \"Effect\": \"Allow\",\n            \"Resource\": [\n                \"arn:aws:s3:::stalwart\",\n                \"arn:aws:s3:::stalwart/*\"\n            ]\n        }\n    ],\n    \"Version\": \"2012-10-17\"\n}"
+      policyDocument: json.encode(policyValue(["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"], ["arn:aws:s3:::stalwart", "arn:aws:s3:::stalwart/*"]))
       reclaimPolicy: "Retain"
       seaweedRef:
         name: "seaweedfs-default"
@@ -223,7 +224,7 @@ export let policies =
       namespace: "seaweedfs"
     spec:
       name: "visual-regression-tracker-access-key"
-      policyDocument: "{\n    \"Statement\": [\n        {\n            \"Action\": [\n                \"s3:Get*\",\n                \"s3:Put*\",\n                \"s3:Delete*\",\n                \"s3:AbortMultipartUpload\",\n                \"s3:List*\",\n                \"s3:*Tagging\"\n            ],\n            \"Effect\": \"Allow\",\n            \"Resource\": [\n                \"arn:aws:s3:::visual-regression-tracker\",\n                \"arn:aws:s3:::visual-regression-tracker/*\"\n            ]\n        }\n    ],\n    \"Version\": \"2012-10-17\"\n}"
+      policyDocument: json.encode(policyValue(["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"], ["arn:aws:s3:::visual-regression-tracker", "arn:aws:s3:::visual-regression-tracker/*"]))
       reclaimPolicy: "Retain"
       seaweedRef:
         name: "seaweedfs-default"
@@ -429,3 +430,10 @@ export let credentials =
         name: "visual-regression-tracker-s3-credentials"
         namespace: "visual-regression-tracker"
         secretKeyField: "AWS_SECRET_ACCESS_KEY"
+
+fn policyValue(actions: List<String>, resources: List<String>) -> Map<String, Any> = node:
+  Statement:
+    - Action: actions
+      Effect: "Allow"
+      Resource: resources
+  Version: "2012-10-17"

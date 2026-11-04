@@ -1,3 +1,4 @@
+import "std:manifest" as manifest
 let externalSecret = manifest.load("./_configs/external-secret.yaml")
 let serviceAccount = manifest.load("./_configs/service-account.yaml")
 let networkPolicy = manifest.load("./_configs/networkpolicy.yaml")

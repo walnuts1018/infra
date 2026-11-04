@@ -1,5 +1,6 @@
 
-import "./shared-infrastructure.mcl" as sharedInfrastructure
+import "./names.mcl" as names
+import "./worker-common.mcl" as workerCommon
 
 let emptyMap: Map<String, Any> = {}
 
@@ -26,127 +27,11 @@ fn deploymentPiccaEmbeddingWorker(namespace: String) -> Map<String, Any> = node:
       spec:
         containers:
           -
-            env:
-              -
-                name: "ENVIRONMENT"
-                value: "production"
-              -
-                name: "OTEL_EXPORTER_OTLP_ENDPOINT"
-                value: "http://default-collector.opentelemetry-collector.svc.cluster.local:4318"
-              -
-                name: "LOG_LEVEL"
-                value: "debug"
-              -
-                name: "AWS_ENDPOINT_URL_S3"
-                value: "http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333"
-              -
-                name: "AWS_REGION"
-                value: "us-east-1"
-              -
-                name: "S3_REGION"
-                value: "us-east-1"
-              -
-                name: "S3_BUCKET"
-                value: "picca"
-              -
-                name: "S3_USE_PATH_STYLE"
-                value: "true"
-              -
-                name: "S3_EXTERNAL_ENDPOINT"
-                value: "https://picca.seaweedfs.walnuts.dev"
-              -
-                name: "IMGPROXY_PUBLIC_URL"
-                value: "https://imgproxy-picca.walnuts.dev"
-              -
-                name: "IMGPROXY_BUCKET"
-                value: "picca"
-              -
-                name: "IMGPROXY_TTL"
-                value: "900"
-              -
-                name: "SCYLLA_HOSTS"
-                value: "scylla-cluster-client.databases.svc.cluster.local:9142"
-              -
-                name: "SCYLLA_DATACENTER"
-                value: "iwakura"
-              -
-                name: "SCYLLA_USER"
-                value: "picca"
-              -
-                name: "OIDC_ISSUER"
-                value: "https://auth.walnuts.dev"
-              -
-                name: "OIDC_AUTH_URL"
-                value: "https://auth.walnuts.dev/oauth/v2/authorize"
-              -
-                name: "OIDC_REDIRECT_URL"
-                value: "https://picca.walnuts.dev/auth/callback"
-              -
-                name: "PUBLIC_API_URL"
-                value: "https://picca.walnuts.dev"
-              -
-                name: "ALLOWED_ORIGIN"
-                value: "https://picca.walnuts.dev"
-              -
-                name: "GRAPHQL_QUERY_SIGNING_REQUIRED"
-                value: "true"
-              -
-                name: "QDRANT_HOST"
-                value: "qdrant.qdrant.svc.cluster.local"
-              -
-                name: "QDRANT_PORT"
-                value: "6334"
-              -
-                name: "QDRANT_COLLECTION"
-                value: "picca_media"
-              -
-                name: "DENSE_SERVICE_URL"
-                value: "http://picca-dense-service.picca.svc.cluster.local:8001"
-              -
-                name: "SPARSE_SERVICE_URL"
-                value: "http://picca-sparse-service.picca.svc.cluster.local:8002"
-              -
-                name: "OCR_SERVICE_URL"
-                value: "http://picca-ocr-service.picca.svc.cluster.local:8003"
-              -
-                name: "CAPTION_SERVICE_URL"
-                value: "http://picca-caption-service.picca.svc.cluster.local:8004"
-              -
-                name: "AWS_WEB_IDENTITY_TOKEN_FILE"
-                value: "/var/run/secrets/sts.seaweedfs.com/serviceaccount/token"
-              -
-                name: "AWS_ENDPOINT_URL_STS"
-                value: "http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333"
-              -
-                name: "AWS_ROLE_ARN"
-                value: "arn:aws:iam::role/picca"
-              -
-                name: "OTEL_SERVICE_NAME"
-                value: "picca-embedding-worker"
-            envFrom:
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaPostgresSecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaValkeySecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaRabbitmqSecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaOidcSecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaGraphqlSecretName
+            env: workerCommon.environment("picca-embedding-worker")
+            envFrom: workerCommon.envFrom
             image: "ghcr.io/walnuts1018/picca/embedding-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
-            livenessProbe:
-              failureThreshold: 3
-              httpGet:
-                path: "/healthz"
-                port: 8080
-              periodSeconds: 15
+            livenessProbe: workerCommon.livenessProbe
             name: "embedding-worker"
             ports:
               -
@@ -159,21 +44,8 @@ fn deploymentPiccaEmbeddingWorker(namespace: String) -> Map<String, Any> = node:
               requests:
                 cpu: "250m"
                 memory: "256Mi"
-            securityContext:
-              capabilities:
-                add:
-                  - "NET_BIND_SERVICE"
-                drop:
-                  - "all"
-              readOnlyRootFilesystem: true
-              seccompProfile:
-                type: "RuntimeDefault"
-            startupProbe:
-              failureThreshold: 18
-              httpGet:
-                path: "/healthz"
-                port: 8080
-              periodSeconds: 10
+            securityContext: workerCommon.containerSecurityContext
+            startupProbe: workerCommon.startupProbe
             volumeMounts:
               -
                 mountPath: "/tmp"
@@ -182,14 +54,9 @@ fn deploymentPiccaEmbeddingWorker(namespace: String) -> Map<String, Any> = node:
                 mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
                 name: "seaweedfs-sts-token"
                 readOnly: true
-        imagePullSecrets:
-          -
-            name: "ghcr-login-secret"
-        securityContext:
-          runAsGroup: 65532
-          runAsNonRoot: true
-          runAsUser: 65532
-        serviceAccountName: "picca"
+        imagePullSecrets: workerCommon.imagePullSecrets
+        securityContext: workerCommon.podSecurityContext
+        serviceAccountName: workerCommon.serviceAccountName
         volumes:
           -
             emptyDir: emptyMap
@@ -251,142 +118,11 @@ fn deploymentPiccaLibraryNotifyWorker(namespace: String) -> Map<String, Any> = n
       spec:
         containers:
           -
-            env:
-              -
-                name: "ENVIRONMENT"
-                value: "production"
-              -
-                name: "OTEL_EXPORTER_OTLP_ENDPOINT"
-                value: "http://default-collector.opentelemetry-collector.svc.cluster.local:4318"
-              -
-                name: "LOG_LEVEL"
-                value: "debug"
-              -
-                name: "AWS_ENDPOINT_URL_S3"
-                value: "http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333"
-              -
-                name: "AWS_REGION"
-                value: "us-east-1"
-              -
-                name: "S3_REGION"
-                value: "us-east-1"
-              -
-                name: "S3_BUCKET"
-                value: "picca"
-              -
-                name: "S3_USE_PATH_STYLE"
-                value: "true"
-              -
-                name: "S3_EXTERNAL_ENDPOINT"
-                value: "https://picca.seaweedfs.walnuts.dev"
-              -
-                name: "IMGPROXY_PUBLIC_URL"
-                value: "https://imgproxy-picca.walnuts.dev"
-              -
-                name: "IMGPROXY_BUCKET"
-                value: "picca"
-              -
-                name: "IMGPROXY_TTL"
-                value: "900"
-              -
-                name: "SCYLLA_HOSTS"
-                value: "scylla-cluster-client.databases.svc.cluster.local:9142"
-              -
-                name: "SCYLLA_DATACENTER"
-                value: "iwakura"
-              -
-                name: "SCYLLA_USER"
-                value: "picca"
-              -
-                name: "OIDC_ISSUER"
-                value: "https://auth.walnuts.dev"
-              -
-                name: "OIDC_AUTH_URL"
-                value: "https://auth.walnuts.dev/oauth/v2/authorize"
-              -
-                name: "OIDC_REDIRECT_URL"
-                value: "https://picca.walnuts.dev/auth/callback"
-              -
-                name: "PUBLIC_API_URL"
-                value: "https://picca.walnuts.dev"
-              -
-                name: "ALLOWED_ORIGIN"
-                value: "https://picca.walnuts.dev"
-              -
-                name: "GRAPHQL_QUERY_SIGNING_REQUIRED"
-                value: "true"
-              -
-                name: "QDRANT_HOST"
-                value: "qdrant.qdrant.svc.cluster.local"
-              -
-                name: "QDRANT_PORT"
-                value: "6334"
-              -
-                name: "QDRANT_COLLECTION"
-                value: "picca_media"
-              -
-                name: "DENSE_SERVICE_URL"
-                value: "http://picca-dense-service.picca.svc.cluster.local:8001"
-              -
-                name: "SPARSE_SERVICE_URL"
-                value: "http://picca-sparse-service.picca.svc.cluster.local:8002"
-              -
-                name: "OCR_SERVICE_URL"
-                value: "http://picca-ocr-service.picca.svc.cluster.local:8003"
-              -
-                name: "CAPTION_SERVICE_URL"
-                value: "http://picca-caption-service.picca.svc.cluster.local:8004"
-              -
-                name: "AWS_WEB_IDENTITY_TOKEN_FILE"
-                value: "/var/run/secrets/sts.seaweedfs.com/serviceaccount/token"
-              -
-                name: "AWS_ENDPOINT_URL_STS"
-                value: "http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333"
-              -
-                name: "AWS_ROLE_ARN"
-                value: "arn:aws:iam::role/picca"
-              -
-                name: "SCYLLA_CA_CERT_PATH"
-                value: "/etc/certs/scylla-db/ca.crt"
-              -
-                name: "SCYLLA_CLIENT_CERT_PATH"
-                value: "/etc/certs/scylla-db-client/tls.crt"
-              -
-                name: "SCYLLA_CLIENT_KEY_PATH"
-                value: "/etc/certs/scylla-db-client/tls.key"
-              -
-                name: "PLAN_CONFIG_FILE"
-                value: "/etc/picca/plans/plans.yaml"
-              -
-                name: "OTEL_SERVICE_NAME"
-                value: "picca-library-notify-worker"
-            envFrom:
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaPostgresSecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaScyllaSecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaValkeySecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaRabbitmqSecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaOidcSecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaGraphqlSecretName
+            env: workerCommon.environmentWithScylla("picca-library-notify-worker")
+            envFrom: workerCommon.envFromWithScylla
             image: "ghcr.io/walnuts1018/picca/library-notify-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
-            livenessProbe:
-              failureThreshold: 3
-              httpGet:
-                path: "/healthz"
-                port: 8080
-              periodSeconds: 15
+            livenessProbe: workerCommon.livenessProbe
             name: "library-notify-worker"
             ports:
               -
@@ -399,21 +135,8 @@ fn deploymentPiccaLibraryNotifyWorker(namespace: String) -> Map<String, Any> = n
               requests:
                 cpu: "100m"
                 memory: "256Mi"
-            securityContext:
-              capabilities:
-                add:
-                  - "NET_BIND_SERVICE"
-                drop:
-                  - "all"
-              readOnlyRootFilesystem: true
-              seccompProfile:
-                type: "RuntimeDefault"
-            startupProbe:
-              failureThreshold: 18
-              httpGet:
-                path: "/healthz"
-                port: 8080
-              periodSeconds: 10
+            securityContext: workerCommon.containerSecurityContext
+            startupProbe: workerCommon.startupProbe
             volumeMounts:
               -
                 mountPath: "/tmp"
@@ -434,14 +157,9 @@ fn deploymentPiccaLibraryNotifyWorker(namespace: String) -> Map<String, Any> = n
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
                 readOnly: true
-        imagePullSecrets:
-          -
-            name: "ghcr-login-secret"
-        securityContext:
-          runAsGroup: 65532
-          runAsNonRoot: true
-          runAsUser: 65532
-        serviceAccountName: "picca"
+        imagePullSecrets: workerCommon.imagePullSecrets
+        securityContext: workerCommon.podSecurityContext
+        serviceAccountName: workerCommon.serviceAccountName
         volumes:
           -
             emptyDir: emptyMap
@@ -461,7 +179,7 @@ fn deploymentPiccaLibraryNotifyWorker(namespace: String) -> Map<String, Any> = n
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: sharedInfrastructure.piccaScylladbCaConfigMapName
+              name: names.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -480,7 +198,7 @@ fn deploymentPiccaLibraryNotifyWorker(namespace: String) -> Map<String, Any> = n
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: sharedInfrastructure.piccaPlansConfigMapName
+              name: names.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn scaledObjectPiccaLibraryNotifyWorker(namespace: String) -> Map<String, Any> = node:
@@ -540,142 +258,11 @@ fn deploymentPiccaStackTimelineWorker(namespace: String) -> Map<String, Any> = n
       spec:
         containers:
           -
-            env:
-              -
-                name: "ENVIRONMENT"
-                value: "production"
-              -
-                name: "OTEL_EXPORTER_OTLP_ENDPOINT"
-                value: "http://default-collector.opentelemetry-collector.svc.cluster.local:4318"
-              -
-                name: "LOG_LEVEL"
-                value: "debug"
-              -
-                name: "AWS_ENDPOINT_URL_S3"
-                value: "http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333"
-              -
-                name: "AWS_REGION"
-                value: "us-east-1"
-              -
-                name: "S3_REGION"
-                value: "us-east-1"
-              -
-                name: "S3_BUCKET"
-                value: "picca"
-              -
-                name: "S3_USE_PATH_STYLE"
-                value: "true"
-              -
-                name: "S3_EXTERNAL_ENDPOINT"
-                value: "https://picca.seaweedfs.walnuts.dev"
-              -
-                name: "IMGPROXY_PUBLIC_URL"
-                value: "https://imgproxy-picca.walnuts.dev"
-              -
-                name: "IMGPROXY_BUCKET"
-                value: "picca"
-              -
-                name: "IMGPROXY_TTL"
-                value: "900"
-              -
-                name: "SCYLLA_HOSTS"
-                value: "scylla-cluster-client.databases.svc.cluster.local:9142"
-              -
-                name: "SCYLLA_DATACENTER"
-                value: "iwakura"
-              -
-                name: "SCYLLA_USER"
-                value: "picca"
-              -
-                name: "OIDC_ISSUER"
-                value: "https://auth.walnuts.dev"
-              -
-                name: "OIDC_AUTH_URL"
-                value: "https://auth.walnuts.dev/oauth/v2/authorize"
-              -
-                name: "OIDC_REDIRECT_URL"
-                value: "https://picca.walnuts.dev/auth/callback"
-              -
-                name: "PUBLIC_API_URL"
-                value: "https://picca.walnuts.dev"
-              -
-                name: "ALLOWED_ORIGIN"
-                value: "https://picca.walnuts.dev"
-              -
-                name: "GRAPHQL_QUERY_SIGNING_REQUIRED"
-                value: "true"
-              -
-                name: "QDRANT_HOST"
-                value: "qdrant.qdrant.svc.cluster.local"
-              -
-                name: "QDRANT_PORT"
-                value: "6334"
-              -
-                name: "QDRANT_COLLECTION"
-                value: "picca_media"
-              -
-                name: "DENSE_SERVICE_URL"
-                value: "http://picca-dense-service.picca.svc.cluster.local:8001"
-              -
-                name: "SPARSE_SERVICE_URL"
-                value: "http://picca-sparse-service.picca.svc.cluster.local:8002"
-              -
-                name: "OCR_SERVICE_URL"
-                value: "http://picca-ocr-service.picca.svc.cluster.local:8003"
-              -
-                name: "CAPTION_SERVICE_URL"
-                value: "http://picca-caption-service.picca.svc.cluster.local:8004"
-              -
-                name: "AWS_WEB_IDENTITY_TOKEN_FILE"
-                value: "/var/run/secrets/sts.seaweedfs.com/serviceaccount/token"
-              -
-                name: "AWS_ENDPOINT_URL_STS"
-                value: "http://seaweedfs-default-filer.seaweedfs.svc.cluster.local:8333"
-              -
-                name: "AWS_ROLE_ARN"
-                value: "arn:aws:iam::role/picca"
-              -
-                name: "SCYLLA_CA_CERT_PATH"
-                value: "/etc/certs/scylla-db/ca.crt"
-              -
-                name: "SCYLLA_CLIENT_CERT_PATH"
-                value: "/etc/certs/scylla-db-client/tls.crt"
-              -
-                name: "SCYLLA_CLIENT_KEY_PATH"
-                value: "/etc/certs/scylla-db-client/tls.key"
-              -
-                name: "PLAN_CONFIG_FILE"
-                value: "/etc/picca/plans/plans.yaml"
-              -
-                name: "OTEL_SERVICE_NAME"
-                value: "picca-stack-timeline-worker"
-            envFrom:
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaPostgresSecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaScyllaSecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaValkeySecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaRabbitmqSecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaOidcSecretName
-              -
-                secretRef:
-                  name: sharedInfrastructure.piccaGraphqlSecretName
+            env: workerCommon.environmentWithScylla("picca-stack-timeline-worker")
+            envFrom: workerCommon.envFromWithScylla
             image: "ghcr.io/walnuts1018/picca/stack-timeline-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
-            livenessProbe:
-              failureThreshold: 3
-              httpGet:
-                path: "/healthz"
-                port: 8080
-              periodSeconds: 15
+            livenessProbe: workerCommon.livenessProbe
             name: "stack-timeline-worker"
             ports:
               -
@@ -688,21 +275,8 @@ fn deploymentPiccaStackTimelineWorker(namespace: String) -> Map<String, Any> = n
               requests:
                 cpu: "100m"
                 memory: "256Mi"
-            securityContext:
-              capabilities:
-                add:
-                  - "NET_BIND_SERVICE"
-                drop:
-                  - "all"
-              readOnlyRootFilesystem: true
-              seccompProfile:
-                type: "RuntimeDefault"
-            startupProbe:
-              failureThreshold: 18
-              httpGet:
-                path: "/healthz"
-                port: 8080
-              periodSeconds: 10
+            securityContext: workerCommon.containerSecurityContext
+            startupProbe: workerCommon.startupProbe
             volumeMounts:
               -
                 mountPath: "/tmp"
@@ -723,14 +297,9 @@ fn deploymentPiccaStackTimelineWorker(namespace: String) -> Map<String, Any> = n
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
                 readOnly: true
-        imagePullSecrets:
-          -
-            name: "ghcr-login-secret"
-        securityContext:
-          runAsGroup: 65532
-          runAsNonRoot: true
-          runAsUser: 65532
-        serviceAccountName: "picca"
+        imagePullSecrets: workerCommon.imagePullSecrets
+        securityContext: workerCommon.podSecurityContext
+        serviceAccountName: workerCommon.serviceAccountName
         volumes:
           -
             emptyDir: emptyMap
@@ -750,7 +319,7 @@ fn deploymentPiccaStackTimelineWorker(namespace: String) -> Map<String, Any> = n
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: sharedInfrastructure.piccaScylladbCaConfigMapName
+              name: names.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -769,7 +338,7 @@ fn deploymentPiccaStackTimelineWorker(namespace: String) -> Map<String, Any> = n
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: sharedInfrastructure.piccaPlansConfigMapName
+              name: names.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn scaledObjectPiccaStackTimelineWorker(namespace: String) -> Map<String, Any> = node:

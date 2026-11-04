@@ -1,3 +1,4 @@
+import "std:manifest" as manifest
 import "./external-secrets.mcl" as externalSecrets
 
 let valuesBundle = manifest.load("./_configs/values.yaml")

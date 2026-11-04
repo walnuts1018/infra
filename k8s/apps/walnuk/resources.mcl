@@ -1,3 +1,4 @@
+import "std:manifest" as manifest
 import "std:list" as lists
 
 let workloads = manifest.load("./_configs/workloads.yaml")

@@ -1,10 +1,11 @@
-type Database =
+export type Database =
   name: String
   resourceName: String
   userName: String
   passwordSecretName: String
   secretSourceKey: String
   secretSourceProperty: String
+  extensions?: List<Map<String, String>>
 
 export let databases =
   - name: "picca"
@@ -13,12 +14,16 @@ export let databases =
     passwordSecretName: "picca-db-password"
     secretSourceKey: "postgres_passwords"
     secretSourceProperty: "picca"
+    extensions:
+      - name: "postgis"
   - name: "picca_dev"
     resourceName: "picca-dev"
     userName: "picca_dev"
     passwordSecretName: "picca-dev-db-password"
     secretSourceKey: "postgres_passwords"
     secretSourceProperty: "picca_dev"
+    extensions:
+      - name: "postgis"
   - name: "fitbit_manager"
     resourceName: "fitbit-manager"
     userName: "fitbit_manager"

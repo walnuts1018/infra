@@ -1,22 +1,23 @@
+import "std:manifest" as manifest
 import text "./_configs/robots.txt" as robotsText
 
-let backDeployment = manifest.load("./_configs/back__deployment.yaml")[0]
-let backHpa = manifest.load("./_configs/back__hpa.yaml")[0]
-let backNetworkPolicy = manifest.load("./_configs/back__networkpolicy.yaml")[0]
-let backService = manifest.load("./_configs/back__service.yaml")[0]
-let backVpa = manifest.load("./_configs/back__vpa.yaml")[0]
-let externalSecret = manifest.load("./_configs/external-secret.yaml")[0]
-let frontDeployment = manifest.load("./_configs/front__deployment.yaml")[0]
-let frontHpa = manifest.load("./_configs/front__hpa.yaml")[0]
-let frontNetworkPolicy = manifest.load("./_configs/front__networkpolicy.yaml")[0]
-let frontService = manifest.load("./_configs/front__service.yaml")[0]
-let frontVpa = manifest.load("./_configs/front__vpa.yaml")[0]
-let oauth2ProxyExternalSecret = manifest.load("./_configs/oauth2-proxy__external-secret.yaml")[0]
-let oauth2ProxyHttpRoutePublic = manifest.load("./_configs/oauth2-proxy__httproute-public.yaml")[0]
-let oauth2ProxyHttpRoute = manifest.load("./_configs/oauth2-proxy__httproute.yaml")[0]
-let oauth2ProxySecurityPolicy = manifest.load("./_configs/oauth2-proxy__securitypolicy.yaml")[0]
-let s3CredentialsSecret = manifest.load("./_configs/s3-credentials-secret.yaml")[0]
-let s3ReferenceGrant = manifest.load("./_configs/s3-reference-grant.yaml")[0]
+let backDeployment = manifest.loadOne("./_configs/back__deployment.yaml")
+let backHpa = manifest.loadOne("./_configs/back__hpa.yaml")
+let backNetworkPolicy = manifest.loadOne("./_configs/back__networkpolicy.yaml")
+let backService = manifest.loadOne("./_configs/back__service.yaml")
+let backVpa = manifest.loadOne("./_configs/back__vpa.yaml")
+let externalSecret = manifest.loadOne("./_configs/external-secret.yaml")
+let frontDeployment = manifest.loadOne("./_configs/front__deployment.yaml")
+let frontHpa = manifest.loadOne("./_configs/front__hpa.yaml")
+let frontNetworkPolicy = manifest.loadOne("./_configs/front__networkpolicy.yaml")
+let frontService = manifest.loadOne("./_configs/front__service.yaml")
+let frontVpa = manifest.loadOne("./_configs/front__vpa.yaml")
+let oauth2ProxyExternalSecret = manifest.loadOne("./_configs/oauth2-proxy__external-secret.yaml")
+let oauth2ProxyHttpRoutePublic = manifest.loadOne("./_configs/oauth2-proxy__httproute-public.yaml")
+let oauth2ProxyHttpRoute = manifest.loadOne("./_configs/oauth2-proxy__httproute.yaml")
+let oauth2ProxySecurityPolicy = manifest.loadOne("./_configs/oauth2-proxy__securitypolicy.yaml")
+let s3CredentialsSecret = manifest.loadOne("./_configs/s3-credentials-secret.yaml")
+let s3ReferenceGrant = manifest.loadOne("./_configs/s3-reference-grant.yaml")
 let oauth2ProxyConfigMap = node:
   apiVersion: "v1"
   kind: "ConfigMap"

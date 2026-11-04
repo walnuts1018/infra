@@ -24,9 +24,26 @@ let options =
   apiVersions: apiVersions
   values: values
 let chartResources = helm.render(appChart.chartArchive, options)
+let controllerConfigMapIdentity =
+  apiVersion: "v1"
+  kind: "ConfigMap"
+  namespace: appChart.namespace
+  name: "cert-manager"
+let chartControllerConfigMap = lists.exactlyOne(
+  chartResources,
+  fn(resource) =>
+    resource.apiVersion == controllerConfigMapIdentity.apiVersion and
+    resource.kind == controllerConfigMapIdentity.kind and
+    resource.metadata.namespace == controllerConfigMapIdentity.namespace and
+    resource.metadata.name == controllerConfigMapIdentity.name,
+)
 let resourcesWithoutControllerConfig = lists.filter(
   chartResources,
-  fn(resource) => resource.kind != "ConfigMap" or resource.metadata.name != "cert-manager",
+  fn(resource) =>
+    resource.apiVersion != chartControllerConfigMap.apiVersion or
+    resource.kind != chartControllerConfigMap.kind or
+    resource.metadata.namespace != chartControllerConfigMap.metadata.namespace or
+    resource.metadata.name != chartControllerConfigMap.metadata.name,
 )
 let configResources =
   - controllerConfigMap.resource

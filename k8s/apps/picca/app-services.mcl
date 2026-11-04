@@ -1,5 +1,5 @@
 
-import "./shared-infrastructure.mcl" as sharedInfrastructure
+import "./names.mcl" as names
 
 let emptyMap: Map<String, Any> = {}
 
@@ -138,25 +138,25 @@ fn deploymentPiccaApiserver(namespace: String) -> Map<String, Any> = node:
             envFrom:
               -
                 secretRef:
-                  name: sharedInfrastructure.piccaPostgresSecretName
+                  name: names.piccaPostgresSecretName
               -
                 secretRef:
-                  name: sharedInfrastructure.piccaScyllaSecretName
+                  name: names.piccaScyllaSecretName
               -
                 secretRef:
-                  name: sharedInfrastructure.piccaValkeySecretName
+                  name: names.piccaValkeySecretName
               -
                 secretRef:
-                  name: sharedInfrastructure.piccaRabbitmqSecretName
+                  name: names.piccaRabbitmqSecretName
               -
                 secretRef:
-                  name: sharedInfrastructure.piccaOidcSecretName
+                  name: names.piccaOidcSecretName
               -
                 secretRef:
-                  name: sharedInfrastructure.piccaGraphqlSecretName
+                  name: names.piccaGraphqlSecretName
               -
                 secretRef:
-                  name: sharedInfrastructure.piccaImgproxySecretName
+                  name: names.piccaImgproxySecretName
             image: "ghcr.io/walnuts1018/picca/apiserver:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe:
@@ -325,10 +325,10 @@ fn deploymentPiccaApiserver(namespace: String) -> Map<String, Any> = node:
             envFrom:
               -
                 secretRef:
-                  name: sharedInfrastructure.piccaPostgresSecretName
+                  name: names.piccaPostgresSecretName
               -
                 secretRef:
-                  name: sharedInfrastructure.piccaScyllaSecretName
+                  name: names.piccaScyllaSecretName
             image: "ghcr.io/walnuts1018/picca/migrations:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             name: "migrations"
@@ -378,7 +378,7 @@ fn deploymentPiccaApiserver(namespace: String) -> Map<String, Any> = node:
                 -
                   key: "ca.crt"
                   path: "ca.crt"
-              name: sharedInfrastructure.piccaScylladbCaConfigMapName
+              name: names.piccaScylladbCaConfigMapName
             name: "scylla-db-ca-cert"
           -
             name: "scylla-db-client-cert"
@@ -397,7 +397,7 @@ fn deploymentPiccaApiserver(namespace: String) -> Map<String, Any> = node:
                 -
                   key: "plans.yaml"
                   path: "plans.yaml"
-              name: sharedInfrastructure.piccaPlansConfigMapName
+              name: names.piccaPlansConfigMapName
             name: "picca-plans"
 
 fn servicePiccaApiserver(namespace: String) -> Map<String, Any> = node:
@@ -470,7 +470,7 @@ fn deploymentPiccaFrontend(namespace: String) -> Map<String, Any> = node:
                 valueFrom:
                   secretKeyRef:
                     key: "PICCA_GRAPHQL_QUERY_SIGNING_SECRET"
-                    name: sharedInfrastructure.piccaGraphqlSecretName
+                    name: names.piccaGraphqlSecretName
             image: "ghcr.io/walnuts1018/picca/frontend:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe:
@@ -583,7 +583,7 @@ fn deploymentPiccaImgproxy(namespace: String) -> Map<String, Any> = node:
             envFrom:
               -
                 secretRef:
-                  name: sharedInfrastructure.piccaImgproxySecretName
+                  name: names.piccaImgproxySecretName
             image: "ghcr.io/imgproxy/imgproxy:v4.0.15"
             imagePullPolicy: "IfNotPresent"
             livenessProbe:

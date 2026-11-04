@@ -2,24 +2,11 @@ import "std:list" as lists
 import "./databases.mcl" as databaseConfig
 import "./profiles.mcl" as appProfiles
 
-type Database =
-  name: String
-  resourceName: String
-  userName: String
-  passwordSecretName: String
-  secretSourceKey: String
-  secretSourceProperty: String
-
-type PostgisDatabase =
-  name: String
-  resourceName: String
-  userName: String
-
 let profile = appProfiles.profiles["seaweedfsBackup"]
-let databases: List<Database> = databaseConfig.databases
+let databases: List<databaseConfig.Database> = databaseConfig.databases
 let clusterName = profile.clusterName
 
-fn roleForDatabase(database: Database) -> Map<String, Any> = node:
+fn roleForDatabase(database: databaseConfig.Database) -> Map<String, Any> = node:
   name: database.userName
   ensure: "present"
   login: true
@@ -86,7 +73,7 @@ let cluster = node:
             path: "sts.seaweedfs.com/serviceaccount/token"
 
 
-fn databaseResource(database: Database) -> Map<String, Any> = node:
+fn databaseResource(database: databaseConfig.Database) -> Map<String, Any> = node:
   apiVersion: "postgresql.cnpg.io/v1"
   kind: "Database"
   metadata:
@@ -96,34 +83,10 @@ fn databaseResource(database: Database) -> Map<String, Any> = node:
     owner: database.userName
     cluster:
       name: clusterName
-let databasesWithoutExtensions = lists.filter(
-  databases,
-  fn(database) => database.name != "picca" and database.name != "picca_dev",
-)
-let regularDatabaseResources = lists.map(databasesWithoutExtensions, databaseResource)
-let postgisDatabases =
-  - name: "picca"
-    resourceName: "picca"
-    userName: "picca"
-  - name: "picca_dev"
-    resourceName: "picca-dev"
-    userName: "picca_dev"
-fn postgisDatabaseResource(database: PostgisDatabase) -> Map<String, Any> = node:
-  apiVersion: "postgresql.cnpg.io/v1"
-  kind: "Database"
-  metadata:
-    name: database.resourceName
-  spec:
-    name: database.name
-    owner: database.userName
-    cluster:
-      name: clusterName
-    extensions:
-      - name: "postgis"
-let postgisResources = lists.map(postgisDatabases, postgisDatabaseResource)
-let databaseResources = lists.concat(regularDatabaseResources, postgisResources)
+    extensions: database.extensions ?? []
+let databaseResources = lists.map(databases, databaseResource)
 
-fn passwordResource(database: Database) -> Map<String, Any> = node:
+fn passwordResource(database: databaseConfig.Database) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
