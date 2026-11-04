@@ -134,8 +134,6 @@ export let podSecurityContext =
 export let containerSecurityContext =
   allowPrivilegeEscalation: false
   capabilities:
-    add:
-      - "NET_BIND_SERVICE"
     drop:
       - "ALL"
   readOnlyRootFilesystem: true

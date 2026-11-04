@@ -1,8 +1,8 @@
 {
   "version": 4,
   "toolchain": {
-    "mcl": "v0.3.29-0.20261104054527-13420a086d0a",
-    "revision": "13420a086d0a742ec3c5dd90f4fe3ff6ce2b935e",
+    "mcl": "v0.3.29-0.20261104073854-a24ee906b5df",
+    "revision": "a24ee906b5dfc8c9ee67a6935973618814adf428",
     "modified": "false",
     "go": "go1.27.3",
     "helm": "v4.3.1",
