@@ -26,7 +26,7 @@ fn deploymentPiccaOutboxWorker(namespace: String) -> Map<String, Any> = node:
         containers:
           -
             env: workerCommon.environmentWithScylla("picca-outbox-worker")
-            envFrom: workerCommon.envFromWithScylla
+            envFrom: workerCommon.envFrom
             image: "ghcr.io/walnuts1018/picca/outbox-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -47,8 +47,6 @@ fn deploymentPiccaOutboxWorker(namespace: String) -> Map<String, Any> = node:
             volumeMounts:
               - workerCommon.tmpVolumeMount
               - workerCommon.stsTokenVolumeMount
-              - workerCommon.scyllaCaVolumeMount
-              - workerCommon.scyllaClientCertVolumeMount
               -
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
@@ -59,8 +57,6 @@ fn deploymentPiccaOutboxWorker(namespace: String) -> Map<String, Any> = node:
         volumes:
           - workerCommon.tmpVolume
           - workerCommon.stsTokenVolume
-          - workerCommon.scyllaCaVolume
-          - workerCommon.scyllaClientCertVolume
           -
             configMap:
               items:
@@ -94,7 +90,7 @@ fn deploymentPiccaProcessingReconciler(namespace: String) -> Map<String, Any> = 
         containers:
           -
             env: workerCommon.environmentWithScylla("picca-processing-reconciler")
-            envFrom: workerCommon.envFromWithScylla
+            envFrom: workerCommon.envFrom
             image: "ghcr.io/walnuts1018/picca/processing-reconciler:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -115,8 +111,6 @@ fn deploymentPiccaProcessingReconciler(namespace: String) -> Map<String, Any> = 
             volumeMounts:
               - workerCommon.tmpVolumeMount
               - workerCommon.stsTokenVolumeMount
-              - workerCommon.scyllaCaVolumeMount
-              - workerCommon.scyllaClientCertVolumeMount
               -
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
@@ -127,8 +121,6 @@ fn deploymentPiccaProcessingReconciler(namespace: String) -> Map<String, Any> = 
         volumes:
           - workerCommon.tmpVolume
           - workerCommon.stsTokenVolume
-          - workerCommon.scyllaCaVolume
-          - workerCommon.scyllaClientCertVolume
           -
             configMap:
               items:
@@ -162,7 +154,7 @@ fn deploymentPiccaStorageReconciler(namespace: String) -> Map<String, Any> = nod
         containers:
           -
             env: workerCommon.environmentWithScylla("picca-storage-reconciler")
-            envFrom: workerCommon.envFromWithScylla
+            envFrom: workerCommon.envFrom
             image: "ghcr.io/walnuts1018/picca/storage-reconciler:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -183,8 +175,6 @@ fn deploymentPiccaStorageReconciler(namespace: String) -> Map<String, Any> = nod
             volumeMounts:
               - workerCommon.tmpVolumeMount
               - workerCommon.stsTokenVolumeMount
-              - workerCommon.scyllaCaVolumeMount
-              - workerCommon.scyllaClientCertVolumeMount
               -
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
@@ -195,8 +185,6 @@ fn deploymentPiccaStorageReconciler(namespace: String) -> Map<String, Any> = nod
         volumes:
           - workerCommon.tmpVolume
           - workerCommon.stsTokenVolume
-          - workerCommon.scyllaCaVolume
-          - workerCommon.scyllaClientCertVolume
           -
             configMap:
               items:

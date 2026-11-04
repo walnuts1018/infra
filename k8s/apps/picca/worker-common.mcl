@@ -77,35 +77,24 @@ let scyllaEnvironment: List<Map<String, String>> =
   - name: "PLAN_CONFIG_FILE"
     value: "/etc/picca/plans/plans.yaml"
 
-let postgresSecretReference: List<Map<String, Any>> =
+export let envFrom: List<Map<String, Any>> =
   - secretRef:
       name: names.piccaPostgresSecretName
-
-let otherSecretReferences: List<Map<String, Any>> =
   - secretRef:
       name: names.piccaValkeySecretName
   - secretRef:
       name: names.piccaRabbitmqSecretName
   - secretRef:
       name: names.piccaOidcSecretName
-  - secretRef:
-      name: names.piccaGraphqlSecretName
 
 let scyllaSecretReference: List<Map<String, Any>> =
   - secretRef:
       name: names.piccaScyllaSecretName
 
-export let envFrom = lists.concat(
-  postgresSecretReference,
-  otherSecretReferences,
+export let envFromWithScylla = lists.concat(
+  envFrom,
+  scyllaSecretReference,
 )
-
-let envFromGroups: List<List<Map<String, Any>>> =
-  - postgresSecretReference
-  - scyllaSecretReference
-  - otherSecretReferences
-
-export let envFromWithScylla = lists.flatten(envFromGroups)
 
 fn serviceEnvironment(serviceName: String) -> List<Map<String, String>> =
   - name: "OTEL_SERVICE_NAME"

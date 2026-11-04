@@ -26,7 +26,7 @@ fn deploymentPiccaDownloadWorker(namespace: String) -> Map<String, Any> = node:
         containers:
           -
             env: workerCommon.environmentWithScylla("picca-download-worker")
-            envFrom: workerCommon.envFromWithScylla
+            envFrom: workerCommon.envFrom
             image: "ghcr.io/walnuts1018/picca/download-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -47,8 +47,6 @@ fn deploymentPiccaDownloadWorker(namespace: String) -> Map<String, Any> = node:
             volumeMounts:
               - workerCommon.tmpVolumeMount
               - workerCommon.stsTokenVolumeMount
-              - workerCommon.scyllaCaVolumeMount
-              - workerCommon.scyllaClientCertVolumeMount
               -
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
@@ -59,8 +57,6 @@ fn deploymentPiccaDownloadWorker(namespace: String) -> Map<String, Any> = node:
         volumes:
           - workerCommon.tmpVolume
           - workerCommon.stsTokenVolume
-          - workerCommon.scyllaCaVolume
-          - workerCommon.scyllaClientCertVolume
           -
             configMap:
               items:
@@ -118,7 +114,7 @@ fn deploymentPiccaImageProcessingWorker(namespace: String) -> Map<String, Any> =
         containers:
           -
             env: workerCommon.environmentWithScylla("picca-image-processing-worker")
-            envFrom: workerCommon.envFromWithScylla
+            envFrom: workerCommon.envFrom
             image: "ghcr.io/walnuts1018/picca/image-processing-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -139,8 +135,6 @@ fn deploymentPiccaImageProcessingWorker(namespace: String) -> Map<String, Any> =
             volumeMounts:
               - workerCommon.tmpVolumeMount
               - workerCommon.stsTokenVolumeMount
-              - workerCommon.scyllaCaVolumeMount
-              - workerCommon.scyllaClientCertVolumeMount
               -
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
@@ -151,8 +145,6 @@ fn deploymentPiccaImageProcessingWorker(namespace: String) -> Map<String, Any> =
         volumes:
           - workerCommon.tmpVolume
           - workerCommon.stsTokenVolume
-          - workerCommon.scyllaCaVolume
-          - workerCommon.scyllaClientCertVolume
           -
             configMap:
               items:
@@ -210,7 +202,7 @@ fn deploymentPiccaVideoProcessingWorker(namespace: String) -> Map<String, Any> =
         containers:
           -
             env: workerCommon.environmentWithScylla("picca-video-processing-worker")
-            envFrom: workerCommon.envFromWithScylla
+            envFrom: workerCommon.envFrom
             image: "ghcr.io/walnuts1018/picca/video-processing-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -231,8 +223,6 @@ fn deploymentPiccaVideoProcessingWorker(namespace: String) -> Map<String, Any> =
             volumeMounts:
               - workerCommon.tmpVolumeMount
               - workerCommon.stsTokenVolumeMount
-              - workerCommon.scyllaCaVolumeMount
-              - workerCommon.scyllaClientCertVolumeMount
               -
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
@@ -243,8 +233,6 @@ fn deploymentPiccaVideoProcessingWorker(namespace: String) -> Map<String, Any> =
         volumes:
           - workerCommon.tmpVolume
           - workerCommon.stsTokenVolume
-          - workerCommon.scyllaCaVolume
-          - workerCommon.scyllaClientCertVolume
           -
             configMap:
               items:
@@ -302,7 +290,7 @@ fn deploymentPiccaVideoTranscodeWorker(namespace: String) -> Map<String, Any> = 
         containers:
           -
             env: workerCommon.environmentWithScylla("picca-video-transcode-worker")
-            envFrom: workerCommon.envFromWithScylla
+            envFrom: workerCommon.envFrom
             image: "ghcr.io/walnuts1018/picca/video-transcode-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -323,8 +311,6 @@ fn deploymentPiccaVideoTranscodeWorker(namespace: String) -> Map<String, Any> = 
             volumeMounts:
               - workerCommon.tmpVolumeMount
               - workerCommon.stsTokenVolumeMount
-              - workerCommon.scyllaCaVolumeMount
-              - workerCommon.scyllaClientCertVolumeMount
               -
                 mountPath: "/etc/picca/plans"
                 name: "picca-plans"
@@ -335,8 +321,6 @@ fn deploymentPiccaVideoTranscodeWorker(namespace: String) -> Map<String, Any> = 
         volumes:
           - workerCommon.tmpVolume
           - workerCommon.stsTokenVolume
-          - workerCommon.scyllaCaVolume
-          - workerCommon.scyllaClientCertVolume
           -
             configMap:
               items:
