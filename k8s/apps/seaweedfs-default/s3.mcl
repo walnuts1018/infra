@@ -87,353 +87,129 @@ fn bucket(config: BucketConfig) -> Map<String, Any> = node:
 
 export let buckets = lists.map(bucketConfigs, fn(config) => bucket(config))
 
-export let identities =
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Identity"
-    metadata:
-      name: "mac-hatena"
-      namespace: "seaweedfs"
-    spec:
-      name: "mac_hatena"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Identity"
-    metadata:
-      name: "maps-read"
-      namespace: "seaweedfs"
-    spec:
-      name: "maps_read"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Identity"
-    metadata:
-      name: "misskey"
-      namespace: "seaweedfs"
-    spec:
-      name: "misskey"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Identity"
-    metadata:
-      name: "oekaki-dengon-game"
-      namespace: "seaweedfs"
-    spec:
-      name: "oekaki_dengon_game"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Identity"
-    metadata:
-      name: "stalwart"
-      namespace: "seaweedfs"
-    spec:
-      name: "stalwart"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Identity"
-    metadata:
-      name: "visual-regression-tracker"
-      namespace: "seaweedfs"
-    spec:
-      name: "visual_regression_tracker"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
+type S3ClientConfig =
+  name: String
+  identityName: String
+  actions: List<String>
+  resources: List<String>
+  secretName: String
+  secretNamespace: String
+  accessKeyField: String
+  secretKeyField: String
 
-export let policies =
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Policy"
-    metadata:
-      name: "mac-hatena-access-key"
-      namespace: "seaweedfs"
-    spec:
-      name: "mac-hatena-access-key"
-      policyDocument: json.encode(policyValue(["s3:*"], ["*"]))
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Policy"
-    metadata:
-      name: "maps-read-access-key"
-      namespace: "seaweedfs"
-    spec:
-      name: "maps-read-access-key"
-      policyDocument: json.encode(policyValue(["s3:Get*"], ["arn:aws:s3:::maps", "arn:aws:s3:::maps/*"]))
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Policy"
-    metadata:
-      name: "misskey-access-key"
-      namespace: "seaweedfs"
-    spec:
-      name: "misskey-access-key"
-      policyDocument: json.encode(policyValue(["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"], ["arn:aws:s3:::misskey", "arn:aws:s3:::misskey/*"]))
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Policy"
-    metadata:
-      name: "oekaki-dengon-game-access-key"
-      namespace: "seaweedfs"
-    spec:
-      name: "oekaki-dengon-game-access-key"
-      policyDocument: json.encode(policyValue(["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"], ["arn:aws:s3:::oekaki-dengon-game", "arn:aws:s3:::oekaki-dengon-game/*"]))
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Policy"
-    metadata:
-      name: "stalwart-access-key"
-      namespace: "seaweedfs"
-    spec:
-      name: "stalwart-access-key"
-      policyDocument: json.encode(policyValue(["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"], ["arn:aws:s3:::stalwart", "arn:aws:s3:::stalwart/*"]))
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Policy"
-    metadata:
-      name: "visual-regression-tracker-access-key"
-      namespace: "seaweedfs"
-    spec:
-      name: "visual-regression-tracker-access-key"
-      policyDocument: json.encode(policyValue(["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"], ["arn:aws:s3:::visual-regression-tracker", "arn:aws:s3:::visual-regression-tracker/*"]))
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
+fn policyValue(actions: List<String>, resources: List<String>) -> Map<String, Any> = {"Statement": [{"Action": actions, "Effect": "Allow", "Resource": resources}], "Version": "2012-10-17"}
 
-export let bindings =
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3PolicyBinding"
-    metadata:
-      name: "mac-hatena"
-      namespace: "seaweedfs"
-    spec:
-      policyRef:
-        name: "mac-hatena-access-key"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      subjects:
-        -
-          kind: "S3Identity"
-          name: "mac-hatena"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3PolicyBinding"
-    metadata:
-      name: "maps-read"
-      namespace: "seaweedfs"
-    spec:
-      policyRef:
-        name: "maps-read-access-key"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      subjects:
-        -
-          kind: "S3Identity"
-          name: "maps-read"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3PolicyBinding"
-    metadata:
-      name: "misskey"
-      namespace: "seaweedfs"
-    spec:
-      policyRef:
-        name: "misskey-access-key"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      subjects:
-        -
-          kind: "S3Identity"
-          name: "misskey"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3PolicyBinding"
-    metadata:
-      name: "oekaki-dengon-game"
-      namespace: "seaweedfs"
-    spec:
-      policyRef:
-        name: "oekaki-dengon-game-access-key"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      subjects:
-        -
-          kind: "S3Identity"
-          name: "oekaki-dengon-game"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3PolicyBinding"
-    metadata:
-      name: "stalwart"
-      namespace: "seaweedfs"
-    spec:
-      policyRef:
-        name: "stalwart-access-key"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      subjects:
-        -
-          kind: "S3Identity"
-          name: "stalwart"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3PolicyBinding"
-    metadata:
-      name: "visual-regression-tracker"
-      namespace: "seaweedfs"
-    spec:
-      policyRef:
-        name: "visual-regression-tracker-access-key"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      subjects:
-        -
-          kind: "S3Identity"
-          name: "visual-regression-tracker"
+let s3ClientConfigs: List<S3ClientConfig> =
+  - name: "mac-hatena"
+    identityName: "mac_hatena"
+    actions: ["s3:*"]
+    resources: ["*"]
+    secretName: "seaweedfs-default-mac-hatena-credentials"
+    secretNamespace: "seaweedfs"
+    accessKeyField: "accesskey"
+    secretKeyField: "secretkey"
+  - name: "maps-read"
+    identityName: "maps_read"
+    actions: ["s3:Get*"]
+    resources: ["arn:aws:s3:::maps", "arn:aws:s3:::maps/*"]
+    secretName: "maps-s3-credentials"
+    secretNamespace: "maps"
+    accessKeyField: "AWS_ACCESS_KEY_ID"
+    secretKeyField: "AWS_SECRET_ACCESS_KEY"
+  - name: "misskey"
+    identityName: "misskey"
+    actions: ["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"]
+    resources: ["arn:aws:s3:::misskey", "arn:aws:s3:::misskey/*"]
+    secretName: "seaweedfs-default-misskey-credentials"
+    secretNamespace: "seaweedfs"
+    accessKeyField: "accesskey"
+    secretKeyField: "secretkey"
+  - name: "oekaki-dengon-game"
+    identityName: "oekaki_dengon_game"
+    actions: ["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"]
+    resources: ["arn:aws:s3:::oekaki-dengon-game", "arn:aws:s3:::oekaki-dengon-game/*"]
+    secretName: "oekaki-dengon-game-s3-credentials"
+    secretNamespace: "oekaki-dengon-game"
+    accessKeyField: "minio-access-key"
+    secretKeyField: "minio-secret-key"
+  - name: "stalwart"
+    identityName: "stalwart"
+    actions: ["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"]
+    resources: ["arn:aws:s3:::stalwart", "arn:aws:s3:::stalwart/*"]
+    secretName: "stalwart-s3-credentials"
+    secretNamespace: "stalwart"
+    accessKeyField: "s3_access_key"
+    secretKeyField: "s3_secret_access_key"
+  - name: "visual-regression-tracker"
+    identityName: "visual_regression_tracker"
+    actions: ["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"]
+    resources: ["arn:aws:s3:::visual-regression-tracker", "arn:aws:s3:::visual-regression-tracker/*"]
+    secretName: "visual-regression-tracker-s3-credentials"
+    secretNamespace: "visual-regression-tracker"
+    accessKeyField: "AWS_ACCESS_KEY_ID"
+    secretKeyField: "AWS_SECRET_ACCESS_KEY"
 
-export let credentials =
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Credentials"
-    metadata:
-      name: "mac-hatena"
-      namespace: "seaweedfs"
-    spec:
-      identityRef:
-        name: "mac-hatena"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      secretRef:
-        accessKeyField: "accesskey"
-        name: "seaweedfs-default-mac-hatena-credentials"
-        namespace: "seaweedfs"
-        secretKeyField: "secretkey"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Credentials"
-    metadata:
-      name: "maps-read"
-      namespace: "seaweedfs"
-    spec:
-      identityRef:
-        name: "maps-read"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      secretRef:
-        accessKeyField: "AWS_ACCESS_KEY_ID"
-        name: "maps-s3-credentials"
-        namespace: "maps"
-        secretKeyField: "AWS_SECRET_ACCESS_KEY"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Credentials"
-    metadata:
-      name: "misskey"
-      namespace: "seaweedfs"
-    spec:
-      identityRef:
-        name: "misskey"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      secretRef:
-        accessKeyField: "accesskey"
-        name: "seaweedfs-default-misskey-credentials"
-        namespace: "seaweedfs"
-        secretKeyField: "secretkey"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Credentials"
-    metadata:
-      name: "oekaki-dengon-game"
-      namespace: "seaweedfs"
-    spec:
-      identityRef:
-        name: "oekaki-dengon-game"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      secretRef:
-        accessKeyField: "minio-access-key"
-        name: "oekaki-dengon-game-s3-credentials"
-        namespace: "oekaki-dengon-game"
-        secretKeyField: "minio-secret-key"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Credentials"
-    metadata:
-      name: "stalwart"
-      namespace: "seaweedfs"
-    spec:
-      identityRef:
-        name: "stalwart"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      secretRef:
-        accessKeyField: "s3_access_key"
-        name: "stalwart-s3-credentials"
-        namespace: "stalwart"
-        secretKeyField: "s3_secret_access_key"
-  -
-    apiVersion: "seaweed.seaweedfs.com/v1"
-    kind: "S3Credentials"
-    metadata:
-      name: "visual-regression-tracker"
-      namespace: "seaweedfs"
-    spec:
-      identityRef:
-        name: "visual-regression-tracker"
-      reclaimPolicy: "Retain"
-      seaweedRef:
-        name: "seaweedfs-default"
-      secretRef:
-        accessKeyField: "AWS_ACCESS_KEY_ID"
-        name: "visual-regression-tracker-s3-credentials"
-        namespace: "visual-regression-tracker"
-        secretKeyField: "AWS_SECRET_ACCESS_KEY"
+fn identity(config: S3ClientConfig) -> Map<String, Any> = node:
+  apiVersion: "seaweed.seaweedfs.com/v1"
+  kind: "S3Identity"
+  metadata:
+    name: config.name
+    namespace: "seaweedfs"
+  spec:
+    name: config.identityName
+    reclaimPolicy: "Retain"
+    seaweedRef:
+      name: "seaweedfs-default"
 
-fn policyValue(actions: List<String>, resources: List<String>) -> Map<String, Any> = node:
-  Statement:
-    - Action: actions
-      Effect: "Allow"
-      Resource: resources
-  Version: "2012-10-17"
+fn policy(config: S3ClientConfig) -> Map<String, Any> = node:
+  apiVersion: "seaweed.seaweedfs.com/v1"
+  kind: "S3Policy"
+  metadata:
+    name: config.name + "-access-key"
+    namespace: "seaweedfs"
+  spec:
+    name: config.name + "-access-key"
+    policyDocument: json.encode(policyValue(config.actions, config.resources))
+    reclaimPolicy: "Retain"
+    seaweedRef:
+      name: "seaweedfs-default"
+
+fn binding(config: S3ClientConfig) -> Map<String, Any> = node:
+  apiVersion: "seaweed.seaweedfs.com/v1"
+  kind: "S3PolicyBinding"
+  metadata:
+    name: config.name
+    namespace: "seaweedfs"
+  spec:
+    policyRef:
+      name: config.name + "-access-key"
+    reclaimPolicy: "Retain"
+    seaweedRef:
+      name: "seaweedfs-default"
+    subjects:
+      -
+        kind: "S3Identity"
+        name: config.name
+
+fn credentialsResource(config: S3ClientConfig) -> Map<String, Any> = node:
+  apiVersion: "seaweed.seaweedfs.com/v1"
+  kind: "S3Credentials"
+  metadata:
+    name: config.name
+    namespace: "seaweedfs"
+  spec:
+    identityRef:
+      name: config.name
+    reclaimPolicy: "Retain"
+    seaweedRef:
+      name: "seaweedfs-default"
+    secretRef:
+      accessKeyField: config.accessKeyField
+      name: config.secretName
+      namespace: config.secretNamespace
+      secretKeyField: config.secretKeyField
+
+export let identities = lists.map(s3ClientConfigs, fn(config) => identity(config))
+export let policies = lists.map(s3ClientConfigs, fn(config) => policy(config))
+export let bindings = lists.map(s3ClientConfigs, fn(config) => binding(config))
+export let credentials = lists.map(s3ClientConfigs, fn(config) => credentialsResource(config))
