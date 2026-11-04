@@ -97,7 +97,24 @@ type S3ClientConfig =
   accessKeyField: String
   secretKeyField: String
 
-fn policyValue(actions: List<String>, resources: List<String>) -> Map<String, Any> = {"Statement": [{"Action": actions, "Effect": "Allow", "Resource": resources}], "Version": "2012-10-17"}
+let readWriteActions =
+  - "s3:Get*"
+  - "s3:Put*"
+  - "s3:Delete*"
+  - "s3:AbortMultipartUpload"
+  - "s3:List*"
+  - "s3:*Tagging"
+
+fn bucketResources(bucketName: String) -> List<String> =
+  - "arn:aws:s3:::" + bucketName
+  - "arn:aws:s3:::" + bucketName + "/*"
+
+fn policyValue(actions: List<String>, resources: List<String>) -> Map<String, Any> =
+  "Statement":
+    - Action: actions
+      Effect: "Allow"
+      Resource: resources
+  "Version": "2012-10-17"
 
 let s3ClientConfigs: List<S3ClientConfig> =
   - name: "mac-hatena"
@@ -118,32 +135,32 @@ let s3ClientConfigs: List<S3ClientConfig> =
     secretKeyField: "AWS_SECRET_ACCESS_KEY"
   - name: "misskey"
     identityName: "misskey"
-    actions: ["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"]
-    resources: ["arn:aws:s3:::misskey", "arn:aws:s3:::misskey/*"]
+    actions: readWriteActions
+    resources: bucketResources("misskey")
     secretName: "seaweedfs-default-misskey-credentials"
     secretNamespace: "seaweedfs"
     accessKeyField: "accesskey"
     secretKeyField: "secretkey"
   - name: "oekaki-dengon-game"
     identityName: "oekaki_dengon_game"
-    actions: ["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"]
-    resources: ["arn:aws:s3:::oekaki-dengon-game", "arn:aws:s3:::oekaki-dengon-game/*"]
+    actions: readWriteActions
+    resources: bucketResources("oekaki-dengon-game")
     secretName: "oekaki-dengon-game-s3-credentials"
     secretNamespace: "oekaki-dengon-game"
     accessKeyField: "minio-access-key"
     secretKeyField: "minio-secret-key"
   - name: "stalwart"
     identityName: "stalwart"
-    actions: ["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"]
-    resources: ["arn:aws:s3:::stalwart", "arn:aws:s3:::stalwart/*"]
+    actions: readWriteActions
+    resources: bucketResources("stalwart")
     secretName: "stalwart-s3-credentials"
     secretNamespace: "stalwart"
     accessKeyField: "s3_access_key"
     secretKeyField: "s3_secret_access_key"
   - name: "visual-regression-tracker"
     identityName: "visual_regression_tracker"
-    actions: ["s3:Get*", "s3:Put*", "s3:Delete*", "s3:AbortMultipartUpload", "s3:List*", "s3:*Tagging"]
-    resources: ["arn:aws:s3:::visual-regression-tracker", "arn:aws:s3:::visual-regression-tracker/*"]
+    actions: readWriteActions
+    resources: bucketResources("visual-regression-tracker")
     secretName: "visual-regression-tracker-s3-credentials"
     secretNamespace: "visual-regression-tracker"
     accessKeyField: "AWS_ACCESS_KEY_ID"
