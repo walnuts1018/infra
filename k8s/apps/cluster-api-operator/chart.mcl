@@ -1,4 +1,12 @@
 # renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api-operator registryUrl=https://github.com/kubernetes-sigs/cluster-api-operator extractVersion=^v(?<version>.*)$
 export let chartVersion = "0.26.0"
 export let chartArchive = "https://github.com/kubernetes-sigs/cluster-api-operator/releases/download/v" + chartVersion + "/cluster-api-operator-" + chartVersion + ".tgz"
-export let namespace = "cluster-api-operator"
+
+# renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api
+export let clusterAPIVersion = "v1.14.2"
+
+# renovate: datasource=github-releases depName=walnuts1018/cluster-api-provider-tart
+export let tartVersion = "v0.3.16"
+
+# renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api-addon-provider-helm
+export let addonProviderVersion = "v0.6.4"

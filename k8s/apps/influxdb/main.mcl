@@ -4,7 +4,8 @@ import "./http-route.mcl" as httpRoute
 import "../../cluster.mcl" as clusterConfig
 
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-emit each app.chartResources(cluster)
-emit externalSecret.resource
-emit httpRoute.resource
+emit each app.chartResources(cluster, namespace)
+emit externalSecret.resource(namespace)
+emit httpRoute.resource(namespace)

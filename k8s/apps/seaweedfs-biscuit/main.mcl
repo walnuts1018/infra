@@ -5,11 +5,12 @@ import "./external-secrets.mcl" as externalSecrets
 import "./storage.mcl" as storage
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-emit compute.resource
-emit config.resource
-emit routes.resource
-emit externalSecrets.resource
-emit storage.service
-emit storage.metaPVC
-emit storage.volumePVC
+emit compute.resource(namespace)
+emit config.resource(namespace)
+emit routes.resource(namespace)
+emit externalSecrets.resource(namespace)
+emit storage.service(namespace)
+emit storage.metaPVC(namespace)
+emit storage.volumePVC(namespace)

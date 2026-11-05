@@ -1,5 +1,5 @@
 import "./external-secrets.mcl" as externalSecrets
-export let resources =
+export fn resources(namespace: String) -> List<Map<String, Any>> =
   -
     apiVersion: "seaweed.seaweedfs.com/v1"
     kind: "Seaweed"
@@ -8,7 +8,7 @@ export let resources =
         app: "seaweedfs-default"
         "app.kubernetes.io/name": "seaweedfs-default"
       name: "seaweedfs-default"
-      namespace: "seaweedfs"
+      namespace: namespace
     spec:
       filer:
         affinity:
@@ -180,7 +180,7 @@ export let resources =
     kind: "AdminScript"
     metadata:
       name: "system-storage-policy"
-      namespace: "seaweedfs"
+      namespace: namespace
     spec:
       clusterRef:
         name: "seaweedfs-default"
@@ -192,7 +192,7 @@ export let resources =
     kind: "Certificate"
     metadata:
       name: "seaweedfs-tikv-client"
-      namespace: "seaweedfs"
+      namespace: namespace
     spec:
       commonName: "SeaweedFS"
       duration: "8760h"
@@ -213,7 +213,7 @@ export let resources =
         "app.kubernetes.io/component": "volume"
         "app.kubernetes.io/name": "seaweedfs-default-volume-hdd"
       name: "seaweedfs-default-volume-hdd-peer"
-      namespace: "seaweedfs"
+      namespace: namespace
     spec:
       clusterIP: "None"
       ports:

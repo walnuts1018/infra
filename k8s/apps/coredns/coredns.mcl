@@ -1,11 +1,10 @@
 import "./configmap.mcl" as appConfigMap
 
-let namespace = "coredns"
 let labels =
   app: "coredns"
   "app.kubernetes.io/name": "coredns"
 
-export let deployment = node:
+export fn deployment(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
@@ -96,7 +95,7 @@ export let deployment = node:
                           - "coredns"
                   topologyKey: "kubernetes.io/hostname"
 
-export let service = node:
+export fn service(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
@@ -125,7 +124,7 @@ export let service = node:
     loadBalancerIP: "192.168.12.135"
     type: "LoadBalancer"
 
-export let scaledObject = node:
+export fn scaledObject(namespace: String) -> Map<String, Any> = node:
   apiVersion: "keda.sh/v1alpha1"
   kind: "ScaledObject"
   metadata:
@@ -147,7 +146,7 @@ export let scaledObject = node:
           query: "sum(rate(coredns_dns_requests_total[2m]))"
           threshold: "100"
 
-export let podDisruptionBudget = node:
+export fn podDisruptionBudget(namespace: String) -> Map<String, Any> = node:
   apiVersion: "policy/v1"
   kind: "PodDisruptionBudget"
   metadata:
@@ -159,7 +158,7 @@ export let podDisruptionBudget = node:
     selector:
       matchLabels: labels
 
-export let verticalPodAutoscaler = node:
+export fn verticalPodAutoscaler(namespace: String) -> Map<String, Any> = node:
   apiVersion: "autoscaling.k8s.io/v1"
   kind: "VerticalPodAutoscaler"
   metadata:
@@ -185,7 +184,7 @@ export let verticalPodAutoscaler = node:
             cpu: "100m"
             memory: "256Mi"
 
-export let dnsEndpoint = node:
+export fn dnsEndpoint(namespace: String) -> Map<String, Any> = node:
   apiVersion: "externaldns.k8s.io/v1alpha1"
   kind: "DNSEndpoint"
   metadata:

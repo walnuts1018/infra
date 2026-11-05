@@ -2,8 +2,11 @@ import "./external-secret.mcl" as externalSecret
 import "./http-route.mcl" as httpRoute
 import "./security-policy.mcl" as securityPolicy
 import "../../cluster.mcl" as clusterConfig
+import "./config.mcl" as appConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
+param settings: appConfig.Settings
 
-emit externalSecret.resource
-emit httpRoute.resource
-emit securityPolicy.resource
+emit externalSecret.resource(namespace)
+emit httpRoute.resource(namespace)
+emit securityPolicy.resource(namespace, settings)

@@ -1,9 +1,9 @@
-let scaledObject = node:
+fn scaledObject(namespace: String) -> Map<String, Any> = node:
   apiVersion: "keda.sh/v1alpha1"
   kind: "ScaledObject"
   metadata:
     name: "ipu"
-    namespace: "ipu"
+    namespace: namespace
   spec:
     minReplicaCount: 0
     maxReplicaCount: 3
@@ -16,4 +16,4 @@ let scaledObject = node:
           scalerAddress: "keda-add-ons-http-external-scaler.keda:9090"
           interceptorRoute: "ipu"
 
-export let resource = scaledObject
+export fn resource(namespace: String) -> Map<String, Any> = scaledObject(namespace)

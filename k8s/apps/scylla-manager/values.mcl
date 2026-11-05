@@ -1,0 +1,41 @@
+let emptyTolerations: List<Map<String, Any>> = []
+let serviceAccount: Map<String, Any> =
+  create: true
+  name: ""
+let serviceMonitor: Map<String, Bool> =
+  create: true
+
+export let baseValues: Map<String, Any> =
+  logLevel: "info"
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "20Mi"
+  serviceAccount: serviceAccount
+  scylla:
+    developerMode: true
+    datacenter: "iwakura"
+    racks:
+      - name: "iwakura-a"
+        members: 1
+        storage:
+          capacity: "5Gi"
+          storageClassName: "local-path"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: 1
+            memory: "1Gi"
+        placement:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                -
+                  matchExpressions:
+                    -
+                      key: "storage.walnuts.dev/slow"
+                      operator: "DoesNotExist"
+          tolerations: emptyTolerations
+  serviceMonitor: serviceMonitor

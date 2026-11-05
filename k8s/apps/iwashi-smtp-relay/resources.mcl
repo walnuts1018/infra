@@ -1,11 +1,19 @@
 import "std:manifest" as manifest
+import "std:list" as lists
 let externalSecret = manifest.load("./_configs/external-secret.yaml")
 let serviceAccount = manifest.load("./_configs/service-account.yaml")
 let networkPolicy = manifest.load("./_configs/networkpolicy.yaml")
 let ciliumNetworkPolicy = manifest.load("./_configs/ciliumnetworkpolicy.yaml")
 
-export let resources =
+let baseResources =
   - externalSecret[0]
   - serviceAccount[0]
   - networkPolicy[0]
   - ciliumNetworkPolicy[0]
+
+fn withNamespace(namespace: String, resource: Map<String, Any>) -> Map<String, Any> = resource with:
+  metadata:
+    namespace: namespace
+
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  lists.map(baseResources, fn(resource) => withNamespace(namespace, resource))

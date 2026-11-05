@@ -1,6 +1,29 @@
 import "std:manifest" as manifest
+import "std:list" as lists
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 let resources = manifest.load("./resources.yaml")
+let namespacedKinds: List<String> =
+  - "Certificate"
+  - "Deployment"
+  - "Issuer"
+  - "ObjectStore"
+  - "Role"
+  - "RoleBinding"
+  - "Secret"
+  - "Service"
+  - "ServiceAccount"
+fn withNamespace(resource: Map<String, Any>) -> Map<String, Any> = resource with:
+  metadata:
+    namespace: namespace
 
-emit each resources
+fn namespaceResource(resource: Map<String, Any>) -> Map<String, Any> =
+  if lists.contains(namespacedKinds, resource.kind):
+    withNamespace(resource)
+  else:
+    resource
+
+let resourcesInNamespace = lists.map(resources, namespaceResource)
+
+emit each resourcesInNamespace

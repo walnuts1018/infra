@@ -10,70 +10,76 @@ let tlsUsages =
 let clientUsages =
   - "client auth"
 
-let pdNames =
+fn serviceNames(name: String, namespace: String) -> List<String> =
+  - name
+  - name + "." + namespace
+  - name + "." + namespace + ".svc"
+  - name + "." + namespace + ".svc.cluster.local"
+
+fn pdNames(namespace: String) -> List<String> =
   - "tikv-cluster-pd"
-  - "tikv-cluster-pd.databases"
-  - "tikv-cluster-pd.databases.svc"
-  - "tikv-cluster-pd.databases.svc.cluster.local"
+  - "tikv-cluster-pd." + namespace
+  - "tikv-cluster-pd." + namespace + ".svc"
+  - "tikv-cluster-pd." + namespace + ".svc.cluster.local"
   - "tikv-cluster-pd-peer"
-  - "tikv-cluster-pd-peer.databases"
-  - "tikv-cluster-pd-peer.databases.svc"
-  - "tikv-cluster-pd-peer.databases.svc.cluster.local"
+  - "tikv-cluster-pd-peer." + namespace
+  - "tikv-cluster-pd-peer." + namespace + ".svc"
+  - "tikv-cluster-pd-peer." + namespace + ".svc.cluster.local"
   - "*.tikv-cluster-pd-peer"
-  - "*.tikv-cluster-pd-peer.databases"
-  - "*.tikv-cluster-pd-peer.databases.svc"
-  - "*.tikv-cluster-pd-peer.databases.svc.cluster.local"
+  - "*.tikv-cluster-pd-peer." + namespace
+  - "*.tikv-cluster-pd-peer." + namespace + ".svc"
+  - "*.tikv-cluster-pd-peer." + namespace + ".svc.cluster.local"
 
-let tikvNames =
+fn tikvNames(namespace: String) -> List<String> =
   - "tikv-cluster-tikv"
-  - "tikv-cluster-tikv.databases"
-  - "tikv-cluster-tikv.databases.svc"
-  - "tikv-cluster-tikv.databases.svc.cluster.local"
+  - "tikv-cluster-tikv." + namespace
+  - "tikv-cluster-tikv." + namespace + ".svc"
+  - "tikv-cluster-tikv." + namespace + ".svc.cluster.local"
   - "tikv-cluster-tikv-peer"
-  - "tikv-cluster-tikv-peer.databases"
-  - "tikv-cluster-tikv-peer.databases.svc"
-  - "tikv-cluster-tikv-peer.databases.svc.cluster.local"
+  - "tikv-cluster-tikv-peer." + namespace
+  - "tikv-cluster-tikv-peer." + namespace + ".svc"
+  - "tikv-cluster-tikv-peer." + namespace + ".svc.cluster.local"
   - "*.tikv-cluster-tikv-peer"
-  - "*.tikv-cluster-tikv-peer.databases"
-  - "*.tikv-cluster-tikv-peer.databases.svc"
-  - "*.tikv-cluster-tikv-peer.databases.svc.cluster.local"
+  - "*.tikv-cluster-tikv-peer." + namespace
+  - "*.tikv-cluster-tikv-peer." + namespace + ".svc"
+  - "*.tikv-cluster-tikv-peer." + namespace + ".svc.cluster.local"
 
-let pdCertificate =
+fn pdCertificate(namespace: String) -> Map<String, Any> =
   apiVersion: "cert-manager.io/v1"
   kind: "Certificate"
   metadata:
     name: "tikv-cluster-pd-cluster-secret"
-    namespace: "databases"
+    namespace: namespace
   spec:
     secretName: "tikv-cluster-pd-cluster-secret"
     duration: "8760h"
     renewBefore: "360h"
     commonName: "TiDB"
     usages: tlsUsages
-    dnsNames: pdNames
+    dnsNames: pdNames(namespace)
     issuerRef: issuer
 
-let tikvCertificate =
+fn tikvCertificate(namespace: String) -> Map<String, Any> =
   apiVersion: "cert-manager.io/v1"
   kind: "Certificate"
   metadata:
     name: "tikv-cluster-tikv-cluster-secret"
-    namespace: "databases"
+    namespace: namespace
   spec:
     secretName: "tikv-cluster-tikv-cluster-secret"
     duration: "8760h"
     renewBefore: "360h"
     commonName: "TiDB"
     usages: tlsUsages
-    dnsNames: tikvNames
+    dnsNames: tikvNames(namespace)
     issuerRef: issuer
 
-let clientCertificate =
+fn clientCertificate(namespace: String) -> Map<String, Any> =
   apiVersion: "cert-manager.io/v1"
   kind: "Certificate"
   metadata:
     name: "tikv-cluster-cluster-client-secret"
-    namespace: "databases"
+    namespace: namespace
   spec:
     secretName: "tikv-cluster-cluster-client-secret"
     duration: "8760h"
@@ -82,7 +88,7 @@ let clientCertificate =
     usages: clientUsages
     issuerRef: issuer
 
-export let resources =
-  - pdCertificate
-  - tikvCertificate
-  - clientCertificate
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - pdCertificate(namespace)
+  - tikvCertificate(namespace)
+  - clientCertificate(namespace)

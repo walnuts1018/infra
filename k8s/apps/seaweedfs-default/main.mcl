@@ -6,14 +6,15 @@ import "./s3.mcl" as s3
 import "./external-secrets.mcl" as externalSecrets
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-emit each core.resources
-emit each volume.resources
-emit each routes.resources
-emit s3Route.resource
-emit each s3.buckets
-emit each s3.identities
-emit each s3.policies
-emit each s3.bindings
-emit each s3.credentials
-emit each externalSecrets.resources
+emit each core.resources(namespace)
+emit each volume.resources(namespace)
+emit each routes.resources(namespace)
+emit s3Route.resource(namespace)
+emit each s3.buckets(namespace)
+emit each s3.identities(namespace)
+emit each s3.policies(namespace)
+emit each s3.bindings(namespace)
+emit each s3.credentials(namespace)
+emit each externalSecrets.resources(namespace)

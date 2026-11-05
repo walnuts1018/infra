@@ -35,7 +35,7 @@ let singleParameters: Map<String, String> =
   staleReplicaTimeout: "30"
   fromBackup: ""
 
-export let resources =
+export fn resources(namespace: String) -> List<Map<String, Any>> =
   - storageClass("longhorn-coder-workspace", localParameters, "Delete")
   - storageClass("longhorn-local", localParameters, "Retain")
   - storageClass("longhorn-local-temporary", localParameters, "Delete")
@@ -47,7 +47,7 @@ export let resources =
       kind: "RecurringJob"
       metadata:
         name: "snapshot"
-        namespace: "longhorn-system"
+        namespace: namespace
       spec:
         concurrency: 1
         cron: "30 16 * * ?"

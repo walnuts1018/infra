@@ -29,7 +29,7 @@ fn deploymentPiccaFrontend(namespace: String) -> Map<String, Any> = node:
             env:
               -
                 name: "PICCA_API_URL"
-                value: "http://picca-apiserver.picca.svc.cluster.local:8080"
+                value: "http://picca-apiserver." + namespace + ".svc.cluster.local:8080"
               -
                 name: "PICCA_GRAPHQL_ENDPOINT"
                 value: "https://picca.walnuts.dev/query"

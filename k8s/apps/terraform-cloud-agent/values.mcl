@@ -1,2 +1,1 @@
 export let name = "terraform-cloud-agent"
-export let namespace = "terraform-cloud-agent"

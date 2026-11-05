@@ -1,15 +1,14 @@
 import "./settings.mcl" as settings
-import "./profiles.mcl" as appProfiles
 import "./external-secret.mcl" as externalSecret
+import "./config.mcl" as appConfig
 
-let profile = appProfiles.profiles["standard"]
 
-export let resource = node:
+export fn resource(namespace: String, appSettings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "gateway.envoyproxy.io/v1alpha1"
   kind: "SecurityPolicy"
   metadata:
     name: settings.name
-    namespace: settings.namespace
+    namespace: namespace
   spec:
     targetRefs:
       - group: "gateway.networking.k8s.io"
@@ -47,4 +46,4 @@ export let resource = node:
                 - name: "my:zitadel:grants"
                   valueType: "StringArray"
                   values:
-                    - profile.authorizedGrant
+                    - appSettings.authorizedGrant

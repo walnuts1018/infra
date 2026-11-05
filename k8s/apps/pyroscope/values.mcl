@@ -1,4 +1,4 @@
-export let values: Map<String, Any> =
+export let baseValues: Map<String, Any> =
   pyroscope:
     replicaCount: 1
     disableSelfProfile: true

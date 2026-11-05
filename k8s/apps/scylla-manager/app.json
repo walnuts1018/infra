@@ -2,6 +2,10 @@
   "name": "scylla-manager",
   "namespace": "scylla-manager",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "features": [
+        "monitoring"
+      ]
+    }
   }
 }

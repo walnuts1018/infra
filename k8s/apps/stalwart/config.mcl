@@ -1,0 +1,7 @@
+export type Settings =
+  s3CredentialName: String
+  s3AccessKeyField: String
+  s3SecretKeyField: String
+  s3Bucket: String
+  s3Endpoint: String
+  loadBalancerService: String

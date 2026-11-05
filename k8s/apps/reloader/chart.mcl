@@ -12,5 +12,3 @@ export let chart: ChartReference =
 export let chartArchive = chart.repoURL + "/" + chart.chart + "-" + chart.targetRevision + ".tgz"
 export let apiVersions: List<String> =
   - "rbac.authorization.k8s.io/v1"
-
-export let namespace = "reloader"

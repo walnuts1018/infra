@@ -1,5 +1,4 @@
 import "std:crypto" as crypto
-import "./app.mcl" as app
 import "./configmaps.mcl" as configMaps
 import "./external-secret.mcl" as migrationsSecret
 
@@ -85,15 +84,15 @@ let jobSpec =
 
 let jobIdentity =
   spec: jobSpec
-  setup: configMaps.setupConfigMap
-  migrations: migrationsSecret.resource
+  setup: configMaps.setupConfigMapName
+  migrations: migrationsSecret.name
 let jobName = "scylla-cluster-setup-" + crypto.sha256(jobIdentity, 10)
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "batch/v1"
   kind: "Job"
   metadata:
     name: jobName
-    namespace: app.namespace
+    namespace: namespace
     labels: labels
   spec: jobSpec

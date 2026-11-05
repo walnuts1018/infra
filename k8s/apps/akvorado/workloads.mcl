@@ -5,7 +5,6 @@ import text "./_configs/inlet.yaml" as inletConfigText
 import text "./_configs/outlet.yaml" as outletConfigText
 import text "./_configs/console.yaml" as consoleConfigText
 
-let namespace = "akvorado"
 let appName = "akvorado"
 let appLabels =
   app: appName
@@ -18,7 +17,7 @@ fn componentLabels(component: String) -> Map<String, String> = node:
   "app.kubernetes.io/name": appName
   "app.kubernetes.io/component": component
 
-fn deployment(name: String, component: String, podSpec: Map<String, Any>) -> Map<String, Any> = node:
+fn deployment(namespace: String, name: String, component: String, podSpec: Map<String, Any>) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
@@ -36,7 +35,7 @@ fn deployment(name: String, component: String, podSpec: Map<String, Any>) -> Map
         labels: componentLabels(component)
       spec: podSpec
 
-fn service(name: String, component: String, ports: List<Map<String, Any>>) -> Map<String, Any> = node:
+fn service(namespace: String, name: String, component: String, ports: List<Map<String, Any>>) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
@@ -52,18 +51,19 @@ fn service(name: String, component: String, ports: List<Map<String, Any>>) -> Ma
 type MonitoredComponent =
   name: String
   component: String
+  namespace: String
 
 fn serviceMonitor(target: MonitoredComponent) -> Map<String, Any> = node:
   apiVersion: "monitoring.coreos.com/v1"
   kind: "ServiceMonitor"
   metadata:
     name: target.name
-    namespace: namespace
+    namespace: target.namespace
     labels: componentLabels(target.component)
   spec:
     namespaceSelector:
       matchNames:
-        - namespace
+        - target.namespace
     selector:
       matchLabels:
         "app.kubernetes.io/name": appName
@@ -232,7 +232,7 @@ let configMapData =
   "outlet.yaml": outletConfigText
   "console.yaml": consoleConfigText
 
-export let configMap = node:
+export fn configMap(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   immutable: true
@@ -245,15 +245,6 @@ export let configMap = node:
   data: configMapData
 
 
-let componentNames =
-  - name: "akvorado-console"
-    component: "console"
-  - name: "akvorado-inlet"
-    component: "inlet"
-  - name: "akvorado-outlet"
-    component: "outlet"
-  - name: "akvorado-orchestrator"
-    component: "orchestrator"
 let httpServicePorts =
   - name: "http"
     port: 8080
@@ -272,12 +263,27 @@ let inletServicePorts =
     port: 6343
     targetPort: 6343
     protocol: "UDP"
-export let consoleDeployment = deployment("akvorado-console", "console", consolePodSpec)
-export let inletDeployment = deployment("akvorado-inlet", "inlet", inletPodSpec)
-export let outletDeployment = deployment("akvorado-outlet", "outlet", outletPodSpec)
-export let orchestratorDeployment = deployment("akvorado-orchestrator", "orchestrator", orchestratorPodSpec)
-export let consoleService = service("akvorado-console", "console", httpServicePorts)
-export let inletService = service("akvorado-inlet", "inlet", inletServicePorts)
-export let outletService = service("akvorado-outlet", "outlet", httpServicePorts)
-export let orchestratorService = service("akvorado-orchestrator", "orchestrator", httpServicePorts)
-export let componentServiceMonitors = lists.map(componentNames, serviceMonitor)
+export fn consoleDeployment(namespace: String) -> Map<String, Any> = deployment(namespace, "akvorado-console", "console", consolePodSpec)
+export fn inletDeployment(namespace: String) -> Map<String, Any> = deployment(namespace, "akvorado-inlet", "inlet", inletPodSpec)
+export fn outletDeployment(namespace: String) -> Map<String, Any> = deployment(namespace, "akvorado-outlet", "outlet", outletPodSpec)
+export fn orchestratorDeployment(namespace: String) -> Map<String, Any> = deployment(namespace, "akvorado-orchestrator", "orchestrator", orchestratorPodSpec)
+export fn consoleService(namespace: String) -> Map<String, Any> = service(namespace, "akvorado-console", "console", httpServicePorts)
+export fn inletService(namespace: String) -> Map<String, Any> = service(namespace, "akvorado-inlet", "inlet", inletServicePorts)
+export fn outletService(namespace: String) -> Map<String, Any> = service(namespace, "akvorado-outlet", "outlet", httpServicePorts)
+export fn orchestratorService(namespace: String) -> Map<String, Any> = service(namespace, "akvorado-orchestrator", "orchestrator", httpServicePorts)
+fn monitoredComponents(namespace: String) -> List<MonitoredComponent> =
+  - name: "akvorado-console"
+    component: "console"
+    namespace: namespace
+  - name: "akvorado-inlet"
+    component: "inlet"
+    namespace: namespace
+  - name: "akvorado-outlet"
+    component: "outlet"
+    namespace: namespace
+  - name: "akvorado-orchestrator"
+    component: "orchestrator"
+    namespace: namespace
+
+export fn componentServiceMonitors(namespace: String) -> List<Map<String, Any>> =
+  lists.map(monitoredComponents(namespace), serviceMonitor)

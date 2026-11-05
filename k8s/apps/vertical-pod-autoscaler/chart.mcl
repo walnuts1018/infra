@@ -10,7 +10,4 @@ export let chart: ChartReference =
   chart: "vertical-pod-autoscaler"
   targetRevision: chartVersion
 export let chartArchive = "https://github.com/kubernetes/autoscaler/releases/download/vertical-pod-autoscaler-chart-" + chartVersion + "/" + chart.chart + "-" + chartVersion + ".tgz"
-export let apiVersions: List<String> =
-  - "monitoring.coreos.com/v1"
-
-export let namespace = "kube-system"
+export let apiVersions: List<String> = []

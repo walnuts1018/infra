@@ -1,4 +1,3 @@
-let namespace = "akvorado"
 let syncOptions = "SkipDryRunOnMissingResource=true"
 
 let avoidSlowNodeAffinity =
@@ -10,7 +9,7 @@ let avoidSlowNodeAffinity =
             - key: "storage.walnuts.dev/slow"
               operator: "DoesNotExist"
 
-export let keeperCluster = node:
+export fn keeperCluster(namespace: String) -> Map<String, Any> = node:
   apiVersion: "clickhouse.com/v1alpha1"
   kind: "KeeperCluster"
   metadata:
@@ -37,7 +36,7 @@ export let keeperCluster = node:
     podTemplate:
       affinity: avoidSlowNodeAffinity
 
-export let clickHouseCluster = node:
+export fn clickHouseCluster(namespace: String) -> Map<String, Any> = node:
   apiVersion: "clickhouse.com/v1alpha1"
   kind: "ClickHouseCluster"
   metadata:
@@ -68,7 +67,7 @@ export let clickHouseCluster = node:
         limits:
           memory: "4Gi"
 
-export let kafka = node:
+export fn kafka(namespace: String) -> Map<String, Any> = node:
   apiVersion: "kafka.strimzi.io/v1"
   kind: "Kafka"
   metadata:
@@ -112,7 +111,7 @@ export let kafka = node:
             cpu: "500m"
             memory: "1Gi"
 
-export let kafkaNodePool = node:
+export fn kafkaNodePool(namespace: String) -> Map<String, Any> = node:
   apiVersion: "kafka.strimzi.io/v1"
   kind: "KafkaNodePool"
   metadata:
@@ -143,7 +142,7 @@ export let kafkaNodePool = node:
       pod:
         affinity: avoidSlowNodeAffinity
 
-export let kafkaTopic = node:
+export fn kafkaTopic(namespace: String) -> Map<String, Any> = node:
   apiVersion: "kafka.strimzi.io/v1"
   kind: "KafkaTopic"
   metadata:
@@ -162,7 +161,7 @@ export let kafkaTopic = node:
       "retention.ms": 604800000
       "segment.bytes": 1073741824
 
-export let valkeyCluster = node:
+export fn valkeyCluster(namespace: String) -> Map<String, Any> = node:
   apiVersion: "valkey.io/v1alpha1"
   kind: "ValkeyCluster"
   metadata:

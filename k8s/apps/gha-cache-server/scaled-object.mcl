@@ -1,9 +1,9 @@
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "keda.sh/v1alpha1"
   kind: "ScaledObject"
   metadata:
     name: "gha-cache-server"
-    namespace: "arc-systems"
+    namespace: namespace
     labels:
       app: "gha-cache-server"
       "app.kubernetes.io/name": "gha-cache-server"

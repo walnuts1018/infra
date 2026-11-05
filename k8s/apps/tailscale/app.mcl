@@ -1,2 +1,1 @@
 export let name = "tailscale"
-export let namespace = "network-exporter"

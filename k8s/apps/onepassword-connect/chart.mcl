@@ -1,4 +1,3 @@
 # renovate: datasource=github-releases depName=1Password/connect-helm-charts registryUrl=https://github.com/1Password/connect-helm-charts extractVersion=^connect\-(?<version>.*)$
 export let chartVersion = "2.3.0"
 export let chartArchive = "https://github.com/1Password/connect-helm-charts/releases/download/connect-" + chartVersion + "/connect-" + chartVersion + ".tgz"
-export let namespace = "onepassword"

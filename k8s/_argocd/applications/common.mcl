@@ -175,6 +175,8 @@ export fn clusterAppSet(cluster: String) -> Map<String, Any> = node:
             env:
               - name: "MCL_CLUSTER_NAME"
                 value: "{{ .name }}"
+              - name: "MCL_CLUSTER_INPUT"
+                value: "clusterAPI"
               - name: "MCL_DEPLOYMENT_JSON"
                 value: "{}"
         syncPolicy: syncPolicy(clusterSyncOptions)

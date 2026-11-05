@@ -4,12 +4,12 @@ import "./values.mcl" as appValues
 import "./podmonitor.mcl" as appPodMonitor
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-let apiVersions: List<String> =
-  - "monitoring.coreos.com/v1"
+let apiVersions: List<String> = []
 let options =
   releaseName: "caretta"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
@@ -17,4 +17,4 @@ let options =
 let chartResources = helm.render(appChart.chartArchive, options)
 
 emit each chartResources
-emit appPodMonitor.resource
+emit appPodMonitor.resource(namespace)

@@ -6,18 +6,21 @@ import "./identity.mcl" as appIdentity
 import "./rbac.mcl" as appRbac
 import "./service.mcl" as appService
 import "../../cluster.mcl" as clusterConfig
+import "./config.mcl" as appConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
+param settings: appConfig.Settings
 
-emit appConfigMaps.envoy
-emit appConfigMaps.versatiles
-emit appConfigMaps.rclone
-emit appIdentity.versatilesServiceAccount
-emit appIdentity.updaterServiceAccount
-emit appIdentity.s3CredentialsSecret
-emit appIdentity.s3ReferenceGrant
-emit appRbac.role
-emit appRbac.roleBinding
-emit appDeployment.resource
-emit appService.resource
-emit appCronJob.resource
-emit httpRoute.resource
+emit appConfigMaps.envoy(namespace)
+emit appConfigMaps.versatiles(namespace)
+emit appConfigMaps.rclone(namespace)
+emit appIdentity.versatilesServiceAccount(namespace)
+emit appIdentity.updaterServiceAccount(namespace)
+emit appIdentity.s3CredentialsSecret(namespace)
+emit appIdentity.s3ReferenceGrant(namespace)
+emit appRbac.role(namespace)
+emit appRbac.roleBinding(namespace)
+emit appDeployment.resource(namespace)
+emit appService.resource(namespace)
+emit appCronJob.resource(namespace, settings)
+emit httpRoute.resource(namespace)

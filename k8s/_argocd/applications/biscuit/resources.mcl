@@ -1,74 +1,9 @@
-import text "../_templates/apps.gotmpl" as appsTemplatePatch
-import "../common.mcl" as common
+import "../agent-cluster.mcl" as agentCluster
 
-let agentLabel =
-  "argocd-agent": "true"
-let standardSyncOptions =
-  - "ServerSideApply=true"
-  - "FailOnSharedResource=true"
-let appSetSyncOptions =
-  - "ServerSideApply=true"
-  - "FailOnSharedResource=true"
-  - "CreateNamespace=true"
-let destination =
+let config =
   name: "biscuit"
-  namespace: "argocd"
-let appDestination =
-  name: "biscuit"
-let appsGenerator = common.applicationGenerator("biscuit")
-let spokeSource = common.mclSource("k8s/_argocd/spoke", "biscuit")
-let cmpSource = common.mclSource("k8s/_argocd/cmp", "biscuit")
-let spokeSources =
-  - cmpSource
-  - spokeSource
-let emptySources: List<Map<String, Any>> = []
-let apps = node:
-  apiVersion: common.apiVersion
-  kind: "ApplicationSet"
-  metadata: common.metadataNoLabels("apps-biscuit")
-  spec:
-    goTemplate: true
-    goTemplateOptions:
-      - "missingkey=error"
-    generators:
-      - appsGenerator
-    template:
-      metadata: common.appTemplateMetadataWithLabels("biscuit", agentLabel)
-      spec:
-        project: "biscuit"
-        destination:
-          name: "biscuit"
-          namespace: "{{.namespace}}"
-        sources: emptySources
-        syncPolicy: common.syncPolicy(appSetSyncOptions)
-    templatePatch: appsTemplatePatch
-let agent = common.application(
-  "argocd-agent-biscuit",
-  "biscuit",
-  destination,
-  common.mclSource("k8s/_argocd/agent/agent", "biscuit"),
-  agentLabel,
-  standardSyncOptions,
-)
-let namespaces = common.application(
-  "namespaces-biscuit",
-  "biscuit",
-  appDestination,
-  common.mclSource("k8s/namespaces/biscuit", "biscuit"),
-  agentLabel,
-  standardSyncOptions,
-)
-let spoke = common.multiSourceApplication(
-  "argocd-spoke-biscuit",
-  "biscuit",
-  destination,
-  spokeSources,
-  agentLabel,
-  standardSyncOptions,
-)
+  project: "biscuit"
+  destinationName: "biscuit"
+  namespaceSourcePath: "k8s/namespaces/biscuit"
 
-export let resources: List<Map<String, Any>> =
-  - agent
-  - apps
-  - namespaces
-  - spoke
+export let resources = agentCluster.resources(config)

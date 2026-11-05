@@ -1,31 +1,49 @@
 import "std:helm" as helm
 import "std:list" as lists
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
+import "./config.mcl" as appConfig
+import "./images.mcl" as appImages
 import "./configmaps.mcl" as configMaps
 import "./external-secret.mcl" as migrationsSecret
 import "./setup-job.mcl" as setupJob
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
+param features: List<appConfig.Feature> = []
+param settings: appConfig.Settings
 
-let profile = appProfiles.profiles["default"]
+rule validSettings(settings: appConfig.Settings):
+  require settings.racks != [] message "Scylla must configure at least one rack"
+  require lists.filter(settings.racks, fn(rack) => rack.members < 1) == [] message "Scylla rack members must be at least one"
+
+let values: Map<String, Any> =
+  developerMode: true
+  scyllaImage:
+    repository: "scylladb/scylla"
+    tag: appImages.appVersion
+  datacenter: settings.datacenter
+  racks: settings.racks
+  serviceMonitor:
+    create: lists.contains(features, "monitoring")
 let apiVersions: List<String> = []
 let options =
   releaseName: "scylla-cluster"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
-  values: profile
+  values: values
 let chartResources = helm.render(appChart.chartArchive, options)
 let generatedResources =
-  - configMaps.scyllaConfig
-  - configMaps.setupConfigMap
-  - migrationsSecret.resource
-  - setupJob.resource
+  - configMaps.scyllaConfig(namespace)
+  - configMaps.setupConfigMap(namespace)
+  - migrationsSecret.resource(namespace)
+  - setupJob.resource(namespace)
 let resources = lists.concat(
   chartResources,
   generatedResources,
 )
 
 emit each resources
+
+validate settings using validSettings

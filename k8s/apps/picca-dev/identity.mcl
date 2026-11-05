@@ -4,7 +4,7 @@ fn serviceAccountPiccaDev(namespace: String) -> Map<String, Any> = node:
   metadata:
     name: "picca-dev"
     namespace: namespace
-let rolePiccaDevReadScyllaClientCert = node:
+fn rolePiccaDevReadScyllaClientCert(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "Role"
   metadata:
@@ -20,7 +20,7 @@ let rolePiccaDevReadScyllaClientCert = node:
         - "secrets"
       verbs:
         - "get"
-let roleBindingPiccaDevReadScyllaClientCert = node:
+fn roleBindingPiccaDevReadScyllaClientCert(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "RoleBinding"
   metadata:
@@ -34,7 +34,7 @@ let roleBindingPiccaDevReadScyllaClientCert = node:
     -
       kind: "ServiceAccount"
       name: "picca-dev-scylla-secret-reader"
-      namespace: "picca-dev"
+      namespace: namespace
 fn serviceAccountPiccaDevScyllaSecretReader(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
@@ -44,6 +44,6 @@ fn serviceAccountPiccaDevScyllaSecretReader(namespace: String) -> Map<String, An
 
 export fn render(namespace: String) -> List<Map<String, Any>> =
   - serviceAccountPiccaDev(namespace)
-  - rolePiccaDevReadScyllaClientCert
-  - roleBindingPiccaDevReadScyllaClientCert
+  - rolePiccaDevReadScyllaClientCert(namespace)
+  - roleBindingPiccaDevReadScyllaClientCert(namespace)
   - serviceAccountPiccaDevScyllaSecretReader(namespace)

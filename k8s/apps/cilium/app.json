@@ -9,8 +9,7 @@
       "settings": {
         "apiServer": "192.168.0.15",
         "clusterId": 2,
-        "envoyMemory": "64Mi",
-        "ingressLoadBalancerIP": ""
+        "envoyMemory": "64Mi"
       }
     },
     "kurumi": {

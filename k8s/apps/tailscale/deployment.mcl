@@ -1,7 +1,8 @@
 import "./app.mcl" as app
-import "./profiles.mcl" as appProfiles
+import "std:json" as json
+import "std:string" as strings
+import "./config.mcl" as appConfig
 
-let profile = appProfiles.profiles.subnetRouter
 let emptyDir: Map<String, Any> = {}
 let labels =
   app: app.name
@@ -12,12 +13,12 @@ let volumes =
   - name: "var-run-tailscale"
     emptyDir: emptyDir
 
-export let resource = node:
+export fn resource(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
     labels: labels
   spec:
     replicas: 1
@@ -26,7 +27,7 @@ export let resource = node:
     template:
       metadata:
         annotations:
-          "k8s.v1.cni.cncf.io/networks": profile.network
+          "k8s.v1.cni.cncf.io/networks": json.encode(settings.networks)
         labels: labels
       spec:
         serviceAccountName: app.name
@@ -56,9 +57,9 @@ export let resource = node:
                     key: "TS_AUTH_KEY"
                     optional: true
               - name: "TS_ROUTES"
-                value: profile.routes
+                value: strings.join(settings.routes, ",")
               - name: "TS_EXTRA_ARGS"
-                value: profile.extraArgs
+                value: strings.join(settings.extraArgs, " ")
             securityContext:
               runAsUser: 1000
               runAsGroup: 1000

@@ -3,12 +3,12 @@ import "./labels.mcl" as labels
 
 let appLabels = labels.forApp(app.name)
 
-export let resource =
+export fn resource(namespace: String) -> Map<String, Any> =
   apiVersion: "autoscaling.k8s.io/v1"
   kind: "VerticalPodAutoscaler"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
     labels: appLabels
   spec:
     targetRef:

@@ -2,6 +2,17 @@
   "name": "iwashi",
   "namespace": "iwashi-system",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "settings": {
+        "oidcIssuer": "https://auth.walnuts.dev",
+        "oidcRedirectUrl": "https://iwashi.walnuts.dev/auth/callback",
+        "cortexQueryUrl": "http://iwashi-cortex-querier.iwashi-system.svc.cluster.local:8080/prometheus",
+        "cortexOtlpUrl": "http://iwashi-cortex-distributor.iwashi-system.svc.cluster.local:8080/api/v1/otlp/v1/metrics",
+        "cortexRulerUrl": "http://iwashi-cortex-ruler.iwashi-system.svc.cluster.local:8080",
+        "cortexAlertmanagerUrl": "http://iwashi-cortex-alertmanager.iwashi-system.svc.cluster.local:8080",
+        "smtpSmarthost": "iwashi-smtp-relay-mail.iwashi-system.svc.cluster.local:587",
+        "smtpFrom": "netbox@resend.walnuts.dev"
+      }
+    }
   }
 }

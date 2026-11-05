@@ -1,4 +1,3 @@
 # renovate: datasource=github-releases depName=opencost/opencost-helm-chart registryUrl=https://github.com/opencost/opencost-helm-chart extractVersion=^opencost\-(?<version>.*)$
 export let chartVersion = "2.5.31"
 export let chartArchive = "https://github.com/opencost/opencost-helm-chart/releases/download/opencost-" + chartVersion + "/opencost-" + chartVersion + ".tgz"
-export let namespace = "opencost"

@@ -1,14 +1,14 @@
 import "./app.mcl" as app
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     podSelector:
-      matchLabels: app.collectorLabels
+      matchLabels: app.collectorLabels(namespace)
     policyTypes:
       - "Ingress"
       - "Egress"

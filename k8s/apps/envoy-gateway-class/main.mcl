@@ -1,4 +1,3 @@
-import "./settings.mcl" as appSettings
 import "./config.mcl" as appConfig
 import "./certificate.mcl" as gatewayCertificate
 import "./client-traffic-policy.mcl" as clientTrafficPolicy
@@ -7,6 +6,7 @@ import "./gateway.mcl" as gateway
 import "./podmonitor.mcl" as proxyPodMonitor
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 param settings: appConfig.Settings
 
@@ -15,7 +15,7 @@ let envoyProxy = node:
   kind: "EnvoyProxy"
   metadata:
     name: "custom-config"
-    namespace: appSettings.namespace
+    namespace: namespace
   spec:
     provider:
       type: "Kubernetes"
@@ -53,9 +53,9 @@ let envoyProxy = node:
               namespace: "opentelemetry-collector"
               port: 4317
 
-emit gatewayCertificate.resource
+emit gatewayCertificate.resource(namespace)
 emit envoyProxy
-emit gatewayClass.resource
-emit gateway.resource
-emit clientTrafficPolicy.resource
-emit proxyPodMonitor.resource
+emit gatewayClass.resource(namespace)
+emit gateway.resource(namespace)
+emit clientTrafficPolicy.resource(namespace)
+emit proxyPodMonitor.resource(namespace)

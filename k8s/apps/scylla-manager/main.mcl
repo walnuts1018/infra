@@ -1,18 +1,24 @@
 import "std:helm" as helm
+import "std:list" as lists
+import "./values.mcl" as appValues
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
 import "../../cluster.mcl" as clusterConfig
+type Feature = "monitoring"
 param cluster: clusterConfig.Cluster
+param namespace: String
+param features: List<Feature> = []
 
-let profile = appProfiles.profiles["default"]
 let apiVersions: List<String> = []
+let values: Map<String, Any> = appValues.baseValues with:
+  serviceMonitor:
+    create: lists.contains(features, "monitoring")
 let options =
   releaseName: appChart.releaseName
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
-  values: profile
+  values: values
 let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources

@@ -3,7 +3,7 @@ import "./values.mcl" as runnerConfig
 
 let runners = runnerConfig.runners
 
-fn runnerApplication(runner: runnerConfig.Runner) -> Map<String, Any> = node:
+fn runnerApplication(namespace: String, runner: runnerConfig.Runner) -> Map<String, Any> = node:
   apiVersion: "argoproj.io/v1alpha1"
   kind: "Application"
   metadata:
@@ -13,7 +13,7 @@ fn runnerApplication(runner: runnerConfig.Runner) -> Map<String, Any> = node:
       - "resources-finalizer.argocd.argoproj.io"
   spec:
     destination:
-      namespace: "arc-runners"
+      namespace: namespace
       server: "https://kubernetes.default.svc"
     project: "default"
     source:
@@ -31,4 +31,9 @@ fn runnerApplication(runner: runnerConfig.Runner) -> Map<String, Any> = node:
         - "ServerSideApply=true"
         - "FailOnSharedResource=true"
 
-export let applications = lists.map(runners, runnerApplication)
+export fn applications(namespace: String) -> List<Map<String, Any>> =
+  - runnerApplication(namespace, runners[0])
+  - runnerApplication(namespace, runners[1])
+  - runnerApplication(namespace, runners[2])
+  - runnerApplication(namespace, runners[3])
+  - runnerApplication(namespace, runners[4])

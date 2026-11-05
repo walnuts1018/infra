@@ -4,6 +4,7 @@ export type AcmeIssuerConfig =
   server: String
 
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let externalSecretName = "cloudflare-api-token"
 let localCertificateName = "local-ca-cert"
@@ -14,6 +15,7 @@ let externalSecret = node:
   kind: "ExternalSecret"
   metadata:
     name: externalSecretName
+    namespace: namespace
   spec:
     data:
       -
@@ -65,7 +67,6 @@ let localBundle = node:
   kind: "Bundle"
   metadata:
     name: "local-ca-bundle"
-    namespace: "cert-manager"
   spec:
     sources:
       -
@@ -83,7 +84,7 @@ let localCertificate = node:
   kind: "Certificate"
   metadata:
     name: localCertificateName
-    namespace: "cert-manager"
+    namespace: namespace
   spec:
     isCA: true
     commonName: "operator"

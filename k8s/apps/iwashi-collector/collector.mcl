@@ -1,15 +1,14 @@
 import "./app.mcl" as app
 import "./discovery-secret.mcl" as discoverySecret
-import "./profiles.mcl" as appProfiles
+import "./config.mcl" as appConfig
 
-let profile = appProfiles.profiles["httpProbeMetrics"]
 
-export let resource = node:
+export fn resource(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "opentelemetry.io/v1beta1"
   kind: "OpenTelemetryCollector"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     mode: "statefulset"
     replicas: 1
@@ -46,7 +45,7 @@ export let resource = node:
                   module:
                     - "http_2xx"
                 http_sd_configs:
-                  - url: profile.discoveryEndpoint
+                  - url: settings.discoveryEndpoint
                     refresh_interval: "15s"
                     authorization:
                       type: "Bearer"
@@ -61,7 +60,7 @@ export let resource = node:
                       - "__param_target"
                     target_label: "instance"
                   - target_label: "__address__"
-                    replacement: profile.blackboxExporterEndpoint
+                    replacement: settings.blackboxExporterEndpoint
       exporters:
         otlp_http:
           metrics_endpoint: "http://iwashi.iwashi-system.svc.cluster.local:8080/internal/otlp/v1/metrics"

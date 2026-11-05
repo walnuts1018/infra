@@ -1,16 +1,56 @@
 import "std:manifest" as manifest
 import "std:list" as lists
+import "./external-secrets.mcl" as externalSecrets
 
 let workloads = manifest.load("./_configs/workloads.yaml")
-let secrets = manifest.load("./_configs/secrets.yaml")
 let traffic = manifest.load("./_configs/traffic.yaml")
 let scaling = manifest.load("./_configs/scaling.yaml")
 let databaseCA = manifest.load("./_configs/database-ca.yaml")
 
-export let scyllaBackedWebApplication = lists.concat(
+fn withApiEndpoint(environment: Map<String, Any>, namespace: String) -> Map<String, Any> = environment with:
+  value: "http://walnuk-backend." + namespace + ".svc.cluster.local:8080"
+
+fn namespaceEnvironment(environment: Map<String, Any>, namespace: String) -> Map<String, Any> =
+  if environment.name == "API_ENDPOINT":
+    withApiEndpoint(environment, namespace)
+  else:
+    environment
+
+fn withContainerEnv(container: Map<String, Any>, namespace: String) -> Map<String, Any> = container with:
+  env: lists.map(container.env, fn(environment) => namespaceEnvironment(environment, namespace))
+
+fn namespaceContainer(container: Map<String, Any>, namespace: String) -> Map<String, Any> =
+  if container.name == "next":
+    withContainerEnv(container, namespace)
+  else:
+    container
+
+fn withNamespace(resource: Map<String, Any>, namespace: String) -> Map<String, Any> = resource with:
+  metadata:
+    namespace: namespace
+
+fn withFrontendNamespace(resource: Map<String, Any>, namespace: String) -> Map<String, Any> = resource with:
+  metadata:
+    namespace: namespace
+  spec:
+    template:
+      spec:
+        containers: lists.map(resource.spec.template.spec.containers, fn(container) => namespaceContainer(container, namespace))
+
+fn namespaceResource(resource: Map<String, Any>, namespace: String) -> Map<String, Any> =
+  if resource.kind == "Deployment" and resource.metadata.name == "walnuk-frontend":
+    withFrontendNamespace(resource, namespace)
+  else:
+    withNamespace(resource, namespace)
+
+fn namespaceResources(resources: List<Map<String, Any>>, namespace: String) -> List<Map<String, Any>> =
+  lists.map(resources, fn(resource) => namespaceResource(resource, namespace))
+
+export fn resources(namespace: String) -> List<Map<String, Any>> =
   lists.concat(
-    lists.concat(workloads, secrets),
-    traffic,
-  ),
-  lists.concat(scaling, databaseCA),
-)
+    lists.concat(
+      namespaceResources(workloads, namespace),
+      externalSecrets.resources(namespace),
+    ),
+    namespaceResources(lists.concat(traffic, lists.concat(scaling, databaseCA)), namespace),
+  )

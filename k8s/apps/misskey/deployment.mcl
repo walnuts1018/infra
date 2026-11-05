@@ -13,12 +13,12 @@ let containerSecurityContext =
     drop:
       - "ALL"
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
     labels: appLabels
   spec:
     replicas: 1

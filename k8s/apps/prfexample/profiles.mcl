@@ -1,6 +1,0 @@
-export let profiles =
-  scyllaClientCertificate:
-    appImage: "ghcr.io/walnuts1018/prfexample/server:0.0.65"
-    scyllaHost: "scylla-cluster-client.databases.svc.cluster.local"
-    scyllaPort: "9142"
-    otelEndpoint: "http://default-collector.opentelemetry-collector.svc.cluster.local:4317"

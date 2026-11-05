@@ -2,6 +2,10 @@
   "name": "longhorn-oauth2-proxy",
   "namespace": "longhorn-system",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "settings": {
+        "authorizedGrant": "385243484069560521:longhorn-admin"
+      }
+    }
   }
 }

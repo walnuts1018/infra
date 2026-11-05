@@ -2,8 +2,26 @@
   "name": "external-secrets-store",
   "namespace": "external-secrets",
   "clusters": {
-    "berry": {},
-    "biscuit": {},
-    "kurumi": {}
+    "berry": {
+      "settings": {
+        "vaults": {
+          "kurumi": 1
+        }
+      }
+    },
+    "biscuit": {
+      "settings": {
+        "vaults": {
+          "kurumi": 1
+        }
+      }
+    },
+    "kurumi": {
+      "settings": {
+        "vaults": {
+          "kurumi": 1
+        }
+      }
+    }
   }
 }

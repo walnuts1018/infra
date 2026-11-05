@@ -9,8 +9,7 @@
       ],
       "settings": {
         "lvmdNodeSelector": {},
-        "nodeSelector": {},
-        "hddIsDefault": false
+        "nodeSelector": {}
       }
     },
     "kurumi": {

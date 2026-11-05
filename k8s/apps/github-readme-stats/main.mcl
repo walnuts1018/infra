@@ -3,8 +3,9 @@ import "./route.mcl" as route
 import "./workload.mcl" as workload
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-emit credentials.externalSecret
-emit workload.deployment
-emit workload.service
-emit route.httpRoute
+emit credentials.externalSecret(namespace)
+emit workload.deployment(namespace)
+emit workload.service(namespace)
+emit route.httpRoute(namespace)

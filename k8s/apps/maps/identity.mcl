@@ -1,33 +1,33 @@
 import "./app.mcl" as app
 
-export let versatilesServiceAccount = node:
+export fn versatilesServiceAccount(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
   metadata:
     name: app.name + "-versatiles-server"
-    namespace: app.namespace
+    namespace: namespace
   automountServiceAccountToken: false
 
-export let updaterServiceAccount = node:
+export fn updaterServiceAccount(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
   metadata:
     name: app.name + "-updater"
-    namespace: app.namespace
+    namespace: namespace
 
-export let s3CredentialsSecret = node:
+export fn s3CredentialsSecret(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Secret"
   metadata:
     name: "maps-s3-credentials"
-    namespace: app.namespace
+    namespace: namespace
 
-export let s3ReferenceGrant = node:
+export fn s3ReferenceGrant(namespace: String) -> Map<String, Any> = node:
   apiVersion: "seaweed.seaweedfs.com/v1"
   kind: "ResourceReferenceGrant"
   metadata:
     name: "seaweedfs-s3-credentials"
-    namespace: app.namespace
+    namespace: namespace
   spec:
     from:
       - group: "seaweed.seaweedfs.com"

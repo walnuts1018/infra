@@ -1,8 +1,0 @@
-import "./values.mcl" as appValues
-
-export type Profile =
-  chartValues: Map<String, Any>
-
-export let profiles: Map<String, Profile> =
-  smtpRelay:
-    chartValues: appValues.values

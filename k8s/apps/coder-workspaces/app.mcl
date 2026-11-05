@@ -1,2 +1,1 @@
 export let name = "coder-workspaces"
-export let namespace = "coder-workspaces"

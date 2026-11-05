@@ -39,5 +39,5 @@ export fn valkeyClusterPiccaValkey(namespace: String) -> Map<String, Any> = node
         passwordSecret:
           keys:
             - "valkey_password"
-          name: names.piccaValkeySecretName
+          name: names.piccaValkeySecretName(namespace)
         permissions: "+@all ~* &*"

@@ -1,10 +1,13 @@
 import "./resources.mcl" as appResources
+import "./config.mcl" as appConfig
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
+param settings: appConfig.Settings
 
-emit appResources.awsConfigMap
-emit appResources.rcloneConfigMap
-emit appResources.scriptConfigMap
-emit appResources.externalSecret
-emit appResources.serviceAccount
-emit appResources.cronJob
+emit appResources.awsConfigMap(namespace)
+emit appResources.rcloneConfigMap(namespace)
+emit appResources.scriptConfigMap(namespace)
+emit appResources.externalSecret(namespace)
+emit appResources.serviceAccount(namespace)
+emit appResources.cronJob(namespace, settings)

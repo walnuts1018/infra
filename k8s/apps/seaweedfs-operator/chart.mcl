@@ -2,4 +2,3 @@
 export let chartVersion = "0.1.40"
 export let chartName = "seaweedfs-operator"
 export let chartArchive = "https://github.com/seaweedfs/seaweedfs-operator/releases/download/seaweedfs-operator-" + chartVersion + "/" + chartName + "-" + chartVersion + ".tgz"
-export let namespace = "seaweedfs-operator"

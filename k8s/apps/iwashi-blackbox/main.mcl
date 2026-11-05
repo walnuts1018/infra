@@ -4,10 +4,11 @@ import "./network-policies.mcl" as networkPolicies
 import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let options =
   releaseName: "iwashi-blackbox"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: appChart.apiVersions
@@ -15,5 +16,5 @@ let options =
 let chartResources = helm.render(appChart.chartArchive, options)
 
 emit each chartResources
-emit networkPolicies.defaultDeny
-emit networkPolicies.policy
+emit networkPolicies.defaultDeny(namespace)
+emit networkPolicies.policy(namespace)

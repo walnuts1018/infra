@@ -68,12 +68,12 @@ let bucketConfigs: List<BucketConfig> =
     diskType: "ssd"
     replication: "000"
 
-fn bucket(config: BucketConfig) -> Map<String, Any> = node:
+fn bucket(namespace: String, config: BucketConfig) -> Map<String, Any> = node:
   apiVersion: "seaweed.seaweedfs.com/v1"
   kind: "Bucket"
   metadata:
     name: config.name
-    namespace: "seaweedfs"
+    namespace: namespace
   spec:
     adoptExisting: true
     clusterRef:
@@ -85,7 +85,7 @@ fn bucket(config: BucketConfig) -> Map<String, Any> = node:
     reclaimPolicy: "Retain"
     versioning: "Off"
 
-export let buckets = lists.map(bucketConfigs, fn(config) => bucket(config))
+export fn buckets(namespace: String) -> List<Map<String, Any>> = lists.map(bucketConfigs, fn(config) => bucket(namespace, config))
 
 type S3ClientConfig =
   name: String
@@ -166,24 +166,24 @@ let s3ClientConfigs: List<S3ClientConfig> =
     accessKeyField: "AWS_ACCESS_KEY_ID"
     secretKeyField: "AWS_SECRET_ACCESS_KEY"
 
-fn identity(config: S3ClientConfig) -> Map<String, Any> = node:
+fn identity(namespace: String, config: S3ClientConfig) -> Map<String, Any> = node:
   apiVersion: "seaweed.seaweedfs.com/v1"
   kind: "S3Identity"
   metadata:
     name: config.name
-    namespace: "seaweedfs"
+    namespace: namespace
   spec:
     name: config.identityName
     reclaimPolicy: "Retain"
     seaweedRef:
       name: "seaweedfs-default"
 
-fn policy(config: S3ClientConfig) -> Map<String, Any> = node:
+fn policy(namespace: String, config: S3ClientConfig) -> Map<String, Any> = node:
   apiVersion: "seaweed.seaweedfs.com/v1"
   kind: "S3Policy"
   metadata:
     name: config.name + "-access-key"
-    namespace: "seaweedfs"
+    namespace: namespace
   spec:
     name: config.name + "-access-key"
     policyDocument: json.encode(policyValue(config.actions, config.resources))
@@ -191,12 +191,12 @@ fn policy(config: S3ClientConfig) -> Map<String, Any> = node:
     seaweedRef:
       name: "seaweedfs-default"
 
-fn binding(config: S3ClientConfig) -> Map<String, Any> = node:
+fn binding(namespace: String, config: S3ClientConfig) -> Map<String, Any> = node:
   apiVersion: "seaweed.seaweedfs.com/v1"
   kind: "S3PolicyBinding"
   metadata:
     name: config.name
-    namespace: "seaweedfs"
+    namespace: namespace
   spec:
     policyRef:
       name: config.name + "-access-key"
@@ -208,12 +208,12 @@ fn binding(config: S3ClientConfig) -> Map<String, Any> = node:
         kind: "S3Identity"
         name: config.name
 
-fn credentialsResource(config: S3ClientConfig) -> Map<String, Any> = node:
+fn credentialsResource(namespace: String, config: S3ClientConfig) -> Map<String, Any> = node:
   apiVersion: "seaweed.seaweedfs.com/v1"
   kind: "S3Credentials"
   metadata:
     name: config.name
-    namespace: "seaweedfs"
+    namespace: namespace
   spec:
     identityRef:
       name: config.name
@@ -226,7 +226,7 @@ fn credentialsResource(config: S3ClientConfig) -> Map<String, Any> = node:
       namespace: config.secretNamespace
       secretKeyField: config.secretKeyField
 
-export let identities = lists.map(s3ClientConfigs, fn(config) => identity(config))
-export let policies = lists.map(s3ClientConfigs, fn(config) => policy(config))
-export let bindings = lists.map(s3ClientConfigs, fn(config) => binding(config))
-export let credentials = lists.map(s3ClientConfigs, fn(config) => credentialsResource(config))
+export fn identities(namespace: String) -> List<Map<String, Any>> = lists.map(s3ClientConfigs, fn(config) => identity(namespace, config))
+export fn policies(namespace: String) -> List<Map<String, Any>> = lists.map(s3ClientConfigs, fn(config) => policy(namespace, config))
+export fn bindings(namespace: String) -> List<Map<String, Any>> = lists.map(s3ClientConfigs, fn(config) => binding(namespace, config))
+export fn credentials(namespace: String) -> List<Map<String, Any>> = lists.map(s3ClientConfigs, fn(config) => credentialsResource(namespace, config))

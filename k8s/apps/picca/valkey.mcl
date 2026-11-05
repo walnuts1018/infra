@@ -5,7 +5,7 @@ export fn valkeyExternalSecret(namespace: String) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
-    name: names.piccaValkeySecretName
+    name: names.piccaValkeySecretName(namespace)
     namespace: namespace
   spec:
     data: secretData.piccaValkeyData
@@ -14,8 +14,8 @@ export fn valkeyExternalSecret(namespace: String) -> Map<String, Any> = node:
       kind: "ClusterSecretStore"
       name: "onepassword"
     target:
-      name: names.piccaValkeySecretName
+      name: names.piccaValkeySecretName(namespace)
       template:
-        data: secretData.piccaValkeyTemplateData
+        data: secretData.piccaValkeyTemplateData(namespace)
         engineVersion: "v2"
         type: "Opaque"

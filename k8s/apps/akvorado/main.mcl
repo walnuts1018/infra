@@ -5,24 +5,25 @@ import "./http-route.mcl" as route
 import "./security-policy.mcl" as policy
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-emit workloads.configMap
-emit externalSecrets.credentials
-emit externalSecrets.snmp
-emit datastores.keeperCluster
-emit datastores.clickHouseCluster
-emit datastores.kafka
-emit datastores.kafkaNodePool
-emit datastores.kafkaTopic
-emit datastores.valkeyCluster
-emit route.httpRoute
-emit policy.resource
-emit workloads.consoleDeployment
-emit workloads.inletDeployment
-emit workloads.outletDeployment
-emit workloads.orchestratorDeployment
-emit workloads.consoleService
-emit workloads.inletService
-emit workloads.outletService
-emit workloads.orchestratorService
-emit each workloads.componentServiceMonitors
+emit workloads.configMap(namespace)
+emit externalSecrets.credentials(namespace)
+emit externalSecrets.snmp(namespace)
+emit datastores.keeperCluster(namespace)
+emit datastores.clickHouseCluster(namespace)
+emit datastores.kafka(namespace)
+emit datastores.kafkaNodePool(namespace)
+emit datastores.kafkaTopic(namespace)
+emit datastores.valkeyCluster(namespace)
+emit route.httpRoute(namespace)
+emit policy.resource(namespace)
+emit workloads.consoleDeployment(namespace)
+emit workloads.inletDeployment(namespace)
+emit workloads.outletDeployment(namespace)
+emit workloads.orchestratorDeployment(namespace)
+emit workloads.consoleService(namespace)
+emit workloads.inletService(namespace)
+emit workloads.outletService(namespace)
+emit workloads.orchestratorService(namespace)
+emit each workloads.componentServiceMonitors(namespace)

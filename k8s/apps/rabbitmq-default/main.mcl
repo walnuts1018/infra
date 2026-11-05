@@ -1,7 +1,10 @@
+import "std:list" as lists
 import "../../cluster.mcl" as clusterConfig
+type Feature = "monitoring"
 param cluster: clusterConfig.Cluster
+param namespace: String
+param features: List<Feature> = []
 
-let namespace = "rabbitmq"
 let labels =
   app: "rabbitmq-default"
   "app.kubernetes.io/name": "rabbitmq-default"
@@ -71,5 +74,11 @@ let serviceMonitor = node:
         interval: "15s"
         scrapeTimeout: "14s"
 
+let monitoringResources =
+  if lists.contains(features, "monitoring"):
+    - serviceMonitor
+  else:
+    []
+
 emit rabbitmqCluster
-emit serviceMonitor
+emit each monitoringResources

@@ -1,21 +1,20 @@
-import "./profiles.mcl" as appProfiles
+import "./app.mcl" as app
 
-let profile = appProfiles.profiles["default"]
-let appName = profile.name
+let appName = app.name
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: appName
-    namespace: profile.namespace
-    labels: profile.labels
+    namespace: namespace
+    labels: app.labels
   spec:
     selector:
-      matchLabels: profile.labels
+      matchLabels: app.labels
     template:
       metadata:
-        labels: profile.labels
+        labels: app.labels
       spec:
         securityContext:
           runAsUser: 10001

@@ -46,7 +46,7 @@ fn hddDeviceClasses(features: List<config.Feature>, settings: config.Settings) -
       name: "hdd"
       "volume-group": "hdd"
       "spare-gb": 10
-      default: settings.hddIsDefault
+      default: settings.hddIsDefault ?? false
       "lvcreate-options":
         - "--alloc=normal"
   else:

@@ -12,6 +12,10 @@ spec:
       env:
       - name: MCL_CLUSTER_NAME
         value: {{ .clusterName | quote }}
+      - name: MCL_NAMESPACE
+        value: {{ .namespace | quote }}
+      - name: MCL_CLUSTER_INPUT
+        value: application
       - name: MCL_DEPLOYMENT_JSON
         value: {{ toJson $deployment | quote }}
     {{- else }}

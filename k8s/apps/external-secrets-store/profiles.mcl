@@ -1,4 +1,0 @@
-export let profiles =
-  onePasswordConnect:
-    vaults:
-      kurumi: 1

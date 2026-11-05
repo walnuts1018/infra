@@ -4,8 +4,8 @@ import "./values.mcl" as appValues
 import "./webhook.mcl" as appWebhook
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-let namespace = "rabbitmq-operator"
 let apiVersions: List<String> = []
 let options =
   releaseName: "rabbitmq-topology-operator"
@@ -17,4 +17,4 @@ let options =
 let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources
-emit appWebhook.configuration
+emit appWebhook.configuration(namespace)

@@ -3,11 +3,12 @@ import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let apiVersions: List<String> = []
 let options =
   releaseName: "onepassword-connect"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions

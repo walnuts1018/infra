@@ -1,18 +1,18 @@
 import "./values.mcl" as appValues
 
-let serviceAccount = node:
+fn serviceAccount(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
   metadata:
     name: "local-path-provisioner-service-account"
-    namespace: "local-path-storage"
+    namespace: namespace
 
-let role = node:
+fn role(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "Role"
   metadata:
     name: "local-path-provisioner-role"
-    namespace: "local-path-storage"
+    namespace: namespace
   rules:
     - apiGroups:
         - ""
@@ -73,12 +73,12 @@ let clusterRole = node:
         - "list"
         - "watch"
 
-let roleBinding = node:
+fn roleBinding(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "RoleBinding"
   metadata:
     name: "local-path-provisioner-bind"
-    namespace: "local-path-storage"
+    namespace: namespace
   roleRef:
     apiGroup: "rbac.authorization.k8s.io"
     kind: "Role"
@@ -86,9 +86,9 @@ let roleBinding = node:
   subjects:
     - kind: "ServiceAccount"
       name: "local-path-provisioner-service-account"
-      namespace: "local-path-storage"
+      namespace: namespace
 
-let clusterRoleBinding = node:
+fn clusterRoleBinding(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "ClusterRoleBinding"
   metadata:
@@ -100,14 +100,14 @@ let clusterRoleBinding = node:
   subjects:
     - kind: "ServiceAccount"
       name: "local-path-provisioner-service-account"
-      namespace: "local-path-storage"
+      namespace: namespace
 
-let deployment = node:
+fn deployment(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: "local-path-provisioner"
-    namespace: "local-path-storage"
+    namespace: namespace
   spec:
     replicas: 1
     selector:
@@ -169,20 +169,20 @@ let storageClass = node:
           values:
             - "true"
 
-let configMap = node:
+fn configMap(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   metadata:
     name: "local-path-config"
-    namespace: "local-path-storage"
+    namespace: namespace
   data: appValues.data
 
-export let resources =
+export fn resources(namespace: String) -> List<Map<String, Any>> =
   - storageClass
-  - serviceAccount
-  - role
+  - serviceAccount(namespace)
+  - role(namespace)
   - clusterRole
-  - roleBinding
-  - clusterRoleBinding
-  - configMap
-  - deployment
+  - roleBinding(namespace)
+  - clusterRoleBinding(namespace)
+  - configMap(namespace)
+  - deployment(namespace)

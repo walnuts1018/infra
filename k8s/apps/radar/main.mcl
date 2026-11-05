@@ -5,11 +5,12 @@ import "./cluster-rbac.mcl" as clusterRbac
 import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let apiVersions: List<String> = []
 let options =
   releaseName: "radar"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
@@ -17,5 +18,5 @@ let options =
 let chartResources = helm.render(appChart.chartArchive, options)
 
 emit each chartResources
-emit each clusterRbac.resources
-emit each additional.resources
+emit each clusterRbac.resources(namespace)
+emit each additional.resources(namespace)

@@ -16,11 +16,10 @@ let peerConfigBase =
 let controlPlanePeerSpec = peerConfigBase with:
   transport:
     peerPort: 179
-    sourceInterface: "veth-cilium"
-    timers:
-      connectRetryTimeSeconds: 3
-      holdTimeSeconds: 9
-      keepAliveTimeSeconds: 3
+  timers:
+    connectRetryTimeSeconds: 3
+    holdTimeSeconds: 9
+    keepAliveTimeSeconds: 3
 
 let controlPlaneInstance =
   name: "talos"

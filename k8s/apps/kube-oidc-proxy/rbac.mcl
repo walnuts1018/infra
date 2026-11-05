@@ -1,11 +1,11 @@
 import "./config.mcl" as app
 
-let serviceAccount = node:
+fn serviceAccount(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
 
 let clusterRole = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
@@ -31,22 +31,22 @@ let clusterRole = node:
       verbs:
         - "impersonate"
 
-let clusterRoleBinding = node:
+fn clusterRoleBinding(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "ClusterRoleBinding"
   metadata:
     name: app.name
   roleRef:
     apiGroup: "rbac.authorization.k8s.io"
-    kind: clusterRole.kind
-    name: clusterRole.metadata.name
+    kind: "ClusterRole"
+    name: app.name
   subjects:
     -
-      kind: serviceAccount.kind
-      name: serviceAccount.metadata.name
-      namespace: serviceAccount.metadata.namespace
+      kind: "ServiceAccount"
+      name: app.name
+      namespace: namespace
 
-export let resources =
-  - serviceAccount
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - serviceAccount(namespace)
   - clusterRole
-  - clusterRoleBinding
+  - clusterRoleBinding(namespace)

@@ -1,12 +1,11 @@
 import "./app.mcl" as app
 
 let appName = app.name
-let namespace = app.namespace
 let labels =
   app: appName
   "app.kubernetes.io/name": appName
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:

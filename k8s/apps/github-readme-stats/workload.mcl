@@ -4,12 +4,12 @@ import "./credentials.mcl" as credentials
 let app = appConfig.app
 let labels = appConfig.labels
 
-export let deployment = node:
+export fn deployment(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
     labels: labels
   spec:
     replicas: 1
@@ -48,12 +48,12 @@ export let deployment = node:
                 drop:
                   - "all"
 
-export let service = node:
+export fn service(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
     labels: labels
   spec:
     selector: labels

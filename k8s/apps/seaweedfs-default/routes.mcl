@@ -1,10 +1,10 @@
-export let resources =
+export fn resources(namespace: String) -> List<Map<String, Any>> =
   -
     apiVersion: "gateway.networking.k8s.io/v1"
     kind: "HTTPRoute"
     metadata:
       name: "seaweedfs-default"
-      namespace: "seaweedfs"
+      namespace: namespace
     spec:
       hostnames:
         - "seaweedfs.walnuts.dev"
@@ -32,7 +32,7 @@ export let resources =
     kind: "HTTPRoute"
     metadata:
       name: "seaweedfs-default-local"
-      namespace: "seaweedfs"
+      namespace: namespace
     spec:
       hostnames:
         - "seaweedfs.local.walnuts.dev"
@@ -60,7 +60,7 @@ export let resources =
     kind: "HTTPRoute"
     metadata:
       name: "seaweedfs-default-minio"
-      namespace: "seaweedfs"
+      namespace: namespace
     spec:
       hostnames:
         - "minio.walnuts.dev"

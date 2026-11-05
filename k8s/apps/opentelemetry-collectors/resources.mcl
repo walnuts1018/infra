@@ -19,7 +19,7 @@ let collectors =
   - prometheusCollector
   - vyosCollector
 
-let baseResources =
+let fixedResources =
   - clusterRoleBinding
   - clusterRole
   - externalSecret
@@ -28,7 +28,32 @@ let baseResources =
 let serviceResources =
   - vyosService
 
-export let resources = lists.concat(
-  lists.concat(baseResources, collectors),
+let resourcesWithClusterObjects = lists.concat(
+  lists.concat(fixedResources, collectors),
   serviceResources,
 )
+
+fn withNamespace(namespace: String, resource: Map<String, Any>) -> Map<String, Any> = resource with:
+  metadata:
+    namespace: namespace
+
+fn withSubjectNamespace(namespace: String, subject: Map<String, Any>) -> Map<String, Any> = subject with:
+  namespace: namespace
+
+fn withSubjects(namespace: String, resource: Map<String, Any>) -> Map<String, Any> = resource with:
+  subjects: lists.map(resource.subjects, fn(subject) => withSubjectNamespace(namespace, subject))
+
+fn applyNamespacedResource(namespace: String, resource: Map<String, Any>) -> Map<String, Any> =
+  if resource.kind == "ClusterRoleBinding":
+    withSubjects(namespace, resource)
+  else:
+    withNamespace(namespace, resource)
+
+fn applyNamespace(namespace: String, resource: Map<String, Any>) -> Map<String, Any> =
+  if resource.kind == "ClusterRole":
+    resource
+  else:
+    applyNamespacedResource(namespace, resource)
+
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  lists.map(resourcesWithClusterObjects, fn(resource) => applyNamespace(namespace, resource))

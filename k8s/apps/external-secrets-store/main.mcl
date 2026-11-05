@@ -1,8 +1,8 @@
-import "./profiles.mcl" as appProfiles
+import "./config.mcl" as appConfig
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
-
-let profile = appProfiles.profiles["onePasswordConnect"]
+param namespace: String
+param settings: appConfig.Settings
 
 let resource = node:
   apiVersion: "external-secrets.io/v1"
@@ -13,7 +13,7 @@ let resource = node:
     provider:
       onepassword:
         connectHost: "http://onepassword-connect.onepassword.svc.cluster.local:8080"
-        vaults: profile.vaults
+        vaults: settings.vaults
         auth:
           secretRef:
             connectTokenSecretRef:

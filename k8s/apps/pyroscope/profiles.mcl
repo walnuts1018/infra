@@ -1,4 +1,0 @@
-import "./values.mcl" as appValues
-
-export let profiles =
-  default: appValues.values

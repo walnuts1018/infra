@@ -1,17 +1,17 @@
 import text "./_configs/config.json" as configJSON
-import "./profiles.mcl" as appProfiles
+import "./config.mcl" as appConfig
 
-let profile = appProfiles.profiles["s3BackedMail"]
 let appName = "stalwart"
 let labels =
   app: appName
   "app.kubernetes.io/name": appName
 
-let externalSecret = node:
+fn externalSecret(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
     name: appName
+    namespace: namespace
   spec:
     secretStoreRef:
       name: "onepassword"
@@ -30,12 +30,12 @@ let externalSecret = node:
           key: "postgres_passwords"
           property: appName
 
-let certificate = node:
+fn certificate(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "cert-manager.io/v1"
   kind: "Certificate"
   metadata:
     name: "stalwart-mx"
-    namespace: profile.namespace
+    namespace: namespace
   spec:
     secretName: "stalwart-mx-tls"
     dnsNames:
@@ -45,36 +45,36 @@ let certificate = node:
       kind: "ClusterIssuer"
       name: "letsencrypt-prod"
 
-let configMap = node:
+fn configMap(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   metadata:
     name: "stalwart-config"
-    namespace: profile.namespace
+    namespace: namespace
     labels: labels
   data:
     "config.json": configJSON
 
-let serviceAccount = node:
+fn serviceAccount(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
   metadata:
     name: appName
-    namespace: profile.namespace
+    namespace: namespace
 
-let s3CredentialsSecret = node:
+fn s3CredentialsSecret(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Secret"
   metadata:
-    name: profile.s3CredentialName
-    namespace: profile.namespace
+    name: settings.s3CredentialName
+    namespace: namespace
 
-let s3ReferenceGrant = node:
+fn s3ReferenceGrant(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "seaweed.seaweedfs.com/v1"
   kind: "ResourceReferenceGrant"
   metadata:
     name: "seaweedfs-s3-credentials"
-    namespace: profile.namespace
+    namespace: namespace
   spec:
     from:
       - group: "seaweed.seaweedfs.com"
@@ -93,12 +93,12 @@ let databaseStorage =
             - key: "storage.walnuts.dev/slow"
               operator: "DoesNotExist"
 
-let elasticsearch = node:
+fn elasticsearch(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "elasticsearch.k8s.elastic.co/v1"
   kind: "Elasticsearch"
   metadata:
     name: appName
-    namespace: profile.namespace
+    namespace: namespace
     annotations:
       "argocd.argoproj.io/sync-options": "SkipDryRunOnMissingResource=true"
   spec:
@@ -132,12 +132,12 @@ let elasticsearch = node:
                 requests:
                   storage: "4Gi"
 
-let valkeyCluster = node:
+fn valkeyCluster(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "valkey.io/v1alpha1"
   kind: "ValkeyCluster"
   metadata:
     name: "stalwart-valkey"
-    namespace: profile.namespace
+    namespace: namespace
     annotations:
       "argocd.argoproj.io/sync-options": "SkipDryRunOnMissingResource=true"
     labels:
@@ -155,12 +155,12 @@ let valkeyCluster = node:
         memory: "1Gi"
 
 
-let deployment = node:
+fn deployment(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: appName
-    namespace: profile.namespace
+    namespace: namespace
     labels: labels
     annotations:
       "reloader.stakater.com/auto": "true"
@@ -177,7 +177,7 @@ let deployment = node:
       metadata:
         labels: labels
       spec:
-        serviceAccountName: serviceAccount.metadata.name
+        serviceAccountName: appName
         topologySpreadConstraints:
           - maxSkew: 1
             topologyKey: "kubernetes.io/hostname"
@@ -195,18 +195,18 @@ let deployment = node:
               - name: "STALWART_DB_PASSWORD"
                 valueFrom:
                   secretKeyRef:
-                    name: externalSecret.spec.target.name
+                    name: appName
                     key: "postgres_password"
               - name: "STALWART_S3_ACCESS_KEY"
                 valueFrom:
                   secretKeyRef:
-                    name: profile.s3CredentialName
-                    key: profile.s3AccessKeyField
+                    name: settings.s3CredentialName
+                    key: settings.s3AccessKeyField
               - name: "STALWART_S3_SECRET_KEY"
                 valueFrom:
                   secretKeyRef:
-                    name: profile.s3CredentialName
-                    key: profile.s3SecretKeyField
+                    name: settings.s3CredentialName
+                    key: settings.s3SecretKeyField
             ports:
               - name: "http"
                 containerPort: 8080
@@ -258,7 +258,7 @@ let deployment = node:
         volumes:
           - name: "stalwart-config"
             configMap:
-              name: configMap.metadata.name
+              name: "stalwart-config"
               items:
                 - key: "config.json"
                   path: "config.json"
@@ -266,14 +266,14 @@ let deployment = node:
             emptyDir: {}
           - name: "tls"
             secret:
-              secretName: certificate.spec.secretName
+              secretName: "stalwart-mx-tls"
 
-let service = node:
+fn service(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: appName
-    namespace: profile.namespace
+    namespace: namespace
     labels: labels
   spec:
     selector: labels
@@ -302,20 +302,20 @@ let service = node:
         protocol: "TCP"
         port: 993
         targetPort: "imaps"
-    type: profile.loadBalancerService
+    type: settings.loadBalancerService
 
-let verticalAutoscaler = node:
+fn verticalAutoscaler(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "autoscaling.k8s.io/v1"
   kind: "VerticalPodAutoscaler"
   metadata:
     name: appName
-    namespace: profile.namespace
+    namespace: namespace
     labels: labels
   spec:
     targetRef:
       apiVersion: "apps/v1"
       kind: "Deployment"
-      name: deployment.metadata.name
+      name: appName
     updatePolicy:
       updateMode: "Auto"
     resourcePolicy:
@@ -330,16 +330,15 @@ let verticalAutoscaler = node:
             cpu: "500m"
             memory: "256Mi"
 
-let resources =
-  - externalSecret
-  - certificate
-  - configMap
-  - serviceAccount
-  - s3CredentialsSecret
-  - s3ReferenceGrant
-  - elasticsearch
-  - valkeyCluster
-  - deployment
-  - service
-  - verticalAutoscaler
-export let allResources = resources
+export fn allResources(namespace: String, settings: appConfig.Settings) -> List<Map<String, Any>> =
+  - externalSecret(namespace, settings)
+  - certificate(namespace, settings)
+  - configMap(namespace, settings)
+  - serviceAccount(namespace, settings)
+  - s3CredentialsSecret(namespace, settings)
+  - s3ReferenceGrant(namespace, settings)
+  - elasticsearch(namespace, settings)
+  - valkeyCluster(namespace, settings)
+  - deployment(namespace, settings)
+  - service(namespace, settings)
+  - verticalAutoscaler(namespace, settings)

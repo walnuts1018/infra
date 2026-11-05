@@ -1,7 +1,6 @@
 import "../../cluster.mcl" as clusterConfig
 export type ApiServerProxy =
   name: String
-  namespace: String
   hostname: String
   gatewayName: String
   gatewayNamespace: String
@@ -11,10 +10,10 @@ export type ApiServerProxy =
   caConfigMap: String
 
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let app: ApiServerProxy =
   name: "api-server-service-proxy"
-  namespace: "default"
   hostname: "kurumi.local.walnuts.dev"
   gatewayName: "envoy-gateway"
   gatewayNamespace: "envoy-gateway-system"
@@ -24,11 +23,11 @@ let app: ApiServerProxy =
   caConfigMap: "kube-root-ca.crt"
 
 let backendTLSPolicy = node:
-  apiVersion: "gateway.networking.k8s.io/v1alpha3"
+  apiVersion: "gateway.networking.k8s.io/v1"
   kind: "BackendTLSPolicy"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     targetRefs:
       -
@@ -48,7 +47,7 @@ let httpRoute = node:
   kind: "HTTPRoute"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     parentRefs:
       -

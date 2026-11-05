@@ -2,12 +2,12 @@ import "./app.mcl" as app
 
 let labels = app.labels("versatiles-server")
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: "maps-versatiles-server"
-    namespace: app.namespace
+    namespace: namespace
     labels: labels
   spec:
     selector: labels

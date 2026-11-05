@@ -1,3 +1,0 @@
-export let profiles =
-  standard:
-    schedule: "10 2 * * *"

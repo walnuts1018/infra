@@ -24,12 +24,12 @@ let objectStoreSpec =
   instanceSidecarConfiguration:
     env: objectStoreEnvironment
 
-export let objectStore =
+export fn objectStore(namespace: String) -> Map<String, Any> =
   apiVersion: "barmancloud.cnpg.io/v1"
   kind: "ObjectStore"
   metadata:
     name: "seaweedfs-store"
-    namespace: app.namespace
+    namespace: namespace
   spec: objectStoreSpec
 
 let scheduledBackupSpec =
@@ -41,9 +41,10 @@ let scheduledBackupSpec =
   pluginConfiguration:
     name: "barman-cloud.cloudnative-pg.io"
 
-export let scheduledBackup =
+export fn scheduledBackup(namespace: String) -> Map<String, Any> =
   apiVersion: "postgresql.cnpg.io/v1"
   kind: "ScheduledBackup"
   metadata:
     name: app.name + "-postgresql-backup"
+    namespace: namespace
   spec: scheduledBackupSpec

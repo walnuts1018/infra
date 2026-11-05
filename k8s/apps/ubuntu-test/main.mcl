@@ -1,14 +1,13 @@
 import "../../cluster.mcl" as clusterConfig
 export type AppConfig =
   name: String
-  namespace: String
   image: String
 
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let app: AppConfig =
   name: "ubuntu-test"
-  namespace: "default"
   image: "ghcr.io/cybozu/ubuntu-debug:24.04"
 
 let labels =
@@ -20,7 +19,7 @@ let deployment = node:
   kind: "Deployment"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
     labels: labels
   spec:
     replicas: 1

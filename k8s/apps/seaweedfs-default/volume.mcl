@@ -11,7 +11,7 @@ let volumeClaimTemplates =
       storageClassName: "topolvm-hdd"
 
 
-export let resources =
+export fn resources(namespace: String) -> List<Map<String, Any>> =
   -
     apiVersion: "apps/v1"
     kind: "StatefulSet"
@@ -21,7 +21,7 @@ export let resources =
         "app.kubernetes.io/component": "volume"
         "app.kubernetes.io/name": "seaweedfs-default-volume-hdd"
       name: "seaweedfs-default-volume-hdd"
-      namespace: "seaweedfs"
+      namespace: namespace
     spec:
       replicas: 1
       selector:

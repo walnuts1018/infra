@@ -27,7 +27,7 @@ fn deploymentPiccaApiserver(namespace: String) -> Map<String, Any> = node:
       spec:
         containers:
           -
-            env: environment.apiServerEnvironment()
+            env: environment.apiServerEnvironment(namespace)
             envFrom:
               -
                 secretRef:
@@ -37,7 +37,7 @@ fn deploymentPiccaApiserver(namespace: String) -> Map<String, Any> = node:
                   name: names.piccaScyllaSecretName
               -
                 secretRef:
-                  name: names.piccaValkeySecretName
+                  name: names.piccaValkeySecretName(namespace)
               -
                 secretRef:
                   name: names.piccaRabbitmqSecretName
@@ -101,7 +101,7 @@ fn deploymentPiccaApiserver(namespace: String) -> Map<String, Any> = node:
             name: "ghcr-login-secret"
         initContainers:
           -
-            env: environment.migrationEnvironment("picca-apiserver")
+            env: environment.migrationEnvironment(namespace, "picca-apiserver")
             envFrom:
               -
                 secretRef:

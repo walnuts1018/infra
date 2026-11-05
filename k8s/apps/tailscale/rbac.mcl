@@ -4,20 +4,20 @@ let labels =
   app: appConfig.name
   "app.kubernetes.io/name": appConfig.name
 
-let serviceAccount = node:
+fn serviceAccount(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
   metadata:
     name: appConfig.name
-    namespace: appConfig.namespace
+    namespace: namespace
     labels: labels
 
-let role = node:
+fn role(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "Role"
   metadata:
     name: appConfig.name
-    namespace: appConfig.namespace
+    namespace: namespace
     labels: labels
   rules:
     - apiGroups:
@@ -55,22 +55,23 @@ let role = node:
         - "update"
         - "patch"
 
-let roleBinding = node:
+fn roleBinding(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "RoleBinding"
   metadata:
     name: appConfig.name
-    namespace: appConfig.namespace
+    namespace: namespace
     labels: labels
   subjects:
     - kind: "ServiceAccount"
       name: appConfig.name
+      namespace: namespace
   roleRef:
     kind: "Role"
     name: appConfig.name
     apiGroup: "rbac.authorization.k8s.io"
 
-export let resources =
-  - serviceAccount
-  - role
-  - roleBinding
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - serviceAccount(namespace)
+  - role(namespace)
+  - roleBinding(namespace)

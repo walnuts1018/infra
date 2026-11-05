@@ -1,4 +1,5 @@
 import "std:manifest" as manifest
+import "std:list" as lists
 import text "./_configs/robots.txt" as robotsText
 
 let backDeployment = manifest.loadOne("./_configs/back__deployment.yaml")
@@ -24,14 +25,13 @@ let oauth2ProxyConfigMap = node:
   immutable: true
   metadata:
     name: "oekaki-dengon-game-oauth2-proxy-6181a5"
-    namespace: "oekaki-dengon-game"
     labels:
       app: "oekaki-dengon-game"
       "app.kubernetes.io/name": "oekaki-dengon-game"
   data:
     "robots.txt": robotsText
 
-export let resources =
+let baseResources =
   - externalSecret
   - oauth2ProxyExternalSecret
   - s3CredentialsSecret
@@ -50,3 +50,42 @@ export let resources =
   - oauth2ProxyHttpRoute
   - oauth2ProxyHttpRoutePublic
   - oauth2ProxySecurityPolicy
+
+fn withEnvironmentValue(environment: Map<String, Any>, value: String) -> Map<String, Any> = environment with:
+  value: value
+
+fn frontEnvironment(namespace: String, environment: Map<String, Any>) -> Map<String, Any> =
+  if environment.name == "API_URL":
+    withEnvironmentValue(environment, "http://oekaki-dengon-game-back." + namespace + ".svc.cluster.local:8080/api")
+  else:
+    environment
+
+fn frontContainerWithEnvironment(container: Map<String, Any>, environment: List<Map<String, Any>>) -> Map<String, Any> = container with:
+  env: environment
+
+fn frontContainer(namespace: String, container: Map<String, Any>) -> Map<String, Any> =
+  if container.name == "oekaki-dengon-game-front":
+    frontContainerWithEnvironment(container, lists.map(container.env, fn(environment) => frontEnvironment(namespace, environment)))
+  else:
+    container
+
+fn frontDeployment(namespace: String, resource: Map<String, Any>) -> Map<String, Any> = resource with:
+  metadata:
+    namespace: namespace
+  spec:
+    template:
+      spec:
+        containers: lists.map(resource.spec.template.spec.containers, fn(container) => frontContainer(namespace, container))
+
+fn withNamespace(namespace: String, resource: Map<String, Any>) -> Map<String, Any> = resource with:
+  metadata:
+    namespace: namespace
+
+fn namespaceResource(namespace: String, resource: Map<String, Any>) -> Map<String, Any> =
+  if resource.kind == "Deployment" and resource.metadata.name == "oekaki-dengon-game-front":
+    frontDeployment(namespace, resource)
+  else:
+    withNamespace(namespace, resource)
+
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  lists.map(baseResources, fn(resource) => namespaceResource(namespace, resource))

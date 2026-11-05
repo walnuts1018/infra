@@ -1,8 +1,8 @@
-import "./profiles.mcl" as appProfiles
 import "../../cluster.mcl" as clusterConfig
+import "./resources.mcl" as appResources
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-let profileName = "standard"
-let resources = appProfiles.resourcesByProfile[profileName]
+let resources = appResources.resources(namespace)
 
 emit each resources

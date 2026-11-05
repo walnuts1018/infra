@@ -1,4 +1,3 @@
 # renovate: datasource=helm depName=gpu-operator registryUrl=https://helm.ngc.nvidia.com/nvidia/charts
 export let chartVersion = "v26.7.0"
 export let chartArchive = "https://helm.ngc.nvidia.com/nvidia/charts/gpu-operator-" + chartVersion + ".tgz"
-export let namespace = "nvidia-gpu-operator"

@@ -1,19 +1,18 @@
 import "std:helm" as helm
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
+import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let apiVersions: List<String> = []
-let profile = appProfiles.profiles["standard"] with:
-  clusterName: cluster.name
 let options =
   releaseName: "keda"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
-  values: profile
+  values: appValues.build(cluster.name)
 let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources

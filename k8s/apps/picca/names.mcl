@@ -10,7 +10,6 @@ let piccaOidcHashInput = secretData.piccaOidcHashInput
 let piccaPostgresHashInput = secretData.piccaPostgresHashInput
 let piccaRabbitmqHashInput = secretData.piccaRabbitmqHashInput
 let piccaScyllaHashInput = secretData.piccaScyllaHashInput
-let piccaValkeyHashInput = secretData.piccaValkeyHashInput
 
 export let piccaGraphqlSecretName = "picca-graphql-signing-secret-" + hash.fnv1a64(piccaGraphqlHashInput)
 export let piccaImgproxySecretName = "picca-imgproxy-" + hash.fnv1a64(piccaImgproxyHashInput)
@@ -18,7 +17,7 @@ export let piccaOidcSecretName = "picca-oidc-" + hash.fnv1a64(piccaOidcHashInput
 export let piccaPostgresSecretName = "picca-postgres-" + hash.fnv1a64(piccaPostgresHashInput)
 export let piccaRabbitmqSecretName = "picca-rabbitmq-" + hash.fnv1a64(piccaRabbitmqHashInput)
 export let piccaScyllaSecretName = "picca-scylla-" + hash.fnv1a64(piccaScyllaHashInput)
-export let piccaValkeySecretName = "picca-valkey-" + hash.fnv1a64(piccaValkeyHashInput)
+export fn piccaValkeySecretName(namespace: String) -> String = "picca-valkey-" + hash.fnv1a64(secretData.piccaValkeyHashInput(namespace))
 
 export let piccaPlansConfigMapName = "picca-plans-" + crypto.sha256(plansConfig, 10)
 export let piccaScylladbCaConfigMapName = "picca-scylladb-ca-cert-" + crypto.sha256(scyllaCaCertificate, 10)

@@ -1,22 +1,23 @@
 import "std:helm" as helm
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
+import "./values.mcl" as appValues
 import "./external-secret.mcl" as externalSecret
 import "./security-policy.mcl" as securityPolicy
 import "./config.mcl" as appConfig
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 param settings: appConfig.Settings
 
 let apiVersions: List<String> = []
-let values = appProfiles.profiles["standard"] with:
+let values = appValues.baseValues with:
   opencost:
     prometheus:
       external:
         url: settings.prometheusURL
 let options =
   releaseName: "opencost"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
@@ -25,4 +26,4 @@ let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources
 emit externalSecret.resource
-emit securityPolicy.resource
+emit securityPolicy.resource(namespace)

@@ -25,5 +25,4 @@ let gpuOperatorValues: Map<String, Any> =
         - name: "WITH_WORKLOAD"
           value: "false"
 
-export let profiles =
-  standard: gpuOperatorValues
+export let baseValues = gpuOperatorValues

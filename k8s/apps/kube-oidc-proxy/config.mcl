@@ -1,5 +1,4 @@
 export let name = "kube-oidc-proxy"
-export let namespace = "kube-oidc-proxy"
 
 # This value is owned by zitadel-kubernetes-rbac.params.oidcIssuerAudience.
 export let oidcIssuerAudience = "385225927988084784"

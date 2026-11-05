@@ -2,9 +2,11 @@ import "./applications.mcl" as runnerApplications
 import "./resources.mcl" as resources
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-emit resources.runnerHooksConfigMap
-emit resources.githubAppSecret
-emit resources.networkPolicy
-emit resources.podMonitor
-emit each runnerApplications.applications
+let appResources = resources.resources(namespace)
+emit appResources.runnerHooksConfigMap
+emit appResources.githubAppSecret
+emit appResources.networkPolicy
+emit appResources.podMonitor
+emit each runnerApplications.applications(namespace)

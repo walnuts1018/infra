@@ -8,6 +8,7 @@ type Feature = "monitoring"
 
 param features: List<Feature> = []
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let monitoringEnabled = lists.contains(features, "monitoring")
 let values =
@@ -15,6 +16,6 @@ let values =
     appFeatures.valuesByFeature.monitoring
   else:
     appFeatures.valuesByFeature.standard
-let rendered = resources.render(cluster, appChart.namespace, values)
+let rendered = resources.render(cluster, namespace, values)
 
 emit each rendered

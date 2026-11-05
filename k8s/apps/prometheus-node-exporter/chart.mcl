@@ -1,4 +1,3 @@
 # renovate: datasource=github-releases depName=prometheus-community/helm-charts registryUrl=https://github.com/prometheus-community/helm-charts extractVersion=^prometheus\-node\-exporter\-(?<version>.*)$
 export let chartVersion = "4.56.3"
 export let chartArchive = "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-node-exporter-" + chartVersion + "/prometheus-node-exporter-" + chartVersion + ".tgz"
-export let namespace = "monitoring"

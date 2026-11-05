@@ -1,4 +1,3 @@
 # renovate: datasource=github-releases depName=klicktipp/helm-charts registryUrl=https://github.com/klicktipp/helm-charts extractVersion=^rabbitmq\-topology\-operator\-(?<version>.*)$
 export let chartVersion = "0.4.1"
 export let chartArchive = "https://github.com/klicktipp/helm-charts/releases/download/rabbitmq-topology-operator-" + chartVersion + "/rabbitmq-topology-operator-" + chartVersion + ".tgz"
-export let namespace = "rabbitmq-operator"

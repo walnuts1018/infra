@@ -1,8 +1,7 @@
 import "./external-secrets.mcl" as externalSecrets
-let namespace = "akvorado"
 let syncOptions = "SkipDryRunOnMissingResource=true"
 
-export let httpRoute = node:
+export fn httpRoute(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "HTTPRoute"
   metadata:

@@ -4,12 +4,12 @@ let labels =
   app: app.name
   "app.kubernetes.io/name": app.name
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
     labels: labels
   spec:
     selector: labels

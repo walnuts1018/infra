@@ -1,4 +1,3 @@
 # renovate: datasource=helm depName=eck-operator registryUrl=https://helm.elastic.co/helm/eck-operator
 export let chartVersion = "3.5.0"
 export let chartArchive = "https://helm.elastic.co/helm/eck-operator/eck-operator-" + chartVersion + ".tgz"
-export let namespace = "elasticsearch"

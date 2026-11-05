@@ -2,7 +2,7 @@ import "./external-secret.mcl" as externalSecret
 import "./http-route.mcl" as httpRoute
 import "./security-policy.mcl" as securityPolicy
 
-export let resources =
-  - externalSecret.resource
-  - httpRoute.resource
-  - securityPolicy.resource
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - externalSecret.resource(namespace)
+  - httpRoute.resource(namespace)
+  - securityPolicy.resource(namespace)

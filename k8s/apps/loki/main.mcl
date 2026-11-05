@@ -3,6 +3,7 @@ import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let valuesBundle = manifest.load("./_configs/values.yaml")
 let values: Map<String, Any> = valuesBundle[0]
@@ -10,7 +11,7 @@ let values: Map<String, Any> = valuesBundle[0]
 let apiVersions: List<String> = []
 let options =
   releaseName: appChart.releaseName
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions

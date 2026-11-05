@@ -122,7 +122,7 @@ let actualUsageProfile =
           cpu: 90
           memory: 90
 
-export let values: Map<String, Any> =
+export let baseValues: Map<String, Any> =
   schedule: "*/5 * * * *"
   deschedulerPolicy:
     maxNoOfPodsToEvictPerNode: 3

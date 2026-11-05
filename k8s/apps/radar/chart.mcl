@@ -1,4 +1,3 @@
 # renovate: datasource=github-releases depName=skyhook-io/helm-charts registryUrl=https://github.com/skyhook-io/helm-charts extractVersion=^radar\-(?<version>.*)$
 export let chartVersion = "1.12.2"
 export let chartArchive = "https://github.com/skyhook-io/helm-charts/releases/download/radar-" + chartVersion + "/radar-" + chartVersion + ".tgz"
-export let namespace = "radar"

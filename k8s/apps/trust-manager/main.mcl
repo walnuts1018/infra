@@ -7,6 +7,7 @@ import "../../cluster.mcl" as clusterConfig
 type Feature = "monitoring"
 
 param cluster: clusterConfig.Cluster
+param namespace: String
 param features: List<Feature> = []
 
 let values: Map<String, Any> = appValues.commonValues with:
@@ -17,11 +18,10 @@ let values: Map<String, Any> = appValues.commonValues with:
           enabled: lists.contains(features, "monitoring")
 let options =
   releaseName: "trust-manager"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
-  apiVersions:
-    - "monitoring.coreos.com/v1"
+  apiVersions: []
   values: values
 let resources = helm.render(appChart.chartArchive, options)
 

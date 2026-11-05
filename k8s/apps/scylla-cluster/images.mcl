@@ -1,0 +1,2 @@
+# renovate: datasource=docker depName=scylladb/scylla
+export let appVersion = "2025.4.10"

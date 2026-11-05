@@ -1,0 +1,34 @@
+import "./chart.mcl" as appChart
+
+let emptyManagerResources: Map<String, Any> = {}
+
+export let baseValues: Map<String, Any> =
+  core:
+    "cluster-api":
+      version: appChart.clusterAPIVersion
+      manager:
+        featureGates:
+          RuntimeSDK: true
+  bootstrap:
+    tart:
+      version: appChart.tartVersion
+      fetchConfig:
+        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/" + appChart.tartVersion + "/bootstrap-components.yaml"
+  controlPlane:
+    tart:
+      version: appChart.tartVersion
+      fetchConfig:
+        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/" + appChart.tartVersion + "/control-plane-components.yaml"
+  infrastructure:
+    tart:
+      version: appChart.tartVersion
+      fetchConfig:
+        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/" + appChart.tartVersion + "/infrastructure-components.yaml"
+  addon:
+    helm:
+      version: appChart.addonProviderVersion
+      fetchConfig:
+        url: "https://github.com/kubernetes-sigs/cluster-api-addon-provider-helm/releases/download/" + appChart.addonProviderVersion + "/addon-components.yaml"
+  resources:
+    manager: emptyManagerResources
+  enableHelmHook: false

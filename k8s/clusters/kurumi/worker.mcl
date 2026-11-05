@@ -1,32 +1,36 @@
 import "std:crypto" as crypto
 import "../lib/tart-control-plane.mcl" as capi
+import "../../cluster.mcl" as clusterConfig
 import text "./_patches/worker.yaml" as patchesText
 
-let clusterName = "kurumi"
-let workerName = "kurumi-worker"
-let labels =
-  "cluster.x-k8s.io/cluster-name": clusterName
-  "cluster.x-k8s.io/deployment-name": workerName
-let hostSelectorLabels =
+fn workerName(cluster: clusterConfig.ClusterAPIConfig) -> String = cluster.name + "-worker"
+
+fn hostSelectorLabels() -> Map<String, String> =
   "kurumi.walnuts.dev/pool": "worker"
-let patches = patchesText
-let identity =
-  patches: patches
+
+fn identity(cluster: clusterConfig.ClusterAPIConfig) -> Map<String, Any> = node:
+  patches: patchesText
   schematicID: "613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245"
-  talosVersion: "v1.14.0"
-  hostSelectorLabels: hostSelectorLabels
-let identityHash = crypto.sha256(identity, 10)
-let resourceName = clusterName + "-worker-" + identityHash
-let patchesSecretName = clusterName + "-worker-patches-" + identityHash
+  talosVersion: cluster.talosVersion
+  hostSelectorLabels: hostSelectorLabels()
 
-let config: capi.WorkerConfig = identity with:
-  name: resourceName
-  patchesName: patchesSecretName
-  clusterName: clusterName
-  deploymentName: workerName
-  namespace: clusterName
-  kubernetesVersion: "v1.36.4"
-  replicas: 1
-  labels: labels
+fn resourceName(cluster: clusterConfig.ClusterAPIConfig) -> String =
+  cluster.name + "-worker-" + crypto.sha256(identity(cluster), 10)
 
-export let resources = capi.worker(config)
+fn patchesSecretName(cluster: clusterConfig.ClusterAPIConfig) -> String =
+  cluster.name + "-worker-patches-" + crypto.sha256(identity(cluster), 10)
+
+fn config(cluster: clusterConfig.ClusterAPIConfig) -> Map<String, Any> = identity(cluster) with:
+  name: resourceName(cluster)
+  patchesName: patchesSecretName(cluster)
+  clusterName: cluster.name
+  deploymentName: workerName(cluster)
+  namespace: cluster.namespace
+  kubernetesVersion: cluster.kubernetesVersion
+  replicas: cluster.workerMachineCount
+
+export fn resources(cluster: clusterConfig.ClusterAPIConfig) -> List<Map<String, Any>> =
+  if cluster.workerMachineCount == 0:
+    []
+  else:
+    capi.worker(config(cluster))

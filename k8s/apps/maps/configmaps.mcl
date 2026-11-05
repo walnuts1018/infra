@@ -15,35 +15,35 @@ export let envoyName = app.name + "-envoy-config-" + crypto.sha256(envoyData, 6)
 export let versatilesName = app.name + "-versatiles-config-" + crypto.sha256(versatilesData, 6)
 export let rcloneName = app.name + "-rclone-config-" + crypto.sha256(rcloneData, 6)
 
-export let envoy = node:
+export fn envoy(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   immutable: true
   metadata:
     name: envoyName
-    namespace: app.namespace
+    namespace: namespace
     labels: app.labels("versatiles-server")
   data:
     "envoy.yaml": envoyConfig
 
-export let versatiles = node:
+export fn versatiles(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   immutable: true
   metadata:
     name: versatilesName
-    namespace: app.namespace
+    namespace: namespace
     labels: app.labels("versatiles-server")
   data:
     "config.yaml": versatilesConfig
 
-export let rclone = node:
+export fn rclone(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   immutable: true
   metadata:
     name: rcloneName
-    namespace: app.namespace
+    namespace: namespace
     labels: app.labels("update")
   data:
     "rclone.conf": rcloneConfig

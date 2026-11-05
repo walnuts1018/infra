@@ -6,7 +6,7 @@ let routeRules =
         name: "seaweedfs-default-filer"
         port: 8333
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "HTTPRoute"
   metadata:
@@ -14,7 +14,7 @@ export let resource = node:
       app: "seaweedfs-default-s3"
       "app.kubernetes.io/name": "seaweedfs-default-s3"
     name: "seaweedfs-default-s3"
-    namespace: "seaweedfs"
+    namespace: namespace
   spec:
     hostnames:
       - "visual-regression-tracker.seaweedfs.local.walnuts.dev"

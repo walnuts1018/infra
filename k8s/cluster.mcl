@@ -2,3 +2,11 @@ export type Cluster =
   name: String
   namespace: String
   kubernetesVersion: String
+
+export type ClusterAPIConfig =
+  name: String
+  namespace: String
+  kubernetesVersion: String
+  talosVersion: String
+  controlPlaneMachineCount: Int
+  workerMachineCount: Int

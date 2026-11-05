@@ -1,0 +1,31 @@
+export type Feature = "monitoring"
+
+export type StorageSettings =
+  storageClassName: String
+  capacity: String
+
+export type ResourceValues =
+  cpu: String
+  memory: String
+
+export type ContainerResources =
+  requests: ResourceValues
+  limits: ResourceValues
+
+export type PlacementSettings =
+  nodeAffinity: Map<String, Any>
+  podAffinity: Map<String, Any>
+  podAntiAffinity: Map<String, Any>
+  tolerations: List<Map<String, Any>>
+
+export type RackSettings =
+  name: String
+  scyllaConfig: String
+  members: Int
+  storage: StorageSettings
+  resources: ContainerResources
+  placement: PlacementSettings
+
+export type Settings =
+  datacenter: String
+  racks: List<RackSettings>

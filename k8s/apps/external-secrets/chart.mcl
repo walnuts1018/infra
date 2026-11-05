@@ -1,4 +1,3 @@
 # renovate: datasource=github-releases depName=external-secrets/external-secrets registryUrl=https://github.com/external-secrets/external-secrets extractVersion=^helm\-chart\-(?<version>.*)$
 export let chartVersion = "2.10.0"
 export let chartArchive = "https://github.com/external-secrets/external-secrets/releases/download/helm-chart-" + chartVersion + "/external-secrets-" + chartVersion + ".tgz"
-export let namespace = "external-secrets"

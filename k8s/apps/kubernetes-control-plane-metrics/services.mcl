@@ -1,5 +1,4 @@
 let appName = "kubernetes-control-plane-metrics"
-let monitoringNamespace = "monitoring"
 let systemNamespace = "kube-system"
 let bearerTokenFile = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 let caFile = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
@@ -18,24 +17,6 @@ fn service(name: String, labels: Map<String, String>, selector: Map<String, Stri
         name: portName
         port: port
         targetPort: port
-
-fn serviceMonitor(name: String, selector: Map<String, String>, jobLabel: String, namespace: String, endpoints: List<Map<String, Any>>) -> Map<String, Any> = node:
-  apiVersion: "monitoring.coreos.com/v1"
-  kind: "ServiceMonitor"
-  metadata:
-    name: name
-    namespace: monitoringNamespace
-    labels:
-      app: appName
-      "app.kubernetes.io/name": appName
-  spec:
-    jobLabel: jobLabel
-    namespaceSelector:
-      matchNames:
-        - namespace
-    selector:
-      matchLabels: selector
-    endpoints: endpoints
 
 let controlPlaneProxySelector =
   app: "kubernetes-control-plane-metrics-proxy"

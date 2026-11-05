@@ -3,6 +3,13 @@ set -eu
 
 mcl_cluster_name=${ARGOCD_ENV_MCL_CLUSTER_NAME:-}
 mcl_deployment_json=${ARGOCD_ENV_MCL_DEPLOYMENT_JSON:-}
+mcl_cluster_input=${ARGOCD_ENV_MCL_CLUSTER_INPUT-application}
+mcl_namespace=${ARGOCD_ENV_MCL_NAMESPACE-}
+mcl_namespace_is_set=false
+if [ "${ARGOCD_ENV_MCL_NAMESPACE+x}" = x ]; then
+  mcl_namespace_is_set=true
+  [ -n "$mcl_namespace" ] || { echo 'MCL_NAMESPACE must not be empty when set.' >&2; exit 1; }
+fi
 k8s_root=$(pwd)
 while [ ! -f "$k8s_root/mcl.toml" ]; do
   parent_dir=$(dirname "$k8s_root")
@@ -13,12 +20,25 @@ lock_file="$k8s_root/mcl.lock"
 case "$mcl_cluster_name" in
   ''|*[!a-z0-9-]*) echo 'MCL_CLUSTER_NAME must be a lowercase cluster name.' >&2; exit 1 ;;
 esac
+case "$mcl_cluster_input" in
+  application|clusterAPI) ;;
+  *) echo 'MCL_CLUSTER_INPUT must be application or clusterAPI.' >&2; exit 1 ;;
+esac
 command -v jq >/dev/null 2>&1 || { echo 'jq is required to resolve cluster facts and MCL parameters.' >&2; exit 1; }
 cluster_file="$k8s_root/clusters/$mcl_cluster_name/cluster.json"
 [ -r "$cluster_file" ] || { echo "Cluster definition not found: $cluster_file" >&2; exit 1; }
-cluster_parameters=$(jq -ce '{name, namespace, kubernetesVersion} | select(.name != null and .namespace != null and .kubernetesVersion != null)' "$cluster_file")
-deployment_parameters=$(printf '%s' "$mcl_deployment_json" | jq -ce 'if type != "object" then error("deployment parameters must be an object") elif has("namespace") then error("namespace is app-wide; per-deployment namespace overrides are unsupported") else . end')
-parameters=$(jq -cn --argjson cluster "$cluster_parameters" --argjson deployment "$deployment_parameters" '$deployment + {cluster: $cluster}')
+case "$mcl_cluster_input" in
+  application)
+    cluster_parameters=$(jq -ce --arg name "$mcl_cluster_name" 'select(type == "object" and .name == $name and (.namespace | type == "string" and length > 0) and (.kubernetesVersion | type == "string" and length > 0)) | {name, namespace, kubernetesVersion}' "$cluster_file")
+    ;;
+  clusterAPI)
+    [ "$mcl_namespace_is_set" = false ] || { echo 'MCL_NAMESPACE is not allowed for clusterAPI input; use cluster.namespace.' >&2; exit 1; }
+    jq -e '.clusterApiManaged == "true"' "$cluster_file" >/dev/null || { echo "Cluster is not marked clusterApiManaged: $mcl_cluster_name" >&2; exit 1; }
+    cluster_parameters=$(jq -ce --arg name "$mcl_cluster_name" 'select(type == "object" and .name == $name and (.namespace | type == "string" and length > 0) and (.kubernetesVersion | type == "string" and length > 0) and (.talosVersion | type == "string" and length > 0) and (.controlPlaneMachineCount | type == "number" and floor == . and . >= 1) and (.workerMachineCount | type == "number" and floor == . and . >= 0)) | {name, namespace, kubernetesVersion, talosVersion, controlPlaneMachineCount, workerMachineCount}' "$cluster_file")
+    ;;
+esac
+deployment_parameters=$(printf '%s' "$mcl_deployment_json" | jq -ce 'if type != "object" then error("deployment parameters must be an object") elif has("cluster") or has("namespace") then error("cluster and namespace are reserved parameter names") else . end')
+parameters=$(jq -cn --argjson cluster "$cluster_parameters" --argjson deployment "$deployment_parameters" --arg namespace "$mcl_namespace" --arg namespace_is_set "$mcl_namespace_is_set" '$deployment + {cluster: $cluster} + (if $namespace_is_set == "true" then {namespace: $namespace} else {} end)')
 mcl_version=$(sed -n '/"toolchain"[[:space:]]*:/,/^[[:space:]]*}/ s/^[[:space:]]*"mcl":[[:space:]]*"\([0-9][0-9A-Za-z.+-]*\)".*/\1/p' "$lock_file")
 mcl_revision=$(sed -n '/"toolchain"[[:space:]]*:/,/^[[:space:]]*}/ s/^[[:space:]]*"revision":[[:space:]]*"\([0-9a-f]*\)".*/\1/p' "$lock_file")
 case "$mcl_version" in

@@ -1,4 +1,4 @@
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   data:
     "filer.toml": "[leveldb2]\nenabled = true\ndir = \"/meta/filer\"\n"
@@ -9,4 +9,4 @@ export let resource = node:
       "app.kubernetes.io/component": "mini"
       "app.kubernetes.io/name": "seaweedfs-biscuit"
     name: "seaweedfs-biscuit-filer-config"
-    namespace: "seaweedfs"
+    namespace: namespace

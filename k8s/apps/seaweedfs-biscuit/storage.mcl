@@ -1,4 +1,4 @@
-export let service = node:
+export fn service(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
@@ -7,7 +7,7 @@ export let service = node:
       "app.kubernetes.io/component": "mini"
       "app.kubernetes.io/name": "seaweedfs-biscuit"
     name: "seaweedfs-biscuit"
-    namespace: "seaweedfs"
+    namespace: namespace
   spec:
     clusterIP: "None"
     ports:
@@ -22,7 +22,7 @@ export let service = node:
       "app.kubernetes.io/name": "seaweedfs-biscuit"
     type: "ClusterIP"
 
-export let metaPVC = node:
+export fn metaPVC(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "PersistentVolumeClaim"
   metadata:
@@ -31,7 +31,7 @@ export let metaPVC = node:
       "app.kubernetes.io/component": "mini"
       "app.kubernetes.io/name": "seaweedfs-biscuit"
     name: "seaweedfs-meta"
-    namespace: "seaweedfs"
+    namespace: namespace
   spec:
     accessModes:
       - "ReadWriteOnce"
@@ -41,7 +41,7 @@ export let metaPVC = node:
     storageClassName: "topolvm-ssd"
     volumeMode: "Filesystem"
 
-export let volumePVC = node:
+export fn volumePVC(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "PersistentVolumeClaim"
   metadata:
@@ -50,7 +50,7 @@ export let volumePVC = node:
       "app.kubernetes.io/component": "mini"
       "app.kubernetes.io/name": "seaweedfs-biscuit"
     name: "seaweedfs-volume"
-    namespace: "seaweedfs"
+    namespace: namespace
   spec:
     accessModes:
       - "ReadWriteOnce"

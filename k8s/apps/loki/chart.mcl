@@ -2,4 +2,3 @@
 export let chartVersion = "13.2.0"
 export let chartArchive = "oci://ghcr.io/grafana-community/helm-charts/loki"
 export let releaseName = "loki"
-export let namespace = "loki"

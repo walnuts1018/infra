@@ -1,11 +1,10 @@
-import "./settings.mcl" as appChart
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "cert-manager.io/v1"
   kind: "Certificate"
   metadata:
     name: "envoy-gateway"
-    namespace: appChart.namespace
+    namespace: namespace
   spec:
     dnsNames:
       - "*.local.walnuts.dev"

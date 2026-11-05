@@ -1,6 +1,3 @@
-import "./profiles.mcl" as appProfiles
-
-let profile = appProfiles.profiles["s3BackedMail"]
 let appName = "stalwart"
 let routeNames =
   smtp: "stalwart-smtp"
@@ -8,12 +5,12 @@ let routeNames =
   submission: "stalwart-submission"
   imaps: "stalwart-imaps"
 
-fn tcpRoute(listener: String, port: Int, routeName: String) -> Map<String, Any> = node:
-  apiVersion: "gateway.networking.k8s.io/v1alpha2"
+fn tcpRoute(namespace: String, listener: String, port: Int, routeName: String) -> Map<String, Any> = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
   kind: "TCPRoute"
   metadata:
     name: routeName
-    namespace: profile.namespace
+    namespace: namespace
   spec:
     parentRefs:
       - name: "envoy-gateway"
@@ -24,18 +21,18 @@ fn tcpRoute(listener: String, port: Int, routeName: String) -> Map<String, Any> 
         backendRefs:
           - name: appName
             port: port
-let generatedTcpRoutes =
-  - tcpRoute("smtp", 25, routeNames.smtp)
-  - tcpRoute("smtps", 465, routeNames.smtps)
-  - tcpRoute("submission", 587, routeNames.submission)
-  - tcpRoute("imaps", 993, routeNames.imaps)
+fn generatedTcpRoutes(namespace: String) -> List<Map<String, Any>> =
+  - tcpRoute(namespace, "smtp", 25, routeNames.smtp)
+  - tcpRoute(namespace, "smtps", 465, routeNames.smtps)
+  - tcpRoute(namespace, "submission", 587, routeNames.submission)
+  - tcpRoute(namespace, "imaps", 993, routeNames.imaps)
 
-let backendTrafficPolicy = node:
+fn backendTrafficPolicy(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.envoyproxy.io/v1alpha1"
   kind: "BackendTrafficPolicy"
   metadata:
     name: "stalwart-proxy-protocol"
-    namespace: profile.namespace
+    namespace: namespace
   spec:
     targetRefs:
       - group: "gateway.networking.k8s.io"
@@ -47,12 +44,12 @@ let backendTrafficPolicy = node:
     proxyProtocol:
       version: "V2"
 
-let httpRoute = node:
+fn httpRoute(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "HTTPRoute"
   metadata:
     name: appName
-    namespace: profile.namespace
+    namespace: namespace
   spec:
     parentRefs:
       - name: "envoy-gateway"
@@ -74,7 +71,7 @@ let httpRoute = node:
               value: "/"
 
 
-export let resources =
-  - backendTrafficPolicy
-  - httpRoute
-export let tcpRoutes = generatedTcpRoutes
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - backendTrafficPolicy(namespace)
+  - httpRoute(namespace)
+export fn tcpRoutes(namespace: String) -> List<Map<String, Any>> = generatedTcpRoutes(namespace)

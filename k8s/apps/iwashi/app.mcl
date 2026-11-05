@@ -1,2 +1,1 @@
 export let name = "iwashi"
-export let namespace = "iwashi-system"

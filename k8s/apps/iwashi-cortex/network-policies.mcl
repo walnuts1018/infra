@@ -1,5 +1,4 @@
 let instance = "iwashi-cortex"
-let namespace = "iwashi-system"
 let cortexSelector =
   matchLabels:
     "app.kubernetes.io/name": "cortex"
@@ -27,7 +26,7 @@ let dnsEgress =
     - dnsPeer
   ports: dnsPorts
 
-let defaultDeny = node:
+fn defaultDeny(namespace: String) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
@@ -51,7 +50,7 @@ let alertmanagerSMTPEgress =
       port: 587
       protocol: "TCP"
 
-let alertmanager = node:
+fn alertmanager(namespace: String) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
@@ -78,7 +77,7 @@ let alertmanager = node:
       - dnsEgress
       - alertmanagerSMTPEgress
 
-let distributor = node:
+fn distributor(namespace: String) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
@@ -101,7 +100,7 @@ let distributor = node:
             port: 8080
             protocol: "TCP"
 
-let querier = node:
+fn querier(namespace: String) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
@@ -124,7 +123,7 @@ let querier = node:
             port: 8080
             protocol: "TCP"
 
-let ruler = node:
+fn ruler(namespace: String) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
@@ -182,7 +181,7 @@ let memcachedNames =
   - "memcached-blocks"
   - "memcached-blocks-metadata"
 
-let internal = node:
+fn internal(namespace: String) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
@@ -236,7 +235,7 @@ let internal = node:
             protocol: "TCP"
       - dnsEgress
 
-let memcached = node:
+fn memcached(namespace: String) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
@@ -266,7 +265,7 @@ let memcached = node:
     egress:
       - dnsEgress
 
-let ciliumAlertmanagerSMTP = node:
+fn ciliumAlertmanagerSMTP(namespace: String) -> Map<String, Any> = node:
   apiVersion: "cilium.io/v2"
   kind: "CiliumNetworkPolicy"
   metadata:
@@ -309,12 +308,12 @@ let ciliumAlertmanagerSMTP = node:
                 port: "587"
                 protocol: "TCP"
 
-export let resources =
-  - defaultDeny
-  - alertmanager
-  - distributor
-  - querier
-  - ruler
-  - internal
-  - memcached
-  - ciliumAlertmanagerSMTP
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - defaultDeny(namespace)
+  - alertmanager(namespace)
+  - distributor(namespace)
+  - querier(namespace)
+  - ruler(namespace)
+  - internal(namespace)
+  - memcached(namespace)
+  - ciliumAlertmanagerSMTP(namespace)

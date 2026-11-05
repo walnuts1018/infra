@@ -2,4 +2,3 @@
 export let chartVersion = "1.12.1"
 export let chartArchive = "https://github.com/longhorn/charts/releases/download/longhorn-" + chartVersion + "/longhorn-" + chartVersion + ".tgz"
 export let releaseName = "longhorn"
-export let namespace = "longhorn-system"

@@ -1,22 +1,20 @@
-import "./chart.mcl" as appChart
-
 let name = "vertical-pod-autoscaler"
 let labels =
   app: name
   "app.kubernetes.io/name": name
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "monitoring.coreos.com/v1"
   kind: "ServiceMonitor"
   metadata:
     name: name
-    namespace: appChart.namespace
+    namespace: namespace
     labels: labels with:
       "app.kubernetes.io/component": "recommender"
   spec:
     namespaceSelector:
       matchNames:
-        - appChart.namespace
+        - namespace
     selector:
       matchLabels:
         "app.kubernetes.io/name": name

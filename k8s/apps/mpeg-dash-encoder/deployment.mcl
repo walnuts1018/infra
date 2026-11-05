@@ -2,12 +2,11 @@ import "./app.mcl" as app
 import "./external-secret.mcl" as externalSecret
 
 let appName = app.name
-let namespace = app.namespace
 let labels =
   app: appName
   "app.kubernetes.io/name": appName
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:

@@ -2,4 +2,3 @@
 export let chartVersion = "v1.21.1"
 export let chartArchive =
   "https://scylla-operator-charts.storage.googleapis.com/stable/scylla-operator-" + chartVersion + ".tgz"
-export let namespace = "scylla-operator"

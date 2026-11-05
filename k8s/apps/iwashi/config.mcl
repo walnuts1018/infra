@@ -1,0 +1,9 @@
+export type Settings =
+  oidcIssuer: String
+  oidcRedirectUrl: String
+  cortexQueryUrl: String
+  cortexOtlpUrl: String
+  cortexRulerUrl: String
+  cortexAlertmanagerUrl: String
+  smtpSmarthost: String
+  smtpFrom: String

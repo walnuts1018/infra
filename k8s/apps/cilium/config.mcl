@@ -4,4 +4,8 @@ export type Settings =
   apiServer: String
   clusterId: Int
   envoyMemory: String
-  ingressLoadBalancerIP: String
+  ingressLoadBalancerIP?: String
+
+export type Configuration =
+  features: List<Feature>
+  settings: Settings

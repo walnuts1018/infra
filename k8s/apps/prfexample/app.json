@@ -2,6 +2,12 @@
   "name": "prfexample",
   "namespace": "prfexample",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "settings": {
+        "scyllaHost": "scylla-cluster-client.databases.svc.cluster.local",
+        "scyllaPort": "9142",
+        "otelEndpoint": "http://default-collector.opentelemetry-collector.svc.cluster.local:4317"
+      }
+    }
   }
 }

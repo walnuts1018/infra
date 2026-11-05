@@ -4,8 +4,9 @@ import "./http-route.mcl" as httpRoute
 import "./service.mcl" as service
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-emit deployment.resource
-emit service.resource
-emit externalSecret.resource
-emit httpRoute.resource
+emit deployment.resource(namespace)
+emit service.resource(namespace)
+emit externalSecret.resource(namespace)
+emit httpRoute.resource(namespace)

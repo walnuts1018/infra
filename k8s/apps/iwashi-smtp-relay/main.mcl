@@ -1,21 +1,20 @@
 import "std:helm" as helm
 import "std:list" as lists
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
+import "./values.mcl" as appValues
 import "./resources.mcl" as appResources
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-let profileName = "smtpRelay"
-let profile = appProfiles.profiles[profileName]
 let apiVersions: List<String> = []
 let options =
   releaseName: "iwashi-smtp-relay"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
-  values: profile.chartValues
+  values: appValues.baseValues
 let chartResources = helm.render(appChart.chartArchive, options)
 
-emit each lists.concat(chartResources, appResources.resources)
+emit each lists.concat(chartResources, appResources.resources(namespace))

@@ -1,0 +1,2 @@
+export let app =
+  image: "ghcr.io/walnuts1018/prfexample/server:0.0.65"

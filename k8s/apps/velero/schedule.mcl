@@ -1,9 +1,9 @@
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "velero.io/v1"
   kind: "Schedule"
   metadata:
     name: "velero-seaweedfs-biscuit"
-    namespace: "velero"
+    namespace: namespace
     labels:
       "app.kubernetes.io/name": "velero"
       "app.kubernetes.io/instance": "velero"

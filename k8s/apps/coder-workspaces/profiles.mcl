@@ -1,6 +1,0 @@
-import "./resources.mcl" as resources
-
-export let resourcesByProfile =
-  "workspace-isolation":
-    - resources.networkPolicy
-    - resources.serviceAccount

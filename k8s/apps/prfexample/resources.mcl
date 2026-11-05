@@ -1,19 +1,19 @@
 import text "./_configs/scylladb-ca.crt" as scyllaCaCertificate
-import "./profiles.mcl" as appProfiles
+import "std:list" as lists
+import "./config.mcl" as config
+import "./images.mcl" as images
 
-let profile = appProfiles.profiles["scyllaClientCertificate"]
 let appName = "prfexample"
-let appNamespace = "prfexample"
 let labels =
   app: appName
   "app.kubernetes.io/name": appName
 
-let scyllaPasswordSecret = node:
+fn scyllaPasswordSecret(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
     name: appName
-    namespace: appNamespace
+    namespace: namespace
   spec:
     secretStoreRef:
       name: "onepassword"
@@ -33,19 +33,19 @@ let scyllaPasswordSecret = node:
           key: "scylladb"
           property: appName
 
-let scyllaClientServiceAccount = node:
+fn scyllaClientServiceAccount(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
   metadata:
     name: "prfexample-scylla-secret-reader"
-    namespace: appNamespace
+    namespace: namespace
 
-let scyllaClientCertificateStore = node:
+fn scyllaClientCertificateStore(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "SecretStore"
   metadata:
     name: "scylla-client-cert"
-    namespace: appNamespace
+    namespace: namespace
   spec:
     provider:
       kubernetes:
@@ -58,18 +58,18 @@ let scyllaClientCertificateStore = node:
             key: "ca.crt"
         auth:
           serviceAccount:
-            name: scyllaClientServiceAccount.metadata.name
-            namespace: appNamespace
+            name: "prfexample-scylla-secret-reader"
+            namespace: namespace
 
-let scyllaClientCertificate = node:
+fn scyllaClientCertificate(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
     name: "scylla-cluster-local-client-ca"
-    namespace: appNamespace
+    namespace: namespace
   spec:
     secretStoreRef:
-      name: scyllaClientCertificateStore.metadata.name
+      name: "scylla-client-cert"
       kind: "SecretStore"
     refreshInterval: "1h"
     target:
@@ -78,7 +78,7 @@ let scyllaClientCertificate = node:
       - extract:
           key: "scylla-cluster-local-client-ca"
 
-let clientCertReadRole = node:
+fn clientCertReadRole(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "Role"
   metadata:
@@ -94,7 +94,7 @@ let clientCertReadRole = node:
       verbs:
         - "get"
 
-let clientCertReadRoleBinding = node:
+fn clientCertReadRoleBinding(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "RoleBinding"
   metadata:
@@ -103,28 +103,28 @@ let clientCertReadRoleBinding = node:
   roleRef:
     apiGroup: "rbac.authorization.k8s.io"
     kind: "Role"
-    name: clientCertReadRole.metadata.name
+    name: "prfexample-read-scylla-client-cert"
   subjects:
     - kind: "ServiceAccount"
-      name: scyllaClientServiceAccount.metadata.name
-      namespace: appNamespace
+      name: "prfexample-scylla-secret-reader"
+      namespace: namespace
 
-let scyllaCaConfigMap = node:
+fn scyllaCaConfigMap(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   metadata:
     name: appName + "-scylladb-ca-cert"
-    namespace: appNamespace
+    namespace: namespace
     labels: labels
   data:
     "ca.crt": scyllaCaCertificate
 
-let deployment = node:
+fn deployment(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: appName
-    namespace: appNamespace
+    namespace: namespace
     labels: labels
   spec:
     replicas: 1
@@ -138,7 +138,7 @@ let deployment = node:
           - name: "ghcr-login-secret"
         containers:
           - name: "apiserver"
-            image: profile.appImage
+            image: images.app.image
             imagePullPolicy: "IfNotPresent"
             resizePolicy:
               - resourceName: "cpu"
@@ -156,7 +156,7 @@ let deployment = node:
                 memory: "256Mi"
             env:
               - name: "OTEL_EXPORTER_OTLP_ENDPOINT"
-                value: profile.otelEndpoint
+                value: settings.otelEndpoint
               - name: "SCYLLA_CA_CERT_PATH"
                 value: "/etc/certs/scylla-db/ca.crt"
               - name: "SCYLLA_CLIENT_CERT_PATH"
@@ -164,18 +164,18 @@ let deployment = node:
               - name: "SCYLLA_CLIENT_KEY_PATH"
                 value: "/etc/certs/scylla-db-client/tls.key"
               - name: "SCYLLA_HOST"
-                value: profile.scyllaHost
+                value: settings.scyllaHost
               - name: "SCYLLA_PORT"
-                value: profile.scyllaPort
+                value: settings.scyllaPort
               - name: "SCYLLA_USER"
                 valueFrom:
                   secretKeyRef:
-                    name: scyllaPasswordSecret.spec.target.name
+                    name: "prfexample"
                     key: "scylladb_username"
               - name: "SCYLLA_PASSWORD"
                 valueFrom:
                   secretKeyRef:
-                    name: scyllaPasswordSecret.spec.target.name
+                    name: "prfexample"
                     key: "scylladb_password"
               - name: "SERVER_ADDITIONAL_ORIGINS"
                 value: "android:apk-key-hash:lQHKOP1Xm9fdIS_R8RbgdktIxTaucWdqLFaSe7QJTWM"
@@ -211,25 +211,25 @@ let deployment = node:
             emptyDir: {}
           - name: "scylla-db-ca-cert"
             configMap:
-              name: scyllaCaConfigMap.metadata.name
+              name: "prfexample-scylladb-ca-cert"
               items:
                 - key: "ca.crt"
                   path: "ca.crt"
           - name: "scylla-db-client-cert"
             secret:
-              secretName: scyllaClientCertificate.spec.target.name
+              secretName: "scylla-cluster-local-client-ca"
               items:
                 - key: "tls.crt"
                   path: "tls.crt"
                 - key: "tls.key"
                   path: "tls.key"
 
-let service = node:
+fn service(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: appName
-    namespace: appNamespace
+    namespace: namespace
     labels: labels
   spec:
     ports:
@@ -239,12 +239,12 @@ let service = node:
     selector: labels
     type: "ClusterIP"
 
-let horizontalAutoscaler = node:
+fn horizontalAutoscaler(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "keda.sh/v1alpha1"
   kind: "ScaledObject"
   metadata:
     name: appName
-    namespace: appNamespace
+    namespace: namespace
     labels: labels
   spec:
     minReplicaCount: 0
@@ -253,7 +253,7 @@ let horizontalAutoscaler = node:
     scaleTargetRef:
       apiVersion: "apps/v1"
       kind: "Deployment"
-      name: deployment.metadata.name
+      name: "prfexample"
     triggers:
       - type: "external-push"
         metadata:
@@ -264,18 +264,18 @@ let horizontalAutoscaler = node:
         metadata:
           value: "95"
 
-let verticalAutoscaler = node:
+fn verticalAutoscaler(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "autoscaling.k8s.io/v1"
   kind: "VerticalPodAutoscaler"
   metadata:
     name: appName
-    namespace: appNamespace
+    namespace: namespace
     labels: labels
   spec:
     targetRef:
       apiVersion: "apps/v1"
       kind: "Deployment"
-      name: deployment.metadata.name
+      name: "prfexample"
     updatePolicy:
       updateMode: "Auto"
     resourcePolicy:
@@ -290,12 +290,12 @@ let verticalAutoscaler = node:
             cpu: "500m"
             memory: "256Mi"
 
-let httpRoute = node:
+fn httpRoute(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "HTTPRoute"
   metadata:
     name: appName
-    namespace: appNamespace
+    namespace: namespace
   spec:
     parentRefs:
       - name: "envoy-gateway"
@@ -309,12 +309,12 @@ let httpRoute = node:
             namespace: "keda"
             port: 8080
 
-let interceptorRoute = node:
+fn interceptorRoute(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "http.keda.sh/v1beta1"
   kind: "InterceptorRoute"
   metadata:
     name: appName
-    namespace: appNamespace
+    namespace: namespace
   spec:
     target:
       service: appName
@@ -326,7 +326,7 @@ let interceptorRoute = node:
       concurrency:
         targetValue: 10
 
-let referenceGrant = node:
+fn referenceGrant(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1beta1"
   kind: "ReferenceGrant"
   metadata:
@@ -336,18 +336,18 @@ let referenceGrant = node:
     from:
       - group: "gateway.networking.k8s.io"
         kind: "HTTPRoute"
-        namespace: appNamespace
+        namespace: namespace
     to:
       - group: ""
         kind: "Service"
         name: "keda-add-ons-http-interceptor-proxy"
 
-let networkPolicy = node:
+fn networkPolicy(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
     name: appName
-    namespace: appNamespace
+    namespace: namespace
   spec:
     podSelector:
       matchLabels: labels
@@ -385,19 +385,8 @@ let networkPolicy = node:
               matchLabels:
                 "scylla/cluster": "scylla-cluster"
 
-export let resources =
-  - scyllaPasswordSecret
-  - scyllaClientServiceAccount
-  - scyllaClientCertificateStore
-  - scyllaClientCertificate
-  - clientCertReadRole
-  - clientCertReadRoleBinding
-  - scyllaCaConfigMap
-  - deployment
-  - service
-  - horizontalAutoscaler
-  - verticalAutoscaler
-  - httpRoute
-  - interceptorRoute
-  - referenceGrant
-  - networkPolicy
+fn resourceList(resource: Map<String, Any>) -> List<Map<String, Any>> =
+  - resource
+
+export fn resources(namespace: String, settings: config.Settings) -> List<Map<String, Any>> =
+  lists.concat(resourceList(scyllaPasswordSecret(namespace, settings)), lists.concat(resourceList(scyllaClientServiceAccount(namespace, settings)), lists.concat(resourceList(scyllaClientCertificateStore(namespace, settings)), lists.concat(resourceList(scyllaClientCertificate(namespace, settings)), lists.concat(resourceList(clientCertReadRole(namespace, settings)), lists.concat(resourceList(clientCertReadRoleBinding(namespace, settings)), lists.concat(resourceList(scyllaCaConfigMap(namespace, settings)), lists.concat(resourceList(deployment(namespace, settings)), lists.concat(resourceList(service(namespace, settings)), lists.concat(resourceList(horizontalAutoscaler(namespace, settings)), lists.concat(resourceList(verticalAutoscaler(namespace, settings)), lists.concat(resourceList(httpRoute(namespace, settings)), lists.concat(resourceList(interceptorRoute(namespace, settings)), lists.concat(resourceList(referenceGrant(namespace, settings)), resourceList(networkPolicy(namespace, settings))))))))))))))))

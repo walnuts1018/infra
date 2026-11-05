@@ -4,14 +4,17 @@ import "./route.mcl" as route
 import "./service.mcl" as service
 import "./workload.mcl" as workload
 import "../../cluster.mcl" as clusterConfig
+import "./config.mcl" as appConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
+param settings: appConfig.Settings
 
 let resources =
-  - workload.serviceAccount
-  - externalSecret.resource
-  - service.resource
-  - workload.deployment
-  - route.resource
+  - workload.serviceAccount(namespace)
+  - externalSecret.resource(namespace)
+  - service.resource(namespace)
+  - workload.deployment(namespace, settings)
+  - route.resource(namespace)
   - networkPolicies.egress
   - networkPolicies.ingress
   - networkPolicies.oidc

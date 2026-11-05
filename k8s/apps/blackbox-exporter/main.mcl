@@ -1,8 +1,8 @@
 import "std:helm" as helm
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-let namespace = "monitoring"
 let chartVersion = "11.18.0"
 let chartArchive = "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-blackbox-exporter-" + chartVersion + "/prometheus-blackbox-exporter-" + chartVersion + ".tgz"
 let values: Map<String, Any> =
@@ -35,8 +35,7 @@ let values: Map<String, Any> =
       memory: "39Mi"
     limits:
       memory: "300Mi"
-let apiVersions: List<String> =
-  - "monitoring.coreos.com/v1"
+let apiVersions: List<String> = []
 let helmOptions =
   releaseName: "blackbox-exporter"
   namespace: namespace
@@ -50,7 +49,7 @@ let ingressRule =
   "from":
     - namespaceSelector:
         matchLabels:
-          "kubernetes.io/metadata.name": "monitoring"
+          "kubernetes.io/metadata.name": namespace
   ports:
     - protocol: "TCP"
       port: 9115

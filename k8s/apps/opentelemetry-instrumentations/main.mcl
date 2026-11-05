@@ -1,10 +1,12 @@
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 let resource = node:
   apiVersion: "opentelemetry.io/v1alpha1"
   kind: "Instrumentation"
   metadata:
     name: "default"
+    namespace: namespace
   spec:
     exporter:
       endpoint: "http://default-collector.opentelemetry-collector.svc.cluster.local:4317"

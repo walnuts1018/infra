@@ -3,9 +3,12 @@ import "./discovery-secret.mcl" as discoverySecret
 import "./network-policy.mcl" as networkPolicy
 import "./service-account.mcl" as serviceAccount
 import "../../cluster.mcl" as clusterConfig
+import "./config.mcl" as appConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
+param settings: appConfig.Settings
 
-emit discoverySecret.resource
-emit serviceAccount.resource
-emit collector.resource
-emit networkPolicy.resource
+emit discoverySecret.resource(namespace)
+emit serviceAccount.resource(namespace)
+emit collector.resource(namespace, settings)
+emit networkPolicy.resource(namespace)

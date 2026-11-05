@@ -2,6 +2,14 @@
   "name": "maps",
   "namespace": "maps",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "settings": {
+        "tileRefresh": {
+          "schedule": "0 3 1 * *",
+          "source": ":http,url='https://download.versatiles.org/':osm-landcover.versatiles",
+          "destination": "seaweedmaps:maps/osm-landcover.versatiles"
+        }
+      }
+    }
   }
 }

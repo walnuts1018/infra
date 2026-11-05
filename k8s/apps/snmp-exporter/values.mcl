@@ -1,0 +1,7 @@
+import text "./config/generator.yaml" as snmpConfig
+
+export let baseValues: Map<String, Any> =
+  tolerations:
+    - key: "node.walnuts.dev/low-performance"
+      operator: "Exists"
+  config: snmpConfig

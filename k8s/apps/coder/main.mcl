@@ -1,20 +1,21 @@
 import "std:helm" as helm
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
+import "./values.mcl" as appValues
 import "./external-secrets.mcl" as externalSecrets
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let options =
   releaseName: appChart.releaseName
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
-  apiVersions: appChart.apiVersions
-  values: appProfiles.valuesByProfile["workspace-host"]
+  apiVersions: []
+  values: appValues.baseValues
 let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources
-emit externalSecrets.database
-emit externalSecrets.github
-emit externalSecrets.oidc
+emit externalSecrets.database(namespace)
+emit externalSecrets.github(namespace)
+emit externalSecrets.oidc(namespace)

@@ -1,8 +1,11 @@
 import "./resources.mcl" as app
 import "./routing.mcl" as routing
+import "./config.mcl" as appConfig
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
+param settings: appConfig.Settings
 
-emit each app.allResources
-emit each routing.resources
-emit each routing.tcpRoutes
+emit each app.allResources(namespace, settings)
+emit each routing.resources(namespace)
+emit each routing.tcpRoutes(namespace)

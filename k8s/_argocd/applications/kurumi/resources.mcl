@@ -1,74 +1,9 @@
-import text "../_templates/apps.gotmpl" as appsTemplatePatch
-import "../common.mcl" as common
+import "../agent-cluster.mcl" as agentCluster
 
-let agentLabel =
-  "argocd-agent": "true"
-let standardSyncOptions =
-  - "ServerSideApply=true"
-  - "FailOnSharedResource=true"
-let appSetSyncOptions =
-  - "ServerSideApply=true"
-  - "FailOnSharedResource=true"
-  - "CreateNamespace=true"
-let destination =
+let config =
   name: "kurumi"
-  namespace: "argocd"
-let appDestination =
-  name: "kurumi"
-let appsGenerator = common.applicationGenerator("kurumi")
-let spokeSource = common.mclSource("k8s/_argocd/spoke", "kurumi")
-let cmpSource = common.mclSource("k8s/_argocd/cmp", "kurumi")
-let spokeSources =
-  - cmpSource
-  - spokeSource
-let emptySources: List<Map<String, Any>> = []
-let apps = node:
-  apiVersion: common.apiVersion
-  kind: "ApplicationSet"
-  metadata: common.metadataNoLabels("apps-kurumi")
-  spec:
-    goTemplate: true
-    goTemplateOptions:
-      - "missingkey=error"
-    generators:
-      - appsGenerator
-    template:
-      metadata: common.appTemplateMetadataWithLabels("kurumi", agentLabel)
-      spec:
-        project: "kurumi"
-        destination:
-          name: "kurumi"
-          namespace: "{{.namespace}}"
-        sources: emptySources
-        syncPolicy: common.syncPolicy(appSetSyncOptions)
-    templatePatch: appsTemplatePatch
-let agent = common.application(
-  "argocd-agent-kurumi",
-  "kurumi",
-  destination,
-  common.mclSource("k8s/_argocd/agent/agent", "kurumi"),
-  agentLabel,
-  standardSyncOptions,
-)
-let namespaces = common.application(
-  "namespaces-kurumi",
-  "kurumi",
-  appDestination,
-  common.mclSource("k8s/namespaces/kurumi", "kurumi"),
-  agentLabel,
-  standardSyncOptions,
-)
-let spoke = common.multiSourceApplication(
-  "argocd-spoke-kurumi",
-  "kurumi",
-  destination,
-  spokeSources,
-  agentLabel,
-  standardSyncOptions,
-)
+  project: "kurumi"
+  destinationName: "kurumi"
+  namespaceSourcePath: "k8s/namespaces/kurumi"
 
-export let resources: List<Map<String, Any>> =
-  - agent
-  - apps
-  - namespaces
-  - spoke
+export let resources = agentCluster.resources(config)

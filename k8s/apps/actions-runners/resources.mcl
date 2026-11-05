@@ -7,169 +7,170 @@ let appLabels =
   app: "actions-runners"
   "app.kubernetes.io/name": "actions-runners"
 
-export let runnerHooksConfigMap = node:
-  apiVersion: "v1"
-  kind: "ConfigMap"
-  immutable: true
-  metadata:
-    name: runnerHooksConfigMapName
-    namespace: "arc-runners"
-    labels: appLabels
-  data: runnerHooksData
+export fn resources(namespace: String) -> Map<String, Any> =
+  runnerHooksConfigMap: node:
+    apiVersion: "v1"
+    kind: "ConfigMap"
+    immutable: true
+    metadata:
+      name: runnerHooksConfigMapName
+      namespace: namespace
+      labels: appLabels
+    data: runnerHooksData
 
-export let githubAppSecret =
-  apiVersion: "external-secrets.io/v1"
-  kind: "ExternalSecret"
-  metadata:
-    name: "github-app-secret"
-    namespace: "arc-runners"
-  spec:
-    data:
-      -
-        remoteRef:
-          key: "sharc-rusk"
-          property: "github_app_id"
-        secretKey: "github_app_id"
-      -
-        remoteRef:
-          key: "sharc-rusk"
-          property: "github_app_installation_id"
-        secretKey: "github_app_installation_id"
-      -
-        remoteRef:
-          key: "sharc-rusk"
-          property: "github_app_private_key"
-        secretKey: "github_app_private_key"
-    refreshInterval: "1m"
-    secretStoreRef:
-      kind: "ClusterSecretStore"
-      name: "onepassword"
-    target:
+  githubAppSecret: node:
+    apiVersion: "external-secrets.io/v1"
+    kind: "ExternalSecret"
+    metadata:
       name: "github-app-secret"
-      template:
-        data:
-          github_app_id: "{{ .github_app_id }}"
-          github_app_installation_id: "{{ .github_app_installation_id }}"
-          github_app_private_key: "{{ .github_app_private_key }}"
-        engineVersion: "v2"
-        type: "Opaque"
+      namespace: namespace
+    spec:
+      data:
+        -
+          remoteRef:
+            key: "sharc-rusk"
+            property: "github_app_id"
+          secretKey: "github_app_id"
+        -
+          remoteRef:
+            key: "sharc-rusk"
+            property: "github_app_installation_id"
+          secretKey: "github_app_installation_id"
+        -
+          remoteRef:
+            key: "sharc-rusk"
+            property: "github_app_private_key"
+          secretKey: "github_app_private_key"
+      refreshInterval: "1m"
+      secretStoreRef:
+        kind: "ClusterSecretStore"
+        name: "onepassword"
+      target:
+        name: "github-app-secret"
+        template:
+          data:
+            github_app_id: "{{ .github_app_id }}"
+            github_app_installation_id: "{{ .github_app_installation_id }}"
+            github_app_private_key: "{{ .github_app_private_key }}"
+          engineVersion: "v2"
+          type: "Opaque"
 
-export let networkPolicy =
-  apiVersion: "networking.k8s.io/v1"
-  kind: "NetworkPolicy"
-  metadata:
-    name: "actions-runners"
-    namespace: "arc-runners"
-  spec:
-    egress:
-      -
-        to:
-          -
-            ipBlock:
-              cidr: "0.0.0.0/0"
-              except:
-                - "192.168.0.0/16"
-                - "10.244.0.0/16"
-                - "10.96.0.0/12"
-      -
-        ports:
-          -
-            port: 53
-            protocol: "UDP"
-          -
-            port: 53
-            protocol: "TCP"
-        to:
-          -
-            namespaceSelector:
-              matchLabels:
-                "kubernetes.io/metadata.name": "kube-system"
-            podSelector:
-              matchLabels:
-                "k8s-app": "kube-dns"
-      -
-        ports:
-          -
-            port: 3000
-            protocol: "TCP"
-        to:
-          -
-            namespaceSelector:
-              matchLabels:
-                "kubernetes.io/metadata.name": "arc-systems"
-            podSelector:
-              matchLabels:
-                "app.kubernetes.io/name": "github-actions-cache-server"
-      -
-        ports:
-          -
-            port: 443
-            protocol: "TCP"
-        to:
-          -
-            ipBlock:
-              cidr: "192.168.12.138/32"
-      -
-        ports:
-          -
-            port: 10443
-            protocol: "TCP"
-        to:
-          -
-            namespaceSelector:
-              matchLabels:
-                "kubernetes.io/metadata.name": "envoy-gateway-system"
-            podSelector:
-              matchLabels:
-                "app.kubernetes.io/component": "proxy"
-                "app.kubernetes.io/name": "envoy"
-      -
-        ports:
-          -
-            port: 4318
-            protocol: "TCP"
-        to:
-          -
-            namespaceSelector:
-              matchLabels:
-                "kubernetes.io/metadata.name": "opentelemetry-collector"
-            podSelector:
-              matchLabels:
-                "app.kubernetes.io/name": "default-collector"
-    ingress:
-      -
-        from:
-          -
-            namespaceSelector:
-              matchLabels:
-                "kubernetes.io/metadata.name": "opentelemetry-collector"
-        ports:
-          -
-            port: 8080
-            protocol: "TCP"
-    podSelector: {}
-    policyTypes:
-      - "Ingress"
-      - "Egress"
+  networkPolicy: node:
+    apiVersion: "networking.k8s.io/v1"
+    kind: "NetworkPolicy"
+    metadata:
+      name: "actions-runners"
+      namespace: namespace
+    spec:
+      egress:
+        -
+          to:
+            -
+              ipBlock:
+                cidr: "0.0.0.0/0"
+                except:
+                  - "192.168.0.0/16"
+                  - "10.244.0.0/16"
+                  - "10.96.0.0/12"
+        -
+          ports:
+            -
+              port: 53
+              protocol: "UDP"
+            -
+              port: 53
+              protocol: "TCP"
+          to:
+            -
+              namespaceSelector:
+                matchLabels:
+                  "kubernetes.io/metadata.name": "kube-system"
+              podSelector:
+                matchLabels:
+                  "k8s-app": "kube-dns"
+        -
+          ports:
+            -
+              port: 3000
+              protocol: "TCP"
+          to:
+            -
+              namespaceSelector:
+                matchLabels:
+                  "kubernetes.io/metadata.name": "arc-systems"
+              podSelector:
+                matchLabels:
+                  "app.kubernetes.io/name": "github-actions-cache-server"
+        -
+          ports:
+            -
+              port: 443
+              protocol: "TCP"
+          to:
+            -
+              ipBlock:
+                cidr: "192.168.12.138/32"
+        -
+          ports:
+            -
+              port: 10443
+              protocol: "TCP"
+          to:
+            -
+              namespaceSelector:
+                matchLabels:
+                  "kubernetes.io/metadata.name": "envoy-gateway-system"
+              podSelector:
+                matchLabels:
+                  "app.kubernetes.io/component": "proxy"
+                  "app.kubernetes.io/name": "envoy"
+        -
+          ports:
+            -
+              port: 4318
+              protocol: "TCP"
+          to:
+            -
+              namespaceSelector:
+                matchLabels:
+                  "kubernetes.io/metadata.name": "opentelemetry-collector"
+              podSelector:
+                matchLabels:
+                  "app.kubernetes.io/name": "default-collector"
+      ingress:
+        -
+          from:
+            -
+              namespaceSelector:
+                matchLabels:
+                  "kubernetes.io/metadata.name": "opentelemetry-collector"
+          ports:
+            -
+              port: 8080
+              protocol: "TCP"
+      podSelector: {}
+      policyTypes:
+        - "Ingress"
+        - "Egress"
 
-export let podMonitor =
-  apiVersion: "monitoring.coreos.com/v1"
-  kind: "PodMonitor"
-  metadata:
-    labels:
-      app: "actions-runners"
-      "app.kubernetes.io/name": "actions-runners"
-    name: "arc-runner-set-listener"
-    namespace: "arc-runners"
-  spec:
-    namespaceSelector:
-      matchNames:
-        - "arc-systems"
-    podMetricsEndpoints:
-      -
-        interval: "15s"
-        path: "/metrics"
-        port: "metrics"
-    selector:
-      matchLabels:
-        "app.kubernetes.io/component": "runner-scale-set-listener"
+  podMonitor: node:
+    apiVersion: "monitoring.coreos.com/v1"
+    kind: "PodMonitor"
+    metadata:
+      labels:
+        app: "actions-runners"
+        "app.kubernetes.io/name": "actions-runners"
+      name: "arc-runner-set-listener"
+      namespace: namespace
+    spec:
+      namespaceSelector:
+        matchNames:
+          - "arc-systems"
+      podMetricsEndpoints:
+        -
+          interval: "15s"
+          path: "/metrics"
+          port: "metrics"
+      selector:
+        matchLabels:
+          "app.kubernetes.io/component": "runner-scale-set-listener"

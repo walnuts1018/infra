@@ -1,0 +1,4 @@
+export type Settings =
+  scyllaHost: String
+  scyllaPort: String
+  otelEndpoint: String

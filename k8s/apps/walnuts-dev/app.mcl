@@ -1,5 +1,4 @@
 export let name = "walnuts-dev"
-export let namespace = "walnuts-dev"
 export let labels =
   app: name
   "app.kubernetes.io/name": name

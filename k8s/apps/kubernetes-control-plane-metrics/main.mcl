@@ -3,6 +3,7 @@ import "./service-monitors.mcl" as monitors
 import "./proxies.mcl" as proxies
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 emit services.controllerManagerService
 emit services.corednsService
@@ -12,10 +13,10 @@ emit services.proxyService
 emit services.schedulerService
 emit proxies.kubeletProxyDaemonSet
 emit proxies.controlPlaneProxyDaemonSet
-emit monitors.controllerManagerServiceMonitor
-emit monitors.corednsServiceMonitor
-emit monitors.etcdServiceMonitor
-emit monitors.proxyServiceMonitor
-emit monitors.schedulerServiceMonitor
-emit monitors.apiServerServiceMonitor
-emit monitors.kubeletServiceMonitor
+emit monitors.controllerManagerServiceMonitor(namespace)
+emit monitors.corednsServiceMonitor(namespace)
+emit monitors.etcdServiceMonitor(namespace)
+emit monitors.proxyServiceMonitor(namespace)
+emit monitors.schedulerServiceMonitor(namespace)
+emit monitors.apiServerServiceMonitor(namespace)
+emit monitors.kubeletServiceMonitor(namespace)

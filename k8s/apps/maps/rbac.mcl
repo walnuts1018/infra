@@ -1,11 +1,11 @@
 import "./app.mcl" as app
 
-export let role = node:
+export fn role(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "Role"
   metadata:
     name: app.name + "-rollout-restart"
-    namespace: app.namespace
+    namespace: namespace
   rules:
     - apiGroups:
         - "apps"
@@ -17,17 +17,17 @@ export let role = node:
         - "get"
         - "patch"
 
-export let roleBinding = node:
+export fn roleBinding(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "RoleBinding"
   metadata:
     name: app.name + "-rollout-restart"
-    namespace: app.namespace
+    namespace: namespace
   roleRef:
     apiGroup: "rbac.authorization.k8s.io"
     kind: "Role"
-    name: role.metadata.name
+    name: app.name + "-rollout-restart"
   subjects:
     - kind: "ServiceAccount"
       name: "maps-updater"
-      namespace: app.namespace
+      namespace: namespace

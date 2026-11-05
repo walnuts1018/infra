@@ -1,19 +1,17 @@
-import "./workload.mcl" as workload
-
 let hosts =
   - "ipu.walnuts.dev"
 let routeRules =
   - hosts: hosts
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "http.keda.sh/v1beta1"
   kind: "InterceptorRoute"
   metadata:
     name: "ipu"
-    namespace: "ipu"
+    namespace: namespace
   spec:
     target:
-      service: workload.service.metadata.name
+      service: "ipu"
       port: 8080
     rules: routeRules
     scalingMetric:

@@ -37,12 +37,12 @@ let webRouteSpec =
   hostnames: webHostnames
   rules: webRules
 
-export let webRoute =
+export fn webRoute(namespace: String) -> Map<String, Any> =
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "HTTPRoute"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
     annotations:
       "external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied": "true"
   spec: webRouteSpec
@@ -95,31 +95,27 @@ let userContentRouteSpec =
   hostnames: userContentHostnames
   rules: userContentRules
 
-export let userContentRoute =
+export fn userContentRoute(namespace: String) -> Map<String, Any> =
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "HTTPRoute"
   metadata:
     name: app.name + "-usercontent"
-    namespace: app.namespace
+    namespace: namespace
     annotations:
       "external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied": "true"
   spec: userContentRouteSpec
 
-let grantFrom =
-  - group: "gateway.networking.k8s.io"
-    kind: "HTTPRoute"
-    namespace: app.namespace
-let grantTo =
-  - group: ""
-    kind: "Service"
-let referenceGrantSpec =
-  from: grantFrom
-  to: grantTo
-
-export let seaweedReferenceGrant =
+export fn seaweedReferenceGrant(namespace: String) -> Map<String, Any> =
   apiVersion: "gateway.networking.k8s.io/v1beta1"
   kind: "ReferenceGrant"
   metadata:
     name: app.name
     namespace: seaweedNamespace
-  spec: referenceGrantSpec
+  spec:
+    from:
+      - group: "gateway.networking.k8s.io"
+        kind: "HTTPRoute"
+        namespace: namespace
+    to:
+      - group: ""
+        kind: "Service"

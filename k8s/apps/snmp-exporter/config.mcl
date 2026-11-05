@@ -1,0 +1,9 @@
+export type Feature = "monitoring"
+
+export type TargetSettings =
+  name: String
+  target: String
+  modules: List<String>
+
+export type Settings =
+  targets: List<TargetSettings>

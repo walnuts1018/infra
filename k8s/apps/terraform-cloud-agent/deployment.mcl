@@ -5,12 +5,12 @@ let labels =
   "app.kubernetes.io/name": app.name
   "app.kubernetes.io/component": "agent"
 
-export let resource =
+export fn resource(namespace: String) -> Map<String, Any> =
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
     labels: labels
     annotations:
       "reloader.stakater.com/auto": "true"

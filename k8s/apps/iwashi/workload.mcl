@@ -1,12 +1,10 @@
 import "./app.mcl" as app
 import "./external-secret.mcl" as externalSecret
-import "./profiles.mcl" as appProfiles
+import "./config.mcl" as appConfig
 
 let labels =
   app: app.name
   "app.kubernetes.io/name": app.name
-let profileName = "oidcAndCortexMetrics"
-let profile = appProfiles.profiles[profileName]
 let secretName = externalSecret.secretName
 let securityContext =
   allowPrivilegeEscalation: false
@@ -16,20 +14,20 @@ let securityContext =
     drop:
       - "ALL"
 
-export let serviceAccount = node:
+export fn serviceAccount(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
   metadata:
     name: app.name + "-api"
-    namespace: app.namespace
+    namespace: namespace
   automountServiceAccountToken: false
 
-export let deployment = node:
+export fn deployment(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
     labels: labels
   spec:
     replicas: 1
@@ -64,28 +62,28 @@ export let deployment = node:
             env:
               -
                 name: "OIDC_ISSUER"
-                value: profile.oidcIssuer
+                value: settings.oidcIssuer
               -
                 name: "OIDC_REDIRECT_URL"
-                value: profile.oidcRedirectUrl
+                value: settings.oidcRedirectUrl
               -
                 name: "CORTEX_QUERY_URL"
-                value: profile.cortexQueryUrl
+                value: settings.cortexQueryUrl
               -
                 name: "CORTEX_OTLP_URL"
-                value: profile.cortexOtlpUrl
+                value: settings.cortexOtlpUrl
               -
                 name: "CORTEX_RULER_URL"
-                value: profile.cortexRulerUrl
+                value: settings.cortexRulerUrl
               -
                 name: "CORTEX_ALERTMANAGER_URL"
-                value: profile.cortexAlertmanagerUrl
+                value: settings.cortexAlertmanagerUrl
               -
                 name: "SMTP_SMARTHOST"
-                value: profile.smtpSmarthost
+                value: settings.smtpSmarthost
               -
                 name: "SMTP_FROM"
-                value: profile.smtpFrom
+                value: settings.smtpFrom
             ports:
               -
                 name: "http"

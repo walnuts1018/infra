@@ -4,28 +4,32 @@ Kubernetes クラスタに適用される Manifest 群です。
 
 ## ディレクトリ構成
 
-- `clusters/<cluster>/cluster.json`: Kubernetesバージョンやクラスタ識別名などのクラスタ情報。
-- `apps/<app>/app.json`: 配置するクラスタと、配置ごとのFeature・Settings。
+- `cluster.mcl`: アプリ配置とCluster API入口が使用するクラスタ型。
+- `clusters/<cluster>/cluster.json`: クラスタ共通情報とCluster APIの構築値。
+- `clusters/<cluster>/*.mcl`: クラスタ構築Manifest。
+- `apps/<app>/app.json`: 配置するクラスタ、namespace、配置ごとのFeature・Settings。
 - `apps/<app>/*.mcl`: 型付き入力からアプリケーションManifestを生成するMCLソース。
-- `_argocd/applications`: アプリ配置を自動発見するApplicationSetと共通Go Template。
+- `_argocd/applications`: アプリ配置を自動発見するApplicationSet、Agentクラスタ生成関数、共通Go Template。
 - `_argocd/cmp`: MCL CMPの実装と入力契約。
 - `namespaces`: Namespace Manifest。
 - 初期構築と運用
   - [初期構築](init/berry.md)
   - [クラスター情報](init/)
   - [運用](operations/)
-- `namespaces`: namespace たち
-- `utils`: ユーティリティlibsonnet
 
 ## アプリ配置とMCL入力
 
-ApplicationSetは`k8s/apps/*/app.json`を読み、`clusters`に明示されたクラスタだけにApplicationを生成します。アプリを追加するときは、そのアプリの`app.json`とMCLソースだけを更新します。Applicationのnamespaceはアプリ共通の`app.json`で指定し、配置ごとの上書きは行いません。
+ApplicationSetは`k8s/apps/*/app.json`を読み、`clusters`に明示されたクラスタだけにApplicationを生成します。アプリを追加するときは、そのアプリの`app.json`とMCLソースを追加します。`app.json`トップレベルの`namespace`がアプリ全体の正本で、Applicationの`destination.namespace`とMCLの`namespace`入力へ同じ値を渡します。配置ごとのnamespace上書きは許可しません。`app.json`経由の全MCL入口は`param namespace: String`を宣言し、Cluster-scopedリソースだけを生成する場合も入力を受け取りますが、そのリソースにはnamespaceを設定しません。
 
-クラスタ情報は`k8s/clusters/<cluster>/cluster.json`を正本とします。`clusterApiManaged`が`"true"`のクラスタだけがCluster API用ApplicationSetの対象です。Berryの`kubernetesVersion`は既存のHelm設定`1.36.4`を引き継いだ値で、実クラスタから取得した値ではありません。アプリのMCL入口は共通の`Cluster`型を受け取り、Helm Chartの`kubeVersion`には`cluster.kubernetesVersion`を渡します。Manifestの差分はFeature、Settings、意味のあるProfileで表し、クラスタ名による条件分岐は使いません。
+クラスタ情報は`k8s/clusters/<cluster>/cluster.json`を正本とします。アプリ入口には`name`、`namespace`、`kubernetesVersion`だけを射影した`Cluster`を渡し、Helm Chartの`kubeVersion`には`cluster.kubernetesVersion`を使います。Cluster API入口にはTalosバージョンとマシン台数を含む6フィールドの`ClusterAPIConfig`を渡します。`clusterApiManaged`が文字列`"true"`のクラスタだけをCluster API ApplicationSetの対象とし、CMPも同じ値を検証します。Berryの`kubernetesVersion`は既存のHelm設定`1.36.4`を引き継いだ値で、実クラスタから取得した値ではありません。Manifestの差分はFeatureとSettingsで表し、汎用Profileやクラスタ名による条件分岐は使いません。
 
-ApplicationSetの共通Go Templateは`MCL_CLUSTER_NAME`と選択された配置設定のJSONをCMPへ渡します。CMPはクラスタ定義から`name`、`namespace`、`kubernetesVersion`を読み、配置設定と合わせた一時JSONファイルを作成して`mcl render --parameter-file`へ渡します。JSON値をシェル引数のコードとして展開しません。この契約ではCMP実行環境に`jq`が必要です。
+ApplicationSetの共通Go Templateは`MCL_CLUSTER_NAME`、`MCL_NAMESPACE`、`MCL_CLUSTER_INPUT=application`、選択された配置設定のJSONをCMPへ渡します。CMPはクラスタ定義からアプリ用の3フィールドを射影し、配置設定とnamespaceを含む一時JSONを作成して`mcl render --parameter-file`へ渡します。`app.json`経由でない入口では`MCL_NAMESPACE`を省略でき、パラメータJSONにも`namespace`キーを追加しません。Cluster API ApplicationSetは`MCL_CLUSTER_INPUT=clusterAPI`を指定し、Cluster API用の6フィールドを射影します。このモードでは`MCL_NAMESPACE`を拒否し、出力namespaceを`cluster.namespace`に限定します。JSON値をシェルコードとして展開しません。この契約ではCMP実行環境に`jq`が必要です。
 
-`app.json`と`cluster.json`はArgo CD Git File Generatorが読む厳密なJSONです。MCLパラメータファイルも厳密なJSONで、解決済みの一時入力はGitへコミットしません。
+`app.json`と`cluster.json`はArgo CD Git File Generatorが読む厳密なJSONです。MCLパラメータファイルも厳密なJSONで、解決済みの一時入力はGitへコミットしません。`MCL_DEPLOYMENT_JSON`は選択した配置のFeatureやSettingsを運び、`cluster`と`namespace`は予約キーとして拒否します。CMPは未知の入力モード、空namespace、Cluster API必須値の欠落、Cluster API管理対象外のクラスタを拒否します。
+
+KurumiとBiscuitは同じAgentクラスタ構成を`k8s/_argocd/applications/agent-cluster.mcl`から生成します。クラスタ別ファイルにはクラスタ名、Project、destination、Namespace Manifestのパスだけを記載します。BerryはPrincipalの役割を持つため、この関数の対象外です。
+
+Helm Chartの`.Capabilities.APIVersions.Has`条件とMCLから渡す`apiVersions`の対応は[Helm Capabilities一覧](design/mcl-helm-capabilities.md)に記録します。CRD Schema Catalogへの登録は、対象クラスタでAPIが利用可能である根拠にしません。
 
 ## Private MCL依存
 
@@ -154,3 +158,20 @@ MCLがlockと依存キャッシュにないGitHub Release assetを取得する�
 - **walnuts-dev**: <https://walnuts.dev>
 - **warrior**
 - **zitadel**: 自宅IdP / Walnuts.devの各サービスにSSOを提供
+
+### 将来のCMPとLifecycle
+
+将来のCMPはMCLのBundle全体を受け取り、各ArtifactのLifecycleをArgoCDの同期順序とHookへ変換する。
+標準CLIの`mcl render`は既定でmainフェーズだけを出力するため、この出力だけをデプロイ用の完全なManifestとして扱わない。
+`_argocd/cmp/_configs/render-mcl.sh`は入力解決とmain出力の参照実装であり、Lifecycle変換は将来のプラグインの責務とする。
+
+プラグインの出力には次の規則を適用する。
+
+- bootstrapのCRDは永続的な管理リソースとして出力し、通常リソースより前のSync waveへ配置する。
+- mainのリソースは通常の管理リソースとして出力する。
+- Hook用ArtifactはLifecycleを保持し、ArgoCDへ対応するHook種別、実行順序、削除条件を明示して出力する。
+- 一つのArtifactが複数のイベントを持つ場合、同じリソースの重複出力や通常リソースとの所有権の衝突を検出する。
+- 対応できないLifecycleを黙って省略せず、プラグインが設定エラーとして報告する。
+
+この変換はArgoCDアダプターへ実装し、MCLの汎用評価器や各アプリへ暗黙の全体書き換えを追加しない。
+ローカルの評価ではBundle全体の検証と、mainまたはbootstrapなど指定フェーズの出力を区別する。

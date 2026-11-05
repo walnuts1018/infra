@@ -1,5 +1,4 @@
 export let appName = "samba"
-export let namespace = "samba"
 export let labels =
   app: appName
   "app.kubernetes.io/name": appName

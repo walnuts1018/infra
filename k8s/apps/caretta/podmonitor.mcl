@@ -1,5 +1,3 @@
-import "./chart.mcl" as appChart
-
 let labels =
   app: "caretta"
   "app.kubernetes.io/name": "caretta"
@@ -7,12 +5,12 @@ let labels =
 let selectorLabels = labels with:
   "app.kubernetes.io/instance": "caretta"
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "monitoring.coreos.com/v1"
   kind: "PodMonitor"
   metadata:
     name: "caretta"
-    namespace: appChart.namespace
+    namespace: namespace
     labels: labels
   spec:
     podMetricsEndpoints:

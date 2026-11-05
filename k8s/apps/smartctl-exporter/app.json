@@ -2,6 +2,10 @@
   "name": "smartctl-exporter",
   "namespace": "monitoring",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "features": [
+        "monitoring"
+      ]
+    }
   }
 }

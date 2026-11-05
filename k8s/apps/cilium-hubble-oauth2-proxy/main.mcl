@@ -1,5 +1,6 @@
 import "./resources.mcl" as app
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-emit each app.resources
+emit each app.resources(namespace)

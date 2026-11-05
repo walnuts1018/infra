@@ -1,19 +1,18 @@
 import "./external-secrets.mcl" as externalSecrets
 
 let name = "ipu"
-let namespace = "ipu"
 let labels =
   app: name
   "app.kubernetes.io/name": name
 
-export let serviceAccount = node:
+export fn serviceAccount(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
   metadata:
     name: name
     namespace: namespace
 
-export let deployment = node:
+export fn deployment(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
@@ -28,7 +27,7 @@ export let deployment = node:
       metadata:
         labels: labels
       spec:
-        serviceAccountName: serviceAccount.metadata.name
+        serviceAccountName: "ipu"
         securityContext:
           fsGroup: 101
           fsGroupChangePolicy: "OnRootMismatch"
@@ -107,7 +106,7 @@ export let deployment = node:
                     expirationSeconds: 86400
                     path: "token"
 
-export let service = node:
+export fn service(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:

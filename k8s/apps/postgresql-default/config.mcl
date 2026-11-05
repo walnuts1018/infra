@@ -1,0 +1,10 @@
+export type Settings =
+  clusterName: String
+  databaseImageCatalog: String
+  majorVersion: Int
+  storageClass: String
+  storageSize: String
+  backupDestination: String
+  backupEndpoint: String
+  backupRetention: String
+  loadBalancerAddress: String

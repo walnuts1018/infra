@@ -5,12 +5,12 @@ let labels =
   app: name
   "app.kubernetes.io/name": name
 
-let deployment = node:
+fn deployment(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: name
-    namespace: appSettings.namespace
+    namespace: namespace
     labels: labels
   spec:
     replicas: 1
@@ -53,12 +53,12 @@ let deployment = node:
               limits:
                 memory: "256Mi"
 
-let service = node:
+fn service(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: name
-    namespace: appSettings.namespace
+    namespace: namespace
   spec:
     selector: labels
     ports:
@@ -67,6 +67,6 @@ let service = node:
         targetPort: "http"
         protocol: "TCP"
 
-export let resources =
-  - deployment
-  - service
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - deployment(namespace)
+  - service(namespace)

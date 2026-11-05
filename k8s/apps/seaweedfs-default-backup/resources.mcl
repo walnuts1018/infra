@@ -1,13 +1,12 @@
 import "std:crypto" as crypto
 import "std:hash" as hash
-import "./profiles.mcl" as appProfiles
+import "./config.mcl" as appConfig
 import text "./_configs/aws-config" as awsConfig
 import text "./_configs/aws-credentials.tmpl" as awsCredentials
 import text "./_configs/backup.ts" as backupScript
 import text "./_configs/rclone.conf" as rcloneConfig
 
 let name = "seaweedfs-default-backup"
-let namespace = "seaweedfs"
 let noCapabilities: List<String> = []
 let labels =
   app: name
@@ -49,7 +48,7 @@ let externalSecretHashInput =
   templateData: externalSecretTemplateData
 let secretName = name + "-aws-" + hash.fnv1a64(externalSecretHashInput)
 
-export let awsConfigMap = node:
+export fn awsConfigMap(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   metadata:
@@ -59,7 +58,7 @@ export let awsConfigMap = node:
   immutable: true
   data: awsData
 
-export let rcloneConfigMap = node:
+export fn rcloneConfigMap(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   metadata:
@@ -69,7 +68,7 @@ export let rcloneConfigMap = node:
   immutable: true
   data: rcloneData
 
-export let scriptConfigMap = node:
+export fn scriptConfigMap(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   metadata:
@@ -79,7 +78,7 @@ export let scriptConfigMap = node:
   immutable: true
   data: scriptData
 
-export let externalSecret = node:
+export fn externalSecret(namespace: String) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
@@ -98,14 +97,14 @@ export let externalSecret = node:
         data: externalSecretTemplateData
     data: externalSecretData
 
-export let serviceAccount = node:
+export fn serviceAccount(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
   metadata:
     name: name
     namespace: namespace
 
-export let cronJob = node:
+export fn cronJob(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "batch/v1"
   kind: "CronJob"
   metadata:
@@ -113,7 +112,7 @@ export let cronJob = node:
     namespace: namespace
     labels: labels
   spec:
-    schedule: appProfiles.profiles["standard"].schedule
+    schedule: settings.schedule
     timeZone: "Asia/Tokyo"
     concurrencyPolicy: "Forbid"
     startingDeadlineSeconds: 21600

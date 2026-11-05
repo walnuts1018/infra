@@ -9,20 +9,20 @@ import "./services.mcl" as services
 import "./valkey.mcl" as valkey
 import "./vpa.mcl" as vpa
 
-export let resources =
-  - config.resource
-  - deployment.resource
-  - externalSecrets.appSecret
-  - externalSecrets.postgresPassword
-  - pdb.resource
-  - vpa.resource
-  - postgres.cluster
-  - backup.objectStore
-  - backup.scheduledBackup
-  - routing.webRoute
-  - routing.userContentRoute
-  - routing.seaweedReferenceGrant
-  - services.application
-  - services.valkey
-  - services.valkeyHeadless
-  - valkey.statefulSet
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - config.resource(namespace)
+  - deployment.resource(namespace)
+  - externalSecrets.appSecret(namespace)
+  - externalSecrets.postgresPassword(namespace)
+  - pdb.resource(namespace)
+  - vpa.resource(namespace)
+  - postgres.cluster(namespace)
+  - backup.objectStore(namespace)
+  - backup.scheduledBackup(namespace)
+  - routing.webRoute(namespace)
+  - routing.userContentRoute(namespace)
+  - routing.seaweedReferenceGrant(namespace)
+  - services.application(namespace)
+  - services.valkey(namespace)
+  - services.valkeyHeadless(namespace)
+  - valkey.statefulSet(namespace)

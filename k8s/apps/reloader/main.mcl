@@ -7,6 +7,7 @@ import "../../cluster.mcl" as clusterConfig
 type Feature = "argocdApplicationReload"
 
 param cluster: clusterConfig.Cluster
+param namespace: String
 param features: List<Feature> = []
 
 let argocdApplicationReloadEnabled = lists.contains(features, "argocdApplicationReload")
@@ -27,7 +28,7 @@ let values: Map<String, Any> = appValues.commonValues with:
     reloadStrategy: reloadStrategy
 let options =
   releaseName: "reloader"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chart.targetRevision
   kubeVersion: cluster.kubernetesVersion
   apiVersions: appChart.apiVersions

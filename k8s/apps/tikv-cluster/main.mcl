@@ -1,12 +1,8 @@
 import "./certificates.mcl" as certificates
-import "./cluster.mcl" as cluster
+import "./cluster.mcl" as tidbCluster
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-let resources =
-  - cluster.resource
-  - certificates.resources[0]
-  - certificates.resources[1]
-  - certificates.resources[2]
-
-emit each resources
+emit tidbCluster.resource(namespace)
+emit each certificates.resources(namespace)

@@ -1,11 +1,11 @@
 import "./config.mcl" as app
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: app.appName
-    namespace: app.namespace
+    namespace: namespace
     labels: app.labels
   spec:
     ports:

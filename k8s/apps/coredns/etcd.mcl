@@ -1,4 +1,3 @@
-let namespace = "coredns"
 let etcdLabels =
   app: "coredns-etcd"
   "app.kubernetes.io/name": "coredns-etcd"
@@ -25,7 +24,7 @@ let affinity =
   nodeAffinity: nodeAffinity
   podAntiAffinity: etcdPodAntiAffinity
 
-export let headlessService = node:
+export fn headlessService(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
@@ -44,7 +43,7 @@ export let headlessService = node:
         port: 2380
         targetPort: "peer"
 
-export let service = node:
+export fn service(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
@@ -58,7 +57,7 @@ export let service = node:
         port: 2379
         targetPort: "client"
 
-export let statefulSet = node:
+export fn statefulSet(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "StatefulSet"
   metadata:
@@ -87,7 +86,7 @@ export let statefulSet = node:
               - "--advertise-client-urls=http://$(POD_NAME).coredns-etcd-headless.$(POD_NAMESPACE).svc.cluster.local:2379"
               - "--listen-peer-urls=http://0.0.0.0:2380"
               - "--initial-advertise-peer-urls=http://$(POD_NAME).coredns-etcd-headless.$(POD_NAMESPACE).svc.cluster.local:2380"
-              - "--initial-cluster=coredns-etcd-0=http://coredns-etcd-0.coredns-etcd-headless.coredns.svc.cluster.local:2380,coredns-etcd-1=http://coredns-etcd-1.coredns-etcd-headless.coredns.svc.cluster.local:2380,coredns-etcd-2=http://coredns-etcd-2.coredns-etcd-headless.coredns.svc.cluster.local:2380"
+              - "--initial-cluster=coredns-etcd-0=http://coredns-etcd-0.coredns-etcd-headless." + namespace + ".svc.cluster.local:2380,coredns-etcd-1=http://coredns-etcd-1.coredns-etcd-headless." + namespace + ".svc.cluster.local:2380,coredns-etcd-2=http://coredns-etcd-2.coredns-etcd-headless." + namespace + ".svc.cluster.local:2380"
               - "--initial-cluster-token=coredns-etcd"
               - "--initial-cluster-state=new"
               - "--auto-compaction-mode=periodic"

@@ -1,12 +1,11 @@
-import "./settings.mcl" as appChart
 import "./gateway.mcl" as gateway
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.envoyproxy.io/v1alpha1"
   kind: "ClientTrafficPolicy"
   metadata:
     name: "enable-http3"
-    namespace: appChart.namespace
+    namespace: namespace
   spec:
     http3: {}
     headers:

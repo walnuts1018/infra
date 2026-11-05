@@ -5,12 +5,12 @@ let certificateSecretName = app.name + "-tls"
 let labels =
   "app.kubernetes.io/name": app.name
 
-let service = node:
+fn service(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     ports:
       -
@@ -21,18 +21,18 @@ let service = node:
     selector: labels
     type: "ClusterIP"
 
-let certificate = node:
+fn certificate(namespace: String) -> Map<String, Any> = node:
   apiVersion: "cert-manager.io/v1"
   kind: "Certificate"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     dnsNames:
-      - service.metadata.name
-      - service.metadata.name + "." + service.metadata.namespace
-      - service.metadata.name + "." + service.metadata.namespace + ".svc"
-      - service.metadata.name + "." + service.metadata.namespace + ".svc.cluster.local"
+      - app.name
+      - app.name + "." + namespace
+      - app.name + "." + namespace + ".svc"
+      - app.name + "." + namespace + ".svc.cluster.local"
     issuerRef:
       group: "cert-manager.io"
       kind: "ClusterIssuer"
@@ -41,12 +41,12 @@ let certificate = node:
     usages:
       - "server auth"
 
-let deployment = node:
+fn deployment(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     replicas: 2
     selector:
@@ -129,7 +129,7 @@ let deployment = node:
           -
             name: "tls"
             secret:
-              secretName: certificate.spec.secretName
+                secretName: certificateSecretName
           -
             name: "ca"
             configMap:
@@ -146,32 +146,32 @@ let deployment = node:
             labelSelector:
               matchLabels: labels
 
-let backendTLSPolicy = node:
-  apiVersion: "gateway.networking.k8s.io/v1alpha3"
+fn backendTLSPolicy(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
   kind: "BackendTLSPolicy"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     targetRefs:
       -
         group: ""
-        kind: service.kind
-        name: service.metadata.name
+        kind: "Service"
+        name: app.name
     validation:
       caCertificateRefs:
         -
           group: ""
           kind: "ConfigMap"
           name: "local-ca-bundle"
-      hostname: service.metadata.name + "." + service.metadata.namespace + ".svc.cluster.local"
+      hostname: app.name + "." + namespace + ".svc.cluster.local"
 
-let httpRoute = node:
+fn httpRoute(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "HTTPRoute"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     parentRefs:
       -
@@ -183,26 +183,26 @@ let httpRoute = node:
       -
         backendRefs:
           -
-            name: service.metadata.name
-            port: service.spec.ports[0].port
+            name: app.name
+            port: 443
         matches:
           -
             path:
               type: "PathPrefix"
               value: "/"
 
-let securityPolicy = node:
+fn securityPolicy(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.envoyproxy.io/v1alpha1"
   kind: "SecurityPolicy"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     targetRefs:
       -
         group: "gateway.networking.k8s.io"
-        kind: httpRoute.kind
-        name: httpRoute.metadata.name
+        kind: "HTTPRoute"
+        name: app.name
     authorization:
       defaultAction: "Deny"
       rules:
@@ -212,12 +212,12 @@ let securityPolicy = node:
             clientCIDRs:
               - "192.168.0.0/16"
 
-let networkPolicy = node:
+fn networkPolicy(namespace: String) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     podSelector:
       matchLabels: labels
@@ -235,11 +235,11 @@ let networkPolicy = node:
             port: 8080
             protocol: "TCP"
 
-export let resources =
-  - service
-  - certificate
-  - deployment
-  - backendTLSPolicy
-  - httpRoute
-  - securityPolicy
-  - networkPolicy
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - service(namespace)
+  - certificate(namespace)
+  - deployment(namespace)
+  - backendTLSPolicy(namespace)
+  - httpRoute(namespace)
+  - securityPolicy(namespace)
+  - networkPolicy(namespace)

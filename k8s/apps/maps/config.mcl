@@ -1,0 +1,7 @@
+export type TileRefreshSettings =
+  schedule: String
+  source: String
+  destination: String
+
+export type Settings =
+  tileRefresh: TileRefreshSettings

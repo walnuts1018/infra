@@ -1,19 +1,29 @@
 import "std:helm" as helm
+import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
 import "./resources.mcl" as appResources
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let apiVersions: List<String> = []
 let options =
   releaseName: "envoy-gateway"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
-  values: appValues.values
-let chartResources = helm.render(appChart.chartArchive, options)
+  values: appValues.values(namespace)
+let renderedChartResources = helm.render(appChart.chartArchive, options)
+# gateway-api-crdsがGateway API CRDを管理するため、Chart出力から共有CRDだけを除外します。
+fn retainAppOwnedResource(resource: Map<String, Any>) -> Bool =
+  if resource.kind == "CustomResourceDefinition":
+    resource.spec.group != "gateway.networking.k8s.io" and resource.spec.group != "gateway.networking.x-k8s.io"
+  else:
+    true
+
+let chartResources = lists.filter(renderedChartResources, retainAppOwnedResource)
 
 emit each chartResources
-emit appResources.valkeyCluster
+emit appResources.valkeyCluster(namespace)

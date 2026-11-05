@@ -1,15 +1,15 @@
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 let app =
   name: "cilium-gateway"
-  namespace: "cilium-system"
 
 let certificate = node:
   apiVersion: "cert-manager.io/v1"
   kind: "Certificate"
   metadata:
     name: "seaweedfs-biscuit-tls"
-    namespace: app.namespace
+    namespace: namespace
   spec:
     secretName: "seaweedfs-biscuit-tls"
     dnsNames:
@@ -32,7 +32,7 @@ let gateway = node:
   kind: "Gateway"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     gatewayClassName: gatewayClass.metadata.name
     addresses:

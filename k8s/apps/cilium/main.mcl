@@ -1,20 +1,39 @@
 import "std:helm" as helm
 import "std:list" as lists
+import "std:string" as strings
 import "./chart.mcl" as appChart
 import "./external-secret.mcl" as externalSecret
 import "./config.mcl" as appConfig
 import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 param features: List<appConfig.Feature> = []
 param settings: appConfig.Settings
 
-let helmValues = appValues.helmValues(cluster, features, settings)
-let apiVersions: List<String> = []
+let ingressValidationInput: appConfig.Configuration =
+  features: features
+  settings: settings
+
+fn ingressSettingsAreValid(input: appConfig.Configuration) -> Bool =
+  if lists.contains(input.features, "originCertificateIngress"):
+    input.settings.ingressLoadBalancerIP != null and strings.trim(input.settings.ingressLoadBalancerIP ?? "") != ""
+  else:
+    input.settings.ingressLoadBalancerIP == null
+
+rule validIngressSettings(input: appConfig.Configuration):
+  require ingressSettingsAreValid(input) message "originCertificateIngress requires a non-empty ingressLoadBalancerIP and must not leave an unused ingressLoadBalancerIP"
+
+let helmValues = appValues.helmValues(cluster, namespace, features, settings)
+let apiVersions: List<String> =
+  if lists.contains(features, "monitoring"):
+    - "monitoring.coreos.com/v1"
+  else:
+    []
 let options =
   releaseName: "cilium"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   now: appChart.durationValidationTime
@@ -23,8 +42,10 @@ let options =
 let chartResources = helm.render(appChart.chartArchive, options)
 let extraResources =
   if lists.contains(features, "originCertificateIngress"):
-    - externalSecret.resource
+    - externalSecret.resource(namespace)
   else:
     []
 
 emit each lists.concat(chartResources, extraResources)
+
+validate ingressValidationInput using validIngressSettings

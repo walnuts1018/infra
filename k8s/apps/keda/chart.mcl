@@ -1,4 +1,3 @@
 # renovate: datasource=helm depName=keda registryUrl=https://kedacore.github.io/charts
 export let chartVersion = "2.20.2"
 export let chartArchive = "https://kedacore.github.io/charts/keda-" + chartVersion + ".tgz"
-export let namespace = "keda"

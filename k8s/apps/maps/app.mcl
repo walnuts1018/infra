@@ -1,5 +1,4 @@
 export let name = "maps"
-export let namespace = "maps"
 
 export let containerSecurityContext: Map<String, Any> =
   readOnlyRootFilesystem: true

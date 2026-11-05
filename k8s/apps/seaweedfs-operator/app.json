@@ -2,6 +2,10 @@
   "name": "seaweedfs-operator",
   "namespace": "seaweedfs-operator",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "features": [
+        "monitoring"
+      ]
+    }
   }
 }

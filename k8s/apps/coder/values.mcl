@@ -2,11 +2,8 @@ import "std:manifest" as manifest
 import "./environment.mcl" as appEnvironment
 
 let valuesBundle = manifest.load("./_configs/values.yaml")
-let baseValues: Map<String, Any> = valuesBundle[0]
+let defaultValues: Map<String, Any> = valuesBundle[0]
 
-let workspaceHostValues = baseValues with:
+export let baseValues: Map<String, Any> = defaultValues with:
   coder:
     env: appEnvironment.environment
-
-export let valuesByProfile: Map<String, Map<String, Any>> =
-  "workspace-host": workspaceHostValues

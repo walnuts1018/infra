@@ -2,20 +2,20 @@ import "std:helm" as helm
 import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./network-policies.mcl" as networkPolicies
-import "./profiles.mcl" as appProfiles
+import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-let profileName = "metricsStorage"
-let values: Map<String, Any> = appProfiles.valuesByProfile[profileName]
+let values: Map<String, Any> = appValues.baseValues
 let apiVersions: List<String> = []
 let options =
   releaseName: "iwashi-cortex"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: values
 let chartResources = helm.render(appChart.chartArchive, options)
 
-emit each lists.concat(chartResources, networkPolicies.resources)
+emit each lists.concat(chartResources, networkPolicies.resources(namespace))

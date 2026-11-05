@@ -32,12 +32,12 @@ let tikvAffinity =
 
 let emptyDiscovery: Map<String, Any> = {}
 
-export let resource =
+export fn resource(namespace: String) -> Map<String, Any> =
   apiVersion: "pingcap.com/v1alpha1"
   kind: "TidbCluster"
   metadata:
     name: "tikv-cluster"
-    namespace: "databases"
+    namespace: namespace
   spec:
     version: "v8.5.7"
     timezone: "Asia/Tokyo"

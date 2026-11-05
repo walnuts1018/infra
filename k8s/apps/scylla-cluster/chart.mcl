@@ -1,5 +1,4 @@
 import "./app.mcl" as app
 
-export let namespace = app.namespace
 export let chartVersion = app.chartVersion
 export let chartArchive = app.chartArchive

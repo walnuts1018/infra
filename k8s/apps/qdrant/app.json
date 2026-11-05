@@ -2,6 +2,10 @@
   "name": "qdrant",
   "namespace": "qdrant",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "features": [
+        "monitoring"
+      ]
+    }
   }
 }

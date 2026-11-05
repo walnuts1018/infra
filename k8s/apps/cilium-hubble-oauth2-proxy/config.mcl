@@ -1,2 +1,1 @@
 export let name = "hubble-oauth2-proxy"
-export let namespace = "cilium-system"

@@ -65,9 +65,10 @@ let clusterSpec =
   plugins: plugins
   projectedVolumeTemplate: projectedVolumes
 
-export let cluster =
+export fn cluster(namespace: String) -> Map<String, Any> =
   apiVersion: "postgresql.cnpg.io/v1"
   kind: "Cluster"
   metadata:
     name: app.name + "-postgresql"
+    namespace: namespace
   spec: clusterSpec

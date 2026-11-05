@@ -1,0 +1,8 @@
+export type NetworkSettings =
+  name: String
+  ips: List<String>
+
+export type Settings =
+  networks: List<NetworkSettings>
+  routes: List<String>
+  extraArgs: List<String>

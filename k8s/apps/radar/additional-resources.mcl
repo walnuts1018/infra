@@ -1,9 +1,10 @@
-export let resources =
+export fn resources(namespace: String) -> List<Map<String, Any>> =
   -
     apiVersion: "external-secrets.io/v1"
     kind: "ExternalSecret"
     metadata:
       name: "radar-auth"
+      namespace: namespace
     spec:
       refreshInterval: "1m"
       secretStoreRef:
@@ -30,7 +31,7 @@ export let resources =
     kind: "NetworkPolicy"
     metadata:
       name: "radar"
-      namespace: "radar"
+      namespace: namespace
     spec:
       podSelector:
         matchLabels:
@@ -58,7 +59,7 @@ export let resources =
     kind: "HTTPRoute"
     metadata:
       name: "radar"
-      namespace: "radar"
+      namespace: namespace
     spec:
       parentRefs:
         -
@@ -78,7 +79,7 @@ export let resources =
     kind: "InterceptorRoute"
     metadata:
       name: "radar"
-      namespace: "radar"
+      namespace: namespace
     spec:
       target:
         service: "radar"
@@ -95,7 +96,7 @@ export let resources =
     kind: "ScaledObject"
     metadata:
       name: "radar"
-      namespace: "radar"
+      namespace: namespace
     spec:
       scaleTargetRef:
         name: "radar"
@@ -119,7 +120,7 @@ export let resources =
         -
           group: "gateway.networking.k8s.io"
           kind: "HTTPRoute"
-          namespace: "radar"
+          namespace: namespace
       to:
         -
           group: ""

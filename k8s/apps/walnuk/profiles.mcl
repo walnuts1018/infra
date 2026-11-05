@@ -1,8 +1,0 @@
-import "./resources.mcl" as appResources
-
-export type Profile =
-  resources: List<Any>
-
-export let profiles: Map<String, Profile> =
-  scyllaBackedWebApplication:
-    resources: appResources.scyllaBackedWebApplication

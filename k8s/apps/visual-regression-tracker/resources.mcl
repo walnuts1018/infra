@@ -1,17 +1,17 @@
-import "./profiles.mcl" as appProfiles
+import "./config.mcl" as appConfig
 
-let profile = appProfiles.profiles["s3BackedVisualRegression"]
 let appName = "visual-regression-tracker"
 fn labels(name: String) -> Map<String, Any> = node:
   app: name
   "app.kubernetes.io/name": name
-let databaseURL = "postgresql://visual_regression_tracker:{{ .postgres_password }}@" + profile.databaseHost + ":5432/visual_regression_tracker?connection_limit=10"
+fn databaseURL(settings: appConfig.Settings) -> String = "postgresql://visual_regression_tracker:{{ .postgres_password }}@" + settings.databaseHost + ":5432/visual_regression_tracker?connection_limit=10"
 
-let externalSecret = node:
+fn externalSecret(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
     name: appName
+    namespace: namespace
   spec:
     secretStoreRef:
       name: "onepassword"
@@ -24,7 +24,7 @@ let externalSecret = node:
         type: "Opaque"
         data:
           jwt_secret: "{{ .jwt_secret }}"
-          DATABASE_URL: databaseURL
+          DATABASE_URL: databaseURL(settings)
           DEFAULT_USER_PASSWORD: "{{ .admin_password }}"
           DEFAULT_USER_API_KEY: "{{ .admin_api_key }}"
     data:
@@ -45,19 +45,19 @@ let externalSecret = node:
           key: "terraform-external-secrets"
           property: "visual-regression-tracker-admin-api-key"
 
-let s3CredentialsSecret = node:
+fn s3CredentialsSecret(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Secret"
   metadata:
     name: "visual-regression-tracker-s3-credentials"
-    namespace: profile.namespace
+    namespace: namespace
 
-let s3ReferenceGrant = node:
+fn s3ReferenceGrant(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "seaweed.seaweedfs.com/v1"
   kind: "ResourceReferenceGrant"
   metadata:
     name: "seaweedfs-s3-credentials"
-    namespace: profile.namespace
+    namespace: namespace
   spec:
     from:
       - group: "seaweed.seaweedfs.com"
@@ -67,12 +67,12 @@ let s3ReferenceGrant = node:
       - group: ""
         kind: "Secret"
 
-let apiDeployment = node:
+fn apiDeployment(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: appName + "-api"
-    namespace: profile.namespace
+    namespace: namespace
     labels: labels(appName + "-api")
   spec:
     replicas: 1
@@ -91,7 +91,7 @@ let apiDeployment = node:
                 containerPort: 3000
             env:
               - name: "APP_FRONTEND_URL"
-                value: profile.publicURL
+                value: settings.publicURL
               - name: "AUTO_APPROVE_BASED_ON_HISTORY"
                 value: "true"
               - name: "BODY_PARSER_JSON_LIMIT"
@@ -101,30 +101,30 @@ let apiDeployment = node:
               - name: "DATABASE_URL"
                 valueFrom:
                   secretKeyRef:
-                    name: externalSecret.spec.target.name
+                    name: "visual-regression-tracker"
                     key: "DATABASE_URL"
               - name: "JWT_SECRET"
                 valueFrom:
                   secretKeyRef:
-                    name: externalSecret.spec.target.name
+                    name: "visual-regression-tracker"
                     key: "jwt_secret"
               - name: "STATIC_SERVICE"
                 value: "s3"
               - name: "AWS_S3_BUCKET_NAME"
-                value: profile.s3Bucket
+                value: settings.s3Bucket
               - name: "AWS_REGION"
                 value: "us-east-1"
               - name: "AWS_ENDPOINT_URL_S3"
-                value: profile.s3Endpoint
+                value: settings.s3Endpoint
               - name: "AWS_ACCESS_KEY_ID"
                 valueFrom:
                   secretKeyRef:
-                    name: s3CredentialsSecret.metadata.name
+                    name: "visual-regression-tracker-s3-credentials"
                     key: "AWS_ACCESS_KEY_ID"
               - name: "AWS_SECRET_ACCESS_KEY"
                 valueFrom:
                   secretKeyRef:
-                    name: s3CredentialsSecret.metadata.name
+                    name: "visual-regression-tracker-s3-credentials"
                     key: "AWS_SECRET_ACCESS_KEY"
             livenessProbe:
               tcpSocket:
@@ -153,12 +153,12 @@ let apiDeployment = node:
                 drop:
                   - "all"
 
-let apiService = node:
+fn apiService(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: appName + "-api"
-    namespace: profile.namespace
+    namespace: namespace
     labels: labels(appName + "-api")
   spec:
     ports:
@@ -168,12 +168,12 @@ let apiService = node:
     selector: labels(appName + "-api")
     type: "ClusterIP"
 
-let uiDeployment = node:
+fn uiDeployment(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: appName + "-ui"
-    namespace: profile.namespace
+    namespace: namespace
     labels: labels(appName + "-ui")
   spec:
     replicas: 1
@@ -192,7 +192,7 @@ let uiDeployment = node:
                 containerPort: 8080
             env:
               - name: "REACT_APP_API_URL"
-                value: profile.publicURL + "/api"
+                value: settings.publicURL + "/api"
             livenessProbe:
               tcpSocket:
                 port: 8080
@@ -223,12 +223,12 @@ let uiDeployment = node:
                 drop:
                   - "all"
 
-let uiService = node:
+fn uiService(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: appName + "-ui"
-    namespace: profile.namespace
+    namespace: namespace
     labels: labels(appName + "-ui")
   spec:
     ports:
@@ -238,12 +238,12 @@ let uiService = node:
     selector: labels(appName + "-ui")
     type: "ClusterIP"
 
-let migrationJob = node:
+fn migrationJob(namespace: String, settings: appConfig.Settings) -> Map<String, Any> = node:
   apiVersion: "batch/v1"
   kind: "Job"
   metadata:
     name: "visual-regression-tracker-migration-1197c5f7e1"
-    namespace: profile.namespace
+    namespace: namespace
     labels: labels("visual-regression-tracker-migration")
   spec:
     template:
@@ -259,19 +259,19 @@ let migrationJob = node:
               - name: "DATABASE_URL"
                 valueFrom:
                   secretKeyRef:
-                    name: externalSecret.spec.target.name
+                    name: "visual-regression-tracker"
                     key: "DATABASE_URL"
               - name: "DEFAULT_USER_EMAIL"
                 value: "admin@vrt.local.walnuts.dev"
               - name: "DEFAULT_USER_PASSWORD"
                 valueFrom:
                   secretKeyRef:
-                    name: externalSecret.spec.target.name
+                    name: "visual-regression-tracker"
                     key: "DEFAULT_USER_PASSWORD"
               - name: "DEFAULT_USER_API_KEY"
                 valueFrom:
                   secretKeyRef:
-                    name: externalSecret.spec.target.name
+                    name: "visual-regression-tracker"
                     key: "DEFAULT_USER_API_KEY"
             securityContext:
               readOnlyRootFilesystem: false
@@ -284,12 +284,12 @@ let migrationJob = node:
                   - "all"
 
 
-export let resources =
-  - externalSecret
-  - s3CredentialsSecret
-  - s3ReferenceGrant
-  - apiDeployment
-  - apiService
-  - uiDeployment
-  - uiService
-  - migrationJob
+export fn resources(namespace: String, settings: appConfig.Settings) -> List<Map<String, Any>> =
+  - externalSecret(namespace, settings)
+  - s3CredentialsSecret(namespace, settings)
+  - s3ReferenceGrant(namespace, settings)
+  - apiDeployment(namespace, settings)
+  - apiService(namespace, settings)
+  - uiDeployment(namespace, settings)
+  - uiService(namespace, settings)
+  - migrationJob(namespace, settings)

@@ -1,5 +1,4 @@
 let appName = "kubernetes-control-plane-metrics"
-let monitoringNamespace = "monitoring"
 let systemNamespace = "kube-system"
 let bearerTokenFile = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 let caFile = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
@@ -10,12 +9,12 @@ export type ServiceMonitorConfig =
   namespace: String
   endpoints: List<Map<String, Any>>
 
-fn serviceMonitor(config: ServiceMonitorConfig) -> Map<String, Any> = node:
+fn serviceMonitor(namespace: String, config: ServiceMonitorConfig) -> Map<String, Any> = node:
   apiVersion: "monitoring.coreos.com/v1"
   kind: "ServiceMonitor"
   metadata:
     name: config.name
-    namespace: monitoringNamespace
+    namespace: namespace
     labels:
       app: appName
       "app.kubernetes.io/name": appName
@@ -68,7 +67,7 @@ let corednsServiceMonitorConfig: ServiceMonitorConfig =
   jobLabel: "jobLabel"
   namespace: systemNamespace
   endpoints: simpleEndpoints
-export let corednsServiceMonitor = serviceMonitor(corednsServiceMonitorConfig)
+export fn corednsServiceMonitor(namespace: String) -> Map<String, Any> = serviceMonitor(namespace, corednsServiceMonitorConfig)
 
 let etcdServiceMonitorConfig: ServiceMonitorConfig =
   name: "kube-etcd"
@@ -76,7 +75,7 @@ let etcdServiceMonitorConfig: ServiceMonitorConfig =
   jobLabel: "jobLabel"
   namespace: systemNamespace
   endpoints: simpleEndpoints
-export let etcdServiceMonitor = serviceMonitor(etcdServiceMonitorConfig)
+export fn etcdServiceMonitor(namespace: String) -> Map<String, Any> = serviceMonitor(namespace, etcdServiceMonitorConfig)
 
 let proxyServiceMonitorConfig: ServiceMonitorConfig =
   name: "kube-proxy"
@@ -84,7 +83,7 @@ let proxyServiceMonitorConfig: ServiceMonitorConfig =
   jobLabel: "jobLabel"
   namespace: systemNamespace
   endpoints: simpleEndpoints
-export let proxyServiceMonitor = serviceMonitor(proxyServiceMonitorConfig)
+export fn proxyServiceMonitor(namespace: String) -> Map<String, Any> = serviceMonitor(namespace, proxyServiceMonitorConfig)
 
 let controllerManagerServiceMonitorConfig: ServiceMonitorConfig =
   name: "kube-controller-manager"
@@ -92,7 +91,7 @@ let controllerManagerServiceMonitorConfig: ServiceMonitorConfig =
   jobLabel: "jobLabel"
   namespace: systemNamespace
   endpoints: tlsSkipVerifyEndpoints
-export let controllerManagerServiceMonitor = serviceMonitor(controllerManagerServiceMonitorConfig)
+export fn controllerManagerServiceMonitor(namespace: String) -> Map<String, Any> = serviceMonitor(namespace, controllerManagerServiceMonitorConfig)
 
 let schedulerServiceMonitorConfig: ServiceMonitorConfig =
   name: "kube-scheduler"
@@ -100,7 +99,7 @@ let schedulerServiceMonitorConfig: ServiceMonitorConfig =
   jobLabel: "jobLabel"
   namespace: systemNamespace
   endpoints: tlsSkipVerifyEndpoints
-export let schedulerServiceMonitor = serviceMonitor(schedulerServiceMonitorConfig)
+export fn schedulerServiceMonitor(namespace: String) -> Map<String, Any> = serviceMonitor(namespace, schedulerServiceMonitorConfig)
 
 let apiServerEndpoints =
   -
@@ -125,7 +124,7 @@ let apiServerServiceMonitorConfig: ServiceMonitorConfig =
   jobLabel: "component"
   namespace: "default"
   endpoints: apiServerEndpoints
-export let apiServerServiceMonitor = serviceMonitor(apiServerServiceMonitorConfig)
+export fn apiServerServiceMonitor(namespace: String) -> Map<String, Any> = serviceMonitor(namespace, apiServerServiceMonitorConfig)
 
 let kubeletEndpoints =
   -
@@ -250,4 +249,4 @@ let kubeletServiceMonitorConfig: ServiceMonitorConfig =
   jobLabel: "k8s-app"
   namespace: systemNamespace
   endpoints: kubeletEndpoints
-export let kubeletServiceMonitor = serviceMonitor(kubeletServiceMonitorConfig)
+export fn kubeletServiceMonitor(namespace: String) -> Map<String, Any> = serviceMonitor(namespace, kubeletServiceMonitorConfig)

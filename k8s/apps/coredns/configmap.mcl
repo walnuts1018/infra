@@ -3,13 +3,13 @@ import text "./_configs/Corefile" as corefileText
 
 export let configMapName = "coredns-config-" + crypto.sha256(corefileText, 6)
 
-export let configMap = node:
+export fn configMap(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   immutable: true
   metadata:
     name: configMapName
-    namespace: "coredns"
+    namespace: namespace
     labels:
       app: "coredns"
       "app.kubernetes.io/name": "coredns"

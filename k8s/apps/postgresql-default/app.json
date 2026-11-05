@@ -2,6 +2,18 @@
   "name": "postgresql-default",
   "namespace": "databases",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "settings": {
+        "clusterName": "postgresql-default",
+        "databaseImageCatalog": "standard",
+        "majorVersion": 18,
+        "storageClass": "local-path",
+        "storageSize": "10Gi",
+        "backupDestination": "s3://cloudnative-pg-backup/",
+        "backupEndpoint": "https://seaweedfs.local.walnuts.dev",
+        "backupRetention": "7d",
+        "loadBalancerAddress": "192.168.12.141"
+      }
+    }
   }
 }

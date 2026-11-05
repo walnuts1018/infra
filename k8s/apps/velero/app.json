@@ -2,6 +2,10 @@
   "name": "velero",
   "namespace": "velero",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "features": [
+        "monitoring"
+      ]
+    }
   }
 }

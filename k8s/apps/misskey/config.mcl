@@ -2,12 +2,12 @@ import text "./_configs/default.yml" as defaultConfig
 import "./app.mcl" as app
 import "./labels.mcl" as labels
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
     labels: labels.forApp(app.name)
   data:
     "default.yml": defaultConfig

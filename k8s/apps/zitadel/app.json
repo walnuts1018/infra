@@ -2,6 +2,10 @@
   "name": "zitadel",
   "namespace": "zitadel",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "features": [
+        "monitoring"
+      ]
+    }
   }
 }

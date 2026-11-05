@@ -1,4 +1,3 @@
-import "./profiles.mcl" as appProfiles
 import "./ai-services.mcl" as aiServices
 import "./apiserver.mcl" as apiserver
 import "./frontend.mcl" as frontend
@@ -7,8 +6,8 @@ import "./shared-infrastructure.mcl" as sharedInfrastructure
 import "./workers.mcl" as workers
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-let namespace = appProfiles.profiles["default"].namespace
 
 emit each aiServices.render(namespace)
 emit each apiserver.render(namespace)

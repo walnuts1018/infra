@@ -20,7 +20,7 @@ export let piccaRabbitmqSecretName = names.piccaRabbitmqSecretName
 
 export let piccaScyllaSecretName = names.piccaScyllaSecretName
 
-export let piccaValkeySecretName = names.piccaValkeySecretName
+export fn piccaValkeySecretName(namespace: String) -> String = names.piccaValkeySecretName(namespace)
 
 export let piccaPlansConfigMapName = names.piccaPlansConfigMapName
 
@@ -46,7 +46,7 @@ export fn render(namespace: String) -> List<Map<String, Any>> =
   - serviceAccount.serviceAccountPicca(namespace)
   - scylla.externalSecretScyllaClusterLocalClientCa(namespace)
   - scylla.rolePiccaReadScyllaClientCert()
-  - scylla.roleBindingPiccaReadScyllaClientCert()
+  - scylla.roleBindingPiccaReadScyllaClientCert(namespace)
   - scylla.serviceAccountPiccaScyllaSecretReader(namespace)
   - scylla.secretStoreScyllaClientCert(namespace)
   - scylla.scyllaExternalSecret(namespace)

@@ -2,9 +2,9 @@ import "std:manifest" as manifest
 import "./external-secrets.mcl" as externalSecrets
 
 let valuesBundle = manifest.load("./_configs/values.yaml")
-let baseValues: Map<String, Any> = valuesBundle[0]
+let rawValues: Map<String, Any> = valuesBundle[0]
 
-let oidcAndS3StorageValues = baseValues with:
+let oidcAndS3StorageValues = rawValues with:
   existingSecret: externalSecrets.netboxSecretName
   superuser:
     existingSecret: externalSecrets.netboxSecretName
@@ -20,5 +20,4 @@ let oidcAndS3StorageValues = baseValues with:
       - secret:
           secretName: externalSecrets.oidcSecretName
 
-export let valuesByProfile: Map<String, Map<String, Any>> =
-  "oidc-and-s3-storage": oidcAndS3StorageValues
+export let baseValues = oidcAndS3StorageValues

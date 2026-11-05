@@ -1,2 +1,1 @@
 export let name = "misskey"
-export let namespace = "misskey"

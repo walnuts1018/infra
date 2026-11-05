@@ -1,20 +1,29 @@
 import "std:helm" as helm
+import "std:list" as lists
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
 import "./service-monitor.mcl" as serviceMonitor
+import "./config.mcl" as appConfig
+import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
+param features: List<appConfig.Feature> = []
 
-let profileName = "standard"
-let values: Map<String, Any> = appProfiles.valuesByProfile[profileName]
+let monitoringEnabled = lists.contains(features, "monitoring")
 let options =
   releaseName: "vertical-pod-autoscaler"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chart.targetRevision
   kubeVersion: cluster.kubernetesVersion
   apiVersions: appChart.apiVersions
-  values: values
+  values: appValues.values
 let resources = helm.render(appChart.chartArchive, options)
 
+let monitoringResources =
+  if monitoringEnabled:
+    - serviceMonitor.resource(namespace)
+  else:
+    []
+
 emit each resources
-emit serviceMonitor.resource
+emit each monitoringResources

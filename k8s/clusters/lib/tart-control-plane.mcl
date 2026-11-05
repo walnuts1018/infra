@@ -21,7 +21,6 @@ export type WorkerConfig =
   namespace: String
   kubernetesVersion: String
   replicas: Int
-  labels: Map<String, String>
   hostSelectorLabels: Map<String, String>
   schematicID: String
   talosVersion: String
@@ -152,17 +151,23 @@ export fn worker(config: WorkerConfig) -> List<Map<String, Any>> =
     apiVersion: "cluster.x-k8s.io/v1beta2"
     kind: "MachineDeployment"
     metadata:
-      labels: config.labels
+      labels:
+        "cluster.x-k8s.io/cluster-name": config.clusterName
+        "cluster.x-k8s.io/deployment-name": config.deploymentName
       name: config.deploymentName
       namespace: config.namespace
     spec:
       clusterName: config.clusterName
       replicas: config.replicas
       selector:
-        matchLabels: config.labels
+        matchLabels:
+          "cluster.x-k8s.io/cluster-name": config.clusterName
+          "cluster.x-k8s.io/deployment-name": config.deploymentName
       template:
         metadata:
-          labels: config.labels
+          labels:
+            "cluster.x-k8s.io/cluster-name": config.clusterName
+            "cluster.x-k8s.io/deployment-name": config.deploymentName
         spec:
           bootstrap:
             configRef:

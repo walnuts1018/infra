@@ -2,6 +2,13 @@
   "name": "visual-regression-tracker",
   "namespace": "visual-regression-tracker",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "settings": {
+        "publicURL": "https://vrt.local.walnuts.dev",
+        "s3Bucket": "visual-regression-tracker",
+        "s3Endpoint": "https://seaweedfs.local.walnuts.dev",
+        "databaseHost": "postgresql-default-rw.databases.svc.cluster.local"
+      }
+    }
   }
 }

@@ -1,14 +1,19 @@
 import "std:helm" as helm
+import "std:list" as lists
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
+import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
+type Feature = "monitoring"
 param cluster: clusterConfig.Cluster
+param namespace: String
+param features: List<Feature> = []
 
-let profileName = "default"
-let values: Map<String, Any> = appProfiles.valuesByProfile[profileName]
+let values: Map<String, Any> = appValues.baseValues with:
+  serviceMonitor:
+    enabled: lists.contains(features, "monitoring")
 let options =
   releaseName: "trivy-operator"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: appChart.apiVersions

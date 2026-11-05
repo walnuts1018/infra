@@ -1,0 +1,87 @@
+import text "./_templates/apps.gotmpl" as appsTemplatePatch
+import "./common.mcl" as common
+
+export type AgentClusterConfig =
+  name: String
+  project: String
+  destinationName: String
+  namespaceSourcePath: String
+
+let agentLabel =
+  "argocd-agent": "true"
+let standardSyncOptions =
+  - "ServerSideApply=true"
+  - "FailOnSharedResource=true"
+let appSetSyncOptions =
+  - "ServerSideApply=true"
+  - "FailOnSharedResource=true"
+  - "CreateNamespace=true"
+let emptySources: List<Map<String, Any>> = []
+
+fn destination(config: AgentClusterConfig) -> Map<String, Any> = node:
+  name: config.destinationName
+  namespace: common.argocdNamespace
+
+fn appDestination(config: AgentClusterConfig) -> Map<String, Any> = node:
+  name: config.destinationName
+
+fn applicationSet(config: AgentClusterConfig) -> Map<String, Any> = node:
+  apiVersion: common.apiVersion
+  kind: "ApplicationSet"
+  metadata: common.metadataNoLabels("apps-" + config.name)
+  spec:
+    goTemplate: true
+    goTemplateOptions:
+      - "missingkey=error"
+    generators:
+      - common.applicationGenerator(config.name)
+    template:
+      metadata: common.appTemplateMetadataWithLabels(config.name, agentLabel)
+      spec:
+        project: config.project
+        destination:
+          name: config.destinationName
+          namespace: "{{.namespace}}"
+        sources: emptySources
+        syncPolicy: common.syncPolicy(appSetSyncOptions)
+    templatePatch: appsTemplatePatch
+
+fn agentApplication(config: AgentClusterConfig) -> Map<String, Any> =
+  common.application(
+    "argocd-agent-" + config.name,
+    config.project,
+    destination(config),
+    common.mclSource("k8s/_argocd/agent/agent", config.name),
+    agentLabel,
+    standardSyncOptions,
+  )
+
+fn namespacesApplication(config: AgentClusterConfig) -> Map<String, Any> =
+  common.application(
+    "namespaces-" + config.name,
+    config.project,
+    appDestination(config),
+    common.mclSource(config.namespaceSourcePath, config.name),
+    agentLabel,
+    standardSyncOptions,
+  )
+
+fn spokeSources(config: AgentClusterConfig) -> List<Map<String, Any>> =
+  - common.mclSource("k8s/_argocd/cmp", config.name)
+  - common.mclSource("k8s/_argocd/spoke", config.name)
+
+fn spokeApplication(config: AgentClusterConfig) -> Map<String, Any> =
+  common.multiSourceApplication(
+    "argocd-spoke-" + config.name,
+    config.project,
+    destination(config),
+    spokeSources(config),
+    agentLabel,
+    standardSyncOptions,
+  )
+
+export fn resources(config: AgentClusterConfig) -> List<Map<String, Any>> =
+  - agentApplication(config)
+  - applicationSet(config)
+  - namespacesApplication(config)
+  - spokeApplication(config)

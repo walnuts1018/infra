@@ -20,6 +20,36 @@
     {
       customType: 'regex',
       managerFilePatterns: [
+        '/^k8s\\/mcl\\.toml$/',
+      ],
+      matchStrings: [
+        'source = "https://raw\\.githubusercontent\\.com/(?<depName>[^/]+/[^/]+)/(?<currentValue>v?[0-9]+\\.[0-9]+\\.[0-9]+)/[^"\\n]+"',
+      ],
+      datasourceTemplate: 'github-tags',
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^k8s\\/mcl\\.toml$/',
+      ],
+      matchStrings: [
+        '#\\s*renovate: datasource=(?<datasource>docker) depName=(?<depName>[^\\s]+)\\s+source = "(?<source>oci://[^"\\n]+)"\\s+version = "(?<currentValue>[^"\\n]+)"',
+      ],
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^k8s\\/mcl\\.toml$/',
+      ],
+      matchStrings: [
+        '#\\s*renovate: datasource=(?<datasource>github-releases) depName=(?<depName>elastic/cloud-on-k8s)\\s+source = "https://download\\.elastic\\.co/downloads/eck/(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)/crds\\.yaml"',
+      ],
+      autoReplaceStringTemplate: '# renovate: datasource=github-releases depName={{{depName}}}\nsource = "https://download.elastic.co/downloads/eck/{{{replace "^v" "" newValue}}}/crds.yaml"',
+      versioningTemplate: 'semver',
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
         '/^k8s\\/(?:apps|_argocd)\\/.+\\.mcl$/',
       ],
       matchStrings: [
@@ -120,6 +150,20 @@
     },
   ],
   packageRules: [
+    {
+      groupName: 'eck-operator',
+      matchPackageNames: [
+        'eck-operator',
+        'elastic/cloud-on-k8s',
+      ],
+    },
+    {
+      groupName: 'trust-manager',
+      matchPackageNames: [
+        'trust-manager',
+        'cert-manager/trust-manager',
+      ],
+    },
     {
       groupName: 'netbird',
       matchPackageNames: [

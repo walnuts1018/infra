@@ -1,4 +1,3 @@
 # renovate: datasource=github-releases depName=cloudnative-pg/charts registryUrl=https://github.com/cloudnative-pg/charts extractVersion=^cloudnative\-pg\-v(?<version>.*)$
 export let chartVersion = "0.29.0"
 export let chartArchive = "https://github.com/cloudnative-pg/charts/releases/download/cloudnative-pg-v" + chartVersion + "/cloudnative-pg-" + chartVersion + ".tgz"
-export let namespace = "cloudnative-pg"

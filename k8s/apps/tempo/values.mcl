@@ -14,7 +14,7 @@ let stsTokenMount =
   mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
   readOnly: true
 
-export let values: Map<String, Any> =
+export fn values(namespace: String, monitoringEnabled: Bool) -> Map<String, Any> =
   global:
     extraArgs:
       - "-config.expand-env=true"
@@ -180,7 +180,7 @@ export let values: Map<String, Any> =
     caches:
       -
         redis:
-          endpoint: "valkey-tempo-valkey.tempo.svc.cluster.local:6379"
+          endpoint: "valkey-tempo-valkey." + namespace + ".svc.cluster.local:6379"
           tls_enabled: false
         roles:
           - "parquet-footer"
@@ -198,7 +198,7 @@ export let values: Map<String, Any> =
     enabled: false
   metaMonitoring:
     serviceMonitor:
-      enabled: true
+      enabled: monitoringEnabled
   gateway:
     enabled: true
     replicas: 1

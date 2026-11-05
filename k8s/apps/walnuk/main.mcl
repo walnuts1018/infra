@@ -1,8 +1,6 @@
-import "./profiles.mcl" as appProfiles
+import "./resources.mcl" as appResources
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-let profileName = "scyllaBackedWebApplication"
-let profile = appProfiles.profiles[profileName]
-
-emit each profile.resources
+emit each appResources.resources(namespace)

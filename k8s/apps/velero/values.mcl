@@ -39,5 +39,4 @@ let values: Map<String, Any> =
           name: "velero-seaweedfs-biscuit"
           key: "credentials"
 
-export let profiles: Map<String, Map<String, Any>> =
-  seaweedfsBiscuit: values
+export let baseValues = values

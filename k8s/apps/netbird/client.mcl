@@ -93,12 +93,12 @@ let statefulSetSpec =
           requests:
             storage: "64Mi"
 
-export let headlessService = node:
+export fn headlessService(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: appName + "-headless"
-    namespace: appSettings.namespace
+    namespace: namespace
     labels: labels
   spec:
     clusterIP: "None"
@@ -108,12 +108,12 @@ export let headlessService = node:
         port: 51820
         protocol: "UDP"
 
-export let statefulSet = node:
+export fn statefulSet(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "StatefulSet"
   metadata:
     name: appName
-    namespace: appSettings.namespace
+    namespace: namespace
     labels: labels
   spec: statefulSetSpec
 

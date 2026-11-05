@@ -1,19 +1,28 @@
 import "std:helm" as helm
+import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./config.mcl" as appConfig
 import "./features.mcl" as appFeatures
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 param features: List<appConfig.Feature> = []
 param settings: appConfig.Settings
 
+let configuration: appConfig.Configuration =
+  features: features
+  settings: settings
+
+rule validConfiguration(configuration: appConfig.Configuration):
+  require lists.contains(configuration.features, "ssd") or lists.contains(configuration.features, "hdd") message "TopoLVM must enable SSD or HDD"
+  require (configuration.settings.hddIsDefault ?? false) == false or lists.contains(configuration.features, "hdd") message "TopoLVM can use HDD as default only when HDD is enabled"
+
 let values = appFeatures.values(features, settings)
-let apiVersions: List<String> =
-  - "monitoring.coreos.com/v1"
+let apiVersions: List<String> = []
 let options =
   releaseName: "topolvm"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
@@ -21,3 +30,5 @@ let options =
 let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources
+
+validate configuration using validConfiguration

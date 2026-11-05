@@ -6,12 +6,13 @@ import "./stun-service.mcl" as stun
 import "./config.mcl" as appConfig
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 param settings: appConfig.Settings
 
-emit each server.resources
-emit client.headlessService
-emit client.statefulSet
-emit stun.resource(settings)
-emit each dashboard.resources
-emit route.resource
+emit each server.resources(namespace)
+emit client.headlessService(namespace)
+emit client.statefulSet(namespace)
+emit stun.resource(namespace, settings)
+emit each dashboard.resources(namespace)
+emit route.resource(namespace)

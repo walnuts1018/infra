@@ -1,21 +1,22 @@
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./external-secrets.mcl" as externalSecrets
-import "./profiles.mcl" as appProfiles
+import "./values.mcl" as appValues
 import "./service-account.mcl" as serviceAccount
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let options =
   releaseName: appChart.releaseName
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: appChart.apiVersions
-  values: appProfiles.valuesByProfile["oidc-and-s3-storage"]
+  values: appValues.baseValues
 let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources
-emit externalSecrets.netboxSecret
-emit externalSecrets.oidcSecret
-emit serviceAccount.resource
+emit externalSecrets.netboxSecret(namespace)
+emit externalSecrets.oidcSecret(namespace)
+emit serviceAccount.resource(namespace)

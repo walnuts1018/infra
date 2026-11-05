@@ -3,12 +3,12 @@ import "./environment.mcl" as env
 import "./external-secret-config.mcl" as externalSecretConfig
 import "../envoy-gateway-class/gateway.mcl" as gateway
 
-let cronJob = node:
+fn cronJob(namespace: String) = node:
   apiVersion: "batch/v1"
   kind: "CronJob"
   metadata:
     name: app.appName
-    namespace: app.namespace
+    namespace: namespace
     labels: app.labels
   spec:
     schedule: "*/15 * * * *"
@@ -51,12 +51,12 @@ let cronJob = node:
               - key: "node.walnuts.dev/low-performance"
                 operator: "Exists"
 
-let deployment = node:
+fn deployment(namespace: String) = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: app.appName
-    namespace: app.namespace
+    namespace: namespace
     labels: app.labels
   spec:
     replicas: 1
@@ -93,11 +93,12 @@ let deployment = node:
                   - "all"
             env: env.environment
 
-let externalSecret = node:
+fn externalSecret(namespace: String) = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
     name: externalSecretConfig.name
+    namespace: namespace
   spec:
     secretStoreRef:
       name: "onepassword"
@@ -110,17 +111,17 @@ let externalSecret = node:
         type: "Opaque"
     data: externalSecretConfig.data
 
-let httpRoute = node:
+fn httpRoute(namespace: String) = node:
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "HTTPRoute"
   metadata:
     name: app.appName
-    namespace: app.namespace
+    namespace: namespace
   spec:
     parentRefs:
       -
-        name: gateway.resource.metadata.name
-        namespace: gateway.resource.metadata.namespace
+        name: gateway.resource(namespace).metadata.name
+        namespace: gateway.resource(namespace).metadata.namespace
     hostnames:
       - "fitbit.walnuts.dev"
     rules:
@@ -137,12 +138,12 @@ let httpRoute = node:
               type: "PathPrefix"
               value: "/"
 
-let service = node:
+fn service(namespace: String) = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: app.appName
-    namespace: app.namespace
+    namespace: namespace
     labels: app.labels
   spec:
     ports:
@@ -152,9 +153,9 @@ let service = node:
     selector: app.labels
     type: "ClusterIP"
 
-export let resources =
-  - cronJob
-  - deployment
-  - externalSecret
-  - httpRoute
-  - service
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - cronJob(namespace)
+  - deployment(namespace)
+  - externalSecret(namespace)
+  - httpRoute(namespace)
+  - service(namespace)

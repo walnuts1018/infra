@@ -1,2 +1,1 @@
 export let name = "netbird"
-export let namespace = "netbird"

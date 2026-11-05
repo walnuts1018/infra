@@ -1,4 +1,3 @@
 # renovate: datasource=github-releases depName=valkey-io/valkey-helm registryUrl=https://github.com/valkey-io/valkey-helm extractVersion=^valkey\-operator\-(?<version>.*)$
 export let chartVersion = "0.6.0"
 export let chartArchive = "https://github.com/valkey-io/valkey-helm/releases/download/valkey-operator-" + chartVersion + "/valkey-operator-" + chartVersion + ".tgz"
-export let namespace = "valkey-operator-system"

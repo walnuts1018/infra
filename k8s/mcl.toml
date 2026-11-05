@@ -26,8 +26,12 @@ revision = "922a06aa49ee4bb802db268ef72a174af70edd32"
 directory = "deploy/crds"
 files = [
   "cert-manager.io_certificates.yaml",
+  "cert-manager.io_clusterissuers.yaml",
   "cert-manager.io_issuers.yaml",
 ]
+
+[[crd_schemas]]
+source = "https://raw.githubusercontent.com/cert-manager/trust-manager/v0.24.0/deploy/crds/trust.cert-manager.io_bundles.yaml"
 
 [[crd_schemas]]
 source = "git+https://github.com/external-secrets/external-secrets"
@@ -54,17 +58,10 @@ files = [
 [[crd_schemas]]
 source = "git+https://github.com/kubernetes-sigs/gateway-api"
 revision = "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3"
-directory = "config/crd/experimental"
+directory = "config/crd/standard"
 files = [
   "gateway.networking.k8s.io_backendtlspolicies.yaml",
   "gateway.networking.k8s.io_tcproutes.yaml",
-]
-
-[[crd_schemas]]
-source = "git+https://github.com/kubernetes-sigs/gateway-api"
-revision = "8bb74df00e56ec8f944d48c25e6c1c9c2f6848e3"
-directory = "config/crd/standard"
-files = [
   "gateway.networking.k8s.io_gatewayclasses.yaml",
   "gateway.networking.k8s.io_gateways.yaml",
   "gateway.networking.k8s.io_grpcroutes.yaml",
@@ -229,11 +226,15 @@ files = [
 ]
 
 [[crd_schemas]]
-source = "git+https://github.com/elastic/cloud-on-k8s"
-revision = "386c7b14f2d1bbb7f2af1e7da997e64875f16e47"
-directory = "config/crds/v1/resources"
+# renovate: datasource=github-releases depName=elastic/cloud-on-k8s
+source = "https://download.elastic.co/downloads/eck/3.5.0/crds.yaml"
+
+[[crd_schemas]]
+# renovate: datasource=docker depName=docker.io/envoyproxy/gateway-helm
+source = "oci://docker.io/envoyproxy/gateway-helm"
+version = "1.6.1"
 files = [
-  "elasticsearch.k8s.elastic.co_elasticsearches.yaml",
+  "generated/gateway.envoyproxy.io_httproutefilters.yaml",
 ]
 
 [[crd_schemas]]

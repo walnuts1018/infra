@@ -9,6 +9,7 @@ import "../../cluster.mcl" as clusterConfig
 type Feature = "monitoring"
 
 param cluster: clusterConfig.Cluster
+param namespace: String
 param features: List<Feature> = []
 
 let apiVersions: List<String> = []
@@ -20,7 +21,7 @@ let values: Map<String, Any> =
     appFeatures.valuesByFeature.standard
 let options =
   releaseName: appChart.releaseName
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
@@ -47,7 +48,7 @@ let resourcesWithoutControllerConfig = lists.filter(
     resource.kind != controllerConfigMapIdentity.kind or
     resource.metadata.name != controllerConfigMapIdentity.name,
 )
-let configResource = controllerConfigMap.resource
+let configResource = controllerConfigMap.resource(namespace)
 let configResources =
   - configResource
 let resources = lists.concat(resourcesWithoutControllerConfig, configResources)

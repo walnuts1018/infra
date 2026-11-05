@@ -1,6 +1,8 @@
 import "std:kustomize" as kustomize
+import "std:list" as lists
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let crds = kustomize.build(
   "git+https://github.com/kubernetes-csi/external-snapshotter",
@@ -13,5 +15,35 @@ let controller = kustomize.build(
   "deploy/kubernetes/snapshot-controller",
 )
 
+fn withNamespace(resource: Map<String, Any>) -> Map<String, Any> = resource with:
+  metadata:
+    namespace: namespace
+
+fn withSubjectNamespace(subject: Map<String, Any>) -> Map<String, Any> = subject with:
+  namespace: namespace
+
+fn serviceAccountSubject(subject: Map<String, Any>) -> Map<String, Any> =
+  if subject.kind == "ServiceAccount":
+    withSubjectNamespace(subject)
+  else:
+    subject
+
+fn withServiceAccountSubjectNamespaces(resource: Map<String, Any>) -> Map<String, Any> = resource with:
+  subjects: lists.map(resource.subjects, serviceAccountSubject)
+
+fn clusterRoleBindingResource(resource: Map<String, Any>) -> Map<String, Any> =
+  if resource.kind == "ClusterRoleBinding":
+    withServiceAccountSubjectNamespaces(resource)
+  else:
+    resource
+
+fn controllerResource(resource: Map<String, Any>) -> Map<String, Any> =
+  if resource.kind == "Deployment" or resource.kind == "ServiceAccount":
+    withNamespace(resource)
+  else:
+    clusterRoleBindingResource(resource)
+
+let controllerInNamespace = lists.map(controller, controllerResource)
+
 emit each crds
-emit each controller
+emit each controllerInNamespace

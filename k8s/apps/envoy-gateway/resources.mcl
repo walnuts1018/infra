@@ -1,5 +1,3 @@
-import "./chart.mcl" as appChart
-
 let appName = "envoy-gateway"
 let valkeyName = appName + "-valkey"
 let avoidSlowNodeAffinity =
@@ -11,12 +9,12 @@ let avoidSlowNodeAffinity =
             - key: "storage.walnuts.dev/slow"
               operator: "DoesNotExist"
 
-export let valkeyCluster = node:
+export fn valkeyCluster(namespace: String) -> Map<String, Any> = node:
   apiVersion: "valkey.io/v1alpha1"
   kind: "ValkeyCluster"
   metadata:
     name: valkeyName
-    namespace: appChart.namespace
+    namespace: namespace
     annotations:
       "argocd.argoproj.io/sync-options": "SkipDryRunOnMissingResource=true"
     labels:

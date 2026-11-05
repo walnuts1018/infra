@@ -1,12 +1,11 @@
-import "./settings.mcl" as appChart
 
 export let name = "envoy-gateway"
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "Gateway"
   metadata:
     name: name
-    namespace: appChart.namespace
+    namespace: namespace
     annotations:
       "external-dns-cloudflare.alpha.kubernetes.io/target": "111.100.165.117"
       "external-dns-local.alpha.kubernetes.io/target": "192.168.12.138"

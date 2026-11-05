@@ -52,7 +52,7 @@ fn scyllaClientCertSecretStore(namespace: String) -> Map<String, Any> = node:
         auth:
           serviceAccount:
             name: "picca-dev-scylla-secret-reader"
-            namespace: "picca-dev"
+            namespace: namespace
         remoteNamespace: "databases"
         server:
           caProvider:

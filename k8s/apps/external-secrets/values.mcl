@@ -17,5 +17,4 @@ let commonValues: Map<String, Any> =
     - key: "node.walnuts.dev/low-performance"
       operator: "Exists"
 
-export let profiles =
-  standard: commonValues
+export let baseValues: Map<String, Any> = commonValues

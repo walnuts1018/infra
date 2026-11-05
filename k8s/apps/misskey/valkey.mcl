@@ -109,11 +109,11 @@ let statefulSetSpec =
   template: podTemplate
   volumeClaimTemplates: volumeClaimTemplates
 
-export let statefulSet = node:
+export fn statefulSet(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "StatefulSet"
   metadata:
     name: valkeyName
-    namespace: app.namespace
+    namespace: namespace
     labels: valkeyLabels
   spec: statefulSetSpec

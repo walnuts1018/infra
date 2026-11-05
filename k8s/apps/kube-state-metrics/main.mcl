@@ -3,12 +3,13 @@ import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let apiVersions: List<String> =
   - "monitoring.coreos.com/v1"
 let options =
   releaseName: "kube-state-metrics"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions

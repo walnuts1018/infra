@@ -1,7 +1,6 @@
 export let name = "iwashi-collector"
-export let namespace = "iwashi-system"
 
-export let collectorLabels =
+export fn collectorLabels(namespace: String) -> Map<String, String> =
   "app.kubernetes.io/component": "opentelemetry-collector"
   "app.kubernetes.io/instance": namespace + "." + name
 

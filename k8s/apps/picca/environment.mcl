@@ -75,57 +75,82 @@ export let scyllaEnvironment: List<Map<String, String>> =
   - name: "SCYLLA_CLIENT_KEY_PATH"
     value: "/etc/certs/scylla-db-client/tls.key"
 
-export let envFrom: List<Map<String, Any>> =
-  - secretRef:
-      name: names.piccaPostgresSecretName
-  - secretRef:
-      name: names.piccaValkeySecretName
-  - secretRef:
-      name: names.piccaRabbitmqSecretName
-  - secretRef:
-      name: names.piccaOidcSecretName
-
 let scyllaSecretReference: List<Map<String, Any>> =
   - secretRef:
       name: names.piccaScyllaSecretName
-
-export let envFromWithScylla = lists.concat(
-  envFrom,
-  scyllaSecretReference,
-)
 
 fn serviceEnvironment(serviceName: String) -> List<Map<String, String>> =
   - name: "OTEL_SERVICE_NAME"
     value: serviceName
 
-let sharedEnvironmentWithoutPlans = lists.filter(
-  sharedEnvironment,
-  fn(variable) => variable.name != "PLAN_CONFIG_FILE",
-)
+fn withEnvironmentValue(variable: Map<String, String>, value: String) -> Map<String, String> = variable with:
+  value: value
 
-let environmentWithoutPlansGroups: List<List<Map<String, String>>> =
-  - sharedEnvironmentWithoutPlans
-  - scyllaEnvironment
+fn sharedEnvironmentDense(namespace: String, variable: Map<String, String>) -> Map<String, String> =
+  if variable.name == "DENSE_SERVICE_URL":
+    withEnvironmentValue(variable, "http://picca-dense-service." + namespace + ".svc.cluster.local:8001")
+  else:
+    variable
 
-let migrationEnvironmentBase = lists.flatten(environmentWithoutPlansGroups)
+fn sharedEnvironmentSparse(namespace: String, variable: Map<String, String>) -> Map<String, String> =
+  if variable.name == "SPARSE_SERVICE_URL":
+    withEnvironmentValue(variable, "http://picca-sparse-service." + namespace + ".svc.cluster.local:8002")
+  else:
+    variable
 
-let environmentWithScyllaGroups: List<List<Map<String, String>>> =
-  - sharedEnvironment
-  - scyllaEnvironment
+fn sharedEnvironmentOcr(namespace: String, variable: Map<String, String>) -> Map<String, String> =
+  if variable.name == "OCR_SERVICE_URL":
+    withEnvironmentValue(variable, "http://picca-ocr-service." + namespace + ".svc.cluster.local:8003")
+  else:
+    variable
 
-let environmentWithScyllaBase = lists.flatten(environmentWithScyllaGroups)
-export fn environment(serviceName: String) -> List<Map<String, String>> =
-  lists.concat(sharedEnvironment, serviceEnvironment(serviceName))
+fn sharedEnvironmentCaption(namespace: String, variable: Map<String, String>) -> Map<String, String> =
+  if variable.name == "CAPTION_SERVICE_URL":
+    withEnvironmentValue(variable, "http://picca-caption-service." + namespace + ".svc.cluster.local:8004")
+  else:
+    variable
 
-export fn environmentWithScylla(serviceName: String) -> List<Map<String, String>> =
-  lists.concat(environmentWithScyllaBase, serviceEnvironment(serviceName))
+fn sharedEnvironmentVariable(namespace: String, variable: Map<String, String>) -> Map<String, String> =
+  sharedEnvironmentCaption(namespace, sharedEnvironmentOcr(namespace, sharedEnvironmentSparse(namespace, sharedEnvironmentDense(namespace, variable))))
 
-export fn migrationEnvironment(serviceName: String) -> List<Map<String, String>> =
+fn sharedEnvironmentFor(namespace: String) -> List<Map<String, String>> =
+  lists.map(sharedEnvironment, fn(variable) => sharedEnvironmentVariable(namespace, variable))
+
+fn envFromWithNamespace(namespace: String) -> List<Map<String, Any>> =
+  - secretRef:
+      name: names.piccaPostgresSecretName
+  - secretRef:
+      name: names.piccaValkeySecretName(namespace)
+  - secretRef:
+      name: names.piccaRabbitmqSecretName
+  - secretRef:
+      name: names.piccaOidcSecretName
+
+export fn envFrom(namespace: String) -> List<Map<String, Any>> = envFromWithNamespace(namespace)
+
+export fn envFromWithScylla(namespace: String) -> List<Map<String, Any>> =
   lists.concat(
-    migrationEnvironmentBase,
+    envFromWithNamespace(namespace),
+    scyllaSecretReference,
+  )
+
+export fn environment(namespace: String, serviceName: String) -> List<Map<String, String>> =
+  lists.concat(sharedEnvironmentFor(namespace), serviceEnvironment(serviceName))
+
+export fn environmentWithScylla(namespace: String, serviceName: String) -> List<Map<String, String>> =
+  lists.concat(
+    lists.concat(sharedEnvironmentFor(namespace), scyllaEnvironment),
     serviceEnvironment(serviceName),
   )
 
+export fn migrationEnvironment(namespace: String, serviceName: String) -> List<Map<String, String>> =
+  lists.concat(
+    lists.concat(
+      lists.filter(sharedEnvironmentFor(namespace), fn(variable) => variable.name != "PLAN_CONFIG_FILE"),
+      scyllaEnvironment,
+    ),
+    serviceEnvironment(serviceName),
+  )
 
-export fn apiServerEnvironment() -> List<Map<String, String>> =
-  environmentWithScylla("picca-apiserver")
+export fn apiServerEnvironment(namespace: String) -> List<Map<String, String>> =
+  environmentWithScylla(namespace, "picca-apiserver")

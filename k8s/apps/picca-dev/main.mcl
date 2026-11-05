@@ -1,4 +1,3 @@
-import "./profiles.mcl" as appProfiles
 import "./oidc.mcl" as oidc
 import "./configmaps.mcl" as configmaps
 import "./external-secrets.mcl" as externalSecrets
@@ -9,8 +8,8 @@ import "./valkey.mcl" as valkey
 import "./identity.mcl" as identity
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-let namespace = appProfiles.profiles["default"].namespace
 
 emit each oidc.externalSecret()
 emit each configmaps.render(namespace)

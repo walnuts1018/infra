@@ -36,7 +36,7 @@ export fn rolePiccaReadScyllaClientCert() -> Map<String, Any> = node:
       verbs:
         - "get"
 
-export fn roleBindingPiccaReadScyllaClientCert() -> Map<String, Any> = node:
+export fn roleBindingPiccaReadScyllaClientCert(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "RoleBinding"
   metadata:
@@ -50,7 +50,7 @@ export fn roleBindingPiccaReadScyllaClientCert() -> Map<String, Any> = node:
     -
       kind: "ServiceAccount"
       name: "picca-scylla-secret-reader"
-      namespace: "picca"
+      namespace: namespace
 
 export fn serviceAccountPiccaScyllaSecretReader(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
@@ -71,7 +71,7 @@ export fn secretStoreScyllaClientCert(namespace: String) -> Map<String, Any> = n
         auth:
           serviceAccount:
             name: "picca-scylla-secret-reader"
-            namespace: "picca"
+            namespace: namespace
         remoteNamespace: "databases"
         server:
           caProvider:

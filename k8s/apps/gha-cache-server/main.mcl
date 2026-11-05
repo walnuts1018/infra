@@ -1,28 +1,26 @@
 import "std:helm" as helm
 import "./chart.mcl" as appChart
-import "./profiles.mcl" as appProfiles
+import "./values.mcl" as appValues
 import "./external-secret.mcl" as externalSecret
 import "./http-route.mcl" as httpRoute
 import "./scaled-object.mcl" as scaledObject
 import "./service-monitor.mcl" as serviceMonitor
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
-let apiVersions: List<String> =
-  - "gateway.networking.k8s.io/v1"
-  - "keda.sh/v1alpha1"
-  - "monitoring.coreos.com/v1"
+let apiVersions: List<String> = []
 let options =
   releaseName: "gha-cache-server"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
-  values: appProfiles.profiles["standard"]
+  values: appValues.baseValues
 let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources
-emit externalSecret.resource
-emit httpRoute.resource
-emit scaledObject.resource
-emit serviceMonitor.resource
+emit externalSecret.resource(namespace)
+emit httpRoute.resource(namespace)
+emit scaledObject.resource(namespace)
+emit serviceMonitor.resource(namespace)

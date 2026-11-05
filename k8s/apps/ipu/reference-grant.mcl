@@ -1,18 +1,18 @@
-let from =
+fn from(namespace: String) -> List<Map<String, Any>> =
   - group: "gateway.networking.k8s.io"
     kind: "HTTPRoute"
-    namespace: "ipu"
+    namespace: namespace
 let to =
   - group: ""
     kind: "Service"
     name: "keda-add-ons-http-interceptor-proxy"
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1beta1"
   kind: "ReferenceGrant"
   metadata:
     name: "ipu-allow-interceptor"
     namespace: "keda"
   spec:
-    from: from
+    from: from(namespace)
     to: to

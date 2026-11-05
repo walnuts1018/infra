@@ -1,4 +1,0 @@
-import "./values.mcl" as appValues
-
-export let valuesByProfile: Map<String, Map<String, Any>> =
-  default: appValues.commonValues

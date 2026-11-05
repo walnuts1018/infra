@@ -1,16 +1,15 @@
 import "./app.mcl" as app
 import "./configmaps.mcl" as appConfigMaps
-import "./identity.mcl" as appIdentity
 
-let s3CredentialsSecret = appIdentity.s3CredentialsSecret.metadata.name
+let s3CredentialsSecret = "maps-s3-credentials"
 let labels = app.labels("versatiles-server")
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: "maps-versatiles-server"
-    namespace: app.namespace
+    namespace: namespace
     labels: labels
   spec:
     replicas: 1
@@ -25,7 +24,7 @@ export let resource = node:
       metadata:
         labels: labels
       spec:
-        serviceAccountName: appIdentity.versatilesServiceAccount.metadata.name
+        serviceAccountName: "maps-versatiles-server"
         automountServiceAccountToken: false
         securityContext:
           runAsNonRoot: true

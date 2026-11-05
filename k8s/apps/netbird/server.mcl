@@ -35,12 +35,12 @@ let serverLabels =
   app: serverName
   "app.kubernetes.io/name": serverName
 
-let externalSecret = node:
+fn externalSecret(namespace: String) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
     name: secretName
-    namespace: appSettings.namespace
+    namespace: namespace
   spec:
     secretStoreRef:
       name: "onepassword"
@@ -54,12 +54,12 @@ let externalSecret = node:
         data: externalSecretTemplateData
     data: externalSecretData
 
-let serverPVC = node:
+fn serverPVC(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "PersistentVolumeClaim"
   metadata:
     name: serverName
-    namespace: appSettings.namespace
+    namespace: namespace
   spec:
     accessModes:
       - "ReadWriteOnce"
@@ -68,12 +68,12 @@ let serverPVC = node:
       requests:
         storage: "1Gi"
 
-let serverDeployment = node:
+fn serverDeployment(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "Deployment"
   metadata:
     name: serverName
-    namespace: appSettings.namespace
+    namespace: namespace
     labels: serverLabels
   spec:
     replicas: 1
@@ -130,12 +130,12 @@ let serverDeployment = node:
             persistentVolumeClaim:
               claimName: serverName
 
-let serverService = node:
+fn serverService(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: serverName
-    namespace: appSettings.namespace
+    namespace: namespace
   spec:
     selector: serverLabels
     ports:
@@ -153,17 +153,17 @@ let serverService = node:
         targetPort: "metrics"
         protocol: "TCP"
 
-let serverMonitor = node:
+fn serverMonitor(namespace: String) -> Map<String, Any> = node:
   apiVersion: "monitoring.coreos.com/v1"
   kind: "ServiceMonitor"
   metadata:
     name: serverName
-    namespace: appSettings.namespace
+    namespace: namespace
     labels: serverLabels
   spec:
     namespaceSelector:
       matchNames:
-        - appSettings.namespace
+        - namespace
     selector:
       matchLabels: serverLabels
     endpoints:
@@ -172,9 +172,9 @@ let serverMonitor = node:
 
 export let externalSecretName = secretName
 
-export let resources =
-  - externalSecret
-  - serverPVC
-  - serverDeployment
-  - serverService
-  - serverMonitor
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - externalSecret(namespace)
+  - serverPVC(namespace)
+  - serverDeployment(namespace)
+  - serverService(namespace)
+  - serverMonitor(namespace)

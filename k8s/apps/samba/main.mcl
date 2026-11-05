@@ -6,14 +6,15 @@ import "./service.mcl" as service
 import "./statefulset.mcl" as statefulSet
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let additionalResources =
-  - externalSecrets.account
-  - externalSecrets.mega
-  - networkPolicy.resource
-  - service.resource
-  - statefulSet.resource
+  - externalSecrets.account(namespace)
+  - externalSecrets.mega(namespace)
+  - networkPolicy.resource(namespace)
+  - service.resource(namespace)
+  - statefulSet.resource(namespace)
 
-let resources = lists.concat(claims.resources, additionalResources)
+let resources = lists.concat(claims.resources(namespace), additionalResources)
 
 emit each resources

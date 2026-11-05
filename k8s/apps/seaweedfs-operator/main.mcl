@@ -1,17 +1,24 @@
 import "std:helm" as helm
+import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
+type Feature = "monitoring"
 param cluster: clusterConfig.Cluster
+param namespace: String
+param features: List<Feature> = []
 
+let values: Map<String, Any> = appValues.values with:
+  serviceMonitor:
+    enabled: lists.contains(features, "monitoring")
 let apiVersions: List<String> = []
 let options =
   releaseName: "seaweedfs-operator"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
-  values: appValues.values
+  values: values
 let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources

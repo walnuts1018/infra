@@ -1,4 +1,4 @@
-export let values: Map<String, Any> =
+export fn values(namespace: String) -> Map<String, Any> =
   deployment:
     envoyGateway:
       resources:
@@ -16,7 +16,7 @@ export let values: Map<String, Any> =
         backend:
           type: "Redis"
           redis:
-            url: "valkey-envoy-gateway-valkey.envoy-gateway-system.svc.cluster.local:6379"
+            url: "valkey-envoy-gateway-valkey." + namespace + ".svc.cluster.local:6379"
       provider:
         kubernetes:
           rateLimitDeployment:

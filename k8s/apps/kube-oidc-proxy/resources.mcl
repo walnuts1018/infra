@@ -1,14 +1,6 @@
+import "std:list" as lists
 import "./proxy.mcl" as proxy
 import "./rbac.mcl" as rbac
 
-export let resources =
-  - rbac.resources[0]
-  - rbac.resources[1]
-  - rbac.resources[2]
-  - proxy.resources[0]
-  - proxy.resources[1]
-  - proxy.resources[2]
-  - proxy.resources[3]
-  - proxy.resources[4]
-  - proxy.resources[5]
-  - proxy.resources[6]
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  lists.concat(rbac.resources(namespace), proxy.resources(namespace))

@@ -1,31 +1,30 @@
 import "std:crypto" as crypto
 import text "./_configs/scylla.yaml" as scyllaConfigText
 import text "./_configs/setup.sh" as setupScript
-import "./app.mcl" as app
 
 let scyllaConfigData =
   "scylla.yaml": scyllaConfigText
 let setupData =
   "setup.sh": setupScript
 
-export let scyllaConfig = node:
+export fn scyllaConfig(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   immutable: false
   metadata:
     name: "scylla-config"
-    namespace: app.namespace
+    namespace: namespace
     labels: {}
   data: scyllaConfigData
 
 export let setupConfigMapName = "scylla-setup-" + crypto.sha256(setupData, 6)
 
-export let setupConfigMap = node:
+export fn setupConfigMap(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   immutable: true
   metadata:
     name: setupConfigMapName
-    namespace: app.namespace
+    namespace: namespace
     labels: {}
   data: setupData

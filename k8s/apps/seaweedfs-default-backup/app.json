@@ -2,6 +2,10 @@
   "name": "seaweedfs-default-backup",
   "namespace": "seaweedfs",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "settings": {
+        "schedule": "10 2 * * *"
+      }
+    }
   }
 }

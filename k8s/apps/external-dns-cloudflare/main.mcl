@@ -3,20 +3,18 @@ import "./external-secret.mcl" as externalSecret
 import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let chartVersion = "1.21.1"
 let chartArchive = "https://github.com/kubernetes-sigs/external-dns/releases/download/external-dns-helm-chart-" + chartVersion + "/external-dns-" + chartVersion + ".tgz"
 let helmOptions =
   releaseName: "external-dns-cloudflare"
-  namespace: "external-dns-cloudflare"
+  namespace: namespace
   version: chartVersion
   kubeVersion: cluster.kubernetesVersion
-  apiVersions:
-    - "gateway.networking.k8s.io/v1"
-    - "gateway.networking.k8s.io/v1alpha2"
-    - "monitoring.coreos.com/v1"
+  apiVersions: []
   values: appValues.values
 let chartResources = helm.render(chartArchive, helmOptions)
 
 emit each chartResources
-emit externalSecret.resource
+emit externalSecret.resource(namespace)

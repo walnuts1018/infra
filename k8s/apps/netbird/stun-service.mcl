@@ -16,10 +16,10 @@ fn serviceSpec(settings: config.Settings) -> Map<String, Any> =
   selector: serverLabels
   ports: ports
 
-export fn resource(settings: config.Settings) -> Map<String, Any> = node:
+export fn resource(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
     name: appSettings.name + "-stun"
-    namespace: appSettings.namespace
+    namespace: namespace
   spec: serviceSpec(settings)

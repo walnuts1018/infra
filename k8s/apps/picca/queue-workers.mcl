@@ -26,8 +26,8 @@ fn deploymentPiccaOutboxWorker(namespace: String) -> Map<String, Any> = node:
       spec:
         containers:
           -
-            env: environment.environment("picca-outbox-worker")
-            envFrom: environment.envFrom
+            env: environment.environment(namespace, "picca-outbox-worker")
+            envFrom: environment.envFrom(namespace)
             image: "ghcr.io/walnuts1018/picca/outbox-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -90,8 +90,8 @@ fn deploymentPiccaProcessingReconciler(namespace: String) -> Map<String, Any> = 
       spec:
         containers:
           -
-            env: environment.environment("picca-processing-reconciler")
-            envFrom: environment.envFrom
+            env: environment.environment(namespace, "picca-processing-reconciler")
+            envFrom: environment.envFrom(namespace)
             image: "ghcr.io/walnuts1018/picca/processing-reconciler:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -154,8 +154,8 @@ fn deploymentPiccaStorageReconciler(namespace: String) -> Map<String, Any> = nod
       spec:
         containers:
           -
-            env: environment.environment("picca-storage-reconciler")
-            envFrom: environment.envFrom
+            env: environment.environment(namespace, "picca-storage-reconciler")
+            envFrom: environment.envFrom(namespace)
             image: "ghcr.io/walnuts1018/picca/storage-reconciler:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe

@@ -1,10 +1,10 @@
-fn webhook(apiVersion: String, path: String, name: String, resource: String) -> Map<String, Any> = node:
+fn webhook(namespace: String, apiVersion: String, path: String, name: String, resource: String) -> Map<String, Any> = node:
   admissionReviewVersions:
     - "v1"
   clientConfig:
     service:
       name: "rabbitmq-topology-operator-webhook"
-      namespace: "rabbitmq-operator"
+      namespace: namespace
       path: path
       port: 443
   failurePolicy: "Fail"
@@ -21,26 +21,26 @@ fn webhook(apiVersion: String, path: String, name: String, resource: String) -> 
         - resource
   sideEffects: "None"
 
-let webhooks: List<Map<String, Any>> =
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-binding", "vbinding.kb.io", "bindings")
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-exchange", "vexchange.kb.io", "exchanges")
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-federation", "vfederation.kb.io", "federations")
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-operatorpolicy", "voperatorpolicy.kb.io", "operatorpolicies")
-  - webhook("v1alpha1", "/validate-rabbitmq-com-v1alpha1-superstream", "vsuperstream.kb.io", "superstreams")
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-permission", "vpermission.kb.io", "permissions")
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-topicpermission", "vtopicpermission.kb.io", "topicpermissions")
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-policy", "vpolicy.kb.io", "policies")
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-queue", "vqueue.kb.io", "queues")
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-schemareplication", "vschemareplication.kb.io", "schemareplications")
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-shovel", "vshovel.kb.io", "shovels")
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-user", "vuser.kb.io", "users")
-  - webhook("v1beta1", "/validate-rabbitmq-com-v1beta1-vhost", "vvhost.kb.io", "vhosts")
+fn webhooks(namespace: String) -> List<Map<String, Any>> =
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-binding", "vbinding.kb.io", "bindings")
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-exchange", "vexchange.kb.io", "exchanges")
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-federation", "vfederation.kb.io", "federations")
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-operatorpolicy", "voperatorpolicy.kb.io", "operatorpolicies")
+  - webhook(namespace, "v1alpha1", "/validate-rabbitmq-com-v1alpha1-superstream", "vsuperstream.kb.io", "superstreams")
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-permission", "vpermission.kb.io", "permissions")
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-topicpermission", "vtopicpermission.kb.io", "topicpermissions")
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-policy", "vpolicy.kb.io", "policies")
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-queue", "vqueue.kb.io", "queues")
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-schemareplication", "vschemareplication.kb.io", "schemareplications")
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-shovel", "vshovel.kb.io", "shovels")
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-user", "vuser.kb.io", "users")
+  - webhook(namespace, "v1beta1", "/validate-rabbitmq-com-v1beta1-vhost", "vvhost.kb.io", "vhosts")
 
-export let configuration = node:
+export fn configuration(namespace: String) -> Map<String, Any> = node:
   apiVersion: "admissionregistration.k8s.io/v1"
   kind: "ValidatingWebhookConfiguration"
   metadata:
     name: "rabbitmq-topology-operator-webhook-rabbitmq-operator"
     annotations:
-      "cert-manager.io/inject-ca-from": "rabbitmq-operator/rabbitmq-topology-operator-webhook"
-  webhooks: webhooks
+      "cert-manager.io/inject-ca-from": namespace + "/rabbitmq-topology-operator-webhook"
+  webhooks: webhooks(namespace)

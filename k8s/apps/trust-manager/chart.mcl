@@ -1,4 +1,3 @@
 # renovate: datasource=helm depName=trust-manager registryUrl=https://charts.jetstack.io/charts
 export let chartVersion = "v0.24.0"
 export let chartArchive = "https://charts.jetstack.io/charts/trust-manager-" + chartVersion + ".tgz"
-export let namespace = "cert-manager"

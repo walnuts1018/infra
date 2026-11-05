@@ -27,12 +27,12 @@ let egressRule =
       protocol: "TCP"
       port: 53
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
     name: app.appName
-    namespace: app.namespace
+    namespace: namespace
   spec:
     podSelector:
       matchLabels: app.labels

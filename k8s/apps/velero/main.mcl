@@ -1,21 +1,34 @@
 import "std:helm" as helm
+import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
+import "./config.mcl" as appConfig
 import "./external-secret.mcl" as externalSecret
 import "./schedule.mcl" as schedule
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
+param features: List<appConfig.Feature> = []
 
-let apiVersions: List<String> = []
+let monitoringEnabled = lists.contains(features, "monitoring")
+let values: Map<String, Any> = appValues.baseValues with:
+  metrics:
+    enabled: monitoringEnabled
+    serviceMonitor:
+      enabled: monitoringEnabled
+    nodeAgentPodMonitor:
+      enabled: monitoringEnabled
+let apiVersions: List<String> =
+  - "policy/v1/PodDisruptionBudget"
 let options =
   releaseName: "velero"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
-  values: appValues.profiles["seaweedfsBiscuit"]
+  values: values
 let resources = helm.render(appChart.chartArchive, options)
 
 emit each resources
-emit externalSecret.resource
-emit schedule.resource
+emit externalSecret.resource(namespace)
+emit schedule.resource(namespace)

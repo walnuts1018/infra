@@ -1,17 +1,14 @@
-import "./profiles.mcl" as appProfiles
-
 let appName = "visual-regression-tracker"
-let profile = appProfiles.profiles["s3BackedVisualRegression"]
 fn labels(name: String) -> Map<String, Any> = node:
   app: name
   "app.kubernetes.io/name": name
 
-let httpRoute = node:
+fn httpRoute(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "HTTPRoute"
   metadata:
     name: appName
-    namespace: profile.namespace
+    namespace: namespace
     labels: labels(appName)
   spec:
     parentRefs:
@@ -48,5 +45,5 @@ let httpRoute = node:
             weight: 1
 
 
-export let resources =
-  - httpRoute
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  - httpRoute(namespace)

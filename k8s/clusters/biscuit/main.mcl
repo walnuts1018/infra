@@ -3,10 +3,16 @@ import "./control-plane.mcl" as controlPlane
 import "./argocd-agent-bootstrap.mcl" as argocdAgentBootstrap
 import "../../namespaces/biscuit/resources.mcl" as namespaces
 import "../../cluster.mcl" as clusterConfig
-param cluster: clusterConfig.Cluster
+param cluster: clusterConfig.ClusterAPIConfig
+
+rule validClusterAPIConfig(cluster: clusterConfig.ClusterAPIConfig):
+  require cluster.controlPlaneMachineCount >= 1 message "Cluster API requires at least one control plane machine"
+  require cluster.workerMachineCount == 0 message "Biscuit does not define Worker machines"
 
 emit each tartHosts.resources.items
 emit tartHosts.resources.credential
 emit each namespaces.resources
-emit each controlPlane.resources
+emit each controlPlane.resources(cluster)
 emit each argocdAgentBootstrap.resources
+
+validate cluster using validClusterAPIConfig

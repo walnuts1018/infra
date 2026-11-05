@@ -1,9 +1,12 @@
 import "./deployment.mcl" as deployment
 import "./external-secret.mcl" as externalSecret
 import "./rbac.mcl" as rbac
+import "./config.mcl" as appConfig
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
+param settings: appConfig.Settings
 
-emit externalSecret.resource
-emit each rbac.resources
-emit deployment.resource
+emit externalSecret.resource(namespace)
+emit each rbac.resources(namespace)
+emit deployment.resource(namespace, settings)

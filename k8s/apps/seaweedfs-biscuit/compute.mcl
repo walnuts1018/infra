@@ -1,4 +1,4 @@
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "StatefulSet"
   metadata:
@@ -9,7 +9,7 @@ export let resource = node:
       "app.kubernetes.io/component": "mini"
       "app.kubernetes.io/name": "seaweedfs-biscuit"
     name: "seaweedfs-biscuit"
-    namespace: "seaweedfs"
+    namespace: namespace
   spec:
     podManagementPolicy: "OrderedReady"
     replicas: 1

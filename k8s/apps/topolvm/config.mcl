@@ -3,4 +3,8 @@ export type Feature = "ssd" | "hdd" | "monitoring"
 export type Settings =
   lvmdNodeSelector: Map<String, String>
   nodeSelector: Map<String, String>
-  hddIsDefault: Bool
+  hddIsDefault?: Bool
+
+export type Configuration =
+  features: List<Feature>
+  settings: Settings

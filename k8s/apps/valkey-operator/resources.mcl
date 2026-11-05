@@ -10,14 +10,12 @@ type HelmOptions =
   values: Map<String, Any>
 
 let apiVersions: List<String> = []
-fn baseOptions(cluster: clusterConfig.Cluster) -> HelmOptions =
+fn options(cluster: clusterConfig.Cluster, namespace: String, values: Map<String, Any>) -> HelmOptions =
   releaseName: "valkey-operator"
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
-
-fn options(cluster: clusterConfig.Cluster, namespace: String, values: Map<String, Any>) -> HelmOptions = baseOptions(cluster) with:
-  namespace: namespace
   values: values
 
 export fn render(cluster: clusterConfig.Cluster, namespace: String, values: Map<String, Any>) -> List<Map<String, Any>> = helm.render(appChart.chartArchive, options(cluster, namespace, values))

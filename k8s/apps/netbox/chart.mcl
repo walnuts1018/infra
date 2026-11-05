@@ -2,7 +2,6 @@
 export let chartVersion = "8.3.18"
 export let chartArchive = "oci://ghcr.io/netbox-community/netbox-chart/netbox"
 export let releaseName = "netbox"
-export let namespace = "netbox"
 export let apiVersions: List<String> =
   - "autoscaling/v2"
   - "gateway.networking.k8s.io/v1"

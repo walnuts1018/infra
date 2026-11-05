@@ -3,13 +3,14 @@ import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let options =
   releaseName: "clickhouse-operator"
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
-  apiVersions: appChart.apiVersions
+  apiVersions: []
   values: appValues.values
 let resources = helm.render(appChart.chartArchive, options)
 

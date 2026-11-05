@@ -11,12 +11,12 @@ let avoidSlowNodeAffinity =
               key: "storage.walnuts.dev/slow"
               operator: "DoesNotExist"
 
-export let resource = node:
+export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "apps/v1"
   kind: "StatefulSet"
   metadata:
     name: app.appName
-    namespace: app.namespace
+    namespace: namespace
     labels: app.labels
   spec:
     replicas: 1

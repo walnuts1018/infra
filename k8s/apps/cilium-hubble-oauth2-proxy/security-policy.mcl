@@ -2,17 +2,17 @@ import "./config.mcl" as app
 import "./external-secret.mcl" as externalSecret
 import "./http-route.mcl" as httpRoute
 
-let securityPolicy = node:
+fn securityPolicy(namespace: String) = node:
   apiVersion: "gateway.envoyproxy.io/v1alpha1"
   kind: "SecurityPolicy"
   metadata:
     name: app.name
-    namespace: app.namespace
+    namespace: namespace
   spec:
     targetRefs:
       - group: "gateway.networking.k8s.io"
-        kind: httpRoute.resource.kind
-        name: httpRoute.resource.metadata.name
+        kind: httpRoute.resource(namespace).kind
+        name: httpRoute.resource(namespace).metadata.name
     oidc:
       provider:
         issuer: "https://auth.walnuts.dev"
@@ -47,4 +47,4 @@ let securityPolicy = node:
                   values:
                     - "385243484187001257:hubble-user"
 
-export let resource = securityPolicy
+export fn resource(namespace: String) -> Map<String, Any> = securityPolicy(namespace)

@@ -2,6 +2,10 @@
   "name": "vertical-pod-autoscaler",
   "namespace": "kube-system",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "features": [
+        "monitoring"
+      ]
+    }
   }
 }

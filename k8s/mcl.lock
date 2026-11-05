@@ -1,8 +1,8 @@
 {
   "version": 4,
   "toolchain": {
-    "mcl": "0.3.30",
-    "revision": "406abb6efce2af9f5d513827c55b38106fa15389",
+    "mcl": "0.3.31",
+    "revision": "5142734cb8547612b6470a3555d49fb194dc459c",
     "modified": "false",
     "go": "go1.27.3",
     "helm": "v4.3.1",
@@ -11,6 +11,7 @@
   },
   "manifests": {},
   "schemas": {
+    "https://download.elastic.co/downloads/eck/3.5.0/crds.yaml": "0e126dbd003f8f98c9b84f2af6263b5ac8a00b52cd9a6d6da225aa3af66cc13c",
     "https://github.com/cloudnative-pg/plugin-barman-cloud/releases/download/v0.15.0/manifest.yaml": "1c483eae12a7424ad28ac66bdfee771b510ee8e234cb8756c3ade7254cef2fad",
     "https://github.com/kedacore/keda/releases/download/v2.20.2/keda-2.20.2-crds.yaml": "2356c9ca2aafe42d3171af49064865298c340385fd866b35ef66fc1c00172fba",
     "https://github.com/kubernetes-sigs/cluster-api-addon-provider-helm/releases/download/v0.6.4/addon-components.yaml": "a70f4eb77eac626231daca1e2a046b4b069bb84320efa327cc8c56a9c4ca03e6",

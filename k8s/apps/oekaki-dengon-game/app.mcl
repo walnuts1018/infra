@@ -1,2 +1,1 @@
 export let name = "oekaki-dengon-game"
-export let namespace = "oekaki-dengon-game"

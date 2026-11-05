@@ -1,7 +1,7 @@
 let zitadelIssuerAudience = "385225927988084784"
 let radarOperatorGroup = "zitadel:" + zitadelIssuerAudience + ":radar-operator"
 
-export let resources =
+export fn resources(namespace: String) -> List<Map<String, Any>> =
   -
     apiVersion: "rbac.authorization.k8s.io/v1"
     kind: "ClusterRole"
@@ -430,7 +430,7 @@ export let resources =
       -
         kind: "ServiceAccount"
         name: "radar"
-        namespace: "radar"
+        namespace: namespace
   -
     apiVersion: "rbac.authorization.k8s.io/v1"
     kind: "ClusterRoleBinding"

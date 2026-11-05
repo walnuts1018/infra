@@ -6,12 +6,12 @@ import "./http-route.mcl" as httpRoute
 import "../../cluster.mcl" as clusterConfig
 let apiVersions: List<String> =
   - "policy/v1"
-export fn chartResources(cluster: clusterConfig.Cluster) -> List<Map<String, Any>> = helm.render(appChart.chartArchive, options(cluster))
-
-fn options(cluster: clusterConfig.Cluster) -> Map<String, Any> =
+fn options(cluster: clusterConfig.Cluster, namespace: String) -> Map<String, Any> =
   releaseName: appChart.releaseName
-  namespace: appChart.namespace
+  namespace: namespace
   version: appChart.chartVersion
   kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: appValues.values
+
+export fn chartResources(cluster: clusterConfig.Cluster, namespace: String) -> List<Map<String, Any>> = helm.render(appChart.chartArchive, options(cluster, namespace))

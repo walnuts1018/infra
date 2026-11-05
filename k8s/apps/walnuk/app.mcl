@@ -3,7 +3,6 @@ export type ApplicationNames =
   frontend: String
 
 export let name = "walnuk"
-export let namespace = "walnuk"
 export let appNames: ApplicationNames =
   backend: "walnuk-backend"
   frontend: "walnuk-frontend"

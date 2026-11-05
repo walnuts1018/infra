@@ -6,15 +6,16 @@ import "./external-secrets.mcl" as externalSecrets
 import "./scaling.mcl" as scaling
 import "../../cluster.mcl" as clusterConfig
 param cluster: clusterConfig.Cluster
+param namespace: String
 
 let resources =
-  - workload.serviceAccount
-  - workload.deployment
-  - workload.service
-  - externalSecrets.externalSecret
-  - routes.httpRoute
-  - interceptorRoute.resource
-  - referenceGrant.resource
-  - scaling.resource
+  - workload.serviceAccount(namespace)
+  - workload.deployment(namespace)
+  - workload.service(namespace)
+  - externalSecrets.externalSecret(namespace)
+  - routes.httpRoute(namespace)
+  - interceptorRoute.resource(namespace)
+  - referenceGrant.resource(namespace)
+  - scaling.resource(namespace)
 
 emit each resources

@@ -2,6 +2,21 @@
   "name": "snmp-exporter",
   "namespace": "monitoring",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "features": [
+        "monitoring"
+      ],
+      "settings": {
+        "targets": [
+          {
+            "name": "ix2215",
+            "target": "192.168.0.1",
+            "modules": [
+              "nec_ix"
+            ]
+          }
+        ]
+      }
+    }
   }
 }

@@ -2,6 +2,11 @@
   "name": "iwashi-collector",
   "namespace": "iwashi-system",
   "clusters": {
-    "kurumi": {}
+    "kurumi": {
+      "settings": {
+        "discoveryEndpoint": "http://iwashi.iwashi-system.svc.cluster.local:8080/internal/discovery/standard",
+        "blackboxExporterEndpoint": "iwashi-blackbox-prometheus-blackbox-exporter.iwashi-blackbox.svc.cluster.local:9115"
+      }
+    }
   }
 }
