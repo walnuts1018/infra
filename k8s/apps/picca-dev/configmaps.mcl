@@ -1,0 +1,31 @@
+import text "./_configs/plans.yaml" as plansConfig
+import text "./_configs/scylla-ca.crt" as scyllaCaCertificate
+
+fn configMapPiccaDevPlans(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  data:
+    "plans.yaml": plansConfig
+  immutable: false
+  kind: "ConfigMap"
+  metadata:
+    labels:
+      app: "picca-dev"
+      "app.kubernetes.io/name": "picca-dev"
+    name: "picca-dev-plans"
+    namespace: namespace
+fn configMapPiccaDevScylladbCaCert(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "v1"
+  data:
+    "ca.crt": scyllaCaCertificate
+  immutable: false
+  kind: "ConfigMap"
+  metadata:
+    labels:
+      app: "picca-dev"
+      "app.kubernetes.io/name": "picca-dev"
+    name: "picca-dev-scylladb-ca-cert"
+    namespace: namespace
+
+export fn render(namespace: String) -> List<Map<String, Any>> =
+  - configMapPiccaDevPlans(namespace)
+  - configMapPiccaDevScylladbCaCert(namespace)

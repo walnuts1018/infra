@@ -1,15 +1,23 @@
-import "std:list" as lists
 import "./profiles.mcl" as appProfiles
 import "./oidc.mcl" as oidc
-import "./shared-infrastructure.mcl" as sharedInfrastructure
+import "./configmaps.mcl" as configmaps
+import "./external-secrets.mcl" as externalSecrets
+import "./routes.mcl" as routes
+import "./rabbitmq.mcl" as rabbitmq
+import "./scylla.mcl" as scylla
+import "./valkey.mcl" as valkey
+import "./identity.mcl" as identity
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
-let profile = appProfiles.profiles["default"]
-let resources = lists.concat(
-  oidc.externalSecret(),
-  lists.concat(
-    sharedInfrastructure.render(profile.namespace),
-    oidc.securityPolicy(profile.namespace),
-  ),
-)
+let namespace = appProfiles.profiles["default"].namespace
 
-emit each resources
+emit each oidc.externalSecret()
+emit each configmaps.render(namespace)
+emit each externalSecrets.render(namespace)
+emit each routes.render(namespace)
+emit each rabbitmq.render(namespace)
+emit each scylla.render(namespace)
+emit each valkey.render(namespace)
+emit each identity.render(namespace)
+emit each oidc.securityPolicy(namespace)

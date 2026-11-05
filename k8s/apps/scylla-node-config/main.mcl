@@ -1,4 +1,6 @@
 import "./node-config.mcl" as config
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let nodeConfig: config.NodeConfig = node:
   apiVersion: "scylla.scylladb.com/v1alpha1"

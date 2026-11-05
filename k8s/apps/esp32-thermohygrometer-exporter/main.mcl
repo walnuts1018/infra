@@ -1,4 +1,6 @@
 import "std:hash" as hashes
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let appName = "esp32-thermohygrometer-exporter"
 let namespace = appName

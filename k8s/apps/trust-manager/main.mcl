@@ -2,9 +2,11 @@ import "std:helm" as helm
 import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
+import "../../cluster.mcl" as clusterConfig
 
 type Feature = "monitoring"
 
+param cluster: clusterConfig.Cluster
 param features: List<Feature> = []
 
 let values: Map<String, Any> = appValues.commonValues with:
@@ -17,7 +19,7 @@ let options =
   releaseName: "trust-manager"
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions:
     - "monitoring.coreos.com/v1"
   values: values

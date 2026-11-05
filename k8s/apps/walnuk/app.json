@@ -1,0 +1,7 @@
+{
+  "name": "walnuk",
+  "namespace": "walnuk",
+  "clusters": {
+    "kurumi": {}
+  }
+}

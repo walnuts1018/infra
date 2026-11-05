@@ -1,6 +1,8 @@
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./profiles.mcl" as appProfiles
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let profileName = "ix2215"
 let apiVersions: List<String> = []
@@ -8,7 +10,7 @@ let options =
   releaseName: "snmp-exporter"
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: "1.36.4"
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: appProfiles.profiles[profileName]
 let resources = helm.render(appChart.chartArchive, options)

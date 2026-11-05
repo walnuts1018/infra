@@ -3,10 +3,15 @@ import "./client.mcl" as client
 import "./dashboard.mcl" as dashboard
 import "./route.mcl" as route
 import "./stun-service.mcl" as stun
+import "./config.mcl" as appConfig
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
+
+param settings: appConfig.Settings
 
 emit each server.resources
 emit client.headlessService
 emit client.statefulSet
-emit stun.resource
+emit stun.resource(settings)
 emit each dashboard.resources
 emit route.resource

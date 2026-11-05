@@ -1,4 +1,4 @@
-import text "../_templates/apps-berry.gotmpl" as appsTemplatePatch
+import text "../_templates/apps.gotmpl" as appsTemplatePatch
 import "../common.mcl" as common
 
 let standardSyncOptions =
@@ -14,16 +14,12 @@ let destination =
 let clusterDestination =
   server: "https://kubernetes.default.svc"
 
-let argocdComponentsSource = common.mclSourceWithRef("k8s/_argocd/argocd_components", "infra")
-let cmpSource = common.mclSource("k8s/_argocd/cmp")
+let argocdComponentsSource = common.mclSourceWithRef("k8s/_argocd/argocd_components", "infra", "berry")
+let cmpSource = common.mclSource("k8s/_argocd/cmp", "berry")
 let argocdSources =
   - argocdComponentsSource
   - cmpSource
-let appsEnabledElement =
-  "berryEnabled": "{{ hasKey (default dict .clusters) \"berry\" }}"
-let appsSelector =
-  "berryEnabled": "true"
-let appsGenerator = common.applicationGenerator(appsEnabledElement, appsSelector)
+let appsGenerator = common.applicationGenerator("berry")
 let emptySources: List<Map<String, Any>> = []
 let appSet = node:
   apiVersion: common.apiVersion
@@ -50,14 +46,14 @@ let agentCerts = common.applicationNoLabels(
   "argocd-agent-certs",
   "berry",
   destination,
-  common.mclSource("k8s/_argocd/agent/certs"),
+  common.mclSource("k8s/_argocd/agent/certs", "berry"),
   standardSyncOptions,
   )
 let agentPrincipal = common.applicationNoLabels(
   "argocd-agent-principal",
   "berry",
   destination,
-  common.mclSource("k8s/_argocd/agent/principal"),
+  common.mclSource("k8s/_argocd/agent/principal", "berry"),
   standardSyncOptions,
   )
 let argocd = common.multiSourceApplicationNoLabels(
@@ -72,7 +68,7 @@ let namespaces = common.applicationNoLabels(
   "namespaces-berry",
   "berry",
   clusterDestination,
-  common.mclSource("k8s/namespaces/berry"),
+  common.mclSource("k8s/namespaces/berry", "berry"),
   standardSyncOptions,
   )
 

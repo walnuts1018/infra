@@ -20,6 +20,25 @@
     {
       customType: 'regex',
       managerFilePatterns: [
+        '/^k8s\\/(?:apps|_argocd)\\/.+\\.mcl$/',
+      ],
+      matchStrings: [
+        '(?:image|modelImage|reference):\\s+"(?<packageName>(?:[^/"@]+/)?[^:"@]+(?:/[^:"@]+)*)(?::(?<currentValue>[^"@]+))?(?:@sha256:(?<currentDigest>[a-f0-9]+))?"',
+      ],
+      datasourceTemplate: 'docker',
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^k8s\\/(?:apps|_argocd)\\/.+\\.mcl$/',
+      ],
+      matchStrings: [
+        '#\\s*renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\s]+)(?: packageName=(?<packageName>[^\\s]+))?(?: registryUrl=(?<registryUrl>[^\\s]+))?(?: extractVersion=(?<extractVersion>[^\\s]+))?\\s+export let [A-Za-z][A-Za-z0-9]*Version = "(?<currentValue>[^"]+)"',
+      ],
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
         '/^k8s/.*/helm.jsonnet$/',
         '/^k8s/.*/helm.libsonnet$/',
         '/^k8s/.*/helm.yaml$/',
@@ -66,15 +85,38 @@
       customType: 'regex',
       managerFilePatterns: [
         '/^k8s/apps/.*/kustomization.yaml$/',
+        '/^k8s/apps/.+\\.mcl$/',
       ],
       matchStringsStrategy: 'any',
       matchStrings: [
-        'https:\\/\\/github\\.com\\/(?<depName>.*?)\\/releases\\/download\\/(?<currentValue>[^\\/]+)\\/.*\\s*',
+        'https:\\/\\/github\\.com\\/(?<depName>.*?)\\/releases\\/download\\/(?<currentValue>[^\\/\\s+]+)\\/[^\\/\\s+]+',
         'https:\\/\\/github\\.com\\/(?<depName>([^\\/]+\\/[^\\/]+)?)\\/.*\\\\\\?ref=(?<currentValue>[^&\\s]+)\\s*',
         'https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>.*?)\\/refs\\/tags\\/(?<currentValue>[^\\/]+)\\/.*\\s*',
         'https:\\/\\/raw\\.githubusercontent\\.com\\/(?<depName>[^/]+\\/[^/]+?)\\/(?<currentValue>[^\\/]+?)\\/.*\\s*',
       ],
       datasourceTemplate: 'github-tags',
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^k8s\\/mcl\\.toml$/',
+      ],
+      matchStrings: [
+        '#\\s*renovate: datasource=(?<datasource>github-releases) depName=(?<depName>[^\\s]+)\\s+source = "https:\\/\\/github\\.com\\/(?<urlDepName>[^/]+\\/[^/]+)\\/releases\\/download\\/(?<versionPrefix>v?)(?<currentValue>[^/]+)\\/(?<assetName>[^"]+)"',
+      ],
+      autoReplaceStringTemplate: '# renovate: datasource=github-releases depName={{{depName}}}\nsource = "https://github.com/{{{urlDepName}}}/releases/download/{{{versionPrefix}}}{{{replace "^v" "" newValue}}}/{{{assetName}}}"',
+      versioningTemplate: 'semver',
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^k8s\\/mcl\\.toml$/',
+      ],
+      matchStrings: [
+        '#\\s*renovate: versioned-asset datasource=(?<datasource>github-releases) depName=(?<depName>[^\\s]+)\\s+source = "(?<urlPrefix>https:\\/\\/github\\.com\\/(?<urlDepName>[^/]+\\/[^/]+)\\/releases\\/download\\/)(?<versionPrefix>v?)(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\\/(?<assetPrefix>[^/]*?)(?<assetVersion>[0-9]+\\.[0-9]+\\.[0-9]+)(?<assetSuffix>[^"]+)"',
+      ],
+      autoReplaceStringTemplate: '# renovate: versioned-asset datasource={{{datasource}}} depName={{{depName}}}\nsource = "{{{urlPrefix}}}{{{versionPrefix}}}{{{replace "^v" "" newValue}}}/{{{assetPrefix}}}{{{replace "^v" "" newValue}}}{{{assetSuffix}}}"',
+      versioningTemplate: 'semver',
     },
   ],
   packageRules: [

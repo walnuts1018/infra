@@ -4,4 +4,3 @@ export let namespace = app.namespace
 export let releaseName = app.releaseName
 export let chartVersion = app.chartVersion
 export let chartArchive = app.chartArchive
-export let kubeVersion = app.kubeVersion

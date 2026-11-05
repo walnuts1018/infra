@@ -1,8 +1,0 @@
-{
-  name: "netbird",
-  namespace: "netbird",
-  clusters: {
-    kurumi: {
-    },
-  },
-}

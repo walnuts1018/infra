@@ -82,13 +82,28 @@ files = [
 ]
 
 [[crd_schemas]]
-source = "git+https://github.com/kedacore/keda"
-revision = "68a5b5028f35b22d50597c69819ab32c4e92f21a"
-directory = "config/crd/bases"
-files = [
-  "keda.sh_scaledobjects.yaml",
-  "keda.sh_triggerauthentications.yaml",
-]
+# renovate: versioned-asset datasource=github-releases depName=kedacore/keda
+source = "https://github.com/kedacore/keda/releases/download/v2.20.2/keda-2.20.2-crds.yaml"
+
+[[crd_schemas]]
+# renovate: datasource=github-releases depName=walnuts1018/cluster-api-provider-tart
+source = "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/v0.3.16/infrastructure-components.yaml"
+
+[[crd_schemas]]
+# renovate: datasource=github-releases depName=walnuts1018/cluster-api-provider-tart
+source = "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/v0.3.16/bootstrap-components.yaml"
+
+[[crd_schemas]]
+# renovate: datasource=github-releases depName=walnuts1018/cluster-api-provider-tart
+source = "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/v0.3.16/control-plane-components.yaml"
+
+[[crd_schemas]]
+# renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api
+source = "https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.14.2/core-components.yaml"
+
+[[crd_schemas]]
+# renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api-addon-provider-helm
+source = "https://github.com/kubernetes-sigs/cluster-api-addon-provider-helm/releases/download/v0.6.4/addon-components.yaml"
 
 [[crd_schemas]]
 source = "git+https://github.com/kedacore/http-add-on"

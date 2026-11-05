@@ -1,4 +1,4 @@
+# renovate: datasource=docker depName=ghcr.io/grafana-community/helm-charts/tempo-distributed registryUrl=https://ghcr.io
 export let chartVersion = "2.26.2"
 export let chartArchive = "oci://ghcr.io/grafana-community/helm-charts/tempo-distributed"
 export let namespace = "tempo"
-export let kubeVersion = "1.36.4"

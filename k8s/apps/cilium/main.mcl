@@ -2,18 +2,21 @@ import "std:helm" as helm
 import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./external-secret.mcl" as externalSecret
+import "./config.mcl" as appConfig
 import "./values.mcl" as appValues
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
-param features: List<appValues.Feature> = []
-param settings: appValues.Settings
+param features: List<appConfig.Feature> = []
+param settings: appConfig.Settings
 
-let helmValues = appValues.helmValues(features, settings)
+let helmValues = appValues.helmValues(cluster, features, settings)
 let apiVersions: List<String> = []
 let options =
   releaseName: "cilium"
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   now: appChart.durationValidationTime
   apiVersions: apiVersions
   values: helmValues

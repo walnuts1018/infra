@@ -1,7 +1,0 @@
-{
-  name: "esp32-thermohygrometer-exporter",
-  namespace: "esp32-thermohygrometer-exporter",
-  clusters: {
-    kurumi: {},
-  },
-}

@@ -1,5 +1,7 @@
 import "./deployment.mcl" as deployment
 import "./external-secret.mcl" as externalSecret
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let resources =
   - deployment.resource

@@ -2,6 +2,8 @@ import "./deployment.mcl" as deployment
 import "./external-secret.mcl" as externalSecret
 import "./http-route.mcl" as httpRoute
 import "./service.mcl" as service
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 emit deployment.resource
 emit service.resource

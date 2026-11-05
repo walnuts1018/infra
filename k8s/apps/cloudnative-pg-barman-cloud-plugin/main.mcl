@@ -1,4 +1,6 @@
 import "std:manifest" as manifest
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 let resources = manifest.load("./resources.yaml")
 
 emit each resources

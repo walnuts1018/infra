@@ -1,4 +1,4 @@
+# renovate: datasource=docker depName=ghcr.io/grafana/helm-charts/pyroscope registryUrl=https://ghcr.io
 export let chartVersion = "2.0.1"
 export let chartArchive = "oci://ghcr.io/grafana/helm-charts/pyroscope"
 export let namespace = "pyroscope"
-export let kubeVersion = "1.36.4"

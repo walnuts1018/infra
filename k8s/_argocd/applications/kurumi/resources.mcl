@@ -1,4 +1,4 @@
-import text "../_templates/apps-kurumi.gotmpl" as appsTemplatePatch
+import text "../_templates/apps.gotmpl" as appsTemplatePatch
 import "../common.mcl" as common
 
 let agentLabel =
@@ -15,13 +15,9 @@ let destination =
   namespace: "argocd"
 let appDestination =
   name: "kurumi"
-let enabledElement =
-  "kurumiEnabled": "{{ hasKey (default dict .clusters) \"kurumi\" }}"
-let selector =
-  "kurumiEnabled": "true"
-let appsGenerator = common.applicationGenerator(enabledElement, selector)
-let spokeSource = common.mclSource("k8s/_argocd/spoke")
-let cmpSource = common.mclSource("k8s/_argocd/cmp")
+let appsGenerator = common.applicationGenerator("kurumi")
+let spokeSource = common.mclSource("k8s/_argocd/spoke", "kurumi")
+let cmpSource = common.mclSource("k8s/_argocd/cmp", "kurumi")
 let spokeSources =
   - cmpSource
   - spokeSource
@@ -50,7 +46,7 @@ let agent = common.application(
   "argocd-agent-kurumi",
   "kurumi",
   destination,
-  common.mclSource("k8s/_argocd/agent/agent"),
+  common.mclSource("k8s/_argocd/agent/agent", "kurumi"),
   agentLabel,
   standardSyncOptions,
 )
@@ -58,7 +54,7 @@ let namespaces = common.application(
   "namespaces-kurumi",
   "kurumi",
   appDestination,
-  common.mclSource("k8s/namespaces/kurumi"),
+  common.mclSource("k8s/namespaces/kurumi", "kurumi"),
   agentLabel,
   standardSyncOptions,
 )

@@ -1,0 +1,7 @@
+export type Feature = "originCertificateIngress" | "gatewayAPI" | "monitoring" | "hubbleTLS" | "l2Announcements" | "nodePort"
+
+export type Settings =
+  apiServer: String
+  clusterId: Int
+  envoyMemory: String
+  ingressLoadBalancerIP: String

@@ -1,0 +1,67 @@
+fn scyllaClientCertExternalSecret(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: "scylla-cluster-local-client-ca"
+    namespace: namespace
+  spec:
+    dataFrom:
+      -
+        extract:
+          key: "scylla-cluster-local-client-ca"
+    refreshInterval: "1h"
+    secretStoreRef:
+      kind: "SecretStore"
+      name: "scylla-client-cert"
+    target:
+      name: "scylla-cluster-local-client-ca"
+fn externalSecretPiccaDevScylla(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: "picca-dev-scylla"
+    namespace: namespace
+  spec:
+    data:
+      -
+        remoteRef:
+          key: "scylladb"
+          property: "picca_dev"
+        secretKey: "scylla_password"
+    refreshInterval: "1m"
+    secretStoreRef:
+      kind: "ClusterSecretStore"
+      name: "onepassword"
+    target:
+      name: "picca-dev-scylla"
+      template:
+        data:
+          SCYLLA_PASSWORD: "{{ .scylla_password }}"
+        engineVersion: "v2"
+        type: "Opaque"
+
+fn scyllaClientCertSecretStore(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "SecretStore"
+  metadata:
+    name: "scylla-client-cert"
+    namespace: namespace
+  spec:
+    provider:
+      kubernetes:
+        auth:
+          serviceAccount:
+            name: "picca-dev-scylla-secret-reader"
+            namespace: "picca-dev"
+        remoteNamespace: "databases"
+        server:
+          caProvider:
+            key: "ca.crt"
+            name: "kube-root-ca.crt"
+            type: "ConfigMap"
+          url: "https://kubernetes.default.svc"
+
+export fn render(namespace: String) -> List<Map<String, Any>> =
+  - scyllaClientCertExternalSecret(namespace)
+  - scyllaClientCertSecretStore(namespace)
+  - externalSecretPiccaDevScylla(namespace)

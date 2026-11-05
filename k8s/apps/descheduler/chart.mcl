@@ -1,4 +1,4 @@
+# renovate: datasource=github-releases depName=kubernetes-sigs/descheduler registryUrl=https://github.com/kubernetes-sigs/descheduler extractVersion=^descheduler\-helm\-chart\-(?<version>.*)$
 export let chartVersion = "0.36.0"
 export let chartArchive = "https://github.com/kubernetes-sigs/descheduler/releases/download/descheduler-helm-chart-" + chartVersion + "/descheduler-" + chartVersion + ".tgz"
-export let kubeVersion = "1.36.4"
 export let namespace = "kube-system"

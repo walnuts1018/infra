@@ -1,5 +1,5 @@
+# renovate: datasource=github-releases depName=prometheus-community/helm-charts registryUrl=https://github.com/prometheus-community/helm-charts extractVersion=^prometheus\-blackbox\-exporter\-(?<version>.*)$
 export let chartVersion = "11.18.0"
 export let chartArchive = "https://github.com/prometheus-community/helm-charts/releases/download/prometheus-blackbox-exporter-" + chartVersion + "/prometheus-blackbox-exporter-" + chartVersion + ".tgz"
-export let kubeVersion = "1.36.4"
 export let namespace = "iwashi-blackbox"
 export let apiVersions: List<String> = []

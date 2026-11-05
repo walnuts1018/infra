@@ -1,3 +1,6 @@
 import "./resources.mcl" as application
+import "../../cluster.mcl" as clusterConfig
 
-emit each application.resources
+param cluster: clusterConfig.Cluster
+
+emit each application.resources(cluster)

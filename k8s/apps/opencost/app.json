@@ -1,0 +1,11 @@
+{
+  "name": "opencost",
+  "namespace": "opencost",
+  "clusters": {
+    "kurumi": {
+      "settings": {
+        "prometheusURL": "http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus"
+      }
+    }
+  }
+}

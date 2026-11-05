@@ -7,7 +7,6 @@ import text "./_configs/console.yaml" as consoleConfigText
 
 let namespace = "akvorado"
 let appName = "akvorado"
-let syncOptions = "SkipDryRunOnMissingResource=true"
 let appLabels =
   app: appName
   "app.kubernetes.io/name": appName

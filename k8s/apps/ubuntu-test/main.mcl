@@ -1,7 +1,10 @@
+import "../../cluster.mcl" as clusterConfig
 export type AppConfig =
   name: String
   namespace: String
   image: String
+
+param cluster: clusterConfig.Cluster
 
 let app: AppConfig =
   name: "ubuntu-test"

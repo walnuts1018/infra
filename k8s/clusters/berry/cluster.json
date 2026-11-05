@@ -1,0 +1,6 @@
+{
+  "name": "berry",
+  "namespace": "argocd",
+  "kubernetesVersion": "v1.36.4",
+  "clusterApiManaged": "false"
+}

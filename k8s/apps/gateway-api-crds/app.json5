@@ -1,7 +1,0 @@
-{
-  name: "gateway-api-crds",
-  namespace: "kube-system",
-  clusters: {
-    biscuit: {},
-  },
-}

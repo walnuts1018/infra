@@ -1,3 +1,4 @@
+import "./environment.mcl" as environment
 
 import "./names.mcl" as names
 import "./worker-common.mcl" as workerCommon
@@ -25,8 +26,8 @@ fn deploymentPiccaDownloadWorker(namespace: String) -> Map<String, Any> = node:
       spec:
         containers:
           -
-            env: workerCommon.environment("picca-download-worker")
-            envFrom: workerCommon.envFrom
+            env: environment.environment("picca-download-worker")
+            envFrom: environment.envFrom
             image: "ghcr.io/walnuts1018/picca/download-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -113,8 +114,8 @@ fn deploymentPiccaImageProcessingWorker(namespace: String) -> Map<String, Any> =
       spec:
         containers:
           -
-            env: workerCommon.environment("picca-image-processing-worker")
-            envFrom: workerCommon.envFrom
+            env: environment.environment("picca-image-processing-worker")
+            envFrom: environment.envFrom
             image: "ghcr.io/walnuts1018/picca/image-processing-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -201,8 +202,8 @@ fn deploymentPiccaVideoProcessingWorker(namespace: String) -> Map<String, Any> =
       spec:
         containers:
           -
-            env: workerCommon.environment("picca-video-processing-worker")
-            envFrom: workerCommon.envFrom
+            env: environment.environment("picca-video-processing-worker")
+            envFrom: environment.envFrom
             image: "ghcr.io/walnuts1018/picca/video-processing-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe
@@ -289,8 +290,8 @@ fn deploymentPiccaVideoTranscodeWorker(namespace: String) -> Map<String, Any> = 
       spec:
         containers:
           -
-            env: workerCommon.environment("picca-video-transcode-worker")
-            envFrom: workerCommon.envFrom
+            env: environment.environment("picca-video-transcode-worker")
+            envFrom: environment.envFrom
             image: "ghcr.io/walnuts1018/picca/video-transcode-worker:v0.0.49"
             imagePullPolicy: "IfNotPresent"
             livenessProbe: workerCommon.livenessProbe

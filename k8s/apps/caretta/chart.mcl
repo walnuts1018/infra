@@ -1,4 +1,4 @@
+# renovate: datasource=github-releases depName=groundcover-com/helm-charts registryUrl=https://github.com/groundcover-com/helm-charts extractVersion=^caretta\-(?<version>.*)$
 export let chartVersion = "0.0.16"
 export let chartArchive = "https://github.com/groundcover-com/helm-charts/releases/download/caretta-" + chartVersion + "/caretta-" + chartVersion + ".tgz"
-export let kubeVersion = "1.36.4"
 export let namespace = "monitoring"

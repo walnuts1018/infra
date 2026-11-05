@@ -1,10 +1,24 @@
 #!/bin/sh
 set -eu
 
-mcl_features=${ARGOCD_ENV_MCL_FEATURES:-}
-mcl_settings=${ARGOCD_ENV_MCL_SETTINGS:-}
-k8s_root=$(cd ../.. && pwd)
+mcl_cluster_name=${ARGOCD_ENV_MCL_CLUSTER_NAME:-}
+mcl_deployment_json=${ARGOCD_ENV_MCL_DEPLOYMENT_JSON:-}
+k8s_root=$(pwd)
+while [ ! -f "$k8s_root/mcl.toml" ]; do
+  parent_dir=$(dirname "$k8s_root")
+  [ "$parent_dir" != "$k8s_root" ] || { echo 'Could not find k8s/mcl.toml from the application source directory.' >&2; exit 1; }
+  k8s_root=$parent_dir
+done
 lock_file="$k8s_root/mcl.lock"
+case "$mcl_cluster_name" in
+  ''|*[!a-z0-9-]*) echo 'MCL_CLUSTER_NAME must be a lowercase cluster name.' >&2; exit 1 ;;
+esac
+command -v jq >/dev/null 2>&1 || { echo 'jq is required to resolve cluster facts and MCL parameters.' >&2; exit 1; }
+cluster_file="$k8s_root/clusters/$mcl_cluster_name/cluster.json"
+[ -r "$cluster_file" ] || { echo "Cluster definition not found: $cluster_file" >&2; exit 1; }
+cluster_parameters=$(jq -ce '{name, namespace, kubernetesVersion} | select(.name != null and .namespace != null and .kubernetesVersion != null)' "$cluster_file")
+deployment_parameters=$(printf '%s' "$mcl_deployment_json" | jq -ce 'if type != "object" then error("deployment parameters must be an object") elif has("namespace") then error("namespace is app-wide; per-deployment namespace overrides are unsupported") else . end')
+parameters=$(jq -cn --argjson cluster "$cluster_parameters" --argjson deployment "$deployment_parameters" '$deployment + {cluster: $cluster}')
 mcl_version=$(sed -n '/"toolchain"[[:space:]]*:/,/^[[:space:]]*}/ s/^[[:space:]]*"mcl":[[:space:]]*"\([0-9][0-9A-Za-z.+-]*\)".*/\1/p' "$lock_file")
 mcl_revision=$(sed -n '/"toolchain"[[:space:]]*:/,/^[[:space:]]*}/ s/^[[:space:]]*"revision":[[:space:]]*"\([0-9a-f]*\)".*/\1/p' "$lock_file")
 case "$mcl_version" in
@@ -55,22 +69,18 @@ esac
 
 backup_file=$(mktemp)
 cp -p "$lock_file" "$backup_file"
+parameter_file=$(mktemp)
+printf '%s\n' "$parameters" > "$parameter_file"
 restore_lock() {
   cp -p "$backup_file" "$lock_file"
   rm -f "$backup_file"
+  rm -f "$parameter_file"
 }
 trap restore_lock EXIT
 trap 'exit 1' HUP INT TERM
-set --
-if [ -n "$mcl_features" ]; then
-  set -- "$@" --parameter "features=$mcl_features"
-fi
-if [ -n "$mcl_settings" ]; then
-  set -- "$@" --parameter "settings=$mcl_settings"
-fi
-"$mcl" update main.mcl "$@"
+"$mcl" update main.mcl --parameter-file "$parameter_file"
 if ! cmp -s "$backup_file" "$lock_file"; then
   echo 'MCL dependency update changed k8s/mcl.lock; refusing to render with an unreviewed lock.' >&2
   exit 1
 fi
-"$mcl" render main.mcl --format yaml "$@"
+"$mcl" render main.mcl --format yaml --parameter-file "$parameter_file"

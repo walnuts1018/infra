@@ -1,17 +1,21 @@
 import "std:helm" as helm
 import "./chart.mcl" as appChart
+import "./config.mcl" as appConfig
 import "./features.mcl" as appFeatures
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
-param features: List<appFeatures.Feature> = []
+param features: List<appConfig.Feature> = []
+param settings: appConfig.Settings
 
-let values = appFeatures.values(features)
+let values = appFeatures.values(features, settings)
 let apiVersions: List<String> =
   - "monitoring.coreos.com/v1"
 let options =
   releaseName: "topolvm"
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: values
 let resources = helm.render(appChart.chartArchive, options)

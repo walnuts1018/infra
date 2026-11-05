@@ -3,17 +3,20 @@ import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./external-secrets.mcl" as externalSecrets
 import "./values.mcl" as appValues
+import "../../cluster.mcl" as clusterConfig
 
-let options =
-  releaseName: appChart.releaseName
-  namespace: appChart.namespace
-  version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
-  apiVersions:
-    - "gateway.networking.k8s.io/v1/HTTPRoute"
-  values: appValues.values
-let chartResources = helm.render(appChart.chartArchive, options)
 let extraResources =
   - externalSecrets.oidc
   - externalSecrets.notifications
-export let resources = lists.concat(chartResources, extraResources)
+
+fn options(cluster: clusterConfig.Cluster) -> Map<String, Any> =
+  releaseName: appChart.releaseName
+  namespace: appChart.namespace
+  version: appChart.chartVersion
+  kubeVersion: cluster.kubernetesVersion
+  apiVersions:
+    - "gateway.networking.k8s.io/v1/HTTPRoute"
+  values: appValues.values
+fn chartResources(cluster: clusterConfig.Cluster) -> List<Map<String, Any>> = helm.render(appChart.chartArchive, options(cluster))
+
+export fn resources(cluster: clusterConfig.Cluster) -> List<Map<String, Any>> = lists.concat(chartResources(cluster), extraResources)

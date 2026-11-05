@@ -1,5 +1,5 @@
+# renovate: datasource=github-releases depName=seaweedfs/seaweedfs-operator registryUrl=https://github.com/seaweedfs/seaweedfs-operator extractVersion=^seaweedfs\-operator\-(?<version>.*)$
 export let chartVersion = "0.1.40"
 export let chartName = "seaweedfs-operator"
 export let chartArchive = "https://github.com/seaweedfs/seaweedfs-operator/releases/download/seaweedfs-operator-" + chartVersion + "/" + chartName + "-" + chartVersion + ".tgz"
-export let kubeVersion = "1.36.4"
 export let namespace = "seaweedfs-operator"

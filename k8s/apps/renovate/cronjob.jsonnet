@@ -1,5 +1,5 @@
 local container = import '../../components/container.libsonnet';
-local app = import 'app.json5';
+local app = import 'app.json';
 local externalSecret = import 'external-secret.jsonnet';
 {
   apiVersion: 'batch/v1',

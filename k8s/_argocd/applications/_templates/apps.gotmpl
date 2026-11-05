@@ -1,0 +1,63 @@
+{{- $deployment := index .clusters .clusterName }}
+spec:
+  destination:
+    namespace: '{{ .namespace }}'
+  sources:
+  - repoURL: 'https://github.com/walnuts1018/infra'
+    targetRevision: clusterapi
+    path: '{{.path.path}}'
+    {{- if ne (dig "manifestGenerator" "" .) "jsonnet" }}
+    plugin:
+      name: mcl
+      env:
+      - name: MCL_CLUSTER_NAME
+        value: {{ .clusterName | quote }}
+      - name: MCL_DEPLOYMENT_JSON
+        value: {{ toJson $deployment | quote }}
+    {{- else }}
+    directory:
+      recurse: true
+      exclude: '{config/*,_*/*,values*.yaml}'
+      jsonnet:
+        tlas:
+        {{- range $tla := dig "jsonnet" "tlas" (list) $deployment }}
+        - {{ $tla | toJson }}
+        {{- end }}
+        extVars:
+        {{- range $extVar := dig "jsonnet" "extVars" (list) $deployment }}
+        - {{ $extVar | toJson }}
+        {{- end }}
+    ref: infra
+    {{- end }}
+  {{- if eq (dig "manifestGenerator" "" .) "jsonnet" }}
+  {{- with (dig "additionalSources" "helm" (dict) .) }}
+  - repoURL: '{{ .repoURL }}'
+    chart: '{{ .chart }}'
+    targetRevision: '{{ .targetRevision }}'
+    helm:
+      releaseName: '{{ $.name }}'
+      valueFiles:
+      {{- range (dig "valueFiles" (list) .) }}
+      - {{ printf "$infra/%s/%s" $.path.path . }}
+      {{- end }}
+      {{- range (dig "additionalSources" "helm" "additionalValueFiles" (list) $deployment) }}
+      - {{ printf "$infra/%s/%s" $.path.path . }}
+      {{- end }}
+  {{- end }}
+  {{- range (dig "additionalSources" "kustomize" (list) .) }}
+  - repoURL: '{{ .repoURL }}'
+    path: '{{ .path }}'
+    targetRevision: '{{ .targetRevision }}'
+    {{- with (dig "patches" (list) .) }}
+    kustomize:
+      patches: {{ . | toJson }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+{{- with (dig "annotations" (dict) .) }}
+metadata:
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+{{- end }}

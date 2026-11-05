@@ -1,5 +1,5 @@
 (import '../../components/external-secret.libsonnet') {
-  name: (import 'app.json5').name,
+  name: (import 'app.json').name,
   data: [
     {
       secretKey: 'github-app-id',

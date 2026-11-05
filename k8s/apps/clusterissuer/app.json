@@ -1,0 +1,9 @@
+{
+  "name": "clusterissuer",
+  "namespace": "cert-manager",
+  "clusters": {
+    "berry": {},
+    "biscuit": {},
+    "kurumi": {}
+  }
+}

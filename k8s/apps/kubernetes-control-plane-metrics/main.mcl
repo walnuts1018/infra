@@ -1,6 +1,8 @@
 import "./services.mcl" as services
 import "./service-monitors.mcl" as monitors
 import "./proxies.mcl" as proxies
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 emit services.controllerManagerService
 emit services.corednsService

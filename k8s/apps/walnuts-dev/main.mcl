@@ -1,5 +1,7 @@
 import "./deployment.mcl" as deployment
 import "./resources.mcl" as appResources
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 emit deployment.resource
 emit each appResources.resources

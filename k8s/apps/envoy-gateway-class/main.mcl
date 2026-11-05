@@ -1,13 +1,15 @@
 import "./settings.mcl" as appSettings
-import "./profiles.mcl" as appProfiles
+import "./config.mcl" as appConfig
 import "./certificate.mcl" as gatewayCertificate
 import "./client-traffic-policy.mcl" as clientTrafficPolicy
 import "./gateway-class.mcl" as gatewayClass
 import "./gateway.mcl" as gateway
 import "./podmonitor.mcl" as proxyPodMonitor
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
-let profileName = "standard"
-let profile = appProfiles.profiles[profileName]
+param settings: appConfig.Settings
+
 let envoyProxy = node:
   apiVersion: "gateway.envoyproxy.io/v1alpha1"
   kind: "EnvoyProxy"
@@ -39,7 +41,7 @@ let envoyProxy = node:
                   averageUtilization: 100
         envoyService:
           externalTrafficPolicy: "Local"
-          loadBalancerIP: profile.envoyProxyLoadBalancerIP
+          loadBalancerIP: settings.envoyProxyLoadBalancerIP
           type: "LoadBalancer"
     telemetry:
       tracing:

@@ -1,4 +1,4 @@
-import text "../_templates/apps-biscuit.gotmpl" as appsTemplatePatch
+import text "../_templates/apps.gotmpl" as appsTemplatePatch
 import "../common.mcl" as common
 
 let agentLabel =
@@ -15,13 +15,9 @@ let destination =
   namespace: "argocd"
 let appDestination =
   name: "biscuit"
-let enabledElement =
-  "biscuitEnabled": "{{ hasKey (default dict .clusters) \"biscuit\" }}"
-let selector =
-  "biscuitEnabled": "true"
-let appsGenerator = common.applicationGenerator(enabledElement, selector)
-let spokeSource = common.mclSource("k8s/_argocd/spoke")
-let cmpSource = common.mclSource("k8s/_argocd/cmp")
+let appsGenerator = common.applicationGenerator("biscuit")
+let spokeSource = common.mclSource("k8s/_argocd/spoke", "biscuit")
+let cmpSource = common.mclSource("k8s/_argocd/cmp", "biscuit")
 let spokeSources =
   - cmpSource
   - spokeSource
@@ -50,7 +46,7 @@ let agent = common.application(
   "argocd-agent-biscuit",
   "biscuit",
   destination,
-  common.mclSource("k8s/_argocd/agent/agent"),
+  common.mclSource("k8s/_argocd/agent/agent", "biscuit"),
   agentLabel,
   standardSyncOptions,
 )
@@ -58,7 +54,7 @@ let namespaces = common.application(
   "namespaces-biscuit",
   "biscuit",
   appDestination,
-  common.mclSource("k8s/namespaces/biscuit"),
+  common.mclSource("k8s/namespaces/biscuit", "biscuit"),
   agentLabel,
   standardSyncOptions,
 )

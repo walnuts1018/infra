@@ -1,9 +1,8 @@
 import "std:list" as lists
 import "./values.mcl" as appValues
+import "./config.mcl" as config
 
-export type Feature = "ssd" | "hdd" | "monitoring" | "ruskStorageNodes"
-
-fn hasFeature(features: List<Feature>, name: Feature) -> Bool =
+fn hasFeature(features: List<config.Feature>, name: config.Feature) -> Bool =
   lists.contains(features, name)
 
 let ssdDeviceClassItems: List<Map<String, Any>> =
@@ -41,58 +40,46 @@ let hddStorageClassItems: List<Map<String, Any>> =
       mountOptions:
         - "noatime"
 
-fn lvmdNodeSelector(features: List<Feature>) -> Map<String, String> =
-  if hasFeature(features, "ruskStorageNodes"):
-    "topolvm.io/lvmd-config": "rusk"
-  else:
-    {}
-
-fn nodeSelector(features: List<Feature>) -> Map<String, String> =
-  if hasFeature(features, "ruskStorageNodes"):
-    "topolvm.io/enabled": "true"
-  else:
-    {}
-
-fn hddDeviceClasses(features: List<Feature>) -> List<Map<String, Any>> =
+fn hddDeviceClasses(features: List<config.Feature>, settings: config.Settings) -> List<Map<String, Any>> =
   if hasFeature(features, "hdd"):
     -
       name: "hdd"
       "volume-group": "hdd"
       "spare-gb": 10
-      default: hasFeature(features, "ruskStorageNodes")
+      default: settings.hddIsDefault
       "lvcreate-options":
         - "--alloc=normal"
   else:
     []
 
-fn ssdDeviceClasses(features: List<Feature>) -> List<Map<String, Any>> =
+fn ssdDeviceClasses(features: List<config.Feature>) -> List<Map<String, Any>> =
   if hasFeature(features, "ssd"):
     ssdDeviceClassItems
   else:
     []
 
-fn deviceClasses(features: List<Feature>) -> List<Map<String, Any>> =
-  lists.concat(ssdDeviceClasses(features), hddDeviceClasses(features))
+fn deviceClasses(features: List<config.Feature>, settings: config.Settings) -> List<Map<String, Any>> =
+  lists.concat(ssdDeviceClasses(features), hddDeviceClasses(features, settings))
 
-fn ssdStorageClasses(features: List<Feature>) -> List<Map<String, Any>> =
+fn ssdStorageClasses(features: List<config.Feature>) -> List<Map<String, Any>> =
   if hasFeature(features, "ssd"):
     ssdStorageClassItems
   else:
     []
 
-fn hddStorageClasses(features: List<Feature>) -> List<Map<String, Any>> =
+fn hddStorageClasses(features: List<config.Feature>) -> List<Map<String, Any>> =
   if hasFeature(features, "hdd"):
     hddStorageClassItems
   else:
     []
 
-fn storageClasses(features: List<Feature>) -> List<Map<String, Any>> =
+fn storageClasses(features: List<config.Feature>) -> List<Map<String, Any>> =
   lists.concat(ssdStorageClasses(features), hddStorageClasses(features))
 
-export fn values(features: List<Feature>) -> Map<String, Any> = appValues.commonValues with:
+export fn values(features: List<config.Feature>, settings: config.Settings) -> Map<String, Any> = appValues.commonValues with:
   lvmd:
-    nodeSelector: lvmdNodeSelector(features)
-    deviceClasses: deviceClasses(features)
+    nodeSelector: settings.lvmdNodeSelector
+    deviceClasses: deviceClasses(features, settings)
     prometheus:
       podMonitor:
         enabled: hasFeature(features, "monitoring")
@@ -101,7 +88,7 @@ export fn values(features: List<Feature>) -> Map<String, Any> = appValues.common
       podMonitor:
         enabled: hasFeature(features, "monitoring")
   node:
-    nodeSelector: nodeSelector(features)
+    nodeSelector: settings.nodeSelector
     prometheus:
       podMonitor:
         enabled: hasFeature(features, "monitoring")

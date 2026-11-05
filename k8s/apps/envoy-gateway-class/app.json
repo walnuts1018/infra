@@ -1,0 +1,11 @@
+{
+  "name": "envoy-gateway-class",
+  "namespace": "envoy-gateway-system",
+  "clusters": {
+    "kurumi": {
+      "settings": {
+        "envoyProxyLoadBalancerIP": "192.168.12.138"
+      }
+    }
+  }
+}

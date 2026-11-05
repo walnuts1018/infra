@@ -1,6 +1,8 @@
 import "./configmap.mcl" as appConfigMap
 import "./coredns.mcl" as appCoreDNS
 import "./etcd.mcl" as appEtcd
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let resources =
   - appConfigMap.configMap

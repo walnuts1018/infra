@@ -3,6 +3,8 @@ import "./network-policies.mcl" as networkPolicies
 import "./route.mcl" as route
 import "./service.mcl" as service
 import "./workload.mcl" as workload
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let resources =
   - workload.serviceAccount

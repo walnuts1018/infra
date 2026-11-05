@@ -3,6 +3,8 @@ import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./network-policies.mcl" as networkPolicies
 import "./profiles.mcl" as appProfiles
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let profileName = "metricsStorage"
 let values: Map<String, Any> = appProfiles.valuesByProfile[profileName]
@@ -11,7 +13,7 @@ let options =
   releaseName: "iwashi-cortex"
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: values
 let chartResources = helm.render(appChart.chartArchive, options)

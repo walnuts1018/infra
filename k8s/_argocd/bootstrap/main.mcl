@@ -3,8 +3,10 @@ import "../applications/resources.mcl" as applications
 import "../argocd_components/resources.mcl" as argocdComponents
 import "../cmp/resources.mcl" as cmp
 import "../entrypoint/resources.mcl" as entrypoint
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
-let argocdAndCMP = lists.concat(argocdComponents.resources, cmp.resources)
+let argocdAndCMP = lists.concat(argocdComponents.resources(cluster), cmp.resources)
 let argocdAndApplications = lists.concat(argocdAndCMP, applications.resources)
 let resources = lists.concat(argocdAndApplications, entrypoint.resources)
 

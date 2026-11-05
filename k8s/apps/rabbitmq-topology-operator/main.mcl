@@ -2,6 +2,8 @@ import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
 import "./webhook.mcl" as appWebhook
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let namespace = "rabbitmq-operator"
 let apiVersions: List<String> = []
@@ -9,7 +11,7 @@ let options =
   releaseName: "rabbitmq-topology-operator"
   namespace: namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: appValues.values
 let resources = helm.render(appChart.chartArchive, options)

@@ -2,12 +2,14 @@ import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./profiles.mcl" as appProfiles
 import "./external-secrets.mcl" as externalSecrets
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let options =
   releaseName: appChart.releaseName
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: appChart.apiVersions
   values: appProfiles.valuesByProfile["workspace-host"]
 let resources = helm.render(appChart.chartArchive, options)

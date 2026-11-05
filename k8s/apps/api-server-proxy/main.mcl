@@ -1,3 +1,4 @@
+import "../../cluster.mcl" as clusterConfig
 export type ApiServerProxy =
   name: String
   namespace: String
@@ -8,6 +9,8 @@ export type ApiServerProxy =
   backendPort: Int
   backendHostname: String
   caConfigMap: String
+
+param cluster: clusterConfig.Cluster
 
 let app: ApiServerProxy =
   name: "api-server-service-proxy"

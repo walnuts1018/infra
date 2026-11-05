@@ -1,0 +1,14 @@
+{
+  "name": "valkey-operator",
+  "namespace": "valkey-operator-system",
+  "clusters": {
+    "berry": {
+      "features": []
+    },
+    "kurumi": {
+      "features": [
+        "monitoring"
+      ]
+    }
+  }
+}

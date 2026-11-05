@@ -1,4 +1,4 @@
+# renovate: datasource=helm depName=moco registryUrl=https://cybozu-go.github.io/moco
 export let chartVersion = "0.27.0"
 export let chartArchive = "https://cybozu-go.github.io/moco/moco-" + chartVersion + ".tgz"
-export let kubeVersion = "1.36.4"
 export let namespace = "moco-system"

@@ -3,13 +3,15 @@ import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
 import "./external-secret.mcl" as externalSecret
 import "./schedule.mcl" as schedule
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let apiVersions: List<String> = []
 let options =
   releaseName: "velero"
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: appValues.profiles["seaweedfsBiscuit"]
 let resources = helm.render(appChart.chartArchive, options)

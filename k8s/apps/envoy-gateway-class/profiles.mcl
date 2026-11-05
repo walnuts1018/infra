@@ -1,6 +1,0 @@
-export type Profile =
-  envoyProxyLoadBalancerIP: String
-
-export let profiles: Map<String, Profile> =
-  standard:
-    envoyProxyLoadBalancerIP: "192.168.12.138"

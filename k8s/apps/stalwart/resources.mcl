@@ -1,4 +1,3 @@
-import "std:list" as lists
 import text "./_configs/config.json" as configJSON
 import "./profiles.mcl" as appProfiles
 
@@ -7,11 +6,6 @@ let appName = "stalwart"
 let labels =
   app: appName
   "app.kubernetes.io/name": appName
-let routeNames =
-  smtp: "stalwart-smtp"
-  smtps: "stalwart-smtps"
-  submission: "stalwart-submission"
-  imaps: "stalwart-imaps"
 
 let externalSecret = node:
   apiVersion: "external-secrets.io/v1"
@@ -160,70 +154,6 @@ let valkeyCluster = node:
         cpu: "1"
         memory: "1Gi"
 
-fn tcpRoute(listener: String, port: Int, routeName: String) -> Map<String, Any> = node:
-  apiVersion: "gateway.networking.k8s.io/v1alpha2"
-  kind: "TCPRoute"
-  metadata:
-    name: routeName
-    namespace: profile.namespace
-  spec:
-    parentRefs:
-      - name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
-        sectionName: listener
-    rules:
-      -
-        backendRefs:
-          - name: appName
-            port: port
-let tcpRoutes =
-  - tcpRoute("smtp", 25, routeNames.smtp)
-  - tcpRoute("smtps", 465, routeNames.smtps)
-  - tcpRoute("submission", 587, routeNames.submission)
-  - tcpRoute("imaps", 993, routeNames.imaps)
-
-let backendTrafficPolicy = node:
-  apiVersion: "gateway.envoyproxy.io/v1alpha1"
-  kind: "BackendTrafficPolicy"
-  metadata:
-    name: "stalwart-proxy-protocol"
-    namespace: profile.namespace
-  spec:
-    targetRefs:
-      - group: "gateway.networking.k8s.io"
-        kind: "TCPRoute"
-        name: routeNames.smtp
-      - group: "gateway.networking.k8s.io"
-        kind: "TCPRoute"
-        name: routeNames.smtps
-    proxyProtocol:
-      version: "V2"
-
-let httpRoute = node:
-  apiVersion: "gateway.networking.k8s.io/v1"
-  kind: "HTTPRoute"
-  metadata:
-    name: appName
-    namespace: profile.namespace
-  spec:
-    parentRefs:
-      - name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
-    hostnames:
-      - "stalwart.local.walnuts.dev"
-      - "autoconfig.walnuts.dev"
-      - "autodiscover.walnuts.dev"
-    rules:
-      -
-        backendRefs:
-          - kind: "Service"
-            name: appName
-            port: 8080
-            weight: 1
-        matches:
-          - path:
-              type: "PathPrefix"
-              value: "/"
 
 let deployment = node:
   apiVersion: "apps/v1"
@@ -409,9 +339,7 @@ let resources =
   - s3ReferenceGrant
   - elasticsearch
   - valkeyCluster
-  - backendTrafficPolicy
-  - httpRoute
   - deployment
   - service
   - verticalAutoscaler
-export let allResources = lists.concat(resources, tcpRoutes)
+export let allResources = resources

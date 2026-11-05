@@ -1,6 +1,8 @@
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./profiles.mcl" as appProfiles
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let profileName = "default"
 let values: Map<String, Any> = appProfiles.valuesByProfile[profileName]
@@ -8,7 +10,7 @@ let options =
   releaseName: "trivy-operator"
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: appChart.apiVersions
   values: values
 let resources = helm.render(appChart.chartArchive, options)

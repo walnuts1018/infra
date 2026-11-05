@@ -1,4 +1,6 @@
 import "./profiles.mcl" as appProfiles
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let resources = appProfiles.resourcesByProfile["workspace-isolation"]
 

@@ -4,8 +4,10 @@ import "./biscuit/resources.mcl" as biscuit
 import "./kurumi/resources.mcl" as kurumi
 import "./base-application.mcl" as base
 
-let baseResources =
-  - base.resource
-let resourcesWithoutBiscuit = lists.concat(baseResources, berry.resources)
-let resourcesWithoutKurumi = lists.concat(resourcesWithoutBiscuit, biscuit.resources)
-export let resources = lists.concat(resourcesWithoutKurumi, kurumi.resources)
+let applicationGroups: List<List<Map<String, Any>>> =
+  - berry.resources
+  - biscuit.resources
+  - kurumi.resources
+  - [base.resource]
+
+export let resources = lists.flatten(applicationGroups)

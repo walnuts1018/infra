@@ -1,5 +1,5 @@
+# renovate: datasource=github-releases depName=influxdata/helm-charts registryUrl=https://github.com/influxdata/helm-charts extractVersion=^influxdb2\-(?<version>.*)$
 export let chartVersion = "2.1.2"
 export let chartArchive = "https://github.com/influxdata/helm-charts/releases/download/influxdb2-" + chartVersion + "/influxdb2-" + chartVersion + ".tgz"
 export let releaseName = "influxdb"
 export let namespace = "databases"
-export let kubeVersion = "1.36.4"

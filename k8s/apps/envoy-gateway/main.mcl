@@ -2,13 +2,15 @@ import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
 import "./resources.mcl" as appResources
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let apiVersions: List<String> = []
 let options =
   releaseName: "envoy-gateway"
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: appValues.values
 let chartResources = helm.render(appChart.chartArchive, options)

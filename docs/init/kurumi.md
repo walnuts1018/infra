@@ -8,7 +8,7 @@
 
 - Control Plane 3台(`cake`、`hotate`、`lemon`)とWorker 1台(`rusk`)で構成します。
 - TartHostのMACアドレス、管理用IP、ホストラベル、WoL/Redfish設定などは[`k8s/clusters/kurumi/tart-hosts.jsonnet`](../../k8s/clusters/kurumi/tart-hosts.jsonnet)で定義します。
-- KubernetesやTalosのバージョン、Pod/Service CIDRは[`k8s/clusters/kurumi/cluster.json5`](../../k8s/clusters/kurumi/cluster.json5)で管理します。
+- KubernetesやTalosのバージョン、Pod/Service CIDRは[`k8s/clusters/kurumi/cluster.json`](../../k8s/clusters/kurumi/cluster.json)で管理します。
 - Kubernetes APIエンドポイントは`192.168.4.11:6443`で、TalosのFabric BGPによりControl Plane 3台から広報します。
 - 各ノードのディスクselector、WWID、TopoLVM、Longhorn用extension設定は[`k8s/clusters/kurumi/_patches/`](../../k8s/clusters/kurumi/_patches/)および各Tart定義ファイルで管理します。
 - Cilium、Argo CD Spoke/Agent、1Password root認証情報は、[`k8s/clusters/kurumi/argocd-agent-bootstrap.jsonnet`](../../k8s/clusters/kurumi/argocd-agent-bootstrap.jsonnet)経由で自動配布されます。

@@ -1,6 +1,8 @@
 import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let profileName = "standard"
 let apiVersions: List<String> =
@@ -9,7 +11,7 @@ let options =
   releaseName: "external-secrets"
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: appValues.profiles[profileName]
 let resources = helm.render(appChart.chartArchive, options)

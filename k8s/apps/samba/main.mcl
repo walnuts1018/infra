@@ -4,6 +4,8 @@ import "./external-secrets.mcl" as externalSecrets
 import "./network-policy.mcl" as networkPolicy
 import "./service.mcl" as service
 import "./statefulset.mcl" as statefulSet
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let additionalResources =
   - externalSecrets.account

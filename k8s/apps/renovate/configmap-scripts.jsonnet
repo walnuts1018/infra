@@ -1,4 +1,4 @@
-local app = import 'app.json5';
+local app = import 'app.json';
 
 (import '../../components/configmap.libsonnet') {
   name: app.name + '-scripts',

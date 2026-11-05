@@ -1,3 +1,5 @@
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let namespace = "rabbitmq"
 let labels =

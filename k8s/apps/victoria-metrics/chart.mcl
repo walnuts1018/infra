@@ -1,4 +1,4 @@
+# renovate: datasource=github-releases depName=VictoriaMetrics/helm-charts registryUrl=https://github.com/VictoriaMetrics/helm-charts extractVersion=^victoria\-metrics\-cluster\-(?<version>.*)$
 export let chartVersion = "0.50.0"
 export let chartArchive = "https://github.com/VictoriaMetrics/helm-charts/releases/download/victoria-metrics-cluster-" + chartVersion + "/victoria-metrics-cluster-" + chartVersion + ".tgz"
-export let kubeVersion = "1.36.4"
 export let namespace = "victoria-metrics"

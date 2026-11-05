@@ -1,10 +1,14 @@
 import "./core.mcl" as core
+import "./volume.mcl" as volume
 import "./routes.mcl" as routes
 import "./s3-route.mcl" as s3Route
 import "./s3.mcl" as s3
 import "./external-secrets.mcl" as externalSecrets
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 emit each core.resources
+emit each volume.resources
 emit each routes.resources
 emit s3Route.resource
 emit each s3.buckets

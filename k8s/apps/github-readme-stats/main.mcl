@@ -1,6 +1,8 @@
 import "./credentials.mcl" as credentials
 import "./route.mcl" as route
 import "./workload.mcl" as workload
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 emit credentials.externalSecret
 emit workload.deployment

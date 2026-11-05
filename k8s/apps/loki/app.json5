@@ -1,8 +1,0 @@
-{
-  name: "loki",
-  namespace: "loki",
-  clusters: {
-    kurumi: {
-    },
-  },
-}

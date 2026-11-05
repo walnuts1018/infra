@@ -1,4 +1,4 @@
+# renovate: datasource=github-releases depName=strimzi/strimzi-kafka-operator registryUrl=https://github.com/strimzi/strimzi-kafka-operator
 export let chartVersion = "1.2.0"
 export let chartArchive = "https://github.com/strimzi/strimzi-kafka-operator/releases/download/" + chartVersion + "/strimzi-kafka-operator-helm-3-chart-" + chartVersion + ".tgz"
-export let kubeVersion = "1.36.4"
 export let namespace = "strimzi-system"

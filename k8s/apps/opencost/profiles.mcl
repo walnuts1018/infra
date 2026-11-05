@@ -30,7 +30,6 @@ let values: Map<String, Any> =
         enabled: false
       external:
         enabled: true
-        url: "http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus"
     ui:
       enabled: true
       modelFqdn: "127.0.0.1:9003"

@@ -1,8 +1,0 @@
-{
-  name: "cluster-api-operator",
-  namespace: "cluster-api-operator",
-  clusters: {
-    berry: {
-    },
-  },
-}

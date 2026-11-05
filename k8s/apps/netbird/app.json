@@ -1,0 +1,11 @@
+{
+  "name": "netbird",
+  "namespace": "netbird",
+  "clusters": {
+    "kurumi": {
+      "settings": {
+        "stunLoadBalancerIP": "192.168.12.142"
+      }
+    }
+  }
+}

@@ -1,8 +1,0 @@
-{
-  name: "seaweedfs-default-backup",
-  namespace: "seaweedfs",
-  clusters: {
-    kurumi: {
-    },
-  },
-}

@@ -1,5 +1,5 @@
+# renovate: datasource=docker depName=ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller registryUrl=https://ghcr.io
 export let chartVersion = "0.14.2"
 export let chartArchive = "oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller"
 export let releaseName = "actions-runner-controller"
 export let namespace = "arc-systems"
-export let kubeVersion = "1.36.4"

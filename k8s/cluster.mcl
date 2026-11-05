@@ -1,0 +1,4 @@
+export type Cluster =
+  name: String
+  namespace: String
+  kubernetesVersion: String

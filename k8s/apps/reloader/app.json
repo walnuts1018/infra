@@ -1,0 +1,17 @@
+{
+  "name": "reloader",
+  "namespace": "reloader",
+  "clusters": {
+    "berry": {
+      "features": [
+        "argocdApplicationReload"
+      ]
+    },
+    "biscuit": {
+      "features": []
+    },
+    "kurumi": {
+      "features": []
+    }
+  }
+}

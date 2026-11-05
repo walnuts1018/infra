@@ -1,8 +1,0 @@
-{
-  name: "coder",
-  namespace: "coder",
-  clusters: {
-    kurumi: {
-    },
-  },
-}

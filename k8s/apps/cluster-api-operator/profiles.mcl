@@ -2,33 +2,42 @@ import "./chart.mcl" as appChart
 
 let emptyManagerResources: Map<String, Any> = {}
 
+# renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api
+export let clusterAPIVersion = "v1.14.2"
+
+# renovate: datasource=github-releases depName=walnuts1018/cluster-api-provider-tart
+export let tartVersion = "v0.3.16"
+
+# renovate: datasource=github-releases depName=kubernetes-sigs/cluster-api-addon-provider-helm
+export let addonProviderVersion = "v0.6.4"
+
 let chartValues: Map<String, Any> =
   core:
     "cluster-api":
-      version: "v1.14.2"
+      version: clusterAPIVersion
       manager:
         featureGates:
           RuntimeSDK: true
   bootstrap:
     tart:
-      version: "v0.3.16"
+      version: tartVersion
       fetchConfig:
-        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/bootstrap-components.yaml"
+        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/" + tartVersion + "/bootstrap-components.yaml"
   controlPlane:
     tart:
-      version: "v0.3.16"
+      version: tartVersion
       fetchConfig:
-        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/control-plane-components.yaml"
+        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/" + tartVersion + "/control-plane-components.yaml"
   infrastructure:
     tart:
-      version: "v0.3.16"
+      version: tartVersion
       fetchConfig:
-        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/v0.3.16/infrastructure-components.yaml"
+        url: "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/" + tartVersion + "/infrastructure-components.yaml"
   addon:
     helm:
-      version: "v0.6.4"
+      version: addonProviderVersion
       fetchConfig:
-        url: "https://github.com/kubernetes-sigs/cluster-api-addon-provider-helm/releases/download/v0.6.4/addon-components.yaml"
+        url: "https://github.com/kubernetes-sigs/cluster-api-addon-provider-helm/releases/download/" + addonProviderVersion + "/addon-components.yaml"
   resources:
     manager: emptyManagerResources
   enableHelmHook: false

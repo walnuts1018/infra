@@ -1,3 +1,5 @@
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 let resource = node:
   apiVersion: "opentelemetry.io/v1alpha1"
   kind: "Instrumentation"

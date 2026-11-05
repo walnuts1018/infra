@@ -1,4 +1,4 @@
 export type WakeOnLAN = {backend: "WakeOnLAN", wakeOnLAN: {broadcastAddress: String}}
-export type Redfish = {backend: "Redfish", redfish: {address: String, credentialSecretRef: {name: String}, caSecretRef: {name: String}}}
+export type Redfish = {backend: "Redfish", redfish: {address: String, credentialSecretRef: {name: String}, caSecretRef: {name: String}, insecureSkipVerify: Bool}}
 export type IntelManageability = {backend: "IntelManageability", intelManageability: {address: String, credentialSecretRef: {name: String}}}
 export type Power = WakeOnLAN | Redfish | IntelManageability

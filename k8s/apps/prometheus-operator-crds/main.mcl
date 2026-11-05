@@ -1,12 +1,14 @@
 import "std:helm" as helm
 import "./chart.mcl" as appChart
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let apiVersions: List<String> = []
 let options =
   releaseName: "prometheus-operator-crds"
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
 let resources = helm.render(appChart.chartArchive, options)
 

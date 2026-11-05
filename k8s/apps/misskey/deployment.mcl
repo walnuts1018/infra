@@ -11,7 +11,7 @@ let containerSecurityContext =
     add:
       - "NET_BIND_SERVICE"
     drop:
-      - "all"
+      - "ALL"
 
 export let resource = node:
   apiVersion: "apps/v1"

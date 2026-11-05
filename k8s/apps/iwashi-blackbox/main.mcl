@@ -2,12 +2,14 @@ import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./network-policies.mcl" as networkPolicies
 import "./values.mcl" as appValues
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let options =
   releaseName: "iwashi-blackbox"
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: appChart.apiVersions
   values: appValues.values
 let chartResources = helm.render(appChart.chartArchive, options)

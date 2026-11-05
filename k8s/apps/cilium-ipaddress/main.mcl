@@ -1,5 +1,7 @@
 import "./resources.mcl" as appResources
 import "./features.mcl" as appFeatures
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 param features: List<appFeatures.Feature> = []
 

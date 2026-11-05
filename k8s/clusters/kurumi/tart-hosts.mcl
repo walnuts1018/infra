@@ -55,6 +55,7 @@ let hosts =
           name: redfishSecretName
         caSecretRef:
           name: redfishSecretName
+        insecureSkipVerify: false
 
 fn renderHost(host: Host) -> Map<String, Any> = tart.tartHost(host.name, host.macAddress, host.talosAPIAddress, host.labels, host.power)
 

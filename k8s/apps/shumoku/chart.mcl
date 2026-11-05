@@ -1,4 +1,4 @@
+# renovate: datasource=docker depName=ghcr.io/konoe-akitoshi/charts/shumoku registryUrl=https://ghcr.io
 export let chartVersion = "0.1.5"
 export let chartArchive = "oci://ghcr.io/konoe-akitoshi/charts/shumoku"
-export let kubeVersion = "1.36.4"
 export let namespace = "netbox"

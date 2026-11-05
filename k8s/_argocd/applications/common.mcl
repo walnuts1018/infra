@@ -67,19 +67,29 @@ export fn multiSourceApplicationNoLabels(name: String, project: String, destinat
     sources: sources
     syncPolicy: syncPolicy(syncOptions)
 
-export fn mclSource(path: String) -> Map<String, Any> = node:
+export fn mclSource(path: String, clusterName: String) -> Map<String, Any> = node:
   repoURL: infraRepo
   targetRevision: revision
   path: path
   plugin:
     name: "mcl"
+    env:
+      - name: "MCL_CLUSTER_NAME"
+        value: clusterName
+      - name: "MCL_DEPLOYMENT_JSON"
+        value: "{}"
 
-export fn mclSourceWithRef(path: String, refName: String) -> Map<String, Any> = node:
+export fn mclSourceWithRef(path: String, refName: String, clusterName: String) -> Map<String, Any> = node:
   repoURL: infraRepo
   targetRevision: revision
   path: path
   plugin:
     name: "mcl"
+    env:
+      - name: "MCL_CLUSTER_NAME"
+        value: clusterName
+      - name: "MCL_DEPLOYMENT_JSON"
+        value: "{}"
   ref: refName
 
 export fn repositorySource(refName: String) -> Map<String, Any> = node:
@@ -103,7 +113,7 @@ export fn agentHelmSource(component: String, releaseName: String, values: List<S
     releaseName: releaseName
     valueFiles: values
 
-export fn applicationGenerator(enabledElement: Map<String, String>, selector: Map<String, String>) -> Map<String, Any> = node:
+export fn applicationGenerator(cluster: String) -> Map<String, Any> = node:
   matrix:
     generators:
       -
@@ -112,13 +122,13 @@ export fn applicationGenerator(enabledElement: Map<String, String>, selector: Ma
           revision: revision
           files:
             -
-              path: "k8s/apps/*/app.json5"
+              path: "k8s/apps/*/app.json"
       -
         list:
-          elements:
-            - enabledElement
+          elementsYaml: "{{- if hasKey (default dict .clusters) \"" + cluster + "\" }}[{\"clusterName\":\"" + cluster + "\",\"clusterEnabled\":\"true\"}]{{- else }}[]{{- end }}"
   selector:
-    matchLabels: selector
+    matchLabels:
+      clusterEnabled: "true"
 
 export fn appTemplateMetadataNoLabels(cluster: String) -> Map<String, Any> = node:
   name: "{{ printf \"%s-" + cluster + "\" .name }}"
@@ -144,7 +154,10 @@ export fn clusterAppSet(cluster: String) -> Map<String, Any> = node:
           revision: revision
           files:
             -
-              path: "k8s/clusters/*/cluster.json5"
+              path: "k8s/clusters/*/cluster.json"
+        selector:
+          matchLabels:
+            clusterApiManaged: "true"
     template:
       metadata:
         name: "{{.name}}"
@@ -159,4 +172,9 @@ export fn clusterAppSet(cluster: String) -> Map<String, Any> = node:
           path: "{{.path.path}}"
           plugin:
             name: "mcl"
+            env:
+              - name: "MCL_CLUSTER_NAME"
+                value: "{{ .name }}"
+              - name: "MCL_DEPLOYMENT_JSON"
+                value: "{}"
         syncPolicy: syncPolicy(clusterSyncOptions)

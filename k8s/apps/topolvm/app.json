@@ -1,0 +1,32 @@
+{
+  "name": "topolvm",
+  "namespace": "topolvm-system",
+  "clusters": {
+    "biscuit": {
+      "features": [
+        "ssd",
+        "hdd"
+      ],
+      "settings": {
+        "lvmdNodeSelector": {},
+        "nodeSelector": {},
+        "hddIsDefault": false
+      }
+    },
+    "kurumi": {
+      "features": [
+        "hdd",
+        "monitoring"
+      ],
+      "settings": {
+        "lvmdNodeSelector": {
+          "topolvm.io/lvmd-config": "rusk"
+        },
+        "nodeSelector": {
+          "topolvm.io/enabled": "true"
+        },
+        "hddIsDefault": true
+      }
+    }
+  }
+}

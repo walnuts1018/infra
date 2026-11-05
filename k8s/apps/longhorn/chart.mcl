@@ -1,5 +1,5 @@
+# renovate: datasource=github-releases depName=longhorn/charts registryUrl=https://github.com/longhorn/charts extractVersion=^longhorn\-(?<version>.*)$
 export let chartVersion = "1.12.1"
 export let chartArchive = "https://github.com/longhorn/charts/releases/download/longhorn-" + chartVersion + "/longhorn-" + chartVersion + ".tgz"
 export let releaseName = "longhorn"
 export let namespace = "longhorn-system"
-export let kubeVersion = "1.36.4"

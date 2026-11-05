@@ -2,10 +2,12 @@ import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./features.mcl" as appFeatures
 import "./resources.mcl" as resources
+import "../../cluster.mcl" as clusterConfig
 
 type Feature = "monitoring"
 
 param features: List<Feature> = []
+param cluster: clusterConfig.Cluster
 
 let monitoringEnabled = lists.contains(features, "monitoring")
 let values =
@@ -13,6 +15,6 @@ let values =
     appFeatures.valuesByFeature.monitoring
   else:
     appFeatures.valuesByFeature.standard
-let rendered = resources.render(appChart.namespace, values)
+let rendered = resources.render(cluster, appChart.namespace, values)
 
 emit each rendered

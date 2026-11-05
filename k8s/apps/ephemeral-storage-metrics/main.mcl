@@ -1,5 +1,7 @@
 import "std:helm" as helm
 import "./values.mcl" as appValues
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let namespace = "monitoring"
 let chartVersion = "1.21.3"
@@ -9,7 +11,7 @@ let helmOptions =
   releaseName: "ephemeral-storage-metrics"
   namespace: namespace
   version: chartVersion
-  kubeVersion: "1.36.4"
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: appValues.values
 let resources = helm.render(chartArchive, helmOptions)

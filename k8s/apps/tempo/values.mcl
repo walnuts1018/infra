@@ -1,5 +1,19 @@
 import text "./_configs/ingester-affinity.yaml" as ingesterAffinity
 
+let stsTokenVolume =
+  name: "seaweedfs-sts-token"
+  projected:
+    sources:
+      - serviceAccountToken:
+          audience: "sts.seaweedfs.com"
+          expirationSeconds: 3600
+          path: "token"
+
+let stsTokenMount =
+  name: "seaweedfs-sts-token"
+  mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
+  readOnly: true
+
 export let values: Map<String, Any> =
   global:
     extraArgs:
@@ -32,20 +46,9 @@ export let values: Map<String, Any> =
         cpu: "1"
         memory: "2Gi"
     extraVolumeMounts:
-      -
-        name: "seaweedfs-sts-token"
-        mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
-        readOnly: true
+      - stsTokenMount
     extraVolumes:
-      -
-        name: "seaweedfs-sts-token"
-        projected:
-          sources:
-            -
-              serviceAccountToken:
-                audience: "sts.seaweedfs.com"
-                expirationSeconds: 3600
-                path: "token"
+      - stsTokenVolume
     persistence:
       enabled: true
       size: "2Gi"
@@ -67,20 +70,9 @@ export let values: Map<String, Any> =
           filter_server_spans: false
           flush_to_storage: true
     extraVolumeMounts:
-      -
-        name: "seaweedfs-sts-token"
-        mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
-        readOnly: true
+      - stsTokenMount
     extraVolumes:
-      -
-        name: "seaweedfs-sts-token"
-        projected:
-          sources:
-            -
-              serviceAccountToken:
-                audience: "sts.seaweedfs.com"
-                expirationSeconds: 3600
-                path: "token"
+      - stsTokenVolume
   distributor:
     replicas: 2
     autoscaling:
@@ -97,20 +89,9 @@ export let values: Map<String, Any> =
         cpu: "500m"
         memory: "256Mi"
     extraVolumeMounts:
-      -
-        name: "seaweedfs-sts-token"
-        mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
-        readOnly: true
+      - stsTokenMount
     extraVolumes:
-      -
-        name: "seaweedfs-sts-token"
-        projected:
-          sources:
-            -
-              serviceAccountToken:
-                audience: "sts.seaweedfs.com"
-                expirationSeconds: 3600
-                path: "token"
+      - stsTokenVolume
   compactor:
     replicas: 1
     autoscaling:
@@ -129,20 +110,9 @@ export let values: Map<String, Any> =
         cpu: "1"
         memory: "1Gi"
     extraVolumeMounts:
-      -
-        name: "seaweedfs-sts-token"
-        mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
-        readOnly: true
+      - stsTokenMount
     extraVolumes:
-      -
-        name: "seaweedfs-sts-token"
-        projected:
-          sources:
-            -
-              serviceAccountToken:
-                audience: "sts.seaweedfs.com"
-                expirationSeconds: 3600
-                path: "token"
+      - stsTokenVolume
     livenessProbe:
       httpGet:
         path: "/ready"
@@ -175,20 +145,9 @@ export let values: Map<String, Any> =
         cpu: "500m"
         memory: "256Mi"
     extraVolumeMounts:
-      -
-        name: "seaweedfs-sts-token"
-        mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
-        readOnly: true
+      - stsTokenMount
     extraVolumes:
-      -
-        name: "seaweedfs-sts-token"
-        projected:
-          sources:
-            -
-              serviceAccountToken:
-                audience: "sts.seaweedfs.com"
-                expirationSeconds: 3600
-                path: "token"
+      - stsTokenVolume
   queryFrontend:
     replicas: 1
     autoscaling:
@@ -205,20 +164,9 @@ export let values: Map<String, Any> =
         cpu: "500m"
         memory: "256Mi"
     extraVolumeMounts:
-      -
-        name: "seaweedfs-sts-token"
-        mountPath: "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
-        readOnly: true
+      - stsTokenMount
     extraVolumes:
-      -
-        name: "seaweedfs-sts-token"
-        projected:
-          sources:
-            -
-              serviceAccountToken:
-                audience: "sts.seaweedfs.com"
-                expirationSeconds: 3600
-                path: "token"
+      - stsTokenVolume
   traces:
     otlp:
       http:

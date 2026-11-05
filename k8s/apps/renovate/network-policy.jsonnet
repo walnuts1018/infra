@@ -1,4 +1,4 @@
-local app = import 'app.json5';
+local app = import 'app.json';
 {
   apiVersion: 'networking.k8s.io/v1',
   kind: 'NetworkPolicy',

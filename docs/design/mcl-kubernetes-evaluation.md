@@ -1,5 +1,7 @@
 # MCLによるKubernetes Manifestの評価
 
+この文書は初期のMCL評価と構成変換の記録です。JSON5の配置宣言、旧CMP環境変数、開発版toolchainなどの記述は当時の状態を表します。現在の配置宣言、クラスタ入力、検証手順は[現在のKubernetes構成](../kubernetes.md)を参照してください。
+
 ## 必須の設計条件
 
 この評価とMCL化では、次の要件を適用します。

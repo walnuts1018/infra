@@ -4,34 +4,32 @@ Kubernetes クラスタに適用される Manifest 群です。
 
 ## ディレクトリ構成
 
-- `_argocd`: ArgoCD 用
-  - `applications`: ArgoCD Application リソース
-    - `[<cluster>]`:
-      - `apps.yaml`: ApplicationSet / `apps`ディレクトリの`app.json5`を見てApplicationを生成
-      - `argocd.yaml`: `argocd_components`を見るApplication
-      - `namespaces.yaml`: `namespace` を見る Application
-  - `argocd_components`: ArgoCD 用のコンポーネント
-    - `appproject.jsonnet`: ArgoCD AppProject
-    - `externalsecret.jsonnet`: ArgoCD用のSecret
-    - `app.json5`: ApplicationのmetadataとHelm/Kustomizeのsource定義
-    - `notification-externalsecret.jsonnet`: Secret
-    - `values.yaml`: ArgoCDの Helm values
-  - `clusters`: クラスタ固有の設定
-- `apps`: アプリケーションごとの Manifest。
-- `components`: Jsonnet Component
-  - `application.libsonnet`: ArgoCD Application 用テンプレート
-  - `configmap.libsonnet`: ConfigMap 用テンプレート / 自動でPrefixを付与
-  - `container.libsonnet`: コンテナ用テンプレート / SecurityContextなどを自動付与
-  - `external-secret.libsonnet`: External Secret 用テンプレート / 自動でPrefixを付与
-  - `helm.libsonnet`: Helm 用のArgoCD Applicationテンプレート
-  - `labels.libsonnet`: ラベル生成用テンプレート
-  - `oauth2-proxy/`: OAuth2 Proxy 用コンポーネント
+- `clusters/<cluster>/cluster.json`: Kubernetesバージョンやクラスタ識別名などのクラスタ情報。
+- `apps/<app>/app.json`: 配置するクラスタと、配置ごとのFeature・Settings。
+- `apps/<app>/*.mcl`: 型付き入力からアプリケーションManifestを生成するMCLソース。
+- `_argocd/applications`: アプリ配置を自動発見するApplicationSetと共通Go Template。
+- `_argocd/cmp`: MCL CMPの実装と入力契約。
+- `namespaces`: Namespace Manifest。
 - 初期構築と運用
   - [初期構築](init/berry.md)
   - [クラスター情報](init/)
   - [運用](operations/)
 - `namespaces`: namespace たち
 - `utils`: ユーティリティlibsonnet
+
+## アプリ配置とMCL入力
+
+ApplicationSetは`k8s/apps/*/app.json`を読み、`clusters`に明示されたクラスタだけにApplicationを生成します。アプリを追加するときは、そのアプリの`app.json`とMCLソースだけを更新します。Applicationのnamespaceはアプリ共通の`app.json`で指定し、配置ごとの上書きは行いません。
+
+クラスタ情報は`k8s/clusters/<cluster>/cluster.json`を正本とします。`clusterApiManaged`が`"true"`のクラスタだけがCluster API用ApplicationSetの対象です。Berryの`kubernetesVersion`は既存のHelm設定`1.36.4`を引き継いだ値で、実クラスタから取得した値ではありません。アプリのMCL入口は共通の`Cluster`型を受け取り、Helm Chartの`kubeVersion`には`cluster.kubernetesVersion`を渡します。Manifestの差分はFeature、Settings、意味のあるProfileで表し、クラスタ名による条件分岐は使いません。
+
+ApplicationSetの共通Go Templateは`MCL_CLUSTER_NAME`と選択された配置設定のJSONをCMPへ渡します。CMPはクラスタ定義から`name`、`namespace`、`kubernetesVersion`を読み、配置設定と合わせた一時JSONファイルを作成して`mcl render --parameter-file`へ渡します。JSON値をシェル引数のコードとして展開しません。この契約ではCMP実行環境に`jq`が必要です。
+
+`app.json`と`cluster.json`はArgo CD Git File Generatorが読む厳密なJSONです。MCLパラメータファイルも厳密なJSONで、解決済みの一時入力はGitへコミットしません。
+
+## Private MCL依存
+
+MCLがlockと依存キャッシュにないGitHub Release assetを取得する場合、Argo CD CMP実行環境に対象リポジトリを読み取れる`GITHUB_TOKEN`を設定します。MCLはGitHub APIでRelease情報とassetを取得し、assetのダウンロード先へリダイレクトするときに`Authorization`ヘッダーを削除します。Token値をManifestやGit管理ファイルへ記載しません。
 
 ## クラスタ構成
 

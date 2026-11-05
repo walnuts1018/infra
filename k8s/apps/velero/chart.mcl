@@ -1,4 +1,4 @@
+# renovate: datasource=github-releases depName=vmware-tanzu/helm-charts registryUrl=https://github.com/vmware-tanzu/helm-charts extractVersion=^velero\-(?<version>.*)$
 export let chartVersion = "12.1.0"
 export let chartArchive = "https://github.com/vmware-tanzu/helm-charts/releases/download/velero-" + chartVersion + "/velero-" + chartVersion + ".tgz"
 export let namespace = "velero"
-export let kubeVersion = "1.36.4"

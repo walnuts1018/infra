@@ -5,6 +5,8 @@ import "./http-route.mcl" as httpRoute
 import "./identity.mcl" as appIdentity
 import "./rbac.mcl" as appRbac
 import "./service.mcl" as appService
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 emit appConfigMaps.envoy
 emit appConfigMaps.versatiles

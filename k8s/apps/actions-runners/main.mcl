@@ -1,5 +1,7 @@
 import "./applications.mcl" as runnerApplications
 import "./resources.mcl" as resources
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 emit resources.runnerHooksConfigMap
 emit resources.githubAppSecret

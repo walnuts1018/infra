@@ -2,13 +2,15 @@ import "std:helm" as helm
 import "./chart.mcl" as appChart
 import "./external-secret.mcl" as appResources
 import "./profiles.mcl" as appProfiles
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let profile = appProfiles.profiles["standard"]
 let options =
   releaseName: "zitadel"
   namespace: profile.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions:
     - "autoscaling/v2"
     - "gateway.networking.k8s.io/v1"

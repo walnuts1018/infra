@@ -1,6 +1,6 @@
+# renovate: datasource=docker depName=ghcr.io/clickhouse/clickhouse-operator-helm registryUrl=https://ghcr.io
 export let chartVersion = "0.0.6"
 export let chartArchive = "oci://ghcr.io/clickhouse/clickhouse-operator-helm"
-export let kubeVersion = "1.36.4"
 export let namespace = "clickhouse-operator-system"
 export let apiVersions: List<String> =
   - "monitoring.coreos.com/v1"

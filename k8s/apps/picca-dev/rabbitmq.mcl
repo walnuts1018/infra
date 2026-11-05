@@ -1,0 +1,99 @@
+fn externalSecretPiccaDevRabbitmqUserCredentials(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: "picca-dev-rabbitmq-user-credentials"
+    namespace: namespace
+  spec:
+    data:
+      -
+        remoteRef:
+          key: "terraform-external-secrets"
+          property: "picca-dev-rabbitmq-password"
+        secretKey: "password"
+    refreshInterval: "1m"
+    secretStoreRef:
+      kind: "ClusterSecretStore"
+      name: "onepassword"
+    target:
+      name: "picca-dev-rabbitmq-user-credentials"
+      template:
+        data:
+          password: "{{ .password }}"
+          username: "picca-dev"
+        engineVersion: "v2"
+        type: "Opaque"
+fn permissionPiccaDev(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "rabbitmq.com/v1beta1"
+  kind: "Permission"
+  metadata:
+    name: "picca-dev"
+    namespace: namespace
+  spec:
+    permissions:
+      configure: ".*"
+      read: ".*"
+      write: ".*"
+    rabbitmqClusterReference:
+      name: "default"
+      namespace: "rabbitmq"
+    userReference:
+      name: "picca-dev"
+    vhost: "picca-dev"
+fn externalSecretPiccaDevRabbitmq(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: "picca-dev-rabbitmq"
+    namespace: namespace
+  spec:
+    data:
+      -
+        remoteRef:
+          key: "terraform-external-secrets"
+          property: "picca-dev-rabbitmq-password"
+        secretKey: "rabbitmq_password"
+    refreshInterval: "1m"
+    secretStoreRef:
+      kind: "ClusterSecretStore"
+      name: "onepassword"
+    target:
+      name: "picca-dev-rabbitmq"
+      template:
+        data:
+          KEDA_RABBITMQ_HOST: "http://picca-dev:{{ .rabbitmq_password | urlquery | replace \"+\" \"%20\" }}@default.rabbitmq.svc.cluster.local:15672/picca-dev"
+          RABBITMQ_URL: "amqp://picca-dev:{{ .rabbitmq_password | urlquery | replace \"+\" \"%20\" }}@default.rabbitmq.svc.cluster.local:5672/picca-dev"
+        engineVersion: "v2"
+        type: "Opaque"
+fn userPiccaDev(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "rabbitmq.com/v1beta1"
+  kind: "User"
+  metadata:
+    name: "picca-dev"
+    namespace: namespace
+  spec:
+    importCredentialsSecret:
+      name: "picca-dev-rabbitmq-user-credentials"
+    rabbitmqClusterReference:
+      name: "default"
+      namespace: "rabbitmq"
+    tags:
+      - "monitoring"
+fn vhostPiccaDev(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "rabbitmq.com/v1beta1"
+  kind: "Vhost"
+  metadata:
+    name: "picca-dev"
+    namespace: namespace
+  spec:
+    name: "picca-dev"
+    rabbitmqClusterReference:
+      name: "default"
+      namespace: "rabbitmq"
+
+export fn render(namespace: String) -> List<Map<String, Any>> =
+  - externalSecretPiccaDevRabbitmqUserCredentials(namespace)
+  - permissionPiccaDev(namespace)
+  - externalSecretPiccaDevRabbitmq(namespace)
+  - userPiccaDev(namespace)
+  - vhostPiccaDev(namespace)

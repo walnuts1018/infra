@@ -1,6 +1,9 @@
+import "../../cluster.mcl" as clusterConfig
 export type AcmeIssuerConfig =
   name: String
   server: String
+
+param cluster: clusterConfig.Cluster
 
 let externalSecretName = "cloudflare-api-token"
 let localCertificateName = "local-ca-cert"

@@ -3,31 +3,32 @@ let monitoringNamespace = "monitoring"
 let systemNamespace = "kube-system"
 let bearerTokenFile = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 let caFile = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
-fn serviceMonitor(name: String, selector: Map<String, String>, jobLabel: String, namespace: String, endpoints: List<Map<String, Any>>) -> Map<String, Any> = node:
+export type ServiceMonitorConfig =
+  name: String
+  selector: Map<String, String>
+  jobLabel: String
+  namespace: String
+  endpoints: List<Map<String, Any>>
+
+fn serviceMonitor(config: ServiceMonitorConfig) -> Map<String, Any> = node:
   apiVersion: "monitoring.coreos.com/v1"
   kind: "ServiceMonitor"
   metadata:
-    name: name
+    name: config.name
     namespace: monitoringNamespace
     labels:
       app: appName
       "app.kubernetes.io/name": appName
   spec:
-    jobLabel: jobLabel
+    jobLabel: config.jobLabel
     namespaceSelector:
       matchNames:
-        - namespace
+        - config.namespace
     selector:
-      matchLabels: selector
-    endpoints: endpoints
+      matchLabels: config.selector
+    endpoints: config.endpoints
 
 
-let controlPlaneProxySelector =
-  app: "kubernetes-control-plane-metrics-proxy"
-let corednsSelector =
-  "k8s-app": "kube-dns"
-let kubeProxySelector =
-  "k8s-app": "kube-proxy"
 let corednsMetricsSelector =
   app: "coredns-metrics"
 let etcdMetricsSelector =
@@ -61,41 +62,45 @@ let tlsSkipVerifyEndpoint =
 let tlsSkipVerifyEndpoints =
   - tlsSkipVerifyEndpoint
 
-export let corednsServiceMonitor = serviceMonitor(
-  "kubernetes-coredns",
-  corednsMetricsSelector,
-  "jobLabel",
-  systemNamespace,
-  simpleEndpoints,
-)
-export let etcdServiceMonitor = serviceMonitor(
-  "kube-etcd",
-  etcdMetricsSelector,
-  "jobLabel",
-  systemNamespace,
-  simpleEndpoints,
-)
-export let proxyServiceMonitor = serviceMonitor(
-  "kube-proxy",
-  kubeProxyMetricsSelector,
-  "jobLabel",
-  systemNamespace,
-  simpleEndpoints,
-)
-export let controllerManagerServiceMonitor = serviceMonitor(
-  "kube-controller-manager",
-  controllerManagerMetricsSelector,
-  "jobLabel",
-  systemNamespace,
-  tlsSkipVerifyEndpoints,
-)
-export let schedulerServiceMonitor = serviceMonitor(
-  "kube-scheduler",
-  schedulerMetricsSelector,
-  "jobLabel",
-  systemNamespace,
-  tlsSkipVerifyEndpoints,
-)
+let corednsServiceMonitorConfig: ServiceMonitorConfig =
+  name: "kubernetes-coredns"
+  selector: corednsMetricsSelector
+  jobLabel: "jobLabel"
+  namespace: systemNamespace
+  endpoints: simpleEndpoints
+export let corednsServiceMonitor = serviceMonitor(corednsServiceMonitorConfig)
+
+let etcdServiceMonitorConfig: ServiceMonitorConfig =
+  name: "kube-etcd"
+  selector: etcdMetricsSelector
+  jobLabel: "jobLabel"
+  namespace: systemNamespace
+  endpoints: simpleEndpoints
+export let etcdServiceMonitor = serviceMonitor(etcdServiceMonitorConfig)
+
+let proxyServiceMonitorConfig: ServiceMonitorConfig =
+  name: "kube-proxy"
+  selector: kubeProxyMetricsSelector
+  jobLabel: "jobLabel"
+  namespace: systemNamespace
+  endpoints: simpleEndpoints
+export let proxyServiceMonitor = serviceMonitor(proxyServiceMonitorConfig)
+
+let controllerManagerServiceMonitorConfig: ServiceMonitorConfig =
+  name: "kube-controller-manager"
+  selector: controllerManagerMetricsSelector
+  jobLabel: "jobLabel"
+  namespace: systemNamespace
+  endpoints: tlsSkipVerifyEndpoints
+export let controllerManagerServiceMonitor = serviceMonitor(controllerManagerServiceMonitorConfig)
+
+let schedulerServiceMonitorConfig: ServiceMonitorConfig =
+  name: "kube-scheduler"
+  selector: schedulerMetricsSelector
+  jobLabel: "jobLabel"
+  namespace: systemNamespace
+  endpoints: tlsSkipVerifyEndpoints
+export let schedulerServiceMonitor = serviceMonitor(schedulerServiceMonitorConfig)
 
 let apiServerEndpoints =
   -
@@ -114,13 +119,13 @@ let apiServerEndpoints =
       insecureSkipVerify: false
       serverName: "kubernetes"
 
-export let apiServerServiceMonitor = serviceMonitor(
-  "kube-apiserver",
-  apiserverSelector,
-  "component",
-  "default",
-  apiServerEndpoints,
-)
+let apiServerServiceMonitorConfig: ServiceMonitorConfig =
+  name: "kube-apiserver"
+  selector: apiserverSelector
+  jobLabel: "component"
+  namespace: "default"
+  endpoints: apiServerEndpoints
+export let apiServerServiceMonitor = serviceMonitor(apiServerServiceMonitorConfig)
 
 let kubeletEndpoints =
   -
@@ -239,10 +244,10 @@ let kubeletEndpoints =
       caFile: caFile
       insecureSkipVerify: true
 
-export let kubeletServiceMonitor = serviceMonitor(
-  "kubelet",
-  kubeletMetricsSelector,
-  "k8s-app",
-  systemNamespace,
-  kubeletEndpoints,
-)
+let kubeletServiceMonitorConfig: ServiceMonitorConfig =
+  name: "kubelet"
+  selector: kubeletMetricsSelector
+  jobLabel: "k8s-app"
+  namespace: systemNamespace
+  endpoints: kubeletEndpoints
+export let kubeletServiceMonitor = serviceMonitor(kubeletServiceMonitorConfig)

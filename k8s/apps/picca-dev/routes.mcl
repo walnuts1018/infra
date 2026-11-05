@@ -1,0 +1,242 @@
+let emptyMap: Map<String, Any> = {}
+
+fn httpRoutePiccaDevImgproxy(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: "picca-dev-imgproxy"
+    namespace: namespace
+  spec:
+    hostnames:
+      - "imgproxy-picca-dev.walnuts.dev"
+    parentRefs:
+      -
+        name: "envoy-gateway"
+        namespace: "envoy-gateway-system"
+        sectionName: "https"
+    rules:
+      -
+        backendRefs:
+          -
+            kind: "Service"
+            name: "picca-dev-imgproxy"
+            port: 80
+            weight: 1
+fn httpRoutePiccaDev(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: "picca-dev"
+    namespace: namespace
+  spec:
+    hostnames:
+      - "picca-dev.walnuts.dev"
+    parentRefs:
+      -
+        name: "envoy-gateway"
+        namespace: "envoy-gateway-system"
+        sectionName: "https"
+    rules:
+      -
+        backendRefs:
+          -
+            kind: "Service"
+            name: "picca-dev-frontend"
+            port: 3000
+            weight: 1
+        filters:
+          -
+            responseHeaderModifier:
+              set:
+                -
+                  name: "Strict-Transport-Security"
+                  value: "max-age=63072000; includeSubDomains"
+                -
+                  name: "X-Content-Type-Options"
+                  value: "nosniff"
+                -
+                  name: "X-Frame-Options"
+                  value: "DENY"
+                -
+                  name: "Referrer-Policy"
+                  value: "no-referrer"
+                -
+                  name: "Permissions-Policy"
+                  value: "camera=(), microphone=(), geolocation=(self), payment=(), usb=(), serial=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=()"
+            type: "ResponseHeaderModifier"
+        matches:
+          -
+            path:
+              type: "PathPrefix"
+              value: "/api/health"
+          -
+            path:
+              type: "PathPrefix"
+              value: "/api/telemetry"
+      -
+        backendRefs:
+          -
+            kind: "Service"
+            name: "picca-dev-apiserver"
+            port: 8080
+            weight: 1
+        filters:
+          -
+            responseHeaderModifier:
+              set:
+                -
+                  name: "Strict-Transport-Security"
+                  value: "max-age=63072000; includeSubDomains"
+                -
+                  name: "X-Content-Type-Options"
+                  value: "nosniff"
+                -
+                  name: "X-Frame-Options"
+                  value: "DENY"
+                -
+                  name: "Referrer-Policy"
+                  value: "no-referrer"
+                -
+                  name: "Permissions-Policy"
+                  value: "camera=(), microphone=(), geolocation=(self), payment=(), usb=(), serial=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=()"
+            type: "ResponseHeaderModifier"
+        matches:
+          -
+            path:
+              type: "PathPrefix"
+              value: "/auth"
+          -
+            path:
+              type: "PathPrefix"
+              value: "/query"
+          -
+            path:
+              type: "PathPrefix"
+              value: "/api"
+        timeouts:
+          backendRequest: "0s"
+          request: "0s"
+      -
+        backendRefs:
+          -
+            kind: "Service"
+            name: "picca-dev-frontend"
+            port: 3000
+            weight: 1
+        filters:
+          -
+            responseHeaderModifier:
+              set:
+                -
+                  name: "Strict-Transport-Security"
+                  value: "max-age=63072000; includeSubDomains"
+                -
+                  name: "X-Content-Type-Options"
+                  value: "nosniff"
+                -
+                  name: "X-Frame-Options"
+                  value: "DENY"
+                -
+                  name: "Referrer-Policy"
+                  value: "no-referrer"
+                -
+                  name: "Permissions-Policy"
+                  value: "camera=(), microphone=(), geolocation=(self), payment=(), usb=(), serial=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=()"
+            type: "ResponseHeaderModifier"
+fn httpRoutePiccaDevHttp(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: "picca-dev-http"
+    namespace: namespace
+  spec:
+    hostnames:
+      - "picca-dev.walnuts.dev"
+    parentRefs:
+      -
+        name: "envoy-gateway"
+        namespace: "envoy-gateway-system"
+        sectionName: "http"
+    rules:
+      -
+        filters:
+          -
+            requestRedirect:
+              scheme: "https"
+              statusCode: 301
+            type: "RequestRedirect"
+fn networkPolicyPiccaDev(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "networking.k8s.io/v1"
+  kind: "NetworkPolicy"
+  metadata:
+    labels:
+      app: "picca-dev"
+      "app.kubernetes.io/name": "picca-dev"
+    name: "picca-dev"
+    namespace: namespace
+  spec:
+    egress:
+      -
+        to:
+          -
+            ipBlock:
+              cidr: "0.0.0.0/0"
+              except:
+                - "192.168.0.0/16"
+                - "10.244.0.0/16"
+                - "10.96.0.0/12"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "kube-system"
+            podSelector:
+              matchLabels:
+                "k8s-app": "kube-dns"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "opentelemetry-collector"
+            podSelector:
+              matchLabels:
+                "app.kubernetes.io/name": "default-collector"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "databases"
+            podSelector:
+              matchLabels:
+                "cnpg.io/cluster": "postgresql-default"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "databases"
+            podSelector:
+              matchLabels:
+                "scylla/cluster": "scylla-cluster"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "rabbitmq"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "seaweedfs"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "qdrant"
+          -
+            namespaceSelector:
+              matchLabels:
+                "kubernetes.io/metadata.name": "zitadel"
+          -
+            podSelector: emptyMap
+    podSelector: emptyMap
+    policyTypes:
+      - "Egress"
+
+export fn render(namespace: String) -> List<Map<String, Any>> =
+  - httpRoutePiccaDevImgproxy(namespace)
+  - httpRoutePiccaDev(namespace)
+  - httpRoutePiccaDevHttp(namespace)
+  - networkPolicyPiccaDev(namespace)

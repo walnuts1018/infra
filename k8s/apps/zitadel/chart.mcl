@@ -1,4 +1,4 @@
+# renovate: datasource=github-releases depName=zitadel/zitadel-charts registryUrl=https://github.com/zitadel/zitadel-charts extractVersion=^zitadel\-(?<version>.*)$
 export let chartVersion = "10.0.6"
 export let chartArchive = "https://github.com/zitadel/zitadel-charts/releases/download/zitadel-" + chartVersion + "/zitadel-" + chartVersion + ".tgz"
-export let kubeVersion = "1.36.4"
 export let namespace = "zitadel"

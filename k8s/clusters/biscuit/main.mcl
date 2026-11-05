@@ -2,6 +2,8 @@ import "./tart-hosts.mcl" as tartHosts
 import "./control-plane.mcl" as controlPlane
 import "./argocd-agent-bootstrap.mcl" as argocdAgentBootstrap
 import "../../namespaces/biscuit/resources.mcl" as namespaces
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 emit each tartHosts.resources.items
 emit tartHosts.resources.credential

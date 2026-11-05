@@ -1,4 +1,4 @@
+# renovate: datasource=docker depName=ghcr.io/falcondev-oss/charts/github-actions-cache-server registryUrl=https://ghcr.io
 export let chartVersion = "1.1.3"
 export let chartArchive = "oci://ghcr.io/falcondev-oss/charts/github-actions-cache-server"
 export let namespace = "arc-systems"
-export let kubeVersion = "1.36.4"

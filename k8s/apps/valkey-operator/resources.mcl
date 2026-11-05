@@ -1,6 +1,6 @@
 import "std:helm" as helm
 import "./chart.mcl" as appChart
-
+import "../../cluster.mcl" as clusterConfig
 type HelmOptions =
   releaseName: String
   namespace: String
@@ -10,14 +10,14 @@ type HelmOptions =
   values: Map<String, Any>
 
 let apiVersions: List<String> = []
-let baseOptions =
+fn baseOptions(cluster: clusterConfig.Cluster) -> HelmOptions =
   releaseName: "valkey-operator"
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
 
-fn options(namespace: String, values: Map<String, Any>) -> HelmOptions = baseOptions with:
+fn options(cluster: clusterConfig.Cluster, namespace: String, values: Map<String, Any>) -> HelmOptions = baseOptions(cluster) with:
   namespace: namespace
   values: values
 
-export fn render(namespace: String, values: Map<String, Any>) -> Any = helm.render(appChart.chartArchive, options(namespace, values))
+export fn render(cluster: clusterConfig.Cluster, namespace: String, values: Map<String, Any>) -> List<Map<String, Any>> = helm.render(appChart.chartArchive, options(cluster, namespace, values))

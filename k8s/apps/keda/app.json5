@@ -1,8 +1,0 @@
-{
-  name: "keda",
-  namespace: "keda",
-  clusters: {
-    kurumi: {
-    },
-  },
-}

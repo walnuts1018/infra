@@ -4,8 +4,8 @@ let destination =
   server: "https://kubernetes.default.svc"
   namespace: "argocd"
 let sources =
-  - common.mclSource("k8s/_argocd/applications")
-  - common.mclSource("k8s/_argocd/entrypoint")
+  - common.mclSource("k8s/_argocd/applications", "berry")
+  - common.mclSource("k8s/_argocd/entrypoint", "berry")
 let syncOptions =
   - "ServerSideApply=true"
   - "FailOnSharedResource=true"

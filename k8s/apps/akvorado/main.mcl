@@ -3,6 +3,8 @@ import "./workloads.mcl" as workloads
 import "./datastores.mcl" as datastores
 import "./http-route.mcl" as route
 import "./security-policy.mcl" as policy
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 emit workloads.configMap
 emit externalSecrets.credentials

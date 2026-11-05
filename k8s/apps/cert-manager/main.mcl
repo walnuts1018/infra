@@ -4,9 +4,11 @@ import "std:list" as lists
 import "./chart.mcl" as appChart
 import "./controller-configmap.mcl" as controllerConfigMap
 import "./features.mcl" as appFeatures
+import "../../cluster.mcl" as clusterConfig
 
 type Feature = "monitoring"
 
+param cluster: clusterConfig.Cluster
 param features: List<Feature> = []
 
 let apiVersions: List<String> = []
@@ -20,7 +22,7 @@ let options =
   releaseName: appChart.releaseName
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: values
 let chartResources: List<Map<String, Any>> =

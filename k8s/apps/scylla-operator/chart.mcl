@@ -1,5 +1,5 @@
+# renovate: datasource=helm depName=scylla-operator registryUrl=https://scylla-operator-charts.storage.googleapis.com/stable
 export let chartVersion = "v1.21.1"
 export let chartArchive =
   "https://scylla-operator-charts.storage.googleapis.com/stable/scylla-operator-" + chartVersion + ".tgz"
-export let kubeVersion = "1.36.4"
 export let namespace = "scylla-operator"

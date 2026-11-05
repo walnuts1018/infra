@@ -1,0 +1,43 @@
+fn valkeyClusterPiccaDevValkey(namespace: String) -> Map<String, Any> = node:
+  apiVersion: "valkey.io/v1alpha1"
+  kind: "ValkeyCluster"
+  metadata:
+    annotations:
+      "argocd.argoproj.io/sync-options": "SkipDryRunOnMissingResource=true"
+    labels:
+      app: "picca-dev-valkey"
+      "app.kubernetes.io/name": "picca-dev-valkey"
+    name: "picca-dev-valkey"
+    namespace: namespace
+  spec:
+    replicas: 2
+    resources:
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+      requests:
+        cpu: "5m"
+        memory: "5Mi"
+    scheduling:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              -
+                matchExpressions:
+                  -
+                    key: "storage.walnuts.dev/slow"
+                    operator: "DoesNotExist"
+    shards: 1
+    users:
+      -
+        enabled: true
+        name: "default"
+        passwordSecret:
+          keys:
+            - "valkey_password"
+          name: "picca-dev-valkey"
+        permissions: "+@all ~* &*"
+
+export fn render(namespace: String) -> List<Map<String, Any>> =
+  - valkeyClusterPiccaDevValkey(namespace)

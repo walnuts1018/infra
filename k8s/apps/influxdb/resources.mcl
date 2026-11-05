@@ -3,14 +3,15 @@ import "./chart.mcl" as appChart
 import "./values.mcl" as appValues
 import "./external-secret.mcl" as externalSecret
 import "./http-route.mcl" as httpRoute
-
+import "../../cluster.mcl" as clusterConfig
 let apiVersions: List<String> =
   - "policy/v1"
-let options =
+export fn chartResources(cluster: clusterConfig.Cluster) -> List<Map<String, Any>> = helm.render(appChart.chartArchive, options(cluster))
+
+fn options(cluster: clusterConfig.Cluster) -> Map<String, Any> =
   releaseName: appChart.releaseName
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   values: appValues.values
-export let chartResources = helm.render(appChart.chartArchive, options)

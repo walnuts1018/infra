@@ -1,0 +1,80 @@
+import "./profiles.mcl" as appProfiles
+
+let profile = appProfiles.profiles["s3BackedMail"]
+let appName = "stalwart"
+let routeNames =
+  smtp: "stalwart-smtp"
+  smtps: "stalwart-smtps"
+  submission: "stalwart-submission"
+  imaps: "stalwart-imaps"
+
+fn tcpRoute(listener: String, port: Int, routeName: String) -> Map<String, Any> = node:
+  apiVersion: "gateway.networking.k8s.io/v1alpha2"
+  kind: "TCPRoute"
+  metadata:
+    name: routeName
+    namespace: profile.namespace
+  spec:
+    parentRefs:
+      - name: "envoy-gateway"
+        namespace: "envoy-gateway-system"
+        sectionName: listener
+    rules:
+      -
+        backendRefs:
+          - name: appName
+            port: port
+let generatedTcpRoutes =
+  - tcpRoute("smtp", 25, routeNames.smtp)
+  - tcpRoute("smtps", 465, routeNames.smtps)
+  - tcpRoute("submission", 587, routeNames.submission)
+  - tcpRoute("imaps", 993, routeNames.imaps)
+
+let backendTrafficPolicy = node:
+  apiVersion: "gateway.envoyproxy.io/v1alpha1"
+  kind: "BackendTrafficPolicy"
+  metadata:
+    name: "stalwart-proxy-protocol"
+    namespace: profile.namespace
+  spec:
+    targetRefs:
+      - group: "gateway.networking.k8s.io"
+        kind: "TCPRoute"
+        name: routeNames.smtp
+      - group: "gateway.networking.k8s.io"
+        kind: "TCPRoute"
+        name: routeNames.smtps
+    proxyProtocol:
+      version: "V2"
+
+let httpRoute = node:
+  apiVersion: "gateway.networking.k8s.io/v1"
+  kind: "HTTPRoute"
+  metadata:
+    name: appName
+    namespace: profile.namespace
+  spec:
+    parentRefs:
+      - name: "envoy-gateway"
+        namespace: "envoy-gateway-system"
+    hostnames:
+      - "stalwart.local.walnuts.dev"
+      - "autoconfig.walnuts.dev"
+      - "autodiscover.walnuts.dev"
+    rules:
+      -
+        backendRefs:
+          - kind: "Service"
+            name: appName
+            port: 8080
+            weight: 1
+        matches:
+          - path:
+              type: "PathPrefix"
+              value: "/"
+
+
+export let resources =
+  - backendTrafficPolicy
+  - httpRoute
+export let tcpRoutes = generatedTcpRoutes

@@ -1,12 +1,18 @@
 import "./profiles.mcl" as appProfiles
 import "./ai-services.mcl" as aiServices
-import "./app-services.mcl" as appServices
+import "./apiserver.mcl" as apiserver
+import "./frontend.mcl" as frontend
+import "./imgproxy.mcl" as imgproxy
 import "./shared-infrastructure.mcl" as sharedInfrastructure
 import "./workers.mcl" as workers
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let namespace = appProfiles.profiles["default"].namespace
 
 emit each aiServices.render(namespace)
-emit each appServices.render(namespace)
+emit each apiserver.render(namespace)
+emit each frontend.render(namespace)
+emit each imgproxy.render(namespace)
 emit each sharedInfrastructure.render(namespace)
 emit each workers.render(namespace)

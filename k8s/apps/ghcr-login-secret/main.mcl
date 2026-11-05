@@ -1,3 +1,5 @@
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 let resource = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ClusterExternalSecret"

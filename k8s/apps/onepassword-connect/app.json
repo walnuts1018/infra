@@ -1,0 +1,9 @@
+{
+  "name": "onepassword-connect",
+  "namespace": "onepassword",
+  "clusters": {
+    "berry": {},
+    "biscuit": {},
+    "kurumi": {}
+  }
+}

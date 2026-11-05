@@ -1,0 +1,32 @@
+{
+  "name": "cilium",
+  "namespace": "cilium-system",
+  "clusters": {
+    "biscuit": {
+      "features": [
+        "gatewayAPI"
+      ],
+      "settings": {
+        "apiServer": "192.168.0.15",
+        "clusterId": 2,
+        "envoyMemory": "64Mi",
+        "ingressLoadBalancerIP": ""
+      }
+    },
+    "kurumi": {
+      "features": [
+        "originCertificateIngress",
+        "monitoring",
+        "hubbleTLS",
+        "l2Announcements",
+        "nodePort"
+      ],
+      "settings": {
+        "apiServer": "192.168.4.11",
+        "clusterId": 1,
+        "envoyMemory": "51Mi",
+        "ingressLoadBalancerIP": "192.168.12.129"
+      }
+    }
+  }
+}

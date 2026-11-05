@@ -8,7 +8,7 @@
 
 - `eclair`1台でControl Plane兼Workerを構成します。
 - TartHostのMACアドレス、管理用IP、Intel AMT/MEBxエンドポイント、ホストラベルなどは[`k8s/clusters/biscuit/tart-hosts.jsonnet`](../../k8s/clusters/biscuit/tart-hosts.jsonnet)で定義します。
-- KubernetesやTalosのバージョン、ノード数は[`k8s/clusters/biscuit/cluster.json5`](../../k8s/clusters/biscuit/cluster.json5)で管理します。
+- KubernetesやTalosのバージョン、ノード数は[`k8s/clusters/biscuit/cluster.json`](../../k8s/clusters/biscuit/cluster.json)で管理します。
 - Kubernetes APIエンドポイントは`192.168.0.15:6443`です。
 - 240GB SSDをTalosのシステム領域およびswapに使用し、1TB HDDをLVM(`hdd`ボリュームグループ)およびTopoLVMに使用します。ディスクのselectorやWWID定義は[`k8s/clusters/biscuit/_patches/control-plane.yaml`](../../k8s/clusters/biscuit/_patches/control-plane.yaml)で管理します。
 - SeaweedFSはTopoLVM上の単一Pod構成で、マニフェストは[`k8s/apps/seaweedfs-biscuit`](../../k8s/apps/seaweedfs-biscuit)で定義します。バケット作成やライフサイクル設定などの初期化後タスクはTerraformで管理します(詳細は[Terraform運用](../operations/terraform.md)を参照してください)。

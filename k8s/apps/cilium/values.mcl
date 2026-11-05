@@ -1,11 +1,6 @@
 import "std:list" as lists
-
-export type Feature = "originCertificateIngress" | "gatewayAPI" | "monitoring" | "hubbleTLS" | "l2Announcements" | "nodePort"
-export type Settings =
-  api_server: String
-  cluster_id: Int
-  cluster_name: String
-  envoy_memory: String
+import "../../cluster.mcl" as clusterConfig
+import "./config.mcl" as config
 
 let commonValues =
   kubeProxyReplacement: true
@@ -66,7 +61,7 @@ type FeatureFlags =
   monitoring: Bool
   nodePort: Bool
 
-fn featureFlags(features: List<Feature>) -> FeatureFlags =
+fn featureFlags(features: List<config.Feature>) -> FeatureFlags =
   l2Announcements: lists.contains(features, "l2Announcements")
   originCertificateIngress: lists.contains(features, "originCertificateIngress")
   gatewayAPI: lists.contains(features, "gatewayAPI")
@@ -74,11 +69,11 @@ fn featureFlags(features: List<Feature>) -> FeatureFlags =
   monitoring: lists.contains(features, "monitoring")
   nodePort: lists.contains(features, "nodePort")
 
-fn helmValuesWithFlags(settings: Settings, flags: FeatureFlags) -> Map<String, Any> = commonValues with:
-  k8sServiceHost: settings.api_server
+fn helmValuesWithFlags(clusterContext: clusterConfig.Cluster, settings: config.Settings, flags: FeatureFlags) -> Map<String, Any> = commonValues with:
+  k8sServiceHost: settings.apiServer
   cluster:
-    id: settings.cluster_id
-    name: settings.cluster_name
+    id: settings.clusterId
+    name: clusterContext.name
   l2announcements:
     enabled: flags.l2Announcements
   ingressController:
@@ -87,7 +82,7 @@ fn helmValuesWithFlags(settings: Settings, flags: FeatureFlags) -> Map<String, A
     default: true
     enforceHttps: true
     service:
-      loadBalancerIP: "192.168.12.129"
+      loadBalancerIP: settings.ingressLoadBalancerIP
     defaultSecretName: "cloudflare-origin-cert"
     defaultSecretNamespace: "cilium-system"
     secretsNamespace:
@@ -139,7 +134,7 @@ fn helmValuesWithFlags(settings: Settings, flags: FeatureFlags) -> Map<String, A
   envoy:
     resources:
       requests:
-        memory: settings.envoy_memory
+        memory: settings.envoyMemory
     prometheus:
       enabled: flags.monitoring
       serviceMonitor:
@@ -172,5 +167,5 @@ fn helmValuesWithFlags(settings: Settings, flags: FeatureFlags) -> Map<String, A
     gatewayClass:
       create: false
 
-export fn helmValues(features: List<Feature>, settings: Settings) -> Map<String, Any> =
-  helmValuesWithFlags(settings, featureFlags(features))
+export fn helmValues(clusterContext: clusterConfig.Cluster, features: List<config.Feature>, settings: config.Settings) -> Map<String, Any> =
+  helmValuesWithFlags(clusterContext, settings, featureFlags(features))

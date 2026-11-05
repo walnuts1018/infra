@@ -1,0 +1,7 @@
+{
+  "name": "zitadel-kubernetes-rbac",
+  "namespace": "kube-system",
+  "clusters": {
+    "kurumi": {}
+  }
+}

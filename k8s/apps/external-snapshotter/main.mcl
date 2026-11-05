@@ -1,4 +1,6 @@
 import "std:kustomize" as kustomize
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let crds = kustomize.build(
   "git+https://github.com/kubernetes-csi/external-snapshotter",

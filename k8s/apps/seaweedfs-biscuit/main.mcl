@@ -3,6 +3,8 @@ import "./config.mcl" as config
 import "./routes.mcl" as routes
 import "./external-secrets.mcl" as externalSecrets
 import "./storage.mcl" as storage
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 emit compute.resource
 emit config.resource

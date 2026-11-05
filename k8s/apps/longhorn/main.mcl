@@ -3,6 +3,8 @@ import "./chart.mcl" as appChart
 import "./profiles.mcl" as appProfiles
 import "./resources.mcl" as appResources
 import "./external-secret.mcl" as externalSecret
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let apiVersions: List<String> = []
 let lookupResources: List<Map<String, Any>> = []
@@ -11,7 +13,7 @@ let options =
   releaseName: appChart.releaseName
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: apiVersions
   lookupResources: lookupResources
   values: selectedProfile.values

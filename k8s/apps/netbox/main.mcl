@@ -3,12 +3,14 @@ import "./chart.mcl" as appChart
 import "./external-secrets.mcl" as externalSecrets
 import "./profiles.mcl" as appProfiles
 import "./service-account.mcl" as serviceAccount
+import "../../cluster.mcl" as clusterConfig
+param cluster: clusterConfig.Cluster
 
 let options =
   releaseName: appChart.releaseName
   namespace: appChart.namespace
   version: appChart.chartVersion
-  kubeVersion: appChart.kubeVersion
+  kubeVersion: cluster.kubernetesVersion
   apiVersions: appChart.apiVersions
   values: appProfiles.valuesByProfile["oidc-and-s3-storage"]
 let resources = helm.render(appChart.chartArchive, options)
