@@ -10,7 +10,7 @@ export fn resource(namespace: String) -> Map<String, Any> = node:
   spec:
     parentRefs:
       - name: gateway.name
-        namespace: gateway.resource(namespace).metadata.namespace
+        namespace: gateway.namespace
     hostnames:
       - "hubble.walnuts.dev"
     rules:

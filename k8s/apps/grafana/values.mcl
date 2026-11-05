@@ -1,3 +1,4 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
 import "./datasources.mcl" as datasources
 import "./external-secret.mcl" as externalSecret
 import text "./_configs/role-attribute-path.txt" as roleAttributePath
@@ -118,4 +119,4 @@ export let values: Map<String, Any> =
         - "grafana.walnuts.dev"
       parentRefs:
         - name: "envoy-gateway"
-          namespace: "envoy-gateway-system"
+          namespace: gateway.namespace

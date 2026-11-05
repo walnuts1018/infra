@@ -1,7 +1,8 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
 import "./app.mcl" as app
 
 let envoyGatewayName = "envoy-gateway"
-let envoyGatewayNamespace = "envoy-gateway-system"
+let envoyGatewayNamespace = gateway.namespace
 let seaweedNamespace = "seaweedfs"
 let seaweedFilerName = "seaweedfs-default-filer"
 let seaweedS3DomainName = "seaweedfs.local.walnuts.dev"

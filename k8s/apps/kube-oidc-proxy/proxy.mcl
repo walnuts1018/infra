@@ -1,3 +1,4 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
 import "./config.mcl" as app
 
 let serviceAccountName = app.name
@@ -129,7 +130,7 @@ fn deployment(namespace: String) -> Map<String, Any> = node:
           -
             name: "tls"
             secret:
-                secretName: certificateSecretName
+              secretName: certificateSecretName
           -
             name: "ca"
             configMap:
@@ -176,7 +177,7 @@ fn httpRoute(namespace: String) -> Map<String, Any> = node:
     parentRefs:
       -
         name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
     hostnames:
       - "kurumi-oidc-proxy.local.walnuts.dev"
     rules:

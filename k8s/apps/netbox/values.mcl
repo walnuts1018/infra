@@ -1,10 +1,15 @@
 import "std:manifest" as manifest
+import "../envoy-gateway-class/gateway.mcl" as gateway
 import "./external-secrets.mcl" as externalSecrets
 
 let valuesBundle = manifest.load("./_configs/values.yaml")
 let rawValues: Map<String, Any> = valuesBundle[0]
 
 let oidcAndS3StorageValues = rawValues with:
+  httpRoute:
+    parentRefs:
+      - name: gateway.name
+        namespace: gateway.namespace
   existingSecret: externalSecrets.netboxSecretName
   superuser:
     existingSecret: externalSecrets.netboxSecretName

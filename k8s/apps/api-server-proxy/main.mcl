@@ -1,9 +1,9 @@
 import "../../cluster.mcl" as clusterConfig
+import "../envoy-gateway-class/gateway.mcl" as gateway
 export type ApiServerProxy =
   name: String
   hostname: String
   gatewayName: String
-  gatewayNamespace: String
   backendService: String
   backendPort: Int
   backendHostname: String
@@ -16,7 +16,6 @@ let app: ApiServerProxy =
   name: "api-server-service-proxy"
   hostname: "kurumi.local.walnuts.dev"
   gatewayName: "envoy-gateway"
-  gatewayNamespace: "envoy-gateway-system"
   backendService: "kubernetes"
   backendPort: 443
   backendHostname: "kubernetes.default.svc.cluster.local"
@@ -52,7 +51,7 @@ let httpRoute = node:
     parentRefs:
       -
         name: app.gatewayName
-        namespace: app.gatewayNamespace
+        namespace: gateway.namespace
     hostnames:
       - app.hostname
     rules:

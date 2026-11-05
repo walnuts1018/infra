@@ -1,4 +1,5 @@
 import "std:manifest" as manifest
+import "../envoy-gateway-class/gateway.mcl" as gateway
 import "./environment.mcl" as appEnvironment
 
 let valuesBundle = manifest.load("./_configs/values.yaml")
@@ -6,4 +7,8 @@ let defaultValues: Map<String, Any> = valuesBundle[0]
 
 export let baseValues: Map<String, Any> = defaultValues with:
   coder:
+    httproute:
+      parentRefs:
+        - name: gateway.name
+          namespace: gateway.namespace
     env: appEnvironment.environment

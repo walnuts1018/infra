@@ -1,8 +1,8 @@
 {
   "version": 4,
   "toolchain": {
-    "mcl": "0.3.31",
-    "revision": "5142734cb8547612b6470a3555d49fb194dc459c",
+    "mcl": "0.3.32",
+    "revision": "de6b947fd35146d80b876196aeb0e6833cd53029",
     "modified": "false",
     "go": "go1.27.3",
     "helm": "v4.3.1",
@@ -19,6 +19,7 @@
     "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/v0.3.16/bootstrap-components.yaml": "02b38f0628a45b4b9157283324adff849e3e0e60c4a3a2408c9925742cfdf450",
     "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/v0.3.16/control-plane-components.yaml": "7f4ccf0f44ff69dbb0b9bf771726159440362a8b8cfe969b1956dc39a4efb60d",
     "https://github.com/walnuts1018/cluster-api-provider-tart/releases/download/v0.3.16/infrastructure-components.yaml": "276d4fd560ce81cd6a4bfef62c548a1da32f61da5abd942317c33f97a2c6fcd3",
+    "https://raw.githubusercontent.com/cert-manager/trust-manager/v0.24.0/deploy/crds/trust.cert-manager.io_bundles.yaml": "712b2ede1c7cd9c9b86c3eef4d1c894b3b0913b3467cf96981dd35ac166bf334",
     "https://raw.githubusercontent.com/longhorn/longhorn/f349c091c50700cb6cb8a4df8aaa29ea214bdd48/deploy/longhorn.yaml": "41648963af867ac1d0c85755fb53cf61cacd57c9bb22e1942e3fb0439eeb04fd"
   },
   "charts": {

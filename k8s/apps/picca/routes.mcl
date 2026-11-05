@@ -1,3 +1,5 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
+
 let emptyMap: Map<String, Any> = {}
 
 
@@ -13,7 +15,7 @@ export fn httpRoutePiccaImgproxy(namespace: String) -> Map<String, Any> = node:
     parentRefs:
       -
         name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
         sectionName: "https"
     rules:
       -
@@ -36,7 +38,7 @@ export fn httpRoutePicca(namespace: String) -> Map<String, Any> = node:
     parentRefs:
       -
         name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
         sectionName: "https"
     rules:
       -
@@ -158,7 +160,7 @@ export fn httpRoutePiccaHttp(namespace: String) -> Map<String, Any> = node:
     parentRefs:
       -
         name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
         sectionName: "http"
     rules:
       -

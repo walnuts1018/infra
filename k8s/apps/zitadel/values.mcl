@@ -1,3 +1,4 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
 import "./external-secret.mcl" as externalSecret
 
 let zitadelLabels =
@@ -28,7 +29,7 @@ let chartValues: Map<String, Any> =
         - group: "gateway.networking.k8s.io"
           kind: "Gateway"
           name: "envoy-gateway"
-          namespace: "envoy-gateway-system"
+          namespace: gateway.namespace
       hostnames:
         - "auth.walnuts.dev"
     grpcRoute:
@@ -37,7 +38,7 @@ let chartValues: Map<String, Any> =
         - group: "gateway.networking.k8s.io"
           kind: "Gateway"
           name: "envoy-gateway"
-          namespace: "envoy-gateway-system"
+          namespace: gateway.namespace
       hostnames:
         - "auth.walnuts.dev"
   metrics:

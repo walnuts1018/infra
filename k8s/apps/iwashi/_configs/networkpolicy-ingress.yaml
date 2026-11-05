@@ -11,10 +11,7 @@ spec:
         matchLabels:
           app.kubernetes.io/component: opentelemetry-collector
           app.kubernetes.io/instance: iwashi-system.iwashi-collector
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: envoy-gateway-system
-      podSelector:
+    - podSelector:
         matchLabels:
           app.kubernetes.io/component: proxy
           app.kubernetes.io/name: envoy

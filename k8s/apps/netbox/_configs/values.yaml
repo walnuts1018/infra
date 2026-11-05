@@ -169,9 +169,6 @@ httpRoute:
   enabled: true
   annotations:
     external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied: "true"
-  parentRefs:
-  - name: envoy-gateway
-    namespace: envoy-gateway-system
   hostnames:
   - netbox.walnuts.dev
 

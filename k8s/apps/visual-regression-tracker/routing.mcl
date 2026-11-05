@@ -1,3 +1,5 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
+
 let appName = "visual-regression-tracker"
 fn labels(name: String) -> Map<String, Any> = node:
   app: name
@@ -13,7 +15,7 @@ fn httpRoute(namespace: String) -> Map<String, Any> = node:
   spec:
     parentRefs:
       - name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
     hostnames:
       - "vrt.local.walnuts.dev"
     rules:

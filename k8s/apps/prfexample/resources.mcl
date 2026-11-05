@@ -1,3 +1,4 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
 import text "./_configs/scylladb-ca.crt" as scyllaCaCertificate
 import "std:list" as lists
 import "./config.mcl" as config
@@ -299,7 +300,7 @@ fn httpRoute(namespace: String, settings: config.Settings) -> Map<String, Any> =
   spec:
     parentRefs:
       - name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
     hostnames:
       - "prfexample.walnuts.dev"
     rules:

@@ -11,7 +11,6 @@ spec:
   - waln.uk
   parentRefs:
   - name: envoy-gateway
-    namespace: envoy-gateway-system
   rules:
   - backendRefs:
     - kind: Service

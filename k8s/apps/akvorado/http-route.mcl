@@ -1,4 +1,4 @@
-import "./external-secrets.mcl" as externalSecrets
+import "../envoy-gateway-class/gateway.mcl" as gateway
 let syncOptions = "SkipDryRunOnMissingResource=true"
 
 export fn httpRoute(namespace: String) -> Map<String, Any> = node:
@@ -12,7 +12,7 @@ export fn httpRoute(namespace: String) -> Map<String, Any> = node:
   spec:
     parentRefs:
       - name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
     hostnames:
       - "akvorado.walnuts.dev"
     rules:

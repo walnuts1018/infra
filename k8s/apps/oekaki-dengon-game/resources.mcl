@@ -1,5 +1,6 @@
 import "std:manifest" as manifest
 import "std:list" as lists
+import "../envoy-gateway-class/gateway.mcl" as gateway
 import text "./_configs/robots.txt" as robotsText
 
 let backDeployment = manifest.loadOne("./_configs/back__deployment.yaml")
@@ -14,8 +15,15 @@ let frontNetworkPolicy = manifest.loadOne("./_configs/front__networkpolicy.yaml"
 let frontService = manifest.loadOne("./_configs/front__service.yaml")
 let frontVpa = manifest.loadOne("./_configs/front__vpa.yaml")
 let oauth2ProxyExternalSecret = manifest.loadOne("./_configs/oauth2-proxy__external-secret.yaml")
-let oauth2ProxyHttpRoutePublic = manifest.loadOne("./_configs/oauth2-proxy__httproute-public.yaml")
-let oauth2ProxyHttpRoute = manifest.loadOne("./_configs/oauth2-proxy__httproute.yaml")
+fn withGatewayParentReference(route: Map<String, Any>) -> Map<String, Any> = route with:
+  spec:
+    parentRefs:
+      -
+        name: gateway.name
+        namespace: gateway.namespace
+
+let oauth2ProxyHttpRoutePublic = withGatewayParentReference(manifest.loadOne("./_configs/oauth2-proxy__httproute-public.yaml"))
+let oauth2ProxyHttpRoute = withGatewayParentReference(manifest.loadOne("./_configs/oauth2-proxy__httproute.yaml"))
 let oauth2ProxySecurityPolicy = manifest.loadOne("./_configs/oauth2-proxy__securitypolicy.yaml")
 let s3CredentialsSecret = manifest.loadOne("./_configs/s3-credentials-secret.yaml")
 let s3ReferenceGrant = manifest.loadOne("./_configs/s3-reference-grant.yaml")

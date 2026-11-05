@@ -18,7 +18,7 @@ fn resourceName(cluster: clusterConfig.ClusterAPIConfig) -> String =
 fn patchesSecretName(cluster: clusterConfig.ClusterAPIConfig) -> String =
   cluster.name + "-control-plane-patches-" + crypto.sha256(identity(cluster), 10)
 
-fn config(cluster: clusterConfig.ClusterAPIConfig) -> Map<String, Any> = identity(cluster) with:
+fn config(cluster: clusterConfig.ClusterAPIConfig) -> capi.ControlPlaneConfig = identity(cluster) with:
   name: resourceName(cluster)
   patchesName: patchesSecretName(cluster)
   clusterName: cluster.name
@@ -34,6 +34,6 @@ export fn resources(cluster: clusterConfig.ClusterAPIConfig) -> List<Map<String,
   - capi.bootstrapConfigTemplate(config(cluster))
   - capi.clusterResource(config(cluster))
   - capi.tartControlPlane(config(cluster))
-  - capi.tartMachineTemplate(config(cluster), hostSelectorLabels())
+  - capi.tartMachineTemplate(config(cluster))
   - capi.patchSecret(config(cluster))
   - capi.tartCluster(config(cluster))

@@ -2,9 +2,6 @@ coder:
   httproute:
     enable: true
     host: coder.walnuts.dev
-    parentRefs:
-    - name: envoy-gateway
-      namespace: envoy-gateway-system
 
   service:
     type: ClusterIP

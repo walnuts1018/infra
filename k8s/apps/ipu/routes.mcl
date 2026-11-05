@@ -16,7 +16,7 @@ export fn httpRoute(namespace: String) -> Map<String, Any> = node:
   spec:
     parentRefs:
       - name: gateway.name
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
     hostnames:
       - "ipu.walnuts.dev"
     rules: routeRules

@@ -10,6 +10,7 @@ export type ControlPlaneConfig =
   endpointPort: Int
   schematicID: String
   patches: String
+  hostSelectorLabels: Map<String, String>
   podCIDR: String
   serviceCIDR: String
 
@@ -91,7 +92,7 @@ export fn tartControlPlane(config: ControlPlaneConfig) -> Map<String, Any> = nod
     replicas: config.replicas
     version: config.kubernetesVersion
 
-export fn tartMachineTemplate(config: ControlPlaneConfig, hostSelectorLabels: Map<String, String>) -> Map<String, Any> = node:
+export fn tartMachineTemplate(config: ControlPlaneConfig) -> Map<String, Any> = node:
   apiVersion: "infrastructure.cluster.x-k8s.io/v1alpha1"
   kind: "TartMachineTemplate"
   metadata:
@@ -104,7 +105,7 @@ export fn tartMachineTemplate(config: ControlPlaneConfig, hostSelectorLabels: Ma
       spec:
         hostSelector:
           selector:
-            matchLabels: hostSelectorLabels
+            matchLabels: config.hostSelectorLabels
         image:
           schematicID: config.schematicID
           version: config.talosVersion

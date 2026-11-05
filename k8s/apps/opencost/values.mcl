@@ -1,3 +1,5 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
+
 let values: Map<String, Any> =
   loglevel: "info"
   opencost:
@@ -37,7 +39,7 @@ let values: Map<String, Any> =
         enabled: true
         parentRefs:
           - name: "envoy-gateway"
-            namespace: "envoy-gateway-system"
+            namespace: gateway.namespace
         hostnames:
           - "opencost.walnuts.dev"
       resources:

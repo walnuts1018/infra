@@ -10,7 +10,6 @@ spec:
     - oekaki.walnuts.dev
   parentRefs:
     - name: envoy-gateway
-      namespace: envoy-gateway-system
   rules:
     - backendRefs:
         - kind: Service

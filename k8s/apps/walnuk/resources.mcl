@@ -1,9 +1,23 @@
 import "std:manifest" as manifest
 import "std:list" as lists
+import "../envoy-gateway-class/gateway.mcl" as gateway
 import "./external-secrets.mcl" as externalSecrets
 
 let workloads = manifest.load("./_configs/workloads.yaml")
-let traffic = manifest.load("./_configs/traffic.yaml")
+fn gatewayParentReference(parentReference: Map<String, Any>) -> Map<String, Any> = parentReference with:
+  namespace: gateway.namespace
+
+fn withGatewayParentReferences(resource: Map<String, Any>) -> Map<String, Any> = resource with:
+  spec:
+    parentRefs: lists.map(resource.spec.parentRefs, fn(parentReference) => gatewayParentReference(parentReference))
+
+fn trafficResource(resource: Map<String, Any>) -> Map<String, Any> =
+  if resource.kind == "HTTPRoute":
+    withGatewayParentReferences(resource)
+  else:
+    resource
+
+let traffic = lists.map(manifest.load("./_configs/traffic.yaml"), fn(resource) => trafficResource(resource))
 let scaling = manifest.load("./_configs/scaling.yaml")
 let databaseCA = manifest.load("./_configs/database-ca.yaml")
 

@@ -1,3 +1,4 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
 import "./app.mcl" as app
 
 export fn resource(namespace: String) -> Map<String, Any> = node:
@@ -10,7 +11,7 @@ export fn resource(namespace: String) -> Map<String, Any> = node:
     parentRefs:
       -
         name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
     hostnames:
       - "iwashi.walnuts.dev"
     rules:

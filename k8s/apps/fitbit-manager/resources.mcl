@@ -121,7 +121,7 @@ fn httpRoute(namespace: String) = node:
     parentRefs:
       -
         name: gateway.resource(namespace).metadata.name
-        namespace: gateway.resource(namespace).metadata.namespace
+        namespace: gateway.namespace
     hostnames:
       - "fitbit.walnuts.dev"
     rules:

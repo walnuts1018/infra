@@ -1,3 +1,5 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
+
 export fn resources(namespace: String) -> List<Map<String, Any>> =
   -
     apiVersion: "external-secrets.io/v1"
@@ -45,7 +47,7 @@ export fn resources(namespace: String) -> List<Map<String, Any>> =
             -
               namespaceSelector:
                 matchLabels:
-                  "kubernetes.io/metadata.name": "envoy-gateway-system"
+                  "kubernetes.io/metadata.name": gateway.namespace
             -
               namespaceSelector:
                 matchLabels:
@@ -64,7 +66,7 @@ export fn resources(namespace: String) -> List<Map<String, Any>> =
       parentRefs:
         -
           name: "envoy-gateway"
-          namespace: "envoy-gateway-system"
+          namespace: gateway.namespace
       hostnames:
         - "k8s-dashboard.walnuts.dev"
       rules:

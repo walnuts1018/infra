@@ -1,3 +1,5 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
+
 let instance = "iwashi-cortex"
 let cortexSelector =
   matchLabels:
@@ -157,7 +159,7 @@ let prometheusCollector =
 let envoyPeer =
   namespaceSelector:
     matchLabels:
-      "kubernetes.io/metadata.name": "envoy-gateway-system"
+      "kubernetes.io/metadata.name": gateway.namespace
   podSelector:
     matchLabels:
       "app.kubernetes.io/component": "proxy"

@@ -1,4 +1,5 @@
 import "../../cluster.mcl" as clusterConfig
+import "../envoy-gateway-class/gateway.mcl" as gateway
 param cluster: clusterConfig.Cluster
 param namespace: String
 let appName = "http-dump"
@@ -109,7 +110,7 @@ let httpRoute = node:
   spec:
     parentRefs:
       - name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
     hostnames:
       - "httptest.walnuts.dev"
     rules:

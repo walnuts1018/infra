@@ -1,3 +1,5 @@
+import "../envoy-gateway-class/gateway.mcl" as gateway
+
 let appName = "stalwart"
 let routeNames =
   smtp: "stalwart-smtp"
@@ -14,7 +16,7 @@ fn tcpRoute(namespace: String, listener: String, port: Int, routeName: String) -
   spec:
     parentRefs:
       - name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
         sectionName: listener
     rules:
       -
@@ -53,7 +55,7 @@ fn httpRoute(namespace: String) -> Map<String, Any> = node:
   spec:
     parentRefs:
       - name: "envoy-gateway"
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
     hostnames:
       - "stalwart.local.walnuts.dev"
       - "autoconfig.walnuts.dev"

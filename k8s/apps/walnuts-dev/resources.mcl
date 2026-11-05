@@ -31,7 +31,7 @@ fn httpRoute(namespace: String) -> Map<String, Any> = node:
   spec:
     parentRefs:
       - name: gateway.name
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
     hostnames:
       - "walnuts.dev"
     rules:
@@ -58,7 +58,7 @@ fn wwwRoute(namespace: String) -> Map<String, Any> = node:
   spec:
     parentRefs:
       - name: gateway.name
-        namespace: "envoy-gateway-system"
+        namespace: gateway.namespace
     hostnames:
       - "www.walnuts.dev"
     rules:

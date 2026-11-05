@@ -1,5 +1,7 @@
 
 export let name = "envoy-gateway"
+export let namespace = "envoy-gateway-system"
+
 export fn resource(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "Gateway"

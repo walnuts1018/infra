@@ -1,4 +1,4 @@
-import text "./config/generator.yaml" as snmpConfig
+import text "./_configs/snmp.yml" as snmpConfig
 
 export let baseValues: Map<String, Any> =
   tolerations:

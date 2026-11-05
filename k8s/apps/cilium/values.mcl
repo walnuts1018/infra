@@ -87,7 +87,7 @@ fn helmValuesWithFlags(clusterContext: clusterConfig.Cluster, namespace: String,
     defaultSecretNamespace: namespace
     secretsNamespace:
       create: false
-      name: namespace
+      name: "cilium-secrets"
       sync: true
   nodePort:
     enabled: flags.nodePort
@@ -152,16 +152,16 @@ fn helmValuesWithFlags(clusterContext: clusterConfig.Cluster, namespace: String,
     enabled: flags.originCertificateIngress
     secretsNamespace:
       create: false
-      name: namespace
+      name: "cilium-secrets"
   tls:
     secretsNamespace:
       create: false
-      name: namespace
+      name: "cilium-secrets"
   gatewayAPI:
     enabled: flags.gatewayAPI
     secretsNamespace:
       create: true
-      name: namespace
+      name: "cilium-secrets"
       sync: true
     gatewayClass:
       create: false
