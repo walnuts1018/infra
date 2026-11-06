@@ -85,10 +85,6 @@ variable "webtop_client_secret" {
   type      = string
   sensitive = true
 }
-variable "netbird_setup_key" {
-  type      = string
-  sensitive = true
-}
 variable "netbox_client_id" { type = string }
 variable "netbox_client_secret" {
   type      = string

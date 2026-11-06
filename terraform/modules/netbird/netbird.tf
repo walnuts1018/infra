@@ -7,8 +7,8 @@ resource "netbird_identity_provider" "zitadel" {
 
 }
 
-resource "netbird_group" "kubernetes_routers" {
-  name = "kubernetes-routers"
+resource "netbird_group" "vyos_routers" {
+  name = "vyos-routers"
 }
 
 resource "netbird_group" "remote_clients" {
@@ -26,7 +26,7 @@ resource "netbird_network" "kubernetes_lan" {
 
 resource "netbird_network_router" "kubernetes_lan" {
   network_id  = netbird_network.kubernetes_lan.id
-  peer_groups = [netbird_group.kubernetes_routers.id]
+  peer_groups = [netbird_group.vyos_routers.id]
   enabled     = true
   masquerade  = true
 }
@@ -65,19 +65,19 @@ resource "netbird_policy" "remote_clients_to_kubernetes_lan" {
   }
 }
 
-resource "netbird_setup_key" "kubernetes_router" {
-  name                   = "kubernetes-routing-peer"
-  type                   = "reusable"
-  expiry_seconds         = 0
+resource "netbird_setup_key" "vyos_router" {
+  name                   = "vyos-routing-peer"
+  type                   = "one-off"
+  expiry_seconds         = 86400
   allow_extra_dns_labels = false
-  auto_groups            = [netbird_group.kubernetes_routers.id]
+  auto_groups            = [netbird_group.vyos_routers.id]
   ephemeral              = false
   revoked                = false
-  usage_limit            = 0
+  usage_limit            = 1
 }
 
-output "kubernetes_router_setup_key" {
-  value       = netbird_setup_key.kubernetes_router.key
+output "vyos_router_setup_key" {
+  value       = netbird_setup_key.vyos_router.key
   sensitive   = true
-  description = "Reusable setup key for the Kubernetes routing peer"
+  description = "One-off setup key for the VyOS routing peer"
 }

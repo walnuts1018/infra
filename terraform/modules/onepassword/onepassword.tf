@@ -191,7 +191,6 @@ resource "onepassword_item" "external_secret" {
         "mcl-playground-rate-limit-secret"         = { type = "CONCEALED", value = random_id.mcl_playground_rate_limit_secret.hex }
         "webtop-client-id"                         = { type = "STRING", value = var.webtop_client_id }
         "webtop-client-secret"                     = { type = "CONCEALED", value = var.webtop_client_secret }
-        "netbird-setup-key"                        = { type = "CONCEALED", value = var.netbird_setup_key }
         "netbox-oidc-client-id"                    = { type = "STRING", value = var.netbox_client_id }
         "netbox-oidc-client-secret"                = { type = "CONCEALED", value = var.netbox_client_secret }
         "oekaki-client-id"                         = { type = "STRING", value = var.oekaki_client_id }
