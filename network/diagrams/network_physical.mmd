@@ -1,0 +1,116 @@
+%%{init: {"flowchart": {"defaultRenderer": "elk"}}}%%
+flowchart TB
+    classDef port fill:#eef4ff,stroke:#4b6cb7,stroke-width:1px;
+    classDef endpoint fill:#f9f0ff,stroke:#722ed1,stroke-width:1px;
+    classDef anchor fill:none,stroke:none,color:transparent,width:0px,height:0px,padding:0px;
+
+    subgraph onu["ONU"]
+        onu_uplink["uplink<br/>RJ45 · 10GBASE-T"]:::port
+    end
+
+    subgraph nexus["Cisco Nexus 3548"]
+        direction TB
+        subgraph nx_ports[" "]
+            direction LR
+            nx_onu["Ethernet1<br/>10GBASE-T SFP+ module · RJ45<br/>access · WAN VLAN<br/>to ONU"]:::port
+            nx_vyos["Ethernet1<br/>SFP+ · 10GBASE-SR<br/>802.1Q trunk<br/>management · WAN · server · user<br/>IPv4 transit · MAP-E IPv6 transit"]:::port
+            subgraph nx_lag_ports[" "]
+                direction LR
+                nx_lag_a["Ethernet1<br/>SFP in SFP+ cage<br/>1000BASE-SX<br/>member A"]:::port
+                nx_lag_b["Ethernet1<br/>SFP in SFP+ cage<br/>1000BASE-SX<br/>member B"]:::port
+            end
+            nx_mgmt["mgmt0<br/>RJ45 · 1000BASE-T"]:::port
+        end
+    end
+
+    subgraph core_row[" "]
+        direction TB
+
+        subgraph lag_links["LACP trunk<br/>management · WAN · server · user · IPv4 transit · MAP-E IPv6 transit"]
+            direction LR
+            lag_a_anchor[" "]:::anchor
+            lag_b_anchor[" "]:::anchor
+        end
+
+        subgraph aruba_switch["Aruba HP 2530-24G"]
+            direction TB
+
+            subgraph ar_uplink_ports[" "]
+                direction LR
+                subgraph ar_lag_ports[" "]
+                    direction LR
+                    ar_lag_a["SFP · 1000BASE-SX<br/>member A"]:::port
+                    ar_lag_b["SFP · 1000BASE-SX<br/>member B"]:::port
+                end
+                ar_mgmt["RJ45 · 1000BASE-T<br/>management access port<br/>management VLAN"]:::port
+            end
+
+            subgraph ar_router_ports[" "]
+                direction LR
+                ar_ix_wan["RJ45 · 1000BASE-T<br/>IX2215 WAN port<br/>untagged · MAP-E IPv6 transit VLAN"]:::port
+                ar_ix_transit["RJ45 · 1000BASE-T<br/>IX2215 transit port<br/>untagged · IPv4 transit VLAN<br/>tagged · management VLAN"]:::port
+            end
+
+            subgraph ar_access_ports[" "]
+                direction LR
+                ar_ap_main["RJ45 · 1000BASE-T<br/>main AP access port<br/>user VLAN"]:::port
+                ar_ap_sat["RJ45 · 1000BASE-T<br/>satellite AP access port<br/>user VLAN"]:::port
+                ar_server_ports["RJ45 · 1000BASE-T<br/>multiple server access ports<br/>server VLAN"]:::port
+            end
+        end
+
+        subgraph router_pair[" "]
+            direction LR
+
+            subgraph vyos_router["VyOS router"]
+                vy_ethernet["eth0<br/>SFP+ · 10GBASE-SR<br/>802.1Q trunk<br/>management · WAN · server · user<br/>IPv4 transit · MAP-E IPv6 transit"]:::port
+            end
+
+            subgraph ix2215_router["NEC IX2215"]
+                direction TB
+                ix_wan["GigaEthernet0<br/>RJ45 · 1000BASE-T<br/>untagged · MAP-E IPv6 transit VLAN"]:::port
+                ix_transit["GigaEthernet1<br/>RJ45 · 1000BASE-T<br/>untagged · IPv4 transit VLAN<br/>tagged · management VLAN"]:::port
+            end
+        end
+    end
+
+    subgraph endpoints[" "]
+        direction TB
+
+        subgraph wireless[" "]
+            direction LR
+            ap_main["archer-be220-main<br/>TP-Link Archer BE220<br/>LAN · RJ45 · 1000BASE-T"]:::endpoint
+            ap_sat["archer-be220-satellite<br/>TP-Link Archer BE220<br/>LAN · RJ45 · 1000BASE-T"]:::endpoint
+        end
+
+        subgraph server_hosts["Server hosts"]
+            multiple_servers["Multiple servers<br/>RJ45 · 1000BASE-T"]:::endpoint
+        end
+    end
+
+    style nx_ports fill:none,stroke:none,color:transparent
+    style nx_lag_ports fill:none,stroke:none
+    style core_row fill:none,stroke:none,color:transparent
+    style lag_links fill:none,stroke:none
+    style router_pair fill:none,stroke:none,color:transparent
+    style ar_uplink_ports fill:none,stroke:none,color:transparent
+    style ar_lag_ports fill:none,stroke:none
+    style ar_router_ports fill:none,stroke:none,color:transparent
+    style ar_access_ports fill:none,stroke:none,color:transparent
+    style endpoints fill:none,stroke:none,color:transparent
+    style wireless fill:none,stroke:none,color:transparent
+
+    onu_uplink ---|"copper LAN cable<br/>10GBASE-T · RJ45 ↔ RJ45"| nx_onu
+
+    nx_vyos ---|"MMF optical fiber<br/>10GBASE-SR · SFP+ ↔ SFP+"| vy_ethernet
+    nx_lag_a ---|"MMF optical fiber<br/>1000BASE-SX · SFP ↔ SFP"| lag_a_anchor
+    lag_a_anchor --- ar_lag_a
+    nx_lag_b ---|"MMF optical fiber<br/>1000BASE-SX · SFP ↔ SFP"| lag_b_anchor
+    lag_b_anchor --- ar_lag_b
+    nx_mgmt ---|"copper LAN cable<br/>1000BASE-T · RJ45"| ar_mgmt
+
+    ar_ix_wan ---|"copper LAN cable<br/>1000BASE-T · RJ45"| ix_wan
+    ar_ix_transit ---|"copper LAN cable<br/>1000BASE-T · RJ45"| ix_transit
+    ar_ap_main ---|"copper LAN cable<br/>1000BASE-T · RJ45"| ap_main
+    ar_ap_sat ---|"copper LAN cable<br/>1000BASE-T · RJ45"| ap_sat
+    ar_server_ports ---|"multiple copper LAN cables<br/>1000BASE-T · RJ45"| multiple_servers

@@ -1,0 +1,100 @@
+%%{init: {"flowchart": {"defaultRenderer": "elk"}}}%%
+flowchart BT
+    classDef provider fill:#f0f8ff,stroke:#4682b4,stroke-width:2px;
+    classDef overlay fill:#e6ffed,stroke:#237804,stroke-width:2px;
+    classDef router fill:#e6f7ff,stroke:#1890ff,stroke-width:2px;
+    classDef endpoint fill:#f9f0ff,stroke:#722ed1,stroke-width:1px;
+    classDef bgp fill:#f6ffed,stroke:#52c41a,stroke-width:2px;
+    classDef service fill:#fafafa,stroke:#777,stroke-width:1px,stroke-dasharray:4 3;
+
+    subgraph endpoint_tier[" "]
+        direction LR
+
+        subgraph user_segment["user VLAN<br/>IPv4: 192.168.100.0/24<br/>GUA: DHCPv6-PD /64<br/>ULA: fd7e:bc2d:5f4a:200::/64"]
+            subgraph wireless_box[" "]
+                users["Wireless<br/>archer-be220-main · archer-be220-satellite"]:::endpoint
+            end
+        end
+
+        subgraph server_segment["server VLAN<br/>IPv4: 192.168.0.0/24<br/>GUA: DHCPv6-PD /64<br/>ULA: fd7e:bc2d:5f4a:100::/64"]
+            servers["Multiple servers"]:::endpoint
+        end
+    end
+
+    subgraph routing_tier[" "]
+        direction TB
+
+        subgraph router_pair[" "]
+            direction LR
+
+            subgraph vyos["VyOS · AS65001"]
+                direction BT
+                vy_l3["Inter-VLAN routing<br/>server VLAN gateway<br/>user VLAN gateway"]:::router
+                vy_services["LAN services<br/>DHCPv4: server / user VLAN<br/>RA: server / user / MAP-E transit VLAN"]:::service
+                vy_pbr{"PBR · V4-EGRESS<br/>RFC1918 / CGN / WAN VIP destinations → main<br/>server source → table 100<br/>user source → table 200"}:::router
+                vy_nat["NAT<br/>server + user fallback: masquerade via tun0<br/>DNAT TCP 80/443 → ingress service<br/>server/user hairpin NAT"]:::router
+                vy_tun["tun0 · static IPv4 over IPv6<br/>encapsulation: IPIP6 · MTU 1460<br/>fixed public IPv4<br/>remote: static IPIP6 endpoint"]:::overlay
+                vy_ipv6["IPv6 forwarding / PD<br/>WAN: DHCPv6-PD client · /56<br/>delegated prefixes → server / user / MAP-E transit VLAN"]:::router
+                vy_bgp["eBGP · AS65001<br/>peer AS65002<br/>advertise 192.168.100.0/24<br/>accept default into table 200 · distance 20<br/>keepalive 4s · hold 9s"]:::bgp
+            end
+
+            subgraph ix2215["NEC IX2215 · AS65002"]
+                direction BT
+                ix_rt["IPv4 routing<br/>default → Tunnel0.0<br/>192.168.100.0/24 → VyOS"]:::router
+                ix_napt["NAPT<br/>Tunnel0.0"]:::router
+                ix_mape["Tunnel0.0 · JPIX MAP-E<br/>tunnel mode: MAP-E<br/>MAP-E assigned IPv4"]:::overlay
+                ix_wan["GigaEthernet0<br/>IPv6 SLAAC + default route<br/>DHCPv6 information-request"]:::router
+                ix_health["MAP-E route tracking<br/>external reachability probe via Tunnel0.0<br/>failure: deactivate Tunnel0.0 default route"]:::service
+                ix_bgp["eBGP · AS65002<br/>peer AS65001<br/>advertise default<br/>accept 192.168.100.0/24<br/>keepalive 4s · hold 9s"]:::bgp
+            end
+        end
+
+        management["management VLAN<br/>192.168.4.0/24<br/>VyOS · Nexus · Aruba switch · IX2215"]:::service
+    end
+
+    subgraph provider["NTT NGN / JPIX"]
+        direction BT
+        ngn(("NTT NGN<br/>IPv6 IPoE underlay")):::provider
+        native_v6(("Native IPv6 Internet")):::provider
+        ipip_endpoint(("Static IPIP6 endpoint")):::overlay
+        mape_br(("JPIX MAP-E BR")):::overlay
+        internet4(("IPv4 Internet")):::provider
+    end
+
+    style endpoint_tier fill:none,stroke:none,color:transparent
+    style wireless_box fill:none,stroke:none,color:transparent
+    style routing_tier fill:none,stroke:none,color:transparent
+    style router_pair fill:none,stroke:none,color:transparent
+    style user_segment fill:#fffbe6,stroke:#d48806,stroke-width:2px
+    style server_segment fill:#fffbe6,stroke:#d48806,stroke-width:2px
+
+    servers -->|"IPv4 / IPv6"| vy_l3
+    users -->|"IPv4 / IPv6"| vy_l3
+    vy_l3 -. "DHCPv4 / RA" .-> vy_services
+
+    vy_l3 == "server IPv4 · table 100" ==> vy_nat
+    vy_l3 == "user IPv4 · table 200" ==> vy_pbr
+    vy_pbr == "user IPv4 primary<br/>IPv4 transit VLAN · 192.168.252.0/30<br/>BGP default · distance 20" ==> ix_rt
+    vy_pbr -. "static default via tun0 · distance 200" .-> vy_nat
+    vy_nat ==> vy_tun
+
+    vy_l3 -- "native IPv6" --> vy_ipv6
+    ix_mape -. "IPv4-in-IPv6" .-> ix_wan
+    ix_wan -- "MAP-E IPv6 transit VLAN<br/>RA / SLAAC · IPv4-in-IPv6 forwarding" --> vy_ipv6
+    vy_ipv6 -- "WAN VLAN<br/>DHCPv6-PD /56" --> ngn
+
+    ix_rt ==> ix_napt
+    ix_napt ==> ix_mape
+    ix_health -. "tracks default route" .-> ix_rt
+
+    vy_bgp <==>|"eBGP · IPv4 transit VLAN<br/>192.168.252.0/30"| ix_bgp
+    ix_rt -. "originate default while route is active" .-> ix_bgp
+    vy_bgp -. "install learned default" .-> vy_pbr
+
+    vy_tun -. "IPIP6 overlay" .-> ipip_endpoint
+    ix_mape -. "MAP-E overlay" .-> mape_br
+    ngn --> native_v6
+    ngn ---|"IPv6 underlay"| ipip_endpoint
+    ngn ---|"IPv6 underlay"| mape_br
+    ipip_endpoint --> internet4
+    mape_br --> internet4
