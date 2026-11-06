@@ -1,21 +1,44 @@
-import "std:list" as lists
+import "std:helm" as helm
 import "./chart.mcl" as appChart
-import "./features.mcl" as appFeatures
-import "./resources.mcl" as resources
 import "../../cluster.mcl" as clusterConfig
 
-type Feature = "monitoring"
-
-param features: List<Feature> = []
+param enableServiceMonitor: Bool = false
 param cluster: clusterConfig.Cluster
 param namespace: String
 
-let monitoringEnabled = lists.contains(features, "monitoring")
-let values =
-  if monitoringEnabled:
-    appFeatures.valuesByFeature.monitoring
+let commonValues: Map<String, Any> =
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "128Mi"
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: "kubernetes.io/hostname"
+      whenUnsatisfiable: "ScheduleAnyway"
+      labelSelector:
+        matchLabels:
+          "app.kubernetes.io/name": "valkey-operator"
+  metrics:
+    enabled: true
+let values: Map<String, Any> =
+  if enableServiceMonitor:
+    commonValues with:
+      metrics:
+        serviceMonitor:
+          enabled: true
   else:
-    appFeatures.valuesByFeature.standard
-let rendered = resources.render(cluster, namespace, values)
+    commonValues
+let renderOptions =
+  releaseName: "valkey-operator"
+  namespace: namespace
+  version: appChart.chartVersion
+  kubeVersion: cluster.kubernetesVersion
+  apiVersions: []
+  values: values
+let rendered = helm.render(appChart.chartArchive, renderOptions)
 
 emit each rendered

@@ -3,12 +3,10 @@
   "namespace": "valkey-operator-system",
   "clusters": {
     "berry": {
-      "features": []
+      "enableServiceMonitor": false
     },
     "kurumi": {
-      "features": [
-        "monitoring"
-      ]
+      "enableServiceMonitor": true
     }
   }
 }

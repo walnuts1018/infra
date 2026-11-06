@@ -223,77 +223,58 @@ export let baseValues =
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            -
-              preference:
+            - preference:
                 matchExpressions:
-                  -
-                    key: "kubernetes.io/hostname"
+                  - key: "kubernetes.io/hostname"
                     operator: "In"
                     values:
                       - "rusk"
               weight: 100
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-              -
-                matchExpressions:
-                  -
-                    key: "kubernetes.io/hostname"
+              - matchExpressions:
+                  - key: "kubernetes.io/hostname"
                     operator: "In"
                     values:
                       - "rusk"
                       - "cake"
       automountServiceAccountToken: false
       containers:
-        -
-          command:
+        - command:
             - "/home/runner/run.sh"
           env:
-            -
-              name: "DOTNET_gcServer"
+            - name: "DOTNET_gcServer"
               value: "0"
-            -
-              name: "DOTNET_GCHeapHardLimit"
+            - name: "DOTNET_GCHeapHardLimit"
               value: "0x10000000"
-            -
-              name: "DOTNET_GCConserveMemory"
+            - name: "DOTNET_GCConserveMemory"
               value: "9"
-            -
-              name: "DOTNET_TieredPGO"
+            - name: "DOTNET_TieredPGO"
               value: "0"
-            -
-              name: "MALLOC_ARENA_MAX"
+            - name: "MALLOC_ARENA_MAX"
               value: "2"
-            -
-              name: "DOCKER_HOST"
+            - name: "DOCKER_HOST"
               value: "unix:///var/run/docker.sock"
-            -
-              name: "RUNNER_WAIT_FOR_DOCKER_IN_SECONDS"
+            - name: "RUNNER_WAIT_FOR_DOCKER_IN_SECONDS"
               value: "120"
-            -
-              name: "CUSTOM_ACTIONS_RESULTS_URL"
+            - name: "CUSTOM_ACTIONS_RESULTS_URL"
               value: "https://gha-cache-server.local.walnuts.dev/"
-            -
-              name: "ACTIONS_RUNNER_HOOK_JOB_STARTED"
+            - name: "ACTIONS_RUNNER_HOOK_JOB_STARTED"
               value: "/etc/arc/hooks/job-started.sh"
-            -
-              name: "ACTIONS_RUNNER_HOOK_JOB_COMPLETED"
+            - name: "ACTIONS_RUNNER_HOOK_JOB_COMPLETED"
               value: "/etc/arc/hooks/job-completed.sh"
           image: runnerImage
           name: "runner"
           volumeMounts:
-            -
-              mountPath: "/home/runner/_work"
+            - mountPath: "/home/runner/_work"
               name: "work"
-            -
-              mountPath: "/var/run"
+            - mountPath: "/var/run"
               name: "dind-sock"
-            -
-              mountPath: "/etc/arc/hooks"
+            - mountPath: "/etc/arc/hooks"
               name: "runner-hooks"
       enableServiceLinks: false
       initContainers:
-        -
-          command:
+        - command:
             - "cp"
             - "-r"
             - "/home/runner/externals/."
@@ -301,18 +282,15 @@ export let baseValues =
           image: runnerImage
           name: "init-dind-externals"
           volumeMounts:
-            -
-              mountPath: "/home/runner/tmpDir"
+            - mountPath: "/home/runner/tmpDir"
               name: "dind-externals"
-        -
-          args:
+        - args:
             - "dockerd"
             - "--host=unix:///var/run/docker.sock"
             - "--group=$(DOCKER_GROUP_GID)"
             - "--mtu=1280"
           env:
-            -
-              name: "DOCKER_GROUP_GID"
+            - name: "DOCKER_GROUP_GID"
               value: "123"
           image: "docker:29.7.2-dind"
           name: "dind"
@@ -329,17 +307,13 @@ export let baseValues =
             periodSeconds: 5
             timeoutSeconds: 10
           volumeMounts:
-            -
-              mountPath: "/home/runner/_work"
+            - mountPath: "/home/runner/_work"
               name: "work"
-            -
-              mountPath: "/var/run"
+            - mountPath: "/var/run"
               name: "dind-sock"
-            -
-              mountPath: "/home/runner/externals"
+            - mountPath: "/home/runner/externals"
               name: "dind-externals"
-            -
-              mountPath: "/var/lib/docker"
+            - mountPath: "/var/lib/docker"
               name: "docker-storage"
       nodeSelector:
         "kubernetes.io/arch": "amd64"
@@ -351,20 +325,15 @@ export let baseValues =
           cpu: "100m"
           memory: "256Mi"
       volumes:
-        -
-          emptyDir: {}
+        - emptyDir: {}
           name: "work"
-        -
-          emptyDir: {}
+        - emptyDir: {}
           name: "dind-sock"
-        -
-          emptyDir: {}
+        - emptyDir: {}
           name: "dind-externals"
-        -
-          emptyDir: {}
+        - emptyDir: {}
           name: "docker-storage"
-        -
-          configMap:
+        - configMap:
             defaultMode: 493
             name: runnerHooksConfigMapName
           name: "runner-hooks"
