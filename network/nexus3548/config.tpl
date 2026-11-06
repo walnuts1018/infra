@@ -10,8 +10,6 @@ username admin password 5 {{ op://Network/nexus3548/admin_password_hash }}  role
 username admin sshkey ssh-rsa {{ op://Network/nexus3548/admin_ssh_public_key }}
 ip domain-lookup
 service unsupported-transceiver
-ip access-list SNMP_NETBOX_DISCOVERY
-  10 permit ip 192.168.0.0/24 any
 ip access-list copp-system-acl-bfd
   10 permit udp any any eq 3784
   20 permit udp any any eq 3785
@@ -41,10 +39,6 @@ ip access-list copp-system-acl-routingproto1
   50 permit ospf any any
 ip access-list copp-system-acl-routingproto2
   10 permit 112 any 224.0.0.0/24
-ip access-list copp-system-acl-snmp
-  10 permit udp any any eq snmp
-  20 permit udp any eq snmp any
-  30 permit udp any any eq snmptrap
 ip access-list copp-system-acl-ssh
   10 permit tcp any any eq 22
   20 permit tcp any eq 22 any
@@ -115,8 +109,6 @@ class-map type control-plane match-any copp-s-routingProto1
 class-map type control-plane match-any copp-s-routingProto2
   match access-group name copp-system-acl-routingproto2
 class-map type control-plane match-any copp-s-ttl1
-class-map type control-plane match-any copp-snmp
-  match access-group name copp-system-acl-snmp
 class-map type control-plane match-any copp-ssh
   match access-group name copp-system-acl-ssh
 class-map type control-plane match-any copp-stftp
@@ -188,8 +180,6 @@ policy-map type control-plane copp-system-policy
     police pps 500
   class copp-ssh
     police pps 500
-  class copp-snmp
-    police pps 500
   class copp-ntp
     police pps 100
   class copp-tacacsradius
@@ -202,9 +192,6 @@ policy-map type control-plane copp-system-policy
     police pps 100
 control-plane
   service-policy input copp-system-policy
-snmp-server user admin network-admin auth {{ op://Network/nexus3548/snmpv3_auth }}
-snmp-server community {{ op://Network/nexus3548/snmp_community_ro }} group network-operator
-snmp-server community {{ op://Network/nexus3548/snmp_community_rw }} use-acl SNMP_NETBOX_DISCOVERY
 ntp server {{ op://Network/nexus3548/ntp_server }} use-vrf management
 
 vlan configuration 20

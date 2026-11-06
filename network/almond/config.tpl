@@ -2,7 +2,6 @@ hostname "almond"
 trunk 25-26 trk1 lacp
 no telnet-server
 ip default-gateway 192.168.4.1
-snmp-server community "{{ op://Network/almond/snmp_community }}" operator
 aaa authentication ssh enable public-key
 vlan 1
    name "DEFAULT_VLAN"

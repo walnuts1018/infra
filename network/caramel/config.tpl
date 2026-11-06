@@ -27,7 +27,6 @@ ip access-list mgmt-acl permit ip src 192.168.100.6/32 dest any
 ip access-list mgmt-acl permit ip src 192.168.100.7/32 dest any
 ip access-list mgmt-acl permit ip src 192.168.4.0/24 dest any
 ip access-list mgmt-acl deny ip src any dest any
-ip access-list snmp-acl permit ip src 192.168.0.0/16 dest any
 !
 !
 ipv6 ufs-cache max-entries 10000
@@ -43,8 +42,6 @@ ipv6 access-list dynamic cache 65535
 ipv6 access-list dynamic dflt-list access permit-list
 !
 !
-snmp-agent ip enable
-snmp-agent ip community {{ op://Network/caramel/snmp_community }} snmp-acl
 !
 !
 !
@@ -52,10 +49,10 @@ snmp-agent ip community {{ op://Network/caramel/snmp_community }} snmp-acl
 !
 !
 !
-ip name-server {{ op://Network/caramel/name_server_1 }}
-ip name-server {{ op://Network/caramel/name_server_2 }}
-ipv6 name-server 2606:4700:4700::1111
-ipv6 name-server 2606:4700:4700::1001
+ip name-server {{ op://Network/caramel/name_server_ipv4_1 }}
+ip name-server {{ op://Network/caramel/name_server_ipv4_2 }}
+ipv6 name-server {{ op://Network/caramel/name_server_ipv6_1 }}
+ipv6 name-server {{ op://Network/caramel/name_server_ipv6_2 }}
 dns cache enable
 !
 !

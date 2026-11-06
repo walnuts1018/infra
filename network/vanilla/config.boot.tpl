@@ -1525,15 +1525,6 @@ service {
             }
         }
     }
-    snmp {
-        community {{ op://Network/vanilla/snmp_community }} {
-            authorization "ro"
-            network "192.168.0.0/24"
-        }
-        listen-address 192.168.0.1 {
-            port "161"
-        }
-    }
     ssh {
         disable-password-authentication
         listen-address "192.168.4.1"
