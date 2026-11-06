@@ -114,7 +114,8 @@ fn sharedEnvironmentVariable(namespace: String, variable: Map<String, String>) -
   sharedEnvironmentCaption(namespace, sharedEnvironmentOcr(namespace, sharedEnvironmentSparse(namespace, sharedEnvironmentDense(namespace, variable))))
 
 fn sharedEnvironmentFor(namespace: String) -> List<Map<String, String>> =
-  lists.map(sharedEnvironment, fn(variable) => sharedEnvironmentVariable(namespace, variable))
+  for variable in sharedEnvironment:
+    sharedEnvironmentVariable(namespace, variable)
 
 fn envFromWithNamespace(namespace: String) -> List<Map<String, Any>> =
   - secretRef:
@@ -129,28 +130,30 @@ fn envFromWithNamespace(namespace: String) -> List<Map<String, Any>> =
 export fn envFrom(namespace: String) -> List<Map<String, Any>> = envFromWithNamespace(namespace)
 
 export fn envFromWithScylla(namespace: String) -> List<Map<String, Any>> =
-  lists.concat(
-    envFromWithNamespace(namespace),
-    scyllaSecretReference,
-  )
+  [
+    ...envFromWithNamespace(namespace),
+    ...scyllaSecretReference,
+  ]
 
 export fn environment(namespace: String, serviceName: String) -> List<Map<String, String>> =
-  lists.concat(sharedEnvironmentFor(namespace), serviceEnvironment(serviceName))
+  [
+    ...sharedEnvironmentFor(namespace),
+    ...serviceEnvironment(serviceName),
+  ]
 
 export fn environmentWithScylla(namespace: String, serviceName: String) -> List<Map<String, String>> =
-  lists.concat(
-    lists.concat(sharedEnvironmentFor(namespace), scyllaEnvironment),
-    serviceEnvironment(serviceName),
-  )
+  [
+    ...sharedEnvironmentFor(namespace),
+    ...scyllaEnvironment,
+    ...serviceEnvironment(serviceName),
+  ]
 
 export fn migrationEnvironment(namespace: String, serviceName: String) -> List<Map<String, String>> =
-  lists.concat(
-    lists.concat(
-      lists.filter(sharedEnvironmentFor(namespace), fn(variable) => variable.name != "PLAN_CONFIG_FILE"),
-      scyllaEnvironment,
-    ),
-    serviceEnvironment(serviceName),
-  )
+  [
+    ...lists.filter(sharedEnvironmentFor(namespace), fn(variable) => variable.name != "PLAN_CONFIG_FILE"),
+    ...scyllaEnvironment,
+    ...serviceEnvironment(serviceName),
+  ]
 
 export fn apiServerEnvironment(namespace: String) -> List<Map<String, String>> =
   environmentWithScylla(namespace, "picca-apiserver")

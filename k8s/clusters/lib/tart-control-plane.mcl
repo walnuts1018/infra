@@ -1,3 +1,9 @@
+export type MachineIdentity =
+  patches: String
+  schematicID: String
+  talosVersion: String
+  hostSelectorLabels: Map<String, String>
+
 export type ControlPlaneConfig =
   name: String
   patchesName: String
@@ -135,8 +141,7 @@ export fn tartCluster(config: ControlPlaneConfig) -> Map<String, Any> = node:
 
 
 export fn worker(config: WorkerConfig) -> List<Map<String, Any>> =
-  -
-    apiVersion: "bootstrap.cluster.x-k8s.io/v1alpha1"
+  - apiVersion: "bootstrap.cluster.x-k8s.io/v1alpha1"
     kind: "TartBootstrapConfigTemplate"
     metadata:
       annotations:
@@ -148,8 +153,7 @@ export fn worker(config: WorkerConfig) -> List<Map<String, Any>> =
         spec:
           configPatchesSecretRef:
             name: config.patchesName
-  -
-    apiVersion: "cluster.x-k8s.io/v1beta2"
+  - apiVersion: "cluster.x-k8s.io/v1beta2"
     kind: "MachineDeployment"
     metadata:
       labels:
@@ -181,8 +185,7 @@ export fn worker(config: WorkerConfig) -> List<Map<String, Any>> =
             kind: "TartMachineTemplate"
             name: config.name
           version: config.kubernetesVersion
-  -
-    apiVersion: "infrastructure.cluster.x-k8s.io/v1alpha1"
+  - apiVersion: "infrastructure.cluster.x-k8s.io/v1alpha1"
     kind: "TartMachineTemplate"
     metadata:
       annotations:
@@ -198,8 +201,7 @@ export fn worker(config: WorkerConfig) -> List<Map<String, Any>> =
           image:
             schematicID: config.schematicID
             version: config.talosVersion
-  -
-    apiVersion: "v1"
+  - apiVersion: "v1"
     immutable: true
     kind: "Secret"
     metadata:

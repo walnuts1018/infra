@@ -204,8 +204,7 @@ fn binding(namespace: String, config: S3ClientConfig) -> Map<String, Any> = node
     seaweedRef:
       name: "seaweedfs-default"
     subjects:
-      -
-        kind: "S3Identity"
+      - kind: "S3Identity"
         name: config.name
 
 fn credentialsResource(namespace: String, config: S3ClientConfig) -> Map<String, Any> = node:
@@ -226,7 +225,19 @@ fn credentialsResource(namespace: String, config: S3ClientConfig) -> Map<String,
       namespace: config.secretNamespace
       secretKeyField: config.secretKeyField
 
-export fn identities(namespace: String) -> List<Map<String, Any>> = lists.map(s3ClientConfigs, fn(config) => identity(namespace, config))
-export fn policies(namespace: String) -> List<Map<String, Any>> = lists.map(s3ClientConfigs, fn(config) => policy(namespace, config))
-export fn bindings(namespace: String) -> List<Map<String, Any>> = lists.map(s3ClientConfigs, fn(config) => binding(namespace, config))
-export fn credentials(namespace: String) -> List<Map<String, Any>> = lists.map(s3ClientConfigs, fn(config) => credentialsResource(namespace, config))
+fn clientResources(namespace: String, config: S3ClientConfig) -> List<Map<String, Any>> =
+  [
+    identity(namespace, config),
+    policy(namespace, config),
+    binding(namespace, config),
+    credentialsResource(namespace, config),
+  ]
+
+fn clients(namespace: String) -> List<Map<String, Any>> =
+  lists.flatMap(s3ClientConfigs, fn(config) => clientResources(namespace, config))
+
+export fn resources(namespace: String) -> List<Map<String, Any>> =
+  [
+    ...buckets(namespace),
+    ...clients(namespace),
+  ]

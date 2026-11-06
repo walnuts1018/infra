@@ -8,7 +8,7 @@ fn workerName(cluster: clusterConfig.ClusterAPIConfig) -> String = cluster.name 
 fn hostSelectorLabels() -> Map<String, String> =
   "kurumi.walnuts.dev/pool": "worker"
 
-fn identity(cluster: clusterConfig.ClusterAPIConfig) -> Map<String, Any> = node:
+fn identity(cluster: clusterConfig.ClusterAPIConfig) -> capi.MachineIdentity =
   patches: patchesText
   schematicID: "613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245"
   talosVersion: cluster.talosVersion
@@ -20,7 +20,7 @@ fn resourceName(cluster: clusterConfig.ClusterAPIConfig) -> String =
 fn patchesSecretName(cluster: clusterConfig.ClusterAPIConfig) -> String =
   cluster.name + "-worker-patches-" + crypto.sha256(identity(cluster), 10)
 
-fn config(cluster: clusterConfig.ClusterAPIConfig) -> Map<String, Any> = identity(cluster) with:
+fn config(cluster: clusterConfig.ClusterAPIConfig) -> capi.WorkerConfig = identity(cluster) with:
   name: resourceName(cluster)
   patchesName: patchesSecretName(cluster)
   clusterName: cluster.name

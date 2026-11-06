@@ -6,7 +6,7 @@ import text "./_patches/control-plane.yaml" as patchesText
 fn hostSelectorLabels() -> Map<String, String> =
   "infrastructure.cluster.x-k8s.io/host-name": "eclair"
 
-fn identity(cluster: clusterConfig.ClusterAPIConfig) -> Map<String, Any> = node:
+fn identity(cluster: clusterConfig.ClusterAPIConfig) -> capi.MachineIdentity =
   patches: patchesText
   schematicID: "376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba"
   talosVersion: cluster.talosVersion

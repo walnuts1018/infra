@@ -9,7 +9,7 @@ let backNetworkPolicy = manifest.loadOne("./_configs/back__networkpolicy.yaml")
 let backService = manifest.loadOne("./_configs/back__service.yaml")
 let backVpa = manifest.loadOne("./_configs/back__vpa.yaml")
 let externalSecret = manifest.loadOne("./_configs/external-secret.yaml")
-let frontDeployment = manifest.loadOne("./_configs/front__deployment.yaml")
+let frontDeploymentTemplate = manifest.loadOne("./_configs/front__deployment.yaml")
 let frontHpa = manifest.loadOne("./_configs/front__hpa.yaml")
 let frontNetworkPolicy = manifest.loadOne("./_configs/front__networkpolicy.yaml")
 let frontService = manifest.loadOne("./_configs/front__service.yaml")
@@ -18,8 +18,7 @@ let oauth2ProxyExternalSecret = manifest.loadOne("./_configs/oauth2-proxy__exter
 fn withGatewayParentReference(route: Map<String, Any>) -> Map<String, Any> = route with:
   spec:
     parentRefs:
-      -
-        name: gateway.name
+      - name: gateway.name
         namespace: gateway.namespace
 
 let oauth2ProxyHttpRoutePublic = withGatewayParentReference(manifest.loadOne("./_configs/oauth2-proxy__httproute-public.yaml"))
@@ -50,7 +49,7 @@ let baseResources =
   - backHpa
   - backVpa
   - backNetworkPolicy
-  - frontDeployment
+  - frontDeploymentTemplate
   - frontService
   - frontHpa
   - frontVpa

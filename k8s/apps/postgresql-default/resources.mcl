@@ -1,9 +1,16 @@
-import "std:list" as lists
 import "./databases.mcl" as databaseConfig
 import "./config.mcl" as config
 
-fn resourceList(resource: Map<String, Any>) -> List<Map<String, Any>> =
-  - resource
+export fn resources(namespace: String, settings: config.Settings) -> List<Map<String, Any>> =
+  [
+    cluster(namespace, settings),
+    superuserPassword(namespace, settings),
+    objectStore(namespace, settings),
+    scheduledBackup(namespace, settings),
+    service(namespace, settings),
+    ...databaseResources(namespace, settings),
+    ...databasePasswords(namespace),
+  ]
 
 fn roleForDatabase(database: databaseConfig.Database) -> Map<String, Any> =
   name: database.userName
@@ -15,6 +22,10 @@ fn roleForDatabase(database: databaseConfig.Database) -> Map<String, Any> =
     - "pg_signal_backend"
   passwordSecret:
     name: database.passwordSecretName
+
+fn databaseRoles() -> List<Map<String, Any>> =
+  for database in databaseConfig.databases:
+    roleForDatabase(database)
 
 fn databaseResource(namespace: String, clusterName: String, database: databaseConfig.Database) -> Map<String, Any> =
   apiVersion: "postgresql.cnpg.io/v1"
@@ -56,164 +67,150 @@ fn passwordResource(namespace: String, database: databaseConfig.Database) -> Map
 
 
 fn cluster(namespace: String, settings: config.Settings) -> Map<String, Any> =
-    apiVersion: "postgresql.cnpg.io/v1"
-    kind: "Cluster"
-    metadata:
-      name: settings.clusterName
-      namespace: namespace
-    spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              -
-                matchExpressions:
-                  - key: "storage.walnuts.dev/slow"
-                    operator: "DoesNotExist"
-      instances: 3
-      imageCatalogRef:
-        apiGroup: "postgresql.cnpg.io"
-        kind: "ClusterImageCatalog"
-        name: settings.databaseImageCatalog
-        major: settings.majorVersion
-      postgresql:
-        extensions:
-          - name: "postgis"
+  apiVersion: "postgresql.cnpg.io/v1"
+  kind: "Cluster"
+  metadata:
+    name: settings.clusterName
+    namespace: namespace
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: "storage.walnuts.dev/slow"
+                  operator: "DoesNotExist"
+    instances: 3
+    imageCatalogRef:
+      apiGroup: "postgresql.cnpg.io"
+      kind: "ClusterImageCatalog"
+      name: settings.databaseImageCatalog
+      major: settings.majorVersion
+    postgresql:
+      extensions:
+        - name: "postgis"
+      parameters:
+        max_connections: "200"
+    storage:
+      size: settings.storageSize
+      storageClass: settings.storageClass
+    superuserSecret:
+      name: "postgres-superuser-password"
+    enableSuperuserAccess: true
+    bootstrap:
+      initdb:
+        database: "app"
+        owner: "app"
+    managed:
+      roles: databaseRoles()
+    resources:
+      requests:
+        cpu: "20m"
+        memory: "150Mi"
+    plugins:
+      - name: "barman-cloud.cloudnative-pg.io"
+        isWALArchiver: true
         parameters:
-          max_connections: "200"
-      storage:
-        size: settings.storageSize
-        storageClass: settings.storageClass
-      superuserSecret:
-        name: "postgres-superuser-password"
-      enableSuperuserAccess: true
-      bootstrap:
-        initdb:
-          database: "app"
-          owner: "app"
-      managed:
-        roles: lists.map(databaseConfig.databases, roleForDatabase)
-      resources:
-        requests:
-          cpu: "20m"
-          memory: "150Mi"
-      plugins:
-        - name: "barman-cloud.cloudnative-pg.io"
-          isWALArchiver: true
-          parameters:
-            barmanObjectName: "seaweedfs-store"
-      projectedVolumeTemplate:
-        sources:
-          - serviceAccountToken:
-              audience: "sts.seaweedfs.com"
-              expirationSeconds: 86400
-              path: "sts.seaweedfs.com/serviceaccount/token"
+          barmanObjectName: "seaweedfs-store"
+    projectedVolumeTemplate:
+      sources:
+        - serviceAccountToken:
+            audience: "sts.seaweedfs.com"
+            expirationSeconds: 86400
+            path: "sts.seaweedfs.com/serviceaccount/token"
 
 fn superuserPassword(namespace: String, settings: config.Settings) -> Map<String, Any> =
-    apiVersion: "external-secrets.io/v1"
-    kind: "ExternalSecret"
-    metadata:
+  apiVersion: "external-secrets.io/v1"
+  kind: "ExternalSecret"
+  metadata:
+    name: "postgres-superuser-password"
+    namespace: namespace
+  spec:
+    secretStoreRef:
+      name: "onepassword"
+      kind: "ClusterSecretStore"
+    refreshInterval: "1m"
+    target:
       name: "postgres-superuser-password"
-      namespace: namespace
-    spec:
-      secretStoreRef:
-        name: "onepassword"
-        kind: "ClusterSecretStore"
-      refreshInterval: "1m"
-      target:
-        name: "postgres-superuser-password"
-        template:
-          engineVersion: "v2"
-          type: "kubernetes.io/basic-auth"
-          data:
-            username: "postgres"
-            password: "{{ .password }}"
-      data:
-        - secretKey: "password"
-          remoteRef:
-            key: "postgres_passwords"
-            property: "postgres"
+      template:
+        engineVersion: "v2"
+        type: "kubernetes.io/basic-auth"
+        data:
+          username: "postgres"
+          password: "{{ .password }}"
+    data:
+      - secretKey: "password"
+        remoteRef:
+          key: "postgres_passwords"
+          property: "postgres"
 
 fn objectStore(namespace: String, settings: config.Settings) -> Map<String, Any> =
-    apiVersion: "barmancloud.cnpg.io/v1"
-    kind: "ObjectStore"
-    metadata:
-      name: "seaweedfs-store"
-      namespace: namespace
-    spec:
-      configuration:
-        destinationPath: settings.backupDestination
-        endpointURL: settings.backupEndpoint
-        s3Credentials:
-          inheritFromIAMRole: true
-        data:
-          compression: "bzip2"
-        wal:
-          compression: "xz"
-      retentionPolicy: settings.backupRetention
-      instanceSidecarConfiguration:
-        env:
-          - name: "AWS_WEB_IDENTITY_TOKEN_FILE"
-            value: "/projected/sts.seaweedfs.com/serviceaccount/token"
-          - name: "AWS_ENDPOINT_URL_STS"
-            value: settings.backupEndpoint
-          - name: "AWS_REGION"
-            value: "us-east-1"
-          - name: "AWS_ROLE_ARN"
-            value: "arn:aws:iam::role/cloudnative-pg-backup"
+  apiVersion: "barmancloud.cnpg.io/v1"
+  kind: "ObjectStore"
+  metadata:
+    name: "seaweedfs-store"
+    namespace: namespace
+  spec:
+    configuration:
+      destinationPath: settings.backupDestination
+      endpointURL: settings.backupEndpoint
+      s3Credentials:
+        inheritFromIAMRole: true
+      data:
+        compression: "bzip2"
+      wal:
+        compression: "xz"
+    retentionPolicy: settings.backupRetention
+    instanceSidecarConfiguration:
+      env:
+        - name: "AWS_WEB_IDENTITY_TOKEN_FILE"
+          value: "/projected/sts.seaweedfs.com/serviceaccount/token"
+        - name: "AWS_ENDPOINT_URL_STS"
+          value: settings.backupEndpoint
+        - name: "AWS_REGION"
+          value: "us-east-1"
+        - name: "AWS_ROLE_ARN"
+          value: "arn:aws:iam::role/cloudnative-pg-backup"
 
 fn scheduledBackup(namespace: String, settings: config.Settings) -> Map<String, Any> =
-    apiVersion: "postgresql.cnpg.io/v1"
-    kind: "ScheduledBackup"
-    metadata:
-      name: "postgresql-default-postgresql-backup"
-      namespace: namespace
-    spec:
-      cluster:
-        name: settings.clusterName
-      schedule: "0 0 19 */7 * *"
-      backupOwnerReference: "self"
-      method: "plugin"
-      pluginConfiguration:
-        name: "barman-cloud.cloudnative-pg.io"
+  apiVersion: "postgresql.cnpg.io/v1"
+  kind: "ScheduledBackup"
+  metadata:
+    name: "postgresql-default-postgresql-backup"
+    namespace: namespace
+  spec:
+    cluster:
+      name: settings.clusterName
+    schedule: "0 0 19 */7 * *"
+    backupOwnerReference: "self"
+    method: "plugin"
+    pluginConfiguration:
+      name: "barman-cloud.cloudnative-pg.io"
 
 fn service(namespace: String, settings: config.Settings) -> Map<String, Any> =
-    apiVersion: "v1"
-    kind: "Service"
-    metadata:
-      name: "postgresql-default-rw-expose"
-      namespace: namespace
-      labels:
-        "cnpg.io/cluster": settings.clusterName
-    spec:
-      selector:
-        "cnpg.io/cluster": settings.clusterName
-        "cnpg.io/instanceRole": "primary"
-      ports:
-        - name: "postgres"
-          protocol: "TCP"
-          port: 5432
-          targetPort: 5432
-      type: "LoadBalancer"
-      loadBalancerIP: settings.loadBalancerAddress
+  apiVersion: "v1"
+  kind: "Service"
+  metadata:
+    name: "postgresql-default-rw-expose"
+    namespace: namespace
+    labels:
+      "cnpg.io/cluster": settings.clusterName
+  spec:
+    selector:
+      "cnpg.io/cluster": settings.clusterName
+      "cnpg.io/instanceRole": "primary"
+    ports:
+      - name: "postgres"
+        protocol: "TCP"
+        port: 5432
+        targetPort: 5432
+    type: "LoadBalancer"
+    loadBalancerIP: settings.loadBalancerAddress
 
-export fn resources(namespace: String, settings: config.Settings) -> List<Map<String, Any>> =
-  lists.concat(
-    lists.concat(
-      lists.concat(
-        lists.concat(
-          lists.concat(
-            lists.concat(
-              resourceList(cluster(namespace, settings)),
-              resourceList(superuserPassword(namespace, settings)),
-            ),
-            resourceList(objectStore(namespace, settings)),
-          ),
-          resourceList(scheduledBackup(namespace, settings)),
-        ),
-        resourceList(service(namespace, settings)),
-      ),
-      lists.map(databaseConfig.databases, fn(database) => databaseResource(namespace, settings.clusterName, database)),
-    ),
-    lists.map(databaseConfig.databases, fn(database) => passwordResource(namespace, database)),
-  )
+fn databaseResources(namespace: String, settings: config.Settings) -> List<Map<String, Any>> =
+  for database in databaseConfig.databases:
+    databaseResource(namespace, settings.clusterName, database)
+
+fn databasePasswords(namespace: String) -> List<Map<String, Any>> =
+  for database in databaseConfig.databases:
+    passwordResource(namespace, database)

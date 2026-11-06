@@ -9,10 +9,9 @@ let appName = "akvorado"
 let appLabels =
   app: appName
   "app.kubernetes.io/name": appName
-let emptyMounts: List<Map<String, Any>> = []
 let emptyVolumes: List<Map<String, Any>> = []
 
-fn componentLabels(component: String) -> Map<String, String> = node:
+fn componentLabels(component: String) -> Map<String, String> =
   app: appName
   "app.kubernetes.io/name": appName
   "app.kubernetes.io/component": component
@@ -72,7 +71,7 @@ fn serviceMonitor(target: MonitoredComponent) -> Map<String, Any> = node:
       - port: "http"
         path: "/api/v0/metrics"
 
-fn appContainer(name: String, args: List<String>, ports: List<Map<String, Any>>, mounts: List<Map<String, Any>>, resources: Map<String, Any>) -> Map<String, Any> = node:
+fn appContainer(name: String, args: List<String>, ports: List<Map<String, Any>>, resources: Map<String, Any>, mounts: List<Map<String, Any>> = []) -> Map<String, Any> =
   name: name
   image: "quay.io/akvorado/akvorado:2.4.1"
   args: args
@@ -152,23 +151,21 @@ let orchestratorArgs =
   - "orchestrator"
   - "/etc/akvorado/akvorado.yaml"
 let consoleContainer = appContainer(
-  "console",
-  consoleArgs,
-  consoleContainerPorts,
-  emptyMounts,
-  consoleResources,
-  )
+  name = "console",
+  args = consoleArgs,
+  ports = consoleContainerPorts,
+  resources = consoleResources,
+)
 let consolePodSpec =
   containers:
     - consoleContainer
   volumes: emptyVolumes
 let inletContainer = appContainer(
-  "inlet",
-  inletArgs,
-  inletContainerPorts,
-  emptyMounts,
-  inletResources,
-  )
+  name = "inlet",
+  args = inletArgs,
+  ports = inletContainerPorts,
+  resources = inletResources,
+)
 let inletPodSpec =
   containers:
     - inletContainer
@@ -176,12 +173,11 @@ let inletPodSpec =
   nodeSelector:
     "kubernetes.io/hostname": "cake"
 let outletContainer = appContainer(
-  "outlet",
-  outletArgs,
-  httpContainerPorts,
-  emptyMounts,
-  outletResources,
-  )
+  name = "outlet",
+  args = outletArgs,
+  ports = httpContainerPorts,
+  resources = outletResources,
+)
 let outletPodSpec =
   containers:
     - outletContainer
@@ -215,12 +211,12 @@ let orchestratorVolumes =
     secret:
       secretName: externalSecrets.snmpName
 let orchestratorContainer = appContainer(
-  "orchestrator",
-  orchestratorArgs,
-  httpContainerPorts,
-  orchestratorMounts,
-  orchestratorResources,
-  )
+  name = "orchestrator",
+  args = orchestratorArgs,
+  ports = httpContainerPorts,
+  resources = orchestratorResources,
+  mounts = orchestratorMounts,
+)
 let orchestratorPodSpec =
   containers:
     - orchestratorContainer

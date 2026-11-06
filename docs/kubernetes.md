@@ -33,6 +33,16 @@ KurumiとBiscuitは同じAgentクラスタ構成を`k8s/_argocd/applications/age
 
 Helm Chartの`.Capabilities.APIVersions.Has`条件とMCLから渡す`apiVersions`の対応は[Helm Capabilities一覧](design/mcl-helm-capabilities.md)に記録します。CRD Schema Catalogへの登録は、対象クラスタでAPIが利用可能である根拠にしません。
 
+## MCLのResource合成
+
+複数の設定値を受け取る関数は、Akvoradoの`appContainer(name = ..., args = ..., resources = ...)`のように名前付き引数で呼び出します。省略可能な設定には関数引数のデフォルト値を定義し、空Listを渡すためだけの変数を作りません。大きな設定は型付きレコードとして分離します。
+
+Resource Listは通常の要素と`...items`による明示的な展開で合成します。単一Resourceを1要素Listに包む関数は不要です。単純な射影には`for`を使い、各入力が複数Resourceを返す場合は`lists.flatMap()`で1段だけ展開します。SeaweedFSのS3設定ではClientごとのIdentity、Policy、Binding、Credentialsをまとめて生成します。複数Resourceの出力には`emit each`を使います。
+
+トップレベル関数の宣言順序は呼び出し順序に依存しないため、PostgreSQLのように公開する`resources()`を内部の補助関数より前へ配置できます。通常の`let`は宣言順に評価します。ラベルやContainerなど、独立して出力しない値はMapを返し、参照可能な識別情報が必要なResourceには`node:`を使います。
+
+Cluster APIのハッシュ入力には共有の`MachineIdentity`型を使います。`Map<String, Any>`を返す関数では呼び出し元へフィールド型を伝えられないため、ControlPlaneConfigやWorkerConfigへ値を追加する前に、identityの4フィールドをレコード型で確定します。
+
 ## Private MCL依存
 
 MCLがlockと依存キャッシュにないGitHub Release assetを取得する場合、Argo CD CMP実行環境に対象リポジトリを読み取れる`GITHUB_TOKEN`を設定します。MCLはGitHub APIでRelease情報とassetを取得し、assetのダウンロード先へリダイレクトするときに`Authorization`ヘッダーを削除します。Token値をManifestやGit管理ファイルへ記載しません。

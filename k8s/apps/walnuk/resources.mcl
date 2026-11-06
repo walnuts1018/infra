@@ -17,7 +17,9 @@ fn trafficResource(resource: Map<String, Any>) -> Map<String, Any> =
   else:
     resource
 
-let traffic = lists.map(manifest.load("./_configs/traffic.yaml"), fn(resource) => trafficResource(resource))
+let traffic =
+  for resource in manifest.load("./_configs/traffic.yaml"):
+    trafficResource(resource)
 let scaling = manifest.load("./_configs/scaling.yaml")
 let databaseCA = manifest.load("./_configs/database-ca.yaml")
 
@@ -58,13 +60,14 @@ fn namespaceResource(resource: Map<String, Any>, namespace: String) -> Map<Strin
     withNamespace(resource, namespace)
 
 fn namespaceResources(resources: List<Map<String, Any>>, namespace: String) -> List<Map<String, Any>> =
-  lists.map(resources, fn(resource) => namespaceResource(resource, namespace))
+  for resource in resources:
+    namespaceResource(resource, namespace)
 
 export fn resources(namespace: String) -> List<Map<String, Any>> =
-  lists.concat(
-    lists.concat(
-      namespaceResources(workloads, namespace),
-      externalSecrets.resources(namespace),
-    ),
-    namespaceResources(lists.concat(traffic, lists.concat(scaling, databaseCA)), namespace),
-  )
+  [
+    ...namespaceResources(workloads, namespace),
+    ...externalSecrets.resources(namespace),
+    ...namespaceResources(traffic, namespace),
+    ...namespaceResources(scaling, namespace),
+    ...namespaceResources(databaseCA, namespace),
+  ]

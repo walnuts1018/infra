@@ -1,6 +1,5 @@
 import "../envoy-gateway-class/gateway.mcl" as gateway
 import text "./_configs/scylladb-ca.crt" as scyllaCaCertificate
-import "std:list" as lists
 import "./config.mcl" as config
 import "./images.mcl" as images
 
@@ -304,8 +303,7 @@ fn httpRoute(namespace: String, settings: config.Settings) -> Map<String, Any> =
     hostnames:
       - "prfexample.walnuts.dev"
     rules:
-      -
-        backendRefs:
+      - backendRefs:
           - name: "keda-add-ons-http-interceptor-proxy"
             namespace: "keda"
             port: 8080
@@ -355,39 +353,47 @@ fn networkPolicy(namespace: String, settings: config.Settings) -> Map<String, An
     policyTypes:
       - "Egress"
     egress:
-      -
-        to:
-          -
-            ipBlock:
+      - to:
+          - ipBlock:
               cidr: "0.0.0.0/0"
               except:
                 - "192.168.0.0/16"
                 - "10.244.0.0/16"
                 - "10.96.0.0/12"
-          -
-            namespaceSelector:
+          - namespaceSelector:
               matchLabels:
                 "kubernetes.io/metadata.name": "kube-system"
             podSelector:
               matchLabels:
                 "k8s-app": "kube-dns"
-          -
-            namespaceSelector:
+          - namespaceSelector:
               matchLabels:
                 "kubernetes.io/metadata.name": "opentelemetry-collector"
             podSelector:
               matchLabels:
                 "app.kubernetes.io/name": "default-collector"
-          -
-            namespaceSelector:
+          - namespaceSelector:
               matchLabels:
                 "kubernetes.io/metadata.name": "databases"
             podSelector:
               matchLabels:
                 "scylla/cluster": "scylla-cluster"
 
-fn resourceList(resource: Map<String, Any>) -> List<Map<String, Any>> =
-  - resource
-
 export fn resources(namespace: String, settings: config.Settings) -> List<Map<String, Any>> =
-  lists.concat(resourceList(scyllaPasswordSecret(namespace, settings)), lists.concat(resourceList(scyllaClientServiceAccount(namespace, settings)), lists.concat(resourceList(scyllaClientCertificateStore(namespace, settings)), lists.concat(resourceList(scyllaClientCertificate(namespace, settings)), lists.concat(resourceList(clientCertReadRole(namespace, settings)), lists.concat(resourceList(clientCertReadRoleBinding(namespace, settings)), lists.concat(resourceList(scyllaCaConfigMap(namespace, settings)), lists.concat(resourceList(deployment(namespace, settings)), lists.concat(resourceList(service(namespace, settings)), lists.concat(resourceList(horizontalAutoscaler(namespace, settings)), lists.concat(resourceList(verticalAutoscaler(namespace, settings)), lists.concat(resourceList(httpRoute(namespace, settings)), lists.concat(resourceList(interceptorRoute(namespace, settings)), lists.concat(resourceList(referenceGrant(namespace, settings)), resourceList(networkPolicy(namespace, settings))))))))))))))))
+  [
+    scyllaPasswordSecret(namespace, settings),
+    scyllaClientServiceAccount(namespace, settings),
+    scyllaClientCertificateStore(namespace, settings),
+    scyllaClientCertificate(namespace, settings),
+    clientCertReadRole(namespace, settings),
+    clientCertReadRoleBinding(namespace, settings),
+    scyllaCaConfigMap(namespace, settings),
+    deployment(namespace, settings),
+    service(namespace, settings),
+    horizontalAutoscaler(namespace, settings),
+    verticalAutoscaler(namespace, settings),
+    httpRoute(namespace, settings),
+    interceptorRoute(namespace, settings),
+    referenceGrant(namespace, settings),
+    networkPolicy(namespace, settings),
+  ]
