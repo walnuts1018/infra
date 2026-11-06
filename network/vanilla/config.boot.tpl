@@ -69,6 +69,24 @@ firewall {
                     action "drop"
                     state "invalid"
                 }
+                rule 5 {
+                    action "drop"
+                    destination {
+                        address "192.168.4.0/24"
+                    }
+                    inbound-interface {
+                        name "eth0.100"
+                    }
+                }
+                rule 6 {
+                    action "drop"
+                    destination {
+                        address "192.168.4.0/24"
+                    }
+                    inbound-interface {
+                        name "eth0.200"
+                    }
+                }
                 rule 10 {
                     action "accept"
                     state "established"
@@ -248,67 +266,6 @@ firewall {
                         name "tun0"
                     }
                 }
-                rule 204 {
-                    action "accept"
-                    description "server VLAN to management subnet"
-                    destination {
-                        address "192.168.4.0/24"
-                    }
-                    inbound-interface {
-                        name "eth0.100"
-                    }
-                    outbound-interface {
-                        name "eth0.10"
-                    }
-                    source {
-                        address "192.168.0.0/24"
-                    }
-                }
-                rule 205 {
-                    action "accept"
-                    description "trusted user to management subnet"
-                    destination {
-                        address "192.168.4.0/24"
-                    }
-                    inbound-interface {
-                        name "eth0.200"
-                    }
-                    outbound-interface {
-                        name "eth0.10"
-                    }
-                    source {
-                        address "192.168.100.6"
-                    }
-                }
-                rule 206 {
-                    action "drop"
-                    description "block user VLAN to management subnet"
-                    destination {
-                        address "192.168.4.0/24"
-                    }
-                    inbound-interface {
-                        name "eth0.200"
-                    }
-                    source {
-                        address "192.168.100.0/24"
-                    }
-                }
-                rule 207 {
-                    action "accept"
-                    description "trusted user to management subnet"
-                    destination {
-                        address "192.168.4.0/24"
-                    }
-                    inbound-interface {
-                        name "eth0.200"
-                    }
-                    outbound-interface {
-                        name "eth0.10"
-                    }
-                    source {
-                        address "192.168.100.7"
-                    }
-                }
                 rule 210 {
                     action "accept"
                     inbound-interface {
@@ -448,6 +405,24 @@ firewall {
                         address "192.168.20.2/32"
                     }
                 }
+                rule 6 {
+                    action "drop"
+                    destination {
+                        address "192.168.4.1"
+                    }
+                    inbound-interface {
+                        name "eth0.100"
+                    }
+                }
+                rule 7 {
+                    action "drop"
+                    destination {
+                        address "192.168.4.1"
+                    }
+                    inbound-interface {
+                        name "eth0.200"
+                    }
+                }
                 rule 10 {
                     action "accept"
                     state "established"
@@ -463,37 +438,6 @@ firewall {
                     action "accept"
                     protocol "icmp"
                 }
-                rule 40 {
-                    action "accept"
-                    destination {
-                        port "22"
-                    }
-                    protocol "tcp"
-                    source {
-                        address "192.168.0.0/24"
-                    }
-                }
-                rule 50 {
-                    action "accept"
-                    destination {
-                        port "22"
-                    }
-                    protocol "tcp"
-                    source {
-                        address "192.168.100.4"
-                    }
-                }
-                rule 60 {
-                    action "accept"
-                    destination {
-                        address "192.168.4.1"
-                        port "22"
-                    }
-                    protocol "tcp"
-                    source {
-                        address "192.168.100.6"
-                    }
-                }
                 rule 70 {
                     action "accept"
                     destination {
@@ -503,17 +447,6 @@ firewall {
                     protocol "tcp"
                     source {
                         address "192.168.4.0/24"
-                    }
-                }
-                rule 80 {
-                    action "accept"
-                    destination {
-                        address "192.168.4.1"
-                        port "22"
-                    }
-                    protocol "tcp"
-                    source {
-                        address "192.168.100.7"
                     }
                 }
                 rule 100 {
