@@ -92,7 +92,7 @@ login:
   enabled: true
   image:
     repository: ghcr.io/zitadel/zitadel-login
-    tag: v4.20.0
+    tag: v4.20.1
   loginServiceKeySecretName: zitadel-login-service-key
   sessionCookieSecretName: zitadel-login-session-cookie
   gateway:
