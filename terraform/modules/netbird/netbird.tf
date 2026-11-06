@@ -11,10 +11,6 @@ resource "netbird_group" "vyos_routers" {
   name = "vyos-routers"
 }
 
-resource "netbird_group" "kubernetes_routers" {
-  name = "kubernetes-routers"
-}
-
 resource "netbird_group" "remote_clients" {
   name = "remote-clients"
 }
