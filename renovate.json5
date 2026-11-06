@@ -63,6 +63,15 @@
         '/^k8s\\/(?:apps|_argocd)\\/.+\\.mcl$/',
       ],
       matchStrings: [
+        '#\\s*renovate: datasource=(?<datasource>docker) depName=(?<depName>[^\\s]+)\\s+export let runnerImage = "[^\"]+:(?<currentValue>[^"@]+)"',
+      ],
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/^k8s\\/(?:apps|_argocd)\\/.+\\.mcl$/',
+      ],
+      matchStrings: [
         '#\\s*renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\s]+)(?: packageName=(?<packageName>[^\\s]+))?(?: registryUrl=(?<registryUrl>[^\\s]+))?(?: extractVersion=(?<extractVersion>[^\\s]+))?\\s+export let [A-Za-z][A-Za-z0-9]*Version = "(?<currentValue>[^"]+)"',
       ],
     },

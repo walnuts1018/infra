@@ -1,8 +1,8 @@
 import "std:crypto" as crypto
-import "std:list" as lists
 import text "./_scripts/job-started.sh" as jobStartedScript
 import text "./_scripts/job-completed.sh" as jobCompletedScript
 
+# renovate: datasource=docker depName=ghcr.io/walnuts1018/infra/actions-runner
 export let runnerImage = "ghcr.io/walnuts1018/infra/actions-runner:2.336.0"
 
 export let runnerHooksData =

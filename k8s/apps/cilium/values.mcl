@@ -69,7 +69,7 @@ fn featureFlags(features: List<config.Feature>) -> FeatureFlags =
   monitoring: lists.contains(features, "monitoring")
   nodePort: lists.contains(features, "nodePort")
 
-fn helmValuesWithFlags(clusterContext: clusterConfig.Cluster, namespace: String, features: List<config.Feature>, settings: config.Settings, flags: FeatureFlags) -> Map<String, Any> = commonValues with:
+fn helmValuesWithFlags(clusterContext: clusterConfig.Cluster, namespace: String, settings: config.Settings, flags: FeatureFlags) -> Map<String, Any> = commonValues with:
   k8sServiceHost: settings.apiServer
   cluster:
     id: settings.clusterId
@@ -167,4 +167,4 @@ fn helmValuesWithFlags(clusterContext: clusterConfig.Cluster, namespace: String,
       create: false
 
 export fn helmValues(clusterContext: clusterConfig.Cluster, namespace: String, features: List<config.Feature>, settings: config.Settings) -> Map<String, Any> =
-  helmValuesWithFlags(clusterContext, namespace, features, settings, featureFlags(features))
+  helmValuesWithFlags(clusterContext, namespace, settings, featureFlags(features))

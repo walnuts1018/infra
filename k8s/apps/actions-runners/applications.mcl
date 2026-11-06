@@ -1,7 +1,4 @@
-import "std:list" as lists
 import "./values.mcl" as runnerConfig
-
-let runners = runnerConfig.runners
 
 fn runnerApplication(namespace: String, runner: runnerConfig.Runner) -> Map<String, Any> = node:
   apiVersion: "argoproj.io/v1alpha1"
@@ -32,8 +29,5 @@ fn runnerApplication(namespace: String, runner: runnerConfig.Runner) -> Map<Stri
         - "FailOnSharedResource=true"
 
 export fn applications(namespace: String) -> List<Map<String, Any>> =
-  - runnerApplication(namespace, runners[0])
-  - runnerApplication(namespace, runners[1])
-  - runnerApplication(namespace, runners[2])
-  - runnerApplication(namespace, runners[3])
-  - runnerApplication(namespace, runners[4])
+  for runner in runnerConfig.runners:
+    runnerApplication(namespace, runner)
