@@ -24,7 +24,7 @@ local app = import 'app.json5';
         automountServiceAccountToken: false,
         containers: [{
           name: 'netbird-server',
-          image: 'netbirdio/netbird-server:0.81.2@sha256:7caa37d30b20e54196e1076d4009fcdc4c9d83d174d8b9a8be52fb29c00708df',
+          image: 'netbirdio/netbird-server:0.82.0@sha256:7b5b53b2dc8bc25639f791cf72d47cf86911894ff3f8a97cb79bab9be958109c',
           args: [
             '--config',
             '/etc/netbird/config.yaml',
