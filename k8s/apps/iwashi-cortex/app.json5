@@ -1,7 +1,0 @@
-{
-  name: "iwashi-cortex",
-  namespace: "iwashi-system",
-  clusters: {
-    kurumi: {},
-  },
-}
