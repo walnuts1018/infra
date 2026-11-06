@@ -76,12 +76,6 @@ resource "netbird_setup_key" "vyos_router" {
   allow_extra_dns_labels = false
   auto_groups            = [netbird_group.vyos_routers.id]
   ephemeral              = false
-  revoked                = false
+  revoked                = true
   usage_limit            = 1
-}
-
-output "vyos_router_setup_key" {
-  value       = netbird_setup_key.vyos_router.key
-  sensitive   = true
-  description = "One-off setup key for the VyOS routing peer"
 }
