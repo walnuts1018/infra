@@ -4,13 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   data: [
     {
-      secretKey: 'NB_SETUP_KEY',
-      remoteRef: {
-        key: 'terraform-external-secrets',
-        property: 'netbird-setup-key',
-      },
-    },
-    {
       secretKey: 'auth_secret',
       remoteRef: {
         key: 'netbird',
@@ -34,6 +27,5 @@ local app = import 'app.json5';
   ],
   template_data: {
     'config.yaml': (importstr './_config/config.yaml'),
-    NB_SETUP_KEY: '{{ .NB_SETUP_KEY }}',
   },
 }

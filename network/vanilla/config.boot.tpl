@@ -1,3 +1,44 @@
+container {
+    network netbird {
+        prefix "192.168.20.0/29"
+    }
+    name netbird {
+        image "docker.io/netbirdio/netbird:0.81.2@sha256:6242a1fbaf6b611c00c26a914cbbea512c30c18a45de0646ce7b0e5d93a21e67"
+        capability "net-admin"
+        capability "net-raw"
+        device tun {
+            source "/dev/net/tun"
+            destination "/dev/net/tun"
+        }
+        environment NB_MANAGEMENT_URL {
+            value "https://netbird.walnuts.dev:443"
+        }
+        environment NB_HOSTNAME {
+            value "vanilla"
+        }
+        environment NB_LOG_FILE {
+            value "console"
+        }
+        memory "256"
+        network netbird {
+            address "192.168.20.2"
+        }
+        restart "always"
+        sysctl {
+            parameter net.ipv4.ip_forward {
+                value "1"
+            }
+            parameter net.ipv4.conf.all.src_valid_mark {
+                value "1"
+            }
+        }
+        volume state {
+            source "/config/netbird"
+            destination "/var/lib/netbird"
+            mode "rw"
+        }
+    }
+}
 firewall {
     group {
         address-group TRUSTED_USERS {
@@ -29,6 +70,48 @@ firewall {
                     action "accept"
                     state "established"
                     state "related"
+                }
+                rule 20 {
+                    action "accept"
+                    destination {
+                        address "192.168.4.0/24"
+                    }
+                    inbound-interface {
+                        name "pod-netbird"
+                    }
+                    outbound-interface {
+                        name "eth0.10"
+                    }
+                    source {
+                        address "192.168.20.2/32"
+                    }
+                }
+                rule 21 {
+                    action "accept"
+                    destination {
+                        address "192.168.0.0/24"
+                    }
+                    inbound-interface {
+                        name "pod-netbird"
+                    }
+                    outbound-interface {
+                        name "eth0.100"
+                    }
+                    source {
+                        address "192.168.20.2/32"
+                    }
+                }
+                rule 22 {
+                    action "accept"
+                    inbound-interface {
+                        name "pod-netbird"
+                    }
+                    outbound-interface {
+                        name "tun0"
+                    }
+                    source {
+                        address "192.168.20.2/32"
+                    }
                 }
                 rule 30 {
                     action "accept"
@@ -349,6 +432,18 @@ firewall {
                 rule 1 {
                     action "drop"
                     state "invalid"
+                }
+                rule 5 {
+                    action "accept"
+                    destination {
+                        address "192.168.4.1"
+                    }
+                    inbound-interface {
+                        name "pod-netbird"
+                    }
+                    source {
+                        address "192.168.20.2/32"
+                    }
                 }
                 rule 10 {
                     action "accept"
@@ -833,6 +928,40 @@ nat {
                 address "192.168.12.138"
             }
         }
+        rule 190 {
+            description "NetBird container HTTPS to ingress"
+            destination {
+                address "{{ op://Network/vanilla/wan_ipv4 }}"
+                port "443"
+            }
+            inbound-interface {
+                name "pod-netbird"
+            }
+            protocol "tcp"
+            source {
+                address "192.168.20.2/32"
+            }
+            translation {
+                address "192.168.12.138"
+            }
+        }
+        rule 195 {
+            description "NetBird container STUN to service"
+            destination {
+                address "{{ op://Network/vanilla/wan_ipv4 }}"
+                port "3478"
+            }
+            inbound-interface {
+                name "pod-netbird"
+            }
+            protocol "udp"
+            source {
+                address "192.168.20.2/32"
+            }
+            translation {
+                address "192.168.12.142"
+            }
+        }
         rule 200 {
             description "server VLAN hairpin HTTP to ingress"
             destination {
@@ -1158,12 +1287,6 @@ policy {
             prefix "192.168.100.0/24"
         }
     }
-    prefix-list K8SVIP-VIP {
-        rule 10 {
-            action "permit"
-            prefix "192.168.4.11/32"
-        }
-    }
     route V4-EGRESS {
         interface "eth0.100"
         interface "eth0.200"
@@ -1231,16 +1354,6 @@ policy {
                 ip {
                     address {
                         prefix-list "CILIUM-LOADBALANCER"
-                    }
-                }
-            }
-        }
-        rule 20 {
-            action "permit"
-            match {
-                ip {
-                    address {
-                        prefix-list "K8SVIP-VIP"
                     }
                 }
             }
