@@ -1,5 +1,6 @@
 container {
     network netbird {
+        no-name-server
         prefix "192.168.20.0/29"
     }
     name netbird {
@@ -20,6 +21,8 @@ container {
             value "console"
         }
         memory "256"
+        name-server "192.168.12.135"
+        name-server "1.1.1.1"
         network netbird {
             address "192.168.20.2"
         }
