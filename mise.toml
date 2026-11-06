@@ -66,3 +66,36 @@ run = "jactionlint"
 
 [tasks."terraform"]
 run = "terraform -chdir=terraform"
+
+[tasks."network:render"]
+description = "Render network configurations with 1Password"
+run = '''
+set -eu
+umask 077
+
+command -v op >/dev/null 2>&1 || {
+  printf '%s\n' "1Password CLI (op) is required" >&2
+  exit 1
+}
+
+stage="$(mktemp -d network/.generated.XXXXXX)"
+cleanup() {
+  if [ -n "${stage:-}" ] && [ -d "$stage" ]; then
+    rm -rf -- "$stage"
+  fi
+}
+trap cleanup EXIT HUP INT TERM
+
+mkdir -p "$stage/vanilla" "$stage/caramel" "$stage/nexus3548" "$stage/almond"
+
+op inject -i network/vanilla/config.boot.tpl -o "$stage/vanilla/config.boot"
+op inject -i network/caramel/config.tpl -o "$stage/caramel/config"
+op inject -i network/nexus3548/config.tpl -o "$stage/nexus3548/config"
+op inject -i network/almond/config.tpl -o "$stage/almond/config"
+op run --no-masking --env-file network/vanilla/v6plus-fcs.env.tpl -- \
+  bash -c 'printf "FCS_USER=%q\nFCS_PASS=%q\n" "$FCS_USER" "$FCS_PASS"' > "$stage/vanilla/v6plus-fcs.env"
+
+rm -rf -- network/.generated
+mv -- "$stage" network/.generated
+stage=""
+'''
