@@ -19,11 +19,11 @@ Kubernetes クラスタに適用される Manifest 群です。
 
 ## アプリ配置とMCL入力
 
-ApplicationSetは`k8s/apps/*/app.json`を読み、`clusters`に明示されたクラスタだけにApplicationを生成します。アプリを追加するときは、そのアプリの`app.json`とMCLソースを追加します。`app.json`トップレベルの`namespace`がアプリ全体の正本で、Applicationの`destination.namespace`とMCLの`namespace`入力へ同じ値を渡します。配置ごとのnamespace上書きは許可しません。`app.json`経由の全MCL入口は`param namespace: String`を宣言し、Cluster-scopedリソースだけを生成する場合も入力を受け取りますが、そのリソースにはnamespaceを設定しません。
+ApplicationSetは`k8s/apps/*/app.json`を読み、`clusters`に明示されたクラスタだけにApplicationを生成します。アプリを追加するときは、そのアプリの`app.json`とMCLソースを追加します。`app.json`トップレベルの`namespace`は各配置の既定値です。配置の`clusters.<name>.namespace`を指定した場合はその値を優先し、解決したnamespaceをApplicationの`destination.namespace`とMCLの`namespace`入力へ同じ値で渡します。`app.json`経由の全MCL入口は`param namespace: String`を宣言し、Cluster-scopedリソースだけを生成する場合も入力を受け取りますが、そのリソースにはnamespaceを設定しません。
 
 クラスタ情報は`k8s/clusters/<cluster>/cluster.json`を正本とします。アプリ入口には`name`、`namespace`、`kubernetesVersion`だけを射影した`Cluster`を渡し、Helm Chartの`kubeVersion`には`cluster.kubernetesVersion`を使います。Cluster API入口にはTalosバージョンとマシン台数を含む6フィールドの`ClusterAPIConfig`を渡します。`clusterApiManaged`が文字列`"true"`のクラスタだけをCluster API ApplicationSetの対象とし、将来のCMPプラグインも同じ値を検証する契約です。Berryの`kubernetesVersion`は既存のHelm設定`1.36.4`を引き継いだ値で、実クラスタから取得した値ではありません。Manifestの差分はFeatureとSettingsで表し、汎用Profileやクラスタ名による条件分岐は使いません。
 
-ApplicationSetの共通Go Templateは`MCL_CLUSTER_NAME`、`MCL_NAMESPACE`、`MCL_CLUSTER_INPUT=application`、選択された配置設定のJSONを将来のMCL CMPプラグインへ渡す契約です。CMPプラグインはまだ実装されていません。実装時にはクラスタ定義からアプリ用の3フィールドを射影し、配置設定とnamespaceを含む一時JSONを作成して`mcl render --parameter-file`へ渡します。`app.json`経由でない入口では`MCL_NAMESPACE`を省略でき、パラメータJSONにも`namespace`キーを追加しません。Cluster API ApplicationSetは`MCL_CLUSTER_INPUT=clusterAPI`を指定し、Cluster API用の6フィールドを射影します。このモードでは`MCL_NAMESPACE`を拒否し、出力namespaceを`cluster.namespace`に限定します。JSON値をシェルコードとして展開しません。この契約ではCMP実行環境に`jq`が必要です。
+ApplicationSetの共通Go Templateは`MCL_CLUSTER_NAME`、`MCL_NAMESPACE`、`MCL_CLUSTER_INPUT=application`、選択された配置設定のJSONをCMPへ渡します。CMPはcluster定義からアプリ用の3フィールドを射影し、配置設定を含む一時JSONを作成して`mcl fetch --locked`と`mcl render --parameter-file`へ渡します。両コマンドには同じパラメータファイルと、対象clusterの`kubernetesVersion`を`--kubernetes-version`で指定します。`MCL_NAMESPACE`はnamespace入力として別に渡し、JSONパラメータへ含めません。`app.json`経由でない入口では`MCL_NAMESPACE`を省略できます。Cluster API ApplicationSetは`MCL_CLUSTER_INPUT=clusterAPI`を指定し、Cluster API用の6フィールドを射影します。このモードでは`MCL_NAMESPACE`を拒否し、出力namespaceを`cluster.namespace`に限定します。JSON値をシェルコードとして展開しません。この契約ではCMP実行環境に`jq`が必要です。
 
 `app.json`と`cluster.json`はArgo CD Git File Generatorが読む厳密なJSONです。MCLパラメータファイルも厳密なJSONで、解決済みの一時入力はGitへコミットしません。`MCL_DEPLOYMENT_JSON`は選択した配置のFeatureやSettingsを運び、`cluster`と`namespace`は予約キーとして拒否します。CMPプラグインは未知の入力モード、空namespace、Cluster API必須値の欠落、Cluster API管理対象外のクラスタを拒否する仕様です。
 

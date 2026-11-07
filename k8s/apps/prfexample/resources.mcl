@@ -8,7 +8,7 @@ let labels =
   app: appName
   "app.kubernetes.io/name": appName
 
-fn scyllaPasswordSecret(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn scyllaPasswordSecret(namespace: String) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
@@ -33,14 +33,14 @@ fn scyllaPasswordSecret(namespace: String, settings: config.Settings) -> Map<Str
           key: "scylladb"
           property: appName
 
-fn scyllaClientServiceAccount(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn scyllaClientServiceAccount(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ServiceAccount"
   metadata:
     name: "prfexample-scylla-secret-reader"
     namespace: namespace
 
-fn scyllaClientCertificateStore(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn scyllaClientCertificateStore(namespace: String) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "SecretStore"
   metadata:
@@ -61,7 +61,7 @@ fn scyllaClientCertificateStore(namespace: String, settings: config.Settings) ->
             name: "prfexample-scylla-secret-reader"
             namespace: namespace
 
-fn scyllaClientCertificate(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn scyllaClientCertificate(namespace: String) -> Map<String, Any> = node:
   apiVersion: "external-secrets.io/v1"
   kind: "ExternalSecret"
   metadata:
@@ -78,7 +78,7 @@ fn scyllaClientCertificate(namespace: String, settings: config.Settings) -> Map<
       - extract:
           key: "scylla-cluster-local-client-ca"
 
-fn clientCertReadRole(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn clientCertReadRole() -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "Role"
   metadata:
@@ -94,7 +94,7 @@ fn clientCertReadRole(namespace: String, settings: config.Settings) -> Map<Strin
       verbs:
         - "get"
 
-fn clientCertReadRoleBinding(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn clientCertReadRoleBinding(namespace: String) -> Map<String, Any> = node:
   apiVersion: "rbac.authorization.k8s.io/v1"
   kind: "RoleBinding"
   metadata:
@@ -109,7 +109,7 @@ fn clientCertReadRoleBinding(namespace: String, settings: config.Settings) -> Ma
       name: "prfexample-scylla-secret-reader"
       namespace: namespace
 
-fn scyllaCaConfigMap(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn scyllaCaConfigMap(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   metadata:
@@ -224,7 +224,7 @@ fn deployment(namespace: String, settings: config.Settings) -> Map<String, Any> 
                 - key: "tls.key"
                   path: "tls.key"
 
-fn service(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn service(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "Service"
   metadata:
@@ -239,7 +239,7 @@ fn service(namespace: String, settings: config.Settings) -> Map<String, Any> = n
     selector: labels
     type: "ClusterIP"
 
-fn horizontalAutoscaler(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn horizontalAutoscaler(namespace: String) -> Map<String, Any> = node:
   apiVersion: "keda.sh/v1alpha1"
   kind: "ScaledObject"
   metadata:
@@ -264,7 +264,7 @@ fn horizontalAutoscaler(namespace: String, settings: config.Settings) -> Map<Str
         metadata:
           value: "95"
 
-fn verticalAutoscaler(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn verticalAutoscaler(namespace: String) -> Map<String, Any> = node:
   apiVersion: "autoscaling.k8s.io/v1"
   kind: "VerticalPodAutoscaler"
   metadata:
@@ -290,7 +290,7 @@ fn verticalAutoscaler(namespace: String, settings: config.Settings) -> Map<Strin
             cpu: "500m"
             memory: "256Mi"
 
-fn httpRoute(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn httpRoute(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1"
   kind: "HTTPRoute"
   metadata:
@@ -308,7 +308,7 @@ fn httpRoute(namespace: String, settings: config.Settings) -> Map<String, Any> =
             namespace: "keda"
             port: 8080
 
-fn interceptorRoute(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn interceptorRoute(namespace: String) -> Map<String, Any> = node:
   apiVersion: "http.keda.sh/v1beta1"
   kind: "InterceptorRoute"
   metadata:
@@ -325,7 +325,7 @@ fn interceptorRoute(namespace: String, settings: config.Settings) -> Map<String,
       concurrency:
         targetValue: 10
 
-fn referenceGrant(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn referenceGrant(namespace: String) -> Map<String, Any> = node:
   apiVersion: "gateway.networking.k8s.io/v1beta1"
   kind: "ReferenceGrant"
   metadata:
@@ -341,7 +341,7 @@ fn referenceGrant(namespace: String, settings: config.Settings) -> Map<String, A
         kind: "Service"
         name: "keda-add-ons-http-interceptor-proxy"
 
-fn networkPolicy(namespace: String, settings: config.Settings) -> Map<String, Any> = node:
+fn networkPolicy(namespace: String) -> Map<String, Any> = node:
   apiVersion: "networking.k8s.io/v1"
   kind: "NetworkPolicy"
   metadata:
@@ -381,19 +381,19 @@ fn networkPolicy(namespace: String, settings: config.Settings) -> Map<String, An
 
 export fn resources(namespace: String, settings: config.Settings) -> List<Map<String, Any>> =
   [
-    scyllaPasswordSecret(namespace, settings),
-    scyllaClientServiceAccount(namespace, settings),
-    scyllaClientCertificateStore(namespace, settings),
-    scyllaClientCertificate(namespace, settings),
-    clientCertReadRole(namespace, settings),
-    clientCertReadRoleBinding(namespace, settings),
-    scyllaCaConfigMap(namespace, settings),
+    scyllaPasswordSecret(namespace),
+    scyllaClientServiceAccount(namespace),
+    scyllaClientCertificateStore(namespace),
+    scyllaClientCertificate(namespace),
+    clientCertReadRole(),
+    clientCertReadRoleBinding(namespace),
+    scyllaCaConfigMap(namespace),
     deployment(namespace, settings),
-    service(namespace, settings),
-    horizontalAutoscaler(namespace, settings),
-    verticalAutoscaler(namespace, settings),
-    httpRoute(namespace, settings),
-    interceptorRoute(namespace, settings),
-    referenceGrant(namespace, settings),
-    networkPolicy(namespace, settings),
+    service(namespace),
+    horizontalAutoscaler(namespace),
+    verticalAutoscaler(namespace),
+    httpRoute(namespace),
+    interceptorRoute(namespace),
+    referenceGrant(namespace),
+    networkPolicy(namespace),
   ]

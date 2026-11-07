@@ -1,7 +1,7 @@
 import "./config.mcl" as appConfig
 
 let appName = "visual-regression-tracker"
-fn labels(name: String) -> Map<String, Any> = node:
+fn labels(name: String) -> Map<String, String> =
   app: name
   "app.kubernetes.io/name": name
 fn databaseURL(settings: appConfig.Settings) -> String = "postgresql://visual_regression_tracker:{{ .postgres_password }}@" + settings.databaseHost + ":5432/visual_regression_tracker?connection_limit=10"

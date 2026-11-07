@@ -1,7 +1,9 @@
-{{- $deployment := index .clusters .clusterName }}
+{{- $placement := index .clusters .clusterName }}
+{{- $namespace := dig "namespace" .namespace $placement }}
+{{- $deployment := omit $placement "namespace" }}
 spec:
   destination:
-    namespace: '{{ .namespace }}'
+    namespace: '{{ $namespace }}'
   sources:
   - repoURL: 'https://github.com/walnuts1018/infra'
     targetRevision: clusterapi
@@ -13,7 +15,7 @@ spec:
       - name: MCL_CLUSTER_NAME
         value: {{ .clusterName | quote }}
       - name: MCL_NAMESPACE
-        value: {{ .namespace | quote }}
+        value: {{ $namespace | quote }}
       - name: MCL_CLUSTER_INPUT
         value: application
       - name: MCL_DEPLOYMENT_JSON

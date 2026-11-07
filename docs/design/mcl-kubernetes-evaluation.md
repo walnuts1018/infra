@@ -102,7 +102,7 @@ ExternalSecret自体は名前へのhash suffixを要求しません。dataやtem
 ApplicationSetの既存Git file generatorは`app.json5`からcluster配置を見つけます。新しいplacement indexやPlugin Generatorは追加せず、MCLのimport graphは明示します。
 ## Argo CD Config Management Plugin
 
-ApplicationSet app、cluster、namespaceのsourceは、各directory内の`main.mcl`を使う`mcl` CMPへ切り替えました。CMPはsource checkoutの`k8s/mcl.lock`からMCL versionとrevisionを読み、対応する公式release CLIをSHA256で検証してから実行します。`mcl update`がlockfileを変更した場合は、元のlockfileを復元してrenderを失敗させます。成功時はYAML Bundleをstdoutへ出力し、診断はstderrへ出力します。CMPはMCL sourceとlockfileに固定した入力を使います。
+ApplicationSet app、cluster、namespaceのsourceは、各directory内の`main.mcl`を使う`mcl` CMPへ切り替えました。CMPはsource checkoutの`k8s/mcl.lock`からMCL versionとrevisionを読み、対応する公式release CLIをSHA256で検証してから実行します。`mcl fetch --locked`でLockfileに記録済みの依存を検証・取得してから`mcl render`を実行し、Render時にLockfileを更新しません。アプリ配置ではトップレベルnamespaceを既定値とし、cluster placementの`namespace`を指定した場合はその値をApplication destinationとMCL入力へ渡します。選択したclusterの`kubernetesVersion`を両コマンドの`--kubernetes-version`へ指定します。成功時はYAML Bundleをstdoutへ出力し、診断はstderrへ出力します。
 
 Argo CDの初期適用Bundleは`k8s/_argocd/bootstrap/main.mcl`から生成します。このentrypointはArgo CD chart、CMP ConfigMap、AppProject、Application、ApplicationSetを集約します。初回は`k8s/`で`mcl render _argocd/bootstrap/main.mcl --format yaml`を実行し、既存Argo CD clusterへ適用します。その後、`base` Applicationが`applications/main.mcl`と`entrypoint/main.mcl`をMCL CMPから同期します。初回Bundleの適用とArgo CDへのdeployはまだ実行していません。
 

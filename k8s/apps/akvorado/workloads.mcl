@@ -1,4 +1,5 @@
 import "std:list" as lists
+import "std:crypto" as crypto
 import "./external-secrets.mcl" as externalSecrets
 import text "./_configs/akvorado.yaml" as akvoradoConfigText
 import text "./_configs/inlet.yaml" as inletConfigText
@@ -203,10 +204,16 @@ let orchestratorMounts =
     mountPath: "/etc/akvorado/snmp.yaml"
     subPath: "snmp.yaml"
     readOnly: true
+let configMapData =
+  "akvorado.yaml": akvoradoConfigText
+  "inlet.yaml": inletConfigText
+  "outlet.yaml": outletConfigText
+  "console.yaml": consoleConfigText
+let configMapName = "akvorado-config-" + crypto.sha256(configMapData, 6)
 let orchestratorVolumes =
   - name: "config"
     configMap:
-      name: "akvorado-config-8a4b55"
+      name: configMapName
   - name: "snmp-config"
     secret:
       secretName: externalSecrets.snmpName
@@ -222,18 +229,12 @@ let orchestratorPodSpec =
     - orchestratorContainer
   volumes: orchestratorVolumes
 
-let configMapData =
-  "akvorado.yaml": akvoradoConfigText
-  "inlet.yaml": inletConfigText
-  "outlet.yaml": outletConfigText
-  "console.yaml": consoleConfigText
-
 export fn configMap(namespace: String) -> Map<String, Any> = node:
   apiVersion: "v1"
   kind: "ConfigMap"
   immutable: true
   metadata:
-    name: "akvorado-config-8a4b55"
+    name: configMapName
     namespace: namespace
     labels:
       app: "akvorado-config"

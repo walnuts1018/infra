@@ -4,8 +4,14 @@ export type MachineIdentity =
   talosVersion: String
   hostSelectorLabels: Map<String, String>
 
+export type MachineTemplateIdentity =
+  schematicID: String
+  talosVersion: String
+  hostSelectorLabels: Map<String, String>
+
 export type ControlPlaneConfig =
-  name: String
+  bootstrapConfigName: String
+  machineTemplateName: String
   patchesName: String
   clusterName: String
   namespace: String
@@ -39,7 +45,7 @@ export fn bootstrapConfigTemplate(config: ControlPlaneConfig) -> Map<String, Any
   metadata:
     annotations:
       "argocd.argoproj.io/sync-options": "Prune=false"
-    name: config.name
+    name: config.bootstrapConfigName
     namespace: config.namespace
   spec:
     template:
@@ -88,13 +94,13 @@ export fn tartControlPlane(config: ControlPlaneConfig) -> Map<String, Any> = nod
     bootstrapConfigTemplateRef:
       apiGroup: "bootstrap.cluster.x-k8s.io"
       kind: "TartBootstrapConfigTemplate"
-      name: config.name
+      name: config.bootstrapConfigName
     machineTemplate:
       spec:
         infrastructureRef:
           apiGroup: "infrastructure.cluster.x-k8s.io"
           kind: "TartMachineTemplate"
-          name: config.name
+          name: config.machineTemplateName
     replicas: config.replicas
     version: config.kubernetesVersion
 
@@ -104,7 +110,7 @@ export fn tartMachineTemplate(config: ControlPlaneConfig) -> Map<String, Any> = 
   metadata:
     annotations:
       "argocd.argoproj.io/sync-options": "Prune=false"
-    name: config.name
+    name: config.machineTemplateName
     namespace: config.namespace
   spec:
     template:

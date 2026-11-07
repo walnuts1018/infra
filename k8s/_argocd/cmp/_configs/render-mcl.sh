@@ -39,6 +39,7 @@ case "$mcl_cluster_input" in
 esac
 deployment_parameters=$(printf '%s' "$mcl_deployment_json" | jq -ce 'if type != "object" then error("deployment parameters must be an object") elif has("cluster") or has("namespace") then error("cluster and namespace are reserved parameter names") else . end')
 parameters=$(jq -cn --argjson cluster "$cluster_parameters" --argjson deployment "$deployment_parameters" --arg namespace "$mcl_namespace" --arg namespace_is_set "$mcl_namespace_is_set" '$deployment + {cluster: $cluster} + (if $namespace_is_set == "true" then {namespace: $namespace} else {} end)')
+kubernetes_version=$(printf '%s' "$cluster_parameters" | jq -er '.kubernetesVersion')
 mcl_version=$(sed -n '/"toolchain"[[:space:]]*:/,/^[[:space:]]*}/ s/^[[:space:]]*"mcl":[[:space:]]*"\([0-9][0-9A-Za-z.+-]*\)".*/\1/p' "$lock_file")
 mcl_revision=$(sed -n '/"toolchain"[[:space:]]*:/,/^[[:space:]]*}/ s/^[[:space:]]*"revision":[[:space:]]*"\([0-9a-f]*\)".*/\1/p' "$lock_file")
 case "$mcl_version" in
@@ -87,20 +88,12 @@ case "$($mcl version)" in
   *) echo 'Downloaded MCL CLI does not match k8s/mcl.lock.' >&2; exit 1 ;;
 esac
 
-backup_file=$(mktemp)
-cp -p "$lock_file" "$backup_file"
 parameter_file=$(mktemp)
 printf '%s\n' "$parameters" > "$parameter_file"
-restore_lock() {
-  cp -p "$backup_file" "$lock_file"
-  rm -f "$backup_file"
+cleanup_parameters() {
   rm -f "$parameter_file"
 }
-trap restore_lock EXIT
+trap cleanup_parameters EXIT
 trap 'exit 1' HUP INT TERM
-"$mcl" update main.mcl --parameter-file "$parameter_file"
-if ! cmp -s "$backup_file" "$lock_file"; then
-  echo 'MCL dependency update changed k8s/mcl.lock; refusing to render with an unreviewed lock.' >&2
-  exit 1
-fi
-"$mcl" render main.mcl --format yaml --parameter-file "$parameter_file"
+"$mcl" fetch --locked main.mcl --parameter-file "$parameter_file" --kubernetes-version "$kubernetes_version"
+"$mcl" render main.mcl --format yaml --parameter-file "$parameter_file" --kubernetes-version "$kubernetes_version"

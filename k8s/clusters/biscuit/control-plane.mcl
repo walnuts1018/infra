@@ -6,20 +6,26 @@ import text "./_patches/control-plane.yaml" as patchesText
 fn hostSelectorLabels() -> Map<String, String> =
   "infrastructure.cluster.x-k8s.io/host-name": "eclair"
 
-fn identity(cluster: clusterConfig.ClusterAPIConfig) -> capi.MachineIdentity =
-  patches: patchesText
+fn machineTemplateIdentity(cluster: clusterConfig.ClusterAPIConfig) -> capi.MachineTemplateIdentity =
   schematicID: "376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba"
   talosVersion: cluster.talosVersion
   hostSelectorLabels: hostSelectorLabels()
 
-fn resourceName(cluster: clusterConfig.ClusterAPIConfig) -> String =
-  cluster.name + "-control-plane-" + crypto.sha256(identity(cluster), 10)
+fn identity(cluster: clusterConfig.ClusterAPIConfig) -> capi.MachineIdentity = machineTemplateIdentity(cluster) with:
+  patches: patchesText
+
+fn machineTemplateName(cluster: clusterConfig.ClusterAPIConfig) -> String =
+  cluster.name + "-control-plane-" + crypto.sha256(machineTemplateIdentity(cluster), 10)
 
 fn patchesSecretName(cluster: clusterConfig.ClusterAPIConfig) -> String =
-  cluster.name + "-control-plane-patches-" + crypto.sha256(identity(cluster), 10)
+  cluster.name + "-control-plane-patches-" + crypto.sha256(patchesText, 10)
+
+fn bootstrapConfigName(cluster: clusterConfig.ClusterAPIConfig) -> String =
+  cluster.name + "-control-plane-bootstrap-" + crypto.sha256(patchesSecretName(cluster), 10)
 
 fn config(cluster: clusterConfig.ClusterAPIConfig) -> capi.ControlPlaneConfig = identity(cluster) with:
-  name: resourceName(cluster)
+  bootstrapConfigName: bootstrapConfigName(cluster)
+  machineTemplateName: machineTemplateName(cluster)
   patchesName: patchesSecretName(cluster)
   clusterName: cluster.name
   namespace: cluster.namespace
