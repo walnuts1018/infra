@@ -109,6 +109,7 @@ class-map type control-plane match-any copp-s-routingProto1
 class-map type control-plane match-any copp-s-routingProto2
   match access-group name copp-system-acl-routingproto2
 class-map type control-plane match-any copp-s-ttl1
+class-map type control-plane match-any copp-snmp
 class-map type control-plane match-any copp-ssh
   match access-group name copp-system-acl-ssh
 class-map type control-plane match-any copp-stftp
@@ -180,6 +181,8 @@ policy-map type control-plane copp-system-policy
     police pps 500
   class copp-ssh
     police pps 500
+  class copp-snmp
+    police pps 500
   class copp-ntp
     police pps 100
   class copp-tacacsradius
@@ -225,49 +228,49 @@ interface Ethernet1/1
   no shutdown
 
 interface Ethernet1/2
-  no shutdown
+  shutdown
 
 interface Ethernet1/3
-  no shutdown
+  shutdown
 
 interface Ethernet1/4
-  no shutdown
+  shutdown
 
 interface Ethernet1/5
-  no shutdown
+  shutdown
 
 interface Ethernet1/6
-  no shutdown
+  shutdown
 
 interface Ethernet1/7
-  no shutdown
+  shutdown
 
 interface Ethernet1/8
-  no shutdown
+  shutdown
 
 interface Ethernet1/9
-  no shutdown
+  shutdown
 
 interface Ethernet1/10
-  no shutdown
+  shutdown
 
 interface Ethernet1/11
-  no shutdown
+  shutdown
 
 interface Ethernet1/12
-  no shutdown
+  shutdown
 
 interface Ethernet1/13
-  no shutdown
+  shutdown
 
 interface Ethernet1/14
-  no shutdown
+  shutdown
 
 interface Ethernet1/15
-  no shutdown
+  shutdown
 
 interface Ethernet1/16
-  no shutdown
+  shutdown
 
 interface Ethernet1/17
   speed 1000
@@ -286,91 +289,91 @@ interface Ethernet1/18
   no shutdown
 
 interface Ethernet1/19
-  no shutdown
+  shutdown
 
 interface Ethernet1/20
-  no shutdown
+  shutdown
 
 interface Ethernet1/21
-  no shutdown
+  shutdown
 
 interface Ethernet1/22
-  no shutdown
+  shutdown
 
 interface Ethernet1/23
-  no shutdown
+  shutdown
 
 interface Ethernet1/24
-  no shutdown
+  shutdown
 
 interface Ethernet1/25
-  no shutdown
+  shutdown
 
 interface Ethernet1/26
-  no shutdown
+  shutdown
 
 interface Ethernet1/27
-  no shutdown
+  shutdown
 
 interface Ethernet1/28
-  no shutdown
+  shutdown
 
 interface Ethernet1/29
-  no shutdown
+  shutdown
 
 interface Ethernet1/30
-  no shutdown
+  shutdown
 
 interface Ethernet1/31
-  no shutdown
+  shutdown
 
 interface Ethernet1/32
-  no shutdown
+  shutdown
 
 interface Ethernet1/33
-  no shutdown
+  shutdown
 
 interface Ethernet1/34
-  no shutdown
+  shutdown
 
 interface Ethernet1/35
-  no shutdown
+  shutdown
 
 interface Ethernet1/36
-  no shutdown
+  shutdown
 
 interface Ethernet1/37
-  no shutdown
+  shutdown
 
 interface Ethernet1/38
-  no shutdown
+  shutdown
 
 interface Ethernet1/39
-  no shutdown
+  shutdown
 
 interface Ethernet1/40
-  no shutdown
+  shutdown
 
 interface Ethernet1/41
-  no shutdown
+  shutdown
 
 interface Ethernet1/42
-  no shutdown
+  shutdown
 
 interface Ethernet1/43
-  no shutdown
+  shutdown
 
 interface Ethernet1/44
-  no shutdown
+  shutdown
 
 interface Ethernet1/45
-  no shutdown
+  shutdown
 
 interface Ethernet1/46
-  no shutdown
+  shutdown
 
 interface Ethernet1/47
-  no shutdown
+  shutdown
 
 interface Ethernet1/48
   no lldp transmit
