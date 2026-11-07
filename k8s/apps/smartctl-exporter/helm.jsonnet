@@ -5,6 +5,6 @@ local app = import 'app.json5';
 
   chart: 'prometheus-smartctl-exporter',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '0.17.1',
+  targetRevision: '0.19.0',
   values: (importstr 'values.yaml'),
 }
