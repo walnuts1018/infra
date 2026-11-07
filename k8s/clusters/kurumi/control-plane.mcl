@@ -30,10 +30,13 @@ fn config(cluster: clusterConfig.ClusterAPIConfig) -> capi.ControlPlaneConfig = 
   podCIDR: "10.244.0.0/16"
   serviceCIDR: "10.96.0.0/12"
 
-export fn resources(cluster: clusterConfig.ClusterAPIConfig) -> List<Map<String, Any>> =
-  - capi.bootstrapConfigTemplate(config(cluster))
-  - capi.clusterResource(config(cluster))
-  - capi.tartControlPlane(config(cluster))
-  - capi.tartMachineTemplate(config(cluster))
-  - capi.patchSecret(config(cluster))
-  - capi.tartCluster(config(cluster))
+export fn resources(cluster: clusterConfig.ClusterAPIConfig) -> List<Map<String, Any>>:
+  let settings = config(cluster)
+  [
+    capi.bootstrapConfigTemplate(settings),
+    capi.clusterResource(settings),
+    capi.tartControlPlane(settings),
+    capi.tartMachineTemplate(settings),
+    capi.patchSecret(settings),
+    capi.tartCluster(settings),
+  ]

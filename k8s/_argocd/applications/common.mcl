@@ -2,27 +2,23 @@ export let infraRepo = "https://github.com/walnuts1018/infra"
 export let revision = "clusterapi"
 export let argocdNamespace = "argocd"
 export let apiVersion = "argoproj.io/v1alpha1"
-let applicationSetSyncOptions =
-  - "ServerSideApply=true"
-  - "FailOnSharedResource=true"
-  - "CreateNamespace=true"
 let clusterSyncOptions =
   - "ServerSideApply=true"
   - "FailOnSharedResource=true"
   - "SkipDryRunOnMissingResource=true"
   - "CreateNamespace=true"
 
-export fn syncPolicy(syncOptions: List<String>) -> Map<String, Any> = node:
+export fn syncPolicy(syncOptions: List<String>) -> Map<String, Any> =
   automated:
     selfHeal: true
     prune: true
   syncOptions: syncOptions
 
-export fn metadataNoLabels(name: String) -> Map<String, Any> = node:
+export fn metadataNoLabels(name: String) -> Map<String, Any> =
   name: name
   namespace: argocdNamespace
 
-export fn metadataWithLabels(name: String, labels: Map<String, String>) -> Map<String, Any> = node:
+export fn metadataWithLabels(name: String, labels: Map<String, String>) -> Map<String, Any> =
   name: name
   namespace: argocdNamespace
   labels: labels
@@ -67,7 +63,7 @@ export fn multiSourceApplicationNoLabels(name: String, project: String, destinat
     sources: sources
     syncPolicy: syncPolicy(syncOptions)
 
-export fn mclSource(path: String, clusterName: String) -> Map<String, Any> = node:
+export fn mclSource(path: String, clusterName: String) -> Map<String, Any> =
   repoURL: infraRepo
   targetRevision: revision
   path: path
@@ -79,7 +75,7 @@ export fn mclSource(path: String, clusterName: String) -> Map<String, Any> = nod
       - name: "MCL_DEPLOYMENT_JSON"
         value: "{}"
 
-export fn mclSourceWithRef(path: String, refName: String, clusterName: String) -> Map<String, Any> = node:
+export fn mclSourceWithRef(path: String, refName: String, clusterName: String) -> Map<String, Any> =
   repoURL: infraRepo
   targetRevision: revision
   path: path
@@ -92,12 +88,12 @@ export fn mclSourceWithRef(path: String, refName: String, clusterName: String) -
         value: "{}"
   ref: refName
 
-export fn repositorySource(refName: String) -> Map<String, Any> = node:
+export fn repositorySource(refName: String) -> Map<String, Any> =
   repoURL: infraRepo
   targetRevision: revision
   ref: refName
 
-export fn argoHelmSource(values: List<String>) -> Map<String, Any> = node:
+export fn argoHelmSource(values: List<String>) -> Map<String, Any> =
   repoURL: "https://argoproj.github.io/argo-helm"
   chart: "argo-cd"
   targetRevision: "10.8.2"
@@ -105,7 +101,7 @@ export fn argoHelmSource(values: List<String>) -> Map<String, Any> = node:
     releaseName: "argocd"
     valueFiles: values
 
-export fn agentHelmSource(component: String, releaseName: String, values: List<String>) -> Map<String, Any> = node:
+export fn agentHelmSource(component: String, releaseName: String, values: List<String>) -> Map<String, Any> =
   repoURL: "https://github.com/argoproj-labs/argocd-agent"
   targetRevision: "v0.10.0"
   path: "install/helm-repo/argocd-agent-" + component
@@ -113,27 +109,24 @@ export fn agentHelmSource(component: String, releaseName: String, values: List<S
     releaseName: releaseName
     valueFiles: values
 
-export fn applicationGenerator(cluster: String) -> Map<String, Any> = node:
+export fn applicationGenerator(cluster: String) -> Map<String, Any> =
   matrix:
     generators:
-      -
-        git:
+      - git:
           repoURL: infraRepo
           revision: revision
           files:
-            -
-              path: "k8s/apps/*/app.json"
-      -
-        list:
+            - path: "k8s/apps/*/app.json"
+      - list:
           elementsYaml: "{{- if hasKey (default dict .clusters) \"" + cluster + "\" }}[{\"clusterName\":\"" + cluster + "\",\"clusterEnabled\":\"true\"}]{{- else }}[]{{- end }}"
   selector:
     matchLabels:
       clusterEnabled: "true"
 
-export fn appTemplateMetadataNoLabels(cluster: String) -> Map<String, Any> = node:
+export fn appTemplateMetadataNoLabels(cluster: String) -> Map<String, Any> =
   name: "{{ printf \"%s-" + cluster + "\" .name }}"
 
-export fn appTemplateMetadataWithLabels(cluster: String, labels: Map<String, String>) -> Map<String, Any> = node:
+export fn appTemplateMetadataWithLabels(cluster: String, labels: Map<String, String>) -> Map<String, Any> =
   name: "{{ printf \"%s-" + cluster + "\" .name }}"
   labels: labels
 
@@ -148,13 +141,11 @@ export fn clusterAppSet(cluster: String) -> Map<String, Any> = node:
     goTemplateOptions:
       - "missingkey=error"
     generators:
-      -
-        git:
+      - git:
           repoURL: infraRepo
           revision: revision
           files:
-            -
-              path: "k8s/clusters/*/cluster.json"
+            - path: "k8s/clusters/*/cluster.json"
         selector:
           matchLabels:
             clusterApiManaged: "true"

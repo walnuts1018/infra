@@ -48,22 +48,22 @@ fn applicationSet(config: AgentClusterConfig) -> Map<String, Any> = node:
 
 fn agentApplication(config: AgentClusterConfig) -> Map<String, Any> =
   common.application(
-    "argocd-agent-" + config.name,
-    config.project,
-    destination(config),
-    common.mclSource("k8s/_argocd/agent/agent", config.name),
-    agentLabel,
-    standardSyncOptions,
+    name = "argocd-agent-" + config.name,
+    project = config.project,
+    destination = destination(config),
+    source = common.mclSource("k8s/_argocd/agent/agent", config.name),
+    labels = agentLabel,
+    syncOptions = standardSyncOptions,
   )
 
 fn namespacesApplication(config: AgentClusterConfig) -> Map<String, Any> =
   common.application(
-    "namespaces-" + config.name,
-    config.project,
-    appDestination(config),
-    common.mclSource(config.namespaceSourcePath, config.name),
-    agentLabel,
-    standardSyncOptions,
+    name = "namespaces-" + config.name,
+    project = config.project,
+    destination = appDestination(config),
+    source = common.mclSource(config.namespaceSourcePath, config.name),
+    labels = agentLabel,
+    syncOptions = standardSyncOptions,
   )
 
 fn spokeSources(config: AgentClusterConfig) -> List<Map<String, Any>> =
@@ -72,12 +72,12 @@ fn spokeSources(config: AgentClusterConfig) -> List<Map<String, Any>> =
 
 fn spokeApplication(config: AgentClusterConfig) -> Map<String, Any> =
   common.multiSourceApplication(
-    "argocd-spoke-" + config.name,
-    config.project,
-    destination(config),
-    spokeSources(config),
-    agentLabel,
-    standardSyncOptions,
+    name = "argocd-spoke-" + config.name,
+    project = config.project,
+    destination = destination(config),
+    sources = spokeSources(config),
+    labels = agentLabel,
+    syncOptions = standardSyncOptions,
   )
 
 export fn resources(config: AgentClusterConfig) -> List<Map<String, Any>> =
