@@ -25,6 +25,7 @@ container {
         name-server "1.1.1.1"
         network netbird {
             address "192.168.20.2"
+            mac "02:b5:74:10:6a:73"
         }
         restart "always"
         sysctl {
