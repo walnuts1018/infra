@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'prometheus-node-exporter',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '4.60.1',
+  targetRevision: '5.0.0',
   values: (importstr 'values.yaml'),
 }
