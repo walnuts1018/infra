@@ -1,0 +1,40 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: coredns-etcd-ingress
+  namespace: coredns
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app: coredns-etcd
+      k8s:app.kubernetes.io/name: coredns-etcd
+      k8s:io.kubernetes.pod.namespace: coredns
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app: coredns
+            k8s:app.kubernetes.io/name: coredns
+            k8s:io.kubernetes.pod.namespace: coredns
+        - matchLabels:
+            k8s:app.kubernetes.io/instance: external-dns-coredns
+            k8s:app.kubernetes.io/name: external-dns
+            k8s:io.kubernetes.pod.namespace: external-dns-coredns
+      toPorts:
+        - ports:
+            - port: "2379"
+              protocol: TCP
+    - fromEndpoints:
+        - matchLabels:
+            k8s:app: coredns-etcd
+            k8s:app.kubernetes.io/name: coredns-etcd
+            k8s:io.kubernetes.pod.namespace: coredns
+      toPorts:
+        - ports:
+            - port: "2380"
+              protocol: TCP
+    - fromEntities:
+        - host
+      toPorts:
+        - ports:
+            - port: "2379"
+              protocol: TCP

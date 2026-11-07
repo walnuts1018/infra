@@ -1,0 +1,15 @@
+apiVersion: http.keda.sh/v1beta1
+kind: InterceptorRoute
+metadata:
+  name: prfexample
+  namespace: prfexample
+spec:
+  rules:
+    - hosts:
+        - prfexample.walnuts.dev
+  scalingMetric:
+    concurrency:
+      targetValue: 10
+  target:
+    port: 8080
+    service: prfexample

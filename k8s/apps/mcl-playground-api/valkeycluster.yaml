@@ -1,0 +1,20 @@
+apiVersion: valkey.io/v1alpha1
+kind: ValkeyCluster
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app: mcl-playground-api-valkey
+    app.kubernetes.io/name: mcl-playground-api-valkey
+  name: mcl-playground-api-valkey
+  namespace: mcl-website
+spec:
+  replicas: 2
+  resources:
+    limits:
+      cpu: 500m
+      memory: 256Mi
+    requests:
+      cpu: 5m
+      memory: 32Mi
+  shards: 1

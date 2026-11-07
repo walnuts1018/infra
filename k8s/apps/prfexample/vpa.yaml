@@ -1,0 +1,26 @@
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  labels:
+    app: prfexample
+    app.kubernetes.io/name: prfexample
+  name: prfexample
+  namespace: prfexample
+spec:
+  resourcePolicy:
+    containerPolicies:
+      - containerName: apiserver
+        controlledResources:
+          - memory
+        maxAllowed:
+          cpu: 500m
+          memory: 256Mi
+        minAllowed:
+          cpu: 1m
+          memory: 10Mi
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: prfexample
+  updatePolicy:
+    updateMode: Auto

@@ -1,0 +1,27 @@
+apiVersion: v1
+data:
+  config.yaml: |
+    server:
+      ip: 0.0.0.0
+      port: 8080
+      cache_control: public, max-age=86400, no-transform
+
+    cors:
+      allowed_origins:
+        - '*'
+      max_age_seconds: 86400
+
+    extra_response_headers:
+      CDN-Cache-Control: max-age=604800
+
+    tiles:
+      - name: osm
+        src: http://127.0.0.1:8081/maps/osm-landcover.versatiles
+immutable: true
+kind: ConfigMap
+metadata:
+  labels:
+    app: maps-versatiles-server
+    app.kubernetes.io/name: maps-versatiles-server
+  name: maps-versatiles-config-9b7bba
+  namespace: maps

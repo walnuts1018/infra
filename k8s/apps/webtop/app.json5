@@ -1,7 +1,0 @@
-{
-  name: "webtop",
-  namespace: "webtop",
-  clusters: {
-    kurumi: {},
-  },
-}

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    app: horse-web
+    app.kubernetes.io/name: horse-web
+  name: horse-web
+  namespace: horse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: horse-web
+      app.kubernetes.io/name: horse-web
+  template:
+    metadata:
+      labels:
+        app: horse-web
+        app.kubernetes.io/name: horse-web
+    spec:
+      containers:
+        - env:
+            - name: NODE_ENV
+              value: production
+            - name: HOST
+              value: 0.0.0.0
+            - name: PORT
+              value: "3000"
+            - name: PUBLIC_ORIGIN
+              value: https://horse.walnuts.dev
+          image: ghcr.io/walnuts1018/horse-web:v0.0.1120@sha256:f1cc786565e5004d5b86bd8892b668d35da3ac7a1dfca8546ab93a74ab577a96
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            periodSeconds: 10
+            tcpSocket:
+              port: http
+          name: web
+          ports:
+            - containerPort: 3000
+              name: http
+          readinessProbe:
+            periodSeconds: 5
+            tcpSocket:
+              port: http
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 10m
+              memory: 96Mi
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+      imagePullSecrets:
+        - name: ghcr-login-secret

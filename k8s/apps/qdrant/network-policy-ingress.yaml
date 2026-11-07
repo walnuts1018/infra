@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: qdrant-ingress
+  namespace: qdrant
+spec:
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: picca
+          podSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - picca-apiserver
+                  - picca-embedding-worker
+                  - picca-index-commit-worker
+      ports:
+        - port: 6334
+          protocol: TCP
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: opentelemetry-collector
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: opentelemetry-collector
+              app.kubernetes.io/instance: opentelemetry-collector.prometheus
+      ports:
+        - port: 6333
+          protocol: TCP
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/instance: qdrant
+              app.kubernetes.io/name: qdrant
+      ports:
+        - port: 6333
+          protocol: TCP
+        - port: 6334
+          protocol: TCP
+        - port: 6335
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: qdrant
+      app.kubernetes.io/name: qdrant
+  policyTypes:
+    - Ingress

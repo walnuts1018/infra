@@ -1,0 +1,31 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: rabbitmq-default
+    app.kubernetes.io/name: rabbitmq-default
+  name: rabbitmq-default
+  namespace: rabbitmq
+spec:
+  endpoints:
+    - interval: 15s
+      path: /metrics
+      port: prometheus
+      scheme: http
+      scrapeTimeout: 14s
+    - interval: 15s
+      params:
+        family:
+          - queue_coarse_metrics
+          - queue_metrics
+      path: /metrics/detailed
+      port: prometheus
+      scheme: http
+      scrapeTimeout: 14s
+  namespaceSelector:
+    matchNames:
+      - rabbitmq
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: rabbitmq
+      app.kubernetes.io/name: default

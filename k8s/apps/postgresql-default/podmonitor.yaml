@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app: postgresql-default
+    app.kubernetes.io/name: postgresql-default
+  name: cnpg-cluster-instances
+  namespace: databases
+spec:
+  podMetricsEndpoints:
+    - interval: 30s
+      path: /metrics
+      port: metrics
+  selector:
+    matchLabels:
+      cnpg.io/cluster: postgresql-default
+      cnpg.io/podRole: instance

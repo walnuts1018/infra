@@ -1,0 +1,10 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Vhost
+metadata:
+  name: horse
+  namespace: horse
+spec:
+  name: horse
+  rabbitmqClusterReference:
+    name: default
+    namespace: rabbitmq
