@@ -48,7 +48,7 @@ local externalSecret = import 'external-secret.jsonnet';
             containers: [
               (container) {
                 name: 'renovate',
-                image: 'ghcr.io/renovatebot/renovate:44.227.2@sha256:90cdd4b76b2cb51f11864572bfadae82af8f254c01dbe7a9456c1d3643d383ff',
+                image: 'ghcr.io/renovatebot/renovate:44.227.3@sha256:13913dbbd614fad8e10f4d3be8e3561fb8d883e1ad8f9604f30b34166f7e6a4b',
                 resources: {
                   requests: {
                     cpu: '1',
