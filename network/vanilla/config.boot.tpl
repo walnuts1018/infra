@@ -4,7 +4,7 @@ container {
         prefix "192.168.20.0/29"
     }
     name netbird {
-        image "docker.io/netbirdio/netbird:0.81.2@sha256:6242a1fbaf6b611c00c26a914cbbea512c30c18a45de0646ce7b0e5d93a21e67"
+        image "docker.io/netbirdio/netbird:0.83.1@sha256:3c9d68ae8b730aaed841ff5374e3efad8be550099871a52b1a653d30e5f4faf2"
         capability "net-admin"
         capability "net-raw"
         device tun {
