@@ -366,43 +366,43 @@ specifiers = ["0.40.1"]
 [tools.tanka."platforms.linux-arm64"]
 checksum = "sha256:80a98e6b2a3a51cbfa0634b9ed584b1e02c959f80e1c2db99f2141c586f6e08f"
 checksum_source = "mise-versions"
-url = "https://github.com/grafana/tanka/releases/download/v0.40.1/tk-linux-arm64"
+url = "https://github.com/grafana/tanka/releases/download/v0.40.2/tk-linux-arm64"
 url_api = "https://api.github.com/repos/grafana/tanka/releases/assets/688784172"
 
 [tools.tanka."platforms.linux-arm64-musl"]
 checksum = "sha256:80a98e6b2a3a51cbfa0634b9ed584b1e02c959f80e1c2db99f2141c586f6e08f"
 checksum_source = "mise-versions"
-url = "https://github.com/grafana/tanka/releases/download/v0.40.1/tk-linux-arm64"
+url = "https://github.com/grafana/tanka/releases/download/v0.40.2/tk-linux-arm64"
 url_api = "https://api.github.com/repos/grafana/tanka/releases/assets/688784172"
 
 [tools.tanka."platforms.linux-x64"]
 checksum = "sha256:de550a4dec153b610ef5047b25869e0942c4740ace4e2b8e9ad6f38fbe8935bb"
 checksum_source = "mise-versions"
-url = "https://github.com/grafana/tanka/releases/download/v0.40.1/tk-linux-amd64"
+url = "https://github.com/grafana/tanka/releases/download/v0.40.2/tk-linux-amd64"
 url_api = "https://api.github.com/repos/grafana/tanka/releases/assets/688784358"
 
 [tools.tanka."platforms.linux-x64-musl"]
 checksum = "sha256:de550a4dec153b610ef5047b25869e0942c4740ace4e2b8e9ad6f38fbe8935bb"
 checksum_source = "mise-versions"
-url = "https://github.com/grafana/tanka/releases/download/v0.40.1/tk-linux-amd64"
+url = "https://github.com/grafana/tanka/releases/download/v0.40.2/tk-linux-amd64"
 url_api = "https://api.github.com/repos/grafana/tanka/releases/assets/688784358"
 
 [tools.tanka."platforms.macos-arm64"]
 checksum = "sha256:761c8d75cb209c1fbd27acb2eaf0ea34fdc85b516d03a08062ab43cb30596e7a"
 checksum_source = "mise-versions"
-url = "https://github.com/grafana/tanka/releases/download/v0.40.1/tk-darwin-arm64"
+url = "https://github.com/grafana/tanka/releases/download/v0.40.2/tk-darwin-arm64"
 url_api = "https://api.github.com/repos/grafana/tanka/releases/assets/688784414"
 
 [tools.tanka."platforms.macos-x64"]
 checksum = "sha256:f2d7a2c5035523629f1415caa60aa301fa8cb5f512d167033b78e5eddb4cf9c2"
 checksum_source = "mise-versions"
-url = "https://github.com/grafana/tanka/releases/download/v0.40.1/tk-darwin-amd64"
+url = "https://github.com/grafana/tanka/releases/download/v0.40.2/tk-darwin-amd64"
 url_api = "https://api.github.com/repos/grafana/tanka/releases/assets/688784508"
 
 [tools.tanka."platforms.windows-x64"]
 checksum = "sha256:a75f446eb3b32a3111002e807e501e24bd4e96c9bb570a3ef2390c2f9c1e26bf"
 checksum_source = "mise-versions"
-url = "https://github.com/grafana/tanka/releases/download/v0.40.1/tk-windows-amd64.exe"
+url = "https://github.com/grafana/tanka/releases/download/v0.40.2/tk-windows-amd64.exe"
 url_api = "https://api.github.com/repos/grafana/tanka/releases/assets/688784060"
 
 [[tools.terraform]]
