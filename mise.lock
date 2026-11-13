@@ -9,43 +9,43 @@ specifiers = ["2.38.5"]
 
 [tools.coder."platforms.linux-arm64"]
 checksum = "sha256:53aa17fab391751cfbf32f1165dd1828240bc3c5c23eb6cd62625b4e46fec4c2"
-url = "https://github.com/coder/coder/releases/download/v2.38.5/coder_2.38.5_linux_arm64.tar.gz"
+url = "https://github.com/coder/coder/releases/download/v2.39.1/coder_2.38.5_linux_arm64.tar.gz"
 url_api = "https://api.github.com/repos/coder/coder/releases/assets/693382401"
 provenance = "github-attestations"
 
 [tools.coder."platforms.linux-arm64-musl"]
 checksum = "sha256:53aa17fab391751cfbf32f1165dd1828240bc3c5c23eb6cd62625b4e46fec4c2"
-url = "https://github.com/coder/coder/releases/download/v2.38.5/coder_2.38.5_linux_arm64.tar.gz"
+url = "https://github.com/coder/coder/releases/download/v2.39.1/coder_2.38.5_linux_arm64.tar.gz"
 url_api = "https://api.github.com/repos/coder/coder/releases/assets/693382401"
 provenance = "github-attestations"
 
 [tools.coder."platforms.linux-x64"]
 checksum = "sha256:f8e16e9d64258fa9b4d640e1f3899f8a76c064326f3ee495b798d7c2361b7ee7"
-url = "https://github.com/coder/coder/releases/download/v2.38.5/coder_2.38.5_linux_amd64.tar.gz"
+url = "https://github.com/coder/coder/releases/download/v2.39.1/coder_2.38.5_linux_amd64.tar.gz"
 url_api = "https://api.github.com/repos/coder/coder/releases/assets/693382311"
 provenance = "github-attestations"
 
 [tools.coder."platforms.linux-x64-musl"]
 checksum = "sha256:f8e16e9d64258fa9b4d640e1f3899f8a76c064326f3ee495b798d7c2361b7ee7"
-url = "https://github.com/coder/coder/releases/download/v2.38.5/coder_2.38.5_linux_amd64.tar.gz"
+url = "https://github.com/coder/coder/releases/download/v2.39.1/coder_2.38.5_linux_amd64.tar.gz"
 url_api = "https://api.github.com/repos/coder/coder/releases/assets/693382311"
 provenance = "github-attestations"
 
 [tools.coder."platforms.macos-arm64"]
 checksum = "sha256:bb62d7b60dd982d440c2c6ddb197f5d6f8d80ca1bc298fddefe22e79bf9461b4"
-url = "https://github.com/coder/coder/releases/download/v2.38.5/coder_2.38.5_darwin_arm64.zip"
+url = "https://github.com/coder/coder/releases/download/v2.39.1/coder_2.38.5_darwin_arm64.zip"
 url_api = "https://api.github.com/repos/coder/coder/releases/assets/693381937"
 provenance = "github-attestations"
 
 [tools.coder."platforms.macos-x64"]
 checksum = "sha256:12df64e8c9ab621a5fed876b1ef6e00a88e1af10176c0c494b1c1a113b6a9bbf"
-url = "https://github.com/coder/coder/releases/download/v2.38.5/coder_2.38.5_darwin_amd64.zip"
+url = "https://github.com/coder/coder/releases/download/v2.39.1/coder_2.38.5_darwin_amd64.zip"
 url_api = "https://api.github.com/repos/coder/coder/releases/assets/693381932"
 provenance = "github-attestations"
 
 [tools.coder."platforms.windows-x64"]
 checksum = "sha256:57fc7db91d495acf6d0400406bb54990d5f3b554a6f6fbd3cd527e1ecadfd190"
-url = "https://github.com/coder/coder/releases/download/v2.38.5/coder_2.38.5_windows_amd64.zip"
+url = "https://github.com/coder/coder/releases/download/v2.39.1/coder_2.38.5_windows_amd64.zip"
 url_api = "https://api.github.com/repos/coder/coder/releases/assets/693382679"
 provenance = "github-attestations"
 
