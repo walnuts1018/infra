@@ -39,7 +39,7 @@ local app = import 'app.json5';
         containers: [
           {
             name: 'controller-manager',
-            image: 'docker.io/alpine/socat:1.8.1.3@sha256:fb3862c949af7c79996d0e514ee96128644d840835ed5368eeecb14a869de361',
+            image: 'docker.io/alpine/socat:1.8.1.3@sha256:71131702f671a88b3808a70b7330f9679cd9b9933adcafadc191508edfe55bba',
             args: [
               '-d',
               '-d',
@@ -66,7 +66,7 @@ local app = import 'app.json5';
           },
           {
             name: 'scheduler',
-            image: 'docker.io/alpine/socat:1.8.1.3@sha256:fb3862c949af7c79996d0e514ee96128644d840835ed5368eeecb14a869de361',
+            image: 'docker.io/alpine/socat:1.8.1.3@sha256:71131702f671a88b3808a70b7330f9679cd9b9933adcafadc191508edfe55bba',
             args: [
               '-d',
               '-d',
@@ -93,7 +93,7 @@ local app = import 'app.json5';
           },
           {
             name: 'etcd',
-            image: 'docker.io/alpine/socat:1.8.1.3@sha256:fb3862c949af7c79996d0e514ee96128644d840835ed5368eeecb14a869de361',
+            image: 'docker.io/alpine/socat:1.8.1.3@sha256:71131702f671a88b3808a70b7330f9679cd9b9933adcafadc191508edfe55bba',
             args: [
               '-d',
               '-d',
