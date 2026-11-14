@@ -8,14 +8,22 @@ local backendRule(contentType) = {
     headers: [{ type: 'Exact', name: 'content-type', value: contentType }],
   }],
   timeouts: { request: '0s', backendRequest: '0s' },
-  filters: [{
-    type: 'ExtensionRef',
-    extensionRef: {
-      group: 'gateway.envoyproxy.io',
-      kind: 'HTTPRouteFilter',
-      name: credentialFilter.metadata.name,
+  filters: [
+    {
+      type: 'RequestHeaderModifier',
+      requestHeaderModifier: {
+        set: [{ name: 'content-type', value: contentType }],
+      },
     },
-  }],
+    {
+      type: 'ExtensionRef',
+      extensionRef: {
+        group: 'gateway.envoyproxy.io',
+        kind: 'HTTPRouteFilter',
+        name: credentialFilter.metadata.name,
+      },
+    },
+  ],
   backendRefs: [{ kind: 'Service', name: server.metadata.name, port: 8080 }],
 };
 {
