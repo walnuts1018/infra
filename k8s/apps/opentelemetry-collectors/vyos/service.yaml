@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    lbipam.cilium.io/ips: 192.168.12.136
+  name: vyos-collector-ingest
+spec:
+  loadBalancerSourceRanges:
+    - 192.168.0.1/32
+  ports:
+    - name: syslog-udp
+      port: 514
+      protocol: UDP
+      targetPort: 5514
+  selector:
+    app.kubernetes.io/component: opentelemetry-collector
+    app.kubernetes.io/instance: opentelemetry-collector.vyos
+    app.kubernetes.io/part-of: opentelemetry
+  type: LoadBalancer

@@ -1,0 +1,12 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: agr-gateway-credential
+  namespace: agr
+spec:
+  credentialInjection:
+    credential:
+      valueRef:
+        name: agr-gateway-credential
+    header: x-gateway-token
+    overwrite: true

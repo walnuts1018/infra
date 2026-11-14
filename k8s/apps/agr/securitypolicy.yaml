@@ -1,0 +1,56 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+  name: agr
+  namespace: agr
+spec:
+  authorization:
+    defaultAction: Deny
+    rules:
+      - action: Allow
+        name: agr-user
+        principal:
+          jwt:
+            claims:
+              - name: my:zitadel:grants
+                valueType: StringArray
+                values:
+                  - 399549847444652339:agr-user
+            provider: zitadel
+  jwt:
+    providers:
+      - claimToHeaders:
+          - claim: sub
+            header: x-authenticated-controller-id
+        extractFrom:
+          cookies:
+            - agr-access-token
+        issuer: https://auth.walnuts.dev
+        name: zitadel
+        remoteJWKS:
+          uri: https://auth.walnuts.dev/oauth/v2/keys
+  oidc:
+    clientIDRef:
+      name: agr-oidc
+    clientSecret:
+      name: agr-oidc
+    cookieNames:
+      accessToken: agr-access-token
+      idToken: agr-id-token
+    forwardAccessToken: false
+    logoutPath: /logout
+    provider:
+      issuer: https://auth.walnuts.dev
+    redirectURL: https://agr.walnuts.dev/oauth2/callback
+    scopes:
+      - openid
+      - email
+      - profile
+      - offline_access
+      - urn:zitadel:iam:org:projects:roles
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: agr

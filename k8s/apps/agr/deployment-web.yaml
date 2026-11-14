@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: agr-web
+    app.kubernetes.io/name: agr-web
+  name: agr-web
+  namespace: agr
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: agr-web
+      app.kubernetes.io/name: agr-web
+  template:
+    metadata:
+      labels:
+        app: agr-web
+        app.kubernetes.io/name: agr-web
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - env:
+            - name: NODE_ENV
+              value: production
+            - name: NEXT_TELEMETRY_DISABLED
+              value: "1"
+          image: ghcr.io/walnuts1018/agr-web:0.1.2@sha256:f43731b3f911dc123e77527e19a1e55849e507b601b2b30a72a4163229c8271a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 3
+          name: web
+          ports:
+            - containerPort: 3000
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - mountPath: /app/web/.next/cache
+              name: next-cache
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      securityContext:
+        fsGroup: 65532
+        runAsGroup: 65532
+        runAsUser: 65532
+      volumes:
+        - emptyDir: {}
+          name: next-cache

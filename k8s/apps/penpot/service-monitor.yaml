@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: penpot-backend
+    app.kubernetes.io/name: penpot-backend
+  name: penpot-backend
+  namespace: penpot
+spec:
+  endpoints:
+    - path: /metrics
+      port: http
+      relabelings:
+        - action: keep
+          regex: penpot-backend
+          sourceLabels:
+            - __meta_kubernetes_service_name
+  namespaceSelector:
+    matchNames:
+      - penpot
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: penpot
+      app.kubernetes.io/name: penpot

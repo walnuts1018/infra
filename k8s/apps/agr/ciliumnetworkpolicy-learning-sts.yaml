@@ -1,0 +1,18 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: agr-learning-sts-egress
+  namespace: agr
+spec:
+  egress:
+    - toFQDNs:
+        - matchName: seaweedfs.local.walnuts.dev
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+          serverNames:
+            - seaweedfs.local.walnuts.dev
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: agr-learning

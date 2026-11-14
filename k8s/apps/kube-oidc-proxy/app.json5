@@ -1,7 +1,0 @@
-{
-  name: "kube-oidc-proxy",
-  namespace: "kube-oidc-proxy",
-  clusters: {
-    kurumi: {},
-  },
-}

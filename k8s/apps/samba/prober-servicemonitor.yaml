@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: samba-prober
+    app.kubernetes.io/name: samba-prober
+  name: samba-prober
+  namespace: samba
+spec:
+  endpoints:
+    - interval: 30s
+      path: /metrics
+      port: metrics
+  namespaceSelector:
+    matchNames:
+      - samba
+  selector:
+    matchLabels:
+      app: samba-prober
+      app.kubernetes.io/name: samba-prober

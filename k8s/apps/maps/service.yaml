@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: maps-versatiles-server
+    app.kubernetes.io/name: maps-versatiles-server
+  name: maps-versatiles-server
+  namespace: maps
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  selector:
+    app: maps-versatiles-server
+    app.kubernetes.io/name: maps-versatiles-server
+  type: ClusterIP

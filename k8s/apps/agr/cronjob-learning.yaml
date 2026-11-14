@@ -1,0 +1,127 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    app: agr-learning
+    app.kubernetes.io/name: agr-learning
+  name: agr-learning
+  namespace: agr
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 604800
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app: agr-learning
+            app.kubernetes.io/name: agr-learning
+        spec:
+          automountServiceAccountToken: false
+          containers:
+            - command:
+                - /app/.venv/bin/agr-pipeline-run
+              env:
+                - name: AGR_PIPELINE_JOB_UID
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.uid
+                - name: SERVICE_ENDPOINT
+                  value: http://agr-server.agr.svc.cluster.local:8080
+                - name: SERVICE_GATEWAY_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      key: SERVICE_GATEWAY_TOKEN
+                      name: agr-learning-token
+                - name: WORKER_CONTROLLER_ID
+                  value: agr-learning-job
+                - name: AGR_SERVER_SERVICE_HEALTH_URL
+                  value: http://agr-server.agr.svc.cluster.local:8081
+                - name: WORKER_S3_BUCKET
+                  value: agr-ai
+                - name: WORKER_S3_PREFIX
+                  value: worker-runs
+                - name: WORKER_S3_ENDPOINT
+                  value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+                - name: AWS_ENDPOINT_URL_S3
+                  value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+                - name: AWS_ENDPOINT_URL_STS
+                  value: https://seaweedfs.local.walnuts.dev
+                - name: AWS_REGION
+                  value: us-east-1
+                - name: AWS_ROLE_ARN
+                  value: arn:aws:iam::role/agr-learning-job
+                - name: AWS_WEB_IDENTITY_TOKEN_FILE
+                  value: /projected/sts.seaweedfs.com/serviceaccount/token
+                - name: AGR_MODEL_ACTIVE_POINTER_S3_URI
+                  value: s3://agr-ai/worker-runs/models/active.json
+                - name: AGR_PIPELINE_BOOTSTRAP_RESAMPLES
+                  value: "10000"
+                - name: AGR_PIPELINE_SIMULATION_CONCURRENCY
+                  value: "4"
+                - name: AGR_PIPELINE_ANALYSIS_ROLLOUTS
+                  value: "8"
+                - name: AGR_PIPELINE_ANALYSIS_DURATION_MS
+                  value: "100"
+                - name: PYTHONDONTWRITEBYTECODE
+                  value: "1"
+                - name: PYTHONHASHSEED
+                  value: "0"
+                - name: HOME
+                  value: /tmp
+                - name: RUST_BACKTRACE
+                  value: "1"
+              image: ghcr.io/walnuts1018/agr-training:0.1.2@sha256:d8a28bd7710e692905e3e677ac1ff3a5f02ff8198acdcd93e6f5cf55a8a9f2f9
+              imagePullPolicy: IfNotPresent
+              name: learning-pipeline
+              resources:
+                limits:
+                  cpu: "8"
+                  memory: 24Gi
+                requests:
+                  cpu: "2"
+                  memory: 8Gi
+              securityContext:
+                capabilities:
+                  add:
+                    - NET_BIND_SERVICE
+                  drop:
+                    - all
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /tmp
+                  name: tmp
+                - mountPath: /projected/sts.seaweedfs.com/serviceaccount
+                  name: seaweedfs-sts-token
+                  readOnly: true
+          imagePullSecrets:
+            - name: ghcr-login-secret
+          restartPolicy: Never
+          securityContext:
+            fsGroup: 10001
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+            seccompProfile:
+              type: RuntimeDefault
+          serviceAccountName: agr-learning-job
+          volumes:
+            - emptyDir:
+                sizeLimit: 8Gi
+              name: tmp
+            - name: seaweedfs-sts-token
+              projected:
+                sources:
+                  - serviceAccountToken:
+                      audience: sts.seaweedfs.com
+                      expirationSeconds: 3600
+                      path: token
+      ttlSecondsAfterFinished: 604800
+  schedule: 0 3 * * *
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  timeZone: Asia/Tokyo
