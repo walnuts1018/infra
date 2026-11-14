@@ -57,7 +57,7 @@ local httpRoute = import 'httproute.jsonnet';
               {
                 name: 'my:zitadel:grants',
                 valueType: 'StringArray',
-                values: ['<todo-replace>:agr-user'],
+                values: ['399549847444652339:agr-user'],
               },
             ],
           },
