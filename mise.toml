@@ -1,7 +1,7 @@
 [tools]
 terraform = "1.15.9"
 go-jsonnet = "0.22.0"
-"github:manifest-configuration-language/mcl" = "0.4.5"
+"github:manifest-configuration-language/mcl" = "0.4.7"
 
 [tasks.jsonnet-fmt]
 description = "Format Jsonnet files"

@@ -50,6 +50,11 @@ case "$mcl_revision" in
 esac
 [ "${#mcl_revision}" -eq 40 ] || { echo 'Could not read a valid MCL revision from k8s/mcl.lock.' >&2; exit 1; }
 
+case "$(uname -s)" in
+  Linux) mcl_os=linux ;;
+  Darwin) mcl_os=darwin ;;
+  *) echo "Unsupported operating system: $(uname -s)" >&2; exit 1 ;;
+esac
 case "$(uname -m)" in
   x86_64|amd64) mcl_arch=amd64 ;;
   aarch64|arm64) mcl_arch=arm64 ;;
@@ -62,7 +67,7 @@ if [ ! -x "$mcl" ]; then
   download_dir=$(mktemp -d "/tmp/mcl-cli/.${mcl_version}-${mcl_revision}-${mcl_arch}.XXXXXX")
   cleanup_download() { rm -rf "$download_dir"; }
   trap cleanup_download EXIT HUP INT TERM
-  archive="mcl_${mcl_version}_linux_${mcl_arch}.tar.gz"
+  archive="mcl_${mcl_version}_${mcl_os}_${mcl_arch}.tar.gz"
   release_url="https://github.com/manifest-configuration-language/mcl/releases/download/v${mcl_version}"
   curl -fsSL "$release_url/SHA256SUMS" -o "$download_dir/SHA256SUMS"
   curl -fsSL "$release_url/$archive" -o "$download_dir/$archive"
