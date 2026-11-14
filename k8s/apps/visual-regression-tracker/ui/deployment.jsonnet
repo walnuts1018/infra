@@ -23,7 +23,7 @@ local appname = app.name + '-ui';
         containers: [
           (container) {
             name: 'ui',
-            image: 'docker.io/visualregressiontracker/ui:5.5.2@sha256:178ef45f1c9a703d5298638ec95290a7211676ea083bff2b2a9561ca70bb0ef0',
+            image: 'docker.io/visualregressiontracker/ui:6.1.0@sha256:2d6b86672d69c28568ccbab23d58c91573bde7dba65133d1a5ab00b1787163c1',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               {
