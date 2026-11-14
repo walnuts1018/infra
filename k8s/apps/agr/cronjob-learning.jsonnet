@@ -56,7 +56,7 @@ local learningServiceAccount = import 'service-account-learning.jsonnet';
             containers: [
               (import '../../components/container.libsonnet') {
                 name: 'learning-pipeline',
-                image: 'ghcr.io/walnuts1018/agr-training:0.1.0@sha256:26ca24303f9ffeca9038922a7ceeb770417056f49de497f69a804ef109cb0f28',
+                image: 'ghcr.io/walnuts1018/agr-training:0.1.2@sha256:d8a28bd7710e692905e3e677ac1ff3a5f02ff8198acdcd93e6f5cf55a8a9f2f9',
                 imagePullPolicy: 'IfNotPresent',
                 command: ['/app/.venv/bin/agr-pipeline-run'],
                 env: [
