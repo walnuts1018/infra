@@ -6,6 +6,12 @@
     secret_source_property: 'horse-database-password',
   },
   {
+    db_name: 'agr',
+    user_name: 'agr',
+    secret_source_key: 'terraform-external-secrets',
+    secret_source_property: 'agr-database-password',
+  },
+  {
     db_name: 'picca',
     user_name: 'picca',
     extensions: [

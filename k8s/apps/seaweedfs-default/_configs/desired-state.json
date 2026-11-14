@@ -11,6 +11,15 @@
   },
   "buckets": [
     {
+      "name": "agr-ai",
+      "publicRead": [],
+      "placement": {
+        "diskType": "ssd",
+        "replication": "001"
+      },
+      "versioning": "Enabled"
+    },
+    {
       "name": "horse",
       "publicRead": [],
       "versioning": "Enabled",
@@ -530,6 +539,16 @@
             "claim": "sub",
             "value": "system:serviceaccount:cortex:iwashi-cortex",
             "role": "cortex"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:agr:agr-app-service",
+            "role": "agr-app-service"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:agr:agr-learning-job",
+            "role": "agr-learning-job"
           }
         ]
       },
@@ -761,6 +780,54 @@
             ]
           }
         ]
+      },
+      {
+        "name": "agr-app-service-read",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:ListBucket"
+            ],
+            "resources": [
+              "arn:aws:s3:::agr-ai"
+            ]
+          },
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:GetObject"
+            ],
+            "resources": [
+              "arn:aws:s3:::agr-ai/worker-runs/models/*"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "agr-learning-job",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:ListBucket"
+            ],
+            "resources": [
+              "arn:aws:s3:::agr-ai"
+            ]
+          },
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:Get*",
+              "s3:Put*",
+              "s3:AbortMultipartUpload"
+            ],
+            "resources": [
+              "arn:aws:s3:::agr-ai/worker-runs/*"
+            ]
+          }
+        ]
       }
     ],
     "roles": [
@@ -854,6 +921,20 @@
         "name": "cortex",
         "policies": [
           "cortex"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "agr-app-service",
+        "policies": [
+          "agr-app-service-read"
+        ],
+        "provider": "k8s"
+      },
+      {
+        "name": "agr-learning-job",
+        "policies": [
+          "agr-learning-job"
         ],
         "provider": "k8s"
       }

@@ -72,6 +72,15 @@ local piccaS3ClientNames = [
           }),
           peer('beast', { matchLabels: { 'app.kubernetes.io/name': 'backend' } }),
           peer('beast', { matchLabels: { 'app.kubernetes.io/name': 'encoder' } }),
+          peer('agr', {
+            matchExpressions: [
+              {
+                key: 'app.kubernetes.io/name',
+                operator: 'In',
+                values: ['agr-server', 'agr-learning'],
+              },
+            ],
+          }),
           peer('horse', {
             matchExpressions: [
               {
