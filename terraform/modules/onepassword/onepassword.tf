@@ -140,6 +140,16 @@ resource "random_password" "mcl_playground_database_password" {
   special = false
 }
 
+resource "random_password" "agr_database_password" {
+  length  = 48
+  special = false
+}
+
+resource "random_password" "agr_gateway_token" {
+  length  = 64
+  special = false
+}
+
 resource "random_id" "mcl_playground_rate_limit_secret" {
   byte_length = 32
 }
@@ -158,6 +168,10 @@ resource "onepassword_item" "external_secret" {
       field_map = {
         "akvorado-client-id"                       = { type = "STRING", value = var.akvorado_client_id }
         "akvorado-client-secret"                   = { type = "CONCEALED", value = var.akvorado_client_secret }
+        "agr-client-id"                            = { type = "STRING", value = var.agr_client_id }
+        "agr-client-secret"                        = { type = "CONCEALED", value = var.agr_client_secret }
+        "agr-database-password"                    = { type = "CONCEALED", value = random_password.agr_database_password.result }
+        "agr-gateway-token"                        = { type = "CONCEALED", value = random_password.agr_gateway_token.result }
         "argocd-cli-client-id"                     = { type = "STRING", value = var.argocd_cli_client_id }
         "b2-application-key"                       = { type = "CONCEALED", value = var.b2_application_key }
         "beast-client-id"                          = { type = "STRING", value = var.beast_client_id }

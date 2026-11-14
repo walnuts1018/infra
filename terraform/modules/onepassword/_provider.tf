@@ -128,3 +128,8 @@ variable "penpot_client_secret" {
   sensitive = true
 }
 variable "penpot_project_id" { type = string }
+variable "agr_client_id" { type = string }
+variable "agr_client_secret" {
+  type      = string
+  sensitive = true
+}

@@ -89,3 +89,14 @@ output "penpot_project_id" {
   value       = module.zitadel.penpot_project_id
   description = "ZITADEL project ID used by Penpot role restriction"
 }
+
+output "agr_oidc_client_id" {
+  value       = module.zitadel.agr_oidc_client_id
+  description = "Client ID for agr's Envoy Gateway OIDC policy"
+}
+
+output "agr_oidc_client_secret" {
+  value       = module.zitadel.agr_oidc_client_secret
+  sensitive   = true
+  description = "OIDC client secret for agr"
+}

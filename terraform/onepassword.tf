@@ -40,6 +40,8 @@ module "onepassword" {
   penpot_client_id        = module.zitadel.penpot_oidc_client_id
   penpot_client_secret    = module.zitadel.penpot_oidc_client_secret
   penpot_project_id       = module.zitadel.penpot_project_id
+  agr_client_id           = module.zitadel.agr_oidc_client_id
+  agr_client_secret       = module.zitadel.agr_oidc_client_secret
 }
 
 module "horse_ai" {
