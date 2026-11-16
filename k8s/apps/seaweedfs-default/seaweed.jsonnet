@@ -11,7 +11,7 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
     labels: labels(app.name),
   },
   spec: {
-    image: 'chrislusf/seaweedfs:4.48_large_disk_full@sha256:ecda8f2983f513d64b21af6d45931228ea1ca4254747883f6ba10ef2d2385097',
+    image: 'chrislusf/seaweedfs:4.54_large_disk_full@sha256:887f20f7184db48867f412471ea4bfb98f71bb9d652fde72de2173dbb450193a',
     master: {
       replicas: 3,
       volumeSizeLimitMB: 1024,
