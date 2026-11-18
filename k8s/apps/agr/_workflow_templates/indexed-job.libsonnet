@@ -1,5 +1,6 @@
 {
   render(config):
+    local workerImage = 'ghcr.io/walnuts1018/agr-worker:0.1.15@sha256:cc333251f3222e99e4efd94f67f584fa329eb6b8225a16d97ba1f77beeb105c9';
     local job = {
       apiVersion: 'batch/v1',
       kind: 'Job',
@@ -42,10 +43,6 @@
             imagePullSecrets: [{ name: 'ghcr-login-secret' }],
             volumes: [
               {
-                name: 'learning-settings',
-                configMap: { name: 'learning-settings' },
-              },
-              {
                 name: 'sts-token',
                 projected: {
                   sources: [{
@@ -61,7 +58,7 @@
             ],
             containers: [{
               name: config.containerName,
-              image: 'ghcr.io/walnuts1018/agr-worker:0.1.15@sha256:cc333251f3222e99e4efd94f67f584fa329eb6b8225a16d97ba1f77beeb105c9',
+              image: workerImage,
               command: ['worker'],
               args: [config.command] + config.commandArgs + [
                 '--generation-id',
@@ -79,7 +76,7 @@
                 { name: 'AGR_WORKFLOW_UID', value: '{{workflow.uid}}' },
                 {
                   name: 'AGR_WORKER_IMAGE_REFERENCE',
-                  value: 'ghcr.io/walnuts1018/agr-worker:0.1.15@sha256:cc333251f3222e99e4efd94f67f584fa329eb6b8225a16d97ba1f77beeb105c9',
+                  value: workerImage,
                 },
                 {
                   name: 'AWS_ENDPOINT_URL_S3',
@@ -131,7 +128,6 @@
                 capabilities: { drop: ['ALL'] },
               },
               volumeMounts: [
-                { name: 'learning-settings', mountPath: '/etc/agr', readOnly: true },
                 {
                   name: 'sts-token',
                   mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',

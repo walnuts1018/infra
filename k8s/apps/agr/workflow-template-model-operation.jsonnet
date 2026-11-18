@@ -1,5 +1,6 @@
 local app = import 'app.json5';
 local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-patch.libsonnet', '', '', ':');
+local stagePod = import '_workflow_templates/stage-pod.libsonnet';
 {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'WorkflowTemplate',
@@ -57,19 +58,11 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
           { name: 'SERVICE_GATEWAY_TOKEN', valueFrom: { secretKeyRef: { name: 'agr-learning-token', key: 'SERVICE_GATEWAY_TOKEN' } } },
         ],
         resources: { requests: { cpu: '100m', memory: '256Mi', 'ephemeral-storage': '128Mi' }, limits: { cpu: '400m', memory: '896Mi', 'ephemeral-storage': '1Gi' } },
-        securityContext: { runAsNonRoot: true, runAsUser: 10001, runAsGroup: 10001, readOnlyRootFilesystem: true, allowPrivilegeEscalation: false, capabilities: { drop: ['ALL'] } },
-        volumeMounts: [
-          { name: 'learning-settings', mountPath: '/etc/agr', readOnly: true },
-          { name: 'sts-token', mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount', readOnly: true },
-          { name: 'tmp', mountPath: '/tmp' },
-        ],
+        securityContext: stagePod.securityContext,
+        volumeMounts: stagePod.volumeMounts,
       },
       serviceAccountName: 'agr-promoter',
-      volumes: [
-        { name: 'learning-settings', configMap: { name: 'learning-settings' } },
-        { name: 'sts-token', projected: { sources: [{ serviceAccountToken: { audience: 'sts.seaweedfs.com', expirationSeconds: 3600, path: 'token' } }] } },
-        { name: 'tmp', emptyDir: { sizeLimit: '1Gi' } },
-      ],
+      volumes: stagePod.volumes('1Gi'),
       podSpecPatch: podSpecPatch,
     }],
   },

@@ -3,42 +3,7 @@ local indexedJob = import '_workflow_templates/indexed-job.libsonnet';
 local jobReference = import '_workflow_templates/job-reference.libsonnet';
 local maxActorPods = 1;
 local maxEvaluationPods = 1;
-local stageSecurityContext = {
-  allowPrivilegeEscalation: false,
-  capabilities: { drop: ['ALL'] },
-  readOnlyRootFilesystem: true,
-  runAsGroup: 10001,
-  runAsNonRoot: true,
-  runAsUser: 10001,
-};
-local stageVolumeMounts = [
-  { name: 'learning-settings', mountPath: '/etc/agr', readOnly: true },
-  {
-    name: 'sts-token',
-    mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-    readOnly: true,
-  },
-  { name: 'tmp', mountPath: '/tmp' },
-];
-local stageVolumes(tmpSize) = [
-  {
-    name: 'learning-settings',
-    configMap: { name: 'learning-settings' },
-  },
-  {
-    name: 'sts-token',
-    projected: {
-      sources: [{
-        serviceAccountToken: {
-          audience: 'sts.seaweedfs.com',
-          expirationSeconds: 3600,
-          path: 'token',
-        },
-      }],
-    },
-  },
-  { name: 'tmp', emptyDir: { sizeLimit: tmpSize } },
-];
+local stagePod = import '_workflow_templates/stage-pod.libsonnet';
 {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'WorkflowTemplate',
@@ -98,9 +63,7 @@ local stageVolumes(tmpSize) = [
               template: 'create-attempt',
             },
             {
-              dependencies: [
-                'create-attempt',
-              ],
+              depends: 'create-attempt.Succeeded',
               arguments: {
                 parameters: [{ name: 'generation-id', value: '{{tasks.create-attempt.outputs.parameters.generation-id}}' }],
               },
@@ -109,9 +72,7 @@ local stageVolumes(tmpSize) = [
               when: '{{tasks.create-attempt.outputs.parameters.skipped}} == false',
             },
             {
-              dependencies: [
-                'plan',
-              ],
+              depends: 'plan.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -125,9 +86,7 @@ local stageVolumes(tmpSize) = [
               template: 'rollout',
             },
             {
-              dependencies: [
-                'rollout',
-              ],
+              depends: 'rollout.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -138,9 +97,7 @@ local stageVolumes(tmpSize) = [
               template: 'dataset',
             },
             {
-              dependencies: [
-                'dataset',
-              ],
+              depends: 'dataset.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -154,9 +111,7 @@ local stageVolumes(tmpSize) = [
               template: 'train',
             },
             {
-              dependencies: [
-                'train',
-              ],
+              depends: 'train.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -167,9 +122,7 @@ local stageVolumes(tmpSize) = [
               template: 'validate',
             },
             {
-              dependencies: [
-                'validate',
-              ],
+              depends: 'validate.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -187,9 +140,7 @@ local stageVolumes(tmpSize) = [
               template: 'assess',
             },
             {
-              dependencies: [
-                'assess',
-              ],
+              depends: 'assess.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -200,9 +151,7 @@ local stageVolumes(tmpSize) = [
               template: 'aggregate',
             },
             {
-              dependencies: [
-                'aggregate',
-              ],
+              depends: 'aggregate.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -214,9 +163,7 @@ local stageVolumes(tmpSize) = [
               template: 'decide',
             },
             {
-              dependencies: [
-                'decide',
-              ],
+              depends: 'decide.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -230,9 +177,7 @@ local stageVolumes(tmpSize) = [
               when: '{{tasks.decide.outputs.parameters.promote}} == true',
             },
             {
-              dependencies: [
-                'publish',
-              ],
+              depends: 'publish.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -404,11 +349,11 @@ local stageVolumes(tmpSize) = [
               memory: '128Mi',
             },
           },
-          securityContext: stageSecurityContext,
-          volumeMounts: stageVolumeMounts,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
         },
         serviceAccountName: 'agr-planner',
-        volumes: stageVolumes('1Gi'),
+        volumes: stagePod.volumes('1Gi'),
       },
       {
         inputs: {
@@ -436,7 +381,14 @@ local stageVolumes(tmpSize) = [
                 ],
               },
             },
-            { name: 'wait-indexed-job', template: 'wait-rollout-indexed-job', dependencies: ['apply-job'] },
+            {
+              name: 'wait-indexed-job',
+              template: 'wait-rollout-indexed-job',
+              dependencies: ['apply-job'],
+              arguments: {
+                parameters: [{ name: 'shard-count', value: '{{inputs.parameters.shard-count}}' }],
+              },
+            },
           ],
         },
       },
@@ -450,7 +402,7 @@ local stageVolumes(tmpSize) = [
         name: 'dataset',
         podSpecPatch: podSpecPatch,
         serviceAccountName: 'agr-dataset',
-        volumes: stageVolumes('4Gi'),
+        volumes: stagePod.volumes('4Gi'),
         container: {
           image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
           command: ['/app/.venv/bin/agr-build-dataset'],
@@ -544,8 +496,8 @@ local stageVolumes(tmpSize) = [
               memory: '256Mi',
             },
           },
-          securityContext: stageSecurityContext,
-          volumeMounts: stageVolumeMounts,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
         },
         outputs: {
           parameters: [
@@ -571,7 +523,7 @@ local stageVolumes(tmpSize) = [
         name: 'train',
         podSpecPatch: podSpecPatch,
         serviceAccountName: 'agr-trainer',
-        volumes: stageVolumes('10Gi'),
+        volumes: stagePod.volumes('10Gi'),
         container: {
           image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
           command: ['/app/.venv/bin/agr-train'],
@@ -689,8 +641,8 @@ local stageVolumes(tmpSize) = [
               memory: '6144Mi',
             },
           },
-          securityContext: stageSecurityContext,
-          volumeMounts: stageVolumeMounts,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
         },
         outputs: {
           parameters: [
@@ -820,11 +772,11 @@ local stageVolumes(tmpSize) = [
               memory: '256Mi',
             },
           },
-          securityContext: stageSecurityContext,
-          volumeMounts: stageVolumeMounts,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
         },
         serviceAccountName: 'agr-validator',
-        volumes: stageVolumes('2Gi'),
+        volumes: stagePod.volumes('2Gi'),
       },
       {
         inputs: {
@@ -860,7 +812,14 @@ local stageVolumes(tmpSize) = [
                 ],
               },
             },
-            { name: 'wait-indexed-job', template: 'wait-assess-indexed-job', dependencies: ['apply-job'] },
+            {
+              name: 'wait-indexed-job',
+              template: 'wait-assess-indexed-job',
+              dependencies: ['apply-job'],
+              arguments: {
+                parameters: [{ name: 'shard-count', value: '{{inputs.parameters.shard-count}}' }],
+              },
+            },
           ],
         },
       },
@@ -945,11 +904,11 @@ local stageVolumes(tmpSize) = [
               memory: '256Mi',
             },
           },
-          securityContext: stageSecurityContext,
-          volumeMounts: stageVolumeMounts,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
         },
         serviceAccountName: 'agr-evaluator',
-        volumes: stageVolumes('2Gi'),
+        volumes: stagePod.volumes('2Gi'),
       },
       {
         inputs: {
@@ -1038,11 +997,11 @@ local stageVolumes(tmpSize) = [
               memory: '128Mi',
             },
           },
-          securityContext: stageSecurityContext,
-          volumeMounts: stageVolumeMounts,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
         },
         serviceAccountName: 'agr-evaluator',
-        volumes: stageVolumes('1Gi'),
+        volumes: stagePod.volumes('1Gi'),
       },
       {
         container: {
@@ -1124,8 +1083,8 @@ local stageVolumes(tmpSize) = [
               memory: '256Mi',
             },
           },
-          securityContext: stageSecurityContext,
-          volumeMounts: stageVolumeMounts,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
         },
         inputs: {
           parameters: [
@@ -1138,7 +1097,7 @@ local stageVolumes(tmpSize) = [
         name: 'publish',
         podSpecPatch: podSpecPatch,
         serviceAccountName: 'agr-promoter',
-        volumes: stageVolumes('2Gi'),
+        volumes: stagePod.volumes('2Gi'),
       },
       {
         container: {
@@ -1210,8 +1169,8 @@ local stageVolumes(tmpSize) = [
               memory: '256Mi',
             },
           },
-          securityContext: stageSecurityContext,
-          volumeMounts: stageVolumeMounts,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
         },
         inputs: {
           parameters: [
@@ -1222,7 +1181,7 @@ local stageVolumes(tmpSize) = [
         name: 'verify',
         podSpecPatch: podSpecPatch,
         serviceAccountName: 'agr-verify',
-        volumes: stageVolumes('1Gi'),
+        volumes: stagePod.volumes('1Gi'),
       },
       {
         inputs: {
@@ -1252,12 +1211,15 @@ local stageVolumes(tmpSize) = [
         },
       },
       {
+        inputs: {
+          parameters: [{ name: 'shard-count' }],
+        },
         name: 'wait-rollout-indexed-job',
         resource: {
           action: 'get',
           failureCondition: import '_workflow_templates/indexed-job-failure-condition.libsonnet',
           manifest: jobReference.manifest('rollout'),
-          successCondition: 'status.succeeded == spec.completions',
+          successCondition: 'status.succeeded == {{inputs.parameters.shard-count}}',
         },
       },
       {
@@ -1297,12 +1259,15 @@ local stageVolumes(tmpSize) = [
         },
       },
       {
+        inputs: {
+          parameters: [{ name: 'shard-count' }],
+        },
         name: 'wait-assess-indexed-job',
         resource: {
           action: 'get',
           failureCondition: import '_workflow_templates/indexed-job-failure-condition.libsonnet',
           manifest: jobReference.manifest('assess'),
-          successCondition: 'status.succeeded == spec.completions',
+          successCondition: 'status.succeeded == {{inputs.parameters.shard-count}}',
         },
       },
       {
@@ -1358,16 +1323,12 @@ local stageVolumes(tmpSize) = [
         container: {
           command: ['/app/.venv/bin/agr-finalize'],
           args: [
-            '--generation-id',
-            '{{workflow.outputs.parameters.generation-id}}',
             '--workflow-uid',
             '{{workflow.uid}}',
             '--workflow-status',
             '{{workflow.status}}',
             '--cancel-requested',
             '{{workflow.annotations.agr.learning/cancel-requested}}',
-            '--promote',
-            '{{workflow.outputs.parameters.promote}}',
           ],
           env: [
             {
@@ -1445,11 +1406,11 @@ local stageVolumes(tmpSize) = [
               memory: '128Mi',
             },
           },
-          securityContext: stageSecurityContext,
-          volumeMounts: stageVolumeMounts,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
         },
         serviceAccountName: 'agr-planner',
-        volumes: stageVolumes('1Gi'),
+        volumes: stagePod.volumes('1Gi'),
       },
       {
         inputs: {
@@ -1569,11 +1530,11 @@ local stageVolumes(tmpSize) = [
               memory: '128Mi',
             },
           },
-          securityContext: stageSecurityContext,
-          volumeMounts: stageVolumeMounts,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
         },
         serviceAccountName: 'agr-planner',
-        volumes: stageVolumes('1Gi'),
+        volumes: stagePod.volumes('1Gi'),
       },
     ],
     ttlStrategy: {
