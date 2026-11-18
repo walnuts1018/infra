@@ -17,7 +17,10 @@ local app = import 'app.json5';
         ports: [{ protocol: 'TCP', port: 8080 }],
       },
       {
-        from: [{ podSelector: { matchLabels: labels(app.name + '-learning') } }],
+        from: [
+          { podSelector: { matchLabels: labels(app.name + '-learning') } },
+          { podSelector: { matchLabels: labels('agr-workflow') } },
+        ],
         ports: [{ protocol: 'TCP', port: 8080 }, { protocol: 'TCP', port: 8081 }],
       },
     ],

@@ -1,0 +1,5 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: agr-rollout-{{workflow.name}}
+  namespace: agr

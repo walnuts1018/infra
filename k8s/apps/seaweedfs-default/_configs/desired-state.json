@@ -547,8 +547,43 @@
           },
           {
             "claim": "sub",
-            "value": "system:serviceaccount:agr:agr-learning-job",
-            "role": "agr-learning-job"
+            "value": "system:serviceaccount:agr:agr-planner",
+            "role": "agr-planner"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:agr:agr-actor",
+            "role": "agr-actor"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:agr:agr-dataset",
+            "role": "agr-dataset"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:agr:agr-trainer",
+            "role": "agr-trainer"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:agr:agr-validator",
+            "role": "agr-validator"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:agr:agr-evaluator",
+            "role": "agr-evaluator"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:agr:agr-promoter",
+            "role": "agr-promoter"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:agr:agr-verify",
+            "role": "agr-verify"
           }
         ]
       },
@@ -791,7 +826,46 @@
             ],
             "resources": [
               "arn:aws:s3:::agr-ai"
+            ],
+            "condition": {
+              "StringLike": {
+                "s3:prefix": [
+                  "worker-runs/models/*"
+                ]
+              }
+            }
+          },
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:GetObject"
+            ],
+            "resources": [
+              "arn:aws:s3:::agr-ai/worker-runs/models/releases/*",
+              "arn:aws:s3:::agr-ai/worker-runs/models/active.json"
             ]
+          }
+        ]
+      },
+      {
+        "name": "agr-planner",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": [
+              "s3:ListBucket"
+            ],
+            "resources": [
+              "arn:aws:s3:::agr-ai"
+            ],
+            "condition": {
+              "StringLike": {
+                "s3:prefix": [
+                  "worker-runs/models/*",
+                  "worker-runs/generations/*"
+                ]
+              }
+            }
           },
           {
             "effect": "Allow",
@@ -801,31 +875,175 @@
             "resources": [
               "arn:aws:s3:::agr-ai/worker-runs/models/*"
             ]
-          }
-        ]
-      },
-      {
-        "name": "agr-learning-job",
-        "statements": [
-          {
-            "effect": "Allow",
-            "actions": [
-              "s3:ListBucket"
-            ],
-            "resources": [
-              "arn:aws:s3:::agr-ai"
-            ]
           },
           {
             "effect": "Allow",
             "actions": [
-              "s3:Get*",
-              "s3:Put*",
+              "s3:PutObject",
               "s3:AbortMultipartUpload"
             ],
             "resources": [
-              "arn:aws:s3:::agr-ai/worker-runs/*"
+              "arn:aws:s3:::agr-ai/worker-runs/generations/*/plan.json",
+              "arn:aws:s3:::agr-ai/worker-runs/operations/*",
+              "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*"
             ]
+          }
+        ]
+      },
+      {
+        "name": "agr-actor",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": ["s3:ListBucket"],
+            "resources": ["arn:aws:s3:::agr-ai"],
+            "condition": {"StringLike": {"s3:prefix": ["worker-runs/generations/*", "worker-runs/rollout/*"]}}
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:GetObject"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/generations/*/plan.json", "arn:aws:s3:::agr-ai/worker-runs/models/*"]
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:GetObject"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/rollout/*"]
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:PutObject", "s3:AbortMultipartUpload"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/rollout/*"]
+          }
+        ]
+      },
+      {
+        "name": "agr-dataset",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": ["s3:ListBucket"],
+            "resources": ["arn:aws:s3:::agr-ai"],
+            "condition": {"StringLike": {"s3:prefix": ["worker-runs/rollout/*", "worker-runs/datasets/*", "worker-runs/generations/*"]}}
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:GetObject"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/rollout/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/plan.json"]
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:PutObject", "s3:AbortMultipartUpload"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/datasets/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*"]
+          }
+        ]
+      },
+      {
+        "name": "agr-trainer",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": ["s3:ListBucket"],
+            "resources": ["arn:aws:s3:::agr-ai"],
+            "condition": {"StringLike": {"s3:prefix": ["worker-runs/datasets/*", "worker-runs/models/*", "worker-runs/training/*", "worker-runs/generations/*"]}}
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:GetObject"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/datasets/*", "arn:aws:s3:::agr-ai/worker-runs/models/*", "arn:aws:s3:::agr-ai/worker-runs/training/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/plan.json"]
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:PutObject", "s3:AbortMultipartUpload"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/training/*", "arn:aws:s3:::agr-ai/worker-runs/models/candidates/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*"]
+          }
+        ]
+      },
+      {
+        "name": "agr-validator",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": ["s3:ListBucket"],
+            "resources": ["arn:aws:s3:::agr-ai"],
+            "condition": {"StringLike": {"s3:prefix": ["worker-runs/models/candidates/*", "worker-runs/generations/*"]}}
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:GetObject"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/models/candidates/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/plan.json"]
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:PutObject", "s3:AbortMultipartUpload"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/generations/*/validation.json", "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*"]
+          }
+        ]
+      },
+      {
+        "name": "agr-evaluator",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": ["s3:ListBucket"],
+            "resources": ["arn:aws:s3:::agr-ai"],
+            "condition": {"StringLike": {"s3:prefix": ["worker-runs/generations/*", "worker-runs/models/*", "worker-runs/evaluations/*"]}}
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:GetObject"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/generations/*/plan.json", "arn:aws:s3:::agr-ai/worker-runs/generations/*/validation.json", "arn:aws:s3:::agr-ai/worker-runs/models/*"]
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:GetObject"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/evaluations/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*"]
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:PutObject", "s3:AbortMultipartUpload"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/evaluations/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/promotion-decision.json"]
+          }
+        ]
+      },
+      {
+        "name": "agr-promoter",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": ["s3:ListBucket"],
+            "resources": ["arn:aws:s3:::agr-ai"],
+            "condition": {"StringLike": {"s3:prefix": ["worker-runs/models/*", "worker-runs/evaluations/*", "worker-runs/generations/*"]}}
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:GetObject"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/models/*", "arn:aws:s3:::agr-ai/worker-runs/evaluations/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/validation.json", "arn:aws:s3:::agr-ai/worker-runs/generations/*/plan.json", "arn:aws:s3:::agr-ai/worker-runs/generations/*/promotion-decision.json"]
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:PutObject", "s3:AbortMultipartUpload"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/models/releases/*", "arn:aws:s3:::agr-ai/worker-runs/models/active.json", "arn:aws:s3:::agr-ai/worker-runs/models/active.json.operations/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*"]
+          }
+        ]
+      },
+      {
+        "name": "agr-verify",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": ["s3:ListBucket"],
+            "resources": ["arn:aws:s3:::agr-ai"],
+            "condition": {"StringLike": {"s3:prefix": ["worker-runs/models/releases/*", "worker-runs/models/active.json", "worker-runs/generations/*"]}}
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:GetObject"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/models/releases/*", "arn:aws:s3:::agr-ai/worker-runs/models/active.json", "arn:aws:s3:::agr-ai/worker-runs/generations/*/plan.json", "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*"]
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:PutObject", "s3:AbortMultipartUpload"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*"]
           }
         ]
       }
@@ -932,10 +1150,45 @@
         "provider": "k8s"
       },
       {
-        "name": "agr-learning-job",
+        "name": "agr-planner",
         "policies": [
-          "agr-learning-job"
+          "agr-planner"
         ],
+        "provider": "k8s"
+      },
+      {
+        "name": "agr-actor",
+        "policies": ["agr-actor"],
+        "provider": "k8s"
+      },
+      {
+        "name": "agr-dataset",
+        "policies": ["agr-dataset"],
+        "provider": "k8s"
+      },
+      {
+        "name": "agr-trainer",
+        "policies": ["agr-trainer"],
+        "provider": "k8s"
+      },
+      {
+        "name": "agr-validator",
+        "policies": ["agr-validator"],
+        "provider": "k8s"
+      },
+      {
+        "name": "agr-evaluator",
+        "policies": ["agr-evaluator"],
+        "provider": "k8s"
+      },
+      {
+        "name": "agr-promoter",
+        "policies": ["agr-promoter"],
+        "provider": "k8s"
+      },
+      {
+        "name": "agr-verify",
+        "policies": ["agr-verify"],
         "provider": "k8s"
       }
     ]
