@@ -30,6 +30,17 @@
     {
       customType: 'regex',
       managerFilePatterns: [
+        '/^k8s\\/apps\\/agr\\/.+\\.jsonnet$/',
+        '/^k8s\\/apps\\/agr\\/.+\\.yaml$/',
+      ],
+      matchStrings: [
+        'value:\\s*[\'\"]?(?<depName>ghcr\\.io/walnuts1018/agr-[^:\\s\'\"]+):(?<currentValue>[^@\\s\'\"]+)@(?<currentDigest>sha256:[a-f0-9]{64})',
+      ],
+      datasourceTemplate: 'docker',
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: [
         '/^\\.github/workflows/build-images\\.yaml$/',
       ],
       matchStrings: [
