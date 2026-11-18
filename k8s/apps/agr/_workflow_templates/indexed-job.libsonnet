@@ -1,6 +1,7 @@
 {
   render(config):
-    local workerImage = 'ghcr.io/walnuts1018/agr-worker:0.1.15@sha256:cc333251f3222e99e4efd94f67f584fa329eb6b8225a16d97ba1f77beeb105c9';
+    local stagePod = import 'stage-pod.libsonnet';
+    local workerImage = 'ghcr.io/walnuts1018/agr-worker:0.1.16@sha256:29d94baf8a1f6b56ab43ab55f7610e50ba515a611ecd07509af825027d66c69c';
     local job = {
       apiVersion: 'batch/v1',
       kind: 'Job',
@@ -72,7 +73,7 @@
                 '--shard-count',
                 '{{inputs.parameters.shard-count}}',
               ],
-              env: [
+              env: stagePod.s3Env(config.controllerId, config.controllerId, [
                 { name: 'AGR_WORKFLOW_UID', value: '{{workflow.uid}}' },
                 {
                   name: 'AGR_WORKER_IMAGE_REFERENCE',
@@ -109,7 +110,7 @@
                     },
                   },
                 },
-              ] + config.extraEnv,
+              ]) + config.extraEnv,
               resources: {
                 requests: {
                   cpu: '1',

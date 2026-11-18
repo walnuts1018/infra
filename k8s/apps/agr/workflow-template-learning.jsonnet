@@ -277,7 +277,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             '--max-evaluation-pods',
             std.toString(maxEvaluationPods),
           ],
-          env: [
+          env: stagePod.s3Env('agr-planner', 'agr-planner', [
             {
               name: 'AWS_ENDPOINT_URL_S3',
               value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
@@ -325,7 +325,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -335,8 +335,8 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               name: 'AGR_WORKFLOW_GENERATION_ID',
               value: '{{inputs.parameters.generation-id}}',
             },
-          ],
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+          ]),
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
           resources: {
             limits: {
               cpu: '500m',
@@ -404,10 +404,10 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         serviceAccountName: 'agr-dataset',
         volumes: stagePod.volumes('4Gi'),
         container: {
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
           command: ['/app/.venv/bin/agr-build-dataset'],
           args: ['--argo-output-dir', '/tmp/dataset-output'],
-          env: [
+          env: stagePod.s3Env('agr-dataset', 'agr-dataset', [
             {
               name: 'AWS_ENDPOINT_URL_S3',
               value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
@@ -467,7 +467,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -481,9 +481,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               name: 'AGR_WORKFLOW_PLAN_URI',
               value: '{{inputs.parameters.plan-uri}}',
             },
-            {
-            },
-          ],
+          ]),
           resources: {
             limits: {
               cpu: '500m',
@@ -525,7 +523,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         serviceAccountName: 'agr-trainer',
         volumes: stagePod.volumes('10Gi'),
         container: {
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
           command: ['/app/.venv/bin/agr-train'],
           args: [
             '--s3-input-uri',
@@ -541,7 +539,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             '--argo-output-dir',
             '/tmp/train-output',
           ],
-          env: [
+          env: stagePod.s3Env('agr-trainer', 'agr-trainer', [
             { name: 'SERVICE_ENDPOINT', value: 'http://agr-server.agr.svc.cluster.local:8080' },
             {
               name: 'SERVICE_GATEWAY_TOKEN',
@@ -594,7 +592,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -628,7 +626,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               name: 'AGR_WORKFLOW_BEHAVIOR_POLICY_SHA256',
               value: '{{inputs.parameters.learner-sha256}}',
             },
-          ],
+          ]),
           resources: {
             limits: {
               cpu: '2',
@@ -713,7 +711,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         container: {
           command: ['/app/.venv/bin/agr-validate'],
           args: ['--argo-output-dir', '/tmp/validate-output'],
-          env: [
+          env: stagePod.s3Env('agr-validator', 'agr-validator', [
             {
               name: 'AWS_ENDPOINT_URL_S3',
               value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
@@ -744,7 +742,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -758,8 +756,8 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               name: 'AGR_WORKFLOW_PLAN_URI',
               value: '{{inputs.parameters.plan-uri}}',
             },
-          ],
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+          ]),
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
           resources: {
             limits: {
               cpu: '500m',
@@ -845,7 +843,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         container: {
           command: ['/app/.venv/bin/agr-aggregate-evaluation'],
           args: ['--argo-output-dir', '/tmp/aggregate-output'],
-          env: [
+          env: stagePod.s3Env('agr-evaluator', 'agr-evaluator', [
             {
               name: 'AWS_ENDPOINT_URL_S3',
               value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
@@ -876,7 +874,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -890,8 +888,8 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               name: 'AGR_WORKFLOW_PLAN_URI',
               value: '{{inputs.parameters.plan-uri}}',
             },
-          ],
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+          ]),
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
           resources: {
             limits: {
               cpu: '500m',
@@ -934,7 +932,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         container: {
           command: ['/app/.venv/bin/agr-decide-promotion'],
           args: ['--argo-output-dir', '/tmp/decision-output'],
-          env: [
+          env: stagePod.s3Env('agr-evaluator', 'agr-evaluator', [
             {
               name: 'AWS_ENDPOINT_URL_S3',
               value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
@@ -965,7 +963,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -983,8 +981,8 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               name: 'AGR_EVALUATION_REPORT_URI',
               value: '{{inputs.parameters.report-uri}}',
             },
-          ],
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+          ]),
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
           resources: {
             limits: {
               cpu: '500m',
@@ -1014,7 +1012,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
           command: [
             '/app/.venv/bin/agr-publish',
           ],
-          env: [
+          env: stagePod.s3Env('agr-promoter', 'agr-promoter', [
             { name: 'SERVICE_ENDPOINT', value: 'http://agr-server.agr.svc.cluster.local:8080' },
             {
               name: 'SERVICE_GATEWAY_TOKEN',
@@ -1051,7 +1049,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -1069,8 +1067,8 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               name: 'AGR_WORKFLOW_PLAN_URI',
               value: '{{inputs.parameters.plan-uri}}',
             },
-          ],
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+          ]),
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
           resources: {
             limits: {
               cpu: '500m',
@@ -1106,7 +1104,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
           command: [
             '/app/.venv/bin/agr-verify-deployment',
           ],
-          env: [
+          env: stagePod.s3Env('agr-verify', 'agr-verify', [
             {
               name: 'AWS_ENDPOINT_URL_S3',
               value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
@@ -1137,7 +1135,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -1155,8 +1153,8 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               name: 'AGR_SERVER_SERVICE_HEALTH_URL',
               value: 'http://agr-server.agr.svc.cluster.local:8081',
             },
-          ],
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+          ]),
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
           resources: {
             limits: {
               cpu: '500m',
@@ -1327,38 +1325,8 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             '{{workflow.uid}}',
             '--workflow-status',
             '{{workflow.status}}',
-            '--cancel-requested',
-            '{{workflow.annotations.agr.learning/cancel-requested}}',
           ],
           env: [
-            {
-              name: 'AWS_ENDPOINT_URL_S3',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'AWS_ENDPOINT_URL_STS',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'AWS_ROLE_ARN',
-              value: 'arn:aws:iam::role/agr-planner',
-            },
-            {
-              name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-              value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
-            },
-            {
-              name: 'AWS_REGION',
-              value: 'us-east-1',
-            },
-            {
-              name: 'WORKER_S3_BUCKET',
-              value: 'agr-ai',
-            },
-            {
-              name: 'WORKER_S3_PREFIX',
-              value: 'worker-runs',
-            },
             {
               name: 'WORKER_CONTROLLER_ID',
               value: 'agr-planner',
@@ -1377,23 +1345,11 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               },
             },
             {
-              name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
-            },
-            {
               name: 'AGR_WORKFLOW_UID',
               value: '{{workflow.uid}}',
             },
-            {
-              name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{workflow.outputs.parameters.generation-id}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_ATTEMPT_ID',
-              value: '{{workflow.outputs.parameters.attempt-id}}',
-            },
           ],
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
           resources: {
             limits: {
               cpu: '500m',
@@ -1407,10 +1363,10 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
           },
           securityContext: stagePod.securityContext,
-          volumeMounts: stagePod.volumeMounts,
+          volumeMounts: [{ name: 'tmp', mountPath: '/tmp' }],
         },
         serviceAccountName: 'agr-planner',
-        volumes: stagePod.volumes('1Gi'),
+        volumes: [{ name: 'tmp', emptyDir: { sizeLimit: '1Gi' } }],
       },
       {
         inputs: {
@@ -1454,7 +1410,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         container: {
           command: ['/app/.venv/bin/agr-create-attempt'],
           args: ['--argo-output-dir', '/tmp/create-attempt-output'],
-          env: [
+          env: stagePod.s3Env('agr-planner', 'agr-planner', [
             {
               name: 'AWS_ENDPOINT_URL_S3',
               value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
@@ -1502,7 +1458,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -1516,8 +1472,8 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               name: 'AGR_WORKFLOW_RETRY_GENERATION_ID',
               value: '{{inputs.parameters.retry-generation-id}}',
             },
-          ],
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+          ]),
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
           resources: {
             limits: {
               cpu: '500m',

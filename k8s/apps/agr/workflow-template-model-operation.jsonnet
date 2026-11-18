@@ -40,10 +40,10 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
     templates: [{
       name: 'operate-model',
       container: {
-        image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
+        image: 'ghcr.io/walnuts1018/agr-training:0.1.16@sha256:38eea13ed60b7baa30725b8a2dbc56525004c86c8fa7e7f7a6ff49248a6e94f5',
         command: ['/app/.venv/bin/agr-model-operation'],
         args: ['--operation', '{{workflow.parameters.operation}}', '--target-id', '{{workflow.parameters.target-id}}', '--expected-revision', '{{workflow.parameters.expected-revision}}', '--operation-id', '{{workflow.parameters.operation-id}}', '--reason', '{{workflow.parameters.reason}}'],
-        env: [
+        env: stagePod.s3Env('agr-promoter', 'agr-promoter', [
           { name: 'AWS_ENDPOINT_URL_S3', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
           { name: 'AWS_ENDPOINT_URL_STS', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
           { name: 'AWS_ROLE_ARN', value: 'arn:aws:iam::role/agr-promoter' },
@@ -56,7 +56,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
           { name: 'AGR_MODEL_OPERATION', value: '{{workflow.parameters.operation}}' },
           { name: 'SERVICE_ENDPOINT', value: 'http://agr-server.agr.svc.cluster.local:8080' },
           { name: 'SERVICE_GATEWAY_TOKEN', valueFrom: { secretKeyRef: { name: 'agr-learning-token', key: 'SERVICE_GATEWAY_TOKEN' } } },
-        ],
+        ]),
         resources: { requests: { cpu: '100m', memory: '256Mi', 'ephemeral-storage': '128Mi' }, limits: { cpu: '400m', memory: '896Mi', 'ephemeral-storage': '1Gi' } },
         securityContext: stagePod.securityContext,
         volumeMounts: stagePod.volumeMounts,
