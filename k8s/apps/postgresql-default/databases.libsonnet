@@ -12,6 +12,13 @@
     secret_source_property: 'agr-database-password',
   },
   {
+    db_name: 'argo_workflows',
+    user_name: 'argo_workflows',
+    secret_source_key: 'terraform-external-secrets',
+    secret_source_property: 'argo-workflows-database-password',
+    in_roles: [],
+  },
+  {
     db_name: 'picca',
     user_name: 'picca',
     extensions: [
