@@ -1201,7 +1201,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             serviceAccount: 'agr-actor',
             containerName: 'actor',
             command: 'run-shard',
-            commandArgs: ['--stage', 'rollout'],
+            commandArgs: [],
             controllerId: 'agr-actor',
             extraEnv: [{ name: 'OMP_NUM_THREADS', value: '1' }],
           }),
