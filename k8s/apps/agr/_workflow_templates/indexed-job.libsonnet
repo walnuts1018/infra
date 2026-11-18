@@ -1,7 +1,7 @@
 {
   render(config):
     local stagePod = import 'stage-pod.libsonnet';
-    local workerImage = 'ghcr.io/walnuts1018/agr-worker:0.1.31@sha256:4d6824bb4a4dba36920d60cc671a2f9e17897f2cc1eb276860a2d809f2176c06';
+    local workerImage = 'ghcr.io/walnuts1018/agr-worker:0.1.32@sha256:1d8b4f32a87b1f0e90c2460cc831bb836f84be185fa60378cadddfcfcd748e23';
     local job = {
       apiVersion: 'batch/v1',
       kind: 'Job',
