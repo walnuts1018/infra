@@ -885,6 +885,7 @@
             "resources": [
               "arn:aws:s3:::agr-ai/worker-runs/generations/*/plan.json",
               "arn:aws:s3:::agr-ai/worker-runs/operations/*",
+              "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/attempt.json",
               "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*"
             ]
           }
