@@ -77,7 +77,7 @@ local piccaS3ClientNames = [
               {
                 key: 'app.kubernetes.io/name',
                 operator: 'In',
-                values: ['agr-server', 'agr-learning'],
+                values: ['agr-server', 'agr-learning', 'agr-workflow'],
               },
             ],
           }),

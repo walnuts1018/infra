@@ -30,7 +30,7 @@ local document(statements) = {
       Effect: statement.effect,
       Action: actions(statement),
       Resource: resources(statement),
-    }
+    } + if std.objectHas(statement, 'condition') then { Condition: statement.condition } else {}
     for statement in statements
   ],
 };

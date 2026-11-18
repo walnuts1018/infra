@@ -33,6 +33,10 @@ local app = import 'app.json5';
         }],
         ports: [{ protocol: 'TCP', port: 8333 }],
       },
+      {
+        to: [networkPolicy.otelDefaultCollector],
+        ports: [{ protocol: 'TCP', port: 4318 }],
+      },
     ],
   },
 }

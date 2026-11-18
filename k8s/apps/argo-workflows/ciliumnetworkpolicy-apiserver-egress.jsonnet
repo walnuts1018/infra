@@ -1,15 +1,16 @@
-local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
 {
   apiVersion: 'cilium.io/v2',
   kind: 'CiliumNetworkPolicy',
   metadata: {
-    name: app.name + '-learning-apiserver-egress',
+    name: app.name + '-apiserver-egress',
     namespace: app.namespace,
   },
   spec: {
     endpointSelector: {
-      matchLabels: labels(app.name + '-learning'),
+      matchLabels: {
+        'k8s:app.kubernetes.io/component': 'workflow-controller',
+      },
     },
     egress: [{
       toEntities: ['kube-apiserver'],

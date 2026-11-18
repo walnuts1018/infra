@@ -32,7 +32,7 @@ local sa = import 'service-account-app.jsonnet';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'app-service',
-            image: 'ghcr.io/walnuts1018/agr-server:0.1.14@sha256:cbb488ee33e26713a282ccc430233d4c480e1b41538f067843291f47945666fb',
+            image: 'ghcr.io/walnuts1018/agr-server:0.1.15@sha256:f31331dd289b990abf9102e918802e6c3e18e86c90c9f511b77f3a11bc70bcf7',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               { name: 'grpc-web', containerPort: 8080, protocol: 'TCP' },
@@ -44,11 +44,13 @@ local sa = import 'service-account-app.jsonnet';
             env: [
               { name: 'SERVICE_LISTEN_ADDR', value: '0.0.0.0:8080' },
               { name: 'SERVICE_HEALTH_ADDR', value: '0.0.0.0:8081' },
-              { name: 'AGR_LEARNING_JOB_IDENTITIES', value: 'agr-learning-job' },
+              { name: 'AGR_LEARNING_JOB_IDENTITIES', value: 'agr-planner,agr-actor,agr-dataset,agr-trainer,agr-validator,agr-evaluator,agr-promoter,agr-verify' },
+              { name: 'AGR_LEARNING_ADMIN_IDENTITIES', valueFrom: { secretKeyRef: { name: 'agr-learning-admin-credential', key: 'AGR_LEARNING_ADMIN_IDENTITIES' } } },
+              { name: 'AGR_LEARNING_ADMIN_GATEWAY_TOKEN', valueFrom: { secretKeyRef: { name: 'agr-learning-admin-credential', key: 'AGR_LEARNING_ADMIN_GATEWAY_TOKEN' } } },
               { name: 'AGR_POLICY_MODEL_S3_URI', value: 's3://agr-ai/worker-runs/models/active.json' },
               { name: 'WORKER_S3_BUCKET', value: 'agr-ai' },
               { name: 'AWS_ENDPOINT_URL_S3', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
-              { name: 'AWS_ENDPOINT_URL_STS', value: 'https://seaweedfs.local.walnuts.dev' },
+              { name: 'AWS_ENDPOINT_URL_STS', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
               { name: 'AWS_REGION', value: 'us-east-1' },
               { name: 'AWS_ROLE_ARN', value: 'arn:aws:iam::role/agr-app-service' },
               { name: 'AWS_WEB_IDENTITY_TOKEN_FILE', value: '/projected/sts.seaweedfs.com/serviceaccount/token' },
@@ -78,6 +80,7 @@ local sa = import 'service-account-app.jsonnet';
             volumeMounts: [
               { name: 'tmp', mountPath: '/tmp' },
               { name: 'seaweedfs-sts-token', mountPath: '/projected/sts.seaweedfs.com/serviceaccount', readOnly: true },
+              { name: 'kubernetes-api-credentials', mountPath: '/var/run/secrets/kubernetes.io/serviceaccount', readOnly: true },
             ],
           }, {
             securityContext: {
@@ -88,6 +91,30 @@ local sa = import 'service-account-app.jsonnet';
         ],
         volumes: [
           { name: 'tmp', emptyDir: {} },
+          {
+            name: 'kubernetes-api-credentials',
+            projected: {
+              sources: [
+                {
+                  serviceAccountToken: {
+                    expirationSeconds: 3600,
+                    path: 'token',
+                  },
+                },
+                {
+                  configMap: {
+                    name: 'kube-root-ca.crt',
+                    items: [{ key: 'ca.crt', path: 'ca.crt' }],
+                  },
+                },
+                {
+                  downwardAPI: {
+                    items: [{ path: 'namespace', fieldRef: { fieldPath: 'metadata.namespace' } }],
+                  },
+                },
+              ],
+            },
+          },
           {
             name: 'seaweedfs-sts-token',
             projected: {

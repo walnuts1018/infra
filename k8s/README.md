@@ -47,6 +47,7 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **actions-runners**: GitHub Actions Self-hosted Runner Scale Sets (Small / Large)
 - **api-server-proxy**
 - **api-server-service-account-issuer-discovery**
+- **argo-workflows**: Namespaceをまたいで共有するArgo Workflows ControllerとWorkflow Archive
 - **argocd-proxy**
 - **cert-manager**
 - **cilium**

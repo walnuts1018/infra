@@ -1,23 +1,24 @@
 local app = import 'app.json5';
-local fqdn = 'seaweedfs.local.walnuts.dev';
 {
   apiVersion: 'cilium.io/v2',
   kind: 'CiliumNetworkPolicy',
   metadata: {
-    name: app.name + '-server-sts-egress',
+    name: app.name + '-crdinstaller-apiserver-egress',
     namespace: app.namespace,
   },
   spec: {
     endpointSelector: {
       matchLabels: {
-        'k8s:app.kubernetes.io/name': app.name + '-server',
+        'k8s:app.kubernetes.io/component': 'crds',
       },
     },
     egress: [{
-      toFQDNs: [{ matchName: fqdn }],
+      toEntities: ['kube-apiserver'],
       toPorts: [{
-        ports: [{ port: '443', protocol: 'TCP' }],
-        serverNames: [fqdn],
+        ports: [
+          { port: '443', protocol: 'TCP' },
+          { port: '6443', protocol: 'TCP' },
+        ],
       }],
     }],
   },

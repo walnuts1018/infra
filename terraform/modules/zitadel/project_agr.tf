@@ -46,3 +46,7 @@ output "agr_oidc_client_secret" {
   value     = zitadel_application_oidc.agr.client_secret
   sensitive = true
 }
+
+output "agr_learning_admin_identity" {
+  value = local.zitadel_human_user_ids.walnuts
+}
