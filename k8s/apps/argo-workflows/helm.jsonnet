@@ -6,9 +6,4 @@ local app = import 'app.json5';
   repoURL: 'https://argoproj.github.io/argo-helm',
   targetRevision: '2.0.18',
   values: (importstr 'values.yaml'),
-  spec+: {
-    syncPolicy+: {
-      syncOptions+: ['CreateNamespace=true'],
-    },
-  },
 }
