@@ -114,12 +114,12 @@
               resources: {
                 requests: {
                   cpu: '1',
-                  memory: '512Mi',
+                  memory: '1Gi',
                   'ephemeral-storage': '128Mi',
                 },
                 limits: {
                   cpu: '1',
-                  memory: '512Mi',
+                  memory: '1Gi',
                   'ephemeral-storage': '1Gi',
                 },
               },
