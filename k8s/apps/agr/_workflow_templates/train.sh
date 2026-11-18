@@ -1,3 +1,4 @@
+# shellcheck shell=sh
 set -- --s3-input-uri "$AGR_WORKFLOW_INPUT_URI" --s3-output-uri "$AGR_WORKFLOW_OUTPUT_URI" --behavior-policy-id shared-policy-v2
 if [ -n "$AGR_WORKFLOW_LEARNER_URI" ]; then
   set -- "$@" --initial-artifact-uri "$AGR_WORKFLOW_LEARNER_URI"

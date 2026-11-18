@@ -1,3 +1,4 @@
+# shellcheck shell=sh
 /app/.venv/bin/agr-plan
 /app/.venv/bin/python - <<'PY'
 import json

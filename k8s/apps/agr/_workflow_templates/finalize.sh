@@ -1,13 +1,17 @@
+# shellcheck shell=sh
 generation_id="{{workflow.outputs.parameters.generation-id}}"
+cancel_requested="{{workflow.annotations.agr.learning/cancel-requested}}"
+workflow_status="{{workflow.status}}"
+promote="{{workflow.outputs.parameters.promote}}"
 if [ -z "$generation_id" ] || [ "$generation_id" = "{{workflow.outputs.parameters.generation-id}}" ]; then
   exit 0
 fi
-if [ "{{workflow.annotations.agr.learning/cancel-requested}}" = "true" ]; then
+if [ "$cancel_requested" = "true" ]; then
   outcome=cancelled
 else
-case "{{workflow.status}}" in
+case "$workflow_status" in
   Succeeded)
-    case "{{workflow.outputs.parameters.promote}}" in
+    case "$promote" in
       true) outcome=succeeded ;;
       false) outcome=rejected ;;
       *) outcome=succeeded ;;
