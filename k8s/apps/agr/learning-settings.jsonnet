@@ -7,7 +7,6 @@ local app = import 'app.json5';
     'learning-settings.json': std.manifestJson({
       schema_version: 1,
       auto_enabled: true,
-      cron: '*/5 * * * *',
       episodes_per_generation: 1600,
       episodes_per_shard: 16,
       actor_pods: 1,

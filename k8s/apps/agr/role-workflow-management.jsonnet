@@ -10,7 +10,7 @@ local app = import 'app.json5';
     {
       apiGroups: ['argoproj.io'],
       resources: ['workflows'],
-      verbs: ['get', 'list', 'watch', 'create', 'patch', 'delete'],
+      verbs: ['get', 'list', 'create', 'patch'],
     },
   ],
 }

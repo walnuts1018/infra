@@ -1,4 +1,42 @@
 local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-patch.libsonnet', '', '', ':');
+local indexedJob = import '_workflow_templates/indexed-job.libsonnet';
+local jobReference = import '_workflow_templates/job-reference.libsonnet';
+local stageSecurityContext = {
+  allowPrivilegeEscalation: false,
+  capabilities: { drop: ['ALL'] },
+  readOnlyRootFilesystem: true,
+  runAsGroup: 10001,
+  runAsNonRoot: true,
+  runAsUser: 10001,
+};
+local stageVolumeMounts = [
+  { name: 'learning-settings', mountPath: '/etc/agr', readOnly: true },
+  {
+    name: 'sts-token',
+    mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
+    readOnly: true,
+  },
+  { name: 'tmp', mountPath: '/tmp' },
+];
+local stageVolumes(tmpSize) = [
+  {
+    name: 'learning-settings',
+    configMap: { name: 'learning-settings' },
+  },
+  {
+    name: 'sts-token',
+    projected: {
+      sources: [{
+        serviceAccountToken: {
+          audience: 'sts.seaweedfs.com',
+          expirationSeconds: 3600,
+          path: 'token',
+        },
+      }],
+    },
+  },
+  { name: 'tmp', emptyDir: { sizeLimit: tmpSize } },
+];
 {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'WorkflowTemplate',
@@ -39,6 +77,7 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
       },
     },
     serviceAccountName: 'agr-workflow',
+    executor: { serviceAccountName: 'agr-workflow-executor' },
     synchronization: {
       mutexes: [{ name: 'agr-training' }],
     },
@@ -47,6 +86,12 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
         dag: {
           tasks: [
             {
+              arguments: {
+                parameters: [
+                  { name: 'trigger', value: '{{workflow.parameters.trigger}}' },
+                  { name: 'retry-generation-id', value: '{{workflow.parameters.retry-generation-id}}' },
+                ],
+              },
               name: 'create-attempt',
               template: 'create-attempt',
             },
@@ -54,13 +99,28 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               dependencies: [
                 'create-attempt',
               ],
+              arguments: {
+                parameters: [{ name: 'generation-id', value: '{{tasks.create-attempt.outputs.parameters.generation-id}}' }],
+              },
               name: 'plan',
               template: 'plan',
+              when: '{{tasks.create-attempt.outputs.parameters.skipped}} == false',
             },
             {
               dependencies: [
                 'plan',
               ],
+              arguments: {
+                parameters: [
+                  { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
+                  { name: 'config-sha256', value: '{{tasks.plan.outputs.parameters.config-sha256}}' },
+                  { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                  { name: 'shard-count', value: '{{tasks.plan.outputs.parameters.rollout-shards}}' },
+                  { name: 'actor-pods', value: '{{tasks.plan.outputs.parameters.actor-pods}}' },
+                  { name: 'actor-cpu-limit', value: '{{tasks.plan.outputs.parameters.actor-cpu-limit}}' },
+                  { name: 'actor-memory-limit', value: '{{tasks.plan.outputs.parameters.actor-memory-limit}}' },
+                ],
+              },
               name: 'rollout',
               template: 'rollout',
             },
@@ -68,6 +128,12 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               dependencies: [
                 'rollout',
               ],
+              arguments: {
+                parameters: [
+                  { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
+                  { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                ],
+              },
               name: 'dataset',
               template: 'dataset',
             },
@@ -75,6 +141,17 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               dependencies: [
                 'dataset',
               ],
+              arguments: {
+                parameters: [
+                  { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
+                  { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                  { name: 'dataset-uri', value: '{{tasks.dataset.outputs.parameters.dataset-uri}}' },
+                  { name: 'learner-artifact-uri', value: '{{tasks.plan.outputs.parameters.learner-artifact-uri}}' },
+                  { name: 'learner-sha256', value: '{{tasks.plan.outputs.parameters.learner-sha256}}' },
+                  { name: 'train-cpu-limit', value: '{{tasks.plan.outputs.parameters.train-cpu-limit}}' },
+                  { name: 'train-memory-limit', value: '{{tasks.plan.outputs.parameters.train-memory-limit}}' },
+                ],
+              },
               name: 'train',
               template: 'train',
             },
@@ -82,6 +159,12 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               dependencies: [
                 'train',
               ],
+              arguments: {
+                parameters: [
+                  { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
+                  { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                ],
+              },
               name: 'validate',
               template: 'validate',
             },
@@ -89,6 +172,21 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               dependencies: [
                 'validate',
               ],
+              arguments: {
+                parameters: [
+                  { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
+                  { name: 'config-sha256', value: '{{tasks.plan.outputs.parameters.config-sha256}}' },
+                  { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                  { name: 'shard-count', value: '{{tasks.plan.outputs.parameters.evaluation-shards}}' },
+                  { name: 'evaluation-pods', value: '{{tasks.plan.outputs.parameters.evaluation-pods}}' },
+                  { name: 'evaluation-cpu-limit', value: '{{tasks.plan.outputs.parameters.evaluation-cpu-limit}}' },
+                  { name: 'actor-memory-limit', value: '{{tasks.plan.outputs.parameters.actor-memory-limit}}' },
+                  { name: 'artifact-uri', value: '{{tasks.validate.outputs.parameters.artifact-uri}}' },
+                  { name: 'model-sha256', value: '{{tasks.validate.outputs.parameters.model-sha256}}' },
+                  { name: 'manifest-sha256', value: '{{tasks.validate.outputs.parameters.manifest-sha256}}' },
+                  { name: 'validation-uri', value: '{{tasks.validate.outputs.parameters.validation-uri}}' },
+                ],
+              },
               name: 'assess',
               template: 'assess',
             },
@@ -96,6 +194,12 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               dependencies: [
                 'assess',
               ],
+              arguments: {
+                parameters: [
+                  { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
+                  { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                ],
+              },
               name: 'aggregate',
               template: 'aggregate',
             },
@@ -103,6 +207,13 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               dependencies: [
                 'aggregate',
               ],
+              arguments: {
+                parameters: [
+                  { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
+                  { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                  { name: 'report-uri', value: '{{tasks.aggregate.outputs.parameters.report-uri}}' },
+                ],
+              },
               name: 'decide',
               template: 'decide',
             },
@@ -110,6 +221,14 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               dependencies: [
                 'decide',
               ],
+              arguments: {
+                parameters: [
+                  { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
+                  { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                  { name: 'report-uri', value: '{{tasks.aggregate.outputs.parameters.report-uri}}' },
+                  { name: 'model-id', value: '{{tasks.train.outputs.parameters.model-id}}' },
+                ],
+              },
               name: 'publish',
               template: 'publish',
               when: '{{tasks.decide.outputs.parameters.promote}} == true',
@@ -118,6 +237,12 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               dependencies: [
                 'publish',
               ],
+              arguments: {
+                parameters: [
+                  { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
+                  { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                ],
+              },
               name: 'verify',
               template: 'verify',
             },
@@ -126,6 +251,9 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
         name: 'learning',
       },
       {
+        inputs: {
+          parameters: [{ name: 'generation-id' }],
+        },
         name: 'plan',
         outputs: {
           parameters: [
@@ -195,19 +323,43 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
                 path: '/tmp/plan-output/learner-sha256',
               },
             },
+            {
+              name: 'train-cpu-limit',
+              valueFrom: {
+                path: '/tmp/plan-output/train-cpu-limit',
+              },
+            },
+            {
+              name: 'train-memory-limit',
+              valueFrom: {
+                path: '/tmp/plan-output/train-memory-limit',
+              },
+            },
+            {
+              name: 'actor-cpu-limit',
+              valueFrom: {
+                path: '/tmp/plan-output/actor-cpu-limit',
+              },
+            },
+            {
+              name: 'actor-memory-limit',
+              valueFrom: {
+                path: '/tmp/plan-output/actor-memory-limit',
+              },
+            },
+            {
+              name: 'evaluation-cpu-limit',
+              valueFrom: {
+                path: '/tmp/plan-output/evaluation-cpu-limit',
+              },
+            },
           ],
         },
         podSpecPatch: podSpecPatch,
-        script: {
-          command: [
-            '/bin/sh',
-            '-e',
-          ],
+        container: {
+          command: ['/app/.venv/bin/agr-plan'],
+          args: ['--argo-output-dir', '/tmp/plan-output'],
           env: [
-            {
-              name: 'AGR_WORKFLOW_NAME',
-              value: '{{workflow.name}}',
-            },
             {
               name: 'AWS_ENDPOINT_URL_S3',
               value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
@@ -262,12 +414,8 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               value: '{{workflow.uid}}',
             },
             {
-              name: 'AGR_WORKFLOW_OUTPUT_FILE',
-              value: '/tmp/plan.json',
-            },
-            {
               name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{tasks.create-attempt.outputs.parameters.generation-id}}',
+              value: '{{inputs.parameters.generation-id}}',
             },
           ],
           image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
@@ -283,74 +431,22 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               memory: '128Mi',
             },
           },
-          securityContext: {
-            allowPrivilegeEscalation: false,
-            capabilities: {
-              drop: [
-                'ALL',
-              ],
-            },
-            readOnlyRootFilesystem: true,
-            runAsGroup: 10001,
-            runAsNonRoot: true,
-            runAsUser: 10001,
-          },
-          source: importstr '_workflow_templates/plan.sh',
-          volumeMounts: [
-            {
-              mountPath: '/etc/agr',
-              name: 'learning-settings',
-              readOnly: true,
-            },
-            {
-              mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-              name: 'sts-token',
-              readOnly: true,
-            },
-            {
-              mountPath: '/tmp',
-              name: 'tmp',
-            },
-          ],
+          securityContext: stageSecurityContext,
+          volumeMounts: stageVolumeMounts,
         },
         serviceAccountName: 'agr-planner',
-        volumes: [
-          {
-            configMap: {
-              name: 'learning-settings',
-            },
-            name: 'learning-settings',
-          },
-          {
-            name: 'sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 3600,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            emptyDir: {
-              sizeLimit: '1Gi',
-            },
-            name: 'tmp',
-          },
-        ],
+        volumes: stageVolumes('1Gi'),
       },
       {
         inputs: {
           parameters: [
-            { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
-            { name: 'config-sha256', value: '{{tasks.plan.outputs.parameters.config-sha256}}' },
-            { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
-            { name: 'shard-count', value: '{{tasks.plan.outputs.parameters.rollout-shards}}' },
-            { name: 'actor-pods', value: '{{tasks.plan.outputs.parameters.actor-pods}}' },
+            { name: 'generation-id' },
+            { name: 'config-sha256' },
+            { name: 'plan-uri' },
+            { name: 'shard-count' },
+            { name: 'actor-pods' },
+            { name: 'actor-cpu-limit' },
+            { name: 'actor-memory-limit' },
           ],
         },
         name: 'rollout',
@@ -366,6 +462,8 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
                   { name: 'plan-uri', value: '{{inputs.parameters.plan-uri}}' },
                   { name: 'shard-count', value: '{{inputs.parameters.shard-count}}' },
                   { name: 'actor-pods', value: '{{inputs.parameters.actor-pods}}' },
+                  { name: 'actor-cpu-limit', value: '{{inputs.parameters.actor-cpu-limit}}' },
+                  { name: 'actor-memory-limit', value: '{{inputs.parameters.actor-memory-limit}}' },
                 ],
               },
             },
@@ -374,44 +472,20 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
         },
       },
       {
+        inputs: {
+          parameters: [
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
+          ],
+        },
         name: 'dataset',
         podSpecPatch: podSpecPatch,
         serviceAccountName: 'agr-dataset',
-        volumes: [
-          {
-            configMap: {
-              name: 'learning-settings',
-            },
-            name: 'learning-settings',
-          },
-          {
-            name: 'sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 3600,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            emptyDir: {
-              sizeLimit: '4Gi',
-            },
-            name: 'tmp',
-          },
-        ],
-        script: {
+        volumes: stageVolumes('4Gi'),
+        container: {
           image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
-          command: [
-            '/bin/sh',
-            '-e',
-          ],
-          source: importstr '_workflow_templates/dataset.sh',
+          command: ['/app/.venv/bin/agr-build-dataset'],
+          args: ['--argo-output-dir', '/tmp/dataset-output'],
           env: [
             {
               name: 'AWS_ENDPOINT_URL_S3',
@@ -480,15 +554,13 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
             },
             {
               name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{tasks.plan.outputs.parameters.generation-id}}',
+              value: '{{inputs.parameters.generation-id}}',
             },
             {
               name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{tasks.plan.outputs.parameters.plan-uri}}',
+              value: '{{inputs.parameters.plan-uri}}',
             },
             {
-              name: 'AGR_WORKFLOW_OUTPUT_FILE',
-              value: '/tmp/dataset.json',
             },
           ],
           resources: {
@@ -503,85 +575,53 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               memory: '256Mi',
             },
           },
-          securityContext: {
-            allowPrivilegeEscalation: false,
-            capabilities: {
-              drop: [
-                'ALL',
-              ],
-            },
-            readOnlyRootFilesystem: true,
-            runAsGroup: 10001,
-            runAsNonRoot: true,
-            runAsUser: 10001,
-          },
-          volumeMounts: [
-            {
-              mountPath: '/etc/agr',
-              name: 'learning-settings',
-              readOnly: true,
-            },
-            {
-              mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-              name: 'sts-token',
-              readOnly: true,
-            },
-            {
-              mountPath: '/tmp',
-              name: 'tmp',
-            },
-          ],
+          securityContext: stageSecurityContext,
+          volumeMounts: stageVolumeMounts,
         },
         outputs: {
           parameters: [
             {
               name: 'dataset-uri',
               valueFrom: {
-                path: '/tmp/dataset-uri',
+                path: '/tmp/dataset-output/dataset-uri',
               },
             },
           ],
         },
       },
       {
+        inputs: {
+          parameters: [
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
+            { name: 'dataset-uri' },
+            { name: 'learner-artifact-uri' },
+            { name: 'learner-sha256' },
+            { name: 'train-cpu-limit' },
+            { name: 'train-memory-limit' },
+          ],
+        },
         name: 'train',
         podSpecPatch: podSpecPatch,
         serviceAccountName: 'agr-trainer',
-        volumes: [
-          {
-            configMap: {
-              name: 'learning-settings',
-            },
-            name: 'learning-settings',
-          },
-          {
-            name: 'sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 3600,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            emptyDir: {
-              sizeLimit: '10Gi',
-            },
-            name: 'tmp',
-          },
-        ],
-        script: {
+        volumes: stageVolumes('10Gi'),
+        container: {
           image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
-          command: [
-            '/bin/sh',
-            '-e',
+          command: ['/app/.venv/bin/agr-train'],
+          args: [
+            '--s3-input-uri',
+            '{{inputs.parameters.dataset-uri}}',
+            '--s3-output-uri',
+            's3://agr-ai/worker-runs/models/candidates/{{inputs.parameters.generation-id}}',
+            '--initial-artifact-uri',
+            '{{inputs.parameters.learner-artifact-uri}}',
+            '--behavior-policy-id',
+            'shared-policy-v2',
+            '--behavior-policy-artifact-sha256',
+            '{{inputs.parameters.learner-sha256}}',
+            '--argo-output-dir',
+            '/tmp/train-output',
           ],
-          source: importstr '_workflow_templates/train.sh',
           env: [
             { name: 'SERVICE_ENDPOINT', value: 'http://agr-server.agr.svc.cluster.local:8080' },
             {
@@ -643,77 +683,47 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
             },
             {
               name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{tasks.plan.outputs.parameters.generation-id}}',
+              value: '{{inputs.parameters.generation-id}}',
             },
             {
               name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{tasks.plan.outputs.parameters.plan-uri}}',
+              value: '{{inputs.parameters.plan-uri}}',
             },
             {
               name: 'AGR_WORKFLOW_INPUT_URI',
-              value: '{{tasks.dataset.outputs.parameters.dataset-uri}}',
+              value: '{{inputs.parameters.dataset-uri}}',
             },
             {
               name: 'AGR_WORKFLOW_OUTPUT_URI',
-              value: 's3://agr-ai/worker-runs/models/candidates/{{tasks.plan.outputs.parameters.generation-id}}',
+              value: 's3://agr-ai/worker-runs/models/candidates/{{inputs.parameters.generation-id}}',
             },
             {
               name: 'AGR_WORKFLOW_LEARNER_URI',
-              value: '{{tasks.plan.outputs.parameters.learner-artifact-uri}}',
+              value: '{{inputs.parameters.learner-artifact-uri}}',
             },
             {
               name: 'AGR_WORKFLOW_LEARNER_SHA256',
-              value: '{{tasks.plan.outputs.parameters.learner-sha256}}',
+              value: '{{inputs.parameters.learner-sha256}}',
             },
             {
               name: 'AGR_WORKFLOW_BEHAVIOR_POLICY_SHA256',
-              value: '{{tasks.plan.outputs.parameters.learner-sha256}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_OUTPUT_FILE',
-              value: '/tmp/train.json',
+              value: '{{inputs.parameters.learner-sha256}}',
             },
           ],
           resources: {
             limits: {
-              cpu: '1900m',
+              cpu: '{{inputs.parameters.train-cpu-limit}}',
               'ephemeral-storage': '10Gi',
-              memory: '6016Mi',
+              memory: '{{inputs.parameters.train-memory-limit}}Mi',
             },
             requests: {
-              cpu: '900m',
+              cpu: '{{inputs.parameters.train-cpu-limit}}',
               'ephemeral-storage': '2Gi',
-              memory: '1984Mi',
+              memory: '{{inputs.parameters.train-memory-limit}}Mi',
             },
           },
-          securityContext: {
-            allowPrivilegeEscalation: false,
-            capabilities: {
-              drop: [
-                'ALL',
-              ],
-            },
-            readOnlyRootFilesystem: true,
-            runAsGroup: 10001,
-            runAsNonRoot: true,
-            runAsUser: 10001,
-          },
-          volumeMounts: [
-            {
-              mountPath: '/etc/agr',
-              name: 'learning-settings',
-              readOnly: true,
-            },
-            {
-              mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-              name: 'sts-token',
-              readOnly: true,
-            },
-            {
-              mountPath: '/tmp',
-              name: 'tmp',
-            },
-          ],
+          securityContext: stageSecurityContext,
+          volumeMounts: stageVolumeMounts,
         },
         outputs: {
           parameters: [
@@ -745,6 +755,12 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
         },
       },
       {
+        inputs: {
+          parameters: [
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
+          ],
+        },
         name: 'validate',
         outputs: {
           parameters: [
@@ -775,11 +791,9 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
           ],
         },
         podSpecPatch: podSpecPatch,
-        script: {
-          command: [
-            '/bin/sh',
-            '-e',
-          ],
+        container: {
+          command: ['/app/.venv/bin/agr-validate'],
+          args: ['--argo-output-dir', '/tmp/validate-output'],
           env: [
             {
               name: 'AWS_ENDPOINT_URL_S3',
@@ -810,10 +824,6 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               value: 'worker-runs',
             },
             {
-              name: 'AGR_WORKFLOW_OUTPUT_FILE',
-              value: '/tmp/validation.json',
-            },
-            {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
               value: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
             },
@@ -823,11 +833,11 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
             },
             {
               name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{tasks.plan.outputs.parameters.generation-id}}',
+              value: '{{inputs.parameters.generation-id}}',
             },
             {
               name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{tasks.plan.outputs.parameters.plan-uri}}',
+              value: '{{inputs.parameters.plan-uri}}',
             },
           ],
           image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
@@ -843,78 +853,26 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               memory: '256Mi',
             },
           },
-          securityContext: {
-            allowPrivilegeEscalation: false,
-            capabilities: {
-              drop: [
-                'ALL',
-              ],
-            },
-            readOnlyRootFilesystem: true,
-            runAsGroup: 10001,
-            runAsNonRoot: true,
-            runAsUser: 10001,
-          },
-          source: importstr '_workflow_templates/validate.sh',
-          volumeMounts: [
-            {
-              mountPath: '/etc/agr',
-              name: 'learning-settings',
-              readOnly: true,
-            },
-            {
-              mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-              name: 'sts-token',
-              readOnly: true,
-            },
-            {
-              mountPath: '/tmp',
-              name: 'tmp',
-            },
-          ],
+          securityContext: stageSecurityContext,
+          volumeMounts: stageVolumeMounts,
         },
         serviceAccountName: 'agr-validator',
-        volumes: [
-          {
-            configMap: {
-              name: 'learning-settings',
-            },
-            name: 'learning-settings',
-          },
-          {
-            name: 'sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 3600,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            emptyDir: {
-              sizeLimit: '2Gi',
-            },
-            name: 'tmp',
-          },
-        ],
+        volumes: stageVolumes('2Gi'),
       },
       {
         inputs: {
           parameters: [
-            { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
-            { name: 'config-sha256', value: '{{tasks.plan.outputs.parameters.config-sha256}}' },
-            { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
-            { name: 'shard-count', value: '{{tasks.plan.outputs.parameters.evaluation-shards}}' },
-            { name: 'evaluation-pods', value: '{{tasks.plan.outputs.parameters.evaluation-pods}}' },
-            { name: 'artifact-uri', value: '{{tasks.validate.outputs.parameters.artifact-uri}}' },
-            { name: 'model-sha256', value: '{{tasks.validate.outputs.parameters.model-sha256}}' },
-            { name: 'manifest-sha256', value: '{{tasks.validate.outputs.parameters.manifest-sha256}}' },
-            { name: 'validation-uri', value: '{{tasks.validate.outputs.parameters.validation-uri}}' },
+            { name: 'generation-id' },
+            { name: 'config-sha256' },
+            { name: 'plan-uri' },
+            { name: 'shard-count' },
+            { name: 'evaluation-pods' },
+            { name: 'evaluation-cpu-limit' },
+            { name: 'actor-memory-limit' },
+            { name: 'artifact-uri' },
+            { name: 'model-sha256' },
+            { name: 'manifest-sha256' },
+            { name: 'validation-uri' },
           ],
         },
         name: 'assess',
@@ -930,6 +888,8 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
                   { name: 'plan-uri', value: '{{inputs.parameters.plan-uri}}' },
                   { name: 'shard-count', value: '{{inputs.parameters.shard-count}}' },
                   { name: 'evaluation-pods', value: '{{inputs.parameters.evaluation-pods}}' },
+                  { name: 'evaluation-cpu-limit', value: '{{inputs.parameters.evaluation-cpu-limit}}' },
+                  { name: 'actor-memory-limit', value: '{{inputs.parameters.actor-memory-limit}}' },
                   { name: 'artifact-uri', value: '{{inputs.parameters.artifact-uri}}' },
                   { name: 'model-sha256', value: '{{inputs.parameters.model-sha256}}' },
                   { name: 'manifest-sha256', value: '{{inputs.parameters.manifest-sha256}}' },
@@ -942,23 +902,27 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
         },
       },
       {
+        inputs: {
+          parameters: [
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
+          ],
+        },
         name: 'aggregate',
         outputs: {
           parameters: [
             {
               name: 'report-uri',
               valueFrom: {
-                path: '/tmp/report-uri',
+                path: '/tmp/aggregate-output/report-uri',
               },
             },
           ],
         },
         podSpecPatch: podSpecPatch,
-        script: {
-          command: [
-            '/bin/sh',
-            '-e',
-          ],
+        container: {
+          command: ['/app/.venv/bin/agr-aggregate-evaluation'],
+          args: ['--argo-output-dir', '/tmp/aggregate-output'],
           env: [
             {
               name: 'AWS_ENDPOINT_URL_S3',
@@ -998,15 +962,11 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
             },
             {
               name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{tasks.plan.outputs.parameters.generation-id}}',
+              value: '{{inputs.parameters.generation-id}}',
             },
             {
               name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{tasks.plan.outputs.parameters.plan-uri}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_OUTPUT_FILE',
-              value: '/tmp/aggregate.json',
+              value: '{{inputs.parameters.plan-uri}}',
             },
           ],
           image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
@@ -1022,73 +982,18 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               memory: '256Mi',
             },
           },
-          securityContext: {
-            allowPrivilegeEscalation: false,
-            capabilities: {
-              drop: [
-                'ALL',
-              ],
-            },
-            readOnlyRootFilesystem: true,
-            runAsGroup: 10001,
-            runAsNonRoot: true,
-            runAsUser: 10001,
-          },
-          source: importstr '_workflow_templates/aggregate.sh',
-          volumeMounts: [
-            {
-              mountPath: '/etc/agr',
-              name: 'learning-settings',
-              readOnly: true,
-            },
-            {
-              mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-              name: 'sts-token',
-              readOnly: true,
-            },
-            {
-              mountPath: '/tmp',
-              name: 'tmp',
-            },
-          ],
+          securityContext: stageSecurityContext,
+          volumeMounts: stageVolumeMounts,
         },
         serviceAccountName: 'agr-evaluator',
-        volumes: [
-          {
-            configMap: {
-              name: 'learning-settings',
-            },
-            name: 'learning-settings',
-          },
-          {
-            name: 'sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 3600,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            emptyDir: {
-              sizeLimit: '2Gi',
-            },
-            name: 'tmp',
-          },
-        ],
+        volumes: stageVolumes('2Gi'),
       },
       {
         inputs: {
           parameters: [
-            {
-              name: 'report-uri',
-              value: '{{tasks.aggregate.outputs.parameters.report-uri}}',
-            },
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
+            { name: 'report-uri' },
           ],
         },
         name: 'decide',
@@ -1098,17 +1003,15 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               globalName: 'promote',
               name: 'promote',
               valueFrom: {
-                path: '/tmp/promote',
+                path: '/tmp/decision-output/promote',
               },
             },
           ],
         },
         podSpecPatch: podSpecPatch,
-        script: {
-          command: [
-            '/bin/sh',
-            '-e',
-          ],
+        container: {
+          command: ['/app/.venv/bin/agr-decide-promotion'],
+          args: ['--argo-output-dir', '/tmp/decision-output'],
           env: [
             {
               name: 'AWS_ENDPOINT_URL_S3',
@@ -1148,19 +1051,15 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
             },
             {
               name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{tasks.plan.outputs.parameters.generation-id}}',
+              value: '{{inputs.parameters.generation-id}}',
             },
             {
               name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{tasks.plan.outputs.parameters.plan-uri}}',
+              value: '{{inputs.parameters.plan-uri}}',
             },
             {
               name: 'AGR_EVALUATION_REPORT_URI',
               value: '{{inputs.parameters.report-uri}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_OUTPUT_FILE',
-              value: '/tmp/decision.json',
             },
           ],
           image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
@@ -1176,71 +1075,17 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               memory: '128Mi',
             },
           },
-          securityContext: {
-            allowPrivilegeEscalation: false,
-            capabilities: {
-              drop: [
-                'ALL',
-              ],
-            },
-            readOnlyRootFilesystem: true,
-            runAsGroup: 10001,
-            runAsNonRoot: true,
-            runAsUser: 10001,
-          },
-          source: importstr '_workflow_templates/decide.sh',
-          volumeMounts: [
-            {
-              mountPath: '/etc/agr',
-              name: 'learning-settings',
-              readOnly: true,
-            },
-            {
-              mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-              name: 'sts-token',
-              readOnly: true,
-            },
-            {
-              mountPath: '/tmp',
-              name: 'tmp',
-            },
-          ],
+          securityContext: stageSecurityContext,
+          volumeMounts: stageVolumeMounts,
         },
         serviceAccountName: 'agr-evaluator',
-        volumes: [
-          {
-            configMap: {
-              name: 'learning-settings',
-            },
-            name: 'learning-settings',
-          },
-          {
-            name: 'sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 3600,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            emptyDir: {
-              sizeLimit: '1Gi',
-            },
-            name: 'tmp',
-          },
-        ],
+        volumes: stageVolumes('1Gi'),
       },
       {
         container: {
           args: [
             '--target-id',
-            '{{tasks.train.outputs.parameters.model-id}}',
+            '{{inputs.parameters.model-id}}',
             '--active-pointer-s3-uri',
             's3://agr-ai/worker-runs/models/active.json',
           ],
@@ -1292,19 +1137,15 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
             },
             {
               name: 'AGR_EVALUATION_REPORT_URI',
-              value: '{{tasks.aggregate.outputs.parameters.report-uri}}',
+              value: '{{inputs.parameters.report-uri}}',
             },
             {
               name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{tasks.plan.outputs.parameters.generation-id}}',
+              value: '{{inputs.parameters.generation-id}}',
             },
             {
               name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{tasks.plan.outputs.parameters.plan-uri}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_OUTPUT_FILE',
-              value: '/tmp/publish.json',
+              value: '{{inputs.parameters.plan-uri}}',
             },
           ],
           image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
@@ -1320,66 +1161,21 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               memory: '256Mi',
             },
           },
-          securityContext: {
-            allowPrivilegeEscalation: false,
-            capabilities: {
-              drop: [
-                'ALL',
-              ],
-            },
-            readOnlyRootFilesystem: true,
-            runAsGroup: 10001,
-            runAsNonRoot: true,
-            runAsUser: 10001,
-          },
-          volumeMounts: [
-            {
-              mountPath: '/etc/agr',
-              name: 'learning-settings',
-              readOnly: true,
-            },
-            {
-              mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-              name: 'sts-token',
-              readOnly: true,
-            },
-            {
-              mountPath: '/tmp',
-              name: 'tmp',
-            },
+          securityContext: stageSecurityContext,
+          volumeMounts: stageVolumeMounts,
+        },
+        inputs: {
+          parameters: [
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
+            { name: 'report-uri' },
+            { name: 'model-id' },
           ],
         },
         name: 'publish',
         podSpecPatch: podSpecPatch,
         serviceAccountName: 'agr-promoter',
-        volumes: [
-          {
-            configMap: {
-              name: 'learning-settings',
-            },
-            name: 'learning-settings',
-          },
-          {
-            name: 'sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 3600,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            emptyDir: {
-              sizeLimit: '2Gi',
-            },
-            name: 'tmp',
-          },
-        ],
+        volumes: stageVolumes('2Gi'),
       },
       {
         container: {
@@ -1427,19 +1223,15 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
             },
             {
               name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{tasks.plan.outputs.parameters.generation-id}}',
+              value: '{{inputs.parameters.generation-id}}',
             },
             {
               name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{tasks.plan.outputs.parameters.plan-uri}}',
+              value: '{{inputs.parameters.plan-uri}}',
             },
             {
               name: 'AGR_SERVER_SERVICE_HEALTH_URL',
               value: 'http://agr-server.agr.svc.cluster.local:8081',
-            },
-            {
-              name: 'AGR_WORKFLOW_OUTPUT_FILE',
-              value: '/tmp/verify.json',
             },
           ],
           image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
@@ -1455,66 +1247,19 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               memory: '256Mi',
             },
           },
-          securityContext: {
-            allowPrivilegeEscalation: false,
-            capabilities: {
-              drop: [
-                'ALL',
-              ],
-            },
-            readOnlyRootFilesystem: true,
-            runAsGroup: 10001,
-            runAsNonRoot: true,
-            runAsUser: 10001,
-          },
-          volumeMounts: [
-            {
-              mountPath: '/etc/agr',
-              name: 'learning-settings',
-              readOnly: true,
-            },
-            {
-              mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-              name: 'sts-token',
-              readOnly: true,
-            },
-            {
-              mountPath: '/tmp',
-              name: 'tmp',
-            },
+          securityContext: stageSecurityContext,
+          volumeMounts: stageVolumeMounts,
+        },
+        inputs: {
+          parameters: [
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
           ],
         },
         name: 'verify',
         podSpecPatch: podSpecPatch,
         serviceAccountName: 'agr-verify',
-        volumes: [
-          {
-            configMap: {
-              name: 'learning-settings',
-            },
-            name: 'learning-settings',
-          },
-          {
-            name: 'sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 3600,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            emptyDir: {
-              sizeLimit: '1Gi',
-            },
-            name: 'tmp',
-          },
-        ],
+        volumes: stageVolumes('1Gi'),
       },
       {
         inputs: {
@@ -1524,12 +1269,25 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
             { name: 'plan-uri' },
             { name: 'shard-count' },
             { name: 'actor-pods' },
+            { name: 'actor-cpu-limit' },
+            { name: 'actor-memory-limit' },
           ],
         },
         name: 'apply-rollout-job',
         resource: {
           action: 'apply',
-          manifest: importstr '_workflow_templates/job-rollout.yaml',
+          manifest: indexedJob.render({
+            stage: 'rollout',
+            stageLabel: 'rollout',
+            parallelismParameter: 'actor-pods',
+            serviceAccount: 'agr-actor',
+            containerName: 'actor',
+            command: 'run-shard',
+            commandArgs: ['--stage', 'rollout'],
+            controllerId: 'agr-actor',
+            cpuLimitParameter: 'actor-cpu-limit',
+            extraEnv: [{ name: 'OMP_NUM_THREADS', value: '1' }],
+          }),
           setOwnerReference: true,
         },
       },
@@ -1538,7 +1296,7 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
         resource: {
           action: 'get',
           failureCondition: import '_workflow_templates/indexed-job-failure-condition.libsonnet',
-          manifest: importstr '_workflow_templates/job-rollout-reference.yaml',
+          manifest: jobReference.manifest('rollout'),
           successCondition: 'status.succeeded == spec.completions',
         },
       },
@@ -1550,6 +1308,8 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
             { name: 'plan-uri' },
             { name: 'shard-count' },
             { name: 'evaluation-pods' },
+            { name: 'evaluation-cpu-limit' },
+            { name: 'actor-memory-limit' },
             { name: 'artifact-uri' },
             { name: 'model-sha256' },
             { name: 'manifest-sha256' },
@@ -1559,7 +1319,23 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
         name: 'apply-assess-job',
         resource: {
           action: 'apply',
-          manifest: importstr '_workflow_templates/job-assess.yaml',
+          manifest: indexedJob.render({
+            stage: 'assess',
+            stageLabel: 'evaluation',
+            parallelismParameter: 'evaluation-pods',
+            serviceAccount: 'agr-evaluator',
+            containerName: 'evaluator',
+            command: 'evaluate-shard',
+            commandArgs: [],
+            controllerId: 'agr-evaluator',
+            cpuLimitParameter: 'evaluation-cpu-limit',
+            extraEnv: [
+              { name: 'AGR_CANDIDATE_MODEL_URI', value: '{{inputs.parameters.artifact-uri}}' },
+              { name: 'AGR_CANDIDATE_MODEL_SHA256', value: '{{inputs.parameters.model-sha256}}' },
+              { name: 'AGR_CANDIDATE_MANIFEST_SHA256', value: '{{inputs.parameters.manifest-sha256}}' },
+              { name: 'AGR_CANDIDATE_VALIDATION_URI', value: '{{inputs.parameters.validation-uri}}' },
+            ],
+          }),
           setOwnerReference: true,
         },
       },
@@ -1568,7 +1344,7 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
         resource: {
           action: 'get',
           failureCondition: import '_workflow_templates/indexed-job-failure-condition.libsonnet',
-          manifest: importstr '_workflow_templates/job-assess-reference.yaml',
+          manifest: jobReference.manifest('assess'),
           successCondition: 'status.succeeded == spec.completions',
         },
       },
@@ -1585,7 +1361,7 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               template: 'delete-assess',
             },
             {
-              depends: 'delete-rollout.Succeeded && delete-assess.Succeeded',
+              depends: '(delete-rollout.Succeeded || delete-rollout.Failed || delete-rollout.Errored || delete-rollout.Skipped || delete-rollout.Omitted) && (delete-assess.Succeeded || delete-assess.Failed || delete-assess.Errored || delete-assess.Skipped || delete-assess.Omitted)',
               name: 'record-final-state',
               template: 'finalize',
             },
@@ -1603,7 +1379,7 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
             '--wait=true',
             '--timeout=10m',
           ],
-          manifest: importstr '_workflow_templates/resource-delete-rollout.yaml',
+          manifest: jobReference.manifest('rollout'),
         },
       },
       {
@@ -1616,16 +1392,25 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
             '--wait=true',
             '--timeout=10m',
           ],
-          manifest: importstr '_workflow_templates/resource-delete-assess.yaml',
+          manifest: jobReference.manifest('assess'),
         },
       },
       {
         name: 'finalize',
         podSpecPatch: podSpecPatch,
-        script: {
-          command: [
-            '/bin/sh',
-            '-e',
+        container: {
+          command: ['/app/.venv/bin/agr-finalize'],
+          args: [
+            '--generation-id',
+            '{{workflow.outputs.parameters.generation-id}}',
+            '--workflow-uid',
+            '{{workflow.uid}}',
+            '--workflow-status',
+            '{{workflow.status}}',
+            '--cancel-requested',
+            '{{workflow.annotations.agr.learning/cancel-requested}}',
+            '--promote',
+            '{{workflow.outputs.parameters.promote}}',
           ],
           env: [
             {
@@ -1703,67 +1488,19 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               memory: '128Mi',
             },
           },
-          securityContext: {
-            allowPrivilegeEscalation: false,
-            capabilities: {
-              drop: [
-                'ALL',
-              ],
-            },
-            readOnlyRootFilesystem: true,
-            runAsGroup: 10001,
-            runAsNonRoot: true,
-            runAsUser: 10001,
-          },
-          source: importstr '_workflow_templates/finalize.sh',
-          volumeMounts: [
-            {
-              mountPath: '/etc/agr',
-              name: 'learning-settings',
-              readOnly: true,
-            },
-            {
-              mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-              name: 'sts-token',
-              readOnly: true,
-            },
-            {
-              mountPath: '/tmp',
-              name: 'tmp',
-            },
-          ],
+          securityContext: stageSecurityContext,
+          volumeMounts: stageVolumeMounts,
         },
         serviceAccountName: 'agr-planner',
-        volumes: [
-          {
-            configMap: {
-              name: 'learning-settings',
-            },
-            name: 'learning-settings',
-          },
-          {
-            name: 'sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 3600,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            emptyDir: {
-              sizeLimit: '1Gi',
-            },
-            name: 'tmp',
-          },
-        ],
+        volumes: stageVolumes('1Gi'),
       },
       {
+        inputs: {
+          parameters: [
+            { name: 'trigger' },
+            { name: 'retry-generation-id' },
+          ],
+        },
         name: 'create-attempt',
         outputs: {
           parameters: [
@@ -1787,19 +1524,19 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
                 path: '/tmp/create-attempt-output/attempt-id',
               },
             },
+            {
+              name: 'skipped',
+              valueFrom: {
+                path: '/tmp/create-attempt-output/skipped',
+              },
+            },
           ],
         },
         podSpecPatch: podSpecPatch,
-        script: {
-          command: [
-            '/bin/sh',
-            '-e',
-          ],
+        container: {
+          command: ['/app/.venv/bin/agr-create-attempt'],
+          args: ['--argo-output-dir', '/tmp/create-attempt-output'],
           env: [
-            {
-              name: 'AGR_WORKFLOW_NAME',
-              value: '{{workflow.name}}',
-            },
             {
               name: 'AWS_ENDPOINT_URL_S3',
               value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
@@ -1854,16 +1591,12 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               value: '{{workflow.uid}}',
             },
             {
-              name: 'AGR_WORKFLOW_OUTPUT_FILE',
-              value: '/tmp/create-attempt.json',
-            },
-            {
               name: 'AGR_WORKFLOW_TRIGGER',
-              value: '{{workflow.parameters.trigger}}',
+              value: '{{inputs.parameters.trigger}}',
             },
             {
               name: 'AGR_WORKFLOW_RETRY_GENERATION_ID',
-              value: '{{workflow.parameters.retry-generation-id}}',
+              value: '{{inputs.parameters.retry-generation-id}}',
             },
           ],
           image: 'ghcr.io/walnuts1018/agr-training:0.1.15@sha256:caba8be0b12864071e4958abdf1a768a022b2549947c4cd8b1c2bc4d2b25c09b',
@@ -1879,65 +1612,11 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
               memory: '128Mi',
             },
           },
-          securityContext: {
-            allowPrivilegeEscalation: false,
-            capabilities: {
-              drop: [
-                'ALL',
-              ],
-            },
-            readOnlyRootFilesystem: true,
-            runAsGroup: 10001,
-            runAsNonRoot: true,
-            runAsUser: 10001,
-          },
-          source: importstr '_workflow_templates/create-attempt.sh',
-          volumeMounts: [
-            {
-              mountPath: '/etc/agr',
-              name: 'learning-settings',
-              readOnly: true,
-            },
-            {
-              mountPath: '/var/run/secrets/sts.seaweedfs.com/serviceaccount',
-              name: 'sts-token',
-              readOnly: true,
-            },
-            {
-              mountPath: '/tmp',
-              name: 'tmp',
-            },
-          ],
+          securityContext: stageSecurityContext,
+          volumeMounts: stageVolumeMounts,
         },
         serviceAccountName: 'agr-planner',
-        volumes: [
-          {
-            configMap: {
-              name: 'learning-settings',
-            },
-            name: 'learning-settings',
-          },
-          {
-            name: 'sts-token',
-            projected: {
-              sources: [
-                {
-                  serviceAccountToken: {
-                    audience: 'sts.seaweedfs.com',
-                    expirationSeconds: 3600,
-                    path: 'token',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            emptyDir: {
-              sizeLimit: '1Gi',
-            },
-            name: 'tmp',
-          },
-        ],
+        volumes: stageVolumes('1Gi'),
       },
     ],
     ttlStrategy: {

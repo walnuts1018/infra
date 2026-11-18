@@ -12,6 +12,7 @@ local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-pat
   },
   spec: {
     serviceAccountName: 'agr-workflow',
+    executor: { serviceAccountName: 'agr-workflow-executor' },
     entrypoint: 'operate-model',
     synchronization: {
       mutexes: [{ name: 'agr-training' }],

@@ -9,6 +9,6 @@ local app = import 'app.json5';
   rules: [{
     apiGroups: ['batch'],
     resources: ['jobs'],
-    verbs: ['create', 'get', 'list', 'watch', 'patch', 'delete'],
+    verbs: ['create', 'get', 'patch', 'delete'],
   }],
 }

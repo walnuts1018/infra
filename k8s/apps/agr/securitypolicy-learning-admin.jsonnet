@@ -1,17 +1,17 @@
 local app = import 'app.json5';
-local grpcRoute = import 'grpc-route-learning-admin.jsonnet';
+local adminRoute = import 'http-route-learning-admin.jsonnet';
 {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
   kind: 'SecurityPolicy',
   metadata: {
-    name: app.name + '-learning-admin-grpc',
+    name: app.name + '-learning-admin',
     namespace: app.namespace,
   },
   spec: {
     targetRefs: [{
       group: 'gateway.networking.k8s.io',
-      kind: 'GRPCRoute',
-      name: grpcRoute.metadata.name,
+      kind: 'HTTPRoute',
+      name: adminRoute.metadata.name,
     }],
     jwt: {
       providers: [{

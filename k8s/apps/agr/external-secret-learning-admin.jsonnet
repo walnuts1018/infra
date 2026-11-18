@@ -12,13 +12,6 @@ local app = import 'app.json5';
       },
     },
     {
-      secretKey: 'admin_gateway_token',
-      remoteRef: {
-        key: 'terraform-external-secrets',
-        property: 'agr-learning-admin-gateway-token',
-      },
-    },
-    {
       secretKey: 'AGR_LEARNING_ADMIN_GATEWAY_TOKEN',
       remoteRef: {
         key: 'terraform-external-secrets',
@@ -27,6 +20,8 @@ local app = import 'app.json5';
     },
   ],
   template_data: {
-    credential: '{{ .admin_gateway_token }}',
+    AGR_LEARNING_ADMIN_IDENTITIES: '{{ .AGR_LEARNING_ADMIN_IDENTITIES }}',
+    AGR_LEARNING_ADMIN_GATEWAY_TOKEN: '{{ .AGR_LEARNING_ADMIN_GATEWAY_TOKEN }}',
+    credential: '{{ .AGR_LEARNING_ADMIN_GATEWAY_TOKEN }}',
   },
 }

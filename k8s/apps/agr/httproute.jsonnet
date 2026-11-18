@@ -1,6 +1,5 @@
 local gateway = import '../envoy-gateway-class/gateway.jsonnet';
 local app = import 'app.json5';
-local adminCredentialFilter = import 'http-route-admin-filter.jsonnet';
 local credentialFilter = import 'http-route-filter.jsonnet';
 local server = import 'service-server.jsonnet';
 local web = import 'service-web.jsonnet';
@@ -22,14 +21,6 @@ local backendRule(contentType) = {
         group: 'gateway.envoyproxy.io',
         kind: 'HTTPRouteFilter',
         name: credentialFilter.metadata.name,
-      },
-    },
-    {
-      type: 'ExtensionRef',
-      extensionRef: {
-        group: 'gateway.envoyproxy.io',
-        kind: 'HTTPRouteFilter',
-        name: adminCredentialFilter.metadata.name,
       },
     },
   ],
