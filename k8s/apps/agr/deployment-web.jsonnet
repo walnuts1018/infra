@@ -28,7 +28,7 @@ local app = import 'app.json5';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'web',
-            image: 'ghcr.io/walnuts1018/agr-web:0.1.2@sha256:f43731b3f911dc123e77527e19a1e55849e507b601b2b30a72a4163229c8271a',
+            image: 'ghcr.io/walnuts1018/agr-web:0.1.12@sha256:34407a16e6958a06823d148763df826310e7777734a9565d768ede1bd30aba63',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               { name: 'http', containerPort: 3000, protocol: 'TCP' },
