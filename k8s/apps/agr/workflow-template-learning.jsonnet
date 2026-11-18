@@ -341,12 +341,12 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             limits: {
               cpu: '500m',
               'ephemeral-storage': '1Gi',
-              memory: '1Gi',
+              memory: '4Gi',
             },
             requests: {
               cpu: '100m',
               'ephemeral-storage': '128Mi',
-              memory: '128Mi',
+              memory: '1Gi',
             },
           },
           securityContext: stagePod.securityContext,
