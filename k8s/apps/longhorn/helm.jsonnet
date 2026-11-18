@@ -4,7 +4,7 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'longhorn',
   repoURL: 'https://charts.longhorn.io',
-  targetRevision: '1.12.1',
+  targetRevision: '1.13.0',
   valuesObject: std.mergePatch(
     std.parseYaml(importstr 'values.yaml'),
     {
