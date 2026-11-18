@@ -115,13 +115,13 @@
               ] + config.extraEnv,
               resources: {
                 requests: {
-                  cpu: '{{inputs.parameters.' + config.cpuLimitParameter + '}}',
-                  memory: '{{inputs.parameters.actor-memory-limit}}Mi',
+                  cpu: '1',
+                  memory: '512Mi',
                   'ephemeral-storage': '128Mi',
                 },
                 limits: {
-                  cpu: '{{inputs.parameters.' + config.cpuLimitParameter + '}}',
-                  memory: '{{inputs.parameters.actor-memory-limit}}Mi',
+                  cpu: '1',
+                  memory: '512Mi',
                   'ephemeral-storage': '1Gi',
                 },
               },

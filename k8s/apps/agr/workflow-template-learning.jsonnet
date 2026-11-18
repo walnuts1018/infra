@@ -1,6 +1,8 @@
 local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-patch.libsonnet', '', '', ':');
 local indexedJob = import '_workflow_templates/indexed-job.libsonnet';
 local jobReference = import '_workflow_templates/job-reference.libsonnet';
+local maxActorPods = 1;
+local maxEvaluationPods = 1;
 local stageSecurityContext = {
   allowPrivilegeEscalation: false,
   capabilities: { drop: ['ALL'] },
@@ -117,8 +119,6 @@ local stageVolumes(tmpSize) = [
                   { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
                   { name: 'shard-count', value: '{{tasks.plan.outputs.parameters.rollout-shards}}' },
                   { name: 'actor-pods', value: '{{tasks.plan.outputs.parameters.actor-pods}}' },
-                  { name: 'actor-cpu-limit', value: '{{tasks.plan.outputs.parameters.actor-cpu-limit}}' },
-                  { name: 'actor-memory-limit', value: '{{tasks.plan.outputs.parameters.actor-memory-limit}}' },
                 ],
               },
               name: 'rollout',
@@ -148,8 +148,6 @@ local stageVolumes(tmpSize) = [
                   { name: 'dataset-uri', value: '{{tasks.dataset.outputs.parameters.dataset-uri}}' },
                   { name: 'learner-artifact-uri', value: '{{tasks.plan.outputs.parameters.learner-artifact-uri}}' },
                   { name: 'learner-sha256', value: '{{tasks.plan.outputs.parameters.learner-sha256}}' },
-                  { name: 'train-cpu-limit', value: '{{tasks.plan.outputs.parameters.train-cpu-limit}}' },
-                  { name: 'train-memory-limit', value: '{{tasks.plan.outputs.parameters.train-memory-limit}}' },
                 ],
               },
               name: 'train',
@@ -179,8 +177,6 @@ local stageVolumes(tmpSize) = [
                   { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
                   { name: 'shard-count', value: '{{tasks.plan.outputs.parameters.evaluation-shards}}' },
                   { name: 'evaluation-pods', value: '{{tasks.plan.outputs.parameters.evaluation-pods}}' },
-                  { name: 'evaluation-cpu-limit', value: '{{tasks.plan.outputs.parameters.evaluation-cpu-limit}}' },
-                  { name: 'actor-memory-limit', value: '{{tasks.plan.outputs.parameters.actor-memory-limit}}' },
                   { name: 'artifact-uri', value: '{{tasks.validate.outputs.parameters.artifact-uri}}' },
                   { name: 'model-sha256', value: '{{tasks.validate.outputs.parameters.model-sha256}}' },
                   { name: 'manifest-sha256', value: '{{tasks.validate.outputs.parameters.manifest-sha256}}' },
@@ -323,42 +319,19 @@ local stageVolumes(tmpSize) = [
                 path: '/tmp/plan-output/learner-sha256',
               },
             },
-            {
-              name: 'train-cpu-limit',
-              valueFrom: {
-                path: '/tmp/plan-output/train-cpu-limit',
-              },
-            },
-            {
-              name: 'train-memory-limit',
-              valueFrom: {
-                path: '/tmp/plan-output/train-memory-limit',
-              },
-            },
-            {
-              name: 'actor-cpu-limit',
-              valueFrom: {
-                path: '/tmp/plan-output/actor-cpu-limit',
-              },
-            },
-            {
-              name: 'actor-memory-limit',
-              valueFrom: {
-                path: '/tmp/plan-output/actor-memory-limit',
-              },
-            },
-            {
-              name: 'evaluation-cpu-limit',
-              valueFrom: {
-                path: '/tmp/plan-output/evaluation-cpu-limit',
-              },
-            },
           ],
         },
         podSpecPatch: podSpecPatch,
         container: {
           command: ['/app/.venv/bin/agr-plan'],
-          args: ['--argo-output-dir', '/tmp/plan-output'],
+          args: [
+            '--argo-output-dir',
+            '/tmp/plan-output',
+            '--max-actor-pods',
+            std.toString(maxActorPods),
+            '--max-evaluation-pods',
+            std.toString(maxEvaluationPods),
+          ],
           env: [
             {
               name: 'AWS_ENDPOINT_URL_S3',
@@ -445,8 +418,6 @@ local stageVolumes(tmpSize) = [
             { name: 'plan-uri' },
             { name: 'shard-count' },
             { name: 'actor-pods' },
-            { name: 'actor-cpu-limit' },
-            { name: 'actor-memory-limit' },
           ],
         },
         name: 'rollout',
@@ -462,8 +433,6 @@ local stageVolumes(tmpSize) = [
                   { name: 'plan-uri', value: '{{inputs.parameters.plan-uri}}' },
                   { name: 'shard-count', value: '{{inputs.parameters.shard-count}}' },
                   { name: 'actor-pods', value: '{{inputs.parameters.actor-pods}}' },
-                  { name: 'actor-cpu-limit', value: '{{inputs.parameters.actor-cpu-limit}}' },
-                  { name: 'actor-memory-limit', value: '{{inputs.parameters.actor-memory-limit}}' },
                 ],
               },
             },
@@ -597,8 +566,6 @@ local stageVolumes(tmpSize) = [
             { name: 'dataset-uri' },
             { name: 'learner-artifact-uri' },
             { name: 'learner-sha256' },
-            { name: 'train-cpu-limit' },
-            { name: 'train-memory-limit' },
           ],
         },
         name: 'train',
@@ -712,14 +679,14 @@ local stageVolumes(tmpSize) = [
           ],
           resources: {
             limits: {
-              cpu: '{{inputs.parameters.train-cpu-limit}}',
+              cpu: '2',
               'ephemeral-storage': '10Gi',
-              memory: '{{inputs.parameters.train-memory-limit}}Mi',
+              memory: '6144Mi',
             },
             requests: {
-              cpu: '{{inputs.parameters.train-cpu-limit}}',
+              cpu: '2',
               'ephemeral-storage': '2Gi',
-              memory: '{{inputs.parameters.train-memory-limit}}Mi',
+              memory: '6144Mi',
             },
           },
           securityContext: stageSecurityContext,
@@ -867,8 +834,6 @@ local stageVolumes(tmpSize) = [
             { name: 'plan-uri' },
             { name: 'shard-count' },
             { name: 'evaluation-pods' },
-            { name: 'evaluation-cpu-limit' },
-            { name: 'actor-memory-limit' },
             { name: 'artifact-uri' },
             { name: 'model-sha256' },
             { name: 'manifest-sha256' },
@@ -888,8 +853,6 @@ local stageVolumes(tmpSize) = [
                   { name: 'plan-uri', value: '{{inputs.parameters.plan-uri}}' },
                   { name: 'shard-count', value: '{{inputs.parameters.shard-count}}' },
                   { name: 'evaluation-pods', value: '{{inputs.parameters.evaluation-pods}}' },
-                  { name: 'evaluation-cpu-limit', value: '{{inputs.parameters.evaluation-cpu-limit}}' },
-                  { name: 'actor-memory-limit', value: '{{inputs.parameters.actor-memory-limit}}' },
                   { name: 'artifact-uri', value: '{{inputs.parameters.artifact-uri}}' },
                   { name: 'model-sha256', value: '{{inputs.parameters.model-sha256}}' },
                   { name: 'manifest-sha256', value: '{{inputs.parameters.manifest-sha256}}' },
@@ -1269,8 +1232,6 @@ local stageVolumes(tmpSize) = [
             { name: 'plan-uri' },
             { name: 'shard-count' },
             { name: 'actor-pods' },
-            { name: 'actor-cpu-limit' },
-            { name: 'actor-memory-limit' },
           ],
         },
         name: 'apply-rollout-job',
@@ -1285,7 +1246,6 @@ local stageVolumes(tmpSize) = [
             command: 'run-shard',
             commandArgs: ['--stage', 'rollout'],
             controllerId: 'agr-actor',
-            cpuLimitParameter: 'actor-cpu-limit',
             extraEnv: [{ name: 'OMP_NUM_THREADS', value: '1' }],
           }),
           setOwnerReference: true,
@@ -1308,8 +1268,6 @@ local stageVolumes(tmpSize) = [
             { name: 'plan-uri' },
             { name: 'shard-count' },
             { name: 'evaluation-pods' },
-            { name: 'evaluation-cpu-limit' },
-            { name: 'actor-memory-limit' },
             { name: 'artifact-uri' },
             { name: 'model-sha256' },
             { name: 'manifest-sha256' },
@@ -1328,7 +1286,6 @@ local stageVolumes(tmpSize) = [
             command: 'evaluate-shard',
             commandArgs: [],
             controllerId: 'agr-evaluator',
-            cpuLimitParameter: 'evaluation-cpu-limit',
             extraEnv: [
               { name: 'AGR_CANDIDATE_MODEL_URI', value: '{{inputs.parameters.artifact-uri}}' },
               { name: 'AGR_CANDIDATE_MODEL_SHA256', value: '{{inputs.parameters.model-sha256}}' },
