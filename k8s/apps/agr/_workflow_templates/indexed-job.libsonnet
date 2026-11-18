@@ -85,7 +85,7 @@
                 },
                 {
                   name: 'AWS_ENDPOINT_URL_STS',
-                  value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
+                  value: 'https://seaweedfs.walnuts.dev',
                 },
                 { name: 'AWS_ROLE_ARN', value: 'arn:aws:iam::role/' + config.controllerId },
                 {

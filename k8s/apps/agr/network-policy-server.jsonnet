@@ -58,6 +58,10 @@ local app = import 'app.json5';
         }],
         ports: [{ protocol: 'TCP', port: 8333 }],
       },
+      {
+        to: [networkPolicy.envoyGatewayProxy],
+        ports: [{ protocol: 'TCP', port: 10443 }],
+      },
     ],
   },
 }

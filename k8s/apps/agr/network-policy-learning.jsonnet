@@ -37,6 +37,10 @@ local app = import 'app.json5';
         to: [networkPolicy.otelDefaultCollector],
         ports: [{ protocol: 'TCP', port: 4318 }],
       },
+      {
+        to: [networkPolicy.envoyGatewayProxy],
+        ports: [{ protocol: 'TCP', port: 10443 }],
+      },
     ],
   },
 }

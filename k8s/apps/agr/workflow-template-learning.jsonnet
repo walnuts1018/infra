@@ -284,7 +284,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AWS_ENDPOINT_URL_STS',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
+              value: 'https://seaweedfs.walnuts.dev',
             },
             {
               name: 'AWS_ROLE_ARN',
@@ -414,7 +414,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AWS_ENDPOINT_URL_STS',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
+              value: 'https://seaweedfs.walnuts.dev',
             },
             {
               name: 'AWS_ROLE_ARN',
@@ -552,7 +552,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AWS_ENDPOINT_URL_STS',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
+              value: 'https://seaweedfs.walnuts.dev',
             },
             {
               name: 'AWS_ROLE_ARN',
@@ -718,7 +718,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AWS_ENDPOINT_URL_STS',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
+              value: 'https://seaweedfs.walnuts.dev',
             },
             {
               name: 'AWS_ROLE_ARN',
@@ -850,7 +850,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AWS_ENDPOINT_URL_STS',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
+              value: 'https://seaweedfs.walnuts.dev',
             },
             {
               name: 'AWS_ROLE_ARN',
@@ -939,7 +939,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AWS_ENDPOINT_URL_STS',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
+              value: 'https://seaweedfs.walnuts.dev',
             },
             {
               name: 'AWS_ROLE_ARN',
@@ -1025,7 +1025,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AWS_ENDPOINT_URL_STS',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
+              value: 'https://seaweedfs.walnuts.dev',
             },
             {
               name: 'AWS_ROLE_ARN',
@@ -1111,7 +1111,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AWS_ENDPOINT_URL_STS',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
+              value: 'https://seaweedfs.walnuts.dev',
             },
             {
               name: 'AWS_ROLE_ARN',
@@ -1417,7 +1417,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AWS_ENDPOINT_URL_STS',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
+              value: 'https://seaweedfs.walnuts.dev',
             },
             {
               name: 'AWS_ROLE_ARN',

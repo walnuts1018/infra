@@ -50,7 +50,7 @@ local sa = import 'service-account-app.jsonnet';
               { name: 'AGR_POLICY_MODEL_S3_URI', value: 's3://agr-ai/worker-runs/models/active.json' },
               { name: 'WORKER_S3_BUCKET', value: 'agr-ai' },
               { name: 'AWS_ENDPOINT_URL_S3', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
-              { name: 'AWS_ENDPOINT_URL_STS', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
+              { name: 'AWS_ENDPOINT_URL_STS', value: 'https://seaweedfs.walnuts.dev' },
               { name: 'AWS_REGION', value: 'us-east-1' },
               { name: 'AWS_ROLE_ARN', value: 'arn:aws:iam::role/agr-app-service' },
               { name: 'AWS_WEB_IDENTITY_TOKEN_FILE', value: '/projected/sts.seaweedfs.com/serviceaccount/token' },

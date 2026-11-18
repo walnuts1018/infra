@@ -1,6 +1,7 @@
 {
   s3Env(role, controllerId, environment):
     local endpoint = 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333';
+    local stsEndpoint = 'https://seaweedfs.walnuts.dev';
     local commonNames = [
       'AWS_ENDPOINT_URL_S3',
       'AWS_ENDPOINT_URL_STS',
@@ -16,7 +17,7 @@
     local has(name) = std.member(presentNames, name);
     local optional(name, value) = if has(name) then [{ name: name, value: value }] else [];
     optional('AWS_ENDPOINT_URL_S3', endpoint) +
-    optional('AWS_ENDPOINT_URL_STS', endpoint) +
+    optional('AWS_ENDPOINT_URL_STS', stsEndpoint) +
     optional('AWS_ROLE_ARN', 'arn:aws:iam::role/' + role) +
     optional(
       'AWS_WEB_IDENTITY_TOKEN_FILE',

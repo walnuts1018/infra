@@ -21,6 +21,10 @@ local app = import 'app.json5';
         ports: [{ protocol: 'TCP', port: 8080 }, { protocol: 'TCP', port: 8081 }],
       },
       {
+        to: [networkPolicy.envoyGatewayProxy],
+        ports: [{ protocol: 'TCP', port: 10443 }],
+      },
+      {
         to: [{
           namespaceSelector: { matchLabels: { 'kubernetes.io/metadata.name': 'seaweedfs' } },
           podSelector: {

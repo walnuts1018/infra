@@ -45,7 +45,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         args: ['--operation', '{{workflow.parameters.operation}}', '--target-id', '{{workflow.parameters.target-id}}', '--expected-revision', '{{workflow.parameters.expected-revision}}', '--operation-id', '{{workflow.parameters.operation-id}}', '--reason', '{{workflow.parameters.reason}}'],
         env: stagePod.s3Env('agr-promoter', 'agr-promoter', [
           { name: 'AWS_ENDPOINT_URL_S3', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
-          { name: 'AWS_ENDPOINT_URL_STS', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
+          { name: 'AWS_ENDPOINT_URL_STS', value: 'https://seaweedfs.walnuts.dev' },
           { name: 'AWS_ROLE_ARN', value: 'arn:aws:iam::role/agr-promoter' },
           { name: 'AWS_WEB_IDENTITY_TOKEN_FILE', value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token' },
           { name: 'AWS_REGION', value: 'us-east-1' },
