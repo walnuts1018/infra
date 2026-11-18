@@ -1,7 +1,7 @@
 {
   s3Env(role, controllerId, environment):
     local endpoint = 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333';
-    local stsEndpoint = 'https://seaweedfs.walnuts.dev';
+    local stsEndpoint = 'https://seaweedfs.local.walnuts.dev';
     local commonNames = [
       'AWS_ENDPOINT_URL_S3',
       'AWS_ENDPOINT_URL_STS',
