@@ -11,9 +11,16 @@ local app = import 'app.json5';
     kind: 'Role',
     name: 'agr-workflow',
   },
-  subjects: [{
-    kind: 'ServiceAccount',
-    name: 'agr-workflow',
-    namespace: app.namespace,
-  }],
+  subjects: [
+    {
+      kind: 'ServiceAccount',
+      name: 'agr-workflow',
+      namespace: app.namespace,
+    },
+    {
+      kind: 'ServiceAccount',
+      name: 'agr-workflow-executor',
+      namespace: app.namespace,
+    },
+  ],
 }
