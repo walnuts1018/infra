@@ -5,6 +5,6 @@ local app = import 'app.json5';
 
   chart: 'prometheus-blackbox-exporter',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '11.20.2',
+  targetRevision: '11.21.3',
   values: (importstr 'values.yaml'),
 }
