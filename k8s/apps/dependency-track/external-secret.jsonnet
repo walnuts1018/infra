@@ -46,13 +46,6 @@ local externalSecret = import '../../components/external-secret.libsonnet';
           property: 'dependency-track-client-id',
         },
       },
-      {
-        secretKey: 'client-secret',
-        remoteRef: {
-          key: 'terraform-external-secrets',
-          property: 'dependency-track-client-secret',
-        },
-      },
     ],
   },
 ]

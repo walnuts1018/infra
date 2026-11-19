@@ -41,10 +41,6 @@ variable "akvorado_client_secret" {
 }
 
 variable "dependency_track_client_id" { type = string }
-variable "dependency_track_client_secret" {
-  type      = string
-  sensitive = true
-}
 
 variable "coder_client_id" { type = string }
 

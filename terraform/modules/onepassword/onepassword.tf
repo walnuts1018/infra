@@ -208,7 +208,6 @@ resource "onepassword_item" "external_secret" {
         "coder-client-secret"                      = { type = "CONCEALED", value = var.coder_client_secret }
         "coder-database-password"                  = { type = "CONCEALED", value = random_password.coder_database_password.result }
         "dependency-track-client-id"               = { type = "STRING", value = var.dependency_track_client_id }
-        "dependency-track-client-secret"           = { type = "CONCEALED", value = var.dependency_track_client_secret }
         "dependency-track-database-password"       = { type = "CONCEALED", value = random_password.dependency_track_database_password.result }
         "dependency-track-kek"                     = { type = "CONCEALED", value = random_id.dependency_track_kek.b64_std }
         "hubble-client-id"                         = { type = "STRING", value = var.hubble_client_id }

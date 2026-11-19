@@ -24,10 +24,11 @@ resource "zitadel_application_oidc" "dependency_track" {
   project_id = zitadel_project.dependency_track.id
   name       = "dependency-track"
 
-  redirect_uris               = ["https://dependency-track.walnuts.dev/oauth2/callback"]
+  redirect_uris               = ["https://dependency-track.walnuts.dev/static/oidc-callback.html"]
+  app_type                    = "OIDC_APP_TYPE_USER_AGENT"
   response_types              = ["OIDC_RESPONSE_TYPE_CODE"]
   grant_types                 = ["OIDC_GRANT_TYPE_AUTHORIZATION_CODE"]
-  auth_method_type            = "OIDC_AUTH_METHOD_TYPE_BASIC"
+  auth_method_type            = "OIDC_AUTH_METHOD_TYPE_NONE"
   post_logout_redirect_uris   = ["https://dependency-track.walnuts.dev/"]
   version                     = "OIDC_VERSION_1_0"
   clock_skew                  = "0s"
@@ -40,9 +41,4 @@ resource "zitadel_application_oidc" "dependency_track" {
 
 output "dependency_track_oidc_client_id" {
   value = nonsensitive(zitadel_application_oidc.dependency_track.client_id)
-}
-
-output "dependency_track_oidc_client_secret" {
-  value     = zitadel_application_oidc.dependency_track.client_secret
-  sensitive = true
 }

@@ -17,16 +17,7 @@ local networkPolicy = import '../../components/network-policy.libsonnet';
     policyTypes: ['Ingress'],
     ingress: [
       {
-        from: [
-          networkPolicy.envoyGatewayProxy,
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'arc-runners',
-              },
-            },
-          },
-        ],
+        from: [networkPolicy.envoyGatewayProxy],
         ports: [{ protocol: 'TCP', port: 8080 }],
       },
       {
