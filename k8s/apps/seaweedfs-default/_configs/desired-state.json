@@ -1062,12 +1062,39 @@
             "effect": "Allow",
             "actions": ["s3:ListBucket"],
             "resources": ["arn:aws:s3:::agr-ai"],
-            "condition": {"StringLike": {"s3:prefix": ["worker-runs/rollout/*/*/*/*/attempts/*", "worker-runs/evaluations/*/*/*/*/attempts/*"]}}
+            "condition": {
+              "StringLike": {
+                "s3:prefix": [
+                  "worker-runs/datasets/",
+                  "worker-runs/datasets/*",
+                  "worker-runs/training/",
+                  "worker-runs/training/*",
+                  "worker-runs/rollout/",
+                  "worker-runs/rollout/*",
+                  "worker-runs/evaluations/",
+                  "worker-runs/evaluations/*"
+                ]
+              }
+            }
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:GetObject"],
+            "resources": [
+              "arn:aws:s3:::agr-ai/worker-runs/models/active.json",
+              "arn:aws:s3:::agr-ai/worker-runs/rollout/*/*/episodes/*/complete.json",
+              "arn:aws:s3:::agr-ai/worker-runs/evaluations/*/*/episodes/*/complete.json"
+            ]
           },
           {
             "effect": "Allow",
             "actions": ["s3:DeleteObject"],
-            "resources": ["arn:aws:s3:::agr-ai/worker-runs/rollout/*/*/*/*/attempts/*/*", "arn:aws:s3:::agr-ai/worker-runs/evaluations/*/*/*/*/attempts/*/*"]
+            "resources": [
+              "arn:aws:s3:::agr-ai/worker-runs/rollout/*/*/episodes/*/attempts/*/trajectory.parquet",
+              "arn:aws:s3:::agr-ai/worker-runs/rollout/*/*/episodes/*/attempts/*/record.json",
+              "arn:aws:s3:::agr-ai/worker-runs/evaluations/*/*/episodes/*/attempts/*/trajectory.parquet",
+              "arn:aws:s3:::agr-ai/worker-runs/evaluations/*/*/episodes/*/attempts/*/record.json"
+            ]
           }
         ]
       }
