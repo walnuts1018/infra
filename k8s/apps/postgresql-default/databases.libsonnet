@@ -133,6 +133,13 @@
     in_roles: [],
   },
   {
+    db_name: 'dependency_track',
+    user_name: 'dependency_track',
+    secret_source_key: 'terraform-external-secrets',
+    secret_source_property: 'dependency-track-database-password',
+    in_roles: [],
+  },
+  {
     db_name: 'gha_cache_server',
     user_name: 'gha_cache_server',
   },

@@ -1,0 +1,47 @@
+database:
+  jdbcUrl: 'jdbc:postgresql://postgresql-default-rw.databases.svc.cluster.local:5432/dependency_track?sslmode=require&reWriteBatchedInserts=true'
+  existingSecret:
+    name: dependency-track-database
+
+secretManagement:
+  database:
+    kek:
+      existingSecret:
+        name: dependency-track-kek
+
+fileStorage:
+  local:
+    storageClassName: local-path
+
+apiServer:
+  extraEnv:
+  - name: DT_OIDC_ENABLED
+    value: 'true'
+  - name: DT_OIDC_ISSUER
+    value: https://auth.walnuts.dev
+  - name: DT_OIDC_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: dependency-track-oidc
+        key: client-id
+  - name: DT_OIDC_USERNAME_CLAIM
+    value: preferred_username
+  - name: DT_OIDC_USER_PROVISIONING
+    value: 'true'
+  - name: DT_OIDC_TEAM_SYNCHRONIZATION
+    value: 'true'
+  - name: DT_OIDC_TEAMS_CLAIM
+    value: 'my:zitadel:grants'
+  serviceMonitor:
+    enabled: true
+
+frontend:
+  extraEnv:
+  - name: OIDC_ISSUER
+    value: https://auth.walnuts.dev
+  - name: OIDC_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: dependency-track-oidc
+        key: client-id
+
