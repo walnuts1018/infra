@@ -1,7 +1,7 @@
 resource "zitadel_project" "dependency_track" {
   org_id                 = zitadel_org.ZITADEL.id
   name                   = "Dependency-Track"
-  project_role_assertion = false
+  project_role_assertion = true
   project_role_check     = true
 }
 
@@ -34,11 +34,15 @@ resource "zitadel_application_oidc" "dependency_track" {
   clock_skew                  = "0s"
   dev_mode                    = false
   access_token_type           = "OIDC_TOKEN_TYPE_JWT"
-  access_token_role_assertion = false
-  id_token_role_assertion     = false
-  id_token_userinfo_assertion = false
+  access_token_role_assertion = true
+  id_token_role_assertion     = true
+  id_token_userinfo_assertion = true
 }
 
 output "dependency_track_oidc_client_id" {
   value = nonsensitive(zitadel_application_oidc.dependency_track.client_id)
+}
+
+output "dependency_track_oidc_group" {
+  value = "${zitadel_project.dependency_track.id}:${zitadel_project_role.dependency_track_user.role_key}"
 }

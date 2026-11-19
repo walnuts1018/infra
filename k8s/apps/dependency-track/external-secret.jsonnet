@@ -35,6 +35,20 @@ local externalSecret = import '../../components/external-secret.libsonnet';
     ],
   },
   (externalSecret) {
+    name: app.name + '-admin',
+    namespace: app.namespace,
+    use_suffix: false,
+    data: [
+      {
+        secretKey: 'password',
+        remoteRef: {
+          key: 'terraform-external-secrets',
+          property: 'dependency-track-admin-password',
+        },
+      },
+    ],
+  },
+  (externalSecret) {
     name: app.name + '-oidc',
     namespace: app.namespace,
     use_suffix: false,
@@ -44,6 +58,13 @@ local externalSecret = import '../../components/external-secret.libsonnet';
         remoteRef: {
           key: 'terraform-external-secrets',
           property: 'dependency-track-client-id',
+        },
+      },
+      {
+        secretKey: 'group',
+        remoteRef: {
+          key: 'terraform-external-secrets',
+          property: 'dependency-track-oidc-group',
         },
       },
     ],

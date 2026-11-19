@@ -28,6 +28,10 @@ apiServer:
     value: preferred_username
   - name: DT_OIDC_USER_PROVISIONING
     value: 'true'
+  - name: DT_OIDC_TEAM_SYNCHRONIZATION
+    value: 'true'
+  - name: DT_OIDC_TEAMS_CLAIM
+    value: 'my:zitadel:grants'
   serviceMonitor:
     enabled: true
 
@@ -41,12 +45,3 @@ frontend:
         name: dependency-track-oidc
         key: client-id
 
-httpRoute:
-  enabled: true
-  annotations:
-    external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied: 'true'
-  parentRefs:
-  - name: envoy-gateway
-    namespace: envoy-gateway-system
-  hostnames:
-  - dependency-track.walnuts.dev

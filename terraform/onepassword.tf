@@ -8,6 +8,7 @@ module "onepassword" {
   akvorado_client_id            = module.zitadel.akvorado_oidc_client_id
   akvorado_client_secret        = module.zitadel.akvorado_oidc_client_secret
   dependency_track_client_id    = module.zitadel.dependency_track_oidc_client_id
+  dependency_track_oidc_group   = module.zitadel.dependency_track_oidc_group
   coder_client_id               = module.zitadel.coder_oidc_client_id
   coder_client_secret           = module.zitadel.coder_oidc_client_secret
   argocd_cli_client_id          = module.zitadel.argocd_cli_client_id

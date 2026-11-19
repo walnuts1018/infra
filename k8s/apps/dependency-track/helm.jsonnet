@@ -5,4 +5,11 @@ local app = import 'app.json5';
   ociChartURL: 'ghcr.io/dependencytrack/helm-charts/dependency-track',
   targetRevision: '2.9.0',
   values: (importstr 'values.yaml'),
+} + {
+  metadata+: {
+    annotations+: {
+      'argocd.argoproj.io/sync-wave': '0',
+      'argocd.argoproj.io/sync-options': 'SkipHealthCheck=true',
+    },
+  },
 }

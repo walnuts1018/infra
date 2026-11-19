@@ -68,6 +68,11 @@ resource "random_password" "iwashi_database_password" {
   special = false
 }
 
+resource "random_password" "dependency_track_admin_password" {
+  length  = 48
+  special = false
+}
+
 resource "random_password" "dependency_track_database_password" {
   length  = 48
   special = false
@@ -208,6 +213,8 @@ resource "onepassword_item" "external_secret" {
         "coder-client-secret"                      = { type = "CONCEALED", value = var.coder_client_secret }
         "coder-database-password"                  = { type = "CONCEALED", value = random_password.coder_database_password.result }
         "dependency-track-client-id"               = { type = "STRING", value = var.dependency_track_client_id }
+        "dependency-track-admin-password"          = { type = "CONCEALED", value = random_password.dependency_track_admin_password.result }
+        "dependency-track-oidc-group"              = { type = "STRING", value = var.dependency_track_oidc_group }
         "dependency-track-database-password"       = { type = "CONCEALED", value = random_password.dependency_track_database_password.result }
         "dependency-track-kek"                     = { type = "CONCEALED", value = random_id.dependency_track_kek.b64_std }
         "hubble-client-id"                         = { type = "STRING", value = var.hubble_client_id }

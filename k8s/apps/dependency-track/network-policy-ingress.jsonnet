@@ -17,7 +17,16 @@ local networkPolicy = import '../../components/network-policy.libsonnet';
     policyTypes: ['Ingress'],
     ingress: [
       {
-        from: [networkPolicy.envoyGatewayProxy],
+        from: [
+          networkPolicy.envoyGatewayProxy,
+          {
+            podSelector: {
+              matchLabels: {
+                'app.kubernetes.io/name': app.name + '-bootstrap',
+              },
+            },
+          },
+        ],
         ports: [{ protocol: 'TCP', port: 8080 }],
       },
       {
