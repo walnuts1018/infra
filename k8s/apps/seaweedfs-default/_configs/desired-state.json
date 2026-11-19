@@ -17,7 +17,7 @@
         "diskType": "ssd",
         "replication": "001"
       },
-      "versioning": "Enabled"
+      "versioning": "Off"
     },
     {
       "name": "horse",
