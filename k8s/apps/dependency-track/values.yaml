@@ -1,0 +1,28 @@
+database:
+  jdbcUrl: 'jdbc:postgresql://postgresql-default-rw.databases.svc.cluster.local:5432/dependency_track?sslmode=require&reWriteBatchedInserts=true'
+  existingSecret:
+    name: dependency-track-database
+
+secretManagement:
+  database:
+    kek:
+      existingSecret:
+        name: dependency-track-kek
+
+fileStorage:
+  local:
+    storageClassName: local-path
+
+apiServer:
+  serviceMonitor:
+    enabled: true
+
+httpRoute:
+  enabled: true
+  annotations:
+    external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied: 'true'
+  parentRefs:
+  - name: envoy-gateway
+    namespace: envoy-gateway-system
+  hostnames:
+  - dependency-track.walnuts.dev
