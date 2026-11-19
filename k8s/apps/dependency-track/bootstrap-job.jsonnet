@@ -30,7 +30,7 @@ local script = importstr '_scripts/bootstrap.py';
         },
         containers: [{
           name: 'bootstrap',
-          image: 'python:3.14-alpine',
+          image: 'python:3.14.10-alpine',
           command: ['python', '-B', '/scripts/bootstrap.py'],
           env: [
             {

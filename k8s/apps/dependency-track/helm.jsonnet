@@ -8,8 +8,7 @@ local app = import 'app.json5';
 } + {
   metadata+: {
     annotations+: {
-      'argocd.argoproj.io/sync-wave': '0',
-      'argocd.argoproj.io/sync-options': 'SkipHealthCheck=true',
+      'argocd.argoproj.io/ignore-healthcheck': 'true',
     },
   },
 }
