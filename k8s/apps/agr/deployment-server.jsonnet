@@ -32,7 +32,7 @@ local sa = import 'service-account-app.jsonnet';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'app-service',
-            image: 'ghcr.io/walnuts1018/agr-server:0.1.42@sha256:15c6e77b905406df344fd0915defa8ce69704d49d07350658db4570e65a73a57',
+            image: 'ghcr.io/walnuts1018/agr-server:0.1.43@sha256:76030304a2ae6c9cf7ac46ddbb0c054e4da80f865643934bf15da8180684acdb',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               { name: 'grpc-web', containerPort: 8080, protocol: 'TCP' },
