@@ -26,6 +26,8 @@ local httpRoute = import 'httproute.jsonnet';
       cookieNames: {
         accessToken: 'agr-access-token',
         idToken: 'agr-id-token',
+        // 管理API用のPolicyとセッションを共有するため、Cookieのsuffixを固定する。
+        suffix: 'agr',
       },
       forwardAccessToken: false,
       scopes: [

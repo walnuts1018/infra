@@ -1,4 +1,5 @@
 local app = import 'app.json5';
+local oidc = import 'external-secret-oidc.jsonnet';
 local adminRoute = import 'http-route-learning-admin.jsonnet';
 {
   apiVersion: 'gateway.envoyproxy.io/v1alpha1',
@@ -13,6 +14,27 @@ local adminRoute = import 'http-route-learning-admin.jsonnet';
       kind: 'HTTPRoute',
       name: adminRoute.metadata.name,
     }],
+    // 管理APIはJWTをCookieから読むため、同じセッションを復号するOIDC filterも必要。
+    oidc: {
+      provider: { issuer: 'https://auth.walnuts.dev' },
+      clientIDRef: { name: oidc.spec.target.name },
+      clientSecret: { name: oidc.spec.target.name },
+      redirectURL: 'https://agr.walnuts.dev/oauth2/callback',
+      logoutPath: '/logout',
+      cookieNames: {
+        accessToken: 'agr-access-token',
+        idToken: 'agr-id-token',
+        suffix: 'agr',
+      },
+      forwardAccessToken: false,
+      scopes: [
+        'openid',
+        'email',
+        'profile',
+        'offline_access',
+        'urn:zitadel:iam:org:projects:roles',
+      ],
+    },
     jwt: {
       providers: [{
         name: 'zitadel',
