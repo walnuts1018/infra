@@ -22,6 +22,8 @@ local image = 'ghcr.io/walnuts1018/agr-training:0.1.39@sha256:b1088fa8f776ce4939
     failedJobsHistoryLimit: 10,
     workflowSpec: {
       entrypoint: 'gc',
+      // A hung storage cleanup must not suppress every later scheduled run.
+      activeDeadlineSeconds: 7200,
       serviceAccountName: 'agr-gc',
       executor: { serviceAccountName: 'agr-workflow-executor' },
       imagePullSecrets: [{ name: 'ghcr-login-secret' }],
