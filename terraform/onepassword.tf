@@ -10,6 +10,8 @@ module "onepassword" {
   coder_client_id               = module.zitadel.coder_oidc_client_id
   coder_client_secret           = module.zitadel.coder_oidc_client_secret
   argocd_cli_client_id          = module.zitadel.argocd_cli_client_id
+  argo_workflows_client_id      = module.zitadel.argo_workflows_oidc_client_id
+  argo_workflows_client_secret  = module.zitadel.argo_workflows_oidc_client_secret
   b2_application_key            = module.b2.application_key.application_key
   beast_client_id               = module.zitadel.beast_oidc_client_id
   beast_client_secret           = module.zitadel.beast_oidc_client_secret

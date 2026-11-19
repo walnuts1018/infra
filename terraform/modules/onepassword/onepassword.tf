@@ -185,6 +185,8 @@ resource "onepassword_item" "external_secret" {
         "agr-learning-admin-identities"            = { type = "STRING", value = var.agr_learning_admin_identities }
         "agr-learning-admin-gateway-token"         = { type = "CONCEALED", value = random_password.agr_learning_admin_gateway_token.result }
         "argocd-cli-client-id"                     = { type = "STRING", value = var.argocd_cli_client_id }
+        "argo-workflows-client-id"                 = { type = "STRING", value = var.argo_workflows_client_id }
+        "argo-workflows-client-secret"             = { type = "CONCEALED", value = var.argo_workflows_client_secret }
         "argo-workflows-database-password"         = { type = "CONCEALED", value = random_password.argo_workflows_database_password.result }
         "b2-application-key"                       = { type = "CONCEALED", value = var.b2_application_key }
         "beast-client-id"                          = { type = "STRING", value = var.beast_client_id }
