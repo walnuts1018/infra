@@ -18,5 +18,6 @@ local app = import 'app.json5';
     'evaluator',
     'promoter',
     'verify',
+    'gc',
   ]
 ]

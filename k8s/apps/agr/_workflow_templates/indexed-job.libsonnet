@@ -55,7 +55,7 @@
                   }],
                 },
               },
-              { name: 'tmp', emptyDir: { sizeLimit: '1Gi' } },
+              { name: 'tmp', emptyDir: { sizeLimit: '2Gi' } },
             ],
             containers: [{
               name: config.containerName,
@@ -115,12 +115,12 @@
                 requests: {
                   cpu: '1',
                   memory: '2Gi',
-                  'ephemeral-storage': '128Mi',
+                  'ephemeral-storage': '512Mi',
                 },
                 limits: {
                   cpu: '1',
                   memory: '4Gi',
-                  'ephemeral-storage': '1Gi',
+                  'ephemeral-storage': '3Gi',
                 },
               },
               securityContext: {

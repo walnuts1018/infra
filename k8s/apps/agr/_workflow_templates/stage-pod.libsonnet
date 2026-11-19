@@ -48,7 +48,7 @@
     },
     { name: 'tmp', mountPath: '/tmp' },
   ],
-  volumes(tmpSize): [
+  volumes(tmpSize='2Gi'): [
     {
       name: 'sts-token',
       projected: {

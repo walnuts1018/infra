@@ -584,6 +584,11 @@
             "claim": "sub",
             "value": "system:serviceaccount:agr:agr-verify",
             "role": "agr-verify"
+          },
+          {
+            "claim": "sub",
+            "value": "system:serviceaccount:agr:agr-gc",
+            "role": "agr-gc"
           }
         ]
       },
@@ -1049,6 +1054,22 @@
             "resources": ["arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*"]
           }
         ]
+      },
+      {
+        "name": "agr-gc",
+        "statements": [
+          {
+            "effect": "Allow",
+            "actions": ["s3:ListBucket"],
+            "resources": ["arn:aws:s3:::agr-ai"],
+            "condition": {"StringLike": {"s3:prefix": ["worker-runs/rollout/*/*/*/*/attempts/*", "worker-runs/evaluations/*/*/*/*/attempts/*"]}}
+          },
+          {
+            "effect": "Allow",
+            "actions": ["s3:DeleteObject"],
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/rollout/*/*/*/*/attempts/*/*", "arn:aws:s3:::agr-ai/worker-runs/evaluations/*/*/*/*/attempts/*/*"]
+          }
+        ]
       }
     ],
     "roles": [
@@ -1192,6 +1213,11 @@
       {
         "name": "agr-verify",
         "policies": ["agr-verify"],
+        "provider": "k8s"
+      },
+      {
+        "name": "agr-gc",
+        "policies": ["agr-gc"],
         "provider": "k8s"
       }
     ]
