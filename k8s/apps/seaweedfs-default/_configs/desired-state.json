@@ -1060,7 +1060,7 @@
         "statements": [
           {
             "effect": "Allow",
-            "actions": ["s3:ListBucket"],
+            "actions": ["s3:ListBucket", "s3:ListBucketVersions"],
             "resources": ["arn:aws:s3:::agr-ai"],
             "condition": {
               "StringLike": {
@@ -1088,7 +1088,7 @@
           },
           {
             "effect": "Allow",
-            "actions": ["s3:DeleteObject"],
+            "actions": ["s3:DeleteObjectVersion"],
             "resources": [
               "arn:aws:s3:::agr-ai/worker-runs/rollout/*/*/episodes/*/attempts/*/trajectory.parquet",
               "arn:aws:s3:::agr-ai/worker-runs/rollout/*/*/episodes/*/attempts/*/record.json",
