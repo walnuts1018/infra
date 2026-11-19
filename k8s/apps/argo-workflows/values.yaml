@@ -58,8 +58,24 @@ controller:
         key: password
 
 server:
-  enabled: false
-
+  enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  replicas: 1
+  httproute:
+    enabled: true
+    parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-gateway
+      namespace: envoy-gateway-system
+    hostnames:
+    - argoworkflows.walnuts.dev
 executor:
   resources:
     requests:
