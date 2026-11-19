@@ -59,6 +59,25 @@ controller:
 
 server:
   enabled: true
+  authModes:
+  - sso
+  sso:
+    enabled: true
+    issuer: https://auth.walnuts.dev
+    clientId:
+      name: argo-workflows-sso
+      key: client-id
+    clientSecret:
+      name: argo-workflows-sso
+      key: client-secret
+    redirectUrl: https://argoworkflows.walnuts.dev/oauth2/callback
+    rbac:
+      enabled: false
+    scopes:
+    - openid
+    - profile
+    - email
+    sessionExpiry: 24h
   resources:
     requests:
       cpu: 50m
