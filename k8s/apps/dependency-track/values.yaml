@@ -14,6 +14,13 @@ fileStorage:
     storageClassName: local-path
 
 apiServer:
+  web:
+    resources:
+      requests:
+        cpu: "50m"
+        memory: 512Mi
+      limits:
+        memory: 2Gi
   extraEnv:
   - name: DT_OIDC_ENABLED
     value: 'true'
@@ -44,4 +51,9 @@ frontend:
       secretKeyRef:
         name: dependency-track-oidc
         key: client-id
-
+  resources:
+    requests:
+      cpu: 50m
+      memory: 32Mi
+    limits:
+      memory: 128Mi
