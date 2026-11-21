@@ -9,11 +9,7 @@ topologySpreadConstraints:
       app.kubernetes.io/name: grafana
       app.kubernetes.io/instance: grafana
 autoscaling:
-  enabled: true
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPU: "100"
-  targetMemory: ""
+  enabled: false
 resources:
   requests:
     cpu: 200m
