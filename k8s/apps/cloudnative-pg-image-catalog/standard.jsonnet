@@ -20,7 +20,7 @@
       },
       {
         major: 16,
-        image: 'ghcr.io/cloudnative-pg/postgresql:16.15-standard-trixie@sha256:d7b23df513a53f3ad8d72004ff2a4bf93eab0b2daa5caa9eedf278b54e883121',
+        image: 'ghcr.io/cloudnative-pg/postgresql:16.16-standard-trixie@sha256:8a5e6535b9ce4edbfe86e5cff55e1c65578fb854f36f5a3a142672e6845581f9',
       },
       {
         major: 17,
