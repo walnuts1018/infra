@@ -357,7 +357,7 @@ url = "https://dl.k8s.io/v1.37.2/bin/windows/amd64/kubectl.exe"
 version = "3.0.5"
 backend = "pipx:sarif-tools"
 specifiers = ["3.0.5"]
-uv = { path = ".mise/locks/pipx-sarif-tools/3.0.5", digest = "sha256:40c92d4bffafd857a4d60ac0069daeef3a464f235c7a857ca4da64ef7dd92a94" }
+uv = { path = ".mise/locks/pipx-sarif-tools/3.0.5", digest = "sha256:77465bdb786256ffbbf2329f590598b92f4a762c86795b61d13410c27f7c3963" }
 
 [[tools.tanka]]
 version = "0.40.1"
