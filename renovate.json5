@@ -44,7 +44,7 @@
         '/^k8s\\/apps\\/agr\\/.+\\.libsonnet$/',
       ],
       matchStrings: [
-        'local workerImage = [\\'\\"]ghcr\\.io/walnuts1018/agr-worker:(?<currentValue>[^@\\s\\'\\"]+)@(?<currentDigest>sha256:[a-f0-9]{64})',
+        'local workerImage = [\'\"]ghcr\\.io/walnuts1018/agr-worker:(?<currentValue>[^@\\s\'\"]+)@(?<currentDigest>sha256:[a-f0-9]{64})',
       ],
       depNameTemplate: 'ghcr.io/walnuts1018/agr-worker',
       datasourceTemplate: 'docker',
