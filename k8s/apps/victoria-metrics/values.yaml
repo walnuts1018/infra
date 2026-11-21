@@ -97,7 +97,7 @@ vminsert:
 vmstorage:
   enabled: true
   replicaCount: 1
-  retentionPeriod: 1y
+  retentionPeriod: 30d
   persistentVolume:
     enabled: true
     storageClassName: "topolvm-hdd"
