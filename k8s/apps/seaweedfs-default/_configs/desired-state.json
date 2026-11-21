@@ -772,27 +772,6 @@
         ]
       },
       {
-        "name": "cortex",
-        "statements": [
-          {
-            "effect": "Allow",
-            "actions": [
-              "s3:Get*",
-              "s3:Put*",
-              "s3:Delete*",
-              "s3:List*",
-              "s3:*Tagging",
-              "s3:AbortMultipartUpload"
-            ],
-            "buckets": [
-              "cortex-blocks",
-              "cortex-ruler",
-              "cortex-alertmanager"
-            ]
-          }
-        ]
-      },
-      {
         "name": "agr-app-service-read",
         "statements": [
           {
@@ -1346,13 +1325,6 @@
         "name": "stalwart",
         "policies": [
           "stalwart"
-        ],
-        "provider": "k8s"
-      },
-      {
-        "name": "cortex",
-        "policies": [
-          "cortex"
         ],
         "provider": "k8s"
       },
