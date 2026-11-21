@@ -63,11 +63,6 @@ resource "random_password" "radar_auth_secret" {
   special = false
 }
 
-resource "random_password" "iwashi_database_password" {
-  length  = 32
-  special = false
-}
-
 resource "random_password" "dependency_track_admin_password" {
   length  = 48
   special = false
@@ -84,16 +79,6 @@ resource "random_id" "dependency_track_kek" {
 
 resource "random_password" "coder_database_password" {
   length  = 32
-  special = false
-}
-
-resource "random_password" "iwashi_session_key" {
-  length  = 64
-  special = false
-}
-
-resource "random_password" "iwashi_discovery_key" {
-  length  = 48
   special = false
 }
 
@@ -228,11 +213,6 @@ resource "onepassword_item" "external_secret" {
         "horse-s3-secret-key"                      = { type = "CONCEALED", value = random_password.horse_s3_secret_key.result }
         "ipu-client-id"                            = { type = "STRING", value = var.ipu_client_id }
         "ipu-client-secret"                        = { type = "CONCEALED", value = var.ipu_client_secret }
-        "iwashi-client-id"                         = { type = "STRING", value = var.iwashi_client_id }
-        "iwashi-client-secret"                     = { type = "CONCEALED", value = var.iwashi_client_secret }
-        "iwashi-database-password"                 = { type = "CONCEALED", value = random_password.iwashi_database_password.result }
-        "iwashi-session-key"                       = { type = "CONCEALED", value = random_password.iwashi_session_key.result }
-        "iwashi-discovery-key"                     = { type = "CONCEALED", value = random_password.iwashi_discovery_key.result }
         "longhorn-client-id"                       = { type = "STRING", value = var.longhorn_client_id }
         "longhorn-client-secret"                   = { type = "CONCEALED", value = var.longhorn_client_secret }
         "mcl-playground-database-password"         = { type = "CONCEALED", value = random_password.mcl_playground_database_password.result }
