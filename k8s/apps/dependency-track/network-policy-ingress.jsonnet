@@ -1,5 +1,5 @@
-local app = import 'app.json5';
 local networkPolicy = import '../../components/network-policy.libsonnet';
+local app = import 'app.json5';
 
 {
   apiVersion: 'networking.k8s.io/v1',
