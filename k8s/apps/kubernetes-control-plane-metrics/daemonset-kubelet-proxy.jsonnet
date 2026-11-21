@@ -34,7 +34,7 @@ local app = import 'app.json5';
         containers: [
           {
             name: 'kubelet',
-            image: 'docker.io/alpine/socat:1.8.1.3@sha256:fb3862c949af7c79996d0e514ee96128644d840835ed5368eeecb14a869de361',
+            image: 'docker.io/alpine/socat:1.8.1.3@sha256:5aa280c6fc5bee94dbd2bbdf2a58d30f50396eaa110be84b03636945b157ae68',
             args: [
               '-d',
               '-d',
