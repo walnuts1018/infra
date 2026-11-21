@@ -325,7 +325,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -336,7 +336,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               value: '{{inputs.parameters.generation-id}}',
             },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
           resources: {
             limits: {
               cpu: '500m',
@@ -404,7 +404,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         serviceAccountName: 'agr-dataset',
         volumes: stagePod.volumes('4Gi'),
         container: {
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
           command: ['/app/.venv/bin/agr-build-dataset'],
           args: ['--argo-output-dir', '/tmp/dataset-output'],
           env: stagePod.s3Env('agr-dataset', 'agr-dataset', [
@@ -467,7 +467,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -523,7 +523,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         serviceAccountName: 'agr-trainer',
         volumes: stagePod.volumes('10Gi'),
         container: {
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
           command: ['/app/.venv/bin/agr-train'],
           args: [
             '--s3-input-uri',
@@ -592,7 +592,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -742,7 +742,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -757,7 +757,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               value: '{{inputs.parameters.plan-uri}}',
             },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
           resources: {
             limits: {
               cpu: '500m',
@@ -874,7 +874,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -889,7 +889,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               value: '{{inputs.parameters.plan-uri}}',
             },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
           resources: {
             limits: {
               cpu: '500m',
@@ -963,7 +963,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -982,7 +982,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               value: '{{inputs.parameters.report-uri}}',
             },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
           resources: {
             limits: {
               cpu: '500m',
@@ -1049,7 +1049,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -1068,7 +1068,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               value: '{{inputs.parameters.plan-uri}}',
             },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
           resources: {
             limits: {
               cpu: '500m',
@@ -1135,7 +1135,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -1154,7 +1154,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               value: 'http://agr-server.agr.svc.cluster.local:8081',
             },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
           resources: {
             limits: {
               cpu: '500m',
@@ -1349,7 +1349,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               value: '{{workflow.uid}}',
             },
           ],
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
           resources: {
             limits: {
               cpu: '500m',
@@ -1458,7 +1458,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             },
             {
               name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+              value: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
             },
             {
               name: 'AGR_WORKFLOW_UID',
@@ -1473,7 +1473,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               value: '{{inputs.parameters.retry-generation-id}}',
             },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.44@sha256:7111e79fdf656e17623a6df32baa0aded072d918eb30dbf817a0371bed3e1ee0',
+          image: 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009',
           resources: {
             limits: {
               cpu: '500m',

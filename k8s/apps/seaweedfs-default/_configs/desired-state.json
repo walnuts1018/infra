@@ -957,12 +957,12 @@
           {
             "effect": "Allow",
             "actions": ["s3:GetObject"],
-            "resources": ["arn:aws:s3:::agr-ai/worker-runs/datasets/*", "arn:aws:s3:::agr-ai/worker-runs/models/*", "arn:aws:s3:::agr-ai/worker-runs/training/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/plan.json"]
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/datasets/*", "arn:aws:s3:::agr-ai/worker-runs/models/*", "arn:aws:s3:::agr-ai/worker-runs/training/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/plan.json", "arn:aws:s3:::agr-ai/worker-runs/generations/*/replay-pin.json", "arn:aws:s3:::agr-ai/worker-runs/rollout/*/trajectory.parquet", "arn:aws:s3:::agr-ai/worker-runs/semantics/*"]
           },
           {
             "effect": "Allow",
             "actions": ["s3:PutObject", "s3:AbortMultipartUpload"],
-            "resources": ["arn:aws:s3:::agr-ai/worker-runs/training/*", "arn:aws:s3:::agr-ai/worker-runs/models/candidates/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*"]
+            "resources": ["arn:aws:s3:::agr-ai/worker-runs/training/*", "arn:aws:s3:::agr-ai/worker-runs/models/candidates/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/attempts/*/stage-metrics/*", "arn:aws:s3:::agr-ai/worker-runs/generations/*/replay-pin.json"]
           }
         ]
       },
