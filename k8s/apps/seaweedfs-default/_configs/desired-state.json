@@ -105,30 +105,6 @@
       }
     },
     {
-      "name": "cortex-blocks",
-      "publicRead": [],
-      "placement": {
-        "diskType": "ssd",
-        "replication": "001"
-      }
-    },
-    {
-      "name": "cortex-ruler",
-      "publicRead": [],
-      "placement": {
-        "diskType": "ssd",
-        "replication": "001"
-      }
-    },
-    {
-      "name": "cortex-alertmanager",
-      "publicRead": [],
-      "placement": {
-        "diskType": "ssd",
-        "replication": "001"
-      }
-    },
-    {
       "name": "ipu",
       "publicRead": [],
       "placement": {
