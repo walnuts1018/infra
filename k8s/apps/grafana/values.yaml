@@ -16,7 +16,7 @@ autoscaling:
   targetMemory: ""
 resources:
   requests:
-    cpu: 120m
+    cpu: 200m
     memory: 812Mi
   limits:
     cpu: 500m
@@ -201,12 +201,12 @@ alerting:
           model:
             conditions:
             - evaluator:
-                params: [0]
+                params: [ 0 ]
                 type: gt
               operator:
                 type: and
               query:
-                params: [B]
+                params: [ B ]
               reducer:
                 params: []
                 type: last
