@@ -533,7 +533,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             '--initial-artifact-uri',
             '{{inputs.parameters.learner-artifact-uri}}',
             '--behavior-policy-id',
-            'shared-policy-v2',
+            'shared-policy-v3',
             '--behavior-policy-artifact-sha256',
             '{{inputs.parameters.learner-sha256}}',
             '--argo-output-dir',
