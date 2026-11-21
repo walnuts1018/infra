@@ -1,0 +1,5 @@
+mise.lock linguist-generated=true
+.mise/locks/** linguist-generated=true
+scripts/infrautil/go.sum linguist-generated=true
+terraform/.terraform.lock.hcl linguist-generated=true
+k8s/namespaces/namespaces.json5 linguist-generated=true
