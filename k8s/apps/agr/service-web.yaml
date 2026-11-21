@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: agr-web
+    app.kubernetes.io/name: agr-web
+  name: agr-web
+  namespace: agr
+spec:
+  ports:
+    - name: http
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: agr-web
+    app.kubernetes.io/name: agr-web
+  type: ClusterIP

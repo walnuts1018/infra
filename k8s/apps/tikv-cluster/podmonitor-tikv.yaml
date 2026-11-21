@@ -1,0 +1,37 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app: tikv-cluster
+    app.kubernetes.io/name: tikv-cluster
+  name: tikv-cluster-tikv
+  namespace: databases
+spec:
+  podMetricsEndpoints:
+    - interval: 30s
+      path: /metrics
+      port: server
+      relabelings:
+        - regex: (.+):20160
+          replacement: $1:20180
+          sourceLabels:
+            - __address__
+          targetLabel: __address__
+      scheme: https
+      tlsConfig:
+        ca:
+          secret:
+            key: ca.crt
+            name: tikv-cluster-tikv-cluster-secret
+        cert:
+          secret:
+            key: tls.crt
+            name: tikv-cluster-tikv-cluster-secret
+        keySecret:
+          key: tls.key
+          name: tikv-cluster-tikv-cluster-secret
+        serverName: tikv-cluster-tikv-peer.databases.svc.cluster.local
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: tikv
+      app.kubernetes.io/instance: tikv-cluster

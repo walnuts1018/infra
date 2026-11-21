@@ -1,0 +1,7 @@
+apiVersion: scheduling.k8s.io/v1
+description: agrの通常サービスよりも学習ワークロードの優先度を低く設定する
+globalDefault: false
+kind: PriorityClass
+metadata:
+  name: agr-learning
+value: -100

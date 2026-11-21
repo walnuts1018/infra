@@ -1,0 +1,33 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    walnuts.dev/scraped-by: pd-leader-prober
+  name: tikv-cluster-pd-leader-prober
+  namespace: databases
+spec:
+  endpoints:
+    - interval: 30s
+      metricRelabelings:
+        - action: replace
+          replacement: https://tikv-cluster-pd-peer.databases.svc.cluster.local:2379/pd/api/v1/leader
+          targetLabel: instance
+        - action: replace
+          replacement: pd-leader
+          targetLabel: target
+      params:
+        module:
+          - http_pd_leader
+        target:
+          - https://tikv-cluster-pd-peer.databases.svc.cluster.local:2379/pd/api/v1/leader
+      path: /probe
+      port: http
+      scheme: http
+      scrapeTimeout: 10s
+  namespaceSelector:
+    matchNames:
+      - databases
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: tikv-cluster
+      app.kubernetes.io/name: pd-leader-prober

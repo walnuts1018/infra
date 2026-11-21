@@ -1,7 +1,0 @@
-{
-  name: "prometheus-node-exporter",
-  namespace: "monitoring",
-  clusters: {
-    kurumi: {},
-  },
-}

@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: prfexample-ingress
+  namespace: prfexample
+spec:
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: keda
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: interceptor
+              app.kubernetes.io/instance: keda-http-addon
+              app.kubernetes.io/name: http-add-on
+              app.kubernetes.io/part-of: keda-add-ons-http
+      ports:
+        - port: 8080
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      app: prfexample
+      app.kubernetes.io/name: prfexample
+  policyTypes:
+    - Ingress

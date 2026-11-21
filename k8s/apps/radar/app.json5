@@ -1,7 +1,0 @@
-{
-  name: "radar",
-  namespace: "radar",
-  clusters: {
-    kurumi: {},
-  },
-}

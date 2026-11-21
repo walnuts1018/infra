@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+    reloader.stakater.com/auto: "true"
+  labels:
+    app: horse-worker
+    app.kubernetes.io/name: horse-worker
+  name: horse-worker
+  namespace: horse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: horse-worker
+      app.kubernetes.io/name: horse-worker
+  template:
+    metadata:
+      labels:
+        app: horse-worker
+        app.kubernetes.io/name: horse-worker
+    spec:
+      containers:
+        - command:
+            - /app/worker
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://default-collector.opentelemetry-collector.svc.cluster.local:4318
+            - name: OTEL_EXPORTER_OTLP_INSECURE
+              value: "true"
+            - name: S3_ENDPOINT
+              value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+            - name: S3_BUCKET
+              value: horse
+            - name: OCR_URL
+              value: http://horse-ocr.horse.svc.cluster.local:8000
+            - name: GEMINI_ENABLED
+              value: "true"
+            - name: GEMINI_MODEL_PRICES
+              valueFrom:
+                configMapKeyRef:
+                  key: GEMINI_MODEL_PRICES
+                  name: horse-gemini-model-prices
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: DATABASE_URL
+                  name: horse-c21df8
+            - name: RABBITMQ_URL
+              valueFrom:
+                secretKeyRef:
+                  key: RABBITMQ_URL
+                  name: horse-c21df8
+            - name: GEMINI_FREE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: GEMINI_FREE_API_KEY
+                  name: horse-ai
+                  optional: true
+            - name: GEMINI_PAID_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: GEMINI_PAID_API_KEY
+                  name: horse-ai
+                  optional: true
+            - name: GEMINI_FREE_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: GEMINI_FREE_PROJECT_ID
+                  name: horse-ai
+                  optional: true
+            - name: GEMINI_PAID_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: GEMINI_PAID_PROJECT_ID
+                  name: horse-ai
+                  optional: true
+            - name: S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_ACCESS_KEY_ID
+                  name: horse-s3-credentials
+            - name: S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_SECRET_ACCESS_KEY
+                  name: horse-s3-credentials
+            - name: EMAIL_BODY_ENCRYPTION_KEYS
+              valueFrom:
+                secretKeyRef:
+                  key: EMAIL_BODY_ENCRYPTION_KEYS
+                  name: horse-c21df8
+          image: ghcr.io/walnuts1018/horse:v0.0.1120@sha256:11590aecb566cc51142d5e3fe05e579218d6e279acffa4a7e97080e10ce3706a
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: health
+            periodSeconds: 10
+          name: worker
+          ports:
+            - containerPort: 8081
+              name: health
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+            periodSeconds: 5
+          resources:
+            limits:
+              cpu: "2"
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      securityContext:
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - emptyDir:
+            sizeLimit: 2Gi
+          name: tmp

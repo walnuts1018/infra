@@ -1,7 +1,0 @@
-{
-  name: "snmp-exporter",
-  namespace: "monitoring",
-  clusters: {
-    kurumi: {},
-  },
-}

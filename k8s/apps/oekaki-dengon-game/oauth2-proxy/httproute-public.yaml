@@ -1,0 +1,39 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    external-dns-cloudflare.alpha.kubernetes.io/cloudflare-proxied: "true"
+  name: oekaki-dengon-game-public
+  namespace: oekaki-dengon-game
+spec:
+  hostnames:
+    - oekaki.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: oekaki-dengon-game-front
+          port: 3000
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /public
+        - method: GET
+          path:
+            type: PathPrefix
+            value: /api
+        - path:
+            type: PathPrefix
+            value: /_next
+        - path:
+            type: PathPrefix
+            value: /texture.png
+        - path:
+            type: PathPrefix
+            value: /favicon.ico
+        - path:
+            type: PathPrefix
+            value: /site.webmanifest

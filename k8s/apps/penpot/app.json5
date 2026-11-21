@@ -1,7 +1,0 @@
-{
-  name: "penpot",
-  namespace: "penpot",
-  clusters: {
-    kurumi: {},
-  },
-}

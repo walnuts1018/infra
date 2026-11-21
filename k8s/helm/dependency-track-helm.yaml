@@ -1,0 +1,418 @@
+---
+# Source: dependency-track/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dependency-track
+  namespace: dependency-track
+  labels:
+    helm.sh/chart: dependency-track-2.9.0
+    app.kubernetes.io/part-of: dependency-track
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/resource-policy": "keep"
+automountServiceAccountToken: false
+---
+# Source: dependency-track/templates/file-storage/pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dependency-track-storage
+  namespace: dependency-track
+  labels:
+    helm.sh/chart: dependency-track-2.9.0
+    app.kubernetes.io/part-of: dependency-track
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local-path
+---
+# Source: dependency-track/templates/api-server/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: dependency-track-api-server
+  namespace: dependency-track
+  labels:
+    helm.sh/chart: dependency-track-2.9.0
+    app.kubernetes.io/part-of: dependency-track
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: dependency-track
+    app.kubernetes.io/name: dependency-track-api-server
+    app.kubernetes.io/component: api-server
+    dependencytrack.io/role: web
+    app.kubernetes.io/version: 5.2.1
+spec:
+  type: ClusterIP
+  ports:
+    - name: web
+      port: 8080
+      targetPort: web
+      protocol: TCP
+      appProtocol: http
+  selector:
+    app.kubernetes.io/instance: dependency-track
+    app.kubernetes.io/name: dependency-track-api-server
+    app.kubernetes.io/component: api-server
+    dependencytrack.io/role: web
+---
+# Source: dependency-track/templates/api-server/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: dependency-track-api-server-metrics
+  namespace: dependency-track
+  labels:
+    helm.sh/chart: dependency-track-2.9.0
+    app.kubernetes.io/part-of: dependency-track
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: dependency-track
+    app.kubernetes.io/name: dependency-track-api-server
+    app.kubernetes.io/component: api-server
+    app.kubernetes.io/version: 5.2.1
+spec:
+  type: ClusterIP
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - name: management
+      port: 9000
+      targetPort: management
+      protocol: TCP
+      appProtocol: http
+  selector:
+    app.kubernetes.io/instance: dependency-track
+    app.kubernetes.io/name: dependency-track-api-server
+    app.kubernetes.io/component: api-server
+---
+# Source: dependency-track/templates/frontend/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: dependency-track-frontend
+  namespace: dependency-track
+  labels:
+    helm.sh/chart: dependency-track-2.9.0
+    app.kubernetes.io/part-of: dependency-track
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: dependency-track
+    app.kubernetes.io/name: dependency-track-frontend
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/version: 5.2.1
+spec:
+  type: ClusterIP
+  ports:
+    - name: web
+      port: 8080
+      targetPort: web
+      protocol: TCP
+      appProtocol: http
+  selector:
+    app.kubernetes.io/instance: dependency-track
+    app.kubernetes.io/name: dependency-track-frontend
+    app.kubernetes.io/component: frontend
+---
+# Source: dependency-track/templates/api-server/deployment-web.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dependency-track-api-server
+  namespace: dependency-track
+  labels:
+    helm.sh/chart: dependency-track-2.9.0
+    app.kubernetes.io/part-of: dependency-track
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: dependency-track
+    app.kubernetes.io/name: dependency-track-api-server
+    app.kubernetes.io/component: api-server
+    dependencytrack.io/role: web
+    app.kubernetes.io/version: 5.2.1
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: dependency-track
+      app.kubernetes.io/name: dependency-track-api-server
+      app.kubernetes.io/component: api-server
+      dependencytrack.io/role: web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: dependency-track
+        app.kubernetes.io/name: dependency-track-api-server
+        app.kubernetes.io/component: api-server
+        dependencytrack.io/role: web
+    spec:
+      serviceAccountName: dependency-track
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: 120
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: api-server
+          image: docker.io/dependencytrack/apiserver:5.2.1
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 2Gi
+          env:
+            - name: DT_METRICS_ENABLED
+              value: "true"
+            - name: DT_MANAGEMENT_PORT
+              value: "9000"
+            - name: DT_DATASOURCE_URL
+              value: "jdbc:postgresql://postgresql-default-rw.databases.svc.cluster.local:5432/dependency_track?sslmode=require&reWriteBatchedInserts=true"
+            - name: DT_DATASOURCE_USERNAME
+              value: "${file::/etc/dt/secrets/db/username}"
+            - name: DT_DATASOURCE_PASSWORD
+              value: "${file::/etc/dt/secrets/db/password}"
+            - name: DT_SECRET_MANAGEMENT_PROVIDER
+              value: "database"
+            - name: DT_SECRET_MANAGEMENT_DATABASE_KEK
+              value: "${file::/etc/dt/secrets/sm/database/kek/kek}"
+            - name: DT_FILE_STORAGE_PROVIDER
+              value: "local"
+            - name: DT_FILE_STORAGE_LOCAL_DIRECTORY
+              value: "/data"
+            - name: DT_OIDC_ENABLED
+              value: "true"
+            - name: DT_OIDC_ISSUER
+              value: https://auth.walnuts.dev
+            - name: DT_OIDC_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: client-id
+                  name: dependency-track-oidc
+            - name: DT_OIDC_USERNAME_CLAIM
+              value: preferred_username
+            - name: DT_OIDC_USER_PROVISIONING
+              value: "true"
+            - name: DT_OIDC_TEAM_SYNCHRONIZATION
+              value: "true"
+            - name: DT_OIDC_TEAMS_CLAIM
+              value: my:zitadel:grants
+          ports:
+            - name: web
+              containerPort: 8080
+              protocol: TCP
+            - name: management
+              containerPort: 9000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              port: management
+              path: /health/live
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              port: management
+              path: /health/ready
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+          startupProbe:
+            httpGet:
+              scheme: HTTP
+              port: management
+              path: /health/started
+            failureThreshold: 60
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: db-secret
+              mountPath: /etc/dt/secrets/db
+              readOnly: true
+            - name: sm-database-kek
+              mountPath: /etc/dt/secrets/sm/database/kek
+              readOnly: true
+            
+            - name: file-storage
+              mountPath: /data
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: db-secret
+          secret:
+            secretName: dependency-track-database
+            defaultMode: 0444
+            items:
+              - key: username
+                path: username
+              - key: password
+                path: password
+        - name: sm-database-kek
+          secret:
+            secretName: dependency-track-kek
+            defaultMode: 0444
+            items:
+              - key: kek
+                path: kek
+        
+        - name: file-storage
+          persistentVolumeClaim:
+            claimName: dependency-track-storage
+---
+# Source: dependency-track/templates/frontend/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dependency-track-frontend
+  namespace: dependency-track
+  labels:
+    helm.sh/chart: dependency-track-2.9.0
+    app.kubernetes.io/part-of: dependency-track
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: dependency-track
+    app.kubernetes.io/name: dependency-track-frontend
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/version: 5.2.1
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: dependency-track
+      app.kubernetes.io/name: dependency-track-frontend
+      app.kubernetes.io/component: frontend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: dependency-track
+        app.kubernetes.io/name: dependency-track-frontend
+        app.kubernetes.io/component: frontend
+    spec:
+      serviceAccountName: dependency-track
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: frontend
+          image: docker.io/dependencytrack/frontend:5.2.1
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 150m
+              memory: 64Mi
+          env:
+            - name: API_BASE_URL
+              value: ""
+            - name: OIDC_ISSUER
+              value: https://auth.walnuts.dev
+            - name: OIDC_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: client-id
+                  name: dependency-track-oidc
+          ports:
+            - name: web
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              port: web
+              path: /static/config.json
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              port: web
+              path: /static/config.json
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+# Source: dependency-track/templates/api-server/servicemonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: dependency-track-api-server-metrics
+  namespace: monitoring
+  labels:
+    helm.sh/chart: dependency-track-2.9.0
+    app.kubernetes.io/part-of: dependency-track
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: dependency-track
+    app.kubernetes.io/name: dependency-track-api-server
+    app.kubernetes.io/component: api-server
+    app.kubernetes.io/version: 5.2.1
+spec:
+  namespaceSelector:
+    matchNames:
+      - dependency-track
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: dependency-track
+      app.kubernetes.io/name: dependency-track-api-server
+      app.kubernetes.io/component: api-server
+  # `dependencytrack_io_role` distinguishes web/worker in PromQL.
+  podTargetLabels:
+    - dependencytrack.io/role
+  endpoints:
+    - port: management
+      path: /metrics
+      interval: 60s
+      scrapeTimeout: 30s

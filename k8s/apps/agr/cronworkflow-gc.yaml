@@ -1,0 +1,107 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  labels:
+    workflows.argoproj.io/archive-strategy: always
+  name: agr-gc
+  namespace: agr
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 10
+  schedules:
+    - 0 4 * * *
+  startingDeadlineSeconds: 3600
+  successfulJobsHistoryLimit: 3
+  suspend: false
+  timezone: Asia/Tokyo
+  workflowSpec:
+    activeDeadlineSeconds: 7200
+    entrypoint: gc
+    executor:
+      serviceAccountName: agr-workflow-executor
+    imagePullSecrets:
+      - name: ghcr-login-secret
+    podGC:
+      strategy: OnWorkflowCompletion
+    podMetadata:
+      labels:
+        app: agr-learning
+        app.kubernetes.io/name: agr-learning
+    serviceAccountName: agr-gc
+    templates:
+      - container:
+          args:
+            - --retention-days
+            - "15"
+          command:
+            - /app/.venv/bin/agr-gc-execute
+          env:
+            - name: AWS_ENDPOINT_URL_S3
+              value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+            - name: AWS_ENDPOINT_URL_STS
+              value: https://seaweedfs.local.walnuts.dev
+            - name: AWS_ROLE_ARN
+              value: arn:aws:iam::role/agr-gc
+            - name: AWS_WEB_IDENTITY_TOKEN_FILE
+              value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+            - name: AWS_REGION
+              value: us-east-1
+            - name: WORKER_S3_BUCKET
+              value: agr-ai
+            - name: WORKER_S3_PREFIX
+              value: worker-runs
+            - name: WORKER_CONTROLLER_ID
+              value: agr-gc
+            - name: AGR_WORKFLOW_UID
+              value: '{{workflow.uid}}'
+            - name: WORKER_S3_ENDPOINT
+              value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+            - name: AGR_GC_RETENTION_DAYS
+              value: "15"
+            - name: SERVICE_ENDPOINT
+              value: http://agr-server.agr.svc.cluster.local:8080
+            - name: SERVICE_GATEWAY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: SERVICE_GATEWAY_TOKEN
+                  name: agr-learning-token
+          image: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+          resources:
+            limits:
+              cpu: 500m
+              ephemeral-storage: 1Gi
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              ephemeral-storage: 128Mi
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          volumeMounts:
+            - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+              name: sts-token
+              readOnly: true
+            - mountPath: /tmp
+              name: tmp
+        name: gc
+        podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+        volumes:
+          - name: sts-token
+            projected:
+              sources:
+                - serviceAccountToken:
+                    audience: sts.seaweedfs.com
+                    expirationSeconds: 3600
+                    path: token
+          - emptyDir:
+              sizeLimit: 1Gi
+            name: tmp
+    ttlStrategy:
+      secondsAfterCompletion: 604800

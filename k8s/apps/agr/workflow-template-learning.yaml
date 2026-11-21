@@ -1,0 +1,1461 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  labels:
+    workflows.argoproj.io/archive-strategy: always
+  name: agr-learning
+  namespace: agr
+spec:
+  activeDeadlineSeconds: 1.2096e+06
+  arguments:
+    parameters:
+      - name: trigger
+      - name: retry-generation-id
+        value: ""
+  entrypoint: learning
+  executor:
+    serviceAccountName: agr-workflow-executor
+  imagePullSecrets:
+    - name: ghcr-login-secret
+  onExit: cleanup
+  podGC:
+    strategy: OnWorkflowCompletion
+  podMetadata:
+    labels:
+      app: agr-workflow
+      app.kubernetes.io/name: agr-workflow
+  serviceAccountName: agr-workflow
+  synchronization:
+    mutexes:
+      - name: agr-training
+  templates:
+    - dag:
+        tasks:
+          - arguments:
+              parameters:
+                - name: trigger
+                  value: '{{workflow.parameters.trigger}}'
+                - name: retry-generation-id
+                  value: '{{workflow.parameters.retry-generation-id}}'
+            name: create-attempt
+            template: create-attempt
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{tasks.create-attempt.outputs.parameters.generation-id}}'
+            depends: create-attempt.Succeeded
+            name: plan
+            template: plan
+            when: '{{tasks.create-attempt.outputs.parameters.skipped}} == false'
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{tasks.plan.outputs.parameters.generation-id}}'
+                - name: config-sha256
+                  value: '{{tasks.plan.outputs.parameters.config-sha256}}'
+                - name: plan-uri
+                  value: '{{tasks.plan.outputs.parameters.plan-uri}}'
+                - name: shard-count
+                  value: '{{tasks.plan.outputs.parameters.rollout-shards}}'
+                - name: actor-pods
+                  value: '{{tasks.plan.outputs.parameters.actor-pods}}'
+            depends: plan.Succeeded
+            name: rollout
+            template: rollout
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{tasks.plan.outputs.parameters.generation-id}}'
+                - name: plan-uri
+                  value: '{{tasks.plan.outputs.parameters.plan-uri}}'
+            depends: rollout.Succeeded
+            name: dataset
+            template: dataset
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{tasks.plan.outputs.parameters.generation-id}}'
+                - name: plan-uri
+                  value: '{{tasks.plan.outputs.parameters.plan-uri}}'
+                - name: dataset-uri
+                  value: '{{tasks.dataset.outputs.parameters.dataset-uri}}'
+                - name: learner-artifact-uri
+                  value: '{{tasks.plan.outputs.parameters.learner-artifact-uri}}'
+                - name: learner-sha256
+                  value: '{{tasks.plan.outputs.parameters.learner-sha256}}'
+            depends: dataset.Succeeded
+            name: train
+            template: train
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{tasks.plan.outputs.parameters.generation-id}}'
+                - name: plan-uri
+                  value: '{{tasks.plan.outputs.parameters.plan-uri}}'
+            depends: train.Succeeded
+            name: validate
+            template: validate
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{tasks.plan.outputs.parameters.generation-id}}'
+                - name: config-sha256
+                  value: '{{tasks.plan.outputs.parameters.config-sha256}}'
+                - name: plan-uri
+                  value: '{{tasks.plan.outputs.parameters.plan-uri}}'
+                - name: shard-count
+                  value: '{{tasks.plan.outputs.parameters.evaluation-shards}}'
+                - name: evaluation-pods
+                  value: '{{tasks.plan.outputs.parameters.evaluation-pods}}'
+                - name: artifact-uri
+                  value: '{{tasks.validate.outputs.parameters.artifact-uri}}'
+                - name: model-sha256
+                  value: '{{tasks.validate.outputs.parameters.model-sha256}}'
+                - name: manifest-sha256
+                  value: '{{tasks.validate.outputs.parameters.manifest-sha256}}'
+                - name: validation-uri
+                  value: '{{tasks.validate.outputs.parameters.validation-uri}}'
+            depends: validate.Succeeded
+            name: assess
+            template: assess
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{tasks.plan.outputs.parameters.generation-id}}'
+                - name: plan-uri
+                  value: '{{tasks.plan.outputs.parameters.plan-uri}}'
+            depends: assess.Succeeded
+            name: aggregate
+            template: aggregate
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{tasks.plan.outputs.parameters.generation-id}}'
+                - name: plan-uri
+                  value: '{{tasks.plan.outputs.parameters.plan-uri}}'
+                - name: report-uri
+                  value: '{{tasks.aggregate.outputs.parameters.report-uri}}'
+            depends: aggregate.Succeeded
+            name: decide
+            template: decide
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{tasks.plan.outputs.parameters.generation-id}}'
+                - name: plan-uri
+                  value: '{{tasks.plan.outputs.parameters.plan-uri}}'
+                - name: report-uri
+                  value: '{{tasks.aggregate.outputs.parameters.report-uri}}'
+                - name: model-id
+                  value: '{{tasks.train.outputs.parameters.model-id}}'
+            depends: decide.Succeeded
+            name: publish
+            template: publish
+            when: '{{tasks.decide.outputs.parameters.promote}} == true'
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{tasks.plan.outputs.parameters.generation-id}}'
+                - name: plan-uri
+                  value: '{{tasks.plan.outputs.parameters.plan-uri}}'
+            depends: publish.Succeeded
+            name: verify
+            template: verify
+      name: learning
+    - container:
+        args:
+          - --argo-output-dir
+          - /tmp/plan-output
+          - --max-actor-pods
+          - "1"
+          - --max-evaluation-pods
+          - "1"
+        command:
+          - /app/.venv/bin/agr-plan
+        env:
+          - name: AWS_ENDPOINT_URL_S3
+            value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+          - name: AWS_ENDPOINT_URL_STS
+            value: https://seaweedfs.local.walnuts.dev
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::role/agr-planner
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+          - name: AWS_REGION
+            value: us-east-1
+          - name: WORKER_S3_BUCKET
+            value: agr-ai
+          - name: WORKER_S3_PREFIX
+            value: worker-runs
+          - name: WORKER_CONTROLLER_ID
+            value: agr-planner
+          - name: AGR_WORKFLOW_UID
+            value: '{{workflow.uid}}'
+          - name: SERVICE_ENDPOINT
+            value: http://agr-server.agr.svc.cluster.local:8080
+          - name: SERVICE_GATEWAY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: SERVICE_GATEWAY_TOKEN
+                name: agr-learning-token
+          - name: AGR_TRAINING_IMAGE_REFERENCE
+            value: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+          - name: AGR_WORKFLOW_GENERATION_ID
+            value: '{{inputs.parameters.generation-id}}'
+        image: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 1Gi
+            memory: 4Gi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 128Mi
+            memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+          - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+            name: sts-token
+            readOnly: true
+          - mountPath: /tmp
+            name: tmp
+      inputs:
+        parameters:
+          - name: generation-id
+      name: plan
+      outputs:
+        parameters:
+          - name: generation-id
+            valueFrom:
+              path: /tmp/plan-output/generation-id
+          - name: generation-number
+            valueFrom:
+              path: /tmp/plan-output/generation-number
+          - name: attempt-id
+            valueFrom:
+              path: /tmp/plan-output/attempt-id
+          - name: config-sha256
+            valueFrom:
+              path: /tmp/plan-output/config-sha256
+          - name: plan-uri
+            valueFrom:
+              path: /tmp/plan-output/plan-uri
+          - name: rollout-shards
+            valueFrom:
+              path: /tmp/plan-output/rollout-shards
+          - name: actor-pods
+            valueFrom:
+              path: /tmp/plan-output/actor-pods
+          - name: evaluation-shards
+            valueFrom:
+              path: /tmp/plan-output/evaluation-shards
+          - name: evaluation-pods
+            valueFrom:
+              path: /tmp/plan-output/evaluation-pods
+          - name: learner-artifact-uri
+            valueFrom:
+              path: /tmp/plan-output/learner-artifact-uri
+          - name: learner-sha256
+            valueFrom:
+              path: /tmp/plan-output/learner-sha256
+      podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+      serviceAccountName: agr-planner
+      volumes:
+        - name: sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 3600
+                  path: token
+        - emptyDir:
+            sizeLimit: 1Gi
+          name: tmp
+    - dag:
+        tasks:
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{inputs.parameters.generation-id}}'
+                - name: config-sha256
+                  value: '{{inputs.parameters.config-sha256}}'
+                - name: plan-uri
+                  value: '{{inputs.parameters.plan-uri}}'
+                - name: shard-count
+                  value: '{{inputs.parameters.shard-count}}'
+                - name: actor-pods
+                  value: '{{inputs.parameters.actor-pods}}'
+            name: apply-job
+            template: apply-rollout-job
+          - arguments:
+              parameters:
+                - name: shard-count
+                  value: '{{inputs.parameters.shard-count}}'
+            dependencies:
+              - apply-job
+            name: wait-indexed-job
+            template: wait-rollout-indexed-job
+      inputs:
+        parameters:
+          - name: generation-id
+          - name: config-sha256
+          - name: plan-uri
+          - name: shard-count
+          - name: actor-pods
+      name: rollout
+    - container:
+        args:
+          - --argo-output-dir
+          - /tmp/dataset-output
+        command:
+          - /app/.venv/bin/agr-build-dataset
+        env:
+          - name: AWS_ENDPOINT_URL_S3
+            value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+          - name: AWS_ENDPOINT_URL_STS
+            value: https://seaweedfs.local.walnuts.dev
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::role/agr-dataset
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+          - name: AWS_REGION
+            value: us-east-1
+          - name: WORKER_S3_BUCKET
+            value: agr-ai
+          - name: WORKER_S3_PREFIX
+            value: worker-runs
+          - name: WORKER_CONTROLLER_ID
+            value: agr-dataset
+          - name: AGR_WORKFLOW_UID
+            value: '{{workflow.uid}}'
+          - name: WORKER_S3_ENDPOINT
+            value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+          - name: SERVICE_ENDPOINT
+            value: http://agr-server.agr.svc.cluster.local:8080
+          - name: SERVICE_GATEWAY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: SERVICE_GATEWAY_TOKEN
+                name: agr-learning-token
+          - name: OMP_NUM_THREADS
+            value: "1"
+          - name: MKL_NUM_THREADS
+            value: "1"
+          - name: AGR_TRAINING_IMAGE_REFERENCE
+            value: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+          - name: AGR_WORKFLOW_GENERATION_ID
+            value: '{{inputs.parameters.generation-id}}'
+          - name: AGR_WORKFLOW_PLAN_URI
+            value: '{{inputs.parameters.plan-uri}}'
+        image: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 4Gi
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 512Mi
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+          - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+            name: sts-token
+            readOnly: true
+          - mountPath: /tmp
+            name: tmp
+      inputs:
+        parameters:
+          - name: generation-id
+          - name: plan-uri
+      name: dataset
+      outputs:
+        parameters:
+          - name: dataset-uri
+            valueFrom:
+              path: /tmp/dataset-output/dataset-uri
+      podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+      serviceAccountName: agr-dataset
+      volumes:
+        - name: sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 3600
+                  path: token
+        - emptyDir:
+            sizeLimit: 4Gi
+          name: tmp
+    - container:
+        args:
+          - --s3-input-uri
+          - '{{inputs.parameters.dataset-uri}}'
+          - --s3-output-uri
+          - s3://agr-ai/worker-runs/models/candidates/{{inputs.parameters.generation-id}}
+          - --initial-artifact-uri
+          - '{{inputs.parameters.learner-artifact-uri}}'
+          - --behavior-policy-id
+          - shared-policy-v3
+          - --behavior-policy-artifact-sha256
+          - '{{inputs.parameters.learner-sha256}}'
+          - --argo-output-dir
+          - /tmp/train-output
+        command:
+          - /app/.venv/bin/agr-train
+        env:
+          - name: AWS_ENDPOINT_URL_S3
+            value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+          - name: AWS_ENDPOINT_URL_STS
+            value: https://seaweedfs.local.walnuts.dev
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::role/agr-trainer
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+          - name: AWS_REGION
+            value: us-east-1
+          - name: WORKER_S3_BUCKET
+            value: agr-ai
+          - name: WORKER_S3_PREFIX
+            value: worker-runs
+          - name: WORKER_CONTROLLER_ID
+            value: agr-trainer
+          - name: AGR_WORKFLOW_UID
+            value: '{{workflow.uid}}'
+          - name: SERVICE_ENDPOINT
+            value: http://agr-server.agr.svc.cluster.local:8080
+          - name: SERVICE_GATEWAY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: SERVICE_GATEWAY_TOKEN
+                name: agr-learning-token
+          - name: OMP_NUM_THREADS
+            value: "2"
+          - name: MKL_NUM_THREADS
+            value: "2"
+          - name: OPENBLAS_NUM_THREADS
+            value: "2"
+          - name: TORCH_NUM_THREADS
+            value: "2"
+          - name: AGR_TRAINING_IMAGE_REFERENCE
+            value: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+          - name: AGR_WORKFLOW_GENERATION_ID
+            value: '{{inputs.parameters.generation-id}}'
+          - name: AGR_WORKFLOW_PLAN_URI
+            value: '{{inputs.parameters.plan-uri}}'
+          - name: AGR_WORKFLOW_INPUT_URI
+            value: '{{inputs.parameters.dataset-uri}}'
+          - name: AGR_WORKFLOW_OUTPUT_URI
+            value: s3://agr-ai/worker-runs/models/candidates/{{inputs.parameters.generation-id}}
+          - name: AGR_WORKFLOW_LEARNER_URI
+            value: '{{inputs.parameters.learner-artifact-uri}}'
+          - name: AGR_WORKFLOW_LEARNER_SHA256
+            value: '{{inputs.parameters.learner-sha256}}'
+          - name: AGR_WORKFLOW_BEHAVIOR_POLICY_SHA256
+            value: '{{inputs.parameters.learner-sha256}}'
+        image: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+        resources:
+          limits:
+            cpu: "2"
+            ephemeral-storage: 10Gi
+            memory: 6144Mi
+          requests:
+            cpu: "2"
+            ephemeral-storage: 2Gi
+            memory: 6144Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+          - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+            name: sts-token
+            readOnly: true
+          - mountPath: /tmp
+            name: tmp
+      inputs:
+        parameters:
+          - name: generation-id
+          - name: plan-uri
+          - name: dataset-uri
+          - name: learner-artifact-uri
+          - name: learner-sha256
+      name: train
+      outputs:
+        parameters:
+          - name: artifact-uri
+            valueFrom:
+              path: /tmp/train-output/artifact-uri
+          - name: model-sha256
+            valueFrom:
+              path: /tmp/train-output/model-sha256
+          - name: manifest-sha256
+            valueFrom:
+              path: /tmp/train-output/manifest-sha256
+          - name: model-id
+            valueFrom:
+              path: /tmp/train-output/model-id
+      podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+      serviceAccountName: agr-trainer
+      volumes:
+        - name: sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 3600
+                  path: token
+        - emptyDir:
+            sizeLimit: 10Gi
+          name: tmp
+    - container:
+        args:
+          - --argo-output-dir
+          - /tmp/validate-output
+        command:
+          - /app/.venv/bin/agr-validate
+        env:
+          - name: AWS_ENDPOINT_URL_S3
+            value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+          - name: AWS_ENDPOINT_URL_STS
+            value: https://seaweedfs.local.walnuts.dev
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::role/agr-validator
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+          - name: AWS_REGION
+            value: us-east-1
+          - name: WORKER_S3_BUCKET
+            value: agr-ai
+          - name: WORKER_S3_PREFIX
+            value: worker-runs
+          - name: AGR_WORKFLOW_UID
+            value: '{{workflow.uid}}'
+          - name: AGR_TRAINING_IMAGE_REFERENCE
+            value: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+          - name: AGR_WORKFLOW_GENERATION_ID
+            value: '{{inputs.parameters.generation-id}}'
+          - name: AGR_WORKFLOW_PLAN_URI
+            value: '{{inputs.parameters.plan-uri}}'
+        image: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 2Gi
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 512Mi
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+          - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+            name: sts-token
+            readOnly: true
+          - mountPath: /tmp
+            name: tmp
+      inputs:
+        parameters:
+          - name: generation-id
+          - name: plan-uri
+      name: validate
+      outputs:
+        parameters:
+          - name: artifact-uri
+            valueFrom:
+              path: /tmp/validate-output/artifact-uri
+          - name: model-sha256
+            valueFrom:
+              path: /tmp/validate-output/model-sha256
+          - name: manifest-sha256
+            valueFrom:
+              path: /tmp/validate-output/manifest-sha256
+          - name: validation-uri
+            valueFrom:
+              path: /tmp/validate-output/validation-uri
+      podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+      serviceAccountName: agr-validator
+      volumes:
+        - name: sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 3600
+                  path: token
+        - emptyDir:
+            sizeLimit: 2Gi
+          name: tmp
+    - dag:
+        tasks:
+          - arguments:
+              parameters:
+                - name: generation-id
+                  value: '{{inputs.parameters.generation-id}}'
+                - name: config-sha256
+                  value: '{{inputs.parameters.config-sha256}}'
+                - name: plan-uri
+                  value: '{{inputs.parameters.plan-uri}}'
+                - name: shard-count
+                  value: '{{inputs.parameters.shard-count}}'
+                - name: evaluation-pods
+                  value: '{{inputs.parameters.evaluation-pods}}'
+                - name: artifact-uri
+                  value: '{{inputs.parameters.artifact-uri}}'
+                - name: model-sha256
+                  value: '{{inputs.parameters.model-sha256}}'
+                - name: manifest-sha256
+                  value: '{{inputs.parameters.manifest-sha256}}'
+                - name: validation-uri
+                  value: '{{inputs.parameters.validation-uri}}'
+            name: apply-job
+            template: apply-assess-job
+          - arguments:
+              parameters:
+                - name: shard-count
+                  value: '{{inputs.parameters.shard-count}}'
+            dependencies:
+              - apply-job
+            name: wait-indexed-job
+            template: wait-assess-indexed-job
+      inputs:
+        parameters:
+          - name: generation-id
+          - name: config-sha256
+          - name: plan-uri
+          - name: shard-count
+          - name: evaluation-pods
+          - name: artifact-uri
+          - name: model-sha256
+          - name: manifest-sha256
+          - name: validation-uri
+      name: assess
+    - container:
+        args:
+          - --argo-output-dir
+          - /tmp/aggregate-output
+        command:
+          - /app/.venv/bin/agr-aggregate-evaluation
+        env:
+          - name: AWS_ENDPOINT_URL_S3
+            value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+          - name: AWS_ENDPOINT_URL_STS
+            value: https://seaweedfs.local.walnuts.dev
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::role/agr-evaluator
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+          - name: AWS_REGION
+            value: us-east-1
+          - name: WORKER_S3_BUCKET
+            value: agr-ai
+          - name: WORKER_S3_PREFIX
+            value: worker-runs
+          - name: AGR_WORKFLOW_UID
+            value: '{{workflow.uid}}'
+          - name: AGR_TRAINING_IMAGE_REFERENCE
+            value: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+          - name: AGR_WORKFLOW_GENERATION_ID
+            value: '{{inputs.parameters.generation-id}}'
+          - name: AGR_WORKFLOW_PLAN_URI
+            value: '{{inputs.parameters.plan-uri}}'
+        image: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 2Gi
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 512Mi
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+          - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+            name: sts-token
+            readOnly: true
+          - mountPath: /tmp
+            name: tmp
+      inputs:
+        parameters:
+          - name: generation-id
+          - name: plan-uri
+      name: aggregate
+      outputs:
+        parameters:
+          - name: report-uri
+            valueFrom:
+              path: /tmp/aggregate-output/report-uri
+      podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+      serviceAccountName: agr-evaluator
+      volumes:
+        - name: sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 3600
+                  path: token
+        - emptyDir:
+            sizeLimit: 2Gi
+          name: tmp
+    - container:
+        args:
+          - --argo-output-dir
+          - /tmp/decision-output
+        command:
+          - /app/.venv/bin/agr-decide-promotion
+        env:
+          - name: AWS_ENDPOINT_URL_S3
+            value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+          - name: AWS_ENDPOINT_URL_STS
+            value: https://seaweedfs.local.walnuts.dev
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::role/agr-evaluator
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+          - name: AWS_REGION
+            value: us-east-1
+          - name: WORKER_S3_BUCKET
+            value: agr-ai
+          - name: WORKER_S3_PREFIX
+            value: worker-runs
+          - name: AGR_WORKFLOW_UID
+            value: '{{workflow.uid}}'
+          - name: AGR_TRAINING_IMAGE_REFERENCE
+            value: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+          - name: AGR_WORKFLOW_GENERATION_ID
+            value: '{{inputs.parameters.generation-id}}'
+          - name: AGR_WORKFLOW_PLAN_URI
+            value: '{{inputs.parameters.plan-uri}}'
+          - name: AGR_EVALUATION_REPORT_URI
+            value: '{{inputs.parameters.report-uri}}'
+        image: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 1Gi
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 128Mi
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+          - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+            name: sts-token
+            readOnly: true
+          - mountPath: /tmp
+            name: tmp
+      inputs:
+        parameters:
+          - name: generation-id
+          - name: plan-uri
+          - name: report-uri
+      name: decide
+      outputs:
+        parameters:
+          - globalName: promote
+            name: promote
+            valueFrom:
+              path: /tmp/decision-output/promote
+      podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+      serviceAccountName: agr-evaluator
+      volumes:
+        - name: sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 3600
+                  path: token
+        - emptyDir:
+            sizeLimit: 1Gi
+          name: tmp
+    - container:
+        args:
+          - --target-id
+          - '{{inputs.parameters.model-id}}'
+          - --active-pointer-s3-uri
+          - s3://agr-ai/worker-runs/models/active.json
+        command:
+          - /app/.venv/bin/agr-publish
+        env:
+          - name: AWS_ENDPOINT_URL_S3
+            value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+          - name: AWS_ENDPOINT_URL_STS
+            value: https://seaweedfs.local.walnuts.dev
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::role/agr-promoter
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+          - name: AWS_REGION
+            value: us-east-1
+          - name: WORKER_S3_BUCKET
+            value: agr-ai
+          - name: WORKER_S3_PREFIX
+            value: worker-runs
+          - name: WORKER_CONTROLLER_ID
+            value: agr-promoter
+          - name: AGR_WORKFLOW_UID
+            value: '{{workflow.uid}}'
+          - name: SERVICE_ENDPOINT
+            value: http://agr-server.agr.svc.cluster.local:8080
+          - name: SERVICE_GATEWAY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: SERVICE_GATEWAY_TOKEN
+                name: agr-learning-token
+          - name: AGR_TRAINING_IMAGE_REFERENCE
+            value: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+          - name: AGR_EVALUATION_REPORT_URI
+            value: '{{inputs.parameters.report-uri}}'
+          - name: AGR_WORKFLOW_GENERATION_ID
+            value: '{{inputs.parameters.generation-id}}'
+          - name: AGR_WORKFLOW_PLAN_URI
+            value: '{{inputs.parameters.plan-uri}}'
+        image: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 2Gi
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 512Mi
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+          - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+            name: sts-token
+            readOnly: true
+          - mountPath: /tmp
+            name: tmp
+      inputs:
+        parameters:
+          - name: generation-id
+          - name: plan-uri
+          - name: report-uri
+          - name: model-id
+      name: publish
+      podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+      serviceAccountName: agr-promoter
+      volumes:
+        - name: sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 3600
+                  path: token
+        - emptyDir:
+            sizeLimit: 2Gi
+          name: tmp
+    - container:
+        args: []
+        command:
+          - /app/.venv/bin/agr-verify-deployment
+        env:
+          - name: AWS_ENDPOINT_URL_S3
+            value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+          - name: AWS_ENDPOINT_URL_STS
+            value: https://seaweedfs.local.walnuts.dev
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::role/agr-verify
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+          - name: AWS_REGION
+            value: us-east-1
+          - name: WORKER_S3_BUCKET
+            value: agr-ai
+          - name: WORKER_S3_PREFIX
+            value: worker-runs
+          - name: AGR_WORKFLOW_UID
+            value: '{{workflow.uid}}'
+          - name: AGR_TRAINING_IMAGE_REFERENCE
+            value: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+          - name: AGR_WORKFLOW_GENERATION_ID
+            value: '{{inputs.parameters.generation-id}}'
+          - name: AGR_WORKFLOW_PLAN_URI
+            value: '{{inputs.parameters.plan-uri}}'
+          - name: AGR_SERVER_SERVICE_HEALTH_URL
+            value: http://agr-server.agr.svc.cluster.local:8081
+        image: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 1Gi
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 128Mi
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+          - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+            name: sts-token
+            readOnly: true
+          - mountPath: /tmp
+            name: tmp
+      inputs:
+        parameters:
+          - name: generation-id
+          - name: plan-uri
+      name: verify
+      podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+      serviceAccountName: agr-verify
+      volumes:
+        - name: sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 3600
+                  path: token
+        - emptyDir:
+            sizeLimit: 1Gi
+          name: tmp
+    - inputs:
+        parameters:
+          - name: generation-id
+          - name: config-sha256
+          - name: plan-uri
+          - name: shard-count
+          - name: actor-pods
+      name: apply-rollout-job
+      resource:
+        action: apply
+        manifest: |-
+          "apiVersion": "batch/v1"
+          "kind": "Job"
+          "metadata":
+            "labels":
+              "agr.walnuts.dev/stage": "rollout"
+              "app": "agr-learning"
+              "app.kubernetes.io/name": "agr-learning"
+            "name": "agr-rollout-{{workflow.name}}"
+            "namespace": "agr"
+          "spec":
+            "activeDeadlineSeconds": 604800
+            "backoffLimitPerIndex": 2
+            "completionMode": "Indexed"
+            "completions": {{inputs.parameters.shard-count}}
+            "maxFailedIndexes": 0
+            "parallelism": {{inputs.parameters.actor-pods}}
+            "template":
+              "metadata":
+                "labels":
+                  "agr.walnuts.dev/stage": "rollout"
+                  "app": "agr-learning"
+                  "app.kubernetes.io/name": "agr-learning"
+              "spec":
+                "automountServiceAccountToken": false
+                "containers":
+                - "args":
+                  - "run-shard"
+                  - "--generation-id"
+                  - "{{inputs.parameters.generation-id}}"
+                  - "--config-sha256"
+                  - "{{inputs.parameters.config-sha256}}"
+                  - "--plan-uri"
+                  - "{{inputs.parameters.plan-uri}}"
+                  - "--shard-index"
+                  - "$(JOB_COMPLETION_INDEX)"
+                  - "--shard-count"
+                  - "{{inputs.parameters.shard-count}}"
+                  "command":
+                  - "worker"
+                  "env":
+                  - "name": "AWS_ENDPOINT_URL_S3"
+                    "value": "http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333"
+                  - "name": "AWS_ENDPOINT_URL_STS"
+                    "value": "https://seaweedfs.local.walnuts.dev"
+                  - "name": "AWS_ROLE_ARN"
+                    "value": "arn:aws:iam::role/agr-actor"
+                  - "name": "AWS_WEB_IDENTITY_TOKEN_FILE"
+                    "value": "/var/run/secrets/sts.seaweedfs.com/serviceaccount/token"
+                  - "name": "AWS_REGION"
+                    "value": "us-east-1"
+                  - "name": "WORKER_S3_BUCKET"
+                    "value": "agr-ai"
+                  - "name": "WORKER_S3_PREFIX"
+                    "value": "worker-runs"
+                  - "name": "WORKER_CONTROLLER_ID"
+                    "value": "agr-actor"
+                  - "name": "AGR_WORKFLOW_UID"
+                    "value": "{{workflow.uid}}"
+                  - "name": "AGR_WORKER_IMAGE_REFERENCE"
+                    "value": "ghcr.io/walnuts1018/agr-worker:0.1.45@sha256:0d35f2c0ba98e8a3c43ada1db4a7e19e649cc9e2e9ba936eb963b88e6d666cd9"
+                  - "name": "WORKER_S3_ENDPOINT"
+                    "value": "http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333"
+                  - "name": "SERVICE_ENDPOINT"
+                    "value": "http://agr-server.agr.svc.cluster.local:8080"
+                  - "name": "SERVICE_GATEWAY_TOKEN"
+                    "valueFrom":
+                      "secretKeyRef":
+                        "key": "SERVICE_GATEWAY_TOKEN"
+                        "name": "agr-learning-token"
+                  - "name": "OMP_NUM_THREADS"
+                    "value": "1"
+                  "image": "ghcr.io/walnuts1018/agr-worker:0.1.45@sha256:0d35f2c0ba98e8a3c43ada1db4a7e19e649cc9e2e9ba936eb963b88e6d666cd9"
+                  "name": "actor"
+                  "resources":
+                    "limits":
+                      "cpu": "1"
+                      "ephemeral-storage": "3Gi"
+                      "memory": "4Gi"
+                    "requests":
+                      "cpu": "1"
+                      "ephemeral-storage": "512Mi"
+                      "memory": "2Gi"
+                  "securityContext":
+                    "allowPrivilegeEscalation": false
+                    "capabilities":
+                      "drop":
+                      - "ALL"
+                    "readOnlyRootFilesystem": true
+                  "volumeMounts":
+                  - "mountPath": "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
+                    "name": "sts-token"
+                    "readOnly": true
+                  - "mountPath": "/tmp"
+                    "name": "tmp"
+                "imagePullSecrets":
+                - "name": "ghcr-login-secret"
+                "priorityClassName": "agr-learning"
+                "restartPolicy": "Never"
+                "securityContext":
+                  "runAsGroup": 10001
+                  "runAsNonRoot": true
+                  "runAsUser": 10001
+                  "seccompProfile":
+                    "type": "RuntimeDefault"
+                "serviceAccountName": "agr-actor"
+                "volumes":
+                - "name": "sts-token"
+                  "projected":
+                    "sources":
+                    - "serviceAccountToken":
+                        "audience": "sts.seaweedfs.com"
+                        "expirationSeconds": 3600
+                        "path": "token"
+                - "emptyDir":
+                    "sizeLimit": "2Gi"
+                  "name": "tmp"
+            "ttlSecondsAfterFinished": 604800
+        setOwnerReference: true
+    - inputs:
+        parameters:
+          - name: shard-count
+      name: wait-rollout-indexed-job
+      resource:
+        action: get
+        failureCondition: status.conditions.0.type == Failed,status.conditions.1.type == Failed
+        manifest: |-
+          "apiVersion": "batch/v1"
+          "kind": "Job"
+          "metadata":
+            "name": "agr-rollout-{{workflow.name}}"
+            "namespace": "agr"
+        successCondition: status.succeeded == {{inputs.parameters.shard-count}}
+    - inputs:
+        parameters:
+          - name: generation-id
+          - name: config-sha256
+          - name: plan-uri
+          - name: shard-count
+          - name: evaluation-pods
+          - name: artifact-uri
+          - name: model-sha256
+          - name: manifest-sha256
+          - name: validation-uri
+      name: apply-assess-job
+      resource:
+        action: apply
+        manifest: |-
+          "apiVersion": "batch/v1"
+          "kind": "Job"
+          "metadata":
+            "labels":
+              "agr.walnuts.dev/stage": "evaluation"
+              "app": "agr-learning"
+              "app.kubernetes.io/name": "agr-learning"
+            "name": "agr-assess-{{workflow.name}}"
+            "namespace": "agr"
+          "spec":
+            "activeDeadlineSeconds": 604800
+            "backoffLimitPerIndex": 2
+            "completionMode": "Indexed"
+            "completions": {{inputs.parameters.shard-count}}
+            "maxFailedIndexes": 0
+            "parallelism": {{inputs.parameters.evaluation-pods}}
+            "template":
+              "metadata":
+                "labels":
+                  "agr.walnuts.dev/stage": "evaluation"
+                  "app": "agr-learning"
+                  "app.kubernetes.io/name": "agr-learning"
+              "spec":
+                "automountServiceAccountToken": false
+                "containers":
+                - "args":
+                  - "evaluate-shard"
+                  - "--generation-id"
+                  - "{{inputs.parameters.generation-id}}"
+                  - "--config-sha256"
+                  - "{{inputs.parameters.config-sha256}}"
+                  - "--plan-uri"
+                  - "{{inputs.parameters.plan-uri}}"
+                  - "--shard-index"
+                  - "$(JOB_COMPLETION_INDEX)"
+                  - "--shard-count"
+                  - "{{inputs.parameters.shard-count}}"
+                  "command":
+                  - "worker"
+                  "env":
+                  - "name": "AWS_ENDPOINT_URL_S3"
+                    "value": "http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333"
+                  - "name": "AWS_ENDPOINT_URL_STS"
+                    "value": "https://seaweedfs.local.walnuts.dev"
+                  - "name": "AWS_ROLE_ARN"
+                    "value": "arn:aws:iam::role/agr-evaluator"
+                  - "name": "AWS_WEB_IDENTITY_TOKEN_FILE"
+                    "value": "/var/run/secrets/sts.seaweedfs.com/serviceaccount/token"
+                  - "name": "AWS_REGION"
+                    "value": "us-east-1"
+                  - "name": "WORKER_S3_BUCKET"
+                    "value": "agr-ai"
+                  - "name": "WORKER_S3_PREFIX"
+                    "value": "worker-runs"
+                  - "name": "WORKER_CONTROLLER_ID"
+                    "value": "agr-evaluator"
+                  - "name": "AGR_WORKFLOW_UID"
+                    "value": "{{workflow.uid}}"
+                  - "name": "AGR_WORKER_IMAGE_REFERENCE"
+                    "value": "ghcr.io/walnuts1018/agr-worker:0.1.45@sha256:0d35f2c0ba98e8a3c43ada1db4a7e19e649cc9e2e9ba936eb963b88e6d666cd9"
+                  - "name": "WORKER_S3_ENDPOINT"
+                    "value": "http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333"
+                  - "name": "SERVICE_ENDPOINT"
+                    "value": "http://agr-server.agr.svc.cluster.local:8080"
+                  - "name": "SERVICE_GATEWAY_TOKEN"
+                    "valueFrom":
+                      "secretKeyRef":
+                        "key": "SERVICE_GATEWAY_TOKEN"
+                        "name": "agr-learning-token"
+                  - "name": "AGR_CANDIDATE_MODEL_URI"
+                    "value": "{{inputs.parameters.artifact-uri}}"
+                  - "name": "AGR_CANDIDATE_MODEL_SHA256"
+                    "value": "{{inputs.parameters.model-sha256}}"
+                  - "name": "AGR_CANDIDATE_MANIFEST_SHA256"
+                    "value": "{{inputs.parameters.manifest-sha256}}"
+                  - "name": "AGR_CANDIDATE_VALIDATION_URI"
+                    "value": "{{inputs.parameters.validation-uri}}"
+                  "image": "ghcr.io/walnuts1018/agr-worker:0.1.45@sha256:0d35f2c0ba98e8a3c43ada1db4a7e19e649cc9e2e9ba936eb963b88e6d666cd9"
+                  "name": "evaluator"
+                  "resources":
+                    "limits":
+                      "cpu": "1"
+                      "ephemeral-storage": "3Gi"
+                      "memory": "4Gi"
+                    "requests":
+                      "cpu": "1"
+                      "ephemeral-storage": "512Mi"
+                      "memory": "2Gi"
+                  "securityContext":
+                    "allowPrivilegeEscalation": false
+                    "capabilities":
+                      "drop":
+                      - "ALL"
+                    "readOnlyRootFilesystem": true
+                  "volumeMounts":
+                  - "mountPath": "/var/run/secrets/sts.seaweedfs.com/serviceaccount"
+                    "name": "sts-token"
+                    "readOnly": true
+                  - "mountPath": "/tmp"
+                    "name": "tmp"
+                "imagePullSecrets":
+                - "name": "ghcr-login-secret"
+                "priorityClassName": "agr-learning"
+                "restartPolicy": "Never"
+                "securityContext":
+                  "runAsGroup": 10001
+                  "runAsNonRoot": true
+                  "runAsUser": 10001
+                  "seccompProfile":
+                    "type": "RuntimeDefault"
+                "serviceAccountName": "agr-evaluator"
+                "volumes":
+                - "name": "sts-token"
+                  "projected":
+                    "sources":
+                    - "serviceAccountToken":
+                        "audience": "sts.seaweedfs.com"
+                        "expirationSeconds": 3600
+                        "path": "token"
+                - "emptyDir":
+                    "sizeLimit": "2Gi"
+                  "name": "tmp"
+            "ttlSecondsAfterFinished": 604800
+        setOwnerReference: true
+    - inputs:
+        parameters:
+          - name: shard-count
+      name: wait-assess-indexed-job
+      resource:
+        action: get
+        failureCondition: status.conditions.0.type == Failed,status.conditions.1.type == Failed
+        manifest: |-
+          "apiVersion": "batch/v1"
+          "kind": "Job"
+          "metadata":
+            "name": "agr-assess-{{workflow.name}}"
+            "namespace": "agr"
+        successCondition: status.succeeded == {{inputs.parameters.shard-count}}
+    - dag:
+        failFast: false
+        tasks:
+          - name: delete-rollout
+            template: delete-rollout
+          - name: delete-assess
+            template: delete-assess
+          - depends: (delete-rollout.Succeeded || delete-rollout.Failed || delete-rollout.Errored || delete-rollout.Skipped || delete-rollout.Omitted) && (delete-assess.Succeeded || delete-assess.Failed || delete-assess.Errored || delete-assess.Skipped || delete-assess.Omitted)
+            name: record-final-state
+            template: finalize
+      name: cleanup
+    - name: delete-rollout
+      resource:
+        action: delete
+        flags:
+          - --ignore-not-found=true
+          - --cascade=foreground
+          - --wait=true
+          - --timeout=10m
+        manifest: |-
+          "apiVersion": "batch/v1"
+          "kind": "Job"
+          "metadata":
+            "name": "agr-rollout-{{workflow.name}}"
+            "namespace": "agr"
+    - name: delete-assess
+      resource:
+        action: delete
+        flags:
+          - --ignore-not-found=true
+          - --cascade=foreground
+          - --wait=true
+          - --timeout=10m
+        manifest: |-
+          "apiVersion": "batch/v1"
+          "kind": "Job"
+          "metadata":
+            "name": "agr-assess-{{workflow.name}}"
+            "namespace": "agr"
+    - container:
+        args:
+          - --workflow-uid
+          - '{{workflow.uid}}'
+          - --workflow-status
+          - '{{workflow.status}}'
+        command:
+          - /app/.venv/bin/agr-finalize
+        env:
+          - name: WORKER_CONTROLLER_ID
+            value: agr-planner
+          - name: SERVICE_ENDPOINT
+            value: http://agr-server.agr.svc.cluster.local:8080
+          - name: SERVICE_GATEWAY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: SERVICE_GATEWAY_TOKEN
+                name: agr-learning-token
+          - name: AGR_WORKFLOW_UID
+            value: '{{workflow.uid}}'
+        image: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 1Gi
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 128Mi
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+          - mountPath: /tmp
+            name: tmp
+      name: finalize
+      podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+      serviceAccountName: agr-planner
+      volumes:
+        - emptyDir:
+            sizeLimit: 1Gi
+          name: tmp
+    - container:
+        args:
+          - --argo-output-dir
+          - /tmp/create-attempt-output
+        command:
+          - /app/.venv/bin/agr-create-attempt
+        env:
+          - name: AWS_ENDPOINT_URL_S3
+            value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+          - name: AWS_ENDPOINT_URL_STS
+            value: https://seaweedfs.local.walnuts.dev
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::role/agr-planner
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+          - name: AWS_REGION
+            value: us-east-1
+          - name: WORKER_S3_BUCKET
+            value: agr-ai
+          - name: WORKER_S3_PREFIX
+            value: worker-runs
+          - name: WORKER_CONTROLLER_ID
+            value: agr-planner
+          - name: AGR_WORKFLOW_UID
+            value: '{{workflow.uid}}'
+          - name: SERVICE_ENDPOINT
+            value: http://agr-server.agr.svc.cluster.local:8080
+          - name: SERVICE_GATEWAY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: SERVICE_GATEWAY_TOKEN
+                name: agr-learning-token
+          - name: AGR_TRAINING_IMAGE_REFERENCE
+            value: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+          - name: AGR_WORKFLOW_TRIGGER
+            value: '{{inputs.parameters.trigger}}'
+          - name: AGR_WORKFLOW_RETRY_GENERATION_ID
+            value: '{{inputs.parameters.retry-generation-id}}'
+        image: ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009
+        resources:
+          limits:
+            cpu: 500m
+            ephemeral-storage: 1Gi
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 128Mi
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+          - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+            name: sts-token
+            readOnly: true
+          - mountPath: /tmp
+            name: tmp
+      inputs:
+        parameters:
+          - name: trigger
+          - name: retry-generation-id
+      name: create-attempt
+      outputs:
+        parameters:
+          - globalName: generation-id
+            name: generation-id
+            valueFrom:
+              path: /tmp/create-attempt-output/generation-id
+          - name: generation-number
+            valueFrom:
+              path: /tmp/create-attempt-output/generation-number
+          - globalName: attempt-id
+            name: attempt-id
+            valueFrom:
+              path: /tmp/create-attempt-output/attempt-id
+          - name: skipped
+            valueFrom:
+              path: /tmp/create-attempt-output/skipped
+      podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+      serviceAccountName: agr-planner
+      volumes:
+        - name: sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 3600
+                  path: token
+        - emptyDir:
+            sizeLimit: 1Gi
+          name: tmp
+  ttlStrategy:
+    secondsAfterCompletion: 604800

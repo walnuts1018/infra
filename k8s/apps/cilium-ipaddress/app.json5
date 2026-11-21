@@ -1,7 +1,0 @@
-{
-  name: "cilium-ipaddress",
-  namespace: "cilium-system",
-  clusters: {
-    kurumi: {},
-  },
-}

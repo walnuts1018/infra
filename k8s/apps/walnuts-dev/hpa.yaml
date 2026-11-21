@@ -1,0 +1,22 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  labels:
+    app: walnuts-dev
+    app.kubernetes.io/name: walnuts-dev
+  name: walnuts-dev
+  namespace: walnuts-dev
+spec:
+  maxReplicaCount: 5
+  minReplicaCount: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: walnuts-dev
+  triggers:
+    - metadata:
+        metricName: envoy_cluster_upstream_rq_total_walnuts_dev
+        query: sum(rate(envoy_cluster_upstream_rq_total{envoy_cluster_name="httproute/walnuts-dev/walnuts-dev/rule/0",envoy_response_code=~"2..|5.."}[2m]))
+        serverAddress: http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus
+        threshold: "10"
+      type: prometheus

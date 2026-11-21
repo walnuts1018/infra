@@ -1,0 +1,66 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: agr
+  namespace: agr
+spec:
+  hostnames:
+    - agr.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: agr-server
+          port: 8080
+      filters:
+        - requestHeaderModifier:
+            set:
+              - name: content-type
+                value: application/grpc-web+proto
+          type: RequestHeaderModifier
+        - extensionRef:
+            group: gateway.envoyproxy.io
+            kind: HTTPRouteFilter
+            name: agr-gateway-credential
+          type: ExtensionRef
+      matches:
+        - headers:
+            - name: content-type
+              type: Exact
+              value: application/grpc-web+proto
+      timeouts:
+        backendRequest: 0s
+        request: 0s
+    - backendRefs:
+        - kind: Service
+          name: agr-server
+          port: 8080
+      filters:
+        - requestHeaderModifier:
+            set:
+              - name: content-type
+                value: application/grpc-web-text
+          type: RequestHeaderModifier
+        - extensionRef:
+            group: gateway.envoyproxy.io
+            kind: HTTPRouteFilter
+            name: agr-gateway-credential
+          type: ExtensionRef
+      matches:
+        - headers:
+            - name: content-type
+              type: Exact
+              value: application/grpc-web-text
+      timeouts:
+        backendRequest: 0s
+        request: 0s
+    - backendRefs:
+        - kind: Service
+          name: agr-web
+          port: 3000
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

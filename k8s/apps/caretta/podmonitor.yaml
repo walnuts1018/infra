@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app: caretta
+    app.kubernetes.io/name: caretta
+  name: caretta
+  namespace: monitoring
+spec:
+  podMetricsEndpoints:
+    - port: prom-metrics
+  selector:
+    matchLabels:
+      app: caretta
+      app.kubernetes.io/instance: caretta
+      app.kubernetes.io/name: caretta

@@ -1,0 +1,60 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  name: dependency-track-bootstrap-599be580ea
+  namespace: dependency-track
+spec:
+  activeDeadlineSeconds: 1200
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: dependency-track-bootstrap
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - command:
+            - python
+            - -B
+            - /scripts/bootstrap.py
+          env:
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: dependency-track-admin
+            - name: OIDC_GROUP
+              valueFrom:
+                secretKeyRef:
+                  key: group
+                  name: dependency-track-oidc
+          image: python:3.14.10-alpine
+          name: bootstrap
+          resources:
+            limits:
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - mountPath: /scripts
+              name: scripts
+              readOnly: true
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - configMap:
+            name: dependency-track-bootstrap
+          name: scripts

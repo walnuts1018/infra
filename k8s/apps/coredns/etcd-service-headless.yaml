@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: coredns-etcd
+    app.kubernetes.io/name: coredns-etcd
+  name: coredns-etcd-headless
+  namespace: coredns
+spec:
+  clusterIP: None
+  ports:
+    - name: client
+      port: 2379
+      targetPort: client
+    - name: peer
+      port: 2380
+      targetPort: peer
+  publishNotReadyAddresses: true
+  selector:
+    app: coredns-etcd
+    app.kubernetes.io/name: coredns-etcd

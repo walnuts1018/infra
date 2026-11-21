@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: netbird-server
+    app.kubernetes.io/name: netbird-server
+  name: netbird-server
+  namespace: netbird
+spec:
+  endpoints:
+    - path: /metrics
+      port: metrics
+  namespaceSelector:
+    matchNames:
+      - netbird
+  selector:
+    matchLabels:
+      app: netbird-server
+      app.kubernetes.io/name: netbird-server

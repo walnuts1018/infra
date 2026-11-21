@@ -1,0 +1,12 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: HTTPRouteFilter
+metadata:
+  name: agr-learning-admin-credential
+  namespace: agr
+spec:
+  credentialInjection:
+    credential:
+      valueRef:
+        name: agr-learning-admin-credential
+    header: x-learning-admin-gateway-token
+    overwrite: true

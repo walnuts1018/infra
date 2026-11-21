@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: visual-regression-tracker-api
+    app.kubernetes.io/name: visual-regression-tracker-api
+  name: visual-regression-tracker-api
+  namespace: visual-regression-tracker
+spec:
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: visual-regression-tracker-api
+    app.kubernetes.io/name: visual-regression-tracker-api
+  type: ClusterIP

@@ -1,7 +1,0 @@
-{
-  name: "agr",
-  namespace: "agr",
-  clusters: {
-    kurumi: {},
-  },
-}
