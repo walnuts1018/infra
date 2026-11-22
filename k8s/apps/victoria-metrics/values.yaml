@@ -2,6 +2,11 @@ vmselect:
   enabled: true
   mode: deployment
   replicaCount: 1
+  suppressStorageFQDNsRender: true
+  extraArgs:
+    storageNode:
+      - short/vm-short-victoria-metrics-cluster-vmstorage-0.vm-short-victoria-metrics-cluster-vmstorage.victoria-metrics.svc.cluster.local:8401
+      - long/vm-long-victoria-metrics-cluster-vmstorage-0.vm-long-victoria-metrics-cluster-vmstorage.victoria-metrics.svc.cluster.local:8401
   networkPolicy:
     enabled: true
     ingress:
@@ -51,71 +56,14 @@ vmselect:
   resources:
     requests:
       cpu: 100m
-      memory: 60Mi
-    limits:
-      memory: 512Gi
-  serviceMonitor:
-    enabled: true
-
-vminsert:
-  enabled: true
-  mode: deployment
-  replicaCount: 1
-  networkPolicy:
-    enabled: true
-    ingress:
-    - from:
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: opentelemetry-collector
-        podSelector:
-          matchLabels:
-            app.kubernetes.io/component: opentelemetry-collector
-      ports:
-      - protocol: TCP
-        port: 8480
-  horizontalPodAutoscaler:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 3
-    metrics:
-    - resource:
-        name: cpu
-        target:
-          averageUtilization: 100
-          type: Utilization
-      type: Resource
-  resources:
-    requests:
-      cpu: 80m
-      memory: 250Mi
+      memory: 256Mi
     limits:
       memory: 1Gi
   serviceMonitor:
     enabled: true
 
+vminsert:
+  enabled: false
+
 vmstorage:
-  enabled: true
-  replicaCount: 1
-  retentionPeriod: 30d
-  persistentVolume:
-    enabled: true
-    storageClassName: "topolvm-hdd"
-    size: 128Gi
-  resources:
-    requests:
-      cpu: 100m
-      memory: 2Gi
-    limits:
-      memory: 4Gi
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: 'kubernetes.io/hostname'
-    whenUnsatisfiable: 'ScheduleAnyway'
-    labelSelector:
-      matchLabels:
-        app: vmstorage
-        app.kubernetes.io/instance: victoria-metrics
-        app.kubernetes.io/name: victoria-metrics-cluster
-  serviceMonitor:
-    enabled: true
+  enabled: false
