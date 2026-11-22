@@ -3,7 +3,7 @@ local app = import 'app.json5';
   name: app.name,
   namespace: app.namespace,
   ociChartURL: 'ghcr.io/dependencytrack/helm-charts/dependency-track',
-  targetRevision: '2.9.0',
+  targetRevision: '2.10.0',
   values: (importstr 'values.yaml'),
 } + {
   metadata+: {
