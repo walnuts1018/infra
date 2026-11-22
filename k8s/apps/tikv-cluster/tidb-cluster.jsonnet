@@ -1,5 +1,6 @@
 local storage = import '../../components/storage.libsonnet';
 local app = import 'app.json5';
+local tikvImage = 'pingcap/tikv:v8.5.7';
 local componentAffinity(component) = {
   nodeAffinity: storage.avoidSlowNodeAffinity.nodeAffinity,
   podAntiAffinity: {
@@ -24,7 +25,7 @@ local componentAffinity(component) = {
     namespace: app.namespace,
   },
   spec: {
-    version: 'v8.5.7',
+    version: std.split(tikvImage, ':')[1],
     timezone: 'Asia/Tokyo',
     pvReclaimPolicy: 'Retain',
     enableDynamicConfiguration: true,
@@ -56,7 +57,7 @@ local componentAffinity(component) = {
       |||,
     },
     tikv: {
-      baseImage: 'pingcap/tikv',
+      baseImage: std.split(tikvImage, ':')[0],
       replicas: 3,
       maxFailoverCount: 0,
       storageClassName: 'local-path',
@@ -69,6 +70,54 @@ local componentAffinity(component) = {
         memory: '2Gi',
       },
       affinity: componentAffinity('tikv'),
+      // TiKV caches decompressed DWARF data for panic backtraces for the lifetime of the process.
+      // Removing debug sections before startup avoids retaining that data in each TiKV store.
+      initContainers: [
+        {
+          name: 'strip-tikv-debug',
+          image: tikvImage,
+          command: ['/bin/sh', '-ec'],
+          args: [
+            'cp /tikv-server /opt/tikv-runtime/tikv-server && strip --strip-debug /opt/tikv-runtime/tikv-server && test -x /opt/tikv-runtime/tikv-server',
+          ],
+          securityContext: {
+            runAsUser: 0,
+            allowPrivilegeEscalation: false,
+            capabilities: { drop: ['ALL'] },
+          },
+          resources: {
+            requests: {
+              cpu: '25m',
+              memory: '128Mi',
+            },
+            limits: {
+              memory: '1Gi',
+            },
+          },
+          volumeMounts: [
+            {
+              name: 'tikv-runtime',
+              mountPath: '/opt/tikv-runtime',
+            },
+          ],
+        },
+      ],
+      additionalVolumes: [
+        {
+          name: 'tikv-runtime',
+          emptyDir: {
+            sizeLimit: '1Gi',
+          },
+        },
+      ],
+      additionalVolumeMounts: [
+        {
+          name: 'tikv-runtime',
+          mountPath: '/tikv-server',
+          subPath: 'tikv-server',
+          readOnly: true,
+        },
+      ],
       config: |||
         [security]
           cert-allowed-cn = ["TiDB", "SeaweedFS"]
