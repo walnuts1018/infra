@@ -70,7 +70,8 @@ local componentAffinity(component) = {
         memory: '2Gi',
       },
       affinity: componentAffinity('tikv'),
-      // パニック時の診断に使うDWARF情報は起動時にキャッシュされ、通常のメタデータ処理とは無関係に大量のメモリを消費するため、起動前に除去する。
+      // バックトレース用のDWARF情報をキャッシュするとメモリ使用量が増え、Swapが発生してしまう。
+      // メタデータ処理に使えるメモリを確保するため、起動前にデバッグ情報を除去する。
       initContainers: [
         {
           name: 'strip-tikv-debug',
