@@ -70,8 +70,8 @@ local componentAffinity(component) = {
         memory: '2Gi',
       },
       affinity: componentAffinity('tikv'),
-      // TiKV caches decompressed DWARF data for panic backtraces for the lifetime of the process.
-      // Removing debug sections before startup avoids retaining that data in each TiKV store.
+      // TiKVは起動時にバックトレース用のDWARF情報を読み込み、プロセス終了までキャッシュする。
+      // このキャッシュによるメモリ消費を抑えるため、起動前にデバッグ情報を除去する。
       initContainers: [
         {
           name: 'strip-tikv-debug',
