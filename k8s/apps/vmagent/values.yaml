@@ -63,6 +63,7 @@ networkPolicy:
         - protocol: TCP
           port: 8480
 
+# 保持期間の異なる保存先に同じ系列を二重保存しないため、retentionラベルで送信先を排他的に選ぶ。
 remoteWrite:
   - url: http://vm-short-victoria-metrics-cluster-vminsert:8480/insert/0/prometheus/api/v1/write
     urlRelabelConfig:
