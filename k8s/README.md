@@ -102,10 +102,7 @@ Kubernetes クラスタに適用される Manifest 群です。
 - **smartctl-exporter**
 - **snmp-exporter**
 - **tempo**
-- **vmagent**: OpenTelemetry Collectorから受け取ったメトリクスを保持期間別に振り分け
-- **vm-query**: 短期・長期ストレージを共通のPromQL APIで検索
-- **vm-short**: 通常メトリクスを30日保存
-- **vm-long**: 選択したメトリクスを100年保存
+- **victoria-metrics**
 
 ### データベース・ストレージ
 
