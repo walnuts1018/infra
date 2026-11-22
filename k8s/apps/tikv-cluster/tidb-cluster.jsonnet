@@ -70,8 +70,8 @@ local componentAffinity(component) = {
         memory: '2Gi',
       },
       affinity: componentAffinity('tikv'),
-      // TiKVは起動時にバックトレース用のDWARF情報を読み込み、プロセス終了までキャッシュする。
-      // このキャッシュによるメモリ消費を抑えるため、起動前にデバッグ情報を除去する。
+      // TiKVはパニック時のバックトレースに使うDWARF情報を起動時にキャッシュし、
+      // 通常のメタデータ処理とは無関係に大量のメモリを消費するため、起動前に除去する。
       initContainers: [
         {
           name: 'strip-tikv-debug',
