@@ -1,0 +1,7 @@
+{
+  name: "vm-query",
+  namespace: "victoria-metrics",
+  clusters: {
+    kurumi: {},
+  },
+}
