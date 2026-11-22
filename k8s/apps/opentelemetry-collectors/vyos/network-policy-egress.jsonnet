@@ -38,13 +38,12 @@ local app = import '../app.json5';
           },
           podSelector: {
             matchLabels: {
-              'app.kubernetes.io/component': 'vminsert',
-              'app.kubernetes.io/instance': 'victoria-metrics',
-              'app.kubernetes.io/name': 'victoria-metrics-cluster',
+              'app.kubernetes.io/instance': 'vmagent',
+              'app.kubernetes.io/name': 'victoria-metrics-agent',
             },
           },
         }],
-        ports: [{ protocol: 'TCP', port: 8480 }],
+        ports: [{ protocol: 'TCP', port: 8429 }],
       },
       {
         to: [{
