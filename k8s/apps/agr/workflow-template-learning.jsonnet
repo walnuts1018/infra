@@ -1,8 +1,8 @@
 local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-patch.libsonnet', '', '', ':');
 local indexedJob = import '_workflow_templates/indexed-job.libsonnet';
 local jobReference = import '_workflow_templates/job-reference.libsonnet';
-local maxActorPods = 8;
-local maxEvaluationPods = 8;
+local maxActorPods = 2;
+local maxEvaluationPods = 2;
 local stagePod = import '_workflow_templates/stage-pod.libsonnet';
 {
   apiVersion: 'argoproj.io/v1alpha1',

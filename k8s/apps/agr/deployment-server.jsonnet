@@ -32,7 +32,7 @@ local sa = import 'service-account-app.jsonnet';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'app-service',
-            image: 'ghcr.io/walnuts1018/agr-server:0.1.46@sha256:f4f241e8fe953799ba6af82db9aa56cf10058c20ebb85c6b731d8be935555327',
+            image: 'ghcr.io/walnuts1018/agr-server:0.1.47@sha256:cc74af1cb6cdcecf1e5a9f7e0a7550fa3f794acfc4f3d2b6efc2bfbf68869682',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               { name: 'grpc-web', containerPort: 8080, protocol: 'TCP' },
@@ -45,9 +45,9 @@ local sa = import 'service-account-app.jsonnet';
               { name: 'SERVICE_LISTEN_ADDR', value: '0.0.0.0:8080' },
               { name: 'SERVICE_HEALTH_ADDR', value: '0.0.0.0:8081' },
               { name: 'AGR_LEARNING_JOB_IDENTITIES', value: 'agr-planner,agr-actor,agr-dataset,agr-trainer,agr-validator,agr-evaluator,agr-promoter,agr-verify' },
-              { name: 'AGR_LEARNING_ADVANCE_REQUESTS', value: '4' },
-              { name: 'AGR_LEARNING_CPU_TASKS', value: '4' },
-              { name: 'AGR_LEARNING_GAMES', value: '4' },
+              { name: 'AGR_LEARNING_ADVANCE_REQUESTS', value: '2' },
+              { name: 'AGR_LEARNING_CPU_TASKS', value: '2' },
+              { name: 'AGR_LEARNING_GAMES', value: '2' },
               { name: 'AGR_LEARNING_ADMIN_IDENTITIES', valueFrom: { secretKeyRef: { name: 'agr-learning-admin-credential', key: 'AGR_LEARNING_ADMIN_IDENTITIES' } } },
               { name: 'AGR_LEARNING_ADMIN_GATEWAY_TOKEN', valueFrom: { secretKeyRef: { name: 'agr-learning-admin-credential', key: 'AGR_LEARNING_ADMIN_GATEWAY_TOKEN' } } },
               { name: 'AGR_POLICY_MODEL_S3_URI', value: 's3://agr-ai/worker-runs/models/active.json' },
