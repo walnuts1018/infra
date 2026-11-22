@@ -1,0 +1,42 @@
+vmselect:
+  enabled: false
+
+vminsert:
+  enabled: true
+  replicaCount: 1
+  networkPolicy:
+    enabled: true
+    ingress:
+      - from:
+          - podSelector:
+              matchLabels:
+                app.kubernetes.io/instance: vmagent
+                app.kubernetes.io/name: victoria-metrics-agent
+        ports:
+          - protocol: TCP
+            port: 8480
+  resources:
+    requests:
+      cpu: 40m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
+  serviceMonitor:
+    enabled: true
+
+vmstorage:
+  enabled: true
+  replicaCount: 1
+  retentionPeriod: 100y
+  persistentVolume:
+    enabled: true
+    storageClassName: topolvm-hdd
+    size: 64Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 512Mi
+    limits:
+      memory: 2Gi
+  serviceMonitor:
+    enabled: true
