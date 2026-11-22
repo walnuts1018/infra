@@ -142,6 +142,9 @@ local externalSecretConfig = (import 'external-secrets.libsonnet').filerConfig;
         type: 'ClusterIP',
       },
       config: '',
+      extraArgs: [
+        '-disk=ssd',
+      ],
       affinity: {
         nodeAffinity: storage.avoidSlowNodeAffinity.nodeAffinity,
         podAntiAffinity: {
