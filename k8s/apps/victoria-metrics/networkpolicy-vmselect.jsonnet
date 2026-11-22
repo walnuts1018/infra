@@ -13,54 +13,37 @@
         'app.kubernetes.io/name': 'victoria-metrics-cluster',
       },
     },
-    policyTypes: [
-      'Egress',
-    ],
+    policyTypes: ['Egress'],
     egress: [
       {
-        to: [
-          {
-            namespaceSelector: {
-              matchLabels: {
-                'kubernetes.io/metadata.name': 'kube-system',
-              },
-            },
-            podSelector: {
-              matchLabels: {
-                'k8s-app': 'kube-dns',
-              },
-            },
+        to: [{
+          namespaceSelector: {
+            matchLabels: { 'kubernetes.io/metadata.name': 'kube-system' },
           },
-        ],
+          podSelector: {
+            matchLabels: { 'k8s-app': 'kube-dns' },
+          },
+        }],
         ports: [
-          {
-            protocol: 'UDP',
-            port: 53,
-          },
-          {
-            protocol: 'TCP',
-            port: 53,
-          },
+          { protocol: 'UDP', port: 53 },
+          { protocol: 'TCP', port: 53 },
         ],
       },
       {
-        to: [
-          {
-            podSelector: {
-              matchLabels: {
-                app: 'vmstorage',
-                'app.kubernetes.io/instance': 'victoria-metrics',
-                'app.kubernetes.io/name': 'victoria-metrics-cluster',
-              },
+        to: [{
+          podSelector: {
+            matchLabels: {
+              app: 'vmstorage',
+              'app.kubernetes.io/name': 'victoria-metrics-cluster',
             },
+            matchExpressions: [{
+              key: 'app.kubernetes.io/instance',
+              operator: 'In',
+              values: ['vm-short', 'vm-long'],
+            }],
           },
-        ],
-        ports: [
-          {
-            protocol: 'TCP',
-            port: 8401,
-          },
-        ],
+        }],
+        ports: [{ protocol: 'TCP', port: 8401 }],
       },
     ],
   },
