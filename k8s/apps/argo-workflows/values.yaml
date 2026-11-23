@@ -44,7 +44,7 @@ controller:
   persistence:
     archive: true
     archiveTTL: 90d
-    nodeStatusOffLoad: false
+    nodeStatusOffLoad: true
     postgresql:
       host: postgresql-default-rw.databases.svc.cluster.local
       port: 5432

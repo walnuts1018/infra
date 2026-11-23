@@ -43,13 +43,6 @@ local sa = import 'service-account-app.jsonnet';
             env: [
               { name: 'SERVICE_LISTEN_ADDR', value: '0.0.0.0:8080' },
               { name: 'SERVICE_HEALTH_ADDR', value: '0.0.0.0:8081' },
-              { name: 'AGR_LEARNING_JOB_IDENTITIES', value: 'agr-planner,agr-actor,agr-dataset,agr-trainer,agr-validator,agr-evaluator,agr-promoter,agr-verify' },
-              { name: 'AGR_LEARNING_ADVANCE_REQUESTS', value: '2' },
-              { name: 'AGR_LEARNING_CPU_TASKS', value: '2' },
-              { name: 'AGR_LEARNING_GAMES', value: '2' },
-              { name: 'AGR_LEARNING_ADMIN_IDENTITIES', valueFrom: { secretKeyRef: { name: 'agr-learning-admin-credential', key: 'AGR_LEARNING_ADMIN_IDENTITIES' } } },
-              { name: 'AGR_LEARNING_ADMIN_GATEWAY_TOKEN', valueFrom: { secretKeyRef: { name: 'agr-learning-admin-credential', key: 'AGR_LEARNING_ADMIN_GATEWAY_TOKEN' } } },
-              { name: 'AGR_POLICY_MODEL_S3_URI', value: 's3://agr-ai/worker-runs/models/active.json' },
               { name: 'WORKER_S3_BUCKET', value: 'agr-ai' },
               { name: 'AWS_ENDPOINT_URL_S3', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
               { name: 'AWS_ENDPOINT_URL_STS', value: 'https://seaweedfs.local.walnuts.dev' },

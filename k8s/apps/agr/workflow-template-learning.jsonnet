@@ -1,9 +1,93 @@
 local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-patch.libsonnet', '', '', ':');
-local indexedJob = import '_workflow_templates/indexed-job.libsonnet';
-local jobReference = import '_workflow_templates/job-reference.libsonnet';
-local maxActorPods = 2;
-local maxEvaluationPods = 2;
 local stagePod = import '_workflow_templates/stage-pod.libsonnet';
+local trainingImage = 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec';
+local workerImage = 'ghcr.io/walnuts1018/agr-worker:0.1.54@sha256:a9b5b4dbbbc64a2358658867d0b5886287c026224297682a35369be213972951';
+local workerRetryStrategy = {
+  limit: '5',
+  retryPolicy: 'Always',
+  expression: 'lastRetry.status == "Error" || asInt(lastRetry.exitCode) == 75',
+  backoff: {
+    duration: '10s',
+    factor: 2,
+    maxDuration: '5m',
+  },
+};
+local s3Env(role, controllerId, extra=[]) =
+  stagePod.s3Env(role, controllerId, [
+    { name: 'AWS_ENDPOINT_URL_S3', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
+    { name: 'AWS_ENDPOINT_URL_STS', value: 'https://seaweedfs.local.walnuts.dev' },
+    { name: 'AWS_ROLE_ARN', value: 'arn:aws:iam::role/' + role },
+    { name: 'AWS_WEB_IDENTITY_TOKEN_FILE', value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token' },
+    { name: 'AWS_REGION', value: 'us-east-1' },
+    { name: 'WORKER_S3_BUCKET', value: 'agr-ai' },
+    { name: 'WORKER_S3_PREFIX', value: 'worker-runs' },
+    { name: 'WORKER_CONTROLLER_ID', value: controllerId },
+    { name: 'AGR_WORKFLOW_UID', value: '{{workflow.uid}}' },
+  ] + extra);
+local workerResources = {
+  requests: {
+    cpu: '1',
+    memory: '2Gi',
+    'ephemeral-storage': '512Mi',
+  },
+  limits: {
+    cpu: '1',
+    memory: '4Gi',
+    'ephemeral-storage': '3Gi',
+  },
+};
+local verifyResources = {
+  requests: {
+    cpu: '100m',
+    memory: '256Mi',
+    'ephemeral-storage': '128Mi',
+  },
+  limits: {
+    cpu: '500m',
+    memory: '1Gi',
+    'ephemeral-storage': '1Gi',
+  },
+};
+local evaluationLookTasks = std.flattenArrays([
+  [
+    {
+      name: 'look-' + i,
+      template: 'evaluation-unit',
+      withSequence: {
+        start: '0',
+        count: '{{inputs.parameters.look-' + i + '-unit-count}}',
+      },
+      arguments: {
+        parameters: [
+          { name: 'unit-index', value: '{{item}}' },
+          { name: 'generation-id', value: '{{inputs.parameters.generation-id}}' },
+          { name: 'plan-uri', value: '{{inputs.parameters.plan-uri}}' },
+          { name: 'plan-sha256', value: '{{inputs.parameters.plan-sha256}}' },
+          { name: 'look-index', value: std.toString(i) },
+        ],
+      },
+    } + (if i == 1 then {} else {
+           depends: 'verify-look-' + (i - 1) + '.Succeeded',
+           when: '{{tasks.verify-look-' + (i - 1) + '.outputs.parameters.rejected}} == false',
+         }),
+    {
+      name: 'verify-look-' + i,
+      template: 'verify-evaluation-look',
+      depends: 'look-' + i + '.Succeeded',
+      arguments: {
+        parameters: [
+          { name: 'generation-id', value: '{{inputs.parameters.generation-id}}' },
+          { name: 'plan-uri', value: '{{inputs.parameters.plan-uri}}' },
+          { name: 'plan-sha256', value: '{{inputs.parameters.plan-sha256}}' },
+          { name: 'stage', value: 'evaluation' },
+          { name: 'look-index', value: std.toString(i) },
+          { name: 'unit-count', value: '{{inputs.parameters.look-' + i + '-unit-count}}' },
+        ],
+      },
+    },
+  ]
+  for i in std.range(1, 4)
+]);
 {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'WorkflowTemplate',
@@ -33,7 +117,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         name: 'ghcr-login-secret',
       },
     ],
-    onExit: 'cleanup',
+    onExit: 'finalize',
     podGC: {
       strategy: 'OnWorkflowCompletion',
     },
@@ -50,53 +134,71 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
     },
     templates: [
       {
+        name: 'learning',
         dag: {
           tasks: [
             {
+              name: 'create-attempt',
+              template: 'create-attempt',
               arguments: {
                 parameters: [
                   { name: 'trigger', value: '{{workflow.parameters.trigger}}' },
                   { name: 'retry-generation-id', value: '{{workflow.parameters.retry-generation-id}}' },
                 ],
               },
-              name: 'create-attempt',
-              template: 'create-attempt',
             },
             {
+              name: 'plan',
+              template: 'plan',
               depends: 'create-attempt.Succeeded',
+              when: '{{tasks.create-attempt.outputs.parameters.skipped}} == false',
               arguments: {
                 parameters: [{ name: 'generation-id', value: '{{tasks.create-attempt.outputs.parameters.generation-id}}' }],
               },
-              name: 'plan',
-              template: 'plan',
-              when: '{{tasks.create-attempt.outputs.parameters.skipped}} == false',
             },
             {
+              name: 'rollout',
+              template: 'rollout',
               depends: 'plan.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
-                  { name: 'config-sha256', value: '{{tasks.plan.outputs.parameters.config-sha256}}' },
                   { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
-                  { name: 'shard-count', value: '{{tasks.plan.outputs.parameters.rollout-shards}}' },
-                  { name: 'actor-pods', value: '{{tasks.plan.outputs.parameters.actor-pods}}' },
+                  { name: 'plan-sha256', value: '{{tasks.plan.outputs.parameters.plan-sha256}}' },
+                  { name: 'unit-count', value: '{{tasks.plan.outputs.parameters.rollout-unit-count}}' },
                 ],
               },
-              name: 'rollout',
-              template: 'rollout',
             },
             {
+              name: 'verify-rollout',
+              template: 'verify-rollout',
               depends: 'rollout.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
                   { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                  { name: 'plan-sha256', value: '{{tasks.plan.outputs.parameters.plan-sha256}}' },
+                  { name: 'stage', value: 'rollout' },
+                  { name: 'look-index', value: '0' },
+                  { name: 'unit-count', value: '{{tasks.plan.outputs.parameters.rollout-unit-count}}' },
                 ],
               },
-              name: 'dataset',
-              template: 'dataset',
             },
             {
+              name: 'dataset',
+              template: 'dataset',
+              depends: 'verify-rollout.Succeeded',
+              arguments: {
+                parameters: [
+                  { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
+                  { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                  { name: 'plan-sha256', value: '{{tasks.plan.outputs.parameters.plan-sha256}}' },
+                ],
+              },
+            },
+            {
+              name: 'train',
+              template: 'train',
               depends: 'dataset.Succeeded',
               arguments: {
                 parameters: [
@@ -107,10 +209,10 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
                   { name: 'learner-sha256', value: '{{tasks.plan.outputs.parameters.learner-sha256}}' },
                 ],
               },
-              name: 'train',
-              template: 'train',
             },
             {
+              name: 'validate',
+              template: 'validate',
               depends: 'train.Succeeded',
               arguments: {
                 parameters: [
@@ -118,39 +220,38 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
                   { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
                 ],
               },
-              name: 'validate',
-              template: 'validate',
             },
             {
+              name: 'evaluation',
+              template: 'evaluation',
               depends: 'validate.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
-                  { name: 'config-sha256', value: '{{tasks.plan.outputs.parameters.config-sha256}}' },
                   { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
-                  { name: 'shard-count', value: '{{tasks.plan.outputs.parameters.evaluation-shards}}' },
-                  { name: 'evaluation-pods', value: '{{tasks.plan.outputs.parameters.evaluation-pods}}' },
-                  { name: 'artifact-uri', value: '{{tasks.validate.outputs.parameters.artifact-uri}}' },
-                  { name: 'model-sha256', value: '{{tasks.validate.outputs.parameters.model-sha256}}' },
-                  { name: 'manifest-sha256', value: '{{tasks.validate.outputs.parameters.manifest-sha256}}' },
-                  { name: 'validation-uri', value: '{{tasks.validate.outputs.parameters.validation-uri}}' },
+                  { name: 'plan-sha256', value: '{{tasks.plan.outputs.parameters.plan-sha256}}' },
+                  { name: 'look-1-unit-count', value: '{{tasks.plan.outputs.parameters.evaluation-look-1-unit-count}}' },
+                  { name: 'look-2-unit-count', value: '{{tasks.plan.outputs.parameters.evaluation-look-2-unit-count}}' },
+                  { name: 'look-3-unit-count', value: '{{tasks.plan.outputs.parameters.evaluation-look-3-unit-count}}' },
+                  { name: 'look-4-unit-count', value: '{{tasks.plan.outputs.parameters.evaluation-look-4-unit-count}}' },
                 ],
               },
-              name: 'assess',
-              template: 'assess',
             },
             {
-              depends: 'assess.Succeeded',
+              name: 'aggregate',
+              template: 'aggregate',
+              depends: 'evaluation.Succeeded',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
                   { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                  { name: 'plan-sha256', value: '{{tasks.plan.outputs.parameters.plan-sha256}}' },
                 ],
               },
-              name: 'aggregate',
-              template: 'aggregate',
             },
             {
+              name: 'decide',
+              template: 'decide',
               depends: 'aggregate.Succeeded',
               arguments: {
                 parameters: [
@@ -159,11 +260,12 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
                   { name: 'report-uri', value: '{{tasks.aggregate.outputs.parameters.report-uri}}' },
                 ],
               },
-              name: 'decide',
-              template: 'decide',
             },
             {
+              name: 'publish',
+              template: 'publish',
               depends: 'decide.Succeeded',
+              when: '{{tasks.decide.outputs.parameters.promote}} == true',
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -172,11 +274,10 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
                   { name: 'model-id', value: '{{tasks.train.outputs.parameters.model-id}}' },
                 ],
               },
-              name: 'publish',
-              template: 'publish',
-              when: '{{tasks.decide.outputs.parameters.promote}} == true',
             },
             {
+              name: 'verify',
+              template: 'verify',
               depends: 'publish.Succeeded',
               arguments: {
                 parameters: [
@@ -184,18 +285,91 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
                   { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
                 ],
               },
-              name: 'verify',
-              template: 'verify',
             },
           ],
         },
-        name: 'learning',
       },
       {
+        name: 'create-attempt',
+        inputs: {
+          parameters: [
+            { name: 'trigger' },
+            { name: 'retry-generation-id' },
+          ],
+        },
+        outputs: {
+          parameters: [
+            {
+              globalName: 'generation-id',
+              name: 'generation-id',
+              valueFrom: {
+                path: '/tmp/create-attempt-output/generation-id',
+              },
+            },
+            {
+              name: 'generation-number',
+              valueFrom: {
+                path: '/tmp/create-attempt-output/generation-number',
+              },
+            },
+            {
+              globalName: 'attempt-id',
+              name: 'attempt-id',
+              valueFrom: {
+                path: '/tmp/create-attempt-output/attempt-id',
+              },
+            },
+            {
+              name: 'skipped',
+              valueFrom: {
+                path: '/tmp/create-attempt-output/skipped',
+              },
+            },
+          ],
+        },
+        podSpecPatch: podSpecPatch,
+        container: {
+          command: ['/app/.venv/bin/agr-create-attempt'],
+          args: ['--argo-output-dir', '/tmp/create-attempt-output'],
+          env: s3Env('agr-planner', 'agr-planner', [
+            { name: 'SERVICE_ENDPOINT', value: 'http://agr-server.agr.svc.cluster.local:8080' },
+            {
+              name: 'SERVICE_GATEWAY_TOKEN',
+              valueFrom: {
+                secretKeyRef: {
+                  key: 'SERVICE_GATEWAY_TOKEN',
+                  name: 'agr-learning-token',
+                },
+              },
+            },
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_WORKFLOW_TRIGGER', value: '{{inputs.parameters.trigger}}' },
+            { name: 'AGR_WORKFLOW_RETRY_GENERATION_ID', value: '{{inputs.parameters.retry-generation-id}}' },
+          ]),
+          image: trainingImage,
+          resources: {
+            limits: {
+              cpu: '500m',
+              'ephemeral-storage': '1Gi',
+              memory: '1Gi',
+            },
+            requests: {
+              cpu: '100m',
+              'ephemeral-storage': '128Mi',
+              memory: '1Gi',
+            },
+          },
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
+        },
+        serviceAccountName: 'agr-planner',
+        volumes: stagePod.volumes('1Gi'),
+      },
+      {
+        name: 'plan',
         inputs: {
           parameters: [{ name: 'generation-id' }],
         },
-        name: 'plan',
         outputs: {
           parameters: [
             {
@@ -205,51 +379,45 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               },
             },
             {
-              name: 'generation-number',
-              valueFrom: {
-                path: '/tmp/plan-output/generation-number',
-              },
-            },
-            {
-              name: 'attempt-id',
-              valueFrom: {
-                path: '/tmp/plan-output/attempt-id',
-              },
-            },
-            {
-              name: 'config-sha256',
-              valueFrom: {
-                path: '/tmp/plan-output/config-sha256',
-              },
-            },
-            {
               name: 'plan-uri',
               valueFrom: {
                 path: '/tmp/plan-output/plan-uri',
               },
             },
             {
-              name: 'rollout-shards',
+              name: 'plan-sha256',
               valueFrom: {
-                path: '/tmp/plan-output/rollout-shards',
+                path: '/tmp/plan-output/plan-sha256',
               },
             },
             {
-              name: 'actor-pods',
+              name: 'rollout-unit-count',
               valueFrom: {
-                path: '/tmp/plan-output/actor-pods',
+                path: '/tmp/plan-output/rollout-unit-count',
               },
             },
             {
-              name: 'evaluation-shards',
+              name: 'evaluation-look-1-unit-count',
               valueFrom: {
-                path: '/tmp/plan-output/evaluation-shards',
+                path: '/tmp/plan-output/evaluation-look-1-unit-count',
               },
             },
             {
-              name: 'evaluation-pods',
+              name: 'evaluation-look-2-unit-count',
               valueFrom: {
-                path: '/tmp/plan-output/evaluation-pods',
+                path: '/tmp/plan-output/evaluation-look-2-unit-count',
+              },
+            },
+            {
+              name: 'evaluation-look-3-unit-count',
+              valueFrom: {
+                path: '/tmp/plan-output/evaluation-look-3-unit-count',
+              },
+            },
+            {
+              name: 'evaluation-look-4-unit-count',
+              valueFrom: {
+                path: '/tmp/plan-output/evaluation-look-4-unit-count',
               },
             },
             {
@@ -269,51 +437,9 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         podSpecPatch: podSpecPatch,
         container: {
           command: ['/app/.venv/bin/agr-plan'],
-          args: [
-            '--argo-output-dir',
-            '/tmp/plan-output',
-            '--max-actor-pods',
-            std.toString(maxActorPods),
-            '--max-evaluation-pods',
-            std.toString(maxEvaluationPods),
-          ],
-          env: stagePod.s3Env('agr-planner', 'agr-planner', [
-            {
-              name: 'AWS_ENDPOINT_URL_S3',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'AWS_ENDPOINT_URL_STS',
-              value: 'https://seaweedfs.local.walnuts.dev',
-            },
-            {
-              name: 'AWS_ROLE_ARN',
-              value: 'arn:aws:iam::role/agr-planner',
-            },
-            {
-              name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-              value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
-            },
-            {
-              name: 'AWS_REGION',
-              value: 'us-east-1',
-            },
-            {
-              name: 'WORKER_S3_BUCKET',
-              value: 'agr-ai',
-            },
-            {
-              name: 'WORKER_S3_PREFIX',
-              value: 'worker-runs',
-            },
-            {
-              name: 'WORKER_CONTROLLER_ID',
-              value: 'agr-planner',
-            },
-            {
-              name: 'SERVICE_ENDPOINT',
-              value: 'http://agr-server.agr.svc.cluster.local:8080',
-            },
+          args: ['--argo-output-dir', '/tmp/plan-output'],
+          env: s3Env('agr-planner', 'agr-planner', [
+            { name: 'SERVICE_ENDPOINT', value: 'http://agr-server.agr.svc.cluster.local:8080' },
             {
               name: 'SERVICE_GATEWAY_TOKEN',
               valueFrom: {
@@ -323,20 +449,10 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
                 },
               },
             },
-            {
-              name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
-            },
-            {
-              name: 'AGR_WORKFLOW_UID',
-              value: '{{workflow.uid}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{inputs.parameters.generation-id}}',
-            },
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_WORKFLOW_GENERATION_ID', value: '{{inputs.parameters.generation-id}}' },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
+          image: trainingImage,
           resources: {
             limits: {
               cpu: '500m',
@@ -356,131 +472,155 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         volumes: stagePod.volumes('1Gi'),
       },
       {
+        name: 'rollout',
         inputs: {
           parameters: [
             { name: 'generation-id' },
-            { name: 'config-sha256' },
             { name: 'plan-uri' },
-            { name: 'shard-count' },
-            { name: 'actor-pods' },
+            { name: 'plan-sha256' },
+            { name: 'unit-count' },
           ],
         },
-        name: 'rollout',
+        parallelism: 2,
         dag: {
           tasks: [
             {
-              name: 'apply-job',
-              template: 'apply-rollout-job',
+              name: 'unit',
+              template: 'rollout-unit',
+              withSequence: {
+                start: '0',
+                count: '{{inputs.parameters.unit-count}}',
+              },
               arguments: {
                 parameters: [
+                  { name: 'unit-index', value: '{{item}}' },
                   { name: 'generation-id', value: '{{inputs.parameters.generation-id}}' },
-                  { name: 'config-sha256', value: '{{inputs.parameters.config-sha256}}' },
                   { name: 'plan-uri', value: '{{inputs.parameters.plan-uri}}' },
-                  { name: 'shard-count', value: '{{inputs.parameters.shard-count}}' },
-                  { name: 'actor-pods', value: '{{inputs.parameters.actor-pods}}' },
+                  { name: 'plan-sha256', value: '{{inputs.parameters.plan-sha256}}' },
                 ],
-              },
-            },
-            {
-              name: 'wait-indexed-job',
-              template: 'wait-rollout-indexed-job',
-              dependencies: ['apply-job'],
-              arguments: {
-                parameters: [{ name: 'shard-count', value: '{{inputs.parameters.shard-count}}' }],
               },
             },
           ],
         },
       },
       {
+        name: 'rollout-unit',
+        inputs: {
+          parameters: [
+            { name: 'unit-index' },
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
+            { name: 'plan-sha256' },
+          ],
+        },
+        retryStrategy: workerRetryStrategy,
+        podSpecPatch: podSpecPatch,
+        serviceAccountName: 'agr-actor',
+        volumes: stagePod.volumes('2Gi'),
+        container: {
+          image: workerImage,
+          command: ['worker'],
+          args: [
+            'work-unit',
+            '--generation-id',
+            '{{inputs.parameters.generation-id}}',
+            '--plan-uri',
+            '{{inputs.parameters.plan-uri}}',
+            '--plan-sha256',
+            '{{inputs.parameters.plan-sha256}}',
+            '--stage',
+            'rollout',
+            '--look-index',
+            '0',
+            '--unit-index',
+            '{{inputs.parameters.unit-index}}',
+          ],
+          env: s3Env('agr-actor', 'agr-actor', [
+            { name: 'AGR_WORKER_IMAGE_REFERENCE', value: workerImage },
+            { name: 'WORKER_S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
+            { name: 'OMP_NUM_THREADS', value: '1' },
+          ]),
+          resources: workerResources,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
+        },
+      },
+      {
+        name: 'verify-rollout',
         inputs: {
           parameters: [
             { name: 'generation-id' },
             { name: 'plan-uri' },
+            { name: 'plan-sha256' },
+            { name: 'stage' },
+            { name: 'look-index' },
+            { name: 'unit-count' },
           ],
         },
+        podSpecPatch: podSpecPatch,
+        serviceAccountName: 'agr-dataset',
+        volumes: stagePod.volumes('1Gi'),
+        container: {
+          image: trainingImage,
+          command: ['/app/.venv/bin/agr-verify-rollout'],
+          args: [
+            '--generation-id',
+            '{{inputs.parameters.generation-id}}',
+            '--plan-uri',
+            '{{inputs.parameters.plan-uri}}',
+            '--plan-sha256',
+            '{{inputs.parameters.plan-sha256}}',
+            '--stage',
+            '{{inputs.parameters.stage}}',
+            '--look-index',
+            '{{inputs.parameters.look-index}}',
+            '--unit-count',
+            '{{inputs.parameters.unit-count}}',
+          ],
+          env: s3Env('agr-dataset', 'agr-dataset', [
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_WORKFLOW_GENERATION_ID', value: '{{inputs.parameters.generation-id}}' },
+            { name: 'AGR_WORKFLOW_PLAN_URI', value: '{{inputs.parameters.plan-uri}}' },
+            { name: 'AGR_WORKFLOW_PLAN_SHA256', value: '{{inputs.parameters.plan-sha256}}' },
+          ]),
+          resources: verifyResources,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
+        },
+      },
+      {
         name: 'dataset',
+        inputs: {
+          parameters: [
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
+            { name: 'plan-sha256' },
+          ],
+        },
+        outputs: {
+          parameters: [
+            {
+              name: 'dataset-uri',
+              valueFrom: {
+                path: '/tmp/dataset-output/dataset-uri',
+              },
+            },
+          ],
+        },
         podSpecPatch: podSpecPatch,
         serviceAccountName: 'agr-dataset',
         volumes: stagePod.volumes('4Gi'),
         container: {
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
+          image: trainingImage,
           command: ['/app/.venv/bin/agr-build-dataset'],
           args: ['--argo-output-dir', '/tmp/dataset-output'],
-          env: stagePod.s3Env('agr-dataset', 'agr-dataset', [
-            {
-              name: 'AWS_ENDPOINT_URL_S3',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'AWS_ENDPOINT_URL_STS',
-              value: 'https://seaweedfs.local.walnuts.dev',
-            },
-            {
-              name: 'AWS_ROLE_ARN',
-              value: 'arn:aws:iam::role/agr-dataset',
-            },
-            {
-              name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-              value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
-            },
-            {
-              name: 'AWS_REGION',
-              value: 'us-east-1',
-            },
-            {
-              name: 'WORKER_S3_BUCKET',
-              value: 'agr-ai',
-            },
-            {
-              name: 'WORKER_S3_PREFIX',
-              value: 'worker-runs',
-            },
-            {
-              name: 'WORKER_S3_ENDPOINT',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'WORKER_CONTROLLER_ID',
-              value: 'agr-dataset',
-            },
-            {
-              name: 'SERVICE_ENDPOINT',
-              value: 'http://agr-server.agr.svc.cluster.local:8080',
-            },
-            {
-              name: 'SERVICE_GATEWAY_TOKEN',
-              valueFrom: {
-                secretKeyRef: {
-                  name: 'agr-learning-token',
-                  key: 'SERVICE_GATEWAY_TOKEN',
-                },
-              },
-            },
-            {
-              name: 'OMP_NUM_THREADS',
-              value: '1',
-            },
-            {
-              name: 'MKL_NUM_THREADS',
-              value: '1',
-            },
-            {
-              name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
-            },
-            {
-              name: 'AGR_WORKFLOW_UID',
-              value: '{{workflow.uid}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{inputs.parameters.generation-id}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{inputs.parameters.plan-uri}}',
-            },
+          env: s3Env('agr-dataset', 'agr-dataset', [
+            { name: 'OMP_NUM_THREADS', value: '1' },
+            { name: 'MKL_NUM_THREADS', value: '1' },
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_WORKFLOW_GENERATION_ID', value: '{{inputs.parameters.generation-id}}' },
+            { name: 'AGR_WORKFLOW_PLAN_URI', value: '{{inputs.parameters.plan-uri}}' },
+            { name: 'AGR_WORKFLOW_PLAN_SHA256', value: '{{inputs.parameters.plan-sha256}}' },
           ]),
           resources: {
             limits: {
@@ -497,18 +637,9 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
           securityContext: stagePod.securityContext,
           volumeMounts: stagePod.volumeMounts,
         },
-        outputs: {
-          parameters: [
-            {
-              name: 'dataset-uri',
-              valueFrom: {
-                path: '/tmp/dataset-output/dataset-uri',
-              },
-            },
-          ],
-        },
       },
       {
+        name: 'train',
         inputs: {
           parameters: [
             { name: 'generation-id' },
@@ -518,12 +649,11 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             { name: 'learner-sha256' },
           ],
         },
-        name: 'train',
         podSpecPatch: podSpecPatch,
         serviceAccountName: 'agr-trainer',
         volumes: stagePod.volumes('10Gi'),
         container: {
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
+          image: trainingImage,
           command: ['/app/.venv/bin/agr-train'],
           args: [
             '--s3-input-uri',
@@ -539,93 +669,19 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             '--argo-output-dir',
             '/tmp/train-output',
           ],
-          env: stagePod.s3Env('agr-trainer', 'agr-trainer', [
-            { name: 'SERVICE_ENDPOINT', value: 'http://agr-server.agr.svc.cluster.local:8080' },
-            {
-              name: 'SERVICE_GATEWAY_TOKEN',
-              valueFrom: { secretKeyRef: { name: 'agr-learning-token', key: 'SERVICE_GATEWAY_TOKEN' } },
-            },
-            { name: 'WORKER_CONTROLLER_ID', value: 'agr-trainer' },
-            {
-              name: 'AWS_ENDPOINT_URL_S3',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'AWS_ENDPOINT_URL_STS',
-              value: 'https://seaweedfs.local.walnuts.dev',
-            },
-            {
-              name: 'AWS_ROLE_ARN',
-              value: 'arn:aws:iam::role/agr-trainer',
-            },
-            {
-              name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-              value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
-            },
-            {
-              name: 'AWS_REGION',
-              value: 'us-east-1',
-            },
-            {
-              name: 'WORKER_S3_BUCKET',
-              value: 'agr-ai',
-            },
-            {
-              name: 'WORKER_S3_PREFIX',
-              value: 'worker-runs',
-            },
-            {
-              name: 'OMP_NUM_THREADS',
-              value: '2',
-            },
-            {
-              name: 'MKL_NUM_THREADS',
-              value: '2',
-            },
-            {
-              name: 'OPENBLAS_NUM_THREADS',
-              value: '2',
-            },
-            {
-              name: 'TORCH_NUM_THREADS',
-              value: '2',
-            },
-            {
-              name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
-            },
-            {
-              name: 'AGR_WORKFLOW_UID',
-              value: '{{workflow.uid}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{inputs.parameters.generation-id}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{inputs.parameters.plan-uri}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_INPUT_URI',
-              value: '{{inputs.parameters.dataset-uri}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_OUTPUT_URI',
-              value: 's3://agr-ai/worker-runs/models/candidates/{{inputs.parameters.generation-id}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_LEARNER_URI',
-              value: '{{inputs.parameters.learner-artifact-uri}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_LEARNER_SHA256',
-              value: '{{inputs.parameters.learner-sha256}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_BEHAVIOR_POLICY_SHA256',
-              value: '{{inputs.parameters.learner-sha256}}',
-            },
+          env: s3Env('agr-trainer', 'agr-trainer', [
+            { name: 'OMP_NUM_THREADS', value: '2' },
+            { name: 'MKL_NUM_THREADS', value: '2' },
+            { name: 'OPENBLAS_NUM_THREADS', value: '2' },
+            { name: 'TORCH_NUM_THREADS', value: '2' },
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_WORKFLOW_GENERATION_ID', value: '{{inputs.parameters.generation-id}}' },
+            { name: 'AGR_WORKFLOW_PLAN_URI', value: '{{inputs.parameters.plan-uri}}' },
+            { name: 'AGR_WORKFLOW_INPUT_URI', value: '{{inputs.parameters.dataset-uri}}' },
+            { name: 'AGR_WORKFLOW_OUTPUT_URI', value: 's3://agr-ai/worker-runs/models/candidates/{{inputs.parameters.generation-id}}' },
+            { name: 'AGR_WORKFLOW_LEARNER_URI', value: '{{inputs.parameters.learner-artifact-uri}}' },
+            { name: 'AGR_WORKFLOW_LEARNER_SHA256', value: '{{inputs.parameters.learner-sha256}}' },
+            { name: 'AGR_WORKFLOW_BEHAVIOR_POLICY_SHA256', value: '{{inputs.parameters.learner-sha256}}' },
           ]),
           resources: {
             limits: {
@@ -672,13 +728,13 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         },
       },
       {
+        name: 'validate',
         inputs: {
           parameters: [
             { name: 'generation-id' },
             { name: 'plan-uri' },
           ],
         },
-        name: 'validate',
         outputs: {
           parameters: [
             {
@@ -711,53 +767,12 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         container: {
           command: ['/app/.venv/bin/agr-validate'],
           args: ['--argo-output-dir', '/tmp/validate-output'],
-          env: stagePod.s3Env('agr-validator', 'agr-validator', [
-            {
-              name: 'AWS_ENDPOINT_URL_S3',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'AWS_ENDPOINT_URL_STS',
-              value: 'https://seaweedfs.local.walnuts.dev',
-            },
-            {
-              name: 'AWS_ROLE_ARN',
-              value: 'arn:aws:iam::role/agr-validator',
-            },
-            {
-              name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-              value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
-            },
-            {
-              name: 'AWS_REGION',
-              value: 'us-east-1',
-            },
-            {
-              name: 'WORKER_S3_BUCKET',
-              value: 'agr-ai',
-            },
-            {
-              name: 'WORKER_S3_PREFIX',
-              value: 'worker-runs',
-            },
-            {
-              name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
-            },
-            {
-              name: 'AGR_WORKFLOW_UID',
-              value: '{{workflow.uid}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{inputs.parameters.generation-id}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{inputs.parameters.plan-uri}}',
-            },
+          env: s3Env('agr-validator', 'agr-validator', [
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_WORKFLOW_GENERATION_ID', value: '{{inputs.parameters.generation-id}}' },
+            { name: 'AGR_WORKFLOW_PLAN_URI', value: '{{inputs.parameters.plan-uri}}' },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
+          image: trainingImage,
           resources: {
             limits: {
               cpu: '500m',
@@ -777,58 +792,130 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         volumes: stagePod.volumes('2Gi'),
       },
       {
+        name: 'evaluation',
         inputs: {
           parameters: [
             { name: 'generation-id' },
-            { name: 'config-sha256' },
             { name: 'plan-uri' },
-            { name: 'shard-count' },
-            { name: 'evaluation-pods' },
-            { name: 'artifact-uri' },
-            { name: 'model-sha256' },
-            { name: 'manifest-sha256' },
-            { name: 'validation-uri' },
+            { name: 'plan-sha256' },
+            { name: 'look-1-unit-count' },
+            { name: 'look-2-unit-count' },
+            { name: 'look-3-unit-count' },
+            { name: 'look-4-unit-count' },
           ],
         },
-        name: 'assess',
+        parallelism: 2,
         dag: {
-          tasks: [
-            {
-              name: 'apply-job',
-              template: 'apply-assess-job',
-              arguments: {
-                parameters: [
-                  { name: 'generation-id', value: '{{inputs.parameters.generation-id}}' },
-                  { name: 'config-sha256', value: '{{inputs.parameters.config-sha256}}' },
-                  { name: 'plan-uri', value: '{{inputs.parameters.plan-uri}}' },
-                  { name: 'shard-count', value: '{{inputs.parameters.shard-count}}' },
-                  { name: 'evaluation-pods', value: '{{inputs.parameters.evaluation-pods}}' },
-                  { name: 'artifact-uri', value: '{{inputs.parameters.artifact-uri}}' },
-                  { name: 'model-sha256', value: '{{inputs.parameters.model-sha256}}' },
-                  { name: 'manifest-sha256', value: '{{inputs.parameters.manifest-sha256}}' },
-                  { name: 'validation-uri', value: '{{inputs.parameters.validation-uri}}' },
-                ],
-              },
-            },
-            {
-              name: 'wait-indexed-job',
-              template: 'wait-assess-indexed-job',
-              dependencies: ['apply-job'],
-              arguments: {
-                parameters: [{ name: 'shard-count', value: '{{inputs.parameters.shard-count}}' }],
-              },
-            },
-          ],
+          tasks: evaluationLookTasks,
         },
       },
       {
+        name: 'evaluation-unit',
+        inputs: {
+          parameters: [
+            { name: 'unit-index' },
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
+            { name: 'plan-sha256' },
+            { name: 'look-index' },
+          ],
+        },
+        retryStrategy: workerRetryStrategy,
+        podSpecPatch: podSpecPatch,
+        serviceAccountName: 'agr-evaluator',
+        volumes: stagePod.volumes('2Gi'),
+        container: {
+          image: workerImage,
+          command: ['worker'],
+          args: [
+            'work-unit',
+            '--generation-id',
+            '{{inputs.parameters.generation-id}}',
+            '--plan-uri',
+            '{{inputs.parameters.plan-uri}}',
+            '--plan-sha256',
+            '{{inputs.parameters.plan-sha256}}',
+            '--stage',
+            'evaluation',
+            '--look-index',
+            '{{inputs.parameters.look-index}}',
+            '--unit-index',
+            '{{inputs.parameters.unit-index}}',
+          ],
+          env: s3Env('agr-evaluator', 'agr-evaluator', [
+            { name: 'AGR_WORKER_IMAGE_REFERENCE', value: workerImage },
+            { name: 'WORKER_S3_ENDPOINT', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
+            { name: 'OMP_NUM_THREADS', value: '1' },
+          ]),
+          resources: workerResources,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
+        },
+      },
+      {
+        name: 'verify-evaluation-look',
         inputs: {
           parameters: [
             { name: 'generation-id' },
             { name: 'plan-uri' },
+            { name: 'plan-sha256' },
+            { name: 'stage' },
+            { name: 'look-index' },
+            { name: 'unit-count' },
           ],
         },
+        outputs: {
+          parameters: [
+            {
+              name: 'rejected',
+              valueFrom: {
+                path: '/tmp/verify-output/rejected',
+              },
+            },
+          ],
+        },
+        podSpecPatch: podSpecPatch,
+        serviceAccountName: 'agr-evaluator',
+        volumes: stagePod.volumes('1Gi'),
+        container: {
+          image: trainingImage,
+          command: ['/app/.venv/bin/agr-verify-evaluation-look'],
+          args: [
+            '--generation-id',
+            '{{inputs.parameters.generation-id}}',
+            '--plan-uri',
+            '{{inputs.parameters.plan-uri}}',
+            '--plan-sha256',
+            '{{inputs.parameters.plan-sha256}}',
+            '--stage',
+            '{{inputs.parameters.stage}}',
+            '--look-index',
+            '{{inputs.parameters.look-index}}',
+            '--unit-count',
+            '{{inputs.parameters.unit-count}}',
+            '--argo-output-dir',
+            '/tmp/verify-output',
+          ],
+          env: s3Env('agr-evaluator', 'agr-evaluator', [
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_WORKFLOW_GENERATION_ID', value: '{{inputs.parameters.generation-id}}' },
+            { name: 'AGR_WORKFLOW_PLAN_URI', value: '{{inputs.parameters.plan-uri}}' },
+            { name: 'AGR_WORKFLOW_PLAN_SHA256', value: '{{inputs.parameters.plan-sha256}}' },
+          ]),
+          resources: verifyResources,
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
+        },
+      },
+      {
         name: 'aggregate',
+        inputs: {
+          parameters: [
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
+            { name: 'plan-sha256' },
+          ],
+        },
         outputs: {
           parameters: [
             {
@@ -843,53 +930,13 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         container: {
           command: ['/app/.venv/bin/agr-aggregate-evaluation'],
           args: ['--argo-output-dir', '/tmp/aggregate-output'],
-          env: stagePod.s3Env('agr-evaluator', 'agr-evaluator', [
-            {
-              name: 'AWS_ENDPOINT_URL_S3',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'AWS_ENDPOINT_URL_STS',
-              value: 'https://seaweedfs.local.walnuts.dev',
-            },
-            {
-              name: 'AWS_ROLE_ARN',
-              value: 'arn:aws:iam::role/agr-evaluator',
-            },
-            {
-              name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-              value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
-            },
-            {
-              name: 'AWS_REGION',
-              value: 'us-east-1',
-            },
-            {
-              name: 'WORKER_S3_BUCKET',
-              value: 'agr-ai',
-            },
-            {
-              name: 'WORKER_S3_PREFIX',
-              value: 'worker-runs',
-            },
-            {
-              name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
-            },
-            {
-              name: 'AGR_WORKFLOW_UID',
-              value: '{{workflow.uid}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{inputs.parameters.generation-id}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{inputs.parameters.plan-uri}}',
-            },
+          env: s3Env('agr-evaluator', 'agr-evaluator', [
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_WORKFLOW_GENERATION_ID', value: '{{inputs.parameters.generation-id}}' },
+            { name: 'AGR_WORKFLOW_PLAN_URI', value: '{{inputs.parameters.plan-uri}}' },
+            { name: 'AGR_WORKFLOW_PLAN_SHA256', value: '{{inputs.parameters.plan-sha256}}' },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
+          image: trainingImage,
           resources: {
             limits: {
               cpu: '500m',
@@ -909,6 +956,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         volumes: stagePod.volumes('2Gi'),
       },
       {
+        name: 'decide',
         inputs: {
           parameters: [
             { name: 'generation-id' },
@@ -916,7 +964,6 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
             { name: 'report-uri' },
           ],
         },
-        name: 'decide',
         outputs: {
           parameters: [
             {
@@ -932,57 +979,13 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         container: {
           command: ['/app/.venv/bin/agr-decide-promotion'],
           args: ['--argo-output-dir', '/tmp/decision-output'],
-          env: stagePod.s3Env('agr-evaluator', 'agr-evaluator', [
-            {
-              name: 'AWS_ENDPOINT_URL_S3',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'AWS_ENDPOINT_URL_STS',
-              value: 'https://seaweedfs.local.walnuts.dev',
-            },
-            {
-              name: 'AWS_ROLE_ARN',
-              value: 'arn:aws:iam::role/agr-evaluator',
-            },
-            {
-              name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-              value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
-            },
-            {
-              name: 'AWS_REGION',
-              value: 'us-east-1',
-            },
-            {
-              name: 'WORKER_S3_BUCKET',
-              value: 'agr-ai',
-            },
-            {
-              name: 'WORKER_S3_PREFIX',
-              value: 'worker-runs',
-            },
-            {
-              name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
-            },
-            {
-              name: 'AGR_WORKFLOW_UID',
-              value: '{{workflow.uid}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{inputs.parameters.generation-id}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{inputs.parameters.plan-uri}}',
-            },
-            {
-              name: 'AGR_EVALUATION_REPORT_URI',
-              value: '{{inputs.parameters.report-uri}}',
-            },
+          env: s3Env('agr-evaluator', 'agr-evaluator', [
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_WORKFLOW_GENERATION_ID', value: '{{inputs.parameters.generation-id}}' },
+            { name: 'AGR_WORKFLOW_PLAN_URI', value: '{{inputs.parameters.plan-uri}}' },
+            { name: 'AGR_EVALUATION_REPORT_URI', value: '{{inputs.parameters.report-uri}}' },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
+          image: trainingImage,
           resources: {
             limits: {
               cpu: '500m',
@@ -1012,63 +1015,13 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
           command: [
             '/app/.venv/bin/agr-publish',
           ],
-          env: stagePod.s3Env('agr-promoter', 'agr-promoter', [
-            { name: 'SERVICE_ENDPOINT', value: 'http://agr-server.agr.svc.cluster.local:8080' },
-            {
-              name: 'SERVICE_GATEWAY_TOKEN',
-              valueFrom: { secretKeyRef: { name: 'agr-learning-token', key: 'SERVICE_GATEWAY_TOKEN' } },
-            },
-            { name: 'WORKER_CONTROLLER_ID', value: 'agr-promoter' },
-            {
-              name: 'AWS_ENDPOINT_URL_S3',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'AWS_ENDPOINT_URL_STS',
-              value: 'https://seaweedfs.local.walnuts.dev',
-            },
-            {
-              name: 'AWS_ROLE_ARN',
-              value: 'arn:aws:iam::role/agr-promoter',
-            },
-            {
-              name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-              value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
-            },
-            {
-              name: 'AWS_REGION',
-              value: 'us-east-1',
-            },
-            {
-              name: 'WORKER_S3_BUCKET',
-              value: 'agr-ai',
-            },
-            {
-              name: 'WORKER_S3_PREFIX',
-              value: 'worker-runs',
-            },
-            {
-              name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
-            },
-            {
-              name: 'AGR_WORKFLOW_UID',
-              value: '{{workflow.uid}}',
-            },
-            {
-              name: 'AGR_EVALUATION_REPORT_URI',
-              value: '{{inputs.parameters.report-uri}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{inputs.parameters.generation-id}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{inputs.parameters.plan-uri}}',
-            },
+          env: s3Env('agr-promoter', 'agr-promoter', [
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_EVALUATION_REPORT_URI', value: '{{inputs.parameters.report-uri}}' },
+            { name: 'AGR_WORKFLOW_GENERATION_ID', value: '{{inputs.parameters.generation-id}}' },
+            { name: 'AGR_WORKFLOW_PLAN_URI', value: '{{inputs.parameters.plan-uri}}' },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
+          image: trainingImage,
           resources: {
             limits: {
               cpu: '500m',
@@ -1104,57 +1057,13 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
           command: [
             '/app/.venv/bin/agr-verify-deployment',
           ],
-          env: stagePod.s3Env('agr-verify', 'agr-verify', [
-            {
-              name: 'AWS_ENDPOINT_URL_S3',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'AWS_ENDPOINT_URL_STS',
-              value: 'https://seaweedfs.local.walnuts.dev',
-            },
-            {
-              name: 'AWS_ROLE_ARN',
-              value: 'arn:aws:iam::role/agr-verify',
-            },
-            {
-              name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-              value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
-            },
-            {
-              name: 'AWS_REGION',
-              value: 'us-east-1',
-            },
-            {
-              name: 'WORKER_S3_BUCKET',
-              value: 'agr-ai',
-            },
-            {
-              name: 'WORKER_S3_PREFIX',
-              value: 'worker-runs',
-            },
-            {
-              name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
-            },
-            {
-              name: 'AGR_WORKFLOW_UID',
-              value: '{{workflow.uid}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_GENERATION_ID',
-              value: '{{inputs.parameters.generation-id}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_PLAN_URI',
-              value: '{{inputs.parameters.plan-uri}}',
-            },
-            {
-              name: 'AGR_SERVER_SERVICE_HEALTH_URL',
-              value: 'http://agr-server.agr.svc.cluster.local:8081',
-            },
+          env: s3Env('agr-verify', 'agr-verify', [
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_WORKFLOW_GENERATION_ID', value: '{{inputs.parameters.generation-id}}' },
+            { name: 'AGR_WORKFLOW_PLAN_URI', value: '{{inputs.parameters.plan-uri}}' },
+            { name: 'AGR_SERVER_SERVICE_HEALTH_URL', value: 'http://agr-server.agr.svc.cluster.local:8081' },
           ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
+          image: trainingImage,
           resources: {
             limits: {
               cpu: '500m',
@@ -1180,140 +1089,6 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         podSpecPatch: podSpecPatch,
         serviceAccountName: 'agr-verify',
         volumes: stagePod.volumes('1Gi'),
-      },
-      {
-        inputs: {
-          parameters: [
-            { name: 'generation-id' },
-            { name: 'config-sha256' },
-            { name: 'plan-uri' },
-            { name: 'shard-count' },
-            { name: 'actor-pods' },
-          ],
-        },
-        name: 'apply-rollout-job',
-        resource: {
-          action: 'apply',
-          manifest: indexedJob.render({
-            stage: 'rollout',
-            stageLabel: 'rollout',
-            parallelismParameter: 'actor-pods',
-            serviceAccount: 'agr-actor',
-            containerName: 'actor',
-            command: 'run-shard',
-            commandArgs: [],
-            controllerId: 'agr-actor',
-            extraEnv: [{ name: 'OMP_NUM_THREADS', value: '1' }],
-          }),
-          setOwnerReference: true,
-        },
-      },
-      {
-        inputs: {
-          parameters: [{ name: 'shard-count' }],
-        },
-        name: 'wait-rollout-indexed-job',
-        resource: {
-          action: 'get',
-          failureCondition: import '_workflow_templates/indexed-job-failure-condition.libsonnet',
-          manifest: jobReference.manifest('rollout'),
-          successCondition: 'status.succeeded == {{inputs.parameters.shard-count}}',
-        },
-      },
-      {
-        inputs: {
-          parameters: [
-            { name: 'generation-id' },
-            { name: 'config-sha256' },
-            { name: 'plan-uri' },
-            { name: 'shard-count' },
-            { name: 'evaluation-pods' },
-            { name: 'artifact-uri' },
-            { name: 'model-sha256' },
-            { name: 'manifest-sha256' },
-            { name: 'validation-uri' },
-          ],
-        },
-        name: 'apply-assess-job',
-        resource: {
-          action: 'apply',
-          manifest: indexedJob.render({
-            stage: 'assess',
-            stageLabel: 'evaluation',
-            parallelismParameter: 'evaluation-pods',
-            serviceAccount: 'agr-evaluator',
-            containerName: 'evaluator',
-            command: 'evaluate-shard',
-            commandArgs: [],
-            controllerId: 'agr-evaluator',
-            extraEnv: [
-              { name: 'AGR_CANDIDATE_MODEL_URI', value: '{{inputs.parameters.artifact-uri}}' },
-              { name: 'AGR_CANDIDATE_MODEL_SHA256', value: '{{inputs.parameters.model-sha256}}' },
-              { name: 'AGR_CANDIDATE_MANIFEST_SHA256', value: '{{inputs.parameters.manifest-sha256}}' },
-              { name: 'AGR_CANDIDATE_VALIDATION_URI', value: '{{inputs.parameters.validation-uri}}' },
-            ],
-          }),
-          setOwnerReference: true,
-        },
-      },
-      {
-        inputs: {
-          parameters: [{ name: 'shard-count' }],
-        },
-        name: 'wait-assess-indexed-job',
-        resource: {
-          action: 'get',
-          failureCondition: import '_workflow_templates/indexed-job-failure-condition.libsonnet',
-          manifest: jobReference.manifest('assess'),
-          successCondition: 'status.succeeded == {{inputs.parameters.shard-count}}',
-        },
-      },
-      {
-        dag: {
-          failFast: false,
-          tasks: [
-            {
-              name: 'delete-rollout',
-              template: 'delete-rollout',
-            },
-            {
-              name: 'delete-assess',
-              template: 'delete-assess',
-            },
-            {
-              depends: '(delete-rollout.Succeeded || delete-rollout.Failed || delete-rollout.Errored || delete-rollout.Skipped || delete-rollout.Omitted) && (delete-assess.Succeeded || delete-assess.Failed || delete-assess.Errored || delete-assess.Skipped || delete-assess.Omitted)',
-              name: 'record-final-state',
-              template: 'finalize',
-            },
-          ],
-        },
-        name: 'cleanup',
-      },
-      {
-        name: 'delete-rollout',
-        resource: {
-          action: 'delete',
-          flags: [
-            '--ignore-not-found=true',
-            '--cascade=foreground',
-            '--wait=true',
-            '--timeout=10m',
-          ],
-          manifest: jobReference.manifest('rollout'),
-        },
-      },
-      {
-        name: 'delete-assess',
-        resource: {
-          action: 'delete',
-          flags: [
-            '--ignore-not-found=true',
-            '--cascade=foreground',
-            '--wait=true',
-            '--timeout=10m',
-          ],
-          manifest: jobReference.manifest('assess'),
-        },
       },
       {
         name: 'finalize',
@@ -1349,7 +1124,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
               value: '{{workflow.uid}}',
             },
           ],
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
+          image: trainingImage,
           resources: {
             limits: {
               cpu: '500m',
@@ -1367,130 +1142,6 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
         },
         serviceAccountName: 'agr-planner',
         volumes: [{ name: 'tmp', emptyDir: { sizeLimit: '1Gi' } }],
-      },
-      {
-        inputs: {
-          parameters: [
-            { name: 'trigger' },
-            { name: 'retry-generation-id' },
-          ],
-        },
-        name: 'create-attempt',
-        outputs: {
-          parameters: [
-            {
-              globalName: 'generation-id',
-              name: 'generation-id',
-              valueFrom: {
-                path: '/tmp/create-attempt-output/generation-id',
-              },
-            },
-            {
-              name: 'generation-number',
-              valueFrom: {
-                path: '/tmp/create-attempt-output/generation-number',
-              },
-            },
-            {
-              globalName: 'attempt-id',
-              name: 'attempt-id',
-              valueFrom: {
-                path: '/tmp/create-attempt-output/attempt-id',
-              },
-            },
-            {
-              name: 'skipped',
-              valueFrom: {
-                path: '/tmp/create-attempt-output/skipped',
-              },
-            },
-          ],
-        },
-        podSpecPatch: podSpecPatch,
-        container: {
-          command: ['/app/.venv/bin/agr-create-attempt'],
-          args: ['--argo-output-dir', '/tmp/create-attempt-output'],
-          env: stagePod.s3Env('agr-planner', 'agr-planner', [
-            {
-              name: 'AWS_ENDPOINT_URL_S3',
-              value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333',
-            },
-            {
-              name: 'AWS_ENDPOINT_URL_STS',
-              value: 'https://seaweedfs.local.walnuts.dev',
-            },
-            {
-              name: 'AWS_ROLE_ARN',
-              value: 'arn:aws:iam::role/agr-planner',
-            },
-            {
-              name: 'AWS_WEB_IDENTITY_TOKEN_FILE',
-              value: '/var/run/secrets/sts.seaweedfs.com/serviceaccount/token',
-            },
-            {
-              name: 'AWS_REGION',
-              value: 'us-east-1',
-            },
-            {
-              name: 'WORKER_S3_BUCKET',
-              value: 'agr-ai',
-            },
-            {
-              name: 'WORKER_S3_PREFIX',
-              value: 'worker-runs',
-            },
-            {
-              name: 'WORKER_CONTROLLER_ID',
-              value: 'agr-planner',
-            },
-            {
-              name: 'SERVICE_ENDPOINT',
-              value: 'http://agr-server.agr.svc.cluster.local:8080',
-            },
-            {
-              name: 'SERVICE_GATEWAY_TOKEN',
-              valueFrom: {
-                secretKeyRef: {
-                  key: 'SERVICE_GATEWAY_TOKEN',
-                  name: 'agr-learning-token',
-                },
-              },
-            },
-            {
-              name: 'AGR_TRAINING_IMAGE_REFERENCE',
-              value: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
-            },
-            {
-              name: 'AGR_WORKFLOW_UID',
-              value: '{{workflow.uid}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_TRIGGER',
-              value: '{{inputs.parameters.trigger}}',
-            },
-            {
-              name: 'AGR_WORKFLOW_RETRY_GENERATION_ID',
-              value: '{{inputs.parameters.retry-generation-id}}',
-            },
-          ]),
-          image: 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec',
-          resources: {
-            limits: {
-              cpu: '500m',
-              'ephemeral-storage': '1Gi',
-              memory: '1Gi',
-            },
-            requests: {
-              cpu: '100m',
-              'ephemeral-storage': '128Mi',
-              memory: '128Mi',
-            },
-          },
-          securityContext: stagePod.securityContext,
-          volumeMounts: stagePod.volumeMounts,
-        },
-        serviceAccountName: 'agr-planner',
-        volumes: stagePod.volumes('1Gi'),
       },
     ],
     ttlStrategy: {

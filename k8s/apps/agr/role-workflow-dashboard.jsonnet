@@ -12,10 +12,5 @@ local app = import 'app.json5';
       resources: ['pods'],
       verbs: ['list'],
     },
-    {
-      apiGroups: ['batch'],
-      resources: ['jobs'],
-      verbs: ['list'],
-    },
   ],
 }
