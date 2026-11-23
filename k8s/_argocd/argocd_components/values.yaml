@@ -1,5 +1,8 @@
 global:
   domain: argocd.walnuts.dev
+  image:
+    # コントローラーが OpenAPI ドキュメントを保持し続けることによるメモリ増の修正を含むバージョン
+    tag: v3.5.8
   logging:
     format: json
     level: info
