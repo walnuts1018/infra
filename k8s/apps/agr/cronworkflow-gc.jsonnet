@@ -1,7 +1,7 @@
 local stagePod = import '_workflow_templates/stage-pod.libsonnet';
 local app = import 'app.json5';
 local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-patch.libsonnet', '', '', ':');
-local image = 'ghcr.io/walnuts1018/agr-training:0.1.45@sha256:c2cd3c27105d65c1235f84805cfb6d14c7836bde228fe1a6e329f09eed589009';
+local image = 'ghcr.io/walnuts1018/agr-training:0.1.50@sha256:a98931fe2ca45bab0c0923a30d050b8450bc8ed425f53be0e8b240ffb4a074fc';
 {
   apiVersion: 'argoproj.io/v1alpha1',
   kind: 'CronWorkflow',
