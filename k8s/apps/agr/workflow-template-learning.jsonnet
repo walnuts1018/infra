@@ -1,7 +1,7 @@
 local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-patch.libsonnet', '', '', ':');
 local stagePod = import '_workflow_templates/stage-pod.libsonnet';
-local trainingImage = 'ghcr.io/walnuts1018/agr-training:0.1.54@sha256:2afa6caeb2f0684957119e3a4683c1ca3f7a4838aef16d51ff2c1b40a0b4daec';
-local workerImage = 'ghcr.io/walnuts1018/agr-worker:0.1.54@sha256:a9b5b4dbbbc64a2358658867d0b5886287c026224297682a35369be213972951';
+local trainingImage = 'ghcr.io/walnuts1018/agr-training:0.1.56@sha256:6469094a36528ae7e68fd655b83470c601a2d18c93a943157a7c79371d6bc27f';
+local workerImage = 'ghcr.io/walnuts1018/agr-worker:0.1.56@sha256:1935ab781bf9bbbdccd2f34de889f5ecdad0c2a6c43295603d63c43a74894284';
 local workerRetryStrategy = {
   limit: '5',
   retryPolicy: 'Always',
