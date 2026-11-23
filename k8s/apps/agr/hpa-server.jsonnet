@@ -15,8 +15,8 @@ local deployment = import 'deployment-server.jsonnet';
       kind: 'Deployment',
       name: deployment.metadata.name,
     },
-    minReplicas: 2,
-    maxReplicas: 8,
+    minReplicas: 1,
+    maxReplicas: 5,
     metrics: [
       {
         type: 'Resource',

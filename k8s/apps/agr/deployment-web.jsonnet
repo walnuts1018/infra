@@ -9,7 +9,7 @@ local app = import 'app.json5';
     labels: labels(app.name + '-web'),
   },
   spec: {
-    replicas: 2,
+    replicas: 1,
     selector: {
       matchLabels: labels(app.name + '-web'),
     },
