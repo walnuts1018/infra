@@ -42,6 +42,11 @@ local app = import 'app.json5';
               cidr: '192.168.100.0/24',
             },
           },
+          {
+            ipBlock: {
+              cidr: '192.168.0.1/32',
+            },
+          },
         ],
         ports: [
           {

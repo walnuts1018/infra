@@ -6,11 +6,7 @@ config:
   publicUri: https://penpot.walnuts.dev
   telemetryEnabled: false
   flags: >-
-    disable-registration
-    disable-login-with-password
-    enable-login-with-oidc
-    enable-oidc-registration
-    enable-mcp
+    disable-registration disable-login-with-password enable-login-with-oidc enable-oidc-registration enable-mcp
   existingSecret: penpot-secrets
   secretKeys:
     apiSecretKey: api-secret-key
@@ -64,27 +60,27 @@ frontend:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
-          - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                  - rusk
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - rusk
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                app.kubernetes.io/name: penpot-frontend
-                app.kubernetes.io/instance: penpot
-            topologyKey: kubernetes.io/hostname
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: penpot-frontend
+              app.kubernetes.io/instance: penpot
+          topologyKey: kubernetes.io/hostname
   resources:
     requests:
       cpu: 50m
-      memory: 128Mi
+      memory: 512Mi
     limits:
       cpu: 500m
-      memory: 1Gi
+      memory: 1.5Gi
   pdb:
     enabled: true
     maxUnavailable: 1
@@ -94,12 +90,12 @@ frontend:
       minReplicas: 1
       maxReplicas: 1
       metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            target:
-              type: Utilization
-              averageUtilization: 70
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 70
 
 backend:
   updateStrategy:
@@ -115,24 +111,24 @@ backend:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
-          - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                  - rusk
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - rusk
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                app.kubernetes.io/name: penpot-backend
-                app.kubernetes.io/instance: penpot
-            topologyKey: kubernetes.io/hostname
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: penpot-backend
+              app.kubernetes.io/instance: penpot
+          topologyKey: kubernetes.io/hostname
   resources:
     requests:
-      cpu: 250m
-      memory: 768Mi
+      cpu: 50m
+      memory: 1Gi
     limits:
       cpu: "2"
       memory: 4Gi
@@ -145,38 +141,38 @@ backend:
       minReplicas: 1
       maxReplicas: 1
       metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            target:
-              type: Utilization
-              averageUtilization: 70
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 70
   extraEnvs:
-    - name: AWS_WEB_IDENTITY_TOKEN_FILE
-      value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
-    - name: AWS_ENDPOINT_URL_STS
-      value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
-    - name: AWS_ROLE_ARN
-      value: arn:aws:iam::role/penpot
-    - name: AWS_REGION
-      value: us-east-1
-    - name: PENPOT_OIDC_ROLES
-      valueFrom:
-        secretKeyRef:
-          name: penpot-secrets
-          key: oidc-required-role
+  - name: AWS_WEB_IDENTITY_TOKEN_FILE
+    value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+  - name: AWS_ENDPOINT_URL_STS
+    value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+  - name: AWS_ROLE_ARN
+    value: arn:aws:iam::role/penpot
+  - name: AWS_REGION
+    value: us-east-1
+  - name: PENPOT_OIDC_ROLES
+    valueFrom:
+      secretKeyRef:
+        name: penpot-secrets
+        key: oidc-required-role
   volumes:
-    - name: seaweedfs-sts-token
-      projected:
-        sources:
-          - serviceAccountToken:
-              audience: sts.seaweedfs.com
-              expirationSeconds: 86400
-              path: token
+  - name: seaweedfs-sts-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: sts.seaweedfs.com
+          expirationSeconds: 86400
+          path: token
   volumeMounts:
-    - name: seaweedfs-sts-token
-      mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
-      readOnly: true
+  - name: seaweedfs-sts-token
+    mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+    readOnly: true
 
 exporter:
   podSecurityContext:
@@ -187,24 +183,24 @@ exporter:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
-          - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                  - rusk
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - rusk
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                app.kubernetes.io/name: penpot-exporter
-                app.kubernetes.io/instance: penpot
-            topologyKey: kubernetes.io/hostname
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: penpot-exporter
+              app.kubernetes.io/instance: penpot
+          topologyKey: kubernetes.io/hostname
   resources:
     requests:
-      cpu: 200m
-      memory: 256Mi
+      cpu: 10m
+      memory: 128Mi
     limits:
       cpu: "2"
       memory: 2Gi
@@ -217,12 +213,12 @@ exporter:
       minReplicas: 1
       maxReplicas: 1
       metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            target:
-              type: Utilization
-              averageUtilization: 70
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 70
 
 mcp:
   podSecurityContext:
@@ -233,24 +229,24 @@ mcp:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
-          - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                  - rusk
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - rusk
     podAntiAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                app.kubernetes.io/name: penpot-mcp
-                app.kubernetes.io/instance: penpot
-            topologyKey: kubernetes.io/hostname
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: penpot-mcp
+              app.kubernetes.io/instance: penpot
+          topologyKey: kubernetes.io/hostname
   resources:
     requests:
-      cpu: 50m
-      memory: 128Mi
+      cpu: 10m
+      memory: 64Mi
     limits:
       cpu: "1"
       memory: 512Mi
@@ -263,9 +259,9 @@ mcp:
       minReplicas: 1
       maxReplicas: 1
       metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            target:
-              type: Utilization
-              averageUtilization: 70
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 70

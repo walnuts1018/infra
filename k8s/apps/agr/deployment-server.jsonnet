@@ -11,7 +11,6 @@ local sa = import 'service-account-app.jsonnet';
     labels: labels(app.name + '-server'),
   },
   spec: {
-    replicas: 1,
     selector: {
       matchLabels: labels(app.name + '-server'),
     },
@@ -32,7 +31,7 @@ local sa = import 'service-account-app.jsonnet';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'app-service',
-            image: 'ghcr.io/walnuts1018/agr-server:0.1.45@sha256:4aa1a441543ddeefaa6841e5b997b7f606dccf004dfba58367fccb345265d6a7',
+            image: 'ghcr.io/walnuts1018/agr-server:0.1.54@sha256:804775007d5ee76e13994ac4d4ae6b6533f6153483bae10603f4a18b63e7d144',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               { name: 'grpc-web', containerPort: 8080, protocol: 'TCP' },
@@ -45,9 +44,9 @@ local sa = import 'service-account-app.jsonnet';
               { name: 'SERVICE_LISTEN_ADDR', value: '0.0.0.0:8080' },
               { name: 'SERVICE_HEALTH_ADDR', value: '0.0.0.0:8081' },
               { name: 'AGR_LEARNING_JOB_IDENTITIES', value: 'agr-planner,agr-actor,agr-dataset,agr-trainer,agr-validator,agr-evaluator,agr-promoter,agr-verify' },
-              { name: 'AGR_LEARNING_ADVANCE_REQUESTS', value: '4' },
-              { name: 'AGR_LEARNING_CPU_TASKS', value: '4' },
-              { name: 'AGR_LEARNING_GAMES', value: '4' },
+              { name: 'AGR_LEARNING_ADVANCE_REQUESTS', value: '2' },
+              { name: 'AGR_LEARNING_CPU_TASKS', value: '2' },
+              { name: 'AGR_LEARNING_GAMES', value: '2' },
               { name: 'AGR_LEARNING_ADMIN_IDENTITIES', valueFrom: { secretKeyRef: { name: 'agr-learning-admin-credential', key: 'AGR_LEARNING_ADMIN_IDENTITIES' } } },
               { name: 'AGR_LEARNING_ADMIN_GATEWAY_TOKEN', valueFrom: { secretKeyRef: { name: 'agr-learning-admin-credential', key: 'AGR_LEARNING_ADMIN_GATEWAY_TOKEN' } } },
               { name: 'AGR_POLICY_MODEL_S3_URI', value: 's3://agr-ai/worker-runs/models/active.json' },
@@ -61,7 +60,7 @@ local sa = import 'service-account-app.jsonnet';
               { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317' },
             ],
             resources: {
-              requests: { cpu: '100m', memory: '256Mi' },
+              requests: { cpu: '1', memory: '1Gi' },
               limits: { cpu: '2', memory: '2Gi' },
             },
             startupProbe: {

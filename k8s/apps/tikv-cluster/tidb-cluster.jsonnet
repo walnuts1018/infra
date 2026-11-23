@@ -43,8 +43,8 @@ local componentAffinity(component) = {
       maxFailoverCount: 0,
       storageClassName: 'local-path',
       requests: {
-        cpu: '45m',
-        memory: '110Mi',
+        cpu: '100m',
+        memory: '256Mi',
         storage: '1Gi',
       },
       limits: {
@@ -62,8 +62,8 @@ local componentAffinity(component) = {
       maxFailoverCount: 0,
       storageClassName: 'local-path',
       requests: {
-        cpu: '30m',
-        memory: '1900Mi',
+        cpu: '100m',
+        memory: '1Gi',
         storage: '8Gi',
       },
       limits: {

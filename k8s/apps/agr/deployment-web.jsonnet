@@ -9,7 +9,7 @@ local app = import 'app.json5';
     labels: labels(app.name + '-web'),
   },
   spec: {
-    replicas: 2,
+    replicas: 1,
     selector: {
       matchLabels: labels(app.name + '-web'),
     },
@@ -28,7 +28,7 @@ local app = import 'app.json5';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'web',
-            image: 'ghcr.io/walnuts1018/agr-web:0.1.45@sha256:d602182378d057a21d0c4006c39d992ae8eab9ee91b0f4eb49b713eba6a2088a',
+            image: 'ghcr.io/walnuts1018/agr-web:0.1.54@sha256:9679b863f328190996c31b2b0ff2052d443689dec30c4267987058932671346b',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               { name: 'http', containerPort: 3000, protocol: 'TCP' },
