@@ -1,5 +1,60 @@
 vmselect:
-  enabled: false
+  enabled: true
+  replicaCount: 1
+  extraArgs:
+    clusternativeListenAddr: ":8401"
+  networkPolicy:
+    enabled: true
+    ingress:
+      - from:
+          - podSelector:
+              matchLabels:
+                app: vmselect
+                app.kubernetes.io/instance: vm-query
+                app.kubernetes.io/name: victoria-metrics-cluster
+        ports:
+          - protocol: TCP
+            port: 8401
+      - from:
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: opentelemetry-collector
+            podSelector:
+              matchLabels:
+                app.kubernetes.io/component: opentelemetry-collector
+        ports:
+          - protocol: TCP
+            port: 8481
+    egress:
+      - to:
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
+        ports:
+          - protocol: UDP
+            port: 53
+          - protocol: TCP
+            port: 53
+      - to:
+          - podSelector:
+              matchLabels:
+                app: vmstorage
+                app.kubernetes.io/instance: vm-long
+                app.kubernetes.io/name: victoria-metrics-cluster
+        ports:
+          - protocol: TCP
+            port: 8401
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 1Gi
+  serviceMonitor:
+    enabled: true
 
 vminsert:
   enabled: true

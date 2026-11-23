@@ -5,8 +5,8 @@ vmselect:
   suppressStorageFQDNsRender: true
   extraArgs:
     storageNode:
-      - short/vm-short-victoria-metrics-cluster-vmstorage-0.vm-short-victoria-metrics-cluster-vmstorage.victoria-metrics.svc.cluster.local:8401
-      - long/vm-long-victoria-metrics-cluster-vmstorage-0.vm-long-victoria-metrics-cluster-vmstorage.victoria-metrics.svc.cluster.local:8401
+      - short/vm-short-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8401
+      - long/vm-long-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8401
   resources:
     requests:
       cpu: 100m
@@ -63,7 +63,7 @@ vmselect:
       - to:
           - podSelector:
               matchLabels:
-                app: vmstorage
+                app: vmselect
                 app.kubernetes.io/name: victoria-metrics-cluster
               matchExpressions:
                 - key: app.kubernetes.io/instance
