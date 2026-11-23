@@ -1,0 +1,7 @@
+{
+  name: "vm-short",
+  namespace: "victoria-metrics",
+  clusters: {
+    kurumi: {},
+  },
+}

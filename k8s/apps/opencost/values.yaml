@@ -51,7 +51,7 @@ opencost:
       enabled: false
     external:
       enabled: true
-      url: "http://victoria-metrics-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus"
+      url: "http://vm-query-victoria-metrics-cluster-vmselect.victoria-metrics.svc.cluster.local:8481/select/0/prometheus"
 
   ui:
     enabled: true

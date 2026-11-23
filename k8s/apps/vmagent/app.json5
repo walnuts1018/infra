@@ -1,5 +1,5 @@
 {
-  name: "victoria-metrics",
+  name: "vmagent",
   namespace: "victoria-metrics",
   clusters: {
     kurumi: {},
