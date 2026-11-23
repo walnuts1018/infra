@@ -11,7 +11,6 @@ local sa = import 'service-account-app.jsonnet';
     labels: labels(app.name + '-server'),
   },
   spec: {
-    replicas: 1,
     selector: {
       matchLabels: labels(app.name + '-server'),
     },
@@ -32,7 +31,7 @@ local sa = import 'service-account-app.jsonnet';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'app-service',
-            image: 'ghcr.io/walnuts1018/agr-server:0.1.53@sha256:8576366dc687fd9c0df131826853a33270386f01f7d79b0e74fc79801c9d2566',
+            image: 'ghcr.io/walnuts1018/agr-server:0.1.54@sha256:804775007d5ee76e13994ac4d4ae6b6533f6153483bae10603f4a18b63e7d144',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               { name: 'grpc-web', containerPort: 8080, protocol: 'TCP' },
@@ -61,7 +60,7 @@ local sa = import 'service-account-app.jsonnet';
               { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317' },
             ],
             resources: {
-              requests: { cpu: '100m', memory: '256Mi' },
+              requests: { cpu: '1', memory: '1Gi' },
               limits: { cpu: '2', memory: '2Gi' },
             },
             startupProbe: {
