@@ -1,0 +1,20 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  labels:
+    app: oekaki-dengon-game-back
+    app.kubernetes.io/name: oekaki-dengon-game-back
+  name: oekaki-dengon-game-back
+  namespace: oekaki-dengon-game
+spec:
+  maxReplicaCount: 2
+  minReplicaCount: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: oekaki-dengon-game-back
+  triggers:
+    - metadata:
+        value: "95"
+      metricType: Utilization
+      type: cpu

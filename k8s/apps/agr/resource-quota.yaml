@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: agr
+  namespace: agr
+spec:
+  hard:
+    count/deployments.apps: "5"
+    count/horizontalpodautoscalers.autoscaling: "5"
+    limits.cpu: "22"
+    limits.memory: 42Gi
+    pods: "26"
+    requests.cpu: "11"
+    requests.memory: 20Gi

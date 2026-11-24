@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: coredns-metrics
+    app.kubernetes.io/name: kubernetes-control-plane-metrics
+    jobLabel: kubernetes-coredns
+  name: coredns-metrics
+  namespace: kube-system
+spec:
+  clusterIP: None
+  ports:
+    - name: http-metrics
+      port: 9153
+      targetPort: 9153
+  selector:
+    k8s-app: kube-dns

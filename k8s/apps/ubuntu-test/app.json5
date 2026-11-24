@@ -1,7 +1,0 @@
-{
-  name: "ubuntu-test",
-  namespace: "default",
-  clusters: {
-    kurumi: {},
-  },
-}

@@ -1,0 +1,104 @@
+apiVersion: pingcap.com/v1alpha1
+kind: TidbCluster
+metadata:
+  name: tikv-cluster
+  namespace: databases
+spec:
+  configUpdateStrategy: RollingUpdate
+  discovery: {}
+  enableDynamicConfiguration: true
+  helper:
+    image: alpine:3.24.3@sha256:1b7232cda4ca3dc20b5d1247bdc9bfb631f2661d15d323bdd6fccc035ed1a9e7
+  pd:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: storage.walnuts.dev/slow
+                  operator: DoesNotExist
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: pd
+                app.kubernetes.io/instance: tikv-cluster
+            topologyKey: kubernetes.io/hostname
+    baseImage: pingcap/pd
+    config: |
+      [security]
+        cert-allowed-cn = ["TiDB", "SeaweedFS"]
+    limits:
+      memory: 512Mi
+    maxFailoverCount: 0
+    replicas: 3
+    requests:
+      cpu: 100m
+      memory: 256Mi
+      storage: 1Gi
+    storageClassName: local-path
+  pvReclaimPolicy: Retain
+  tikv:
+    additionalVolumeMounts:
+      - mountPath: /tikv-server
+        name: tikv-runtime
+        readOnly: true
+        subPath: tikv-server
+    additionalVolumes:
+      - emptyDir:
+          sizeLimit: 1Gi
+        name: tikv-runtime
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: storage.walnuts.dev/slow
+                  operator: DoesNotExist
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: tikv
+                app.kubernetes.io/instance: tikv-cluster
+            topologyKey: kubernetes.io/hostname
+    baseImage: pingcap/tikv
+    config: |
+      [security]
+        cert-allowed-cn = ["TiDB", "SeaweedFS"]
+    initContainers:
+      - args:
+          - cp /tikv-server /opt/tikv-runtime/tikv-server && strip --strip-debug /opt/tikv-runtime/tikv-server && test -x /opt/tikv-runtime/tikv-server
+        command:
+          - /bin/sh
+          - -ec
+        image: pingcap/tikv:v8.5.7
+        name: strip-tikv-debug
+        resources:
+          limits:
+            memory: 1Gi
+          requests:
+            cpu: 25m
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsUser: 0
+        volumeMounts:
+          - mountPath: /opt/tikv-runtime
+            name: tikv-runtime
+    limits:
+      memory: 2Gi
+    maxFailoverCount: 0
+    replicas: 3
+    requests:
+      cpu: 100m
+      memory: 1Gi
+      storage: 8Gi
+    storageClassName: local-path
+  timezone: Asia/Tokyo
+  tlsCluster:
+    enabled: true
+  version: v8.5.7

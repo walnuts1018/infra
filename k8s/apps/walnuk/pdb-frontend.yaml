@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app: walnuk-frontend
+    app.kubernetes.io/name: walnuk-frontend
+  name: walnuk-frontend
+  namespace: walnuk
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: walnuk-frontend
+      app.kubernetes.io/name: walnuk-frontend

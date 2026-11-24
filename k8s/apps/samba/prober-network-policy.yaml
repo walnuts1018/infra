@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: samba-prober
+  namespace: samba
+spec:
+  egress:
+    - ports:
+        - port: 10445
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: samba
+          podSelector:
+            matchLabels:
+              app: samba
+              app.kubernetes.io/name: samba
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+      to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: opentelemetry-collector
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus-collector
+      ports:
+        - port: 9187
+          protocol: TCP
+  podSelector:
+    matchLabels:
+      app: samba-prober
+      app.kubernetes.io/name: samba-prober
+  policyTypes:
+    - Ingress
+    - Egress

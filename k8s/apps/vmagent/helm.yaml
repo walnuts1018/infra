@@ -1,0 +1,101 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: vmagent-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: victoria-metrics
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: victoria-metrics-agent
+    helm:
+      releaseName: vmagent
+      values: |
+        mode: statefulSet
+        replicaCount: 1
+
+        service:
+          enabled: true
+
+        config:
+          scrape_configs: []
+
+        persistentVolume:
+          enabled: true
+          storageClassName: topolvm-hdd
+          size: 8Gi
+
+        resources:
+          requests:
+            cpu: 150m
+            memory: 256Mi
+          limits:
+            memory: 2Gi
+
+        serviceMonitor:
+          enabled: true
+
+        networkPolicy:
+          enabled: true
+          ingress:
+            - from:
+                - namespaceSelector:
+                    matchLabels:
+                      kubernetes.io/metadata.name: opentelemetry-collector
+                  podSelector:
+                    matchLabels:
+                      app.kubernetes.io/component: opentelemetry-collector
+              ports:
+                - protocol: TCP
+                  port: 8429
+          egress:
+            - to:
+                - namespaceSelector:
+                    matchLabels:
+                      kubernetes.io/metadata.name: kube-system
+                  podSelector:
+                    matchLabels:
+                      k8s-app: kube-dns
+              ports:
+                - protocol: UDP
+                  port: 53
+                - protocol: TCP
+                  port: 53
+            - to:
+                - podSelector:
+                    matchLabels:
+                      app: vminsert
+                      app.kubernetes.io/name: victoria-metrics-cluster
+                    matchExpressions:
+                      - key: app.kubernetes.io/instance
+                        operator: In
+                        values:
+                          - vm-short
+                          - vm-long
+              ports:
+                - protocol: TCP
+                  port: 8480
+
+        # 保持期間の異なる保存先に同じ系列を二重保存しないため、retentionラベルで送信先を排他的に選ぶ。
+        remoteWrite:
+          - url: http://vm-short-victoria-metrics-cluster-vminsert:8480/insert/0/prometheus/api/v1/write
+            urlRelabelConfig:
+              - if: '{retention="long"}'
+                action: drop
+          - url: http://vm-long-victoria-metrics-cluster-vminsert:8480/insert/0/prometheus/api/v1/write
+            urlRelabelConfig:
+              - if: '{retention="long"}'
+                action: keep
+    repoURL: https://victoriametrics.github.io/helm-charts/
+    targetRevision: 0.52.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

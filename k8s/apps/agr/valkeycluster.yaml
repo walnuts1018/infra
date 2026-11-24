@@ -1,0 +1,37 @@
+apiVersion: valkey.io/v1alpha1
+kind: ValkeyCluster
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+  labels:
+    app: agr-valkey
+    app.kubernetes.io/name: agr-valkey
+  name: agr-valkey
+  namespace: agr
+spec:
+  exporter:
+    enabled: true
+    resources:
+      limits:
+        cpu: 100m
+        memory: 64Mi
+      requests:
+        cpu: 5m
+        memory: 32Mi
+  replicas: 2
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1Gi
+    requests:
+      cpu: 5m
+      memory: 32Mi
+  shards: 1
+  users:
+    - enabled: true
+      name: default
+      passwordSecret:
+        keys:
+          - valkey_password
+        name: agr-valkey-credential
+      permissions: +@all ~* &*

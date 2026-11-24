@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    app: horse-ocr
+    app.kubernetes.io/name: horse-ocr
+  name: horse-ocr
+  namespace: horse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: horse-ocr
+      app.kubernetes.io/name: horse-ocr
+  template:
+    metadata:
+      labels:
+        app: horse-ocr
+        app.kubernetes.io/name: horse-ocr
+    spec:
+      containers:
+        - env:
+            - name: HOME
+              value: /home/horse
+            - name: PADDLE_PDX_CACHE_HOME
+              value: /home/horse/.paddlex
+            - name: XDG_CACHE_HOME
+              value: /home/horse/.cache
+            - name: OCR_CPU_THREADS
+              value: "2"
+          image: ghcr.io/walnuts1018/horse-ocr:v0.0.1120@sha256:df6440e126d8d88179edbbf2c329d8464d2e5e551940a2e7c5599e46291cd44e
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 30
+          name: ocr
+          ports:
+            - containerPort: 8000
+              name: http
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "2"
+              memory: 4Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          startupProbe:
+            failureThreshold: 120
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /home/horse
+              name: home
+            - mountPath: /tmp
+              name: tmp
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - emptyDir:
+            sizeLimit: 4Gi
+          name: home
+        - emptyDir:
+            sizeLimit: 1Gi
+          name: tmp

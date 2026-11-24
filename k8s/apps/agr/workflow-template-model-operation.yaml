@@ -1,0 +1,115 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  labels:
+    workflows.argoproj.io/archive-strategy: always
+  name: agr-model-operation
+  namespace: agr
+spec:
+  activeDeadlineSeconds: 1800
+  arguments:
+    parameters:
+      - name: operation
+      - name: target-id
+      - name: expected-revision
+      - name: reason
+      - name: operation-id
+  entrypoint: operate-model
+  executor:
+    serviceAccountName: agr-workflow-executor
+  imagePullSecrets:
+    - name: ghcr-login-secret
+  podGC:
+    strategy: OnWorkflowCompletion
+  podMetadata:
+    labels:
+      app: agr-workflow
+      app.kubernetes.io/name: agr-workflow
+  serviceAccountName: agr-workflow
+  synchronization:
+    mutexes:
+      - name: agr-training
+  templates:
+    - container:
+        args:
+          - --operation
+          - '{{workflow.parameters.operation}}'
+          - --target-id
+          - '{{workflow.parameters.target-id}}'
+          - --expected-revision
+          - '{{workflow.parameters.expected-revision}}'
+          - --operation-id
+          - '{{workflow.parameters.operation-id}}'
+          - --reason
+          - '{{workflow.parameters.reason}}'
+        command:
+          - /app/.venv/bin/agr-model-operation
+        env:
+          - name: AWS_ENDPOINT_URL_S3
+            value: http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333
+          - name: AWS_ENDPOINT_URL_STS
+            value: https://seaweedfs.local.walnuts.dev
+          - name: AWS_ROLE_ARN
+            value: arn:aws:iam::role/agr-promoter
+          - name: AWS_WEB_IDENTITY_TOKEN_FILE
+            value: /var/run/secrets/sts.seaweedfs.com/serviceaccount/token
+          - name: AWS_REGION
+            value: us-east-1
+          - name: WORKER_S3_BUCKET
+            value: agr-ai
+          - name: WORKER_S3_PREFIX
+            value: worker-runs
+          - name: WORKER_CONTROLLER_ID
+            value: agr-promoter
+          - name: AGR_WORKFLOW_UID
+            value: '{{workflow.uid}}'
+          - name: AGR_MODEL_OPERATION
+            value: '{{workflow.parameters.operation}}'
+          - name: SERVICE_ENDPOINT
+            value: http://agr-server.agr.svc.cluster.local:8080
+          - name: SERVICE_GATEWAY_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: SERVICE_GATEWAY_TOKEN
+                name: agr-learning-token
+        image: ghcr.io/walnuts1018/agr-training:0.1.67@sha256:83b33dbc12c06ae5bc75586b133f0d45315407b6382ec0ad917d7f76f79bdb0f
+        resources:
+          limits:
+            cpu: 400m
+            ephemeral-storage: 1Gi
+            memory: 896Mi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 128Mi
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 10001
+          runAsNonRoot: true
+          runAsUser: 10001
+        volumeMounts:
+          - mountPath: /var/run/secrets/sts.seaweedfs.com/serviceaccount
+            name: sts-token
+            readOnly: true
+          - mountPath: /tmp
+            name: tmp
+      name: operate-model
+      podSpecPatch: '{"priorityClassName":"agr-learning","securityContext":{"runAsGroup":10001,"runAsNonRoot":true,"runAsUser":10001,"seccompProfile":{"type":"RuntimeDefault"}}}'
+      serviceAccountName: agr-promoter
+      volumes:
+        - name: sts-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: sts.seaweedfs.com
+                  expirationSeconds: 3600
+                  path: token
+        - emptyDir:
+            sizeLimit: 1Gi
+          name: tmp
+  ttlStrategy:
+    secondsAfterCompletion: 604800

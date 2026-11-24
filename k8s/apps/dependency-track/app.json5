@@ -1,7 +1,0 @@
-{
-  name: "dependency-track",
-  namespace: "dependency-track",
-  clusters: {
-    kurumi: {},
-  },
-}

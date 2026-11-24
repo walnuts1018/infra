@@ -1,0 +1,23 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: shumoku
+  namespace: netbox
+spec:
+  oidc:
+    clientIDRef:
+      name: shumoku-oidc-54a017
+    clientSecret:
+      name: shumoku-oidc-54a017
+    logoutPath: /oauth2/logout
+    provider:
+      issuer: https://auth.walnuts.dev
+    redirectURL: https://shumoku.walnuts.dev/oauth2/callback
+    scopes:
+      - openid
+      - email
+      - profile
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: shumoku

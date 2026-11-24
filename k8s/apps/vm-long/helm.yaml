@@ -1,0 +1,151 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: vm-long-helm
+  namespace: argocd
+spec:
+  destination:
+    namespace: victoria-metrics
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: victoria-metrics-cluster
+    helm:
+      releaseName: vm-long
+      values: |
+        vmselect:
+          enabled: true
+          replicaCount: 1
+          extraArgs:
+            clusternativeListenAddr: ":8401"
+          networkPolicy:
+            enabled: true
+            ingress:
+              - from:
+                  - podSelector:
+                      matchLabels:
+                        app: vmselect
+                        app.kubernetes.io/instance: vm-query
+                        app.kubernetes.io/name: victoria-metrics-cluster
+                ports:
+                  - protocol: TCP
+                    port: 8401
+              - from:
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: opentelemetry-collector
+                    podSelector:
+                      matchLabels:
+                        app.kubernetes.io/component: opentelemetry-collector
+                ports:
+                  - protocol: TCP
+                    port: 8481
+            egress:
+              - to:
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: kube-system
+                    podSelector:
+                      matchLabels:
+                        k8s-app: kube-dns
+                ports:
+                  - protocol: UDP
+                    port: 53
+                  - protocol: TCP
+                    port: 53
+              - to:
+                  - podSelector:
+                      matchLabels:
+                        app: vmstorage
+                        app.kubernetes.io/instance: vm-long
+                        app.kubernetes.io/name: victoria-metrics-cluster
+                ports:
+                  - protocol: TCP
+                    port: 8401
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
+          serviceMonitor:
+            enabled: true
+
+        vminsert:
+          enabled: true
+          replicaCount: 1
+          networkPolicy:
+            enabled: true
+            ingress:
+              - from:
+                  - podSelector:
+                      matchLabels:
+                        app.kubernetes.io/instance: vmagent
+                        app.kubernetes.io/name: victoria-metrics-agent
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: opentelemetry-collector
+                    podSelector:
+                      matchLabels:
+                        app.kubernetes.io/component: opentelemetry-collector
+                ports:
+                  - protocol: TCP
+                    port: 8480
+            egress:
+              - to:
+                  - namespaceSelector:
+                      matchLabels:
+                        kubernetes.io/metadata.name: kube-system
+                    podSelector:
+                      matchLabels:
+                        k8s-app: kube-dns
+                ports:
+                  - protocol: UDP
+                    port: 53
+                  - protocol: TCP
+                    port: 53
+              - to:
+                  - podSelector:
+                      matchLabels:
+                        app: vmstorage
+                        app.kubernetes.io/instance: vm-long
+                        app.kubernetes.io/name: victoria-metrics-cluster
+                ports:
+                  - protocol: TCP
+                    port: 8400
+          resources:
+            requests:
+              cpu: 40m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+          serviceMonitor:
+            enabled: true
+
+        vmstorage:
+          enabled: true
+          replicaCount: 1
+          retentionPeriod: 100y
+          persistentVolume:
+            enabled: true
+            storageClassName: topolvm-hdd
+            size: 64Gi
+          resources:
+            requests:
+              cpu: 50m
+              memory: 512Mi
+            limits:
+              memory: 2Gi
+          serviceMonitor:
+            enabled: true
+    repoURL: https://victoriametrics.github.io/helm-charts/
+    targetRevision: 0.55.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - FailOnSharedResource=true

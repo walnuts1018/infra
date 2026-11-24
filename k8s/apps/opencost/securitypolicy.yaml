@@ -1,0 +1,23 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: opencost
+  namespace: opencost
+spec:
+  oidc:
+    clientIDRef:
+      name: opencost-secret-2bafb3
+    clientSecret:
+      name: opencost-secret-2bafb3
+    logoutPath: /oauth2/logout
+    provider:
+      issuer: https://auth.walnuts.dev
+    redirectURL: https://opencost.walnuts.dev/oauth2/callback
+    scopes:
+      - openid
+      - email
+      - profile
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: opencost-ui

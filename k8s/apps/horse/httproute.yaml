@@ -1,0 +1,84 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  labels:
+    app: horse
+    app.kubernetes.io/name: horse
+  name: horse
+  namespace: horse
+spec:
+  hostnames:
+    - horse.walnuts.dev
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+  rules:
+    - backendRefs:
+        - kind: Service
+          name: horse-api
+          port: 8080
+      matches:
+        - path:
+            type: Exact
+            value: /healthz
+      timeouts:
+        backendRequest: 55s
+        request: 60s
+    - backendRefs:
+        - kind: Service
+          name: horse-api
+          port: 8080
+      matches:
+        - path:
+            type: PathPrefix
+            value: /graphql
+      timeouts:
+        backendRequest: 0s
+        request: 0s
+    - backendRefs:
+        - kind: Service
+          name: horse-api
+          port: 8080
+      matches:
+        - path:
+            type: PathPrefix
+            value: /events
+      timeouts:
+        backendRequest: 0s
+        request: 0s
+    - backendRefs:
+        - kind: Service
+          name: horse-api
+          port: 8080
+      matches:
+        - path:
+            type: PathPrefix
+            value: /documents
+        - path:
+            type: PathPrefix
+            value: /uploads
+      timeouts:
+        backendRequest: 4m
+        request: 5m
+    - backendRefs:
+        - kind: Service
+          name: horse-api
+          port: 8080
+      matches:
+        - path:
+            type: PathPrefix
+            value: /auth
+        - path:
+            type: PathPrefix
+            value: /purchases
+      timeouts:
+        backendRequest: 55s
+        request: 60s
+    - backendRefs:
+        - kind: Service
+          name: horse-web
+          port: 3000
+      matches:
+        - path:
+            type: PathPrefix
+            value: /

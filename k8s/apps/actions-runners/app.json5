@@ -1,7 +1,0 @@
-{
-  name: "actions-runners",
-  namespace: "arc-runners",
-  clusters: {
-    kurumi: {},
-  },
-}

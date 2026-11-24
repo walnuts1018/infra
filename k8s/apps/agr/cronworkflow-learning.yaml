@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  labels:
+    workflows.argoproj.io/archive-strategy: always
+  name: agr-training
+  namespace: agr
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 10
+  schedules:
+    - '*/5 * * * *'
+  startingDeadlineSeconds: 120
+  successfulJobsHistoryLimit: 3
+  suspend: true
+  timezone: Asia/Tokyo
+  workflowSpec:
+    arguments:
+      parameters:
+        - name: trigger
+          value: cron
+        - name: retry-generation-id
+          value: ""
+    workflowTemplateRef:
+      name: agr-learning

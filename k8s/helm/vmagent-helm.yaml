@@ -1,0 +1,316 @@
+---
+# Source: victoria-metrics-agent/templates/networkpolicy.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vmagent-victoria-metrics-agent
+  namespace: victoria-metrics
+  labels: 
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: victoria-metrics-agent-0.52.0
+spec:
+  podSelector:
+    matchLabels: 
+      app.kubernetes.io/instance: vmagent
+      app.kubernetes.io/name: victoria-metrics-agent
+  ingress: 
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: opentelemetry-collector
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/component: opentelemetry-collector
+      ports:
+      - port: 8429
+        protocol: TCP
+  egress: 
+    - ports:
+      - port: 53
+        protocol: UDP
+      - port: 53
+        protocol: TCP
+      to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+    - ports:
+      - port: 8480
+        protocol: TCP
+      to:
+      - podSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/instance
+            operator: In
+            values:
+            - vm-short
+            - vm-long
+          matchLabels:
+            app: vminsert
+            app.kubernetes.io/name: victoria-metrics-cluster
+---
+# Source: victoria-metrics-agent/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vmagent-victoria-metrics-agent
+  namespace: victoria-metrics
+  labels: 
+    app.kubernetes.io/instance: vmagent
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: victoria-metrics-agent
+    app.kubernetes.io/version: v1.156.0
+    helm.sh/chart: victoria-metrics-agent-0.52.0
+---
+# Source: victoria-metrics-agent/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vmagent-victoria-metrics-agent-config
+  namespace: victoria-metrics
+  labels: 
+    app.kubernetes.io/instance: vmagent
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: victoria-metrics-agent
+    app.kubernetes.io/version: v1.156.0
+    helm.sh/chart: victoria-metrics-agent-0.52.0
+data:
+  scrape.yml: |
+    global:
+      scrape_interval: 10s
+    scrape_configs: []
+---
+# Source: victoria-metrics-agent/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vmagent-victoria-metrics-agent-rw
+  namespace: victoria-metrics
+  labels: 
+    app.kubernetes.io/instance: vmagent
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: victoria-metrics-agent
+    app.kubernetes.io/version: v1.156.0
+    helm.sh/chart: victoria-metrics-agent-0.52.0
+data: 
+  0-urlRelabelConfig.yaml: |-
+    - action: drop
+      if: '{retention="long"}'
+  1-urlRelabelConfig.yaml: |-
+    - action: keep
+      if: '{retention="long"}'
+---
+# Source: victoria-metrics-agent/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vmagent-victoria-metrics-agent
+  labels: 
+    app.kubernetes.io/instance: vmagent
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: victoria-metrics-agent
+    app.kubernetes.io/version: v1.156.0
+    helm.sh/chart: victoria-metrics-agent-0.52.0
+rules:
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources:
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources:
+  - nodes
+  - nodes/metrics
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: 
+  - /metrics
+  verbs: ["get"]
+---
+# Source: victoria-metrics-agent/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vmagent-victoria-metrics-agent
+  labels: 
+    app.kubernetes.io/instance: vmagent
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: victoria-metrics-agent
+    app.kubernetes.io/version: v1.156.0
+    helm.sh/chart: victoria-metrics-agent-0.52.0
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: vmagent-victoria-metrics-agent
+subjects:
+  - kind: ServiceAccount
+    name: vmagent-victoria-metrics-agent
+    namespace: victoria-metrics
+---
+# Source: victoria-metrics-agent/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels: 
+    app.kubernetes.io/instance: vmagent
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: victoria-metrics-agent
+    app.kubernetes.io/version: v1.156.0
+    helm.sh/chart: victoria-metrics-agent-0.52.0
+  name: vmagent-victoria-metrics-agent
+  namespace: victoria-metrics
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8429
+      protocol: TCP
+      targetPort: http
+  selector: 
+    app.kubernetes.io/instance: vmagent
+    app.kubernetes.io/name: victoria-metrics-agent
+---
+# Source: victoria-metrics-agent/templates/server.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: vmagent-victoria-metrics-agent
+  namespace: victoria-metrics
+  labels: 
+    app.kubernetes.io/instance: vmagent
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: victoria-metrics-agent
+    app.kubernetes.io/version: v1.156.0
+    helm.sh/chart: victoria-metrics-agent-0.52.0
+spec:
+  updateStrategy: {}
+  replicas: 1
+  serviceName: vmagent-victoria-metrics-agent
+  selector:
+    matchLabels: 
+      app.kubernetes.io/instance: vmagent
+      app.kubernetes.io/name: victoria-metrics-agent
+  template:
+    metadata:
+      labels: 
+        app.kubernetes.io/instance: vmagent
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: victoria-metrics-agent
+      annotations: 
+        checksum/config: bcfaf51add2a9408ce5f486557aa90d48cd8b21c0493bb72a13665100d2fc081
+    spec:
+      serviceAccountName: vmagent-victoria-metrics-agent
+      automountServiceAccountToken: true
+      securityContext: 
+        {}
+      containers:
+        - name: vmagent
+          securityContext: 
+            {}
+          image: victoriametrics/vmagent:v1.156.0
+          imagePullPolicy: IfNotPresent
+          workingDir: /
+          args: 
+            - --envflag.enable
+            - --envflag.prefix=VM_
+            - --httpListenAddr=:8429
+            - --loggerFormat=json
+            - --promscrape.config=/config/scrape/scrape.yml
+            - --remoteWrite.tmpDataPath=/tmpData
+            - --remoteWrite.url=http://vm-short-victoria-metrics-cluster-vminsert:8480/insert/0/prometheus/api/v1/write
+            - --remoteWrite.url=http://vm-long-victoria-metrics-cluster-vminsert:8480/insert/0/prometheus/api/v1/write
+            - --remoteWrite.urlRelabelConfig=/config/rw/0-urlRelabelConfig.yaml
+            - --remoteWrite.urlRelabelConfig=/config/rw/1-urlRelabelConfig.yaml
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          ports:
+            - name: http
+              containerPort: 8429
+          readinessProbe: 
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          livenessProbe: 
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            tcpSocket:
+              port: http
+            timeoutSeconds: 5
+          resources: 
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 150m
+              memory: 256Mi
+          volumeMounts:
+            - name: tmpdata
+              mountPath: /tmpData
+            - name: config-out
+              mountPath: /config/scrape
+            - name: relabelings-assets
+              mountPath: /config/rw
+            
+            
+      volumes:
+        - name: relabelings-assets
+          configMap:
+            name: vmagent-victoria-metrics-agent-rw
+        - name: config-out
+          configMap:
+            name: vmagent-victoria-metrics-agent-config
+        
+        
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: tmpdata
+      spec:
+        accessModes: 
+          - ReadWriteOnce
+        storageClassName: topolvm-hdd
+        resources:
+          requests:
+            storage: 8Gi
+---
+# Source: victoria-metrics-agent/templates/monitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels: 
+    app.kubernetes.io/instance: vmagent
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: victoria-metrics-agent
+    app.kubernetes.io/version: v1.156.0
+    helm.sh/chart: victoria-metrics-agent-0.52.0
+  name: vmagent-victoria-metrics-agent
+spec:
+  namespaceSelector:
+    matchNames:
+      - victoria-metrics
+  selector:
+    matchLabels: 
+      app.kubernetes.io/instance: vmagent
+      app.kubernetes.io/name: victoria-metrics-agent
+  endpoints:
+    -
+      port: http

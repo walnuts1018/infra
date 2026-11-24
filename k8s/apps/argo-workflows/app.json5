@@ -1,7 +1,0 @@
-{
-  name: "argo-workflows",
-  namespace: "argo-workflows",
-  clusters: {
-    kurumi: {},
-  },
-}

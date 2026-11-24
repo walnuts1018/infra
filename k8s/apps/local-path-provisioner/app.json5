@@ -1,7 +1,0 @@
-{
-  name: "local-path-storage",
-  namespace: "local-path-storage",
-  clusters: {
-    kurumi: {},
-  },
-}
