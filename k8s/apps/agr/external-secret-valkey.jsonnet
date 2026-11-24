@@ -13,6 +13,7 @@ local app = import 'app.json5';
     },
   ],
   template_data: {
+    valkey_password: '{{ .valkey_password }}',
     AGR_VALKEY_URL: 'redis://:{{ .valkey_password }}@valkey-' + app.name + '-valkey.' + app.namespace + '.svc.cluster.local:6379/0',
   },
 }
