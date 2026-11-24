@@ -40,7 +40,7 @@ local stagePod = import '_workflow_templates/stage-pod.libsonnet';
     templates: [{
       name: 'operate-model',
       container: {
-        image: 'ghcr.io/walnuts1018/agr-training:0.1.59@sha256:3c8e65e3e394d8b651d857665dab2da64a269c0007ecc37680b71ca7fc50297e',
+        image: 'ghcr.io/walnuts1018/agr-training:0.1.60@sha256:f4e14c85419332f1d5e0e86c7493d042ea460fde06e96ef698e95b6f3f456bad',
         command: ['/app/.venv/bin/agr-model-operation'],
         args: ['--operation', '{{workflow.parameters.operation}}', '--target-id', '{{workflow.parameters.target-id}}', '--expected-revision', '{{workflow.parameters.expected-revision}}', '--operation-id', '{{workflow.parameters.operation-id}}', '--reason', '{{workflow.parameters.reason}}'],
         env: stagePod.s3Env('agr-promoter', 'agr-promoter', [

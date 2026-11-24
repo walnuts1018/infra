@@ -32,7 +32,7 @@ local sa = import 'service-account-app.jsonnet';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'app-agent',
-            image: 'ghcr.io/walnuts1018/agr-server:0.1.59@sha256:ce8cb947aa803c124829797cd588ff17a46dd13581345af6a90069e94c92a905',
+            image: 'ghcr.io/walnuts1018/agr-server:0.1.60@sha256:1d229b32974d6eb7c9e8599715e5e29ad56a1bd64255e7bf1f0738f669175784',
             imagePullPolicy: 'IfNotPresent',
             command: ['/usr/local/bin/agr-agent'],
             ports: [
