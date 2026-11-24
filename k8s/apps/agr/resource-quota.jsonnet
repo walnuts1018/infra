@@ -9,13 +9,13 @@ local app = import 'app.json5';
   },
   spec: {
     hard: {
-      pods: '20',
-      'requests.cpu': '8',
-      'requests.memory': '16Gi',
-      'limits.cpu': '16',
-      'limits.memory': '32Gi',
-      'count/deployments.apps': '4',
-      'count/horizontalpodautoscalers.autoscaling': '4',
+      pods: '26',
+      'requests.cpu': '11',
+      'requests.memory': '20Gi',
+      'limits.cpu': '22',
+      'limits.memory': '42Gi',
+      'count/deployments.apps': '5',
+      'count/horizontalpodautoscalers.autoscaling': '5',
     },
   },
 }

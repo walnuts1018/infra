@@ -144,6 +144,11 @@ resource "random_password" "agr_database_password" {
   special = false
 }
 
+resource "random_password" "agr_redis_password" {
+  length  = 48
+  special = false
+}
+
 resource "random_password" "agr_gateway_token" {
   length  = 64
   special = false
@@ -181,6 +186,7 @@ resource "onepassword_item" "external_secret" {
         "agr-client-secret"                        = { type = "CONCEALED", value = var.agr_client_secret }
         "agr-database-password"                    = { type = "CONCEALED", value = random_password.agr_database_password.result }
         "agr-gateway-token"                        = { type = "CONCEALED", value = random_password.agr_gateway_token.result }
+        "agr-redis-password"                       = { type = "CONCEALED", value = random_password.agr_redis_password.result }
         "agr-learning-admin-identities"            = { type = "STRING", value = var.agr_learning_admin_identities }
         "agr-learning-admin-gateway-token"         = { type = "CONCEALED", value = random_password.agr_learning_admin_gateway_token.result }
         "argocd-cli-client-id"                     = { type = "STRING", value = var.argocd_cli_client_id }

@@ -1,6 +1,7 @@
 local gateway = import '../envoy-gateway-class/gateway.jsonnet';
 local app = import 'app.json5';
 local credentialFilter = import 'http-route-filter.jsonnet';
+local agent = import 'service-agent.jsonnet';
 local server = import 'service-server.jsonnet';
 local web = import 'service-web.jsonnet';
 local backendRule(contentType) = {
@@ -37,6 +38,21 @@ local backendRule(contentType) = {
     parentRefs: [{ name: gateway.metadata.name, namespace: gateway.metadata.namespace }],
     hostnames: ['agr.walnuts.dev'],
     rules: [
+      {
+        matches: [{ path: { type: 'PathPrefix', value: '/agr.v1.AnalysisService/' } }],
+        timeouts: { request: '0s', backendRequest: '0s' },
+        filters: [
+          {
+            type: 'ExtensionRef',
+            extensionRef: {
+              group: 'gateway.envoyproxy.io',
+              kind: 'HTTPRouteFilter',
+              name: credentialFilter.metadata.name,
+            },
+          },
+        ],
+        backendRefs: [{ kind: 'Service', name: agent.metadata.name, port: 8080 }],
+      },
       backendRule('application/grpc-web+proto'),
       backendRule('application/grpc-web-text'),
       {

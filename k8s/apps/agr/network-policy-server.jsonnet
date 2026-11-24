@@ -26,6 +26,14 @@ local app = import 'app.json5';
     ],
     egress: [
       {
+        to: [{ podSelector: { matchLabels: { 'valkey.io/cluster': app.name + '-valkey' } } }],
+        ports: [{ protocol: 'TCP', port: 6379 }],
+      },
+      {
+        to: [{ podSelector: { matchLabels: labels(app.name + '-agent') } }],
+        ports: [{ protocol: 'TCP', port: 8080 }],
+      },
+      {
         to: [networkPolicy.kubeDns],
         ports: [{ protocol: 'UDP', port: 53 }, { protocol: 'TCP', port: 53 }],
       },

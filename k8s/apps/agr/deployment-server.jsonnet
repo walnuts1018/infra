@@ -1,5 +1,6 @@
 local labels = import '../../components/labels.libsonnet';
 local app = import 'app.json5';
+local valkeyCredential = import 'external-secret-valkey.jsonnet';
 local database = import 'external-secret.jsonnet';
 local sa = import 'service-account-app.jsonnet';
 {
@@ -31,7 +32,7 @@ local sa = import 'service-account-app.jsonnet';
         containers: [
           std.mergePatch((import '../../components/container.libsonnet') {
             name: 'app-service',
-            image: 'ghcr.io/walnuts1018/agr-server:0.1.57@sha256:85b9eaf1aded43157474bc5fd834f91535bb09c66df22bd8e0732f6943d086c5',
+            image: 'ghcr.io/walnuts1018/agr-server:0.1.58@sha256:639a09e5c0f96d408f79941e9c663ce7a7eb3b853df83deaadbdc09c41bd2217',
             imagePullPolicy: 'IfNotPresent',
             ports: [
               { name: 'grpc-web', containerPort: 8080, protocol: 'TCP' },
@@ -39,6 +40,7 @@ local sa = import 'service-account-app.jsonnet';
             ],
             envFrom: [
               { secretRef: { name: database.spec.target.name } },
+              { secretRef: { name: valkeyCredential.spec.target.name } },
             ],
             env: [
               { name: 'SERVICE_LISTEN_ADDR', value: '0.0.0.0:8080' },
@@ -46,6 +48,8 @@ local sa = import 'service-account-app.jsonnet';
               { name: 'AGR_LEARNING_JOB_IDENTITIES', value: 'agr-planner,agr-actor,agr-dataset,agr-trainer,agr-validator,agr-evaluator,agr-promoter,agr-verify' },
               { name: 'AGR_LEARNING_ADMIN_IDENTITIES', valueFrom: { secretKeyRef: { name: 'agr-learning-admin-credential', key: 'AGR_LEARNING_ADMIN_IDENTITIES' } } },
               { name: 'AGR_LEARNING_ADMIN_GATEWAY_TOKEN', valueFrom: { secretKeyRef: { name: 'agr-learning-admin-credential', key: 'AGR_LEARNING_ADMIN_GATEWAY_TOKEN' } } },
+              { name: 'AGR_AGENT_ENDPOINT', value: 'http://' + app.name + '-agent.' + app.namespace + '.svc.cluster.local:8080' },
+              { name: 'AGR_AGENT_GATEWAY_TOKEN', valueFrom: { secretKeyRef: { name: database.spec.target.name, key: 'SERVICE_GATEWAY_TOKEN' } } },
               { name: 'AGR_POLICY_MODEL_S3_URI', value: 's3://agr-ai/worker-runs/models/active.json' },
               { name: 'WORKER_S3_BUCKET', value: 'agr-ai' },
               { name: 'AWS_ENDPOINT_URL_S3', value: 'http://seaweedfs-default-s3.seaweedfs.svc.cluster.local:8333' },
@@ -57,8 +61,8 @@ local sa = import 'service-account-app.jsonnet';
               { name: 'OTEL_EXPORTER_OTLP_ENDPOINT', value: 'http://default-collector.opentelemetry-collector.svc.cluster.local:4317' },
             ],
             resources: {
-              requests: { cpu: '1', memory: '1Gi' },
-              limits: { cpu: '2', memory: '2Gi' },
+              requests: { cpu: '500m', memory: '1Gi' },
+              limits: { cpu: '1', memory: '2Gi' },
             },
             startupProbe: {
               httpGet: { path: '/livez', port: 'health' },

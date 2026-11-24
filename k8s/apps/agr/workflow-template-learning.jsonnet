@@ -1,7 +1,7 @@
 local podSpecPatch = std.manifestJsonEx(import '_workflow_templates/pod-spec-patch.libsonnet', '', '', ':');
 local stagePod = import '_workflow_templates/stage-pod.libsonnet';
-local trainingImage = 'ghcr.io/walnuts1018/agr-training:0.1.57@sha256:9cf21dc5128f7c29e50fe47eae676b6a044bcb0cccd56c078564dce10fdcc96c';
-local workerImage = 'ghcr.io/walnuts1018/agr-worker:0.1.57@sha256:a4457710d6993e3b370e537f4d2e2ead8f238f29a2c4c43ea74bf17df8535065';
+local trainingImage = 'ghcr.io/walnuts1018/agr-training:0.1.58@sha256:5325232469df82f8dcf9f1de4dc0927e3d39e24442ed7fd2f24e5fc2469a66c1';
+local workerImage = 'ghcr.io/walnuts1018/agr-worker:0.1.58@sha256:34919d893a645558d983028f55defc262d50befc93c31d65f8763eb4ef95420f';
 local workerRetryStrategy = {
   limit: '5',
   retryPolicy: 'Always',
@@ -68,8 +68,10 @@ local evaluationLookTasks = std.flattenArrays([
       },
     } + (if i == 1 then {} else {
            depends: 'verify-look-' + (i - 1) + '.Succeeded',
-           when: '{{tasks.verify-look-' + (i - 1) + '.outputs.parameters.rejected}} == false',
-         }),
+         }) + {
+      when: '{{inputs.parameters.look-' + i + '-unit-count}} > 0'
+            + (if i == 1 then '' else ' && {{tasks.verify-look-' + (i - 1) + '.outputs.parameters.rejected}} == false'),
+    },
     {
       name: 'verify-look-' + i,
       template: 'verify-evaluation-look',
@@ -86,6 +88,15 @@ local evaluationLookTasks = std.flattenArrays([
       },
     },
   ]
+  for i in std.range(1, 4)
+]);
+local lookRejectedParameter(i) = '{{tasks.evaluation.outputs.parameters.look-' + std.toString(i) + '-rejected}}';
+local allLooksCompleted = std.join(' && ', [
+  lookRejectedParameter(i) + ' == false'
+  for i in std.range(1, 4)
+]);
+local anyLookRejected = std.join(' || ', [
+  lookRejectedParameter(i) + ' == true'
   for i in std.range(1, 4)
 ]);
 {
@@ -241,6 +252,7 @@ local evaluationLookTasks = std.flattenArrays([
               name: 'aggregate',
               template: 'aggregate',
               depends: 'evaluation.Succeeded',
+              when: allLooksCompleted,
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -250,9 +262,29 @@ local evaluationLookTasks = std.flattenArrays([
               },
             },
             {
+              name: 'record-rejection',
+              template: 'record-rejection',
+              depends: 'evaluation.Succeeded',
+              when: anyLookRejected,
+              arguments: {
+                parameters: [
+                  { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
+                  { name: 'plan-uri', value: '{{tasks.plan.outputs.parameters.plan-uri}}' },
+                  { name: 'plan-sha256', value: '{{tasks.plan.outputs.parameters.plan-sha256}}' },
+                ] + [
+                  {
+                    name: 'look-' + std.toString(i) + '-rejected',
+                    value: lookRejectedParameter(i),
+                  }
+                  for i in std.range(1, 4)
+                ],
+              },
+            },
+            {
               name: 'decide',
               template: 'decide',
-              depends: 'aggregate.Succeeded',
+              depends: 'evaluation.Succeeded && aggregate.Succeeded',
+              when: allLooksCompleted,
               arguments: {
                 parameters: [
                   { name: 'generation-id', value: '{{tasks.plan.outputs.parameters.generation-id}}' },
@@ -804,6 +836,18 @@ local evaluationLookTasks = std.flattenArrays([
             { name: 'look-4-unit-count' },
           ],
         },
+        outputs: {
+          parameters: [
+            {
+              name: 'look-' + std.toString(i) + '-rejected',
+              valueFrom: {
+                parameter: '{{tasks.verify-look-' + std.toString(i) + '.outputs.parameters.rejected}}',
+                default: 'false',
+              },
+            }
+            for i in std.range(1, 4)
+          ],
+        },
         parallelism: 2,
         dag: {
           tasks: evaluationLookTasks,
@@ -870,6 +914,7 @@ local evaluationLookTasks = std.flattenArrays([
               name: 'rejected',
               valueFrom: {
                 path: '/tmp/verify-output/rejected',
+                default: 'false',
               },
             },
           ],
@@ -1003,6 +1048,77 @@ local evaluationLookTasks = std.flattenArrays([
         },
         serviceAccountName: 'agr-evaluator',
         volumes: stagePod.volumes('1Gi'),
+      },
+      {
+        name: 'record-rejection',
+        inputs: {
+          parameters: [
+            { name: 'generation-id' },
+            { name: 'plan-uri' },
+            { name: 'plan-sha256' },
+            { name: 'look-1-rejected' },
+            { name: 'look-2-rejected' },
+            { name: 'look-3-rejected' },
+            { name: 'look-4-rejected' },
+          ],
+        },
+        outputs: {
+          parameters: [
+            {
+              name: 'report-uri',
+              valueFrom: {
+                path: '/tmp/rejection-output/report-uri',
+              },
+            },
+            {
+              name: 'decision-uri',
+              valueFrom: {
+                path: '/tmp/rejection-output/decision-uri',
+              },
+            },
+          ],
+        },
+        podSpecPatch: podSpecPatch,
+        container: {
+          command: ['/app/.venv/bin/agr-record-rejection'],
+          args: [
+            '--generation-id',
+            '{{inputs.parameters.generation-id}}',
+            '--plan-uri',
+            '{{inputs.parameters.plan-uri}}',
+            '--plan-sha256',
+            '{{inputs.parameters.plan-sha256}}',
+            '--argo-output-dir',
+            '/tmp/rejection-output',
+          ],
+          env: s3Env('agr-evaluator', 'agr-evaluator', [
+            { name: 'AGR_TRAINING_IMAGE_REFERENCE', value: trainingImage },
+            { name: 'AGR_WORKFLOW_GENERATION_ID', value: '{{inputs.parameters.generation-id}}' },
+            { name: 'AGR_WORKFLOW_PLAN_URI', value: '{{inputs.parameters.plan-uri}}' },
+            { name: 'AGR_WORKFLOW_PLAN_SHA256', value: '{{inputs.parameters.plan-sha256}}' },
+            { name: 'AGR_EVALUATION_LOOK_1_REJECTED', value: '{{inputs.parameters.look-1-rejected}}' },
+            { name: 'AGR_EVALUATION_LOOK_2_REJECTED', value: '{{inputs.parameters.look-2-rejected}}' },
+            { name: 'AGR_EVALUATION_LOOK_3_REJECTED', value: '{{inputs.parameters.look-3-rejected}}' },
+            { name: 'AGR_EVALUATION_LOOK_4_REJECTED', value: '{{inputs.parameters.look-4-rejected}}' },
+          ]),
+          image: trainingImage,
+          resources: {
+            limits: {
+              cpu: '500m',
+              'ephemeral-storage': '2Gi',
+              memory: '1Gi',
+            },
+            requests: {
+              cpu: '100m',
+              'ephemeral-storage': '512Mi',
+              memory: '256Mi',
+            },
+          },
+          securityContext: stagePod.securityContext,
+          volumeMounts: stagePod.volumeMounts,
+        },
+        serviceAccountName: 'agr-evaluator',
+        volumes: stagePod.volumes('2Gi'),
       },
       {
         container: {
