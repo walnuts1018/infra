@@ -14,7 +14,7 @@ local app = import 'app.json5';
     timezone: 'Asia/Tokyo',
     concurrencyPolicy: 'Forbid',
     startingDeadlineSeconds: 120,
-    suspend: false,
+    suspend: true,
     successfulJobsHistoryLimit: 3,
     failedJobsHistoryLimit: 10,
     workflowSpec: {
