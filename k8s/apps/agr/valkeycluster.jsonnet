@@ -26,6 +26,13 @@ local valkeyCredential = import 'external-secret-valkey.jsonnet';
         },
       },
     ],
+    exporter: {
+      enabled: true,
+      resources: {
+        requests: { cpu: '5m', memory: '32Mi' },
+        limits: { cpu: '100m', memory: '64Mi' },
+      },
+    },
     resources: {
       requests: { cpu: '5m', memory: '32Mi' },
       limits: { cpu: '1', memory: '1Gi' },
