@@ -234,7 +234,10 @@ jobs:
 
       - uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
         with:
-          install_args: trivy pipx:sarif-tools jq
+          install_args: uv trivy jq
+
+      - name: Install SARIF tools
+        run: mise install --locked pipx:sarif-tools
 
       - name: Compare Trivy SARIF reports
         run: |
