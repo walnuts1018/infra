@@ -55,7 +55,7 @@ local s3Credentials = (import '../../components/seaweedfs-s3-credentials.libsonn
                 restartPolicy: 'RestartContainer',
               },
             ],
-            image: 'docker.io/stalwartlabs/stalwart:v0.16.27@sha256:c429b311c93db5606598abc1c68225a85a6953183848ae01bee9c6a98885836c',
+            image: 'docker.io/stalwartlabs/stalwart:v1.2.1@sha256:ed3153af935f0125ed0424b2a6d7d5891915a9249189dda76860a27f906b64ea',
             imagePullPolicy: 'IfNotPresent',
             args: [
               '--config',
