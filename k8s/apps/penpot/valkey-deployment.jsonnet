@@ -39,7 +39,7 @@ local valkeyLabels = (import '../../components/labels.libsonnet')(app.name + '-v
         containers: [
           {
             name: 'valkey',
-            image: 'valkey/valkey:9.1.3@sha256:3add1a336a920ea54770a001ab6feb3da5fceea96a40373a3a2cd469b815f0b7',
+            image: 'valkey/valkey:9.2.1@sha256:169567d6288e5f08aa141847c0c3e0864a32e727682ca6f052a20567c7103ef8',
             imagePullPolicy: 'IfNotPresent',
             command: ['valkey-server'],
             args: [
