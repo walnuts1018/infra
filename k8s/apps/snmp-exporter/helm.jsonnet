@@ -5,6 +5,6 @@ local app = import 'app.json5';
 
   chart: 'prometheus-snmp-exporter',
   repoURL: 'https://prometheus-community.github.io/helm-charts',
-  targetRevision: '9.18.2',
+  targetRevision: '9.21.1',
   values: (importstr 'values.yaml'),
 }
