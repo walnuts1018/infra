@@ -4,6 +4,6 @@ local app = import 'app.json5';
   namespace: app.namespace,
   chart: 'strimzi-kafka-operator',
   repoURL: 'https://strimzi.io/charts/',
-  targetRevision: '1.3.0',
+  targetRevision: '1.3.1',
   values: (importstr 'values.yaml'),
 }
