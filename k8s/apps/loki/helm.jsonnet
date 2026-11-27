@@ -3,6 +3,6 @@ local app = import 'app.json5';
   name: app.name,
   namespace: app.namespace,
   ociChartURL: 'ghcr.io/grafana-community/helm-charts/loki',
-  targetRevision: '18.16.2',
+  targetRevision: '18.17.1',
   values: (importstr 'values.yaml'),
 }
