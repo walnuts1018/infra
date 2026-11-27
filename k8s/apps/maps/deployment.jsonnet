@@ -82,7 +82,7 @@ local readSecretName = (import '../../components/seaweedfs-s3-credentials.libson
         containers: [
           (import '../../components/container.libsonnet') {
             name: 'versatiles',
-            image: 'docker.io/versatiles/versatiles:v5.2.0@sha256:b86cd76ff874ab904ebc54d35f90a5899f969d0e670481457feeeaf74496b5f3',
+            image: 'docker.io/versatiles/versatiles:v5.16.0@sha256:3aa57d8c9b7bafb6834246c0848f11ee79f2e9a98ffd61d9e13e1a1d82d9fb0a',
             imagePullPolicy: 'IfNotPresent',
             args: ['serve', '--config', '/config/config.yaml'],
             securityContext+: {
