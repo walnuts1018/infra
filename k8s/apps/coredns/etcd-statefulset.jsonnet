@@ -41,7 +41,7 @@ local peerHost(ordinal) =
         containers: [
           std.mergePatch((import '../../components/container.libsonnet'), {
             name: 'etcd',
-            image: 'quay.io/coreos/etcd:v3.7.3@sha256:8d1b6c24f08e12ed7623d1df421832b3cafabe221aa6b658b97288d07807582f',
+            image: 'quay.io/coreos/etcd:v3.7.4@sha256:641c8cb2492aedf4c693b20029a56f325f9b18754bb7dc9f6eac22c99786228c',
             command: [
               '/usr/local/bin/etcd',
             ],
